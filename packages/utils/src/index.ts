@@ -1,4 +1,5 @@
 export { capitalizeWord } from "./capitalizeWord";
+export { formatRelativeNumber } from "./formatRelativeNumber";
 export { parseEnvVars } from "./parseEnvVars";
 export { parseString } from "./parseString";
 export { random } from "./random";

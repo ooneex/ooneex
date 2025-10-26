@@ -1,5 +1,5 @@
 export const trim = (text: string, char = " "): string => {
-  if ([".", "[", "]", "(", ")", "+", "*", "^", "$", "?", "/"].includes(char)) {
+  if ([".", "[", "]", "(", ")", "+", "*", "^", "$", "?", "/", "\\"].includes(char)) {
     char = `\\${char}`;
   }
 

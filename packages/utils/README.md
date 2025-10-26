@@ -17,10 +17,33 @@ pnpm add @ooneex/utils
 ## Usage
 
 ```typescript
-import { capitalizeWord, formatRelativeNumber, random, sleep } from '@ooneex/utils';
+import { capitalizeWord, formatRelativeNumber, random, sleep, dataURLtoFile } from '@ooneex/utils';
 ```
 
 ## API Reference
+
+### File Utilities
+
+#### `dataURLtoFile(dataurl: string, filename: string): File`
+
+Converts a data URL string into a File object, useful for handling base64-encoded file data.
+
+**Examples:**
+```typescript
+import { dataURLtoFile } from '@ooneex/utils';
+
+// Convert a data URL to a File object
+const dataUrl = 'data:text/plain;base64,SGVsbG8gV29ybGQ=';
+const file = dataURLtoFile(dataUrl, 'hello.txt');
+
+// Use with image data URLs
+const imageDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB...';
+const imageFile = dataURLtoFile(imageDataUrl, 'image.png');
+
+// The resulting File object can be used in FormData or uploaded
+const formData = new FormData();
+formData.append('file', file);
+```
 
 ### String Utilities
 

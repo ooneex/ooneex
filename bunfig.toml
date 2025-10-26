@@ -1,4 +1,2 @@
 [test]
 coverage = true
-coverageReporter = "lcov"
-coverageDir = "coverage"

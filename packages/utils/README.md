@@ -17,7 +17,7 @@ pnpm add @ooneex/utils
 ## Usage
 
 ```typescript
-import { capitalizeWord, formatRelativeNumber, random } from '@ooneex/utils';
+import { capitalizeWord, formatRelativeNumber, random, sleep } from '@ooneex/utils';
 ```
 
 ## API Reference
@@ -249,6 +249,39 @@ random.stringInt(5);               // '12345'
 const generateId = random.nanoidFactory(8);
 generateId();                      // 'a1b2c3d4'
 generateId();                      // '5e6f7890'
+```
+
+### Async Utilities
+
+#### `sleep(ms: number): Promise<void>`
+
+Creates a promise that resolves after the specified number of milliseconds, useful for adding delays in async functions.
+
+**Examples:**
+```typescript
+import { sleep } from '@ooneex/utils';
+
+// Wait for 1 second
+await sleep(1000);
+
+// Use in async function
+async function delayedOperation() {
+  console.log('Starting...');
+  await sleep(2000);  // Wait 2 seconds
+  console.log('Done!');
+}
+
+// Use with other async operations
+async function retryWithDelay() {
+  for (let i = 0; i < 3; i++) {
+    try {
+      await someOperation();
+      break;
+    } catch (error) {
+      if (i < 2) await sleep(1000); // Wait 1 second before retry
+    }
+  }
+}
 ```
 
 ## Type Safety

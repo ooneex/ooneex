@@ -1,12 +1,4 @@
-const METHODS = [
-  "GET",
-  "POST",
-  "PUT",
-  "DELETE",
-  "PATCH",
-  "OPTIONS",
-  "HEAD",
-] as const;
+const METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"] as const;
 
 export type MethodType = (typeof METHODS)[number];
 

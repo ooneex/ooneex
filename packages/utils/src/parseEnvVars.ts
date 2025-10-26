@@ -1,9 +1,7 @@
 import { parseString } from "./parseString";
 import { toCamelCase } from "./toCamelCase";
 
-export const parseEnvVars = <T = Record<string, unknown>>(
-  envs: Record<string, unknown>,
-): T => {
+export const parseEnvVars = <T = Record<string, unknown>>(envs: Record<string, unknown>): T => {
   const vars: Record<string, unknown> = {};
 
   for (const key in envs) {

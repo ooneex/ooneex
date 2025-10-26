@@ -6,7 +6,7 @@ const DIGITS_REGEXP = /\p{N}+/u; // e.g. 123
 
 const WORD_OR_NUMBER_REGEXP = new RegExp(
   `${CAPITALIZED_WORD_REGEXP.source}|${ACRONYM_REGEXP.source}|${LOWERCASED_WORD_REGEXP.source}|${ANY_LETTERS.source}|${DIGITS_REGEXP.source}`,
-  'gu',
+  "gu",
 );
 
 export const splitToWords = (input: string) => {

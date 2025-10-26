@@ -8,10 +8,10 @@
   ],
   "scripts": {
     "build": "bun --workspaces run build",
-    "lint": "bun --workspaces run lint",
     "fmt": "bunx biome format --write",
-    "test": "bun --workspaces run test",
-    "test:watch": "bun --workspaces run test:watch",
+    "lint": "bunx biome lint",
+    "test": "bun test tests",
+    "test:watch": "bun test tests --watch",
     "publish": "bun --workspaces run publish",
     "prepare": "husky"
   },

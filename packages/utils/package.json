@@ -7,13 +7,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --outfile dist/index.d.ts",
+    "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --target ES2022 --moduleResolution bundler --outfile dist/index.d.ts",
     "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
-    "lint": "bunx biome lint",
-    "test": "bun test tests",
-    "test:watch": "bun test tests --watch",
-    "test:coverage": "bun test tests --coverage",
-    "test:coverage:watch": "bun test tests --coverage --watch",
     "publish": "bun run build && cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
   },
   "devDependencies": {},

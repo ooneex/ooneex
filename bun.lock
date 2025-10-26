@@ -12,12 +12,24 @@
         "typescript": "^5",
       },
     },
+    "packages/analytics": {
+      "name": "@ooneex/analytics",
+      "version": "0.0.1",
+    },
+    "packages/auth": {
+      "name": "@ooneex/auth",
+      "version": "0.0.1",
+    },
     "packages/container": {
       "name": "@ooneex/container",
       "version": "0.0.1",
     },
     "packages/core": {
       "name": "@ooneex/core",
+      "version": "0.0.1",
+    },
+    "packages/docker": {
+      "name": "@ooneex/docker",
       "version": "0.0.1",
     },
     "packages/exception": {
@@ -40,8 +52,24 @@
       "name": "@ooneex/http-response",
       "version": "0.0.1",
     },
+    "packages/logger": {
+      "name": "@ooneex/logger",
+      "version": "0.0.1",
+    },
+    "packages/mailer": {
+      "name": "@ooneex/mailer",
+      "version": "0.0.1",
+    },
     "packages/migrations": {
       "name": "@ooneex/migrations",
+      "version": "0.0.1",
+    },
+    "packages/repository": {
+      "name": "@ooneex/repository",
+      "version": "0.0.1",
+    },
+    "packages/role": {
+      "name": "@ooneex/role",
       "version": "0.0.1",
     },
     "packages/routing": {
@@ -62,6 +90,10 @@
     },
     "packages/url": {
       "name": "@ooneex/url",
+      "version": "0.0.1",
+    },
+    "packages/user": {
+      "name": "@ooneex/user",
       "version": "0.0.1",
     },
     "packages/utils": {
@@ -95,9 +127,15 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.0", "", { "os": "win32", "cpu": "x64" }, "sha512-zOCYmCRVkWXc9v8P7OLbLlGGMxQTKMvi+5IC4v7O8DkjLCOHRzRVK/Lno2pGZNo0lzKM60pcQOhH8HVkXMQdFg=="],
 
+    "@ooneex/analytics": ["@ooneex/analytics@workspace:packages/analytics"],
+
+    "@ooneex/auth": ["@ooneex/auth@workspace:packages/auth"],
+
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
 
     "@ooneex/core": ["@ooneex/core@workspace:packages/core"],
+
+    "@ooneex/docker": ["@ooneex/docker@workspace:packages/docker"],
 
     "@ooneex/exception": ["@ooneex/exception@workspace:packages/exception"],
 
@@ -109,7 +147,15 @@
 
     "@ooneex/http-response": ["@ooneex/http-response@workspace:packages/http-response"],
 
+    "@ooneex/logger": ["@ooneex/logger@workspace:packages/logger"],
+
+    "@ooneex/mailer": ["@ooneex/mailer@workspace:packages/mailer"],
+
     "@ooneex/migrations": ["@ooneex/migrations@workspace:packages/migrations"],
+
+    "@ooneex/repository": ["@ooneex/repository@workspace:packages/repository"],
+
+    "@ooneex/role": ["@ooneex/role@workspace:packages/role"],
 
     "@ooneex/routing": ["@ooneex/routing@workspace:packages/routing"],
 
@@ -120,6 +166,8 @@
     "@ooneex/storage": ["@ooneex/storage@workspace:packages/storage"],
 
     "@ooneex/url": ["@ooneex/url@workspace:packages/url"],
+
+    "@ooneex/user": ["@ooneex/user@workspace:packages/user"],
 
     "@ooneex/utils": ["@ooneex/utils@workspace:packages/utils"],
 

@@ -43,6 +43,7 @@
       "nursery": {},
       "style": {
         "noParameterAssign": "off",
+        "useTemplate": "error",
         "useImportType": "error",
         "useAsConstAssertion": "error",
         "useDefaultParameterLast": "error",

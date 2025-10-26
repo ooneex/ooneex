@@ -10,7 +10,8 @@
     "build": "bun --workspaces run build",
     "lint": "bun --workspaces run lint",
     "fmt": "bunx biome format --write",
-    "test": "bun --workspaces run test"
+    "test": "bun --workspaces run test",
+    "publish": "bun --workspaces run publish"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.0",

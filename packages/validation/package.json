@@ -1,0 +1,21 @@
+{
+  "name": "@ooneex/validation",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --outfile dist/index.d.ts",
+    "build": "bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
+    "lint": "bunx biome lint",
+    "test": "bun test tests",
+    "test:watch": "bun test tests --watch",
+    "test:coverage": "bun test tests --coverage",
+    "test:coverage:watch": "bun test tests --coverage --watch",
+    "publish": "cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
+  },
+  "devDependencies": {},
+  "peerDependencies": {}
+}

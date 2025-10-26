@@ -24,7 +24,7 @@
         "noUnusedVariables": "error"
       },
       "suspicious": {
-        "noExplicitAny": "off",
+        "noExplicitAny": "error",
         "noConsole": "error",
         "noArrayIndexKey": "off",
         "noControlCharactersInRegex": "off"

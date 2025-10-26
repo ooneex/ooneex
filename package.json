@@ -11,6 +11,7 @@
     "lint": "bun --workspaces run lint",
     "fmt": "bunx biome format --write",
     "test": "bun --workspaces run test",
+    "test:watch": "bun --workspaces run test:watch",
     "publish": "bun --workspaces run publish",
     "prepare": "husky"
   },

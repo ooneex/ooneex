@@ -17,5 +17,8 @@
     "publish": "cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
   },
   "devDependencies": {},
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "dependencies": {
+    "nanoid": "^5.1.6"
+  }
 }

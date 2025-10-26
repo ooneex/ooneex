@@ -1,8 +1,11 @@
 export { capitalizeWord } from "./capitalizeWord";
 export { formatRelativeNumber } from "./formatRelativeNumber";
+export { millisecondsToHMS } from "./millisecondsToHMS";
 export { parseEnvVars } from "./parseEnvVars";
 export { parseString } from "./parseString";
 export { random } from "./random";
+export { secondsToHMS } from "./secondsToHMS";
+export { secondsToMS } from "./secondsToMS";
 export { splitToWords } from "./splitToWords";
 export { toCamelCase } from "./toCamelCase";
 export { toKebabCase } from "./toKebabCase";

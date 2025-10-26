@@ -1,0 +1,31 @@
+name: Package Utils
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  release-package-utils:
+    name: Release new version
+    needs: lint-test
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0
+    if: ${{ startsWith(github.ref, 'refs/tags') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun --workspace install
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Publish package on NPM
+        run: cd packages/utils && bun run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

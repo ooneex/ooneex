@@ -1,0 +1,20 @@
+{
+  "name": "@ooneex/http-status",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
+    "publish": "bun run build && cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
+  },
+  "devDependencies": {},
+  "peerDependencies": {},
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ]
+}

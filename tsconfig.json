@@ -3,7 +3,7 @@
     // Environment setup & latest features
     "lib": ["ES2022", "DOM"],
     "target": "ES2022",
-    "module": "Preserve",
+    "module": "ESNext",
     "moduleDetection": "force",
     "allowJs": true,
 

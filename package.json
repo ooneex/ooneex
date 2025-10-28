@@ -1,11 +1,15 @@
 {
   "name": "ooneex",
-  "private": true,
   "module": "index.ts",
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+  "devDependencies": {
+    "@biomejs/biome": "2.3.0",
+    "@types/bun": "latest",
+    "husky": "^9.1.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
   "scripts": {
     "build": "bun --workspaces run build",
     "fmt": "bunx biome format --write",
@@ -15,12 +19,8 @@
     "publish": "bun --workspaces run publish",
     "prepare": "husky"
   },
-  "devDependencies": {
-    "@biomejs/biome": "2.3.0",
-    "@types/bun": "latest",
-    "husky": "^9.1.7"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ]
 }

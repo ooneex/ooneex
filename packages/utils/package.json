@@ -1,15 +1,24 @@
 {
   "name": "@ooneex/utils",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+
   "license": "MIT",
   "scripts": {
-    "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --target ES2022 --moduleResolution bundler --outfile dist/index.d.ts",
+    "compile": "tsc -p tsconfig.build.json",
     "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
-    "publish": "bun run build && cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
+    "publish": "bun run build && npm publish --access public"
   },
   "devDependencies": {},
   "peerDependencies": {},

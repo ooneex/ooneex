@@ -1,5 +1,5 @@
 {
-  "name": "@ooneex/storage",
+  "name": "@ooneex/controller",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",

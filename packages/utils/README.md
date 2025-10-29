@@ -1,335 +1,422 @@
 # @ooneex/utils
 
-A comprehensive collection of utility functions for common programming tasks including string manipulation, number formatting, time conversion, and more.
+A comprehensive TypeScript/JavaScript utility library providing essential helper functions for modern web development. This package includes string manipulation, time formatting, data conversion, and other commonly needed utilities.
+
+![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
+![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
+![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
+![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
+![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+## Features
+
+✅ **String Manipulation** - Case conversion, word splitting, and capitalization
+
+✅ **Time Utilities** - Format seconds/milliseconds to human-readable formats
+
+✅ **Data Conversion** - Parse strings to appropriate types, DataURL to File conversion
+
+✅ **Random Generation** - Generate random IDs and strings with customizable patterns
+
+✅ **Environment Parsing** - Parse environment variables with type safety
+
+✅ **Number Formatting** - Format numbers with internationalization support
+
+✅ **Type-Safe** - Full TypeScript support with proper type definitions
+
+✅ **Lightweight** - Minimal dependencies and optimized bundle size
+
+✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+
+✅ **Zero Config** - Works out of the box with sensible defaults
 
 ## Installation
 
+### Bun
+```bash
+bun add @ooneex/utils
+```
+
+### pnpm
+```bash
+pnpm add @ooneex/utils
+```
+
+### Yarn
+```bash
+yarn add @ooneex/utils
+```
+
+### npm
 ```bash
 npm install @ooneex/utils
-# or
-bun add @ooneex/utils
-# or
-yarn add @ooneex/utils
-# or
-pnpm add @ooneex/utils
 ```
 
 ## Usage
 
+### String Utilities
+
 ```typescript
-import { capitalizeWord, formatRelativeNumber, random, sleep, dataURLtoFile } from '@ooneex/utils';
+import {
+  capitalizeWord,
+  toCamelCase,
+  toPascalCase,
+  toKebabCase,
+  splitToWords,
+  trim
+} from '@ooneex/utils';
+
+// Capitalize words
+console.log(capitalizeWord('hello')); // 'Hello'
+console.log(capitalizeWord('WORLD')); // 'World'
+
+// Case conversions
+console.log(toCamelCase('hello world')); // 'helloWorld'
+console.log(toPascalCase('hello world')); // 'HelloWorld'
+console.log(toKebabCase('Hello World')); // 'hello-world'
+
+// Split strings into words
+console.log(splitToWords('hello-world_example')); // ['hello', 'world', 'example']
+
+// Advanced trimming
+console.log(trim('  hello world  ')); // 'hello world'
+console.log(trim('[hello]', '\\[|\\]')); // 'hello'
+```
+
+### Time Formatting
+
+```typescript
+import {
+  secondsToHMS,
+  secondsToMS,
+  millisecondsToHMS,
+  sleep
+} from '@ooneex/utils';
+
+// Convert seconds to time formats
+console.log(secondsToHMS(3661)); // '1:01:01'
+console.log(secondsToMS(125)); // '2:05'
+
+// Convert milliseconds to HMS
+console.log(millisecondsToHMS(3661000)); // '1:01:01'
+
+// Async sleep utility
+await sleep(1000); // Wait for 1 second
+```
+
+### Data Conversion
+
+```typescript
+import { parseString, dataURLtoFile } from '@ooneex/utils';
+
+// Parse strings to appropriate types
+console.log(parseString('123')); // 123 (number)
+console.log(parseString('12.5')); // 12.5 (number)
+console.log(parseString('true')); // true (boolean)
+console.log(parseString('null')); // null
+console.log(parseString('[1, 2, 3]')); // [1, 2, 3] (array)
+console.log(parseString('{"key": "value"}')); // {key: "value"} (object)
+
+// Convert DataURL to File
+const dataURL = 'data:text/plain;base64,SGVsbG8gV29ybGQ=';
+const file = dataURLtoFile(dataURL, 'hello.txt');
+console.log(file.name); // 'hello.txt'
+console.log(file.type); // 'text/plain'
+```
+
+### Random Generation
+
+```typescript
+import { random } from '@ooneex/utils';
+
+// Generate random hex IDs
+console.log(random.nanoid()); // 'a1b2c3d4e5' (10 chars by default)
+console.log(random.nanoid(8)); // 'a1b2c3d4' (8 chars)
+
+// Generate numeric strings
+console.log(random.stringInt()); // '1234567890' (10 digits by default)
+console.log(random.stringInt(6)); // '123456' (6 digits)
+
+// Create custom generators
+const customId = random.nanoidFactory(12);
+console.log(customId()); // 12-character hex string
+console.log(customId(8)); // 8-character hex string (overrides factory default)
+```
+
+### Number Formatting
+
+```typescript
+import { formatRelativeNumber } from '@ooneex/utils';
+
+// Format large numbers
+console.log(formatRelativeNumber(1234)); // '1.2K'
+console.log(formatRelativeNumber(1234567)); // '1.2M'
+console.log(formatRelativeNumber(1234567890)); // '1.2B'
+
+// Custom precision and locale
+console.log(formatRelativeNumber(1234.56, { precision: 2 })); // '1.23K'
+console.log(formatRelativeNumber(1234, { lang: 'de-DE' })); // '1,2 Tsd.'
+```
+
+### Environment Variables
+
+```typescript
+import { parseEnvVars } from '@ooneex/utils';
+
+// Assuming process.env contains:
+// API_PORT=3000
+// DEBUG=true
+// API_ENDPOINTS=["/api/v1", "/api/v2"]
+
+const config = parseEnvVars({
+  port: 'API_PORT',
+  debug: 'DEBUG',
+  endpoints: 'API_ENDPOINTS'
+});
+
+console.log(config);
+// {
+//   port: 3000,        // parsed as number
+//   debug: true,       // parsed as boolean
+//   endpoints: ["/api/v1", "/api/v2"]  // parsed as array
+// }
 ```
 
 ## API Reference
 
-### File Utilities
-
-#### `dataURLtoFile(dataurl: string, filename: string): File`
-
-Converts a data URL string into a File object, useful for handling base64-encoded file data.
-
-**Examples:**
-```typescript
-import { dataURLtoFile } from '@ooneex/utils';
-
-// Convert a data URL to a File object
-const dataUrl = 'data:text/plain;base64,SGVsbG8gV29ybGQ=';
-const file = dataURLtoFile(dataUrl, 'hello.txt');
-
-// Use with image data URLs
-const imageDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB...';
-const imageFile = dataURLtoFile(imageDataUrl, 'image.png');
-
-// The resulting File object can be used in FormData or uploaded
-const formData = new FormData();
-formData.append('file', file);
-```
-
 ### String Utilities
 
 #### `capitalizeWord(word: string): string`
+Capitalizes the first letter of a word and converts the rest to lowercase.
 
-Capitalizes the first letter of a word and makes the rest lowercase.
-
-**Examples:**
+**Example:**
 ```typescript
-import { capitalizeWord } from '@ooneex/utils';
-
-capitalizeWord('hello');      // 'Hello'
-capitalizeWord('WORLD');      // 'World'
-capitalizeWord('javaScript'); // 'Javascript'
-capitalizeWord('');           // ''
-```
-
-#### `splitToWords(input: string): string[]`
-
-Splits a string into an array of words, handling camelCase, PascalCase, kebab-case, snake_case, and more.
-
-**Examples:**
-```typescript
-import { splitToWords } from '@ooneex/utils';
-
-splitToWords('helloWorld');           // ['hello', 'World']
-splitToWords('PascalCaseString');     // ['Pascal', 'Case', 'String']
-splitToWords('kebab-case-string');    // ['kebab', 'case', 'string']
-splitToWords('snake_case_string');    // ['snake', 'case', 'string']
-splitToWords('HTMLElement123');       // ['HTML', 'Element', '123']
-splitToWords('URLParser');            // ['URL', 'Parser']
+capitalizeWord('hello'); // 'Hello'
+capitalizeWord('WORLD'); // 'World'
 ```
 
 #### `toCamelCase(input: string): string`
-
 Converts a string to camelCase.
 
-**Examples:**
+**Example:**
 ```typescript
-import { toCamelCase } from '@ooneex/utils';
-
-toCamelCase('hello world');           // 'helloWorld'
-toCamelCase('PascalCaseString');      // 'pascalCaseString'
-toCamelCase('kebab-case-string');     // 'kebabCaseString'
-toCamelCase('snake_case_string');     // 'snakeCaseString'
-toCamelCase('  SPACED  STRING  ');    // 'spacedString'
+toCamelCase('hello world'); // 'helloWorld'
+toCamelCase('hello-world_example'); // 'helloWorldExample'
 ```
 
 #### `toPascalCase(input: string): string`
-
 Converts a string to PascalCase.
 
-**Examples:**
+**Example:**
 ```typescript
-import { toPascalCase } from '@ooneex/utils';
-
-toPascalCase('hello world');          // 'HelloWorld'
-toPascalCase('camelCaseString');      // 'CamelCaseString'
-toPascalCase('kebab-case-string');    // 'KebabCaseString'
-toPascalCase('snake_case_string');    // 'SnakeCaseString'
-toPascalCase('  spaced  string  ');   // 'SpacedString'
+toPascalCase('hello world'); // 'HelloWorld'
+toPascalCase('hello-world_example'); // 'HelloWorldExample'
 ```
 
 #### `toKebabCase(input: string): string`
-
 Converts a string to kebab-case.
 
-**Examples:**
+**Example:**
 ```typescript
-import { toKebabCase } from '@ooneex/utils';
-
-toKebabCase('Hello World');           // 'hello-world'
-toKebabCase('camelCaseString');       // 'camel-case-string'
-toKebabCase('PascalCaseString');      // 'pascal-case-string'
-toKebabCase('snake_case_string');     // 'snake-case-string'
-toKebabCase('  SPACED  STRING  ');    // 'spaced-string'
+toKebabCase('Hello World'); // 'hello-world'
+toKebabCase('helloWorldExample'); // 'hello-world-example'
 ```
 
-#### `trim(text: string, char?: string): string`
+#### `splitToWords(input: string): string[]`
+Splits a string into an array of words, handling various separators.
 
-Trims specified characters from the beginning and end of a string. Defaults to trimming whitespace.
-
-**Examples:**
+**Example:**
 ```typescript
-import { trim } from '@ooneex/utils';
-
-trim('  hello world  ');              // 'hello world'
-trim('...hello world...', '.');       // 'hello world'
-trim('[hello world]', '[');           // 'hello world]'
-trim('[hello world]', '\\[|\\]');     // 'hello world'
-trim('***hello world***', '*');       // 'hello world'
+splitToWords('hello-world_example'); // ['hello', 'world', 'example']
+splitToWords('camelCaseString'); // ['camel', 'Case', 'String']
 ```
 
-### Parsing Utilities
+#### `trim(input: string, pattern?: string): string`
+Trims whitespace or custom patterns from a string.
+
+**Parameters:**
+- `input` - The string to trim
+- `pattern` - Optional regex pattern to trim (default: whitespace)
+
+**Example:**
+```typescript
+trim('  hello  '); // 'hello'
+trim('[hello]', '\\[|\\]'); // 'hello'
+```
+
+### Time Utilities
+
+#### `secondsToHMS(seconds: number): string`
+Converts seconds to HH:MM:SS format.
+
+**Example:**
+```typescript
+secondsToHMS(3661); // '1:01:01'
+secondsToHMS(125); // '0:02:05'
+```
+
+#### `secondsToMS(seconds: number): string`
+Converts seconds to MM:SS format.
+
+**Example:**
+```typescript
+secondsToMS(125); // '2:05'
+secondsToMS(61); // '1:01'
+```
+
+#### `millisecondsToHMS(milliseconds: number): string`
+Converts milliseconds to HH:MM:SS format.
+
+**Example:**
+```typescript
+millisecondsToHMS(3661000); // '1:01:01'
+millisecondsToHMS(125000); // '0:02:05'
+```
+
+#### `sleep(ms: number): Promise<void>`
+Async utility to pause execution for specified milliseconds.
+
+**Example:**
+```typescript
+await sleep(1000); // Wait for 1 second
+await sleep(500);  // Wait for 500 milliseconds
+```
+
+### Data Conversion
 
 #### `parseString<T = unknown>(text: string): T`
+Intelligently parses a string to its appropriate type.
 
-Intelligently parses a string into appropriate JavaScript types (number, boolean, array, object, etc.).
+**Supported conversions:**
+- Numbers (integers and floats)
+- Booleans (`'true'`/`'false'`)
+- `null`
+- Arrays (JSON format)
+- Objects (JSON format)
+- Falls back to original string
 
-**Examples:**
+**Example:**
 ```typescript
-import { parseString } from '@ooneex/utils';
-
-parseString('123');                   // 123 (number)
-parseString('45.67');                 // 45.67 (number)
-parseString('true');                  // true (boolean)
-parseString('false');                 // false (boolean)
-parseString('null');                  // null
-parseString('[1, 2, 3]');             // [1, 2, 3] (array)
-parseString('{"key": "value"}');      // { key: "value" } (object)
-parseString('hello');                 // 'hello' (string)
-parseString('[apple, banana, 123]'); // ['apple', 'banana', 123]
+parseString('123'); // 123
+parseString('12.5'); // 12.5
+parseString('true'); // true
+parseString('[1, 2, 3]'); // [1, 2, 3]
+parseString('invalid'); // 'invalid'
 ```
 
-#### `parseEnvVars<T = Record<string, unknown>>(envs: Record<string, unknown>): T`
+#### `dataURLtoFile(dataURL: string, filename: string): File`
+Converts a Data URL to a File object.
 
-Parses environment variables, converting keys to camelCase and values to appropriate types.
+**Parameters:**
+- `dataURL` - The Data URL string
+- `filename` - The desired filename for the File object
 
-**Examples:**
+**Example:**
 ```typescript
-import { parseEnvVars } from '@ooneex/utils';
+const dataURL = 'data:text/plain;base64,SGVsbG8=';
+const file = dataURLtoFile(dataURL, 'hello.txt');
+```
 
-const envVars = {
-  'DATABASE_URL': 'postgresql://localhost:5432/db',
-  'PORT': '3000',
-  'ENABLE_LOGGING': 'true',
-  'MAX_CONNECTIONS': '100'
-};
+### Random Generation
 
-const parsed = parseEnvVars(envVars);
-// {
-//   databaseUrl: 'postgresql://localhost:5432/db',
-//   port: 3000,
-//   enableLogging: true,
-//   maxConnections: 100
-// }
+#### `random.nanoid(size?: number): string`
+Generates a random hexadecimal ID.
+
+**Parameters:**
+- `size` - Optional length (default: 10)
+
+**Example:**
+```typescript
+random.nanoid(); // 'a1b2c3d4e5'
+random.nanoid(8); // 'a1b2c3d4'
+```
+
+#### `random.stringInt(size?: number): string`
+Generates a random numeric string.
+
+**Parameters:**
+- `size` - Optional length (default: 10)
+
+**Example:**
+```typescript
+random.stringInt(); // '1234567890'
+random.stringInt(6); // '123456'
+```
+
+#### `random.nanoidFactory(size?: number): (size?: number) => string`
+Creates a factory function for generating IDs with a default size.
+
+**Parameters:**
+- `size` - Default length for generated IDs
+
+**Returns:** Function that generates IDs
+
+**Example:**
+```typescript
+const generateId = random.nanoidFactory(12);
+generateId(); // 12-character ID
+generateId(8); // 8-character ID (overrides default)
 ```
 
 ### Number Formatting
 
 #### `formatRelativeNumber(num: number, config?: { precision?: number; lang?: string }): string`
-
 Formats numbers using compact notation (K, M, B, etc.).
 
-**Examples:**
-```typescript
-import { formatRelativeNumber } from '@ooneex/utils';
+**Parameters:**
+- `num` - The number to format
+- `config.precision` - Decimal places (default: 1)
+- `config.lang` - Locale for formatting (default: 'en-GB')
 
-formatRelativeNumber(1234);                           // '1.2K'
-formatRelativeNumber(1234567);                        // '1.2M'
-formatRelativeNumber(1234567890);                     // '1.2B'
-formatRelativeNumber(1234, { precision: 0 });         // '1K'
-formatRelativeNumber(1234, { precision: 2 });         // '1.23K'
-formatRelativeNumber(1234, { lang: 'de' });           // '1,2 Tsd.'
-formatRelativeNumber(1500000, { lang: 'fr' });        // '1,5 M'
+**Example:**
+```typescript
+formatRelativeNumber(1234); // '1.2K'
+formatRelativeNumber(1234567, { precision: 2 }); // '1.23M'
+formatRelativeNumber(1234, { lang: 'de-DE' }); // '1,2 Tsd.'
 ```
 
-### Time Conversion
+### Environment Variables
 
-#### `millisecondsToHMS(ms: number): string`
+#### `parseEnvVars<T>(mapping: Record<keyof T, string>): T`
+Parses environment variables using intelligent type conversion.
 
-Converts milliseconds to HH:MM:SS or MM:SS format.
+**Parameters:**
+- `mapping` - Object mapping result keys to environment variable names
 
-**Examples:**
+**Returns:** Object with parsed values
+
+**Example:**
 ```typescript
-import { millisecondsToHMS } from '@ooneex/utils';
-
-millisecondsToHMS(30000);          // '30'
-millisecondsToHMS(90000);          // '1:30'
-millisecondsToHMS(3661000);        // '1:01:01'
-millisecondsToHMS(45000);          // '45'
-millisecondsToHMS(125000);         // '2:05'
-millisecondsToHMS(7323000);        // '2:02:03'
-```
-
-#### `secondsToHMS(seconds: number): string`
-
-Converts seconds to HH:MM:SS or MM:SS format.
-
-**Examples:**
-```typescript
-import { secondsToHMS } from '@ooneex/utils';
-
-secondsToHMS(30);                  // '30'
-secondsToHMS(90);                  // '1:30'
-secondsToHMS(3661);                // '1:01:01'
-secondsToHMS(45);                  // '45'
-secondsToHMS(125);                 // '2:05'
-secondsToHMS(7323);                // '2:02:03'
-```
-
-#### `secondsToMS(seconds: number): string`
-
-Converts seconds to MM:SS format.
-
-**Examples:**
-```typescript
-import { secondsToMS } from '@ooneex/utils';
-
-secondsToMS(30);                   // '0:30'
-secondsToMS(90);                   // '1:30'
-secondsToMS(125);                  // '2:05'
-secondsToMS(3661);                 // '61:01'
-```
-
-### Random Generation
-
-#### `random`
-
-Object containing various random string generation functions.
-
-**Examples:**
-```typescript
-import { random } from '@ooneex/utils';
-
-// Generate random hexadecimal string (default 10 characters)
-random.nanoid();                   // 'a1b2c3d4e5'
-random.nanoid(5);                  // '1a2b3'
-random.nanoid(16);                 // '1234567890abcdef'
-
-// Generate random numeric string
-random.stringInt();                // '1234567890'
-random.stringInt(5);               // '12345'
-
-// Create a factory function for consistent length
-const generateId = random.nanoidFactory(8);
-generateId();                      // 'a1b2c3d4'
-generateId();                      // '5e6f7890'
-```
-
-### Async Utilities
-
-#### `sleep(ms: number): Promise<void>`
-
-Creates a promise that resolves after the specified number of milliseconds, useful for adding delays in async functions.
-
-**Examples:**
-```typescript
-import { sleep } from '@ooneex/utils';
-
-// Wait for 1 second
-await sleep(1000);
-
-// Use in async function
-async function delayedOperation() {
-  console.log('Starting...');
-  await sleep(2000);  // Wait 2 seconds
-  console.log('Done!');
-}
-
-// Use with other async operations
-async function retryWithDelay() {
-  for (let i = 0; i < 3; i++) {
-    try {
-      await someOperation();
-      break;
-    } catch (error) {
-      if (i < 2) await sleep(1000); // Wait 1 second before retry
-    }
-  }
-}
-```
-
-## Type Safety
-
-All functions are fully typed with TypeScript, providing excellent IDE support and compile-time type checking.
-
-```typescript
-// Generic type support
-const parsedNumber = parseString<number>('123');     // Type: number
-const parsedArray = parseString<string[]>('[a,b,c]'); // Type: string[]
-
-// Environment variables with custom type
-interface AppConfig {
-  port: number;
-  databaseUrl: string;
-  enableLogging: boolean;
-}
-
-const config = parseEnvVars<AppConfig>(process.env);
+const config = parseEnvVars({
+  port: 'API_PORT',
+  debug: 'DEBUG_MODE'
+});
+// Automatically parses types based on string values
 ```
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### Development Setup
+
+1. Clone the repository
+2. Install dependencies: `bun install`
+3. Run tests: `bun test`
+4. Build the project: `bun run build`
+
+### Guidelines
+
+- Write tests for new features
+- Follow the existing code style
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
+
+---
+
+Made with ❤️ by the Ooneex team

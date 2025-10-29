@@ -164,22 +164,28 @@ console.log(formatRelativeNumber(1234, { lang: 'de-DE' })); // '1,2 Tsd.'
 ```typescript
 import { parseEnvVars } from '@ooneex/utils';
 
-// Assuming process.env contains:
-// API_PORT=3000
-// DEBUG=true
-// API_ENDPOINTS=["/api/v1", "/api/v2"]
+// Parse environment variables with automatic type conversion and key transformation
+const envVars = {
+  DATABASE_URL: "postgres://localhost:5432/db",
+  API_PORT: "3000",
+  DEBUG_MODE: "true",
+  MAX_CONNECTIONS: "100",
+  ALLOWED_ORIGINS: "[localhost, example.com, api.example.com]",
+  FEATURE_FLAGS: '{"analytics": true, "logging": false}',
+  APP_VERSION: "1.2.3"
+};
 
-const config = parseEnvVars({
-  port: 'API_PORT',
-  debug: 'DEBUG',
-  endpoints: 'API_ENDPOINTS'
-});
+const config = parseEnvVars(envVars);
 
 console.log(config);
 // {
-//   port: 3000,        // parsed as number
-//   debug: true,       // parsed as boolean
-//   endpoints: ["/api/v1", "/api/v2"]  // parsed as array
+//   databaseUrl: "postgres://localhost:5432/db",     // SCREAMING_SNAKE_CASE → camelCase
+//   apiPort: 3000,                                   // string → number
+//   debugMode: true,                                 // string → boolean
+//   maxConnections: 100,                             // string → number
+//   allowedOrigins: ["localhost", "example.com", "api.example.com"],  // array parsing
+//   featureFlags: { analytics: true, logging: false }, // JSON parsing
+//   appVersion: "1.2.3"                              // stays as string
 // }
 ```
 
@@ -378,21 +384,33 @@ formatRelativeNumber(1234, { lang: 'de-DE' }); // '1,2 Tsd.'
 
 ### Environment Variables
 
-#### `parseEnvVars<T>(mapping: Record<keyof T, string>): T`
-Parses environment variables using intelligent type conversion.
+#### `parseEnvVars<T>(envVars: Record<string, string>): T`
+Parses environment variables with automatic key transformation (SCREAMING_SNAKE_CASE to camelCase) and intelligent type conversion.
 
 **Parameters:**
-- `mapping` - Object mapping result keys to environment variable names
+- `envVars` - Object with SCREAMING_SNAKE_CASE keys and string values
 
-**Returns:** Object with parsed values
+**Returns:** Object with camelCase keys and parsed values
+
+**Type conversions:**
+- Numbers (integers and floats)
+- Booleans (`'true'`/`'false'`, case-insensitive)
+- `null` (case-insensitive)
+- Arrays (bracket notation: `[item1, item2, item3]`)
+- Objects (valid JSON strings)
+- Falls back to original string
 
 **Example:**
 ```typescript
-const config = parseEnvVars({
-  port: 'API_PORT',
-  debug: 'DEBUG_MODE'
-});
-// Automatically parses types based on string values
+const envVars = {
+  API_PORT: "3000",           // → apiPort: 3000
+  DEBUG_MODE: "true",         // → debugMode: true
+  ALLOWED_IPS: "[127.0.0.1, localhost]",  // → allowedIps: ["127.0.0.1", "localhost"]
+  CONFIG_JSON: '{"timeout": 5000}',       // → configJson: {timeout: 5000}
+  DATABASE_URL: "postgres://localhost"    // → databaseUrl: "postgres://localhost"
+};
+
+const config = parseEnvVars(envVars);
 ```
 
 ## License

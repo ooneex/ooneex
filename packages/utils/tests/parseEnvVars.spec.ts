@@ -12,7 +12,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         databaseUrl: "postgres://localhost:5432/db",
         apiPort: 3000,
         debugMode: true,
@@ -27,7 +27,7 @@ describe("parseEnvVars", () => {
     test("should handle single environment variable", () => {
       const input = { PORT: "8080" };
       const result = parseEnvVars(input);
-      expect(result).toEqual({ port: 8080 });
+      expect(result as unknown).toEqual({ port: 8080 });
     });
   });
 
@@ -57,7 +57,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         apiV2Url: "https://api.example.com/v2",
         dbVersion1: "1.0.0",
         port3000: 3000,
@@ -73,7 +73,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         apiUrl: "https://api.example.com",
         dbName: "mydb",
         valueWithSpaces: "test",
@@ -89,7 +89,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         apiUrl: "https://api.example.com",
         databasePort: 5432,
         isEnabled: true,
@@ -108,7 +108,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         port: 3000,
         timeout: 5000,
         maxConnections: 100,
@@ -125,7 +125,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         rate: 1.5,
         percentage: 99.99,
         smallDecimal: 0.001,
@@ -143,7 +143,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         enableFeature: true,
         debugMode: false,
         isProduction: true,
@@ -161,7 +161,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         nullableField: null,
         emptyConfig: null,
         caseMixed: null,
@@ -178,7 +178,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         allowedOrigins: ["localhost", "127.0.0.1", "example.com"],
         ports: [3000, 4000, 5000],
         features: [true, false, true],
@@ -195,7 +195,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         configObject: { host: "localhost", port: 3000 },
         userData: { name: "John", age: 30, active: true },
         nestedJson: { db: { host: "localhost", port: 5432 } },
@@ -311,7 +311,7 @@ describe("parseEnvVars", () => {
         UNDEFINED_VAL: undefined as unknown,
       };
 
-      const result = parseEnvVars<{ stringVal: string }>(input);
+      const result = parseEnvVars<{ stringVal: string }>(input as Record<string, string>);
 
       // Since parseString expects strings, non-string values might behave unexpectedly
       // But the function should still work
@@ -334,7 +334,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars<Config>(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         apiUrl: "https://api.example.com",
         port: 3000,
         debugMode: true,
@@ -372,7 +372,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         nodeEnv: "production",
         databaseUrl: "postgres://user:pass@localhost:5432/mydb",
         apiPort: 3000,
@@ -398,7 +398,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         awsRegion: "us-east-1",
         awsAccessKeyId: "AKIAIOSFODNN7EXAMPLE",
         awsSecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
@@ -420,7 +420,7 @@ describe("parseEnvVars", () => {
 
       const result = parseEnvVars(input);
 
-      expect(result).toEqual({
+      expect(result as unknown).toEqual({
         dockerHost: "unix:///var/run/docker.sock",
         composeProjectName: "my-app",
         restartPolicy: "unless-stopped",

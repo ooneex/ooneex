@@ -47,61 +47,42 @@ export type CharsetType = "ISO-8859-1" | "7-BIT" | "UTF-8" | "UTF-16" | "US-ASCI
 
 export interface IHeader extends IReadonlyHeader {
   readonly native: Headers;
-  setCacheControl: (value: string) => IHeader;
-  setEtag: (value: string) => IHeader;
-  setAuthorization: (value: string) => IHeader;
-  setBasicAuth: (token: string) => IHeader;
-  setBearerToken: (token: string) => IHeader;
-  setBlobType: (charset?: CharsetType) => IHeader;
-  setJson: (charset?: CharsetType) => IHeader;
-  setStream: (charset?: CharsetType) => IHeader;
-  setFormData: (charset?: CharsetType) => IHeader;
-  setForm: (charset?: CharsetType) => IHeader;
-  setHtml: (charset?: CharsetType) => IHeader;
-  setText: (charset?: CharsetType) => IHeader;
-  contentType: (value: MimeType, charset?: CharsetType) => IHeader;
-  contentDisposition: (value: string) => IHeader;
-  contentLength: (length: number) => IHeader;
-  setCustom: (value: string) => IHeader;
+
+  // Core methods
   add: (name: HeaderFieldType, value: string) => IHeader;
   remove: (name: HeaderFieldType) => IHeader;
   set: (name: HeaderFieldType, value: string) => IHeader;
 
-  // CORS Headers
-  setAccessControlAllowOrigin: (origin: string) => IHeader;
-  setAccessControlAllowMethods: (methods: MethodType[]) => IHeader;
-  setAccessControlAllowHeaders: (headers: string[]) => IHeader;
-  setAccessControlAllowCredentials: (allow: boolean) => IHeader;
-  setAccessControlMaxAge: (seconds: number) => IHeader;
-  setAccessControlExposeHeaders: (headers: string[]) => IHeader;
+  // Content handling
+  contentType: (value: MimeType, charset?: CharsetType) => IHeader;
+  contentLength: (length: number) => IHeader;
+  contentDisposition: (value: string) => IHeader;
 
-  // Security Headers
-  setContentSecurityPolicy: (policy: string) => IHeader;
-  setStrictTransportSecurity: (maxAge: number, includeSubDomains?: boolean, preload?: boolean) => IHeader;
-  setXContentTypeOptions: (value?: string) => IHeader;
-  setXFrameOptions: (value: "DENY" | "SAMEORIGIN" | string) => IHeader;
-  setXXSSProtection: (enabled?: boolean, mode?: string) => IHeader;
-  setReferrerPolicy: (policy: string) => IHeader;
+  // Content type convenience methods
+  setJson: (charset?: CharsetType) => IHeader;
+  setHtml: (charset?: CharsetType) => IHeader;
+  setText: (charset?: CharsetType) => IHeader;
+  setForm: (charset?: CharsetType) => IHeader;
+  setFormData: (charset?: CharsetType) => IHeader;
+  setBlobType: (charset?: CharsetType) => IHeader;
 
-  // Request/Response Headers
+  // Content negotiation
   setAccept: (mimeType: MimeType) => IHeader;
   setAcceptLanguage: (languages: string[]) => IHeader;
   setAcceptEncoding: (encodings: string[]) => IHeader;
-  setUserAgent: (userAgent: string) => IHeader;
+
+  // Request information
   setHost: (host: string) => IHeader;
+  setUserAgent: (userAgent: string) => IHeader;
   setReferer: (referer: string) => IHeader;
   setOrigin: (origin: string) => IHeader;
-  setLocation: (location: string) => IHeader;
 
-  // Connection and Transfer Headers
-  setConnection: (value: "close" | "keep-alive" | string) => IHeader;
-  setTransferEncoding: (encoding: "chunked" | "gzip" | "deflate" | string) => IHeader;
-  setContentEncoding: (encoding: "gzip" | "deflate" | "br" | string) => IHeader;
-  setAcceptRanges: (value: "bytes" | "none" | string) => IHeader;
-  setContentRange: (value: string) => IHeader;
-  setRange: (value: string) => IHeader;
+  // Authentication
+  setAuthorization: (value: string) => IHeader;
+  setBasicAuth: (token: string) => IHeader;
+  setBearerToken: (token: string) => IHeader;
 
-  // Cookie Headers
+  // Cookies
   setCookie: (
     name: string,
     value: string,
@@ -116,117 +97,130 @@ export interface IHeader extends IReadonlyHeader {
     },
   ) => IHeader;
 
-  // Date/Time Headers
-  setDate: (date?: Date) => IHeader;
-  setExpires: (date: Date) => IHeader;
+  setCookies: (
+    cookies: Array<{
+      name: string;
+      value: string;
+      options?: {
+        domain?: string;
+        path?: string;
+        expires?: Date;
+        maxAge?: number;
+        secure?: boolean;
+        httpOnly?: boolean;
+        sameSite?: "Strict" | "Lax" | "None";
+      };
+    }>,
+  ) => IHeader;
+
+  addCookie: (
+    name: string,
+    value: string,
+    options?: {
+      domain?: string;
+      path?: string;
+      expires?: Date;
+      maxAge?: number;
+      secure?: boolean;
+      httpOnly?: boolean;
+      sameSite?: "Strict" | "Lax" | "None";
+    },
+  ) => IHeader;
+
+  // Caching
+  setCacheControl: (value: string) => IHeader;
+  setEtag: (value: string) => IHeader;
   setLastModified: (date: Date) => IHeader;
   setIfModifiedSince: (date: Date) => IHeader;
-  setIfUnmodifiedSince: (date: Date) => IHeader;
 
-  // Server Information Headers
-  setServer: (server: string) => IHeader;
-  setRetryAfter: (seconds: number) => IHeader;
+  // CORS
+  setAccessControlAllowOrigin: (origin: string) => IHeader;
+  setAccessControlAllowMethods: (methods: MethodType[]) => IHeader;
+  setAccessControlAllowHeaders: (headers: string[]) => IHeader;
+  setAccessControlAllowCredentials: (allow: boolean) => IHeader;
 
-  // API and Custom Headers
-  setApiVersion: (version: string) => IHeader;
-  setRequestId: (id: string) => IHeader;
-  setRateLimit: (limit: number, remaining: number, reset: number) => IHeader;
-  setPoweredBy: (value: string) => IHeader;
-  removePoweredBy: () => IHeader;
+  // Security headers
+  setContentSecurityPolicy: (policy: string) => IHeader;
+  setStrictTransportSecurity: (maxAge: number, includeSubDomains?: boolean, preload?: boolean) => IHeader;
+  setXContentTypeOptions: (value?: string) => IHeader;
+  setXFrameOptions: (value: "DENY" | "SAMEORIGIN" | string) => IHeader;
+  setXXSSProtection: (enabled?: boolean, mode?: string) => IHeader;
 
-  // Compression and Content Headers
-  setVary: (headers: string[]) => IHeader;
-  setAge: (seconds: number) => IHeader;
-  setContentLanguage: (language: string) => IHeader;
-  setContentLocation: (location: string) => IHeader;
+  // Redirects
+  setLocation: (location: string) => IHeader;
 
-  // WebSocket Headers
-  setWebSocketAccept: (key: string) => IHeader;
-  setWebSocketKey: (key: string) => IHeader;
-  setWebSocketVersion: (version: string) => IHeader;
-  setWebSocketProtocol: (protocol: string) => IHeader;
-  setUpgrade: (protocol: string) => IHeader;
+  // Utility
+  setCustom: (value: string) => IHeader;
 }
 
 export interface IReadonlyHeader {
   readonly native: Headers;
+
+  // Core methods
   get: (name: HeaderFieldType) => string | null;
-  getAllow: () => MethodType[] | null;
-  getAccept: () => MimeType | "*/*" | null;
-  getAcceptEncoding: () => EncodingType[] | null;
-  getAcceptLanguage: () => string[] | null;
-  getAcceptRanges: () => string | null;
-  getAge: () => number | null;
-  getConnection: () => string | null;
-  getContentLength: () => number;
+  has: (name: HeaderFieldType) => boolean;
+  toJson: () => Partial<Record<HeaderFieldType, string>>;
+
+  // Content handling
   getContentType: () => MimeType | "*/*" | null;
+  getContentLength: () => number;
+  getCharset: () => CharsetType | null;
   getContentDisposition: () => string | null;
-  getContentEncoding: () => string | null;
-  getContentLanguage: () => string | null;
-  getContentLocation: () => string | null;
-  getContentRange: () => string | null;
-  getUserAgent: () => IUserAgent;
+
+  // Content negotiation
+  getAccept: () => MimeType | "*/*" | null;
+  getAcceptLanguage: () => string[] | null;
+  getAcceptEncoding: () => EncodingType[] | null;
+
+  // Request information
+  getHost: () => string | null;
+  getUserAgent: () => IUserAgent | null;
+  getReferer: () => string | null;
+  getOrigin: () => string | null;
+
+  // Authentication
   getAuthorization: () => string | null;
   getBasicAuth: () => string | null;
   getBearerToken: () => string | null;
-  getHost: () => string | null;
-  getIp: () => string | null;
-  getReferer: () => string | null;
-  getRefererPolicy: () => string | null;
-  getCharset: () => CharsetType | null;
-  getCacheControl: () => string | null;
-  getEtag: () => string | null;
+
+  // Cookies
   getCookies: () => Record<string, string> | null;
   getCookie: (name: string) => string | null;
-  getDate: () => Date | null;
-  getExpires: () => Date | null;
-  getLastModified: () => Date | null;
-  getLocation: () => string | null;
-  getOrigin: () => string | null;
-  getRange: () => string | null;
-  getServer: () => string | null;
-  getTransferEncoding: () => string | null;
-  getUpgrade: () => string | null;
-  getVary: () => string[] | null;
-  getWWWAuthenticate: () => string | null;
+
+  // Client IP detection
+  getIp: () => string | null;
   getXForwardedFor: () => string | null;
-  getXForwardedHost: () => string | null;
-  getXForwardedProto: () => string | null;
-  getXRequestedWith: () => string | null;
   getXRealIP: () => string | null;
+  getClientIps: () => string[];
+
+  // Caching
+  getCacheControl: () => string | null;
+  getEtag: () => string | null;
+  getLastModified: () => Date | null;
+  getIfModifiedSince: () => Date | null;
+  getIfNoneMatch: () => string | null;
+
+  // CORS
   getAccessControlAllowOrigin: () => string | null;
   getAccessControlAllowMethods: () => MethodType[] | null;
   getAccessControlAllowHeaders: () => string[] | null;
   getAccessControlAllowCredentials: () => boolean | null;
-  getAccessControlMaxAge: () => number | null;
-  getAccessControlExposeHeaders: () => string[] | null;
+
+  // Security headers
   getContentSecurityPolicy: () => string | null;
   getStrictTransportSecurity: () => string | null;
   getXContentTypeOptions: () => string | null;
   getXFrameOptions: () => string | null;
   getXXSSProtection: () => string | null;
-  getWebSocketAccept: () => string | null;
-  getWebSocketKey: () => string | null;
-  getWebSocketVersion: () => string | null;
-  getWebSocketProtocol: () => string | null;
-  getApiVersion: () => string | null;
-  getRequestId: () => string | null;
-  getRateLimitLimit: () => number | null;
-  getRateLimitRemaining: () => number | null;
-  getRateLimitReset: () => number | null;
-  getPoweredBy: () => string | null;
-  getRetryAfter: () => number | null;
-  getIfMatch: () => string | null;
-  getIfNoneMatch: () => string | null;
-  getIfModifiedSince: () => Date | null;
-  getIfUnmodifiedSince: () => Date | null;
-  getIfRange: () => string | null;
+
+  // Redirects
+  getLocation: () => string | null;
+
+  // Request type detection
   isSecure: () => boolean;
   isAjax: () => boolean;
   isCorsRequest: () => boolean;
-  isWebSocketRequest: () => boolean;
-  getClientIps: () => string[];
-  has: (name: HeaderFieldType) => boolean;
+
+  // Iterator support
   [Symbol.iterator](): IterableIterator<[HeaderFieldType, string]>;
-  toJson: () => Partial<Record<HeaderFieldType, string>>;
 }

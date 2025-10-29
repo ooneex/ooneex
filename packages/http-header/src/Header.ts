@@ -7,82 +7,7 @@ export class Header extends ReadonlyHeader implements IHeader {
     super(headers || new Headers());
   }
 
-  public setCacheControl(value: string): this {
-    return this.add("Cache-Control", value);
-  }
-
-  public setEtag(value: string): this {
-    return this.add("Etag", value);
-  }
-
-  public setAuthorization(value: string): this {
-    return this.add("Authorization", value);
-  }
-
-  public setBasicAuth(token: string): this {
-    return this.add("Authorization", `Basic ${token}`);
-  }
-
-  public setBearerToken(token: string): this {
-    return this.add("Authorization", `Bearer ${token}`);
-  }
-
-  public setBlobType(charset?: CharsetType): this {
-    return this.contentType("application/octet-stream", charset);
-  }
-
-  public setJson(charset?: CharsetType): this {
-    this.add("Accept", "application/json");
-    this.contentType("application/json", charset);
-
-    return this;
-  }
-
-  public setStream(charset?: CharsetType): this {
-    return this.setBlobType(charset);
-  }
-
-  public setFormData(charset?: CharsetType): this {
-    return this.contentType("multipart/form-data", charset);
-  }
-
-  public setForm(charset?: CharsetType): this {
-    return this.contentType("application/x-www-form-urlencoded", charset);
-  }
-
-  public setHtml(charset?: CharsetType): this {
-    return this.contentType("text/html", charset);
-  }
-
-  public setText(charset?: CharsetType): this {
-    return this.contentType("text/plain", charset);
-  }
-
-  public contentType(type: MimeType, charset?: CharsetType): this {
-    const typeStr = String(type);
-    const value = charset ? `${typeStr}; charset=${charset}` : typeStr;
-    this.add("Content-Type", value);
-
-    if (typeStr.startsWith("text/") || typeStr === "application/json") {
-      this.add("Accept-Charset", charset || "utf-8");
-    }
-
-    return this;
-  }
-
-  public contentDisposition(value: string): this {
-    return this.add("Content-Disposition", value);
-  }
-
-  public contentLength(length: number): this {
-    this.add("Content-Length", length.toString());
-    return this;
-  }
-
-  public setCustom(value: string): this {
-    return this.add("X-Custom", value);
-  }
-
+  // Core methods
   public add(name: HeaderFieldType, value: string): this {
     this.native.append(name, value);
     return this;
@@ -98,62 +23,56 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this;
   }
 
-  public setAccessControlAllowOrigin(origin: string): this {
-    return this.add("Access-Control-Allow-Origin", origin);
+  // Content handling
+  public contentType(type: MimeType, charset?: CharsetType): this {
+    const typeStr = String(type);
+    const value = charset ? `${typeStr}; charset=${charset}` : typeStr;
+    this.add("Content-Type", value);
+
+    if (typeStr.startsWith("text/") || typeStr === "application/json") {
+      this.add("Accept-Charset", charset || "utf-8");
+    }
+
+    return this;
   }
 
-  public setAccessControlAllowMethods(methods: MethodType[]): this {
-    const value = methods.join(", ");
-    return this.add("Access-Control-Allow-Methods", value);
+  public contentLength(length: number): this {
+    this.add("Content-Length", length.toString());
+    return this;
   }
 
-  public setAccessControlAllowHeaders(headers: string[]): this {
-    const value = headers.join(", ");
-    return this.add("Access-Control-Allow-Headers", value);
+  public contentDisposition(value: string): this {
+    return this.add("Content-Disposition", value);
   }
 
-  public setAccessControlAllowCredentials(allow: boolean): this {
-    return this.add("Access-Control-Allow-Credentials", allow.toString());
+  // Content type convenience methods
+  public setJson(charset?: CharsetType): this {
+    this.add("Accept", "application/json");
+    this.contentType("application/json", charset);
+    return this;
   }
 
-  public setAccessControlMaxAge(seconds: number): this {
-    return this.add("Access-Control-Max-Age", seconds.toString());
+  public setHtml(charset?: CharsetType): this {
+    return this.contentType("text/html", charset);
   }
 
-  public setAccessControlExposeHeaders(headers: string[]): this {
-    const value = headers.join(", ");
-    return this.add("Access-Control-Expose-Headers", value);
+  public setText(charset?: CharsetType): this {
+    return this.contentType("text/plain", charset);
   }
 
-  public setContentSecurityPolicy(policy: string): this {
-    return this.add("Content-Security-Policy", policy);
+  public setForm(charset?: CharsetType): this {
+    return this.contentType("application/x-www-form-urlencoded", charset);
   }
 
-  public setStrictTransportSecurity(maxAge: number, includeSubDomains = false, preload = false): this {
-    let value = `max-age=${maxAge}`;
-    if (includeSubDomains) value += "; includeSubDomains";
-    if (preload) value += "; preload";
-    return this.add("Strict-Transport-Security", value);
+  public setFormData(charset?: CharsetType): this {
+    return this.contentType("multipart/form-data", charset);
   }
 
-  public setXContentTypeOptions(value = "nosniff"): this {
-    return this.add("X-Content-Type-Options", value);
+  public setBlobType(charset?: CharsetType): this {
+    return this.contentType("application/octet-stream", charset);
   }
 
-  public setXFrameOptions(value: "DENY" | "SAMEORIGIN" | string): this {
-    return this.add("X-Frame-Options", value);
-  }
-
-  public setXXSSProtection(enabled = true, mode?: string): this {
-    let value = enabled ? "1" : "0";
-    if (enabled && mode) value += `; mode=${mode}`;
-    return this.add("X-XSS-Protection", value);
-  }
-
-  public setReferrerPolicy(policy: string): this {
-    return this.add("Referrer-Policy", policy);
-  }
-
+  // Content negotiation
   public setAccept(mimeType: MimeType): this {
     return this.add("Accept", mimeType as string);
   }
@@ -168,12 +87,13 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Accept-Encoding", value);
   }
 
-  public setUserAgent(userAgent: string): this {
-    return this.add("User-Agent", userAgent);
-  }
-
+  // Request information
   public setHost(host: string): this {
     return this.add("Host", host);
+  }
+
+  public setUserAgent(userAgent: string): this {
+    return this.add("User-Agent", userAgent);
   }
 
   public setReferer(referer: string): this {
@@ -184,34 +104,20 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Origin", origin);
   }
 
-  public setLocation(location: string): this {
-    return this.add("Location", location);
+  // Authentication
+  public setAuthorization(value: string): this {
+    return this.add("Authorization", value);
   }
 
-  public setConnection(value: "close" | "keep-alive" | string): this {
-    return this.add("Connection", value);
+  public setBasicAuth(token: string): this {
+    return this.add("Authorization", `Basic ${token}`);
   }
 
-  public setTransferEncoding(encoding: "chunked" | "gzip" | "deflate" | string): this {
-    return this.add("Transfer-Encoding", encoding);
+  public setBearerToken(token: string): this {
+    return this.add("Authorization", `Bearer ${token}`);
   }
 
-  public setContentEncoding(encoding: "gzip" | "deflate" | "br" | string): this {
-    return this.add("Content-Encoding", encoding);
-  }
-
-  public setAcceptRanges(value: "bytes" | "none" | string): this {
-    return this.add("Accept-Ranges", value);
-  }
-
-  public setContentRange(range: string): this {
-    return this.add("Content-Range", range);
-  }
-
-  public setRange(range: string): this {
-    return this.add("Range", range);
-  }
-
+  // Cookies
   public setCookie(
     name: string,
     value: string,
@@ -242,12 +148,50 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Set-Cookie", cookieValue);
   }
 
-  public setDate(date: Date = new Date()): this {
-    return this.add("Date", date.toUTCString());
+  public setCookies(
+    cookies: Array<{
+      name: string;
+      value: string;
+      options?: {
+        domain?: string;
+        path?: string;
+        expires?: Date;
+        maxAge?: number;
+        secure?: boolean;
+        httpOnly?: boolean;
+        sameSite?: "Strict" | "Lax" | "None";
+      };
+    }>,
+  ): this {
+    cookies.forEach((cookie) => {
+      this.setCookie(cookie.name, cookie.value, cookie.options);
+    });
+    return this;
   }
 
-  public setExpires(date: Date): this {
-    return this.add("Expires", date.toUTCString());
+  public addCookie(
+    name: string,
+    value: string,
+    options?: {
+      domain?: string;
+      path?: string;
+      expires?: Date;
+      maxAge?: number;
+      secure?: boolean;
+      httpOnly?: boolean;
+      sameSite?: "Strict" | "Lax" | "None";
+    },
+  ): this {
+    return this.setCookie(name, value, options);
+  }
+
+  // Caching
+  public setCacheControl(value: string): this {
+    return this.add("Cache-Control", value);
+  }
+
+  public setEtag(value: string): this {
+    return this.add("Etag", value);
   }
 
   public setLastModified(date: Date): this {
@@ -258,75 +202,58 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("If-Modified-Since", date.toUTCString());
   }
 
-  public setIfUnmodifiedSince(date: Date): this {
-    return this.add("If-Unmodified-Since", date.toUTCString());
+  // CORS
+  public setAccessControlAllowOrigin(origin: string): this {
+    return this.add("Access-Control-Allow-Origin", origin);
   }
 
-  public setServer(server: string): this {
-    return this.add("Server", server);
+  public setAccessControlAllowMethods(methods: MethodType[]): this {
+    const value = methods.join(", ");
+    return this.add("Access-Control-Allow-Methods", value);
   }
 
-  public setRetryAfter(seconds: number): this {
-    return this.add("Retry-After", seconds.toString());
-  }
-
-  public setApiVersion(version: string): this {
-    return this.add("X-API-Version", version);
-  }
-
-  public setRequestId(id: string): this {
-    return this.add("X-Request-ID", id);
-  }
-
-  public setRateLimit(limit: number, remaining: number, reset: number): this {
-    this.add("X-RateLimit-Limit", limit.toString());
-    this.add("X-RateLimit-Remaining", remaining.toString());
-    this.add("X-RateLimit-Reset", reset.toString());
-    return this;
-  }
-
-  public setPoweredBy(value: string): this {
-    return this.add("X-Powered-By", value);
-  }
-
-  public removePoweredBy(): this {
-    return this.remove("X-Powered-By");
-  }
-
-  public setVary(headers: string[]): this {
+  public setAccessControlAllowHeaders(headers: string[]): this {
     const value = headers.join(", ");
-    return this.add("Vary", value);
+    return this.add("Access-Control-Allow-Headers", value);
   }
 
-  public setAge(seconds: number): this {
-    return this.add("Age", seconds.toString());
+  public setAccessControlAllowCredentials(allow: boolean): this {
+    return this.add("Access-Control-Allow-Credentials", allow.toString());
   }
 
-  public setContentLanguage(language: string): this {
-    return this.add("Content-Language", language);
+  // Security headers
+  public setContentSecurityPolicy(policy: string): this {
+    return this.add("Content-Security-Policy", policy);
   }
 
-  public setContentLocation(location: string): this {
-    return this.add("Content-Location", location);
+  public setStrictTransportSecurity(maxAge: number, includeSubDomains = false, preload = false): this {
+    let value = `max-age=${maxAge}`;
+    if (includeSubDomains) value += "; includeSubDomains";
+    if (preload) value += "; preload";
+    return this.add("Strict-Transport-Security", value);
   }
 
-  public setWebSocketAccept(key: string): this {
-    return this.add("Sec-WebSocket-Accept", key);
+  public setXContentTypeOptions(value = "nosniff"): this {
+    return this.add("X-Content-Type-Options", value);
   }
 
-  public setWebSocketKey(key: string): this {
-    return this.add("Sec-WebSocket-Key", key);
+  public setXFrameOptions(value: "DENY" | "SAMEORIGIN" | string): this {
+    return this.add("X-Frame-Options", value);
   }
 
-  public setWebSocketVersion(version: string): this {
-    return this.add("Sec-WebSocket-Version", version);
+  public setXXSSProtection(enabled = true, mode?: string): this {
+    let value = enabled ? "1" : "0";
+    if (enabled && mode) value += `; mode=${mode}`;
+    return this.add("X-XSS-Protection", value);
   }
 
-  public setWebSocketProtocol(protocol: string): this {
-    return this.add("Sec-WebSocket-Protocol", protocol);
+  // Redirects
+  public setLocation(location: string): this {
+    return this.add("Location", location);
   }
 
-  public setUpgrade(protocol: string): this {
-    return this.add("Upgrade", protocol);
+  // Utility
+  public setCustom(value: string): this {
+    return this.add("X-Custom", value);
   }
 }

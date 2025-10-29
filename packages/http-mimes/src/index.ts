@@ -2493,7 +2493,7 @@ export class Mime implements IMime {
    * @returns true if the MIME type is JSON-related, false otherwise
    */
   public isJson = (mime: string): boolean => {
-    return /^(application\/(json|json5|jsonml\+json|jsonpath|(?:ld\+)?json)|text\/json)$/i.test(mime);
+    return /(application\/(json|json5|jsonml\+json|jsonpath|(?:ld\+)?json)|text\/json)/i.test(mime);
   };
 
   /**
@@ -2524,7 +2524,7 @@ export class Mime implements IMime {
    * @returns true if the MIME type is MP4-related, false otherwise
    */
   public isMp4 = (mime: string): boolean => {
-    return /(video|audio|application)\/mp4/i.test(mime);
+    return /(video|application)\/mp4/i.test(mime);
   };
 
   /**

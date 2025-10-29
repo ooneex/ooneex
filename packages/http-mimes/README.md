@@ -225,21 +225,211 @@ Checks if a MIME type is ZIP-related.
 mime.isZip('application/zip'); // true
 ```
 
-##### Additional Format Methods
+##### `isMp4(mimeType: string): boolean`
+Checks if a MIME type is MP4 video.
 
-- `isMp4(mimeType: string): boolean` - Checks for MP4 video
-- `isMp3(mimeType: string): boolean` - Checks for MP3 audio
-- `isSvg(mimeType: string): boolean` - Checks for SVG images
-- `isJpeg(mimeType: string): boolean` - Checks for JPEG images
-- `isJpg(mimeType: string): boolean` - Alias for JPEG
-- `isPng(mimeType: string): boolean` - Checks for PNG images
-- `isGif(mimeType: string): boolean` - Checks for GIF images
-- `isWebp(mimeType: string): boolean` - Checks for WebP images
-- `isCsv(mimeType: string): boolean` - Checks for CSV files
-- `isOctetStream(mimeType: string): boolean` - Checks for binary streams
-- `isWord(mimeType: string): boolean` - Checks for Microsoft Word documents
-- `isExcel(mimeType: string): boolean` - Checks for Microsoft Excel documents
-- `isPowerPoint(mimeType: string): boolean` - Checks for Microsoft PowerPoint documents
+**Example:**
+```typescript
+mime.isMp4('video/mp4'); // true
+mime.isMp4('video/mpeg'); // false
+```
+
+##### `isMp3(mimeType: string): boolean`
+Checks if a MIME type is MP3 audio.
+
+**Example:**
+```typescript
+mime.isMp3('audio/mpeg'); // true
+mime.isMp3('audio/wav'); // false
+```
+
+##### `isSvg(mimeType: string): boolean`
+Checks if a MIME type is SVG image.
+
+**Example:**
+```typescript
+mime.isSvg('image/svg+xml'); // true
+mime.isSvg('image/png'); // false
+```
+
+##### `isJpeg(mimeType: string): boolean`
+Checks if a MIME type is JPEG image.
+
+**Example:**
+```typescript
+mime.isJpeg('image/jpeg'); // true
+mime.isJpeg('image/png'); // false
+```
+
+##### `isJpg(mimeType: string): boolean`
+Alias for `isJpeg()`. Checks if a MIME type is JPEG image.
+
+**Example:**
+```typescript
+mime.isJpg('image/jpeg'); // true
+mime.isJpg('image/png'); // false
+```
+
+##### `isPng(mimeType: string): boolean`
+Checks if a MIME type is PNG image.
+
+**Example:**
+```typescript
+mime.isPng('image/png'); // true
+mime.isPng('image/jpeg'); // false
+```
+
+##### `isGif(mimeType: string): boolean`
+Checks if a MIME type is GIF image.
+
+**Example:**
+```typescript
+mime.isGif('image/gif'); // true
+mime.isGif('image/png'); // false
+```
+
+##### `isWebp(mimeType: string): boolean`
+Checks if a MIME type is WebP image.
+
+**Example:**
+```typescript
+mime.isWebp('image/webp'); // true
+mime.isWebp('image/png'); // false
+```
+
+##### `isCsv(mimeType: string): boolean`
+Checks if a MIME type is CSV.
+
+**Example:**
+```typescript
+mime.isCsv('text/csv'); // true
+mime.isCsv('application/csv'); // true
+mime.isCsv('text/plain'); // false
+```
+
+##### `isOctetStream(mimeType: string): boolean`
+Checks if a MIME type is binary stream.
+
+**Example:**
+```typescript
+mime.isOctetStream('application/octet-stream'); // true
+mime.isOctetStream('text/plain'); // false
+```
+
+##### `isWord(mimeType: string): boolean`
+Checks if a MIME type is Microsoft Word document.
+
+**Example:**
+```typescript
+mime.isWord('application/msword'); // true
+mime.isWord('application/vnd.openxmlformats-officedocument.wordprocessingml.document'); // true
+mime.isWord('application/pdf'); // false
+```
+
+##### `isExcel(mimeType: string): boolean`
+Checks if a MIME type is Microsoft Excel document.
+
+**Example:**
+```typescript
+mime.isExcel('application/vnd.ms-excel'); // true
+mime.isExcel('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // true
+mime.isExcel('text/csv'); // false
+```
+
+##### `isPowerPoint(mimeType: string): boolean`
+Checks if a MIME type is Microsoft PowerPoint document.
+
+**Example:**
+```typescript
+mime.isPowerPoint('application/vnd.ms-powerpoint'); // true
+mime.isPowerPoint('application/vnd.openxmlformats-officedocument.presentationml.presentation'); // true
+mime.isPowerPoint('application/pdf'); // false
+```
+
+##### `isBlob(mimeType: string): boolean`
+Checks if a MIME type is blob (binary large object).
+
+**Example:**
+```typescript
+mime.isBlob('application/octet-stream'); // true
+mime.isBlob('text/plain'); // false
+```
+
+##### `isStream(mimeType: string): boolean`
+Checks if a MIME type is stream-related.
+
+**Example:**
+```typescript
+mime.isStream('application/octet-stream'); // true
+mime.isStream('application/stream'); // true
+mime.isStream('text/plain'); // false
+```
+
+##### `isFormData(mimeType: string): boolean`
+Checks if a MIME type is form data.
+
+**Example:**
+```typescript
+mime.isFormData('application/form-data'); // true
+mime.isFormData('application/json'); // false
+```
+
+##### `isForm(mimeType: string): boolean`
+Checks if a MIME type is URL-encoded form.
+
+**Example:**
+```typescript
+mime.isForm('application/x-www-form-urlencoded'); // true
+mime.isForm('application/json'); // false
+```
+
+##### `isMultipart(mimeType: string): boolean`
+Checks if a MIME type is multipart-related.
+
+**Example:**
+```typescript
+mime.isMultipart('multipart/form-data'); // true
+mime.isMultipart('multipart/mixed'); // true
+mime.isMultipart('application/json'); // false
+```
+
+##### `isPlainText(mimeType: string): boolean`
+Checks if a MIME type is plain text.
+
+**Example:**
+```typescript
+mime.isPlainText('text/plain'); // true
+mime.isPlainText('text/html'); // false
+```
+
+##### `isMarkdown(mimeType: string): boolean`
+Checks if a MIME type is Markdown.
+
+**Example:**
+```typescript
+mime.isMarkdown('text/markdown'); // true
+mime.isMarkdown('text/x-markdown'); // true
+mime.isMarkdown('text/plain'); // false
+```
+
+##### `isRtf(mimeType: string): boolean`
+Checks if a MIME type is RTF (Rich Text Format).
+
+**Example:**
+```typescript
+mime.isRtf('application/rtf'); // true
+mime.isRtf('text/plain'); // false
+```
+
+##### `isGzip(mimeType: string): boolean`
+Checks if a MIME type is gzip-compressed.
+
+**Example:**
+```typescript
+mime.isGzip('application/gzip'); // true
+mime.isGzip('application/x-gzip'); // true
+mime.isGzip('application/zip'); // false
+```
 
 
 #### `MimeType`

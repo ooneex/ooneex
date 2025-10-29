@@ -2450,425 +2450,365 @@ const MIME = [
 export type MimeType = (typeof MIME)[keyof typeof MIME];
 
 export interface IMime {
-  isJson: (mimeType: string) => boolean;
-  isAudio: (mimeType: string) => boolean;
-  isVideo: (mimeType: string) => boolean;
-  isMp4: (mimeType: string) => boolean;
-  isMp3: (mimeType: string) => boolean;
-  isSvg: (mimeType: string) => boolean;
-  isJpeg: (mimeType: string) => boolean;
-  isCsv: (mimeType: string) => boolean;
-  isJpg: (mimeType: string) => boolean;
-  isPng: (mimeType: string) => boolean;
-  isPdf: (mimeType: string) => boolean;
-  isHtml: (mimeType: string) => boolean;
-  isCss: (mimeType: string) => boolean;
-  isJavaScript: (mimeType: string) => boolean;
-  isZip: (mimeType: string) => boolean;
-  isGif: (mimeType: string) => boolean;
-  isWebp: (mimeType: string) => boolean;
-  isXml: (mimeType: string) => boolean;
-  isText: (mimeType: string) => boolean;
-  isOctetStream: (mimeType: string) => boolean;
-  isFont: (mimeType: string) => boolean;
-  isWord: (mimeType: string) => boolean;
-  isExcel: (mimeType: string) => boolean;
-  isPowerPoint: (mimeType: string) => boolean;
-  isImage: (mimeType: string) => boolean;
+  isJson: (mime: string) => boolean;
+  isAudio: (mime: string) => boolean;
+  isVideo: (mime: string) => boolean;
+  isMp4: (mime: string) => boolean;
+  isMp3: (mime: string) => boolean;
+  isSvg: (mime: string) => boolean;
+  isJpeg: (mime: string) => boolean;
+  isCsv: (mime: string) => boolean;
+  isJpg: (mime: string) => boolean;
+  isPng: (mime: string) => boolean;
+  isPdf: (mime: string) => boolean;
+  isHtml: (mime: string) => boolean;
+  isCss: (mime: string) => boolean;
+  isJavaScript: (mime: string) => boolean;
+  isZip: (mime: string) => boolean;
+  isGif: (mime: string) => boolean;
+  isWebp: (mime: string) => boolean;
+  isXml: (mime: string) => boolean;
+  isText: (mime: string) => boolean;
+  isOctetStream: (mime: string) => boolean;
+  isFont: (mime: string) => boolean;
+  isWord: (mime: string) => boolean;
+  isExcel: (mime: string) => boolean;
+  isPowerPoint: (mime: string) => boolean;
+  isImage: (mime: string) => boolean;
+  isBlob: (mime: string) => boolean;
+  isStream: (mime: string) => boolean;
+  isFormData: (mime: string) => boolean;
+  isForm: (mime: string) => boolean;
+  isMultipart: (mime: string) => boolean;
+  isPlainText: (mime: string) => boolean;
+  isMarkdown: (mime: string) => boolean;
+  isRtf: (mime: string) => boolean;
+  isGzip: (mime: string) => boolean;
 }
 
 export class Mime implements IMime {
   /**
    * Checks if a given MIME type is JSON-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is JSON-related, false otherwise
    */
-  public isJson = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for exact JSON MIME type
-    if (normalizedMimeType === "application/json") return true;
-
-    // Check for JSON-based MIME types (ending with +json)
-    if (normalizedMimeType.endsWith("+json")) return true;
-
-    // Check for other JSON-related MIME types
-    const jsonRelatedTypes = ["application/json5", "application/jsonml+json", "application/jsonpath", "text/json"];
-
-    return jsonRelatedTypes.includes(normalizedMimeType);
+  public isJson = (mime: string): boolean => {
+    return /^(application\/(json|json5|jsonml\+json|jsonpath|(?:ld\+)?json)|text\/json)$/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is audio-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is audio-related, false otherwise
    */
-  public isAudio = (mimeType: string): boolean => {
-    if (!mimeType) return false;
+  public isAudio = (mime: string): boolean => {
+    mime = this.formatMimeType(mime);
 
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for audio/* MIME types
-    return normalizedMimeType.startsWith("audio/");
+    return mime.startsWith("audio/");
   };
 
   /**
    * Checks if a given MIME type is video-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is video-related, false otherwise
    */
-  public isVideo = (mimeType: string): boolean => {
-    if (!mimeType) return false;
+  public isVideo = (mime: string): boolean => {
+    mime = this.formatMimeType(mime);
 
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for video/* MIME types
-    return normalizedMimeType.startsWith("video/");
+    return mime.startsWith("video/");
   };
 
   /**
    * Checks if a given MIME type is MP4-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is MP4-related, false otherwise
    */
-  public isMp4 = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for MP4 MIME types
-    return (
-      normalizedMimeType === "video/mp4" ||
-      normalizedMimeType === "audio/mp4" ||
-      normalizedMimeType === "application/mp4"
-    );
+  public isMp4 = (mime: string): boolean => {
+    return /(video|audio|application)\/mp4/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is MP3-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is MP3-related, false otherwise
    */
-  public isMp3 = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for MP3 MIME types
-    return normalizedMimeType === "audio/mp3" || normalizedMimeType === "audio/mpeg";
+  public isMp3 = (mime: string): boolean => {
+    return /audio\/(mp3|mpeg)/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is SVG-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is SVG-related, false otherwise
    */
-  public isSvg = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for SVG MIME types
-    return normalizedMimeType === "image/svg+xml";
+  public isSvg = (mime: string): boolean => {
+    return /image\/svg\+xml/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is JPEG-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is JPEG-related, false otherwise
    */
-  public isJpeg = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for JPEG MIME types
-    return normalizedMimeType === "image/jpeg" || normalizedMimeType === "image/pjpeg";
+  public isJpeg = (mime: string): boolean => {
+    return /image\/(jpeg|pjpeg)/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is CSV-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is CSV-related, false otherwise
    */
-  public isCsv = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for CSV MIME types
-    return normalizedMimeType === "text/csv";
+  public isCsv = (mime: string): boolean => {
+    return /text\/csv/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is JPG-related (alias for JPEG)
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is JPG-related, false otherwise
    */
-  public isJpg = (mimeType: string): boolean => {
-    return this.isJpeg(mimeType);
+  public isJpg = (mime: string): boolean => {
+    return this.isJpeg(mime);
   };
 
   /**
    * Checks if a given MIME type is PNG-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is PNG-related, false otherwise
    */
-  public isPng = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for PNG MIME types
-    return normalizedMimeType === "image/png";
+  public isPng = (mime: string): boolean => {
+    return /image\/png/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is PDF-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is PDF-related, false otherwise
    */
-  public isPdf = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for PDF MIME type
-    return normalizedMimeType === "application/pdf";
+  public isPdf = (mime: string): boolean => {
+    return /application\/pdf/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is HTML-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is HTML-related, false otherwise
    */
-  public isHtml = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for HTML MIME type
-    return normalizedMimeType === "text/html";
+  public isHtml = (mime: string): boolean => {
+    return /text\/html/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is CSS-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is CSS-related, false otherwise
    */
-  public isCss = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for CSS MIME type
-    return normalizedMimeType === "text/css";
+  public isCss = (mime: string): boolean => {
+    return /text\/css/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is JavaScript-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is JavaScript-related, false otherwise
    */
-  public isJavaScript = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
+  public isJavaScript = (mime: string): boolean => {
+    mime = this.formatMimeType(mime);
 
     // Check for JavaScript MIME types
-    return (
-      normalizedMimeType === "text/javascript" ||
-      normalizedMimeType === "application/javascript" ||
-      normalizedMimeType === "application/x-javascript"
-    );
+    return /(text|application)\/(javascript|x-javascript)/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is ZIP-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is ZIP-related, false otherwise
    */
-  public isZip = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for ZIP MIME types
-    return normalizedMimeType === "application/zip";
+  public isZip = (mime: string): boolean => {
+    return /application\/zip/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is GIF-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is GIF-related, false otherwise
    */
-  public isGif = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for GIF MIME type
-    return normalizedMimeType === "image/gif";
+  public isGif = (mime: string): boolean => {
+    return /image\/gif/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is WebP-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is WebP-related, false otherwise
    */
-  public isWebp = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for WebP MIME type
-    return normalizedMimeType === "image/webp";
+  public isWebp = (mime: string): boolean => {
+    return /image\/webp/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is XML-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is XML-related, false otherwise
    */
-  public isXml = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for XML MIME types
-    return (
-      normalizedMimeType === "text/xml" ||
-      normalizedMimeType === "application/xml" ||
-      normalizedMimeType.endsWith("+xml")
-    );
+  public isXml = (mime: string): boolean => {
+    return /(text|application)\/xml|.*\+xml/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is plain text-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is plain text-related, false otherwise
    */
-  public isText = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for plain text MIME type
-    return normalizedMimeType === "text/plain";
+  public isText = (mime: string): boolean => {
+    return /text\/plain/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is octet-stream (binary data)
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is octet-stream, false otherwise
    */
-  public isOctetStream = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for octet-stream MIME type
-    return normalizedMimeType === "application/octet-stream";
+  public isOctetStream = (mime: string): boolean => {
+    return /application\/octet-stream/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is font-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is font-related, false otherwise
    */
-  public isFont = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for font MIME types
-    return (
-      normalizedMimeType.startsWith("font/") ||
-      normalizedMimeType === "application/font-woff" ||
-      normalizedMimeType === "application/font-woff2" ||
-      normalizedMimeType === "application/font-sfnt" ||
-      normalizedMimeType === "application/font-tdpfr"
-    );
+  public isFont = (mime: string): boolean => {
+    return /font\/|application\/font-(woff2?|sfnt|tdpfr)/i.test(mime);
   };
 
   /**
    * Checks if a given MIME type is Microsoft Word-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is Word-related, false otherwise
    */
-  public isWord = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for Word MIME types
-    return (
-      normalizedMimeType === "application/msword" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.template" ||
-      normalizedMimeType === "application/vnd.ms-word.document.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-word.template.macroenabled.12"
+  public isWord = (mime: string): boolean => {
+    return /application\/(msword|vnd\.(openxmlformats-officedocument\.wordprocessingml\.(document|template)|ms-word\.(document|template)\.macroenabled\.12))/i.test(
+      mime,
     );
   };
 
   /**
    * Checks if a given MIME type is Microsoft Excel-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is Excel-related, false otherwise
    */
-  public isExcel = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for Excel MIME types
-    return (
-      normalizedMimeType === "application/vnd.ms-excel" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.template" ||
-      normalizedMimeType === "application/vnd.ms-excel.sheet.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-excel.template.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-excel.addin.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-excel.sheet.binary.macroenabled.12"
+  public isExcel = (mime: string): boolean => {
+    return /application\/vnd\.(ms-excel(\.(sheet|template|addin)\.macroenabled\.12|\.sheet\.binary\.macroenabled\.12)?|openxmlformats-officedocument\.spreadsheetml\.(sheet|template))/i.test(
+      mime,
     );
   };
 
   /**
    * Checks if a given MIME type is Microsoft PowerPoint-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is PowerPoint-related, false otherwise
    */
-  public isPowerPoint = (mimeType: string): boolean => {
-    if (!mimeType) return false;
-
-    const normalizedMimeType = mimeType.toLowerCase().trim();
-
-    // Check for PowerPoint MIME types
-    return (
-      normalizedMimeType === "application/vnd.ms-powerpoint" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.presentationml.template" ||
-      normalizedMimeType === "application/vnd.openxmlformats-officedocument.presentationml.slideshow" ||
-      normalizedMimeType === "application/vnd.ms-powerpoint.addin.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-powerpoint.presentation.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-powerpoint.template.macroenabled.12" ||
-      normalizedMimeType === "application/vnd.ms-powerpoint.slideshow.macroenabled.12"
+  public isPowerPoint = (mime: string): boolean => {
+    return /application\/vnd\.(ms-powerpoint(\.(addin|presentation|template|slideshow)\.macroenabled\.12)?|openxmlformats-officedocument\.presentationml\.(presentation|template|slideshow))/i.test(
+      mime,
     );
   };
 
   /**
    * Checks if a given MIME type is image-related
-   * @param mimeType - The MIME type to check
+   * @param mime - The MIME type to check
    * @returns true if the MIME type is image-related, false otherwise
    */
-  public isImage = (mimeType: string): boolean => {
-    if (!mimeType) return false;
+  public isImage = (mime: string): boolean => {
+    mime = this.formatMimeType(mime);
 
-    const normalizedMimeType = mimeType.toLowerCase().trim();
+    return mime.startsWith("image/");
+  };
 
-    // Check for image/* MIME types
-    return normalizedMimeType.startsWith("image/");
+  /**
+   * Checks if a given MIME type is blob-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is blob-related, false otherwise
+   */
+  public isBlob = (mime: string): boolean => {
+    return /application\/octet-stream/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is stream-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is stream-related, false otherwise
+   */
+  public isStream = (mime: string): boolean => {
+    return /application\/(octet-stream|stream)/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is form data-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is form data-related, false otherwise
+   */
+  public isFormData = (mime: string): boolean => {
+    return /application\/form-data/i.test(mime);
+  };
+
+  public isForm = (mime: string): boolean => {
+    return /application\/x-www-form-urlencoded/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is multipart-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is multipart-related, false otherwise
+   */
+  public isMultipart = (mime: string): boolean => {
+    mime = this.formatMimeType(mime);
+
+    return mime.startsWith("multipart/");
+  };
+
+  /**
+   * Checks if a given MIME type is plain text-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is plain text-related, false otherwise
+   */
+  public isPlainText = (mime: string): boolean => {
+    return /text\/plain/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is markdown-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is markdown-related, false otherwise
+   */
+  public isMarkdown = (mime: string): boolean => {
+    return /text\/(markdown|x-markdown)/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is RTF-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is RTF-related, false otherwise
+   */
+  public isRtf = (mime: string): boolean => {
+    return /application\/rtf/i.test(mime);
+  };
+
+  /**
+   * Checks if a given MIME type is gzip-related
+   * @param mime - The MIME type to check
+   * @returns true if the MIME type is gzip-related, false otherwise
+   */
+  public isGzip = (mime: string): boolean => {
+    return /application\/(gzip|x-gzip)/i.test(mime);
+  };
+
+  private formatMimeType = (mime: string): string => {
+    if (!mime || typeof mime !== "string") {
+      return "";
+    }
+    return mime.toLowerCase().trim();
   };
 }

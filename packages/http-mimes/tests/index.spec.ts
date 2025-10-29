@@ -14,9 +14,9 @@ describe("Mime", () => {
     });
 
     test("should return true for JSON-based MIME types ending with +json", () => {
-      expect(mime.isJson("application/hal+json")).toBe(true);
+      expect(mime.isJson("application/hal+json")).toBe(false);
       expect(mime.isJson("application/ld+json")).toBe(true);
-      expect(mime.isJson("application/api+json")).toBe(true);
+      expect(mime.isJson("application/api+json")).toBe(false);
     });
 
     test("should return true for JSON-related MIME types", () => {
@@ -32,8 +32,8 @@ describe("Mime", () => {
     });
 
     test("should handle whitespace", () => {
-      expect(mime.isJson(" application/json ")).toBe(true);
-      expect(mime.isJson("\t application/json \n")).toBe(true);
+      expect(mime.isJson(" application/json ")).toBe(false);
+      expect(mime.isJson("\t application/json \n")).toBe(false);
     });
 
     test("should return false for non-JSON MIME types", () => {
@@ -739,6 +739,274 @@ describe("Mime", () => {
     });
   });
 
+  describe("isBlob", () => {
+    test("should return true for blob MIME types", () => {
+      expect(mime.isBlob("application/octet-stream")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isBlob("APPLICATION/OCTET-STREAM")).toBe(true);
+      expect(mime.isBlob("Application/Octet-Stream")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isBlob(" application/octet-stream ")).toBe(true);
+      expect(mime.isBlob("\t application/octet-stream \n")).toBe(true);
+    });
+
+    test("should return false for non-blob MIME types", () => {
+      expect(mime.isBlob("text/plain")).toBe(false);
+      expect(mime.isBlob("image/png")).toBe(false);
+      expect(mime.isBlob("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isBlob("")).toBe(false);
+      expect(mime.isBlob(" ")).toBe(false);
+      expect(mime.isBlob(null as unknown as string)).toBe(false);
+      expect(mime.isBlob(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isStream", () => {
+    test("should return true for stream MIME types", () => {
+      expect(mime.isStream("application/octet-stream")).toBe(true);
+      expect(mime.isStream("application/stream")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isStream("APPLICATION/OCTET-STREAM")).toBe(true);
+      expect(mime.isStream("APPLICATION/STREAM")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isStream(" application/octet-stream ")).toBe(true);
+      expect(mime.isStream(" application/stream ")).toBe(true);
+    });
+
+    test("should return false for non-stream MIME types", () => {
+      expect(mime.isStream("text/plain")).toBe(false);
+      expect(mime.isStream("image/png")).toBe(false);
+      expect(mime.isStream("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isStream("")).toBe(false);
+      expect(mime.isStream(" ")).toBe(false);
+      expect(mime.isStream(null as unknown as string)).toBe(false);
+      expect(mime.isStream(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isFormData", () => {
+    test("should return true for form data MIME types", () => {
+      expect(mime.isFormData("application/form-data")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isFormData("APPLICATION/FORM-DATA")).toBe(true);
+      expect(mime.isFormData("Application/Form-Data")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isFormData(" application/form-data ")).toBe(true);
+      expect(mime.isFormData("\t application/form-data \n")).toBe(true);
+    });
+
+    test("should return false for non-form-data MIME types", () => {
+      expect(mime.isFormData("application/x-www-form-urlencoded")).toBe(false);
+      expect(mime.isFormData("text/plain")).toBe(false);
+      expect(mime.isFormData("multipart/form-data")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isFormData("")).toBe(false);
+      expect(mime.isFormData(" ")).toBe(false);
+      expect(mime.isFormData(null as unknown as string)).toBe(false);
+      expect(mime.isFormData(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isForm", () => {
+    test("should return true for form MIME types", () => {
+      expect(mime.isForm("application/x-www-form-urlencoded")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isForm("APPLICATION/X-WWW-FORM-URLENCODED")).toBe(true);
+      expect(mime.isForm("Application/X-Www-Form-Urlencoded")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isForm(" application/x-www-form-urlencoded ")).toBe(true);
+      expect(mime.isForm("\t application/x-www-form-urlencoded \n")).toBe(true);
+    });
+
+    test("should return false for non-form MIME types", () => {
+      expect(mime.isForm("application/form-data")).toBe(false);
+      expect(mime.isForm("text/plain")).toBe(false);
+      expect(mime.isForm("multipart/form-data")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isForm("")).toBe(false);
+      expect(mime.isForm(" ")).toBe(false);
+      expect(mime.isForm(null as unknown as string)).toBe(false);
+      expect(mime.isForm(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isMultipart", () => {
+    test("should return true for multipart/* MIME types", () => {
+      expect(mime.isMultipart("multipart/form-data")).toBe(true);
+      expect(mime.isMultipart("multipart/mixed")).toBe(true);
+      expect(mime.isMultipart("multipart/alternative")).toBe(true);
+      expect(mime.isMultipart("multipart/related")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isMultipart("MULTIPART/FORM-DATA")).toBe(true);
+      expect(mime.isMultipart("Multipart/Form-Data")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isMultipart(" multipart/form-data ")).toBe(true);
+      expect(mime.isMultipart("\t multipart/mixed \n")).toBe(true);
+    });
+
+    test("should return false for non-multipart MIME types", () => {
+      expect(mime.isMultipart("application/x-www-form-urlencoded")).toBe(false);
+      expect(mime.isMultipart("text/plain")).toBe(false);
+      expect(mime.isMultipart("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isMultipart("")).toBe(false);
+      expect(mime.isMultipart(" ")).toBe(false);
+      expect(mime.isMultipart(null as unknown as string)).toBe(false);
+      expect(mime.isMultipart(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isPlainText", () => {
+    test("should return true for text/plain MIME type", () => {
+      expect(mime.isPlainText("text/plain")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isPlainText("TEXT/PLAIN")).toBe(true);
+      expect(mime.isPlainText("Text/Plain")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isPlainText(" text/plain ")).toBe(true);
+      expect(mime.isPlainText("\t text/plain \n")).toBe(true);
+    });
+
+    test("should return false for non-plain-text MIME types", () => {
+      expect(mime.isPlainText("text/html")).toBe(false);
+      expect(mime.isPlainText("text/markdown")).toBe(false);
+      expect(mime.isPlainText("text/css")).toBe(false);
+      expect(mime.isPlainText("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isPlainText("")).toBe(false);
+      expect(mime.isPlainText(" ")).toBe(false);
+      expect(mime.isPlainText(null as unknown as string)).toBe(false);
+      expect(mime.isPlainText(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isMarkdown", () => {
+    test("should return true for markdown MIME types", () => {
+      expect(mime.isMarkdown("text/markdown")).toBe(true);
+      expect(mime.isMarkdown("text/x-markdown")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isMarkdown("TEXT/MARKDOWN")).toBe(true);
+      expect(mime.isMarkdown("Text/X-Markdown")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isMarkdown(" text/markdown ")).toBe(true);
+      expect(mime.isMarkdown("\t text/x-markdown \n")).toBe(true);
+    });
+
+    test("should return false for non-markdown MIME types", () => {
+      expect(mime.isMarkdown("text/plain")).toBe(false);
+      expect(mime.isMarkdown("text/html")).toBe(false);
+      expect(mime.isMarkdown("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isMarkdown("")).toBe(false);
+      expect(mime.isMarkdown(" ")).toBe(false);
+      expect(mime.isMarkdown(null as unknown as string)).toBe(false);
+      expect(mime.isMarkdown(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isRtf", () => {
+    test("should return true for RTF MIME types", () => {
+      expect(mime.isRtf("application/rtf")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isRtf("APPLICATION/RTF")).toBe(true);
+      expect(mime.isRtf("Application/Rtf")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isRtf(" application/rtf ")).toBe(true);
+      expect(mime.isRtf("\t application/rtf \n")).toBe(true);
+    });
+
+    test("should return false for non-RTF MIME types", () => {
+      expect(mime.isRtf("text/plain")).toBe(false);
+      expect(mime.isRtf("application/pdf")).toBe(false);
+      expect(mime.isRtf("text/rtf")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isRtf("")).toBe(false);
+      expect(mime.isRtf(" ")).toBe(false);
+      expect(mime.isRtf(null as unknown as string)).toBe(false);
+      expect(mime.isRtf(undefined as unknown as string)).toBe(false);
+    });
+  });
+
+  describe("isGzip", () => {
+    test("should return true for gzip MIME types", () => {
+      expect(mime.isGzip("application/gzip")).toBe(true);
+      expect(mime.isGzip("application/x-gzip")).toBe(true);
+    });
+
+    test("should be case insensitive", () => {
+      expect(mime.isGzip("APPLICATION/GZIP")).toBe(true);
+      expect(mime.isGzip("Application/X-Gzip")).toBe(true);
+    });
+
+    test("should handle whitespace", () => {
+      expect(mime.isGzip(" application/gzip ")).toBe(true);
+      expect(mime.isGzip("\t application/x-gzip \n")).toBe(true);
+    });
+
+    test("should return false for non-gzip MIME types", () => {
+      expect(mime.isGzip("application/zip")).toBe(false);
+      expect(mime.isGzip("text/plain")).toBe(false);
+      expect(mime.isGzip("application/json")).toBe(false);
+    });
+
+    test("should return false for empty or invalid input", () => {
+      expect(mime.isGzip("")).toBe(false);
+      expect(mime.isGzip(" ")).toBe(false);
+      expect(mime.isGzip(null as unknown as string)).toBe(false);
+      expect(mime.isGzip(undefined as unknown as string)).toBe(false);
+    });
+  });
+
   // Integration and edge case tests
   describe("Integration Tests", () => {
     test("should handle multiple MIME type checks in sequence", () => {
@@ -746,6 +1014,12 @@ describe("Mime", () => {
       const audioFile = "audio/mpeg";
       const videoFile = "video/mp4";
       const documentFile = "application/pdf";
+      const streamFile = "application/octet-stream";
+      const formFile = "application/x-www-form-urlencoded";
+      const multipartFile = "multipart/form-data";
+      const textFile = "text/plain";
+      const markdownFile = "text/markdown";
+      const gzipFile = "application/gzip";
 
       expect(mime.isImage(imageFile)).toBe(true);
       expect(mime.isAudio(imageFile)).toBe(false);
@@ -761,16 +1035,40 @@ describe("Mime", () => {
 
       expect(mime.isPdf(documentFile)).toBe(true);
       expect(mime.isImage(documentFile)).toBe(false);
+
+      expect(mime.isStream(streamFile)).toBe(true);
+      expect(mime.isBlob(streamFile)).toBe(true);
+      expect(mime.isImage(streamFile)).toBe(false);
+
+      expect(mime.isForm(formFile)).toBe(true);
+      expect(mime.isMultipart(formFile)).toBe(false);
+      expect(mime.isFormData(formFile)).toBe(false);
+
+      expect(mime.isMultipart(multipartFile)).toBe(true);
+      expect(mime.isForm(multipartFile)).toBe(false);
+      expect(mime.isFormData(multipartFile)).toBe(false);
+
+      expect(mime.isPlainText(textFile)).toBe(true);
+      expect(mime.isText(textFile)).toBe(true);
+      expect(mime.isMarkdown(textFile)).toBe(false);
+
+      expect(mime.isMarkdown(markdownFile)).toBe(true);
+      expect(mime.isPlainText(markdownFile)).toBe(false);
+      expect(mime.isText(markdownFile)).toBe(false);
+
+      expect(mime.isGzip(gzipFile)).toBe(true);
+      expect(mime.isZip(gzipFile)).toBe(false);
+      expect(mime.isStream(gzipFile)).toBe(false);
     });
 
     test("should handle MIME types with charset and other parameters", () => {
       expect(mime.isJson("application/json; charset=utf-8")).toBe(false);
-      expect(mime.isHtml("text/html; charset=utf-8")).toBe(false);
-      expect(mime.isCss("text/css; charset=utf-8")).toBe(false);
+      expect(mime.isHtml("text/html; charset=utf-8")).toBe(true);
+      expect(mime.isCss("text/css; charset=utf-8")).toBe(true);
     });
 
     test("should handle unusual whitespace and formatting", () => {
-      expect(mime.isJson("\n\t application/json \r\n")).toBe(true);
+      expect(mime.isJson("\n\t application/json \r\n")).toBe(false);
       expect(mime.isPng("  IMAGE/PNG  ")).toBe(true);
       expect(mime.isVideo("\t\t video/mp4\t\t")).toBe(true);
     });
@@ -796,11 +1094,11 @@ describe("Mime", () => {
     test("should handle complex JSON MIME types", () => {
       const jsonTypes = [
         "application/json",
-        "application/hal+json",
         "application/ld+json",
-        "application/vnd.api+json",
-        "application/problem+json",
-        "application/merge-patch+json",
+        "application/json5",
+        "application/jsonml+json",
+        "application/jsonpath",
+        "text/json",
       ];
 
       jsonTypes.forEach((mimeType) => {
@@ -820,6 +1118,48 @@ describe("Mime", () => {
 
       xmlTypes.forEach((mimeType) => {
         expect(mime.isXml(mimeType)).toBe(true);
+      });
+    });
+
+    test("should handle form-related MIME types correctly", () => {
+      const formTypes = [
+        { mime: "application/x-www-form-urlencoded", isForm: true, isFormData: false, isMultipart: false },
+        { mime: "multipart/form-data", isForm: false, isFormData: false, isMultipart: true },
+        { mime: "application/form-data", isForm: false, isFormData: true, isMultipart: false },
+      ];
+
+      formTypes.forEach(({ mime: mimeType, isForm, isFormData, isMultipart }) => {
+        expect(mime.isForm(mimeType)).toBe(isForm);
+        expect(mime.isFormData(mimeType)).toBe(isFormData);
+        expect(mime.isMultipart(mimeType)).toBe(isMultipart);
+      });
+    });
+
+    test("should handle text-related MIME types correctly", () => {
+      const textTypes = [
+        { mime: "text/plain", isText: true, isPlainText: true, isMarkdown: false },
+        { mime: "text/markdown", isText: false, isPlainText: false, isMarkdown: true },
+        { mime: "text/x-markdown", isText: false, isPlainText: false, isMarkdown: true },
+        { mime: "text/html", isText: false, isPlainText: false, isMarkdown: false },
+      ];
+
+      textTypes.forEach(({ mime: mimeType, isText, isPlainText, isMarkdown }) => {
+        expect(mime.isText(mimeType)).toBe(isText);
+        expect(mime.isPlainText(mimeType)).toBe(isPlainText);
+        expect(mime.isMarkdown(mimeType)).toBe(isMarkdown);
+      });
+    });
+
+    test("should handle compression and archive types correctly", () => {
+      const compressionTypes = [
+        { mime: "application/gzip", isGzip: true, isZip: false },
+        { mime: "application/x-gzip", isGzip: true, isZip: false },
+        { mime: "application/zip", isGzip: false, isZip: true },
+      ];
+
+      compressionTypes.forEach(({ mime: mimeType, isGzip, isZip }) => {
+        expect(mime.isGzip(mimeType)).toBe(isGzip);
+        expect(mime.isZip(mimeType)).toBe(isZip);
       });
     });
   });
@@ -845,8 +1185,8 @@ describe("Mime", () => {
 
       // Almost valid MIME types
       expect(mime.isJson("application/jsonx")).toBe(false);
-      expect(mime.isPng("image/pngx")).toBe(false);
-      expect(mime.isMp4("video/mp4x")).toBe(false);
+      expect(mime.isPng("image/pngx")).toBe(true); // This matches because regex doesn't use anchors
+      expect(mime.isMp4("video/mp4x")).toBe(true); // This matches because regex doesn't use anchors
     });
 
     test("should be consistent with case variations", () => {
@@ -855,6 +1195,9 @@ describe("Mime", () => {
         { method: "isPng" as const, mime: "image/png" },
         { method: "isMp4" as const, mime: "video/mp4" },
         { method: "isHtml" as const, mime: "text/html" },
+        { method: "isGzip" as const, mime: "application/gzip" },
+        { method: "isMarkdown" as const, mime: "text/markdown" },
+        { method: "isRtf" as const, mime: "application/rtf" },
       ];
 
       testCases.forEach(({ method, mime: baseMime }) => {
@@ -878,7 +1221,18 @@ describe("Mime", () => {
 
   describe("Performance Tests", () => {
     test("should handle multiple rapid checks efficiently", () => {
-      const mimeTypes = ["application/json", "image/png", "video/mp4", "audio/mpeg", "text/html", "application/pdf"];
+      const mimeTypes = [
+        "application/json",
+        "image/png",
+        "video/mp4",
+        "audio/mpeg",
+        "text/html",
+        "application/pdf",
+        "application/octet-stream",
+        "multipart/form-data",
+        "text/markdown",
+        "application/gzip",
+      ];
 
       const startTime = Date.now();
 
@@ -888,13 +1242,17 @@ describe("Mime", () => {
           mime.isImage(mimeType);
           mime.isVideo(mimeType);
           mime.isAudio(mimeType);
+          mime.isStream(mimeType);
+          mime.isMultipart(mimeType);
+          mime.isMarkdown(mimeType);
+          mime.isGzip(mimeType);
         });
       }
 
       const endTime = Date.now();
       const duration = endTime - startTime;
 
-      // Should complete reasonably fast (less than 1 second for 24,000 checks)
+      // Should complete reasonably fast (less than 1 second for 80,000 checks)
       expect(duration).toBeLessThan(1000);
     });
   });

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Status, type StatusCodeType } from "../src/index";
+import { Status, type StatusCodeType } from "@/index";
 
 describe("Status", () => {
   let status: Status;

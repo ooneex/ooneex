@@ -67,7 +67,7 @@ const STATUS_CODE = {
   NetworkAuthenticationRequired: 511,
 } as const;
 
-export const STATUS_TEXT = {
+const STATUS_TEXT = {
   [STATUS_CODE.Accepted]: "Accepted",
   [STATUS_CODE.AlreadyReported]: "Already Reported",
   [STATUS_CODE.BadGateway]: "Bad Gateway",

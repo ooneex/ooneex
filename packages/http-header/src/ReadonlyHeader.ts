@@ -124,19 +124,37 @@ export class ReadonlyHeader implements IReadonlyHeader {
   }
 
   public getBearerToken(): string | null {
-    const token = this.get("Authorization");
+    const token = this.get("Authorization") || null;
 
-    if (!token) {
+    const match = token?.match(/Bearer +(?<token>[^, ]+)/);
+
+    return match?.[1] || null;
+  }
+
+  public getCookies(): Record<string, string> | null {
+    const cookieHeader = this.get("Cookie");
+
+    if (!cookieHeader) {
       return null;
     }
 
-    const match = token.match(/Bearer +(?<token>[^, ]+)/);
+    const cookies: Record<string, string> = {};
 
-    if (!match) {
-      return null;
-    }
+    cookieHeader.split(";").forEach((cookie) => {
+      const [key, ...valueParts] = cookie.trim().split("=");
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join("=");
+        cookies[key.trim()] = decodeURIComponent(value.trim());
+      }
+    });
 
-    return match[1] || null;
+    return Object.keys(cookies).length > 0 ? cookies : null;
+  }
+
+  public getCookie(name: string): string | null {
+    const cookies = this.getCookies();
+
+    return cookies?.[name] || null;
   }
 
   public has(name: HeaderFieldType): boolean {
@@ -146,19 +164,318 @@ export class ReadonlyHeader implements IReadonlyHeader {
   public toJson(): Partial<Record<HeaderFieldType, string>> {
     const headers: Partial<Record<HeaderFieldType, string>> = {};
 
-    for (const [key, value] of this) {
-      headers[key] = value as string;
-    }
+    this.native.forEach((value, key) => {
+      headers[key as HeaderFieldType] = value;
+    });
 
     return headers;
   }
 
-  [Symbol.iterator](): IterableIterator<[HeaderFieldType, string]> {
-    // Create an iterator for the headers
-    const headers: [HeaderFieldType, string][] = [];
+  public getAcceptLanguage(): string[] | null {
+    const acceptLanguage = this.get("Accept-Language");
+
+    if (!acceptLanguage) {
+      return null;
+    }
+
+    return acceptLanguage
+      .split(",")
+      .map((lang) => {
+        return lang.split(";")[0]?.trim();
+      })
+      .filter((lang): lang is string => Boolean(lang));
+  }
+
+  public getAcceptRanges(): string | null {
+    return this.get("Accept-Ranges");
+  }
+
+  public getAge(): number | null {
+    const age = this.get("Age");
+    return age ? Number.parseInt(age, 10) : null;
+  }
+
+  public getConnection(): string | null {
+    return this.get("Connection");
+  }
+
+  public getContentEncoding(): string | null {
+    return this.get("Content-Encoding");
+  }
+
+  public getContentLanguage(): string | null {
+    return this.get("Content-Language");
+  }
+
+  public getContentLocation(): string | null {
+    return this.get("Content-Location");
+  }
+
+  public getContentRange(): string | null {
+    return this.get("Content-Range");
+  }
+
+  public getDate(): Date | null {
+    const date = this.get("Date");
+    return date ? new Date(date) : null;
+  }
+
+  public getExpires(): Date | null {
+    const expires = this.get("Expires");
+    return expires ? new Date(expires) : null;
+  }
+
+  public getLastModified(): Date | null {
+    const lastModified = this.get("Last-Modified");
+    return lastModified ? new Date(lastModified) : null;
+  }
+
+  public getLocation(): string | null {
+    return this.get("Location");
+  }
+
+  public getOrigin(): string | null {
+    return this.get("Origin");
+  }
+
+  public getRange(): string | null {
+    return this.get("Range");
+  }
+
+  public getServer(): string | null {
+    return this.get("Server");
+  }
+
+  public getTransferEncoding(): string | null {
+    return this.get("Transfer-Encoding");
+  }
+
+  public getUpgrade(): string | null {
+    return this.get("Upgrade");
+  }
+
+  public getVary(): string[] | null {
+    const vary = this.get("Vary");
+
+    if (!vary) {
+      return null;
+    }
+
+    return vary.split(",").map((header) => header.trim());
+  }
+
+  public getWWWAuthenticate(): string | null {
+    return this.get("WWW-Authenticate");
+  }
+
+  public getXForwardedFor(): string | null {
+    return this.get("X-Forwarded-For");
+  }
+
+  public getXForwardedHost(): string | null {
+    return this.get("X-Forwarded-Host");
+  }
+
+  public getXForwardedProto(): string | null {
+    return this.get("X-Forwarded-Proto");
+  }
+
+  public getXRequestedWith(): string | null {
+    return this.get("X-Requested-With");
+  }
+
+  public getXRealIP(): string | null {
+    return this.get("X-Real-IP");
+  }
+
+  public getAccessControlAllowOrigin(): string | null {
+    return this.get("Access-Control-Allow-Origin");
+  }
+
+  public getAccessControlAllowMethods(): MethodType[] | null {
+    const methods = this.get("Access-Control-Allow-Methods");
+
+    if (!methods) {
+      return null;
+    }
+
+    return methods.split(",").map((method) => method.trim()) as MethodType[];
+  }
+
+  public getAccessControlAllowHeaders(): string[] | null {
+    const headers = this.get("Access-Control-Allow-Headers");
+
+    if (!headers) {
+      return null;
+    }
+
+    return headers.split(",").map((header) => header.trim());
+  }
+
+  public getAccessControlAllowCredentials(): boolean | null {
+    const credentials = this.get("Access-Control-Allow-Credentials");
+
+    if (!credentials) {
+      return null;
+    }
+
+    return credentials.toLowerCase() === "true";
+  }
+
+  public getAccessControlMaxAge(): number | null {
+    const maxAge = this.get("Access-Control-Max-Age");
+    return maxAge ? Number.parseInt(maxAge, 10) : null;
+  }
+  public getAccessControlExposeHeaders(): string[] | null {
+    const headers = this.get("Access-Control-Expose-Headers");
+
+    if (!headers) {
+      return null;
+    }
+
+    return headers.split(",").map((header) => header.trim());
+  }
+
+  public getContentSecurityPolicy(): string | null {
+    return this.get("Content-Security-Policy");
+  }
+
+  public getStrictTransportSecurity(): string | null {
+    return this.get("Strict-Transport-Security");
+  }
+
+  public getXContentTypeOptions(): string | null {
+    return this.get("X-Content-Type-Options");
+  }
+
+  public getXFrameOptions(): string | null {
+    return this.get("X-Frame-Options");
+  }
+
+  public getXXSSProtection(): string | null {
+    return this.get("X-XSS-Protection");
+  }
+
+  public getWebSocketAccept(): string | null {
+    return this.get("Sec-WebSocket-Accept");
+  }
+
+  public getWebSocketKey(): string | null {
+    return this.get("Sec-WebSocket-Key");
+  }
+
+  public getWebSocketVersion(): string | null {
+    return this.get("Sec-WebSocket-Version");
+  }
+
+  public getWebSocketProtocol(): string | null {
+    return this.get("Sec-WebSocket-Protocol");
+  }
+
+  public getApiVersion(): string | null {
+    return this.get("X-API-Version");
+  }
+
+  public getRequestId(): string | null {
+    return this.get("X-Request-ID");
+  }
+
+  public getRateLimitLimit(): number | null {
+    const limit = this.get("X-RateLimit-Limit");
+    return limit ? Number.parseInt(limit, 10) : null;
+  }
+
+  public getRateLimitRemaining(): number | null {
+    const remaining = this.get("X-RateLimit-Remaining");
+    return remaining ? Number.parseInt(remaining, 10) : null;
+  }
+
+  public getRateLimitReset(): number | null {
+    const reset = this.get("X-RateLimit-Reset");
+    return reset ? Number.parseInt(reset, 10) : null;
+  }
+
+  public getPoweredBy(): string | null {
+    return this.get("X-Powered-By");
+  }
+
+  public getRetryAfter(): number | null {
+    const retryAfter = this.get("Retry-After");
+    return retryAfter ? Number.parseInt(retryAfter, 10) : null;
+  }
+
+  public getIfMatch(): string | null {
+    return this.get("If-Match");
+  }
+
+  public getIfNoneMatch(): string | null {
+    return this.get("If-None-Match");
+  }
+
+  public getIfModifiedSince(): Date | null {
+    const ifModifiedSince = this.get("If-Modified-Since");
+    return ifModifiedSince ? new Date(ifModifiedSince) : null;
+  }
+
+  public getIfUnmodifiedSince(): Date | null {
+    const ifUnmodifiedSince = this.get("If-Unmodified-Since");
+    return ifUnmodifiedSince ? new Date(ifUnmodifiedSince) : null;
+  }
+
+  public getIfRange(): string | null {
+    return this.get("If-Range");
+  }
+
+  public isSecure(): boolean {
+    const proto = this.getXForwardedProto();
+    return proto === "https";
+  }
+  public isAjax(): boolean {
+    return this.getXRequestedWith()?.toLowerCase() === "xmlhttprequest";
+  }
+
+  public isCorsRequest(): boolean {
+    return this.has("Origin");
+  }
+
+  public isWebSocketRequest(): boolean {
+    const upgrade = this.getUpgrade();
+    const connection = this.getConnection();
+    return upgrade?.toLowerCase() === "websocket" && connection?.toLowerCase().includes("upgrade") === true;
+  }
+
+  public getClientIps(): string[] {
+    const ips: string[] = [];
+
+    // Check X-Forwarded-For header (can contain multiple IPs)
+    const xForwardedFor = this.getXForwardedFor();
+    if (xForwardedFor) {
+      const forwardedIps = xForwardedFor.split(",").map((ip) => ip.trim());
+      ips.push(...forwardedIps);
+    }
+
+    // Check X-Real-IP header
+    const xRealIp = this.getXRealIP();
+    if (xRealIp && !ips.includes(xRealIp)) {
+      ips.push(xRealIp);
+    }
+
+    // Check generic IP header
+    const ip = this.getIp();
+    if (ip && !ips.includes(ip)) {
+      ips.push(ip);
+    }
+
+    return ips.filter((ip) => ip && ip.length > 0);
+  }
+
+  public *[Symbol.iterator](): IterableIterator<[HeaderFieldType, string]> {
+    const entries: [HeaderFieldType, string][] = [];
     this.native.forEach((value, key) => {
-      headers.push([key as HeaderFieldType, value]);
+      entries.push([key as HeaderFieldType, value]);
     });
-    return headers[Symbol.iterator]();
+    for (const entry of entries) {
+      yield entry;
+    }
   }
 }

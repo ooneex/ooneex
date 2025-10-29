@@ -1183,4 +1183,8 @@ export const HEADERS = [
   "Signed-Headers",
   "Server-Timing",
   "Service-Worker-Allowed",
+  "X-API-Version",
+  "X-RateLimit-Limit",
+  "X-RateLimit-Remaining",
+  "X-RateLimit-Reset",
 ] as const;

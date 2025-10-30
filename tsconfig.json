@@ -21,7 +21,7 @@
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
 
     "emitDecoratorMetadata": true,

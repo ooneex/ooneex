@@ -4,10 +4,10 @@ import type { ExceptionStackFrameType } from "./types";
 export class Exception<T = unknown> extends Error {
   public readonly date: Date = new Date();
   public readonly status?: StatusCodeType;
-  public readonly data?: Readonly<Record<string, T>>;
+  public readonly data?: T;
   public readonly native?: Error;
 
-  constructor(message: string | Error, options?: { status?: StatusCodeType; data?: Readonly<Record<string, T>> }) {
+  constructor(message: string | Error, options?: { status?: StatusCodeType; data?: T }) {
     super(message instanceof Error ? (message as Error).message : message);
 
     this.status = options?.status;

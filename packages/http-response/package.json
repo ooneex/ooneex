@@ -9,9 +9,11 @@
   "scripts": {
     "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --target ES2022 --moduleResolution bundler --outfile dist/index.d.ts",
     "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
-    "publish": "bun run build && cp package.json dist && cp README.md dist && cd dist && bun publish --access public"
+    "publish": "bun run build && bun publish --access public"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {},
   "files": [
     "dist/**/*.js",

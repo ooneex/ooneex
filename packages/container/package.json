@@ -8,8 +8,10 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc -p tsconfig.build.json",
+    "test": "bun test tests",
+    "test:watch": "bun test tests --watch",
     "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
-    "publish": "bun run build && npm publish --access public"
+    "publish": "bun run build && bun publish --access public"
   },
   "devDependencies": {},
   "peerDependencies": {},
@@ -18,6 +20,8 @@
     "dist/**/*.d.ts"
   ],
   "dependencies": {
-    "inversify": "^7.10.4"
+    "inversify": "^7.10.4",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
   }
 }

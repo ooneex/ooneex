@@ -11,12 +11,12 @@
   },
   "private": true,
   "scripts": {
-    "build": "bun --workspaces run build",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "test:watch": "pnpm -r run test:watch",
     "fmt": "bunx biome format --write",
     "lint": "bunx biome lint",
-    "test": "bun test tests",
-    "test:watch": "bun test tests --watch",
-    "publish": "bun --workspaces run publish",
+    "publish": "pnpm -r run publish",
     "prepare": "husky"
   },
   "type": "module",

@@ -134,14 +134,14 @@ describe("Exception", () => {
   describe("Generic type parameter", () => {
     test("should work with string data type", () => {
       const data: Record<string, string> = { message: "error", code: "E001" };
-      const ex = new Exception<string>("Test", { data });
+      const ex = new Exception<Record<string, string>>("Test", { data });
 
       expect(ex.data).toEqual(data);
     });
 
     test("should work with number data type", () => {
       const data: Record<string, number> = { statusCode: 400, retryCount: 3 };
-      const ex = new Exception<number>("Test", { data });
+      const ex = new Exception<Record<string, number>>("Test", { data });
 
       expect(ex.data).toEqual(data);
     });
@@ -156,7 +156,7 @@ describe("Exception", () => {
       const data: Record<string, UserData> = {
         user: { id: 1, name: "John", roles: ["admin", "user"] },
       };
-      const ex = new Exception<UserData>("Test", { data });
+      const ex = new Exception<Record<string, UserData>>("Test", { data });
 
       expect(ex.data).toEqual(data);
     });

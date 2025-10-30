@@ -1,0 +1,22 @@
+{
+  "name": "@ooneex/middleware",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "bun test tests",
+    "test:watch": "bun test tests --watch",
+    "build": "rm -rf dist && bun run compile && bun build ./src/index.ts --outdir ./dist --target bun --format esm --packages external --minify",
+    "publish": "bun run build && bun publish --access public"
+  },
+  "devDependencies": {},
+  "peerDependencies": {},
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ]
+}

@@ -1,4 +1,5 @@
 import { Container as DI } from "inversify";
+import { ContainerException } from "./ContainerException";
 import { EContainerScope } from "./types";
 
 export const di = new DI();
@@ -26,7 +27,11 @@ export class Container {
 
   // biome-ignore lint/suspicious/noExplicitAny: trust me
   public get<T>(target: new (...args: any[]) => T): T {
-    return di.get<T>(target);
+    try {
+      return di.get<T>(target);
+    } catch (_e) {
+      throw new ContainerException(`Failed to resolve dependency: ${target.name}`);
+    }
   }
 
   // biome-ignore lint/suspicious/noExplicitAny: trust me

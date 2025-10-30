@@ -127,6 +127,14 @@ export interface IHeader extends IReadonlyHeader {
     },
   ) => IHeader;
 
+  removeCookie: (
+    name: string,
+    options?: {
+      domain?: string;
+      path?: string;
+    },
+  ) => IHeader;
+
   // Caching
   setCacheControl: (value: string) => IHeader;
   setEtag: (value: string) => IHeader;

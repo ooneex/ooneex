@@ -149,7 +149,7 @@ export class Header extends ReadonlyHeader implements IHeader {
   }
 
   public setCookies(
-    cookies: Array<{
+    cookies: {
       name: string;
       value: string;
       options?: {
@@ -161,7 +161,7 @@ export class Header extends ReadonlyHeader implements IHeader {
         httpOnly?: boolean;
         sameSite?: "Strict" | "Lax" | "None";
       };
-    }>,
+    }[],
   ): this {
     cookies.forEach((cookie) => {
       this.setCookie(cookie.name, cookie.value, cookie.options);
@@ -183,6 +183,21 @@ export class Header extends ReadonlyHeader implements IHeader {
     },
   ): this {
     return this.setCookie(name, value, options);
+  }
+
+  public removeCookie(
+    name: string,
+    options?: {
+      domain?: string;
+      path?: string;
+    },
+  ): this {
+    const pastDate = new Date(0); // January 1, 1970
+    return this.setCookie(name, "", {
+      ...options,
+      expires: pastDate,
+      maxAge: 0,
+    });
   }
 
   // Caching

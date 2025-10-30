@@ -159,7 +159,7 @@ export interface IReadonlyHeader {
   // Core methods
   get: (name: HeaderFieldType) => string | null;
   has: (name: HeaderFieldType) => boolean;
-  toJson: () => Partial<Record<HeaderFieldType, string>>;
+  toJson: () => Record<string, string>;
 
   // Content handling
   getContentType: () => MimeType | "*/*" | null;

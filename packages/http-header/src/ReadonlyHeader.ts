@@ -13,11 +13,11 @@ export class ReadonlyHeader implements IReadonlyHeader {
     return this.native.has(name);
   }
 
-  public toJson(): Partial<Record<HeaderFieldType, string>> {
-    const headers: Partial<Record<HeaderFieldType, string>> = {};
+  public toJson(): Record<string, string> {
+    const headers: Record<string, string> = {};
 
     this.native.forEach((value, key) => {
-      headers[key as HeaderFieldType] = value;
+      headers[key] = value;
     });
 
     return headers;

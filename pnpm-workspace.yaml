@@ -1,9 +1,18 @@
 packages:
-  # all packages in direct subdirs of packages/
-  - 'packages/*'
+  - packages/*
 
 hoistPattern:
   - '@biomejs/biome'
+  - '@nx/js'
+  - '@swc-node/register'
+  - '@swc/core'
+  - '@swc/helpers'
   - '@types/bun'
-  - 'husky'
-  - 'typescript'
+  - husky
+  - nx
+  - typescript
+  - undici-types
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - nx

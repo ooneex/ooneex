@@ -3,20 +3,26 @@
   "module": "index.ts",
   "devDependencies": {
     "@biomejs/biome": "2.3.0",
+    "@nx/js": "^22.0.2",
+    "@swc-node/register": "^1.11.1",
+    "@swc/core": "^1.14.0",
+    "@swc/helpers": "~0.5.11",
     "@types/bun": "latest",
-    "husky": "^9.1.7"
+    "@types/node": "^24.9.2",
+    "husky": "^9.1.7",
+    "nx": "22.0.2",
+    "undici-types": "^7.16.0"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "private": true,
   "scripts": {
-    "build": "pnpm -r run build",
-    "test": "pnpm -r run test",
-    "test:watch": "pnpm -r run test:watch",
+    "build": "bunx nx run-many -t build --output-style=stream --verbose",
+    "test": "bunx nx run-many -t test --output-style=stream --verbose",
+    "test:watch": "bunx nx run-many -t test:watch",
     "fmt": "bunx biome format --write",
     "lint": "bunx biome lint",
-    "publish": "pnpm -r run publish",
     "prepare": "husky"
   },
   "type": "module",

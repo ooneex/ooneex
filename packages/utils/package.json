@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/utils",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "type": "module",
   "exports": {
@@ -12,7 +12,6 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-
   "license": "MIT",
   "scripts": {
     "compile": "tsc -p tsconfig.build.json",

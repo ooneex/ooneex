@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "ooneex",
+      "dependencies": {
+        "reflect-metadata": "^0.2.2",
+      },
       "devDependencies": {
         "@biomejs/biome": "2.3.0",
         "@nx/js": "^22.0.2",

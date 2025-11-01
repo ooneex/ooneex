@@ -20,7 +20,7 @@
   "private": true,
   "scripts": {
     "graph": "bunx nx graph",
-    "dev": "bunx nx run-many -t test --watch",
+    "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
     "graph:affected": "bunx nx graph --affected",
     "build": "bunx nx run-many -t build --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
@@ -32,5 +32,8 @@
   "type": "module",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
+  }
 }

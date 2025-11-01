@@ -26,6 +26,5 @@
 
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
-  },
-  "references": []
+  }
 }

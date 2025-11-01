@@ -140,9 +140,6 @@ vite.config.ts.timestamp-*
 
 
 packages/pnpm-lock.yaml
-bun.lock
-
-
 
 .nx/cache
 .nx/workspace-data

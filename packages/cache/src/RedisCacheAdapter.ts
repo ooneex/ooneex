@@ -44,12 +44,14 @@ export class RedisCacheAdapter implements ICache {
     }
   };
 
-  public set = async <T = unknown>(key: string, value: T, ttlSeconds?: number): Promise<void> => {
+  public set = async <T = unknown>(key: string, value: T, ttl?: number): Promise<void> => {
     try {
-      const serializedValue = typeof value === "string" ? value : JSON.stringify(value);
+      // Convert undefined to null for Redis compatibility
+      const normalizedValue = value === undefined ? null : value;
+      const serializedValue = typeof normalizedValue === "string" ? normalizedValue : JSON.stringify(normalizedValue);
 
-      if (ttlSeconds) {
-        await this.client.send("SETEX", [key, ttlSeconds.toString(), serializedValue]);
+      if (ttl) {
+        await this.client.send("SETEX", [key, ttl.toString(), serializedValue]);
       } else {
         await this.client.set(key, serializedValue);
       }
@@ -61,7 +63,7 @@ export class RedisCacheAdapter implements ICache {
   public delete = async (key: string): Promise<boolean> => {
     try {
       const result = await this.client.del(key);
-      return result === 1;
+      return result > 0;
     } catch (error) {
       throw new CacheException(`Failed to delete key "${key}": ${error}`);
     }
@@ -100,7 +102,7 @@ export class RedisCacheAdapter implements ICache {
     }
   };
 
-  public mset = async <T = unknown>(entries: { key: string; value: T; ttlSeconds?: number }[]): Promise<void> => {
+  public mset = async <T = unknown>(entries: { key: string; value: T; ttl?: number }[]): Promise<void> => {
     if (entries.length === 0) {
       return;
     }
@@ -108,11 +110,11 @@ export class RedisCacheAdapter implements ICache {
     try {
       // Group entries by TTL
       const withoutTtl: { key: string; value: T }[] = [];
-      const withTtl: { key: string; value: T; ttlSeconds: number }[] = [];
+      const withTtl: { key: string; value: T; ttl: number }[] = [];
 
       entries.forEach((entry) => {
-        if (entry.ttlSeconds) {
-          withTtl.push(entry as { key: string; value: T; ttlSeconds: number });
+        if (entry.ttl && entry.ttl > 0) {
+          withTtl.push(entry as { key: string; value: T; ttl: number });
         } else {
           withoutTtl.push({ key: entry.key, value: entry.value });
         }
@@ -123,15 +125,19 @@ export class RedisCacheAdapter implements ICache {
         const msetArgs: string[] = [];
         withoutTtl.forEach(({ key, value }) => {
           msetArgs.push(key);
-          msetArgs.push(typeof value === "string" ? value : JSON.stringify(value));
+          // Convert undefined to null for Redis compatibility
+          const normalizedValue = value === undefined ? null : value;
+          msetArgs.push(typeof normalizedValue === "string" ? normalizedValue : JSON.stringify(normalizedValue));
         });
         await this.client.send("MSET", msetArgs);
       }
 
       // Handle entries with TTL individually using SETEX
-      for (const { key, value, ttlSeconds } of withTtl) {
-        const serializedValue = typeof value === "string" ? value : JSON.stringify(value);
-        await this.client.send("SETEX", [key, ttlSeconds.toString(), serializedValue]);
+      for (const { key, value, ttl } of withTtl) {
+        // Convert undefined to null for Redis compatibility
+        const normalizedValue = value === undefined ? null : value;
+        const serializedValue = typeof normalizedValue === "string" ? normalizedValue : JSON.stringify(normalizedValue);
+        await this.client.send("SETEX", [key, ttl.toString(), serializedValue]);
       }
     } catch (error) {
       throw new CacheException(`Failed to set multiple keys: ${error}`);
@@ -159,9 +165,9 @@ export class RedisCacheAdapter implements ICache {
     }
   };
 
-  public expire = async (key: string, ttlSeconds: number): Promise<boolean> => {
+  public expire = async (key: string, ttl: number): Promise<boolean> => {
     try {
-      const result = await this.client.expire(key, ttlSeconds);
+      const result = await this.client.expire(key, ttl);
       return result === 1;
     } catch (error) {
       throw new CacheException(`Failed to set TTL for key "${key}": ${error}`);
@@ -174,7 +180,8 @@ export class RedisCacheAdapter implements ICache {
       if (delta === 1) {
         return await this.client.incr(key);
       }
-      return await this.client.send("INCRBY", [key, delta.toString()]);
+      const integerDelta = Math.floor(delta);
+      return await this.client.send("INCRBY", [key, integerDelta.toString()]);
     } catch (error) {
       throw new CacheException(`Failed to increment key "${key}" by ${delta}: ${error}`);
     }
@@ -185,7 +192,8 @@ export class RedisCacheAdapter implements ICache {
       if (delta === 1) {
         return await this.client.decr(key);
       }
-      return await this.client.send("DECRBY", [key, delta.toString()]);
+      const integerDelta = Math.floor(delta);
+      return await this.client.send("DECRBY", [key, integerDelta.toString()]);
     } catch (error) {
       throw new CacheException(`Failed to decrement key "${key}" by ${delta}: ${error}`);
     }

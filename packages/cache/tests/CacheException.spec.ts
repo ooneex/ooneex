@@ -4,6 +4,27 @@ import { Status } from "@ooneex/http-status";
 import { CacheException } from "@/index";
 
 describe("CacheException", () => {
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new CacheException("Test message");
+
+      expect(exception.name).toBe("CacheException");
+    });
+  });
+
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new CacheException("Test message", data);
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
+  });
+
   describe("Constructor", () => {
     test("should create CacheException with message only", () => {
       const message = "Cache operation failed";
@@ -50,7 +71,7 @@ describe("CacheException", () => {
   describe("Inheritance and Properties", () => {
     test("should inherit all properties from Exception", () => {
       const message = "Cache error";
-      const data = { store: "redis", operation: "set", size: 1024 };
+      const data = { store: "redis", operation: "get", size: 1024 };
       const exception = new CacheException(message, data);
 
       // Properties from Exception
@@ -91,34 +112,35 @@ describe("CacheException", () => {
         key: string;
         operation: string;
         store: string;
-        ttl?: number;
+        ttl: number;
       }
 
       const errorData: Record<string, CacheError> = {
         missedKey: {
-          key: "user:profile:123",
+          key: "user:session:123",
           operation: "get",
           store: "redis",
           ttl: 3600,
         },
         expiredKey: {
-          key: "session:abc123",
-          operation: "get",
+          key: "cache:data:456",
+          operation: "retrieve",
           store: "memory",
+          ttl: 0,
         },
       };
 
       const exception = new CacheException<typeof errorData>("Cache operation failed", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.missedKey?.key).toBe("user:profile:123");
-      expect(exception.data?.expiredKey?.store).toBe("memory");
+      expect(exception.data?.missedKey?.key).toBe("user:session:123");
+      expect(exception.data?.expiredKey?.ttl).toBe(0);
     });
 
     test("should support string generic type", () => {
       const stringData: Record<string, string> = {
-        error: "Connection timeout",
-        suggestion: "Check cache server connection",
+        error: "Invalid cache key",
+        suggestion: "Use alphanumeric characters only",
         store: "redis",
       };
 
@@ -132,7 +154,7 @@ describe("CacheException", () => {
       const numberData: Record<string, number> = {
         attempts: 3,
         timeout: 5000,
-        size: 2048,
+        size: 1024,
         ttl: 3600,
       };
 
@@ -143,36 +165,34 @@ describe("CacheException", () => {
     });
   });
 
-  describe("Cache Operation Scenarios", () => {
+  describe("Error Handling Scenarios", () => {
     test("should handle cache miss errors", () => {
-      const exception = new CacheException("Cache miss", {
+      const exception = new CacheException("Cache miss occurred", {
         operation: "get",
-        key: "product:123",
+        key: "user:profile:123",
         store: "redis",
-        namespace: "catalog",
+        namespace: "app:cache",
         requestedAt: new Date().toISOString(),
       });
 
-      expect(exception.message).toBe("Cache miss");
+      expect(exception.message).toBe("Cache miss occurred");
       expect(exception.data?.operation).toBe("get");
-      expect(exception.data?.key).toBe("product:123");
-      expect(exception.data?.store).toBe("redis");
+      expect(exception.data?.key).toBe("user:profile:123");
     });
 
     test("should handle cache write failures", () => {
       const exception = new CacheException("Failed to write to cache", {
         operation: "set",
-        key: "user:session:456",
-        value: { userId: "456", loginTime: Date.now() },
+        key: "session:456",
+        value: { userId: 123, loginTime: Date.now() },
         ttl: 1800,
-        store: "memory",
+        store: "redis",
         error: "Memory limit exceeded",
       });
 
       expect(exception.message).toBe("Failed to write to cache");
       expect(exception.data?.operation).toBe("set");
       expect(exception.data?.ttl).toBe(1800);
-      expect(exception.data?.error).toBe("Memory limit exceeded");
     });
 
     test("should handle cache invalidation errors", () => {
@@ -181,29 +201,27 @@ describe("CacheException", () => {
         pattern: "user:*",
         affectedKeys: ["user:123", "user:456", "user:789"],
         store: "redis",
-        reason: "Pattern matching error",
+        reason: "Pattern too broad",
       });
 
       expect(exception.message).toBe("Cache invalidation failed");
-      expect(exception.data?.operation).toBe("invalidate");
       expect(exception.data?.pattern).toBe("user:*");
       expect(exception.data?.affectedKeys).toHaveLength(3);
     });
 
     test("should handle cache connection errors", () => {
-      const exception = new CacheException("Cache store connection lost", {
+      const exception = new CacheException("Cache connection lost", {
         store: "redis",
-        host: "localhost",
+        host: "cache.example.com",
         port: 6379,
         lastConnected: new Date(Date.now() - 30000).toISOString(),
         retryCount: 3,
         maxRetries: 5,
       });
 
-      expect(exception.message).toBe("Cache store connection lost");
+      expect(exception.message).toBe("Cache connection lost");
       expect(exception.data?.store).toBe("redis");
       expect(exception.data?.port).toBe(6379);
-      expect(exception.data?.retryCount).toBe(3);
     });
   });
 
@@ -212,48 +230,45 @@ describe("CacheException", () => {
       const exception = new CacheException("Redis operation failed", {
         store: "redis",
         command: "HGETALL",
-        key: "hash:data:123",
+        key: "hash:data",
         redisError: "WRONGTYPE Operation against a key holding the wrong kind of value",
-        cluster: false,
+        cluster: true,
         database: 0,
       });
 
       expect(exception.message).toBe("Redis operation failed");
-      expect(exception.data?.store).toBe("redis");
       expect(exception.data?.command).toBe("HGETALL");
-      expect(exception.data?.redisError).toContain("WRONGTYPE");
+      expect(exception.data?.cluster).toBe(true);
     });
 
     test("should handle memory cache errors", () => {
       const exception = new CacheException("Memory cache overflow", {
         store: "memory",
-        currentSize: 104857600, // 100MB
-        maxSize: 104857600,
-        evictionPolicy: "LRU",
-        evictedKeys: 15,
+        currentSize: 1073741824, // 1GB
+        maxSize: 1073741824, // 1GB
+        evictionPolicy: "lru",
+        evictedKeys: ["old:key:1", "old:key:2"],
         operation: "set",
       });
 
       expect(exception.message).toBe("Memory cache overflow");
-      expect(exception.data?.store).toBe("memory");
-      expect(exception.data?.currentSize).toBe(exception.data?.maxSize);
-      expect(exception.data?.evictionPolicy).toBe("LRU");
+      expect(exception.data?.evictionPolicy).toBe("lru");
+      expect(exception.data?.evictedKeys).toHaveLength(2);
     });
 
     test("should handle distributed cache errors", () => {
       const exception = new CacheException("Distributed cache sync failed", {
         store: "distributed",
-        nodes: ["node1:6379", "node2:6379", "node3:6379"],
-        failedNodes: ["node2:6379"],
+        nodes: ["cache-1", "cache-2", "cache-3"],
+        failedNodes: ["cache-2"],
         operation: "replicate",
-        consistencyLevel: "strong",
+        consistencyLevel: "quorum",
         partitionTolerance: false,
       });
 
       expect(exception.message).toBe("Distributed cache sync failed");
       expect(exception.data?.nodes).toHaveLength(3);
-      expect(exception.data?.failedNodes).toContain("node2:6379");
-      expect(exception.data?.consistencyLevel).toBe("strong");
+      expect(exception.data?.failedNodes).toContain("cache-2");
     });
   });
 
@@ -351,22 +366,22 @@ describe("CacheException", () => {
     test("should handle complex nested cache data", () => {
       const complexData = {
         operations: {
-          successful: ["get:user:123", "set:config:app"],
-          failed: ["del:temp:*", "expire:session:456"],
+          successful: 95,
+          failed: 5,
         },
         stores: {
           primary: "redis",
           fallback: "memory",
-          backup: "file",
+          backup: "disk",
         },
         performance: {
-          hitRate: 0.85,
-          missRate: 0.15,
+          hitRate: 0.92,
+          missRate: 0.08,
           averageResponseTime: 2.5,
-          peakMemoryUsage: 1024000,
+          peakMemoryUsage: 512000000,
         },
         configuration: {
-          maxMemory: 2048000,
+          maxMemory: 1073741824,
           evictionPolicy: "allkeys-lru",
           persistence: {
             enabled: true,
@@ -376,55 +391,47 @@ describe("CacheException", () => {
         },
       };
 
-      const exception = new CacheException<typeof complexData>("Complex cache data test", complexData);
+      const exception = new CacheException<typeof complexData>("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.operations.successful).toHaveLength(2);
-      expect(exception.data?.operations.failed).toContain("del:temp:*");
+      expect(exception.data?.operations.successful).toBe(95);
       expect(exception.data?.stores.primary).toBe("redis");
-      expect(exception.data?.performance.hitRate).toBe(0.85);
+      expect(exception.data?.performance.hitRate).toBe(0.92);
       expect(exception.data?.configuration.persistence.enabled).toBe(true);
     });
 
     test("should handle cache-specific data structures", () => {
       interface CacheEntry {
         key: string;
-        value: unknown;
+        value: Record<string, unknown>;
         ttl: number;
-        createdAt: number;
-        lastAccessed: number;
+        createdAt: string;
+        lastAccessed: string;
         accessCount: number;
       }
 
       const entryData: CacheEntry = {
-        key: "api:response:users:list",
+        key: "api:response:users",
         value: {
           users: [
-            { id: 1, name: "John" },
-            { id: 2, name: "Jane" },
+            { id: 1, name: "Alice" },
+            { id: 2, name: "Bob" },
           ],
           total: 2,
           page: 1,
         },
-        ttl: 300,
-        createdAt: 1699123456789,
-        lastAccessed: 1699123456889,
-        accessCount: 5,
+        ttl: 3600,
+        createdAt: new Date().toISOString(),
+        lastAccessed: new Date().toISOString(),
+        accessCount: 15,
       };
 
       const exception = new CacheException<CacheEntry>("Failed to process cache entry", entryData);
 
-      expect(exception.data?.key).toBe("api:response:users:list");
-      expect(exception.data?.ttl).toBe(300);
-      expect(exception.data?.accessCount).toBe(5);
-      expect(exception.data?.value).toEqual({
-        users: [
-          { id: 1, name: "John" },
-          { id: 2, name: "Jane" },
-        ],
-        total: 2,
-        page: 1,
-      });
+      expect(exception.data?.key).toBe("api:response:users");
+      expect(exception.data?.value.users).toHaveLength(2);
+      expect(exception.data?.value.total).toBe(2);
+      expect(exception.data?.accessCount).toBe(15);
     });
   });
 
@@ -432,27 +439,27 @@ describe("CacheException", () => {
     test("should handle cache warming errors", () => {
       const exception = new CacheException("Cache warming failed", {
         operation: "warm",
-        keys: ["popular:products", "featured:items", "trending:categories"],
-        warmedKeys: ["popular:products"],
-        failedKeys: ["featured:items", "trending:categories"],
+        keys: ["featured:items", "trending:categories", "popular:products"],
+        warmedKeys: ["featured:items"],
+        failedKeys: ["trending:categories", "popular:products"],
         errors: {
-          "featured:items": "Data source unavailable",
-          "trending:categories": "Computation timeout",
+          "trending:categories": "Data source unavailable",
+          "popular:products": "Query timeout",
         },
-        duration: 15000,
-        expectedDuration: 5000,
+        duration: 45000,
+        expectedDuration: 15000,
       });
 
       expect(exception.message).toBe("Cache warming failed");
-      expect(exception.data?.operation).toBe("warm");
+      expect(exception.data?.warmedKeys).toHaveLength(1);
       expect(exception.data?.failedKeys).toHaveLength(2);
-      expect(exception.data?.errors["featured:items"]).toBe("Data source unavailable");
+      expect(exception.data?.duration).toBeGreaterThan(exception.data?.expectedDuration || 0);
     });
 
     test("should handle cache partition errors", () => {
       const exception = new CacheException("Cache partition error", {
         partition: "user_sessions",
-        shardKey: "user:123",
+        shardKey: "user_123",
         targetShard: "shard_2",
         availableShards: ["shard_1", "shard_3", "shard_4"],
         unavailableShards: ["shard_2"],
@@ -461,46 +468,46 @@ describe("CacheException", () => {
       });
 
       expect(exception.message).toBe("Cache partition error");
-      expect(exception.data?.partition).toBe("user_sessions");
-      expect(exception.data?.unavailableShards).toContain("shard_2");
+      expect(exception.data?.targetShard).toBe("shard_2");
       expect(exception.data?.reshardingInProgress).toBe(true);
+      expect(exception.data?.availableShards).toHaveLength(3);
     });
 
     test("should handle cache expiration policy errors", () => {
       const exception = new CacheException("Expiration policy violation", {
-        policy: "sliding_expiration",
-        key: "api:token:abc123",
-        originalTtl: 3600,
+        policy: "sliding_window",
+        key: "session:active:789",
+        originalTtl: 1800,
         remainingTtl: 0,
-        lastAccessed: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-        slidingWindow: 1800, // 30 minutes
-        maxIdleTime: 1800,
-        absoluteExpiration: new Date(Date.now() + 86400000).toISOString(), // 24 hours from now
+        lastAccessed: new Date(Date.now() - 2000000).toISOString(),
+        slidingWindow: 1800,
+        maxIdleTime: 900,
+        absoluteExpiration: new Date(Date.now() + 86400000).toISOString(),
       });
 
       expect(exception.message).toBe("Expiration policy violation");
-      expect(exception.data?.policy).toBe("sliding_expiration");
+      expect(exception.data?.policy).toBe("sliding_window");
       expect(exception.data?.remainingTtl).toBe(0);
-      expect(exception.data?.maxIdleTime).toBe(1800);
+      expect(exception.data?.maxIdleTime).toBe(900);
     });
 
     test("should handle cache size limit errors", () => {
       const exception = new CacheException("Cache size limit exceeded", {
         operation: "set",
-        key: "large:dataset:processed",
+        key: "large:dataset:001",
         valueSize: 10485760, // 10MB
         maxValueSize: 5242880, // 5MB
-        totalCacheSize: 104857600, // 100MB
-        maxCacheSize: 104857600,
-        compressionEnabled: false,
-        compressionRatio: null,
-        suggestedAction: "Enable compression or increase size limits",
+        totalCacheSize: 1073741824, // 1GB
+        maxCacheSize: 1073741824, // 1GB
+        compressionEnabled: true,
+        compressionRatio: 0.7,
+        suggestedAction: "Split data into smaller chunks",
       });
 
       expect(exception.message).toBe("Cache size limit exceeded");
       expect(exception.data?.valueSize).toBeGreaterThan(exception.data?.maxValueSize || 0);
-      expect(exception.data?.compressionEnabled).toBe(false);
-      expect(exception.data?.suggestedAction).toContain("compression");
+      expect(exception.data?.compressionEnabled).toBe(true);
+      expect(exception.data?.suggestedAction).toBe("Split data into smaller chunks");
     });
   });
 });

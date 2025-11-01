@@ -301,7 +301,7 @@ describe("RedisCacheAdapter", () => {
       const undefinedValue = undefined;
       await adapter.set(testKey, undefinedValue);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, JSON.stringify(undefinedValue));
+      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, "null");
     });
 
     test("should set value with zero TTL (should behave as no TTL)", async () => {
@@ -736,7 +736,7 @@ describe("RedisCacheAdapter", () => {
 
     test("should handle entries with TTL", async () => {
       const entries = [
-        { key: "key1", value: "value1", ttlSeconds: 10 },
+        { key: "key1", value: "value1", ttl: 10 },
         { key: "key2", value: "value2" },
       ];
 
@@ -784,9 +784,9 @@ describe("RedisCacheAdapter", () => {
 
     test("should handle all entries with TTL", async () => {
       const entries = [
-        { key: "key1", value: "value1", ttlSeconds: 10 },
-        { key: "key2", value: { data: "test" }, ttlSeconds: 20 },
-        { key: "key3", value: [1, 2, 3], ttlSeconds: 30 },
+        { key: "key1", value: "value1", ttl: 10 },
+        { key: "key2", value: { data: "test" }, ttl: 20 },
+        { key: "key3", value: [1, 2, 3], ttl: 30 },
       ];
 
       await adapter.mset<unknown>(entries);
@@ -800,9 +800,9 @@ describe("RedisCacheAdapter", () => {
     test("should handle mixed TTL and non-TTL entries", async () => {
       const entries = [
         { key: "no-ttl-1", value: "value1" },
-        { key: "with-ttl", value: "value2", ttlSeconds: 15 },
+        { key: "with-ttl", value: "value2", ttl: 15 },
         { key: "no-ttl-2", value: { test: true } },
-        { key: "with-ttl-2", value: [1, 2], ttlSeconds: 25 },
+        { key: "with-ttl-2", value: [1, 2], ttl: 25 },
       ];
 
       await adapter.mset<unknown>(entries);
@@ -821,7 +821,7 @@ describe("RedisCacheAdapter", () => {
 
     test("should handle zero TTL (should use MSET)", async () => {
       const entries = [
-        { key: "key1", value: "value1", ttlSeconds: 0 },
+        { key: "key1", value: "value1", ttl: 0 },
         { key: "key2", value: "value2" },
       ];
 
@@ -943,7 +943,7 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should throw CacheException on SETEX error", async () => {
-      const entries = [{ key: "key1", value: "value1", ttlSeconds: 10 }];
+      const entries = [{ key: "key1", value: "value1", ttl: 10 }];
       mockRedisClient.send.mockRejectedValue(new Error("SETEX command failed"));
 
       expect(adapter.mset(entries)).rejects.toThrow(CacheException);
@@ -1007,8 +1007,8 @@ describe("RedisCacheAdapter", () => {
 
     test("should handle mset with TTL and verify immediate retrieval", async () => {
       const entriesWithTTL = [
-        { key: "ttl-key-1", value: "ttl-value-1", ttlSeconds: 60 },
-        { key: "ttl-key-2", value: { ttl: true }, ttlSeconds: 120 },
+        { key: "ttl-key-1", value: "ttl-value-1", ttl: 60 },
+        { key: "ttl-key-2", value: { ttl: true }, ttl: 120 },
       ];
 
       await adapter.mset<unknown>(entriesWithTTL);
@@ -2472,11 +2472,13 @@ describe("RedisCacheAdapter", () => {
 
       const results = await Promise.all(operations);
 
-      // At least one operation should complete successfully
+      // All operations should complete (flush returns undefined, keys return arrays)
       expect(results).toHaveLength(4);
-      results.forEach((result) => {
-        expect(result).toBeDefined();
-      });
+      // Check that keys operations return arrays and flush returns undefined
+      expect(Array.isArray(results[0])).toBe(true); // keys("concurrent:*")
+      expect(results[1]).toBeUndefined(); // flush() returns void/undefined
+      expect(Array.isArray(results[2])).toBe(true); // keys("concurrent:*")
+      expect(Array.isArray(results[3])).toBe(true); // keys("*")
     });
 
     test("should handle flush and immediate keys check", async () => {

@@ -12,17 +12,17 @@ export interface RedisCacheAdapterType {
 export interface ICache {
   // Basic operations
   get: <T = unknown>(key: string) => Promise<T | undefined>;
-  set: <T = unknown>(key: string, value: T, ttlSeconds?: number) => Promise<void>;
+  set: <T = unknown>(key: string, value: T, ttl?: number) => Promise<void>;
   delete: (key: string) => Promise<boolean>;
   has: (key: string) => Promise<boolean>;
 
   // Bulk operations
   mget: <T = unknown>(keys: string[]) => Promise<(T | undefined)[]>;
-  mset: <T = unknown>(entries: Array<{ key: string; value: T; ttlSeconds?: number }>) => Promise<void>;
+  mset: <T = unknown>(entries: { key: string; value: T; ttl?: number }[]) => Promise<void>;
 
   // TTL / metadata
   ttl: (key: string) => Promise<number | null>; // remaining seconds; null if no TTL; -1 if not found
-  expire: (key: string, ttlSeconds: number) => Promise<boolean>;
+  expire: (key: string, ttl: number) => Promise<boolean>;
 
   // Counters (atomic where supported; fallback with locks)
   incr: (key: string, delta?: number) => Promise<number>;

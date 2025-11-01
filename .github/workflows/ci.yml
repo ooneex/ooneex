@@ -33,6 +33,7 @@ jobs:
 
       - run: bun install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v4
-      - run: bunx nx affected -t lint test build
+      - run: bunx nx affected -t lint
+      - run: bunx nx affected -t test
       - run: bunx nx fix-ci
         if: always()

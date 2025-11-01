@@ -1,4 +1,4 @@
-.PHONY: clean-node-modules clean-dist clean-all
+.PHONY: clean-node-modules clean-dist clean-pnpm-lock clean-all
 
 # Clean node_modules directories
 clean-node-modules:
@@ -36,6 +36,24 @@ clean-dist:
 		echo "$(YELLOW)No dist directories found$(NC)"; \
 	fi
 
-# Clean both node_modules and dist directories
-clean-all: clean-node-modules clean-dist
-	@echo "$(GREEN)✓ Cleaned all node_modules and dist directories$(NC)"
+# Clean pnpm-lock.yaml files
+clean-pnpm-lock:
+	@echo "$(YELLOW)Finding and removing pnpm-lock.yaml files...$(NC)"
+	@found_files=$$(find . -name "pnpm-lock.yaml" -type f -not -path "*/.nx/*" 2>/dev/null || true); \
+	if [ -n "$$found_files" ]; then \
+		echo "$$found_files" | while read -r file; do \
+			if [ -f "$$file" ]; then \
+				echo "$(YELLOW)Removing $$file$(NC)"; \
+				rm -f "$$file"; \
+				echo "$(GREEN)✓ Removed $$file$(NC)"; \
+			fi \
+		done; \
+		count=$$(echo "$$found_files" | wc -l | tr -d ' '); \
+		echo "$(GREEN)✓ Removed $$count pnpm-lock.yaml files$(NC)"; \
+	else \
+		echo "$(YELLOW)No pnpm-lock.yaml files found$(NC)"; \
+	fi
+
+# Clean node_modules, dist directories, and pnpm-lock.yaml files
+clean-all: clean-node-modules clean-dist clean-pnpm-lock
+	@echo "$(GREEN)✓ Cleaned all node_modules, dist directories, and pnpm-lock.yaml files$(NC)"

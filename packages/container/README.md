@@ -1,6 +1,6 @@
 # @ooneex/container
 
-A lightweight and type-safe dependency injection container for TypeScript/JavaScript applications. Built on top of Inversify, this package provides a simplified API for managing dependencies with support for different scoping strategies and constant value injection.
+A powerful and lightweight Dependency Injection (DI) container for TypeScript/JavaScript applications. Built on top of Inversify, this package provides a simple yet comprehensive API for managing service dependencies and constants with different scoping strategies.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,21 +11,25 @@ A lightweight and type-safe dependency injection container for TypeScript/JavaSc
 
 ## Features
 
+✅ **Service Registration** - Register classes and resolve dependencies automatically
+
+
+✅ **Multiple Scopes** - Singleton, Transient, and Request scoping support
+
+✅ **Constant Management** - Store and retrieve constants with string or symbol identifiers
+
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Multiple Scopes** - Support for Singleton, Transient, and Request scopes
-
-✅ **Constant Injection** - Register and inject constant values using string or symbol identifiers
-
-✅ **Simple API** - Clean and intuitive methods for dependency management
-
-✅ **Built on Inversify** - Leverages the robust Inversify container under the hood
-
-✅ **Lightweight** - Minimal overhead with focused functionality
+✅ **Lightweight** - Minimal overhead with powerful dependency injection
 
 ✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 
-✅ **Service Management** - Easy registration, retrieval, and removal of services
+✅ **Error Handling** - Comprehensive error reporting
+ with ContainerException
+
+✅ **Service Lifecycle** - Complete control over service creation and removal
+
+✅ **Symbol Support** - Use symbols as identifiers for constants and services
 
 ## Installation
 
@@ -51,118 +55,16 @@ npm install @ooneex/container
 
 ## Usage
 
-### Basic Usage
+### Basic Service Registration
 
 ```typescript
 import { Container, EContainerScope } from '@ooneex/container';
 
 const container = new Container();
 
-// Define a service
 class DatabaseService {
   public connect(): string {
-    return 'Connected to database';
-  }
-}
-
-// Register the service
-container.add(DatabaseService);
-
-// Retrieve the service
-const dbService = container.get(DatabaseService);
-console.log(dbService.connect()); // "Connected to database"
-```
-
-### Different Scopes
-
-```typescript
-import { Container, EContainerScope } from '@ooneex/container';
-
-const container = new Container();
-
-class CounterService {
-  private static count = 0;
-  public readonly id: number;
-
-  constructor() {
-    CounterService.count++;
-    this.id = CounterService.count;
-  }
-
-  public getId(): number {
-    return this.id;
-  }
-}
-
-// Singleton scope (default) - same instance every time
-container.add(CounterService, EContainerScope.Singleton);
-const instance1 = container.get(CounterService);
-const instance2 = container.get(CounterService);
-console.log(instance1.getId() === instance2.getId()); // true
-
-// Transient scope - new instance every time
-container.add(CounterService, EContainerScope.Transient);
-const instance3 = container.get(CounterService);
-const instance4 = container.get(CounterService);
-console.log(instance3.getId() !== instance4.getId()); // true
-```
-
-### Working with Constants
-
-```typescript
-import { Container } from '@ooneex/container';
-
-const container = new Container();
-
-// Register constants
-const API_KEY = Symbol('API_KEY');
-const DATABASE_URL = 'database_url';
-
-container.addConstant(API_KEY, 'your-api-key-here');
-container.addConstant(DATABASE_URL, 'postgresql://localhost:5432/mydb');
-
-// Retrieve constants
-const apiKey = container.getConstant<string>(API_KEY);
-const dbUrl = container.getConstant<string>(DATABASE_URL);
-
-console.log(apiKey); // "your-api-key-here"
-console.log(dbUrl); // "postgresql://localhost:5432/mydb"
-
-// Use constants in services
-class ApiService {
-  public getEndpoint(): string {
-    const apiKey = container.getConstant<string>(API_KEY);
-    return `https://api.example.com?key=${apiKey}`;
-  }
-}
-```
-
-### Advanced Usage
-
-```typescript
-import { Container, EContainerScope } from '@ooneex/container';
-
-const container = new Container();
-
-// Configuration constants
-const DB_CONFIG = Symbol('DB_CONFIG');
-interface DbConfig {
-  host: string;
-  port: number;
-}
-
-const dbConfig: DbConfig = {
-  host: 'localhost',
-  port: 5432
-};
-
-container.addConstant(DB_CONFIG, dbConfig);
-
-// Service with dependencies
-class DatabaseService {
-  public connect(): string {
-    const config = container.getConstant<DbConfig>(DB_CONFIG);
-    return `Connected to ${config.host}:${config.port}`;
+    return "Connected to database";
   }
 }
 
@@ -174,8 +76,8 @@ class UserService {
   }
 
   public createUser(name: string): string {
-    const dbResult = this.database.connect();
-    return `User ${name} created. ${dbResult}`;
+    this.database.connect();
+    return `User ${name} created`;
   }
 }
 
@@ -183,10 +85,138 @@ class UserService {
 container.add(DatabaseService);
 container.add(UserService);
 
-// Use the service
+// Resolve an
+d use services
 const userService = container.get(UserService);
-console.log(userService.createUser('John'));
-// "User John created. Connected to localhost:5432"
+console.log(userService.createUser("John")); // "User John created"
+```
+
+### Scoping Strategies
+
+```typescript
+import { Container, EContainerScope } from '@ooneex/container';
+
+const container = new Container();
+
+class SingletonService {
+  private static instanceCount = 0;
+  public readonly instanceId: number;
+
+  constructor() {
+    this.instanceId = ++SingletonService.instanceCount;
+  }
+}
+
+class TransientService {
+  private static instanceCount = 0;
+  public readonly instanceId: number;
+
+  constructor() {
+    this.instanceId = ++TransientService.instanceCount;
+  }
+}
+
+// Singleton scope (default) - same instance every time
+container.add(SingletonService, EContainerScope.Singleton);
+const singleton1 = container.get(SingletonService);
+const singleton2 = container.get(SingletonService);
+console.log(singleton1.instanceId === singleton2.instanceId); // true
+
+// Transient scope - new instance every time
+container.add(TransientService, EContainerScope.Transient);
+const transient1 = container.get(TransientService);
+const transient2 = container.get(TransientService);
+console.log(transient1.instanceId !== transient2.instanceId); // true
+```
+
+### Constants Management
+
+```typescript
+import { Container } from '@ooneex/container';
+
+const container = new Container();
+
+// String-based constants
+container.addConstant("API_URL", "https://api.example.com");
+container.addConstant("MAX_RETRIES", 3);
+
+// Symbol-based constants
+const DATABASE_CONFIG = Symbol("database-config");
+const dbConfig = {
+  host: "localhost",
+  port: 5432,
+  database: "myapp"
+};
+
+container.addConstant(DATABASE_CONFIG, dbConfig);
+
+// Retrieve constants
+const apiUrl = container.getConstant<string>("API_URL");
+const maxRetries = container.getConstant<number>("MAX_RETRIES");
+const config = container.getConstant<typeof dbConfig>(DATABASE_CONFIG);
+
+console.log(apiUrl); // "https://api.example.com"
+console.log(maxRetries); // 3
+console.log(config.host); // "localhost"
+```
+
+### Advanced Usage with Mixed Dependencies
+
+```typescript
+import { Container } from '@ooneex/container';
+
+const container = new Container();
+
+const DB_CONFIG = Symbol("db-config");
+const API_URL = "API_URL";
+
+interface DatabaseConfig {
+  host: string;
+  port: number;
+}
+
+class ApiService {
+  public getEndpoint(): string {
+    const apiUrl = container.getConstant<string>(API_URL);
+    return `${apiUrl}/users`;
+  }
+}
+
+class DatabaseService {
+  public connect(): string {
+    const config = container.getConstant<DatabaseConfig>(DB_CONFIG);
+    return `Connected to ${config.host}:${config.port}`;
+  }
+}
+
+class UserService {
+  private api: ApiService;
+  private db: DatabaseService;
+
+  constructor() {
+    this.api = container.get(ApiService);
+    this.db = container.get(DatabaseService);
+  }
+
+  public processUser(): string {
+    const endpoint = this.api.getEndpoint();
+    const connection = this.db.connect();
+    return `Processing user via ${endpoint} with ${connection}`;
+  }
+}
+
+// Register constants
+container.addConstant(DB_CONFIG, { host: "localhost", port: 5432 });
+container.addConstant(API_URL, "https://api.example.com");
+
+// Register services
+container.add(ApiService);
+container.add(DatabaseService);
+container.add(UserService);
+
+// Use the services
+const userService = container.get(UserService);
+console.log(userService.processUser());
 ```
 
 ## API Reference
@@ -195,171 +225,166 @@ console.log(userService.createUser('John'));
 
 The main dependency injection container class.
 
-#### Methods
+#### Service Methods
 
 ##### `add(target: Constructor, scope?: EContainerScope): void`
-Registers a service class in the container.
+Registers a class constructor in the container with optional scoping.
 
 **Parameters:**
-- `target` - The constructor function of the service class
-- `scope` - Optional scope for the service (defaults to Singleton)
+- `target` - The class constructor to register
+- `scope` - The lifecycle scope (default: `EContainerScope.Singleton`)
 
 **Example:**
 ```typescript
-class MyService {
-  getValue(): string {
-    return 'Hello World';
-  }
-}
-
-container.add(MyService); // Singleton scope
-container.add(MyService, EContainerScope.Transient); // Transient scope
-container.add(MyService, EContainerScope.Request); // Request scope
+container.add(DatabaseService);
+container.add(LoggerService, EContainerScope.Transient);
+container.add(RequestService, EContainerScope.Request);
 ```
 
 ##### `get<T>(target: Constructor<T>): T`
-Retrieves an instance of a registered service.
+Resolves and returns an instance of the registered class.
 
 **Parameters:**
-- `target` - The constructor function of the service class
+- `target` - The class constructor to resolve
 
-**Returns:** Instance of the requested service
+**Returns:** Instance of the requested class
 
-**Throws:** Error if the service is not registered
+**Throws:** `ContainerException` if the service is not registered
 
 **Example:**
 ```typescript
-const service = container.get(MyService);
-console.log(service.getValue()); // "Hello World"
+const service = container.get(DatabaseService);
+service.connect();
 ```
 
 ##### `has(target: Constructor): boolean`
 Checks if a service is registered in the container.
 
 **Parameters:**
-- `target` - The constructor function to check
+- `target` - The class constructor to check
 
 **Returns:** `true` if registered, `false` otherwise
 
 **Example:**
 ```typescript
-console.log(container.has(MyService)); // true
-console.log(container.has(UnregisteredService)); // false
+if (container.has(DatabaseService)) {
+  const db = container.get(DatabaseService);
+}
 ```
 
 ##### `remove(target: Constructor): void`
 Removes a service registration from the container.
 
 **Parameters:**
-- `target` - The constructor function of the service to remove
+- `target` - The class constructor to remove
 
 **Example:**
 ```typescript
-container.remove(MyService);
-console.log(container.has(MyService)); // false
+container.remove(DatabaseService);
+console.log(container.has(DatabaseService)); // false
 ```
 
-##### `addConstant<T>(identifier: string | symbol, value: T): void`
+#### Constants Methods
+
+##### `addConstant
+<T>(identifier: string | symbol, value: T): void`
 Registers a constant value in the container.
 
 **Parameters:**
-- `identifier` - String or Symbol identifier for the constant
+- `identifier` - String or symbol identifier for the constant
 - `value` - The constant value to store
 
 **Example:**
 ```typescript
-const API_URL = Symbol('API_URL');
-container.addConstant(API_URL, 'https://api.example.com');
-container.addConstant('version', '1.0.0');
+container.addConstant("API_KEY", "secret-key-123");
+const CONFIG_SYMBOL = Symbol("config");
+container.addConstant(CONFIG_SYMBOL, { env: "production" });
 ```
 
 ##### `getConstant<T>(identifier: string | symbol): T`
 Retrieves a constant value from the container.
 
 **Parameters:**
-- `identifier` - String or Symbol identifier of the constant
+- `identifier` - String or symbol identifier for the constant
 
 **Returns:** The stored constant value
 
-**Throws:** Error if the constant is not registered
+**Throws:** `ContainerException` if the constant is not found
 
 **Example:**
 ```typescript
-const apiUrl = container.getConstant<string>(API_URL);
-const version = container.getConstant<string>('version');
+const apiKey = container.getConstant<string>("API_KEY");
+const config = container.getConstant<Config>(CONFIG_SYMBOL);
 ```
 
 ##### `hasConstant(identifier: string | symbol): boolean`
 Checks if a constant is registered in the container.
 
 **Parameters:**
-- `identifier` - String or Symbol identifier to check
+- `identifier` - String or symbol identifier to check
 
-**Returns:** `true` if registered, `false` otherwise
+**Returns:** `true` if the constant exists, `false` otherwise
 
 **Example:**
 ```typescript
-console.log(container.hasConstant(API_URL)); // true
-console.log(container.hasConstant('unknown')); // false
+if (container.hasConstant("API_KEY")) {
+  const key = container.getConstant<string>("API_KEY");
+}
 ```
 
 ##### `removeConstant(identifier: string | symbol): void`
-Removes a constant registration from the container.
+Removes a constant from the container.
 
 **Parameters:**
-- `identifier` - String or Symbol identifier of the constant to remove
+- `identifier` - String or symbol identifier to remove
 
 **Example:**
 ```typescript
-container.removeConstant(API_URL);
-console.log(container.hasConstant(API_URL)); // false
+container.removeConstant("API_KEY");
+console.log(container.hasConstant("API_KEY")); // false
 ```
 
 ### `EContainerScope` Enum
 
-Defines the available scoping strategies for services.
+Defines the lifecycle
+ scopes for service instances.
 
 #### Values
 
 ##### `EContainerScope.Singleton`
-**Default scope.** Creates a single instance that is reused for all requests.
+Creates a single instance that is reused for all requests (default behavior).
 
 **Example:**
 ```typescript
-container.add(MyService, EContainerScope.Singleton);
-const instance1 = container.get(MyService);
-const instance2 = container.get(MyService);
-console.log(instance1 === instance2); // true
+container.add(DatabaseService, EContainerScope.Singleton);
 ```
 
 ##### `EContainerScope.Transient`
-Creates a new instance every time the service is requested.
+Creates a new instance for every request.
 
 **Example:**
 ```typescript
-container.add(MyService, EContainerScope.Transient);
-const instance1 = container.get(MyService);
-const instance2 = container.get(MyService);
-console.log(instance1 === instance2); // false
+container.add(RequestIdService, EContainerScope.Transient);
 ```
 
 ##### `EContainerScope.Request`
-Creates one instance per request scope. In most contexts, behaves like Singleton.
+Creates one instance per request scope (useful in web applications).
 
 **Example:**
 ```typescript
-container.add(MyService, EContainerScope.Request);
+container.add(UserContextService, EContainerScope.Request);
 ```
 
 ### `IContainer` Interface
 
-Interface defining the container contract.
+Interface defining the contract for dependency injection containers.
 
 **Example:**
 ```typescript
-import { IContainer, EContainerScope } from '@ooneex/container';
+import { IContainer } from '@ooneex/container';
 
 class CustomContainer implements IContainer {
+  // Implement all required methods
   add(target: Constructor, scope?: EContainerScope): void {
     // Custom implementation
   }
@@ -368,104 +393,132 @@ class CustomContainer implements IContainer {
     // Custom implementation
   }
 
-  // ... implement other methods
+  // ... other methods
 }
 ```
 
-## Shared Container State
+### `ContainerException` Class
 
-**Important:** The container uses a shared Inversify container instance under the hood. This means that all `Container` instances share the same service registrations.
+Exception thrown when container operations fail.
 
+**Properties:**
+- Extends the base `Exception` class from `@ooneex/exception`
+- Contains detailed error information and context
+- HTTP status code set to `500 Internal Server Error`
+
+**Example:**
 ```typescript
-import { Container } from '@ooneex/container';
-
-const container1 = new Container();
-const container2 = new Container();
-
-class SharedService {
-  getValue(): string {
-    return 'shared';
-  }
-}
-
-// Register in first container
-container1.add(SharedService);
-
-// Available in second container too
-console.log(container2.has(SharedService)); // true
-const service = container2.get(SharedService);
-console.log(service.getValue()); // "shared"
-```
-
-## Best Practices
-
-### 1. Use Symbols for Constants
-```typescript
-// Good
-const API_KEY = Symbol('API_KEY');
-container.addConstant(API_KEY, 'your-key');
-
-// Avoid string keys when possible
-container.addConstant('api_key', 'your-key');
-```
-
-### 2. Define Interfaces
-```typescript
-interface IUserRepository {
-  findUser(id: string): User | null;
-}
-
-class UserRepository implements IUserRepository {
-  findUser(id: string): User | null {
-    // Implementation
-  }
-}
-```
-
-### 3. Use Appropriate Scopes
-- **Singleton**: For stateless services, configurations, connections
-- **Transient**: For stateful services that need fresh instances
-- **Request**: For services that should be scoped to a request lifecycle
-
-### 4. Handle Dependencies Manually
-Since this is a simple container, inject dependencies in constructors:
-
-```typescript
-class UserService {
-  private userRepo: IUserRepository;
-  private logger: ILogger;
-
-  constructor() {
-    this.userRepo = container.get(UserRepository);
-    this.logger = container.get(Logger);
+try {
+  const service = container.get(UnregisteredService);
+} catch (error) {
+  if (error instanceof ContainerException) {
+    console.log(error.message); // "Failed to resolve dependency: UnregisteredService"
+    console.log(error.status); // 500
   }
 }
 ```
 
 ## Error Handling
 
-The container will throw errors in the following scenarios:
-
-- Attempting to get an unregistered service
-- Attempting to get an unregistered constant
+The container provides comprehensive error handling through the `ContainerException` class:
 
 ```typescript
+import { Container, ContainerException } from '@ooneex/container';
+
+const container = new Container();
+
+// Service not registered
 try {
-  const service = container.get(UnregisteredService);
+  const service = container.get(UnknownService);
 } catch (error) {
-  console.error('Service not found:', error.message);
+  if (error instanceof ContainerException) {
+    console.log(`Service error: ${error.message}`);
+  }
 }
 
+// Constant not found
 try {
-  const value = container.getConstant('unknown');
+  const value = container.getConstant("MISSING_CONSTANT");
 } catch (error) {
-  console.error('Constant not found:', error.message);
+  if (error instanceof ContainerException) {
+    console.log(`Constant error: ${error.message}`);
+  }
 }
+```
+
+## Best Practices
+
+### 1. Use Symbols for Internal Constants
+```typescript
+// Use symbols to avoid naming conflicts
+const DATABASE_CONFIG = Symbol("database-config");
+container.addConstant(DATABASE_CONFIG, config);
+```
+
+### 2. Check Registration Before Use
+```typescript
+if (!container.has(OptionalService)) {
+  container.add(OptionalService);
+}
+```
+
+### 3. Handle Exceptions Gracefully
+```typescript
+try {
+  const service = container.get(CriticalService);
+  return service.process();
+} catch (error) {
+  if (error instanceof ContainerException) {
+    // Log error and provide fallback
+    console.error("Service unavailable:", error.message);
+    return defaultResult;
+  }
+  throw error;
+}
+```
+
+### 4. Use Appropriate Scoping
+```typescript
+// Singleton for shared resources
+container.add(DatabaseConnection, EContainerScope.Singleton);
+
+// Transient for stateful services
+container.add(UserSession, EContainerScope.Transient);
+
+// Request scope for web request context
+container.add(RequestContext, EContainerScope.Request);
+```
+
+### 5. Organize Dependencies
+```typescript
+// Group related services and constants
+const setupDatabase = (container: Container) => {
+  const DB_CONFIG = Symbol("db-config");
+  container.addConstant(DB_CONFIG, databaseConfig);
+  container.add(DatabaseService);
+  container.add(UserRepository);
+};
+
+const setupApi = (container: Container) => {
+  container.addConstant("API_BASE_URL", process.env.API_URL);
+  container.add(ApiClient);
+  container.add(AuthService);
+};
 ```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Copyright
+
+Copyright (c) 2025 Ooneex
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Contributing
 
@@ -475,7 +528,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 1. Clone the repository
 2. Install dependencies: `bun install`
-3. Run tests: `bun test`
+3. Run tests: `bun run test`
 4. Build the project: `bun run build`
 
 ### Guidelines

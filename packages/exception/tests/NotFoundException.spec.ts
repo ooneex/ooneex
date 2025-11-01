@@ -4,218 +4,287 @@ import { Exception } from "@/Exception";
 import { NotFoundException } from "@/NotFoundException";
 
 describe("NotFoundException", () => {
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new NotFoundException("Test message");
+
+      expect(exception.name).toBe("NotFoundException");
+    });
+  });
+
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new NotFoundException("Test message", data);
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
+  });
+
   describe("Constructor", () => {
-    test("should create exception with message only", () => {
+    test("should create NotFoundException with message only", () => {
       const message = "Resource not found";
       const exception = new NotFoundException(message);
 
+      expect(exception).toBeInstanceOf(NotFoundException);
+      expect(exception).toBeInstanceOf(Exception);
+      expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.NotFound);
-      expect(exception.status).toBe(404);
       expect(exception.data).toBeUndefined();
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with message and data", () => {
+    test("should create NotFoundException with message and data", () => {
       const message = "User not found";
-      const data = {
-        id: "user-123",
-        resource: "users",
-      };
+      const data = { id: "user-123", resource: "users" };
       const exception = new NotFoundException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.NotFound);
-      expect(exception.status).toBe(404);
       expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with empty data object", () => {
-      const message = "Not found";
+    test("should create NotFoundException with empty data object", () => {
+      const message = "Empty data test";
       const data = {};
       const exception = new NotFoundException(message, data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(Status.Code.NotFound);
-      expect(exception.data).toEqual({});
+      expect(exception.data).toEqual(data);
     });
 
-    test("should handle readonly data correctly", () => {
-      const message = "Immutable resource not found";
-      const data = Object.freeze({
-        resourceId: "res-456",
-        type: "document",
-      });
+    test("should handle null data gracefully", () => {
+      const message = "Null data test";
+      const exception = new NotFoundException(message);
+
+      expect(exception.message).toBe(message);
+      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.data).toBeUndefined();
+    });
+  });
+
+  describe("Inheritance and Properties", () => {
+    test("should inherit all properties from Exception", () => {
+      const message = "Resource not found error";
+      const data = { resourceId: "item-123", resourceType: "product" };
       const exception = new NotFoundException(message, data);
+
+      // Properties from Exception
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.data).toEqual(data);
+      expect(exception.native).toBeUndefined();
+
+      // Properties from Error
+      expect(exception.name).toBe("NotFoundException");
+      expect(exception.message).toBe(message);
+      expect(exception.stack).toBeDefined();
+    });
+
+    test("should always set status to NotFound", () => {
+      const exception1 = new NotFoundException("Error 1");
+      const exception2 = new NotFoundException("Error 2", { key: "value" });
+
+      expect(exception1.status).toBe(Status.Code.NotFound);
+      expect(exception2.status).toBe(Status.Code.NotFound);
+      expect(exception1.status).toBe(404);
+      expect(exception2.status).toBe(404);
+    });
+
+    test("should have readonly data property", () => {
+      const data = { resourceId: "test-123" };
+      const exception = new NotFoundException("Test", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
     });
   });
 
-  describe("Inheritance", () => {
-    test("should extend Exception class", () => {
-      const exception = new NotFoundException("Test message");
-
-      expect(exception).toBeInstanceOf(Exception);
-      expect(exception).toBeInstanceOf(Error);
-    });
-
-    test("should inherit Exception methods", () => {
-      const exception = new NotFoundException("Test message");
-
-      expect(typeof exception.stackToJson).toBe("function");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
-    });
-
-    test("should have correct prototype chain", () => {
-      const exception = new NotFoundException("Test message");
-
-      expect(exception.constructor.name).toBe("NotFoundException");
-      expect(Object.getPrototypeOf(exception)).toBe(NotFoundException.prototype);
-      expect(Object.getPrototypeOf(Object.getPrototypeOf(exception))).toBe(Exception.prototype);
-    });
-  });
-
-  describe("Generic type parameter", () => {
-    test("should work with string data type", () => {
-      const data = {
-        path: "/api/users/123",
-        message: "User not found",
-      };
-      const exception = new NotFoundException<string>("String type error", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with number data type", () => {
-      const data = {
-        userId: 404,
-        attempts: 3,
-      };
-      const exception = new NotFoundException<number>("Numeric error", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with complex object data type", () => {
-      interface ResourceNotFound {
+  describe("Generic Type Support", () => {
+    test("should support generic type for data values", () => {
+      interface ResourceError {
         id: string;
         type: string;
-        lastSeen: Date;
+        lastSeen: string;
       }
 
-      const data = {
-        resource: {
+      const errorData: Record<string, ResourceError> = {
+        userError: {
+          id: "user-456",
+          type: "user",
+          lastSeen: "2024-01-15T10:30:00Z",
+        },
+        documentError: {
           id: "doc-789",
           type: "document",
-          lastSeen: new Date("2023-01-01"),
+          lastSeen: "2024-01-14T15:45:00Z",
         },
       };
-      const exception = new NotFoundException<ResourceNotFound>("Complex resource error", data);
 
-      expect(exception.data).toEqual(data);
-      expect(exception.data?.resource?.id).toBe("doc-789");
+      const exception = new NotFoundException<typeof errorData>("Resources not found", errorData);
+
+      expect(exception.data).toEqual(errorData);
+      expect(exception.data?.userError?.id).toBe("user-456");
+      expect(exception.data?.documentError?.type).toBe("document");
     });
 
-    test("should work with union types", () => {
-      const data = {
-        identifier: "user-abc",
-        code: 404,
+    test("should support string generic type", () => {
+      const stringData: Record<string, string> = {
+        path: "/api/users/missing",
+        suggestion: "Check if the resource ID is correct",
+        endpoint: "/api/users",
       };
-      const exception = new NotFoundException<string | number>("Union type error", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new NotFoundException<typeof stringData>("String data test", stringData);
+
+      expect(exception.data).toEqual(stringData);
+      expect(typeof exception.data?.path).toBe("string");
     });
 
-    test("should work without explicit generic type", () => {
-      const data = {
-        resource: "posts",
-        found: false,
-        searchTerm: "missing-post",
+    test("should support number generic type", () => {
+      const numberData: Record<string, number> = {
+        userId: 404,
+        attempts: 3,
+        lastFoundTimestamp: 1640995200,
       };
-      const exception = new NotFoundException("Mixed data types", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new NotFoundException<typeof numberData>("Number data test", numberData);
+
+      expect(exception.data).toEqual(numberData);
+      expect(typeof exception.data?.userId).toBe("number");
     });
   });
 
-  describe("Properties", () => {
-    test("should have readonly properties", () => {
-      const data = { id: "item-123" };
-      const exception = new NotFoundException("Test", data);
-
-      // Properties should be readonly (TypeScript compile-time check)
-      // At runtime, the properties are still accessible and have correct values
-      expect(exception.status).toBe(Status.Code.NotFound);
-      expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
-
-      // Verify properties exist and are of correct types
-      expect(typeof exception.status).toBe("number");
-      expect(typeof exception.data).toBe("object");
-      expect(exception.date).toBeInstanceOf(Date);
-    });
-
-    test("should capture creation time accurately", () => {
-      const beforeTime = Date.now();
-      const exception = new NotFoundException("Time test");
-      const afterTime = Date.now();
-
-      expect(exception.date.getTime()).toBeGreaterThanOrEqual(beforeTime);
-      expect(exception.date.getTime()).toBeLessThanOrEqual(afterTime);
-    });
-
-    test("should maintain same date across multiple accesses", () => {
-      const exception = new NotFoundException("Date consistency test");
-      const firstAccess = exception.date;
-      const secondAccess = exception.date;
-
-      expect(firstAccess).toBe(secondAccess);
-    });
-  });
-
-  describe("Error handling", () => {
-    test("should work with try-catch blocks", () => {
-      let caughtException: NotFoundException | null = null;
-
-      try {
-        throw new NotFoundException("Caught resource exception", {
-          resourceId: "missing-123",
-        });
-      } catch (error) {
-        caughtException = error as NotFoundException;
-      }
-
-      expect(caughtException).not.toBeNull();
-      expect(caughtException?.message).toBe("Caught resource exception");
-      expect(caughtException?.status).toBe(Status.Code.NotFound);
-      expect(caughtException?.data?.resourceId).toBe("missing-123");
-    });
-
-    test("should work with Promise rejections", async () => {
-      const exception = new NotFoundException("Promise rejection", {
-        async: true,
+  describe("Error Handling Scenarios", () => {
+    test("should handle resource lookup failures", () => {
+      const exception = new NotFoundException("Resource lookup failed", {
+        resourceId: "product-789",
+        resourceType: "product",
+        searchCriteria: "sku",
+        searchValue: "ABC-123",
+        database: "inventory",
       });
 
-      expect(Promise.reject(exception)).rejects.toThrow("Promise rejection");
-      expect(Promise.reject(exception)).rejects.toHaveProperty("status", Status.Code.NotFound);
+      expect(exception.message).toBe("Resource lookup failed");
+      expect(exception.data?.resourceId).toBe("product-789");
+      expect(exception.data?.searchCriteria).toBe("sku");
     });
 
-    test("should preserve stack trace", () => {
-      const exception = new NotFoundException("Stack trace test");
+    test("should handle API endpoint not found", () => {
+      const exception = new NotFoundException("API endpoint not found", {
+        path: "/api/v2/deprecated-endpoint",
+        method: "GET",
+        availableEndpoints: ["/api/v3/users", "/api/v3/products"],
+        suggestion: "Use v3 API instead",
+      });
 
-      expect(exception.stack).toBeDefined();
-      expect(exception.stack).toContain("NotFoundException");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
+      expect(exception.message).toBe("API endpoint not found");
+      expect(exception.data?.path).toBe("/api/v2/deprecated-endpoint");
+      expect(exception.data?.availableEndpoints).toHaveLength(2);
+    });
+
+    test("should handle file system resource not found", () => {
+      const exception = new NotFoundException("File not found", {
+        filePath: "/uploads/documents/report.pdf",
+        fileType: "pdf",
+        directory: "/uploads/documents",
+        permissions: "read",
+        fileSize: null,
+      });
+
+      expect(exception.message).toBe("File not found");
+      expect(exception.data?.filePath).toBe("/uploads/documents/report.pdf");
+      expect(exception.data?.fileSize).toBeNull();
+    });
+
+    test("should handle database record not found", () => {
+      const exception = new NotFoundException("Database record not found", {
+        table: "orders",
+        primaryKey: "id",
+        value: 99999,
+        query: "SELECT * FROM orders WHERE id = ?",
+        database: "ecommerce",
+      });
+
+      expect(exception.message).toBe("Database record not found");
+      expect(exception.data?.table).toBe("orders");
+      expect(exception.data?.value).toBe(99999);
     });
   });
 
-  describe("Edge cases", () => {
-    test("should handle empty string message", () => {
+  describe("Stack Trace and Debugging", () => {
+    test("should maintain proper stack trace", () => {
+      function throwNotFoundException() {
+        throw new NotFoundException("Stack trace test");
+      }
+
+      try {
+        throwNotFoundException();
+        // biome-ignore lint/suspicious/noExplicitAny: trust me
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.stack).toBeDefined();
+        expect(error.stack).toContain("throwNotFoundException");
+        expect(error.stack).toContain("Stack trace test");
+      }
+    });
+
+    test("should support stackToJson method from parent Exception", () => {
+      const exception = new NotFoundException("JSON stack test");
+      const stackJson = exception.stackToJson();
+
+      expect(stackJson).toBeDefined();
+      if (stackJson) {
+        expect(Array.isArray(stackJson)).toBe(true);
+        expect(stackJson.length).toBeGreaterThan(0);
+        expect(stackJson[0]).toHaveProperty("source");
+      }
+    });
+  });
+
+  describe("Serialization and Inspection", () => {
+    test("should be JSON serializable", () => {
+      const exception = new NotFoundException("Serialization test", {
+        component: "resource-finder",
+        version: "4.2.0",
+        cacheEnabled: false,
+      });
+
+      const serialized = JSON.stringify({
+        message: exception.message,
+        name: exception.name,
+        status: exception.status,
+        data: exception.data,
+        date: exception.date,
+      });
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed.message).toBe("Serialization test");
+      expect(parsed.name).toBe("NotFoundException");
+      expect(parsed.status).toBe(404);
+      expect(parsed.data).toEqual({
+        component: "resource-finder",
+        version: "4.2.0",
+        cacheEnabled: false,
+      });
+    });
+
+    test("should have correct toString representation", () => {
+      const exception = new NotFoundException("ToString test");
+      const stringRep = exception.toString();
+
+      expect(stringRep).toContain("NotFoundException");
+      expect(stringRep).toContain("ToString test");
+    });
+  });
+
+  describe("Edge Cases", () => {
+    test("should handle empty message", () => {
       const exception = new NotFoundException("");
 
       expect(exception.message).toBe("");
@@ -223,263 +292,160 @@ describe("NotFoundException", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "NotFound".repeat(1500);
+      const longMessage = "x".repeat(1000);
       const exception = new NotFoundException(longMessage);
 
       expect(exception.message).toBe(longMessage);
-      expect(exception.message.length).toBe(12000);
+      expect(exception.message.length).toBe(1000);
     });
 
     test("should handle special characters in message", () => {
-      const specialMessage = "Resource: 特殊字符 🔍 not found @#$%^&*()";
+      const specialMessage = "Resource Not Found: 特殊文字 🔍 with émojis and ñumbers 123!@#$%^&*()";
       const exception = new NotFoundException(specialMessage);
 
       expect(exception.message).toBe(specialMessage);
     });
 
-    test("should handle null and undefined in data", () => {
-      const data = {
-        nullValue: null,
-        undefinedValue: undefined,
+    test("should handle complex nested data", () => {
+      const complexData = {
+        search: {
+          query: "missing-item",
+          filters: ["active", "published"],
+          results: 0,
+        },
+        context: {
+          userId: "user-789",
+          sessionId: "sess-abc123",
+          timestamp: new Date().toISOString(),
+        },
+        metadata: {
+          searchEngine: "elasticsearch",
+          indexName: "products",
+          totalIndexed: 50000,
+        },
+        suggestions: {
+          similarTerms: ["missing", "unavailable", "deleted"],
+          alternativeActions: ["Contact support", "Try different search"],
+        },
       };
-      const exception = new NotFoundException("Null/undefined test", data);
 
-      expect(exception.data?.nullValue).toBeNull();
-      expect(exception.data?.undefinedValue).toBeUndefined();
+      const exception = new NotFoundException<typeof complexData>("Complex data test", complexData);
+
+      expect(exception.data).toEqual(complexData);
+      expect(exception.data?.search.results).toBe(0);
+      expect(exception.data?.search.filters).toHaveLength(2);
+      expect(exception.data?.metadata.totalIndexed).toBe(50000);
+      expect(exception.data?.suggestions.similarTerms).toContain("missing");
     });
 
-    test("should handle circular references in data", () => {
-      const circularData: Record<string, unknown> = {
-        name: "circular",
-      };
-      circularData.self = circularData;
+    test("should handle resource-specific data structures", () => {
+      interface ResourceSearchResult {
+        resourceId: string;
+        resourceType: "user" | "product" | "order" | "document";
+        searchAttempts: {
+          method: string;
+          timestamp: string;
+          found: boolean;
+        }[];
+        lastKnownLocation?: string;
+        relatedResources: string[];
+      }
 
-      const exception = new NotFoundException("Circular reference test", {
-        data: circularData,
-      });
-
-      expect(exception.data?.data?.name).toBe("circular");
-      expect(exception.data?.data?.self).toBe(circularData);
-    });
-
-    test("should handle deeply nested data", () => {
-      const deepData = {
-        level1: {
-          level2: {
-            level3: {
-              level4: {
-                resourceId: "deep-resource",
-              },
-            },
+      const resourceData: ResourceSearchResult = {
+        resourceId: "order-404",
+        resourceType: "order",
+        searchAttempts: [
+          {
+            method: "database_primary_key",
+            timestamp: new Date().toISOString(),
+            found: false,
           },
+          {
+            method: "index_search",
+            timestamp: new Date().toISOString(),
+            found: false,
+          },
+        ],
+        lastKnownLocation: "/api/orders/404",
+        relatedResources: ["user-123", "product-456"],
+      };
+
+      const exception = new NotFoundException<ResourceSearchResult>("Resource search exhausted", resourceData);
+
+      expect(exception.data?.resourceId).toBe("order-404");
+      expect(exception.data?.resourceType).toBe("order");
+      expect(exception.data?.searchAttempts).toHaveLength(2);
+      expect(exception.data?.relatedResources).toContain("user-123");
+    });
+  });
+
+  describe("Resource-Specific Scenarios", () => {
+    test("should handle user account lookup failures", () => {
+      const exception = new NotFoundException("User account not found", {
+        lookupMethod: "email",
+        emailAddress: "nonexistent@example.com",
+        searchedTables: ["users", "user_profiles", "archived_users"],
+        accountStatus: null,
+        registrationDate: null,
+        lastLoginDate: null,
+      });
+
+      expect(exception.message).toBe("User account not found");
+      expect(exception.data?.lookupMethod).toBe("email");
+      expect(exception.data?.searchedTables).toHaveLength(3);
+      expect(exception.data?.accountStatus).toBeNull();
+    });
+
+    test("should handle inventory item not found", () => {
+      const exception = new NotFoundException("Inventory item not found", {
+        sku: "PROD-404-XYZ",
+        category: "electronics",
+        warehouse: "main",
+        lastStockCount: 0,
+        discontinuedDate: "2024-01-01",
+        replacementProducts: ["PROD-405-XYZ", "PROD-406-XYZ"],
+      });
+
+      expect(exception.message).toBe("Inventory item not found");
+      expect(exception.data?.sku).toBe("PROD-404-XYZ");
+      expect(exception.data?.lastStockCount).toBe(0);
+      expect(exception.data?.replacementProducts).toHaveLength(2);
+    });
+
+    test("should handle document retrieval failures", () => {
+      const exception = new NotFoundException("Document not accessible", {
+        documentId: "DOC-MISSING-001",
+        documentType: "contract",
+        storage: "cloud",
+        encryptionStatus: "encrypted",
+        permissions: {
+          read: false,
+          write: false,
+          delete: false,
         },
-      };
-
-      const exception = new NotFoundException("Deep nesting test", deepData);
-
-      expect(exception.data?.level1?.level2?.level3?.level4?.resourceId).toBe("deep-resource");
-    });
-  });
-
-  describe("Resource specific tests", () => {
-    test("should handle different resource types", () => {
-      const resourceTypes = ["users", "posts", "comments", "files", "documents"];
-
-      resourceTypes.forEach((resourceType) => {
-        const exception = new NotFoundException(`${resourceType} not found`, {
-          resource: resourceType,
-          id: "missing-id",
-        });
-
-        expect(exception.message).toBe(`${resourceType} not found`);
-        expect(exception.data?.resource).toBe(resourceType);
-      });
-    });
-
-    test("should handle resource with ID information", () => {
-      const data = {
-        resourceType: "user",
-        resourceId: "user-789",
-        searchCriteria: "email",
-        searchValue: "nonexistent@example.com",
-      };
-
-      const exception = new NotFoundException("User not found by email", data);
-
-      expect(exception.data?.resourceType).toBe("user");
-      expect(exception.data?.resourceId).toBe("user-789");
-      expect(exception.data?.searchCriteria).toBe("email");
-      expect(exception.data?.searchValue).toBe("nonexistent@example.com");
-    });
-
-    test("should handle API endpoint information", () => {
-      const data = {
-        endpoint: "/api/v1/posts/123",
-        method: "GET",
-        resourceType: "post",
-        resourceId: "123",
-        message: "Post with ID 123 does not exist",
-      };
-
-      const exception = new NotFoundException("API resource not found", data);
-
-      expect(exception.data?.endpoint).toBe("/api/v1/posts/123");
-      expect(exception.data?.method).toBe("GET");
-      expect(exception.data?.resourceType).toBe("post");
-      expect(exception.data?.resourceId).toBe("123");
-    });
-
-    test("should handle file system resources", () => {
-      const data = {
-        path: "/uploads/documents/missing-file.pdf",
-        type: "file",
-        exists: false,
-        permissions: "read",
-      };
-
-      const exception = new NotFoundException("File not found", data);
-
-      expect(exception.data?.path).toBe("/uploads/documents/missing-file.pdf");
-      expect(exception.data?.type).toBe("file");
-      expect(exception.data?.exists).toBe(false);
-    });
-
-    test("should handle database records", () => {
-      const data = {
-        table: "products",
-        primaryKey: "id",
-        value: 999,
-        query: "SELECT * FROM products WHERE id = 999",
-      };
-
-      const exception = new NotFoundException("Database record not found", data);
-
-      expect(exception.data?.table).toBe("products");
-      expect(exception.data?.primaryKey).toBe("id");
-      expect(exception.data?.value).toBe(999);
-    });
-  });
-
-  describe("JSON serialization", () => {
-    test("should be JSON serializable (excluding circular stack)", () => {
-      const exception = new NotFoundException("JSON test", {
-        resourceId: "json-123",
-        statusCode: 404,
+        archiveStatus: "unknown",
       });
 
-      const json = {
-        message: exception.message,
-        status: exception.status,
-        data: exception.data,
-        date: exception.date,
-        stackFrames: exception.stackToJson(),
-      };
-
-      const serialized = JSON.stringify(json);
-      const parsed = JSON.parse(serialized);
-
-      expect(parsed.message).toBe("JSON test");
-      expect(parsed.status).toBe(404);
-      expect(parsed.data.resourceId).toBe("json-123");
-      expect(parsed.data.statusCode).toBe(404);
-    });
-  });
-
-  describe("Type compatibility", () => {
-    test("should be compatible with Error type", () => {
-      const errors: Error[] = [new NotFoundException("Error 1"), new NotFoundException("Error 2", { id: "missing" })];
-
-      expect(errors.length).toBe(2);
-      expect(errors[0]).toBeInstanceOf(Error);
-      expect(errors[1]).toBeInstanceOf(Error);
+      expect(exception.message).toBe("Document not accessible");
+      expect(exception.data?.documentId).toBe("DOC-MISSING-001");
+      expect(exception.data?.permissions.read).toBe(false);
+      expect(exception.data?.archiveStatus).toBe("unknown");
     });
 
-    test("should be compatible with Exception type", () => {
-      const exceptions: Exception[] = [
-        new NotFoundException("Exception 1"),
-        new NotFoundException("Exception 2", { resource: "posts" }),
-      ];
-
-      expect(exceptions.length).toBe(2);
-      expect(exceptions[0]).toBeInstanceOf(Exception);
-      expect(exceptions[1]).toBeInstanceOf(Exception);
-    });
-  });
-
-  describe("Comparison with base Exception", () => {
-    test("should have same interface as Exception but with fixed status", () => {
-      const baseException = new Exception("Base exception", {
-        status: Status.Code.InternalServerError,
-        data: { key: "value" },
+    test("should handle search result pagination", () => {
+      const exception = new NotFoundException("Page not found in search results", {
+        searchTerm: "javascript tutorials",
+        requestedPage: 50,
+        totalPages: 25,
+        resultsPerPage: 20,
+        totalResults: 500,
+        availablePages: Array.from({ length: 25 }, (_, i) => i + 1),
       });
 
-      const notFoundException = new NotFoundException("Not found exception", {
-        key: "value",
-      });
-
-      // Both should have same property types
-      expect(typeof baseException.message).toBe("string");
-      expect(typeof notFoundException.message).toBe("string");
-
-      expect(typeof baseException.status).toBe("number");
-      expect(typeof notFoundException.status).toBe("number");
-
-      expect(baseException.date).toBeInstanceOf(Date);
-      expect(notFoundException.date).toBeInstanceOf(Date);
-
-      // But different status values
-      expect(baseException.status).toBe(Status.Code.InternalServerError);
-      expect(notFoundException.status).toBe(Status.Code.NotFound);
-    });
-
-    test("should maintain consistent behavior with Exception", () => {
-      const data = { resourceId: "test-123", found: false };
-
-      const baseException = new Exception("Test", {
-        status: Status.Code.NotFound,
-        data,
-      });
-
-      const notFoundException = new NotFoundException("Test", data);
-
-      expect(baseException.message).toBe(notFoundException.message);
-      expect(baseException.status).toBe(notFoundException.status);
-      expect(baseException.data).toEqual(notFoundException.data);
-    });
-  });
-
-  describe("Search and query scenarios", () => {
-    test("should handle search with no results", () => {
-      const data = {
-        searchTerm: "nonexistent query",
-        searchType: "full-text",
-        resultsFound: 0,
-        totalSearched: 10000,
-      };
-
-      const exception = new NotFoundException("Search returned no results", data);
-
-      expect(exception.data?.searchTerm).toBe("nonexistent query");
-      expect(exception.data?.resultsFound).toBe(0);
-    });
-
-    test("should handle filtered queries", () => {
-      const data = {
-        filters: {
-          status: "active" as const,
-          category: "electronics" as const,
-          priceRange: "100-500" as const,
-        },
-        totalFiltered: 0,
-        totalAvailable: 1250,
-      };
-
-      const exception = new NotFoundException("No items match the specified filters", data);
-
-      expect((exception.data?.filters as { status: string; category: string; priceRange: string })?.status).toBe(
-        "active",
-      );
-      expect(exception.data?.totalFiltered).toBe(0);
+      expect(exception.message).toBe("Page not found in search results");
+      expect(exception.data?.requestedPage).toBe(50);
+      expect(exception.data?.totalPages).toBe(25);
+      expect(exception.data?.availablePages).toHaveLength(25);
     });
   });
 });

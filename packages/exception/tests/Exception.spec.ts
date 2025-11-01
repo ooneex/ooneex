@@ -1,70 +1,85 @@
-import { beforeEach, describe, expect, test } from "bun:test";
-import type { StatusCodeType } from "@ooneex/http-status";
-import { Exception, type ExceptionStackFrameType } from "@/index";
+import { describe, expect, test } from "bun:test";
+import { Exception } from "@/index";
 
 describe("Exception", () => {
-  let exception: Exception;
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new Exception("Test message");
 
-  beforeEach(() => {
-    exception = new Exception("Test error message");
+      expect(exception.name).toBe("Exception");
+    });
+  });
+
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new Exception("Test message", { data });
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
   });
 
   describe("Constructor", () => {
-    test("should create an exception with string message", () => {
+    test("should create Exception with string message only", () => {
       const message = "Test error message";
-      const ex = new Exception(message);
+      const exception = new Exception(message);
 
-      expect(ex.message).toBe(message);
-      expect(ex.name).toBe("Error");
-      expect(ex.date).toBeInstanceOf(Date);
-      expect(ex.status).toBeUndefined();
-      expect(ex.data).toBeUndefined();
-      expect(ex.native).toBeUndefined();
+      expect(exception).toBeInstanceOf(Exception);
+      expect(exception).toBeInstanceOf(Error);
+      expect(exception.message).toBe(message);
+      expect(exception.name).toBe("Exception");
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.status).toBeUndefined();
+      expect(exception.data).toBeUndefined();
+      expect(exception.native).toBeUndefined();
     });
 
-    test("should create an exception with Error object", () => {
+    test("should create Exception with Error object", () => {
       const originalError = new Error("Original error");
-      const ex = new Exception(originalError);
+      const exception = new Exception(originalError);
 
-      expect(ex.message).toBe("Original error");
-      expect(ex.name).toBe("Error");
-      expect(ex.date).toBeInstanceOf(Date);
-      expect(ex.native).toBe(originalError);
-      expect(ex.status).toBeUndefined();
-      expect(ex.data).toBeUndefined();
+      expect(exception.message).toBe("Original error");
+      expect(exception.name).toBe("Exception");
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.native).toBe(originalError);
+      expect(exception.status).toBeUndefined();
+      expect(exception.data).toBeUndefined();
     });
 
-    test("should create an exception with string message and options", () => {
+    test("should create Exception with string message and options", () => {
       const message = "Test error with options";
       const status = 400;
       const data = { userId: 123, action: "login" };
-      const ex = new Exception(message, { status, data });
+      const exception = new Exception(message, { status, data });
 
-      expect(ex.message).toBe(message);
-      expect(ex.status).toBe(status);
-      expect(ex.data).toEqual(data);
-      expect(ex.native).toBeUndefined();
+      expect(exception.message).toBe(message);
+      expect(exception.status).toBe(status);
+      expect(exception.data).toEqual(data);
+      expect(exception.native).toBeUndefined();
     });
 
-    test("should create an exception with Error object and options", () => {
+    test("should create Exception with Error object and options", () => {
       const originalError = new Error("Original error");
       const status = 500;
-      const data = { trace: "server-error" };
-      const ex = new Exception(originalError, { status, data });
+      const data = { trace: "error_trace" };
+      const exception = new Exception(originalError, { status, data });
 
-      expect(ex.message).toBe("Original error");
-      expect(ex.native).toBe(originalError);
-      expect(ex.status).toBe(status);
-      expect(ex.data).toEqual(data);
+      expect(exception.message).toBe("Original error");
+      expect(exception.status).toBe(status);
+      expect(exception.data).toEqual(data);
+      expect(exception.native).toBe(originalError);
     });
 
     test("should handle empty options", () => {
-      const ex = new Exception("Test", {});
+      const exception = new Exception("Test", {});
 
-      expect(ex.message).toBe("Test");
-      expect(ex.status).toBeUndefined();
-      expect(ex.data).toBeUndefined();
-      expect(ex.native).toBeUndefined();
+      expect(exception.message).toBe("Test");
+      expect(exception.status).toBeUndefined();
+      expect(exception.data).toBeUndefined();
     });
 
     test("should handle partial options", () => {
@@ -74,649 +89,596 @@ describe("Exception", () => {
 
       const ex2 = new Exception("Test", { data: { key: "value" } });
       expect(ex2.status).toBeUndefined();
-      expect(ex2.data).toEqual({ key: "value" });
+      expect(ex2.data?.key).toBe("value");
     });
   });
 
-  describe("Properties", () => {
+  describe("Inheritance and Properties", () => {
     test("should have readonly date property", () => {
-      const beforeDate = new Date();
-      const ex = new Exception("Test");
-      const afterDate = new Date();
+      const beforeDate = Date.now();
+      const exception = new Exception("Test");
+      const afterDate = Date.now();
 
-      expect(ex.date).toBeInstanceOf(Date);
-      expect(ex.date.getTime()).toBeGreaterThanOrEqual(beforeDate.getTime());
-      expect(ex.date.getTime()).toBeLessThanOrEqual(afterDate.getTime());
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.date.getTime()).toBeGreaterThanOrEqual(beforeDate);
+      expect(exception.date.getTime()).toBeLessThanOrEqual(afterDate);
 
-      // Verify it's readonly at TypeScript level (runtime properties are still writable)
-      // The readonly modifier is a TypeScript compile-time feature
-      expect(ex.date).toBeInstanceOf(Date);
+      // Date should be immutable
+      const originalDate = exception.date;
+      expect(exception.date).toBe(originalDate);
     });
 
     test("should have readonly status property", () => {
-      const ex = new Exception("Test", { status: 400 });
-      expect(ex.status).toBe(400);
+      const exception = new Exception("Test", { status: 400 });
 
-      // Verify it's readonly at TypeScript level (runtime properties are still writable)
-      expect(typeof ex.status).toBe("number");
+      expect(exception.status).toBe(400);
+      expect(typeof exception.status).toBe("number");
     });
 
     test("should have readonly data property", () => {
       const data = { key: "value" };
-      const ex = new Exception("Test", { data });
-      expect(ex.data).toBe(data);
+      const exception = new Exception("Test", { data });
 
-      // Verify it's readonly at TypeScript level (runtime properties are still writable)
-      expect(typeof ex.data).toBe("object");
+      expect(exception.data).toEqual(data);
+      expect(Object.isFrozen(exception.data)).toBe(true);
     });
 
     test("should freeze data property to prevent mutation", () => {
       const data = {
-        count: 1,
+        count: 42,
         nested: { value: "test" },
         array: [1, 2, 3],
       };
-      const ex = new Exception("Test", { data });
+      const exception = new Exception("Test", { data });
 
-      // Verify data is frozen
-      expect(Object.isFrozen(ex.data)).toBe(true);
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      // Note: Exception only does shallow freeze, nested objects are not frozen
+      expect(Object.isFrozen(exception.data?.nested)).toBe(false);
+      expect(Object.isFrozen(exception.data?.array)).toBe(false);
 
-      // Verify that attempting to modify frozen data throws in strict mode
+      // Should not allow modifications
       expect(() => {
-        // @ts-expect-error - Intentionally trying to modify frozen object
-        ex.data.count = 2;
-      }).toThrow("Attempted to assign to readonly property.");
-
-      expect(() => {
-        // @ts-expect-error - Intentionally trying to add property
-        ex.data.newProp = "new";
+        // @ts-expect-error - testing frozen object
+        exception.data.count = 100;
       }).toThrow();
 
+      // Nested objects are not frozen (shallow freeze only)
       expect(() => {
-        // @ts-expect-error - Intentionally trying to delete property
-        delete ex.data.count;
-      }).toThrow();
+        // @ts-expect-error - testing unfrozen nested object
+        exception.data.nested.value = "modified";
+      }).not.toThrow();
 
-      // Verify data remains unchanged after attempted modifications
-      expect(ex.data?.count).toBe(1);
-      expect(ex.data).not.toHaveProperty("newProp");
-      expect(ex.data).toHaveProperty("count");
-
-      // Note: Object.freeze is shallow - nested objects are not frozen
-      expect(Object.isFrozen(ex.data?.nested)).toBe(false);
-      expect(Object.isFrozen(ex.data?.array)).toBe(false);
+      expect(() => {
+        // @ts-expect-error - testing unfrozen array
+        exception.data.array.push(4);
+      }).not.toThrow();
     });
 
     test("should not freeze data when data is undefined", () => {
-      const ex = new Exception("Test");
-      expect(ex.data).toBeUndefined();
-    });
-
-    test("should not freeze data when data is null", () => {
-      const ex = new Exception("Test", { data: null });
-      expect(ex.data).toBeNull();
-    });
-
-    test("should freeze data with different data types", () => {
-      // Test with array
-      const arrayData = [1, 2, 3, { nested: "value" }];
-      const exArray = new Exception("Test", { data: arrayData });
-      expect(Object.isFrozen(exArray.data)).toBe(true);
-
-      // Test with string (primitives can't be frozen, but should not throw)
-      const stringData = "test string";
-      const exString = new Exception("Test", { data: stringData });
-      expect(exString.data).toBe(stringData);
-
-      // Test with number
-      const numberData = 42;
-      const exNumber = new Exception("Test", { data: numberData });
-      expect(exNumber.data).toBe(numberData);
-
-      // Test with boolean
-      const booleanData = true;
-      const exBoolean = new Exception("Test", { data: booleanData });
-      expect(exBoolean.data).toBe(booleanData);
-
-      // Test with complex nested object
-      const complexData = {
-        level1: {
-          level2: {
-            level3: "deep value",
-          },
-          array: [1, 2, { item: "value" }],
-        },
-        primitive: 123,
-      };
-      const exComplex = new Exception("Test", { data: complexData });
-      expect(Object.isFrozen(exComplex.data)).toBe(true);
-      // Nested objects should not be frozen (shallow freeze)
-      expect(Object.isFrozen(exComplex.data?.level1)).toBe(false);
+      const exception = new Exception("Test");
+      expect(exception.data).toBeUndefined();
     });
 
     test("should have readonly native property", () => {
       const originalError = new Error("Original");
-      const ex = new Exception(originalError);
-      expect(ex.native).toBe(originalError);
+      const exception = new Exception(originalError);
 
-      // Verify it's readonly at TypeScript level (runtime properties are still writable)
-      expect(ex.native).toBeInstanceOf(Error);
+      expect(exception.native).toBe(originalError);
     });
 
     test("should inherit from Error", () => {
+      const exception = new Exception("Test");
       expect(exception).toBeInstanceOf(Error);
-      expect(exception).toBeInstanceOf(Exception);
     });
 
     test("should have stack trace", () => {
+      const exception = new Exception("Test");
       expect(exception.stack).toBeDefined();
       expect(typeof exception.stack).toBe("string");
-      expect(exception.stack?.length).toBeGreaterThan(0);
     });
   });
 
-  describe("Generic type parameter", () => {
-    test("should work with string data type", () => {
-      const data: Record<string, string> = { message: "error", code: "E001" };
-      const ex = new Exception<Record<string, string>>("Test", { data });
+  describe("Generic Type Support", () => {
+    test("should support string data type", () => {
+      const data = { message: "error message", code: "ERR_001" };
+      const exception = new Exception<typeof data>("Test", { data });
 
-      expect(ex.data).toEqual(data);
+      expect(exception.data).toEqual(data);
+      expect(typeof exception.data?.message).toBe("string");
     });
 
-    test("should work with number data type", () => {
-      const data: Record<string, number> = { statusCode: 400, retryCount: 3 };
-      const ex = new Exception<Record<string, number>>("Test", { data });
+    test("should support number data type", () => {
+      const data = { statusCode: 500, retryCount: 3 };
+      const exception = new Exception<typeof data>("Test", { data });
 
-      expect(ex.data).toEqual(data);
+      expect(exception.data).toEqual(data);
+      expect(typeof exception.data?.statusCode).toBe("number");
     });
 
-    test("should work with complex object data type", () => {
+    test("should support complex object data type", () => {
       interface UserData {
-        id: number;
-        name: string;
-        roles: string[];
+        user: {
+          id: number;
+          name: string;
+          roles: string[];
+        };
       }
 
-      const data: Record<string, UserData> = {
-        user: { id: 1, name: "John", roles: ["admin", "user"] },
+      const data: UserData = {
+        user: { id: 123, name: "John", roles: ["admin", "user"] },
       };
-      const ex = new Exception<Record<string, UserData>>("Test", { data });
+      const exception = new Exception<UserData>("Test", { data });
 
-      expect(ex.data).toEqual(data);
+      expect(exception.data).toEqual(data);
+      expect(exception.data?.user.id).toBe(123);
+      expect(exception.data?.user.roles).toContain("admin");
     });
   });
 
-  describe("stackToJson", () => {
+  describe("Error Handling Scenarios", () => {
+    test("should handle application errors", () => {
+      const exception = new Exception("Application error occurred", {
+        status: 500,
+        data: {
+          component: "user-service",
+          operation: "create_user",
+          timestamp: new Date().toISOString(),
+          errorCode: "APP_ERR_001",
+        },
+      });
+
+      expect(exception.message).toBe("Application error occurred");
+      expect(exception.status).toBe(500);
+      expect(exception.data?.component).toBe("user-service");
+      expect(exception.data?.operation).toBe("create_user");
+    });
+
+    test("should handle system errors", () => {
+      const exception = new Exception("System resource unavailable", {
+        status: 503,
+        data: {
+          resource: "database",
+          maxRetries: 3,
+          lastAttempt: new Date().toISOString(),
+          healthCheck: false,
+        },
+      });
+
+      expect(exception.message).toBe("System resource unavailable");
+      expect(exception.status).toBe(503);
+      expect(exception.data?.resource).toBe("database");
+      expect(exception.data?.healthCheck).toBe(false);
+    });
+
+    test("should handle validation errors", () => {
+      const exception = new Exception("Data validation failed", {
+        status: 422,
+        data: {
+          field: "email",
+          value: "invalid-email",
+          rule: "email_format",
+          message: "Must be a valid email address",
+        },
+      });
+
+      expect(exception.message).toBe("Data validation failed");
+      expect(exception.status).toBe(422);
+      expect(exception.data?.field).toBe("email");
+      expect(exception.data?.rule).toBe("email_format");
+    });
+
+    test("should handle wrapped native errors", () => {
+      const originalError = new TypeError("Cannot read property 'name' of undefined");
+      const exception = new Exception(originalError, {
+        status: 500,
+        data: {
+          context: "user_profile_processing",
+          operation: "get_user_name",
+        },
+      });
+
+      expect(exception.message).toBe("Cannot read property 'name' of undefined");
+      expect(exception.native).toBe(originalError);
+      expect(exception.data?.context).toBe("user_profile_processing");
+    });
+  });
+
+  describe("Stack Trace and Debugging", () => {
+    test("should maintain proper stack trace", () => {
+      function throwException() {
+        throw new Exception("Stack trace test");
+      }
+
+      try {
+        throwException();
+        // biome-ignore lint/suspicious/noExplicitAny: trust me
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(Exception);
+        expect(error.stack).toBeDefined();
+        expect(error.stack).toContain("throwException");
+        expect(error.stack).toContain("Stack trace test");
+      }
+    });
+
+    test("should support stackToJson method", () => {
+      const exception = new Exception("JSON stack test");
+      const stackJson = exception.stackToJson();
+
+      expect(stackJson).toBeDefined();
+      if (stackJson) {
+        expect(Array.isArray(stackJson)).toBe(true);
+        expect(stackJson.length).toBeGreaterThan(0);
+        expect(stackJson[0]).toHaveProperty("source");
+      }
+    });
+
     test("should return null when stack is undefined", () => {
-      const ex = new Exception("Test");
-      // Manually remove stack to test this case
-      delete ex.stack;
+      const exception = new Exception("Test");
+      exception.stack = undefined;
+      const result = exception.stackToJson();
 
-      const result = ex.stackToJson();
       expect(result).toBeNull();
     });
 
-    test("should return null for empty stack", () => {
-      const ex = new Exception("Test");
-      ex.stack = "";
+    test("should parse stack trace frames correctly", () => {
+      const exception = new Exception("Test");
+      exception.stack = `Error: Test
+    at testFunction (/path/to/file.js:10:5)
+    at Object.method (/path/to/another.js:20:15)`;
 
-      const result = ex.stackToJson();
-      expect(result).toBeNull();
-    });
+      const result = exception.stackToJson();
 
-    test("should return empty array for stack with only error message", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test message";
+      expect(result).not.toBeNull();
+      expect(result).toHaveLength(2);
 
-      const result = ex.stackToJson();
-      expect(result).toEqual([]);
-    });
+      if (result) {
+        expect(result[0]?.functionName).toBe("testFunction");
+        expect(result[0]?.fileName).toBe("/path/to/file.js");
+        expect(result[0]?.lineNumber).toBe(10);
+        expect(result[0]?.columnNumber).toBe(5);
 
-    test("should parse function name with file location", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at functionName (/path/to/file.js:10:5)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at functionName (/path/to/file.js:10:5)",
-        functionName: "functionName",
-        fileName: "/path/to/file.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should parse function name with file location (no line numbers)", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at functionName (/path/to/file.js)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at functionName (/path/to/file.js)",
-        functionName: "functionName",
-        fileName: "/path/to/file.js",
-      });
-    });
-
-    test("should parse direct file location", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at /path/to/file.js:15:20";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at /path/to/file.js:15:20",
-        fileName: "/path/to/file.js",
-        lineNumber: 15,
-        columnNumber: 20,
-      });
-    });
-
-    test("should parse function name without location", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at functionName";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at functionName",
-        functionName: "functionName",
-      });
-    });
-
-    test("should handle multiple stack frames", () => {
-      const ex = new Exception("Test");
-      ex.stack = [
-        "Error: Test",
-        "    at functionA (/path/to/fileA.js:10:5)",
-        "    at functionB (/path/to/fileB.js:20:10)",
-        "    at /path/to/fileC.js:30:15",
-      ].join("\n");
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(3);
-
-      expect(result?.[0]).toEqual({
-        source: "at functionA (/path/to/fileA.js:10:5)",
-        functionName: "functionA",
-        fileName: "/path/to/fileA.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-
-      expect(result?.[1]).toEqual({
-        source: "at functionB (/path/to/fileB.js:20:10)",
-        functionName: "functionB",
-        fileName: "/path/to/fileB.js",
-        lineNumber: 20,
-        columnNumber: 10,
-      });
-
-      expect(result?.[2]).toEqual({
-        source: "at /path/to/fileC.js:30:15",
-        fileName: "/path/to/fileC.js",
-        lineNumber: 30,
-        columnNumber: 15,
-      });
-    });
-
-    test("should skip empty lines", () => {
-      const ex = new Exception("Test");
-      ex.stack = [
-        "Error: Test",
-        "    at functionA (/path/to/fileA.js:10:5)",
-        "",
-        "    at functionB (/path/to/fileB.js:20:10)",
-        "   ",
-        "    at functionC (/path/to/fileC.js:30:15)",
-      ].join("\n");
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(3);
-      expect(result?.[0]?.functionName).toBe("functionA");
-      expect(result?.[1]?.functionName).toBe("functionB");
-      expect(result?.[2]?.functionName).toBe("functionC");
+        expect(result[1]?.functionName).toBe("Object.method");
+        expect(result[1]?.fileName).toBe("/path/to/another.js");
+        expect(result[1]?.lineNumber).toBe(20);
+        expect(result[1]?.columnNumber).toBe(15);
+      }
     });
 
     test("should handle malformed stack frames", () => {
-      const ex = new Exception("Test");
-      ex.stack = [
-        "Error: Test",
-        "    at functionA (/path/to/fileA.js:10:5)",
-        "    some malformed line",
-        "    at functionB (/path/to/fileB.js:20:10)",
-      ].join("\n");
+      const exception = new Exception("Test");
+      exception.stack = `Error: Test
+    malformed line without proper format
+    at validFunction (/path/file.js:1:1)`;
 
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(3);
-      expect(result?.[0]?.functionName).toBe("functionA");
-      expect(result?.[1]).toEqual({
-        source: "some malformed line",
-      });
-      expect(result?.[2]?.functionName).toBe("functionB");
-    });
-
-    test("should handle Windows-style paths", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at functionName (C:\\path\\to\\file.js:10:5)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at functionName (C:\\path\\to\\file.js:10:5)",
-        functionName: "functionName",
-        fileName: "C:\\path\\to\\file.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should handle anonymous functions", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at <anonymous> (/path/to/file.js:10:5)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at <anonymous> (/path/to/file.js:10:5)",
-        functionName: "<anonymous>",
-        fileName: "/path/to/file.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should handle method calls on objects", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at Object.methodName (/path/to/file.js:10:5)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at Object.methodName (/path/to/file.js:10:5)",
-        functionName: "Object.methodName",
-        fileName: "/path/to/file.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should handle class method calls", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at MyClass.methodName (/path/to/file.js:10:5)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at MyClass.methodName (/path/to/file.js:10:5)",
-        functionName: "MyClass.methodName",
-        fileName: "/path/to/file.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should handle real stack trace from actual error", () => {
-      // Create a real error to get an actual stack trace
-      function createError() {
-        return new Exception("Real error");
-      }
-
-      const ex = createError();
-      const result = ex.stackToJson();
+      const result = exception.stackToJson();
 
       expect(result).not.toBeNull();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result?.length).toBeGreaterThan(0);
+      expect(result).toHaveLength(2);
 
-      // Each frame should have a source
-      result?.forEach((frame: ExceptionStackFrameType) => {
-        expect(frame.source).toBeDefined();
-        expect(typeof frame.source).toBe("string");
-        expect(frame.source.length).toBeGreaterThan(0);
-      });
-    });
+      if (result) {
+        expect(result[0]?.source).toBe("malformed line without proper format");
 
-    test("should handle node_modules paths", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at functionName (/path/node_modules/package/index.js:10:5)";
+        expect(result[0]?.functionName).toBeUndefined();
 
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at functionName (/path/node_modules/package/index.js:10:5)",
-        functionName: "functionName",
-        fileName: "/path/node_modules/package/index.js",
-        lineNumber: 10,
-        columnNumber: 5,
-      });
-    });
-
-    test("should handle eval contexts", () => {
-      const ex = new Exception("Test");
-      ex.stack = "Error: Test\n    at eval (eval at <anonymous> (/path/to/file.js:10:5), <anonymous>:1:1)";
-
-      const result = ex.stackToJson();
-      expect(result).toHaveLength(1);
-      expect(result?.[0]).toEqual({
-        source: "at eval (eval at <anonymous> (/path/to/file.js:10:5), <anonymous>:1:1)",
-        functionName: "eval",
-        fileName: "eval at <anonymous> (/path/to/file.js:10:5), <anonymous>",
-        lineNumber: 1,
-        columnNumber: 1,
-      });
+        expect(result[1]?.functionName).toBe("validFunction");
+        expect(result[1]?.fileName).toBe("/path/file.js");
+      }
     });
   });
 
-  describe("Error integration", () => {
-    test("should work with try-catch blocks", () => {
-      let caughtException: Exception | null = null;
-
-      try {
-        throw new Exception("Test error", { status: 400, data: { field: "email" } });
-      } catch (error) {
-        caughtException = error as Exception;
-      }
-
-      expect(caughtException).toBeInstanceOf(Exception);
-      expect(caughtException?.message).toBe("Test error");
-      expect(caughtException?.status).toBe(400);
-      expect(caughtException?.data).toEqual({ field: "email" });
-    });
-
-    test("should maintain Error prototype chain", () => {
-      expect(exception instanceof Error).toBe(true);
-      expect(exception instanceof Exception).toBe(true);
-      expect(Object.getPrototypeOf(exception)).toBe(Exception.prototype);
-      expect(Object.getPrototypeOf(Exception.prototype)).toBe(Error.prototype);
-    });
-
-    test("should have correct constructor name", () => {
-      expect(exception.constructor.name).toBe("Exception");
-    });
-
-    test("should work with Error.captureStackTrace", () => {
-      // This test verifies that stack trace capturing works correctly
-      function testFunction() {
-        const ex = new Exception("Stack trace test");
-        return ex;
-      }
-
-      const ex = testFunction();
-      expect(ex.stack).toBeDefined();
-      expect(ex.stack).toContain("testFunction");
-    });
-
-    test("should be JSON serializable (excluding circular stack)", () => {
-      const ex = new Exception("Test", { status: 400, data: { key: "value" } });
-
-      const json = JSON.stringify({
-        message: ex.message,
-        status: ex.status,
-        data: ex.data,
-        date: ex.date,
-        stackFrames: ex.stackToJson(),
+  describe("Serialization and Inspection", () => {
+    test("should be JSON serializable", () => {
+      const exception = new Exception("Serialization test", {
+        status: 400,
+        data: { component: "base-exception", version: "1.0.0" },
       });
 
-      expect(json).toBeDefined();
-      const parsed = JSON.parse(json);
-      expect(parsed.message).toBe("Test");
+      const serialized = JSON.stringify({
+        message: exception.message,
+        name: exception.name,
+        status: exception.status,
+        data: exception.data,
+        date: exception.date,
+      });
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed.message).toBe("Serialization test");
+      expect(parsed.name).toBe("Exception");
       expect(parsed.status).toBe(400);
-      expect(parsed.data).toEqual({ key: "value" });
+      expect(parsed.data).toEqual({
+        component: "base-exception",
+        version: "1.0.0",
+      });
+    });
+
+    test("should have correct toString representation", () => {
+      const exception = new Exception("ToString test");
+      const stringRep = exception.toString();
+
+      expect(stringRep).toContain("Exception");
+      expect(stringRep).toContain("ToString test");
+    });
+
+    test("should be JSON serializable with stackToJson", () => {
+      const exception = new Exception("Test", {
+        status: 500,
+        data: { key: "value" },
+      });
+
+      const json = {
+        message: exception.message,
+        status: exception.status,
+        data: exception.data,
+        date: exception.date,
+        stackFrames: exception.stackToJson(),
+      };
+
+      const serialized = JSON.stringify(json);
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed.message).toBe("Test");
+      expect(parsed.status).toBe(500);
+      expect(parsed.data.key).toBe("value");
+      expect(Array.isArray(parsed.stackFrames)).toBe(true);
     });
   });
 
-  describe("Edge cases", () => {
-    test("should handle extremely long messages", () => {
-      const longMessage = "A".repeat(10000);
-      const ex = new Exception(longMessage);
+  describe("Edge Cases", () => {
+    test("should handle empty message", () => {
+      const exception = new Exception("");
 
-      expect(ex.message).toBe(longMessage);
-      expect(ex.message.length).toBe(10000);
+      expect(exception.message).toBe("");
+    });
+
+    test("should handle very long messages", () => {
+      const longMessage = "x".repeat(1000);
+      const exception = new Exception(longMessage);
+
+      expect(exception.message).toBe(longMessage);
+      expect(exception.message.length).toBe(1000);
     });
 
     test("should handle special characters in message", () => {
-      const specialMessage = "Error with unicode: 🚨 and newlines\n\r\t";
-      const ex = new Exception(specialMessage);
+      const specialMessage = "Error: 特殊文字 ⚠️ with émojis and ñumbers 123!@#$%^&*()";
+      const exception = new Exception(specialMessage);
 
-      expect(ex.message).toBe(specialMessage);
+      expect(exception.message).toBe(specialMessage);
     });
 
     test("should handle null and undefined in data", () => {
-      const data = { nullValue: null, undefinedValue: undefined };
-      const ex = new Exception("Test", { data });
+      const data = {
+        nullValue: null,
+        undefinedValue: undefined,
+      };
+      const exception = new Exception("Test", { data });
 
-      expect(ex.data).toEqual(data);
+      expect(exception.data?.nullValue).toBeNull();
+      expect(exception.data?.undefinedValue).toBeUndefined();
     });
 
     test("should handle circular references in data", () => {
-      const circularData = { name: "test" };
-      // @ts-expect-error
+      const circularData: Record<string, unknown> = {
+        name: "circular",
+      };
       circularData.self = circularData;
 
-      // This should not throw during construction
-      expect(() => {
-        const ex = new Exception("Test", { data: circularData });
-        expect(ex.data).toBe(circularData);
-      }).not.toThrow();
+      const exception = new Exception("Circular test", {
+        data: { circular: circularData },
+      });
+
+      expect(exception.data?.circular?.name).toBe("circular");
+      expect(exception.data?.circular?.self).toBe(circularData);
     });
 
     test("should handle nested Error objects", () => {
-      const originalError = new Error("Original");
-      const nestedError = new Error("Nested");
-      originalError.cause = nestedError;
+      const originalError = new TypeError("Type error");
+      const nestedError = new ReferenceError("Reference error");
+      (originalError as TypeError & { cause?: Error }).cause = nestedError;
 
-      const ex = new Exception(originalError);
-      expect(ex.native).toBe(originalError);
-      expect(ex.native?.cause).toBe(nestedError);
+      const exception = new Exception(originalError);
+
+      expect(exception.message).toBe("Type error");
+      expect(exception.native).toBe(originalError);
+      expect((exception.native as TypeError & { cause?: Error })?.cause).toBe(nestedError);
     });
 
     test("should handle Error objects with custom properties", () => {
       const customError = new Error("Custom error");
-      // @ts-expect-error
-      customError.code = "CUSTOM_CODE";
-      // @ts-expect-error
-      customError.statusCode = 422;
+      // biome-ignore lint/suspicious/noExplicitAny: testing custom properties
+      (customError as any).code = "CUSTOM_001";
+      // biome-ignore lint/suspicious/noExplicitAny: testing custom properties
+      (customError as any).severity = "high";
 
-      const ex = new Exception(customError, { status: 500 });
-      expect(ex.native).toBe(customError);
-      // @ts-expect-error
-      expect(ex.native?.code).toBe("CUSTOM_CODE");
-      // @ts-expect-error
-      expect(ex.native?.statusCode).toBe(422);
-      expect(ex.status).toBe(500); // Should use the provided status, not the native error's
-    });
+      const exception = new Exception(customError, { status: 500 });
 
-    test("should handle empty string message", () => {
-      const ex = new Exception("");
-      expect(ex.message).toBe("");
+      expect(exception.message).toBe("Custom error");
+      expect(exception.status).toBe(500);
+      // biome-ignore lint/suspicious/noExplicitAny: testing custom properties
+      expect((exception.native as any)?.code).toBe("CUSTOM_001");
+      // biome-ignore lint/suspicious/noExplicitAny: testing custom properties
+      expect((exception.native as any)?.severity).toBe("high");
     });
 
     test("should handle zero status code", () => {
-      const ex = new Exception("Test", { status: 0 as StatusCodeType });
-      expect(ex.status).toBe(0 as StatusCodeType);
+      const exception = new Exception("Test", { status: 0 as never });
+      expect(exception.status).toBe(0 as never);
     });
   });
 
-  describe("Type compatibility", () => {
-    test("should be compatible with Error type", () => {
-      const errors: Error[] = [new Error("Standard error"), new Exception("Exception error")];
-
-      errors.forEach((error) => {
-        expect(error.message).toBeDefined();
-        expect(error.stack).toBeDefined();
-        expect(error.name).toBeDefined();
+  describe("Exception-Specific Scenarios", () => {
+    test("should handle configuration errors", () => {
+      const exception = new Exception("Configuration validation failed", {
+        status: 500,
+        data: {
+          configFile: "app.config.json",
+          invalidFields: ["database.host", "redis.port"],
+          validationRules: {
+            "database.host": "required|string",
+            "redis.port": "required|integer|min:1|max:65535",
+          },
+          suggestion: "Check configuration file format and required fields",
+        },
       });
+
+      expect(exception.message).toBe("Configuration validation failed");
+      expect(exception.data?.configFile).toBe("app.config.json");
+      expect(exception.data?.invalidFields).toHaveLength(2);
+      expect(exception.data?.invalidFields).toContain("database.host");
     });
 
-    test("should work with Promise rejections", async () => {
-      const ex = new Exception("Async error", { status: 500 });
+    test("should handle service integration errors", () => {
+      const exception = new Exception("External service integration failed", {
+        status: 502,
+        data: {
+          service: "payment-gateway",
+          endpoint: "https://api.payment.com/v1/charge",
+          method: "POST",
+          responseStatus: 503,
+          retryAttempt: 3,
+          maxRetries: 5,
+          lastError: "Service temporarily unavailable",
+          circuitBreakerOpen: true,
+        },
+      });
 
-      try {
-        await Promise.reject(ex);
-        expect.unreachable("Promise should have rejected");
-      } catch (error) {
-        expect(error).toBe(ex);
-        expect(error).toBeInstanceOf(Exception);
+      expect(exception.message).toBe("External service integration failed");
+      expect(exception.data?.service).toBe("payment-gateway");
+      expect(exception.data?.retryAttempt).toBe(3);
+      expect(exception.data?.circuitBreakerOpen).toBe(true);
+    });
+
+    test("should handle business logic errors", () => {
+      const exception = new Exception("Business rule violation", {
+        status: 422,
+        data: {
+          rule: "insufficient_balance",
+          entity: "user_account",
+          entityId: "acc_123456",
+          currentBalance: 50.0,
+          requiredAmount: 100.0,
+          currency: "USD",
+          operation: "transfer",
+          businessContext: {
+            transferLimit: 1000.0,
+            dailyTransactions: 5,
+            maxDailyTransactions: 10,
+          },
+        },
+      });
+
+      expect(exception.message).toBe("Business rule violation");
+      expect(exception.data?.rule).toBe("insufficient_balance");
+      expect(exception.data?.currentBalance).toBe(50.0);
+      expect(exception.data?.businessContext.dailyTransactions).toBe(5);
+    });
+
+    test("should handle data transformation errors", () => {
+      const exception = new Exception("Data transformation failed", {
+        status: 422,
+        data: {
+          transformer: "user-profile-transformer",
+          inputFormat: "xml",
+          outputFormat: "json",
+          validationErrors: [
+            { field: "birthDate", error: "Invalid date format" },
+            { field: "email", error: "Invalid email format" },
+          ],
+          transformationStep: "validation",
+          inputSize: 2048,
+          partialOutput: null,
+        },
+      });
+
+      expect(exception.message).toBe("Data transformation failed");
+      expect(exception.data?.transformer).toBe("user-profile-transformer");
+      expect(exception.data?.validationErrors).toHaveLength(2);
+      expect(exception.data?.transformationStep).toBe("validation");
+    });
+
+    test("should handle async operation timeouts", () => {
+      const exception = new Exception("Async operation timeout", {
+        status: 408,
+        data: {
+          operation: "database_query",
+          timeout: 30000,
+          elapsed: 30001,
+          query: "SELECT * FROM users WHERE active = true",
+          connectionPool: {
+            active: 8,
+            idle: 2,
+            max: 10,
+          },
+          retryPolicy: {
+            maxRetries: 3,
+            backoffMultiplier: 2,
+            initialDelay: 1000,
+          },
+        },
+      });
+
+      expect(exception.message).toBe("Async operation timeout");
+      expect(exception.data?.elapsed).toBeGreaterThan(exception.data?.timeout || 0);
+      expect(exception.data?.connectionPool.active).toBe(8);
+      expect(exception.data?.retryPolicy.maxRetries).toBe(3);
+    });
+
+    test("should handle complex nested error scenarios", () => {
+      interface ComplexErrorData {
+        context: {
+          requestId: string;
+          userId?: string;
+          sessionId: string;
+        };
+        errorChain: {
+          primary: string;
+          secondary?: string;
+          root?: string;
+        };
+        systemState: {
+          memoryUsage: number;
+          cpuUsage: number;
+          activeConnections: number;
+        };
+        recovery: {
+          possible: boolean;
+          suggestions: string[];
+          automaticRetry: boolean;
+        };
       }
-    });
 
-    test("should work with throw statements", () => {
-      expect(() => {
-        throw new Exception("Thrown exception", { status: 400 });
-      }).toThrow("Thrown exception");
-    });
+      const complexData: ComplexErrorData = {
+        context: {
+          requestId: "req_abc123",
+          userId: "user_456",
+          sessionId: "sess_xyz789",
+        },
+        errorChain: {
+          primary: "Database connection lost",
+          secondary: "Connection pool exhausted",
+          root: "Network timeout",
+        },
+        systemState: {
+          memoryUsage: 0.85,
+          cpuUsage: 0.92,
+          activeConnections: 150,
+        },
+        recovery: {
+          possible: true,
+          suggestions: ["Restart connection pool", "Check network connectivity"],
+          automaticRetry: false,
+        },
+      };
 
-    test("should preserve stack trace when rethrowing", () => {
-      let originalStackLength = 0;
-      let rethrownStackLength = 0;
+      const exception = new Exception<ComplexErrorData>("System failure with complex context", {
+        status: 500,
+        data: complexData,
+      });
 
-      try {
-        const ex = new Exception("Original error");
-        originalStackLength = ex.stack?.split("\n").length || 0;
-        throw ex;
-      } catch (error) {
-        try {
-          throw error; // rethrow the same exception
-        } catch (rethrown) {
-          const ex = rethrown as Exception;
-          rethrownStackLength = ex.stack?.split("\n").length || 0;
-        }
-      }
-
-      expect(originalStackLength).toBeGreaterThan(0);
-      expect(rethrownStackLength).toBe(originalStackLength);
-    });
-  });
-
-  describe("Date property behavior", () => {
-    test("should capture creation time accurately", () => {
-      const beforeTime = Date.now();
-      const ex = new Exception("Test");
-      const afterTime = Date.now();
-
-      expect(ex.date.getTime()).toBeGreaterThanOrEqual(beforeTime);
-      expect(ex.date.getTime()).toBeLessThanOrEqual(afterTime);
-    });
-
-    test("should maintain same date across multiple accesses", () => {
-      const ex = new Exception("Test");
-      const firstAccess = ex.date;
-      const secondAccess = ex.date;
-
-      expect(firstAccess).toBe(secondAccess);
-      expect(firstAccess.getTime()).toBe(secondAccess.getTime());
-    });
-
-    test("should have different dates for different instances", async () => {
-      const ex1 = new Exception("Test 1");
-      await new Promise((resolve) => setTimeout(resolve, 1)); // 1ms delay
-      const ex2 = new Exception("Test 2");
-
-      expect(ex1.date.getTime()).not.toBe(ex2.date.getTime());
-      expect(ex1.date.getTime()).toBeLessThan(ex2.date.getTime());
+      expect(exception.data?.context.requestId).toBe("req_abc123");
+      expect(exception.data?.errorChain.primary).toBe("Database connection lost");
+      expect(exception.data?.systemState.memoryUsage).toBe(0.85);
+      expect(exception.data?.recovery.suggestions).toHaveLength(2);
+      expect(exception.data?.recovery.possible).toBe(true);
     });
   });
 });

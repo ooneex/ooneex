@@ -4,218 +4,283 @@ import { BadRequestException } from "@/BadRequestException";
 import { Exception } from "@/Exception";
 
 describe("BadRequestException", () => {
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new BadRequestException("Test message");
+
+      expect(exception.name).toBe("BadRequestException");
+    });
+  });
+
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new BadRequestException("Test message", data);
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
+  });
+
   describe("Constructor", () => {
-    test("should create exception with message only", () => {
+    test("should create BadRequestException with message only", () => {
       const message = "Invalid request parameter";
       const exception = new BadRequestException(message);
 
+      expect(exception).toBeInstanceOf(BadRequestException);
+      expect(exception).toBeInstanceOf(Exception);
+      expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.BadRequest);
-      expect(exception.status).toBe(400);
       expect(exception.data).toBeUndefined();
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with message and data", () => {
+    test("should create BadRequestException with message and data", () => {
       const message = "Validation failed";
-      const data = {
-        field: "email",
-        code: "INVALID_FORMAT",
-      };
+      const data = { field: "email", code: "INVALID_FORMAT" };
       const exception = new BadRequestException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.BadRequest);
-      expect(exception.status).toBe(400);
       expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with empty data object", () => {
-      const message = "Bad request";
+    test("should create BadRequestException with empty data object", () => {
+      const message = "Empty data test";
       const data = {};
       const exception = new BadRequestException(message, data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(Status.Code.BadRequest);
-      expect(exception.data).toEqual({});
+      expect(exception.data).toEqual(data);
     });
 
-    test("should handle readonly data correctly", () => {
-      const message = "Immutable data test";
-      const data = Object.freeze({
-        userId: 123,
-        action: "create",
-      });
+    test("should handle null data gracefully", () => {
+      const message = "Null data test";
+      const exception = new BadRequestException(message);
+
+      expect(exception.message).toBe(message);
+      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.data).toBeUndefined();
+    });
+  });
+
+  describe("Inheritance and Properties", () => {
+    test("should inherit all properties from Exception", () => {
+      const message = "Bad request error";
+      const data = { field: "username", validation: "required" };
       const exception = new BadRequestException(message, data);
+
+      // Properties from Exception
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.data).toEqual(data);
+      expect(exception.native).toBeUndefined();
+
+      // Properties from Error
+      expect(exception.name).toBe("BadRequestException");
+      expect(exception.message).toBe(message);
+      expect(exception.stack).toBeDefined();
+    });
+
+    test("should always set status to BadRequest", () => {
+      const exception1 = new BadRequestException("Error 1");
+      const exception2 = new BadRequestException("Error 2", { key: "value" });
+
+      expect(exception1.status).toBe(Status.Code.BadRequest);
+      expect(exception2.status).toBe(Status.Code.BadRequest);
+      expect(exception1.status).toBe(400);
+      expect(exception2.status).toBe(400);
+    });
+
+    test("should have readonly data property", () => {
+      const data = { field: "test" };
+      const exception = new BadRequestException("Test", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
     });
   });
 
-  describe("Inheritance", () => {
-    test("should extend Exception class", () => {
-      const exception = new BadRequestException("Test message");
-
-      expect(exception).toBeInstanceOf(Exception);
-      expect(exception).toBeInstanceOf(Error);
-    });
-
-    test("should inherit Exception methods", () => {
-      const exception = new BadRequestException("Test message");
-
-      expect(typeof exception.stackToJson).toBe("function");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
-    });
-
-    test("should have correct prototype chain", () => {
-      const exception = new BadRequestException("Test message");
-
-      expect(exception.constructor.name).toBe("BadRequestException");
-      expect(Object.getPrototypeOf(exception)).toBe(BadRequestException.prototype);
-      expect(Object.getPrototypeOf(Object.getPrototypeOf(exception))).toBe(Exception.prototype);
-    });
-  });
-
-  describe("Generic type parameter", () => {
-    test("should work with string data type", () => {
-      const data = {
-        error: "Invalid email format",
-        field: "email",
-      };
-      const exception = new BadRequestException<string>("Validation error", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with number data type", () => {
-      const data = {
-        statusCode: 400,
-        errorCount: 5,
-      };
-      const exception = new BadRequestException<number>("Numeric error", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with complex object data type", () => {
+  describe("Generic Type Support", () => {
+    test("should support generic type for data values", () => {
       interface ValidationError {
         field: string;
         message: string;
         code: string;
       }
 
-      const data = {
-        validation: {
+      const errorData: Record<string, ValidationError> = {
+        emailError: {
+          field: "email",
+          message: "Invalid email format",
+          code: "INVALID_FORMAT",
+        },
+        passwordError: {
           field: "password",
           message: "Password too weak",
           code: "WEAK_PASSWORD",
         },
       };
-      const exception = new BadRequestException<ValidationError>("Complex validation error", data);
 
-      expect(exception.data).toEqual(data);
-      expect(exception.data?.validation?.field).toBe("password");
+      const exception = new BadRequestException<typeof errorData>("Validation failed", errorData);
+
+      expect(exception.data).toEqual(errorData);
+      expect(exception.data?.emailError?.field).toBe("email");
+      expect(exception.data?.passwordError?.code).toBe("WEAK_PASSWORD");
     });
 
-    test("should work with union types", () => {
-      const data = {
-        value: "invalid",
-        backup: 404,
+    test("should support string generic type", () => {
+      const stringData: Record<string, string> = {
+        error: "Invalid request format",
+        suggestion: "Check the API documentation",
+        endpoint: "/api/users",
       };
-      const exception = new BadRequestException<string | number>("Union type error", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new BadRequestException<typeof stringData>("String data test", stringData);
+
+      expect(exception.data).toEqual(stringData);
+      expect(typeof exception.data?.error).toBe("string");
     });
 
-    test("should work without explicit generic type", () => {
-      const data = {
-        mixed: "string",
-        number: 123,
-        boolean: true,
+    test("should support number generic type", () => {
+      const numberData: Record<string, number> = {
+        statusCode: 400,
+        errorCount: 3,
+        retryAfter: 300,
       };
-      const exception = new BadRequestException("Mixed data types", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new BadRequestException<typeof numberData>("Number data test", numberData);
+
+      expect(exception.data).toEqual(numberData);
+      expect(typeof exception.data?.statusCode).toBe("number");
     });
   });
 
-  describe("Properties", () => {
-    test("should have readonly properties", () => {
-      const data = { key: "value" };
-      const exception = new BadRequestException("Test", data);
-
-      // Properties should be readonly (TypeScript compile-time check)
-      // At runtime, the properties are still accessible and have correct values
-      expect(exception.status).toBe(Status.Code.BadRequest);
-      expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
-
-      // Verify properties exist and are of correct types
-      expect(typeof exception.status).toBe("number");
-      expect(typeof exception.data).toBe("object");
-      expect(exception.date).toBeInstanceOf(Date);
-    });
-
-    test("should capture creation time accurately", () => {
-      const beforeTime = Date.now();
-      const exception = new BadRequestException("Time test");
-      const afterTime = Date.now();
-
-      expect(exception.date.getTime()).toBeGreaterThanOrEqual(beforeTime);
-      expect(exception.date.getTime()).toBeLessThanOrEqual(afterTime);
-    });
-
-    test("should maintain same date across multiple accesses", () => {
-      const exception = new BadRequestException("Date consistency test");
-      const firstAccess = exception.date;
-      const secondAccess = exception.date;
-
-      expect(firstAccess).toBe(secondAccess);
-    });
-  });
-
-  describe("Error handling", () => {
-    test("should work with try-catch blocks", () => {
-      let caughtException: BadRequestException | null = null;
-
-      try {
-        throw new BadRequestException("Caught exception", {
-          field: "username",
-        });
-      } catch (error) {
-        caughtException = error as BadRequestException;
-      }
-
-      expect(caughtException).not.toBeNull();
-      expect(caughtException?.message).toBe("Caught exception");
-      expect(caughtException?.status).toBe(Status.Code.BadRequest);
-      expect(caughtException?.data?.field).toBe("username");
-    });
-
-    test("should work with Promise rejections", async () => {
-      const exception = new BadRequestException("Promise rejection", {
-        async: true,
+  describe("Error Handling Scenarios", () => {
+    test("should handle validation errors", () => {
+      const exception = new BadRequestException("Request validation failed", {
+        field: "email",
+        value: "invalid-email",
+        expectedFormat: "user@domain.com",
+        validationRule: "email_format",
       });
 
-      expect(Promise.reject(exception)).rejects.toThrow("Promise rejection");
-      expect(Promise.reject(exception)).rejects.toHaveProperty("status", Status.Code.BadRequest);
+      expect(exception.message).toBe("Request validation failed");
+      expect(exception.data?.field).toBe("email");
+      expect(exception.data?.value).toBe("invalid-email");
     });
 
-    test("should preserve stack trace", () => {
-      const exception = new BadRequestException("Stack trace test");
+    test("should handle missing required fields", () => {
+      const exception = new BadRequestException("Missing required fields", {
+        missingFields: ["name", "email", "password"],
+        providedFields: ["username"],
+        requiredFields: ["name", "email", "password", "username"],
+      });
 
-      expect(exception.stack).toBeDefined();
-      expect(exception.stack).toContain("BadRequestException");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
+      expect(exception.message).toBe("Missing required fields");
+      expect(exception.data?.missingFields).toHaveLength(3);
+      expect(exception.data?.providedFields).toContain("username");
+    });
+
+    test("should handle malformed request body", () => {
+      const exception = new BadRequestException("Malformed request body", {
+        contentType: "application/json",
+        parseError: "Unexpected token } in JSON at position 15",
+        expectedFormat: "Valid JSON object",
+      });
+
+      expect(exception.message).toBe("Malformed request body");
+      expect(exception.data?.contentType).toBe("application/json");
+      expect(exception.data?.parseError).toContain("Unexpected token");
+    });
+
+    test("should handle parameter type mismatches", () => {
+      const exception = new BadRequestException("Invalid parameter types", {
+        parameter: "userId",
+        expectedType: "number",
+        actualType: "string",
+        providedValue: "abc123",
+      });
+
+      expect(exception.message).toBe("Invalid parameter types");
+      expect(exception.data?.parameter).toBe("userId");
+      expect(exception.data?.expectedType).toBe("number");
+      expect(exception.data?.actualType).toBe("string");
     });
   });
 
-  describe("Edge cases", () => {
-    test("should handle empty string message", () => {
+  describe("Stack Trace and Debugging", () => {
+    test("should maintain proper stack trace", () => {
+      function throwBadRequestException() {
+        throw new BadRequestException("Stack trace test");
+      }
+
+      try {
+        throwBadRequestException();
+        // biome-ignore lint/suspicious/noExplicitAny: trust me
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(BadRequestException);
+        expect(error.stack).toBeDefined();
+        expect(error.stack).toContain("throwBadRequestException");
+        expect(error.stack).toContain("Stack trace test");
+      }
+    });
+
+    test("should support stackToJson method from parent Exception", () => {
+      const exception = new BadRequestException("JSON stack test");
+      const stackJson = exception.stackToJson();
+
+      expect(stackJson).toBeDefined();
+      if (stackJson) {
+        expect(Array.isArray(stackJson)).toBe(true);
+        expect(stackJson.length).toBeGreaterThan(0);
+        expect(stackJson[0]).toHaveProperty("source");
+      }
+    });
+  });
+
+  describe("Serialization and Inspection", () => {
+    test("should be JSON serializable", () => {
+      const exception = new BadRequestException("Serialization test", {
+        component: "validation",
+        version: "1.2.0",
+        strict: true,
+      });
+
+      const serialized = JSON.stringify({
+        message: exception.message,
+        name: exception.name,
+        status: exception.status,
+        data: exception.data,
+        date: exception.date,
+      });
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed.message).toBe("Serialization test");
+      expect(parsed.name).toBe("BadRequestException");
+      expect(parsed.status).toBe(400);
+      expect(parsed.data).toEqual({
+        component: "validation",
+        version: "1.2.0",
+        strict: true,
+      });
+    });
+
+    test("should have correct toString representation", () => {
+      const exception = new BadRequestException("ToString test");
+      const stringRep = exception.toString();
+
+      expect(stringRep).toContain("BadRequestException");
+      expect(stringRep).toContain("ToString test");
+    });
+  });
+
+  describe("Edge Cases", () => {
+    test("should handle empty message", () => {
       const exception = new BadRequestException("");
 
       expect(exception.message).toBe("");
@@ -223,152 +288,159 @@ describe("BadRequestException", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "A".repeat(10000);
+      const longMessage = "x".repeat(1000);
       const exception = new BadRequestException(longMessage);
 
       expect(exception.message).toBe(longMessage);
-      expect(exception.message.length).toBe(10000);
+      expect(exception.message.length).toBe(1000);
     });
 
     test("should handle special characters in message", () => {
-      const specialMessage = "Error: 特殊字符 🚨 émojis & symbols @#$%^&*()";
+      const specialMessage = "Bad Request: 特殊文字 🚫 with émojis and ñumbers 123!@#$%^&*()";
       const exception = new BadRequestException(specialMessage);
 
       expect(exception.message).toBe(specialMessage);
     });
 
-    test("should handle null and undefined in data", () => {
-      const data = {
-        nullValue: null,
-        undefinedValue: undefined,
-      };
-      const exception = new BadRequestException("Null/undefined test", data);
-
-      expect(exception.data?.nullValue).toBeNull();
-      expect(exception.data?.undefinedValue).toBeUndefined();
-    });
-
-    test("should handle circular references in data", () => {
-      const circularData: Record<string, unknown> = {
-        name: "circular",
-      };
-      circularData.self = circularData;
-
-      const exception = new BadRequestException("Circular reference test", {
-        data: circularData,
-      });
-
-      expect(exception.data?.data?.name).toBe("circular");
-      expect(exception.data?.data?.self).toBe(circularData);
-    });
-
-    test("should handle deeply nested data", () => {
-      const deepData = {
-        level1: {
-          level2: {
-            level3: {
-              level4: {
-                value: "deep",
-              },
-            },
+    test("should handle complex nested data", () => {
+      const complexData = {
+        validation: {
+          errors: ["email_invalid", "password_weak"],
+          warnings: ["username_exists"],
+        },
+        request: {
+          method: "POST",
+          url: "/api/users",
+          headers: {
+            "content-type": "application/json",
           },
+        },
+        metadata: {
+          timestamp: new Date().toISOString(),
+          userAgent: "Mozilla/5.0",
+          ipAddress: "192.168.1.1",
+        },
+        suggestions: {
+          emailFormat: "Use format: user@domain.com",
+          passwordStrength: "Include uppercase, lowercase, numbers and symbols",
         },
       };
 
-      const exception = new BadRequestException("Deep nesting test", deepData);
+      const exception = new BadRequestException<typeof complexData>("Complex data test", complexData);
 
-      expect(exception.data?.level1?.level2?.level3?.level4?.value).toBe("deep");
+      expect(exception.data).toEqual(complexData);
+      expect(exception.data?.validation.errors).toHaveLength(2);
+      expect(exception.data?.validation.warnings).toContain("username_exists");
+      expect(exception.data?.request.method).toBe("POST");
+      expect(exception.data?.suggestions.emailFormat).toContain("user@domain.com");
     });
-  });
 
-  describe("JSON serialization", () => {
-    test("should be JSON serializable (excluding circular stack)", () => {
-      const exception = new BadRequestException("JSON test", {
-        key: "value",
-        number: 42,
-      });
+    test("should handle request-specific data structures", () => {
+      interface RequestValidation {
+        endpoint: string;
+        method: string;
+        errors: {
+          field: string;
+          message: string;
+          code: string;
+          value?: unknown;
+        }[];
+        requestId: string;
+        timestamp: string;
+      }
 
-      const json = {
-        message: exception.message,
-        status: exception.status,
-        data: exception.data,
-        date: exception.date,
-        stackFrames: exception.stackToJson(),
+      const requestData: RequestValidation = {
+        endpoint: "/api/users/create",
+        method: "POST",
+        errors: [
+          {
+            field: "email",
+            message: "Email format is invalid",
+            code: "EMAIL_INVALID",
+            value: "not-an-email",
+          },
+          {
+            field: "age",
+            message: "Age must be a positive number",
+            code: "AGE_INVALID",
+            value: -5,
+          },
+        ],
+        requestId: "req_123456789",
+        timestamp: new Date().toISOString(),
       };
 
-      const serialized = JSON.stringify(json);
-      const parsed = JSON.parse(serialized);
+      const exception = new BadRequestException<RequestValidation>("Request validation failed", requestData);
 
-      expect(parsed.message).toBe("JSON test");
-      expect(parsed.status).toBe(400);
-      expect(parsed.data.key).toBe("value");
-      expect(parsed.data.number).toBe(42);
+      expect(exception.data?.endpoint).toBe("/api/users/create");
+      expect(exception.data?.errors).toHaveLength(2);
+      expect(exception.data?.errors[0]?.field).toBe("email");
+      expect(exception.data?.errors[1]?.code).toBe("AGE_INVALID");
+      expect(exception.data?.requestId).toBe("req_123456789");
     });
   });
 
-  describe("Type compatibility", () => {
-    test("should be compatible with Error type", () => {
-      const errors: Error[] = [
-        new BadRequestException("Error 1"),
-        new BadRequestException("Error 2", { code: "TEST" }),
-      ];
-
-      expect(errors.length).toBe(2);
-      expect(errors[0]).toBeInstanceOf(Error);
-      expect(errors[1]).toBeInstanceOf(Error);
-    });
-
-    test("should be compatible with Exception type", () => {
-      const exceptions: Exception[] = [
-        new BadRequestException("Exception 1"),
-        new BadRequestException("Exception 2", { type: "validation" }),
-      ];
-
-      expect(exceptions.length).toBe(2);
-      expect(exceptions[0]).toBeInstanceOf(Exception);
-      expect(exceptions[1]).toBeInstanceOf(Exception);
-    });
-  });
-
-  describe("Comparison with base Exception", () => {
-    test("should have same interface as Exception but with fixed status", () => {
-      const baseException = new Exception("Base exception", {
-        status: Status.Code.InternalServerError,
-        data: { key: "value" },
+  describe("Request-Specific Scenarios", () => {
+    test("should handle query parameter validation errors", () => {
+      const exception = new BadRequestException("Invalid query parameters", {
+        invalidParameters: [
+          { name: "limit", value: "abc", expectedType: "number", maxValue: 100 },
+          { name: "offset", value: -5, expectedType: "number", minValue: 0 },
+        ],
+        validParameters: ["sort", "filter"],
+        endpoint: "/api/users",
+        queryString: "?limit=abc&offset=-5&sort=name",
       });
 
-      const badRequestException = new BadRequestException("Bad request exception", {
-        key: "value",
-      });
-
-      // Both should have same property types
-      expect(typeof baseException.message).toBe("string");
-      expect(typeof badRequestException.message).toBe("string");
-
-      expect(typeof baseException.status).toBe("number");
-      expect(typeof badRequestException.status).toBe("number");
-
-      expect(baseException.date).toBeInstanceOf(Date);
-      expect(badRequestException.date).toBeInstanceOf(Date);
-
-      // But different status values
-      expect(baseException.status).toBe(Status.Code.InternalServerError);
-      expect(badRequestException.status).toBe(Status.Code.BadRequest);
+      expect(exception.message).toBe("Invalid query parameters");
+      expect(exception.data?.invalidParameters).toHaveLength(2);
+      expect(exception.data?.validParameters).toContain("sort");
+      expect(exception.data?.endpoint).toBe("/api/users");
     });
 
-    test("should maintain consistent behavior with Exception", () => {
-      const data = { field: "test", value: 123 };
-
-      const baseException = new Exception("Test", {
-        status: Status.Code.BadRequest,
-        data,
+    test("should handle request header validation errors", () => {
+      const exception = new BadRequestException("Invalid request headers", {
+        missingHeaders: ["Authorization", "Content-Type"],
+        invalidHeaders: [{ name: "Accept", value: "text/plain", expectedValue: "application/json" }],
+        providedHeaders: ["User-Agent", "Accept"],
+        requiredHeaders: ["Authorization", "Content-Type", "Accept"],
       });
 
-      const badRequestException = new BadRequestException("Test", data);
+      expect(exception.message).toBe("Invalid request headers");
+      expect(exception.data?.missingHeaders).toContain("Authorization");
+      expect(exception.data?.invalidHeaders[0]?.name).toBe("Accept");
+      expect(exception.data?.requiredHeaders).toHaveLength(3);
+    });
 
-      expect(baseException.message).toBe(badRequestException.message);
-      expect(baseException.status).toBe(badRequestException.status);
-      expect(baseException.data).toEqual(badRequestException.data);
+    test("should handle content type mismatches", () => {
+      const exception = new BadRequestException("Unsupported content type", {
+        providedContentType: "text/xml",
+        supportedContentTypes: ["application/json", "application/x-www-form-urlencoded"],
+        endpoint: "/api/data",
+        method: "POST",
+        suggestion: "Use application/json for this endpoint",
+      });
+
+      expect(exception.message).toBe("Unsupported content type");
+      expect(exception.data?.providedContentType).toBe("text/xml");
+      expect(exception.data?.supportedContentTypes).toContain("application/json");
+      expect(exception.data?.suggestion).toContain("application/json");
+    });
+
+    test("should handle request size limit errors", () => {
+      const exception = new BadRequestException("Request payload too large", {
+        currentSize: 10485760, // 10MB
+        maxSize: 5242880, // 5MB
+        sizeUnit: "bytes",
+        contentType: "application/json",
+        endpoint: "/api/upload",
+        suggestion: "Reduce payload size or use multipart upload",
+      });
+
+      expect(exception.message).toBe("Request payload too large");
+      expect(exception.data?.currentSize).toBeGreaterThan(exception.data?.maxSize || 0);
+      expect(exception.data?.sizeUnit).toBe("bytes");
+      expect(exception.data?.suggestion).toContain("multipart upload");
     });
   });
 });

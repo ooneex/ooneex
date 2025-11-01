@@ -4,218 +4,285 @@ import { Exception } from "@/Exception";
 import { MethodNotAllowedException } from "@/MethodNotAllowedException";
 
 describe("MethodNotAllowedException", () => {
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new MethodNotAllowedException("Test message");
+
+      expect(exception.name).toBe("MethodNotAllowedException");
+    });
+  });
+
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new MethodNotAllowedException("Test message", data);
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
+  });
+
   describe("Constructor", () => {
-    test("should create exception with message only", () => {
+    test("should create MethodNotAllowedException with message only", () => {
       const message = "Method POST not allowed";
       const exception = new MethodNotAllowedException(message);
 
+      expect(exception).toBeInstanceOf(MethodNotAllowedException);
+      expect(exception).toBeInstanceOf(Exception);
+      expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.MethodNotAllowed);
-      expect(exception.status).toBe(405);
       expect(exception.data).toBeUndefined();
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with message and data", () => {
+    test("should create MethodNotAllowedException with message and data", () => {
       const message = "HTTP method not supported";
-      const data = {
-        method: "DELETE",
-        allowedMethods: "GET, POST, PUT",
-      };
+      const data = { method: "DELETE", allowedMethods: "GET, POST, PUT" };
       const exception = new MethodNotAllowedException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.name).toBe("Error");
       expect(exception.status).toBe(Status.Code.MethodNotAllowed);
-      expect(exception.status).toBe(405);
       expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
     });
 
-    test("should create exception with empty data object", () => {
-      const message = "Method not allowed";
+    test("should create MethodNotAllowedException with empty data object", () => {
+      const message = "Empty data test";
       const data = {};
       const exception = new MethodNotAllowedException(message, data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(Status.Code.MethodNotAllowed);
-      expect(exception.data).toEqual({});
+      expect(exception.data).toEqual(data);
     });
 
-    test("should handle readonly data correctly", () => {
-      const message = "Immutable method restriction";
-      const data = Object.freeze({
-        requestedMethod: "PATCH",
-        supportedMethods: "GET, POST",
-      });
+    test("should handle null data gracefully", () => {
+      const message = "Null data test";
+      const exception = new MethodNotAllowedException(message);
+
+      expect(exception.message).toBe(message);
+      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.data).toBeUndefined();
+    });
+  });
+
+  describe("Inheritance and Properties", () => {
+    test("should inherit all properties from Exception", () => {
+      const message = "Method not allowed error";
+      const data = { method: "PATCH", endpoint: "/api/users" };
       const exception = new MethodNotAllowedException(message, data);
+
+      // Properties from Exception
+      expect(exception.date).toBeInstanceOf(Date);
+      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.data).toEqual(data);
+      expect(exception.native).toBeUndefined();
+
+      // Properties from Error
+      expect(exception.name).toBe("MethodNotAllowedException");
+      expect(exception.message).toBe(message);
+      expect(exception.stack).toBeDefined();
+    });
+
+    test("should always set status to MethodNotAllowed", () => {
+      const exception1 = new MethodNotAllowedException("Error 1");
+      const exception2 = new MethodNotAllowedException("Error 2", { key: "value" });
+
+      expect(exception1.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception2.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception1.status).toBe(405);
+      expect(exception2.status).toBe(405);
+    });
+
+    test("should have readonly data property", () => {
+      const data = { method: "DELETE" };
+      const exception = new MethodNotAllowedException("Test", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
     });
   });
 
-  describe("Inheritance", () => {
-    test("should extend Exception class", () => {
-      const exception = new MethodNotAllowedException("Test message");
-
-      expect(exception).toBeInstanceOf(Exception);
-      expect(exception).toBeInstanceOf(Error);
-    });
-
-    test("should inherit Exception methods", () => {
-      const exception = new MethodNotAllowedException("Test message");
-
-      expect(typeof exception.stackToJson).toBe("function");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
-    });
-
-    test("should have correct prototype chain", () => {
-      const exception = new MethodNotAllowedException("Test message");
-
-      expect(exception.constructor.name).toBe("MethodNotAllowedException");
-      expect(Object.getPrototypeOf(exception)).toBe(MethodNotAllowedException.prototype);
-      expect(Object.getPrototypeOf(Object.getPrototypeOf(exception))).toBe(Exception.prototype);
-    });
-  });
-
-  describe("Generic type parameter", () => {
-    test("should work with string data type", () => {
-      const data = {
-        method: "PUT",
-        endpoint: "/api/users",
-      };
-      const exception = new MethodNotAllowedException<string>("Method restriction", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with number data type", () => {
-      const data = {
-        statusCode: 405,
-        retryAfter: 3600,
-      };
-      const exception = new MethodNotAllowedException<number>("Numeric method error", data);
-
-      expect(exception.data).toEqual(data);
-    });
-
-    test("should work with complex object data type", () => {
+  describe("Generic Type Support", () => {
+    test("should support generic type for data values", () => {
       interface MethodError {
         method: string;
-        allowed: string[];
+        allowedMethods: string[];
         reason: string;
       }
 
-      const data = {
-        methodInfo: {
+      const errorData: Record<string, MethodError> = {
+        deleteError: {
           method: "DELETE",
-          allowed: ["GET", "POST", "PUT"],
+          allowedMethods: ["GET", "POST", "PUT"],
           reason: "Resource is read-only",
         },
+        patchError: {
+          method: "PATCH",
+          allowedMethods: ["GET", "POST"],
+          reason: "Partial updates not supported",
+        },
       };
-      const exception = new MethodNotAllowedException<MethodError>("Complex method error", data);
 
-      expect(exception.data).toEqual(data);
-      expect(exception.data?.methodInfo?.method).toBe("DELETE");
+      const exception = new MethodNotAllowedException<typeof errorData>("Method not supported", errorData);
+
+      expect(exception.data).toEqual(errorData);
+      expect(exception.data?.deleteError?.method).toBe("DELETE");
+      expect(exception.data?.patchError?.reason).toBe("Partial updates not supported");
     });
 
-    test("should work with union types", () => {
-      const data = {
-        method: "PATCH",
-        code: 405,
+    test("should support string generic type", () => {
+      const stringData: Record<string, string> = {
+        method: "OPTIONS",
+        suggestion: "Use GET or POST instead",
+        endpoint: "/api/health",
       };
-      const exception = new MethodNotAllowedException<string | number>("Union type error", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new MethodNotAllowedException<typeof stringData>("String data test", stringData);
+
+      expect(exception.data).toEqual(stringData);
+      expect(typeof exception.data?.method).toBe("string");
     });
 
-    test("should work without explicit generic type", () => {
-      const data = {
-        httpMethod: "OPTIONS",
-        supported: true,
-        timestamp: Date.now(),
+    test("should support number generic type", () => {
+      const numberData: Record<string, number> = {
+        statusCode: 405,
+        retryAfter: 3600,
+        allowedMethodsCount: 3,
       };
-      const exception = new MethodNotAllowedException("Mixed data types", data);
 
-      expect(exception.data).toEqual(data);
+      const exception = new MethodNotAllowedException<typeof numberData>("Number data test", numberData);
+
+      expect(exception.data).toEqual(numberData);
+      expect(typeof exception.data?.statusCode).toBe("number");
     });
   });
 
-  describe("Properties", () => {
-    test("should have readonly properties", () => {
-      const data = { method: "HEAD" };
-      const exception = new MethodNotAllowedException("Test", data);
-
-      // Properties should be readonly (TypeScript compile-time check)
-      // At runtime, the properties are still accessible and have correct values
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
-      expect(exception.data).toEqual(data);
-      expect(exception.date).toBeInstanceOf(Date);
-
-      // Verify properties exist and are of correct types
-      expect(typeof exception.status).toBe("number");
-      expect(typeof exception.data).toBe("object");
-      expect(exception.date).toBeInstanceOf(Date);
-    });
-
-    test("should capture creation time accurately", () => {
-      const beforeTime = Date.now();
-      const exception = new MethodNotAllowedException("Time test");
-      const afterTime = Date.now();
-
-      expect(exception.date.getTime()).toBeGreaterThanOrEqual(beforeTime);
-      expect(exception.date.getTime()).toBeLessThanOrEqual(afterTime);
-    });
-
-    test("should maintain same date across multiple accesses", () => {
-      const exception = new MethodNotAllowedException("Date consistency test");
-      const firstAccess = exception.date;
-      const secondAccess = exception.date;
-
-      expect(firstAccess).toBe(secondAccess);
-    });
-  });
-
-  describe("Error handling", () => {
-    test("should work with try-catch blocks", () => {
-      let caughtException: MethodNotAllowedException | null = null;
-
-      try {
-        throw new MethodNotAllowedException("Caught method exception", {
-          method: "TRACE",
-        });
-      } catch (error) {
-        caughtException = error as MethodNotAllowedException;
-      }
-
-      expect(caughtException).not.toBeNull();
-      expect(caughtException?.message).toBe("Caught method exception");
-      expect(caughtException?.status).toBe(Status.Code.MethodNotAllowed);
-      expect(caughtException?.data?.method).toBe("TRACE");
-    });
-
-    test("should work with Promise rejections", async () => {
-      const exception = new MethodNotAllowedException("Promise rejection", {
-        async: true,
+  describe("Error Handling Scenarios", () => {
+    test("should handle HTTP method restrictions", () => {
+      const exception = new MethodNotAllowedException("HTTP method not allowed", {
+        requestedMethod: "DELETE",
+        allowedMethods: ["GET", "POST", "PUT"],
+        resource: "/api/users/123",
+        reason: "Delete operation not permitted",
       });
 
-      expect(Promise.reject(exception)).rejects.toThrow("Promise rejection");
-      expect(Promise.reject(exception)).rejects.toHaveProperty("status", Status.Code.MethodNotAllowed);
+      expect(exception.message).toBe("HTTP method not allowed");
+      expect(exception.data?.requestedMethod).toBe("DELETE");
+      expect(exception.data?.allowedMethods).toHaveLength(3);
     });
 
-    test("should preserve stack trace", () => {
-      const exception = new MethodNotAllowedException("Stack trace test");
+    test("should handle REST endpoint method restrictions", () => {
+      const exception = new MethodNotAllowedException("REST method not supported", {
+        endpoint: "/api/v1/products",
+        method: "PATCH",
+        supportedMethods: ["GET", "POST", "PUT", "DELETE"],
+        httpVersion: "1.1",
+      });
 
-      expect(exception.stack).toBeDefined();
-      expect(exception.stack).toContain("MethodNotAllowedException");
-      expect(exception.stackToJson()).toEqual(expect.any(Array));
+      expect(exception.message).toBe("REST method not supported");
+      expect(exception.data?.endpoint).toBe("/api/v1/products");
+      expect(exception.data?.method).toBe("PATCH");
+    });
+
+    test("should handle resource-specific method restrictions", () => {
+      const exception = new MethodNotAllowedException("Resource method not allowed", {
+        resourceType: "readonly",
+        resourceId: "config_123",
+        attemptedOperation: "UPDATE",
+        allowedOperations: ["READ"],
+      });
+
+      expect(exception.message).toBe("Resource method not allowed");
+      expect(exception.data?.resourceType).toBe("readonly");
+      expect(exception.data?.allowedOperations).toContain("READ");
+    });
+
+    test("should handle API versioning method restrictions", () => {
+      const exception = new MethodNotAllowedException("Method deprecated in API version", {
+        method: "HEAD",
+        apiVersion: "v2",
+        deprecatedIn: "v2.0",
+        alternative: "Use GET with minimal response",
+        endpoint: "/api/v2/status",
+      });
+
+      expect(exception.message).toBe("Method deprecated in API version");
+      expect(exception.data?.method).toBe("HEAD");
+      expect(exception.data?.apiVersion).toBe("v2");
     });
   });
 
-  describe("Edge cases", () => {
-    test("should handle empty string message", () => {
+  describe("Stack Trace and Debugging", () => {
+    test("should maintain proper stack trace", () => {
+      function throwMethodNotAllowedException() {
+        throw new MethodNotAllowedException("Stack trace test");
+      }
+
+      try {
+        throwMethodNotAllowedException();
+        // biome-ignore lint/suspicious/noExplicitAny: trust me
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(MethodNotAllowedException);
+        expect(error.stack).toBeDefined();
+        expect(error.stack).toContain("throwMethodNotAllowedException");
+        expect(error.stack).toContain("Stack trace test");
+      }
+    });
+
+    test("should support stackToJson method from parent Exception", () => {
+      const exception = new MethodNotAllowedException("JSON stack test");
+      const stackJson = exception.stackToJson();
+
+      expect(stackJson).toBeDefined();
+      if (stackJson) {
+        expect(Array.isArray(stackJson)).toBe(true);
+        expect(stackJson.length).toBeGreaterThan(0);
+        expect(stackJson[0]).toHaveProperty("source");
+      }
+    });
+  });
+
+  describe("Serialization and Inspection", () => {
+    test("should be JSON serializable", () => {
+      const exception = new MethodNotAllowedException("Serialization test", {
+        component: "api-router",
+        version: "3.1.0",
+        strictMode: true,
+      });
+
+      const serialized = JSON.stringify({
+        message: exception.message,
+        name: exception.name,
+        status: exception.status,
+        data: exception.data,
+        date: exception.date,
+      });
+      const parsed = JSON.parse(serialized);
+
+      expect(parsed.message).toBe("Serialization test");
+      expect(parsed.name).toBe("MethodNotAllowedException");
+      expect(parsed.status).toBe(405);
+      expect(parsed.data).toEqual({
+        component: "api-router",
+        version: "3.1.0",
+        strictMode: true,
+      });
+    });
+
+    test("should have correct toString representation", () => {
+      const exception = new MethodNotAllowedException("ToString test");
+      const stringRep = exception.toString();
+
+      expect(stringRep).toContain("MethodNotAllowedException");
+      expect(stringRep).toContain("ToString test");
+    });
+  });
+
+  describe("Edge Cases", () => {
+    test("should handle empty message", () => {
       const exception = new MethodNotAllowedException("");
 
       expect(exception.message).toBe("");
@@ -223,197 +290,143 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "Method".repeat(2000);
+      const longMessage = "x".repeat(1000);
       const exception = new MethodNotAllowedException(longMessage);
 
       expect(exception.message).toBe(longMessage);
-      expect(exception.message.length).toBe(12000);
+      expect(exception.message.length).toBe(1000);
     });
 
     test("should handle special characters in message", () => {
-      const specialMessage = "HTTP Method: 特殊字符 🚫 not allowed @#$%^&*()";
+      const specialMessage = "Method Not Allowed: 特殊文字 🚫 with émojis and ñumbers 123!@#$%^&*()";
       const exception = new MethodNotAllowedException(specialMessage);
 
       expect(exception.message).toBe(specialMessage);
     });
 
-    test("should handle null and undefined in data", () => {
-      const data = {
-        nullValue: null,
-        undefinedValue: undefined,
-      };
-      const exception = new MethodNotAllowedException("Null/undefined test", data);
-
-      expect(exception.data?.nullValue).toBeNull();
-      expect(exception.data?.undefinedValue).toBeUndefined();
-    });
-
-    test("should handle circular references in data", () => {
-      const circularData: Record<string, unknown> = {
-        name: "circular",
-      };
-      circularData.self = circularData;
-
-      const exception = new MethodNotAllowedException("Circular reference test", {
-        data: circularData,
-      });
-
-      expect(exception.data?.data?.name).toBe("circular");
-      expect(exception.data?.data?.self).toBe(circularData);
-    });
-
-    test("should handle deeply nested data", () => {
-      const deepData = {
-        level1: {
-          level2: {
-            level3: {
-              level4: {
-                method: "CONNECT",
-              },
-            },
+    test("should handle complex nested data", () => {
+      const complexData = {
+        request: {
+          method: "TRACE",
+          url: "/api/debug",
+          headers: {
+            "user-agent": "TestClient/1.0",
           },
+        },
+        restrictions: {
+          allowedMethods: ["GET", "POST", "PUT"],
+          deniedReasons: ["security", "not_implemented"],
+        },
+        metadata: {
+          timestamp: new Date().toISOString(),
+          clientIp: "192.168.1.100",
+          userAgent: "TestClient/1.0",
+        },
+        suggestions: {
+          alternative: "Use GET method instead",
+          documentation: "https://api.example.com/docs",
         },
       };
 
-      const exception = new MethodNotAllowedException("Deep nesting test", deepData);
+      const exception = new MethodNotAllowedException<typeof complexData>("Complex data test", complexData);
 
-      expect(exception.data?.level1?.level2?.level3?.level4?.method).toBe("CONNECT");
+      expect(exception.data).toEqual(complexData);
+      expect(exception.data?.request.method).toBe("TRACE");
+      expect(exception.data?.restrictions.allowedMethods).toHaveLength(3);
+      expect(exception.data?.restrictions.deniedReasons).toContain("security");
+      expect(exception.data?.suggestions.alternative).toContain("GET method");
+    });
+
+    test("should handle HTTP method specific data structures", () => {
+      interface HttpMethodInfo {
+        method: string;
+        safe: boolean;
+        idempotent: boolean;
+        cacheable: boolean;
+        allowedInForms: boolean;
+        rfc: string;
+      }
+
+      const methodData: HttpMethodInfo = {
+        method: "CONNECT",
+        safe: false,
+        idempotent: false,
+        cacheable: false,
+        allowedInForms: false,
+        rfc: "RFC 7231",
+      };
+
+      const exception = new MethodNotAllowedException<HttpMethodInfo>("HTTP method analysis failed", methodData);
+
+      expect(exception.data?.method).toBe("CONNECT");
+      expect(exception.data?.safe).toBe(false);
+      expect(exception.data?.idempotent).toBe(false);
+      expect(exception.data?.rfc).toBe("RFC 7231");
     });
   });
 
-  describe("HTTP method specific tests", () => {
-    test("should handle common HTTP methods", () => {
-      const httpMethods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"];
-
-      httpMethods.forEach((method) => {
-        const exception = new MethodNotAllowedException(`${method} not allowed`, {
-          method,
-          allowedMethods: "GET, POST",
-        });
-
-        expect(exception.message).toBe(`${method} not allowed`);
-        expect(exception.data?.method).toBe(method);
-      });
-    });
-
-    test("should handle allowed methods list", () => {
-      const data = {
-        requestedMethod: "DELETE",
-        allowedMethods: ["GET", "POST", "PUT"],
-        resource: "/api/users/123",
-      };
-
-      const exception = new MethodNotAllowedException("Method not in allowed list", data);
-
-      expect(exception.data?.requestedMethod).toBe("DELETE");
-      expect(exception.data?.allowedMethods).toEqual(["GET", "POST", "PUT"]);
-      expect(exception.data?.resource).toBe("/api/users/123");
-    });
-
-    test("should handle REST endpoint information", () => {
-      const data = {
+  describe("HTTP Method-Specific Scenarios", () => {
+    test("should handle common HTTP method restrictions", () => {
+      const exception = new MethodNotAllowedException("Standard HTTP method not allowed", {
+        requestedMethod: "OPTIONS",
         endpoint: "/api/v1/users",
-        method: "PATCH",
-        supportedMethods: "GET, POST, PUT, DELETE",
-        reason: "PATCH not implemented for this resource",
-      };
-
-      const exception = new MethodNotAllowedException("REST method not allowed", data);
-
-      expect(exception.data?.endpoint).toBe("/api/v1/users");
-      expect(exception.data?.method).toBe("PATCH");
-      expect(exception.data?.reason).toBe("PATCH not implemented for this resource");
-    });
-  });
-
-  describe("JSON serialization", () => {
-    test("should be JSON serializable (excluding circular stack)", () => {
-      const exception = new MethodNotAllowedException("JSON test", {
-        method: "PUT",
-        statusCode: 405,
+        allowedMethods: ["GET", "POST", "PUT", "DELETE"],
+        corsEnabled: false,
+        preflightRequired: true,
+        reason: "CORS preflight disabled for this endpoint",
       });
 
-      const json = {
-        message: exception.message,
-        status: exception.status,
-        data: exception.data,
-        date: exception.date,
-        stackFrames: exception.stackToJson(),
-      };
-
-      const serialized = JSON.stringify(json);
-      const parsed = JSON.parse(serialized);
-
-      expect(parsed.message).toBe("JSON test");
-      expect(parsed.status).toBe(405);
-      expect(parsed.data.method).toBe("PUT");
-      expect(parsed.data.statusCode).toBe(405);
-    });
-  });
-
-  describe("Type compatibility", () => {
-    test("should be compatible with Error type", () => {
-      const errors: Error[] = [
-        new MethodNotAllowedException("Error 1"),
-        new MethodNotAllowedException("Error 2", { method: "OPTIONS" }),
-      ];
-
-      expect(errors.length).toBe(2);
-      expect(errors[0]).toBeInstanceOf(Error);
-      expect(errors[1]).toBeInstanceOf(Error);
+      expect(exception.message).toBe("Standard HTTP method not allowed");
+      expect(exception.data?.requestedMethod).toBe("OPTIONS");
+      expect(exception.data?.corsEnabled).toBe(false);
+      expect(exception.data?.allowedMethods).toHaveLength(4);
     });
 
-    test("should be compatible with Exception type", () => {
-      const exceptions: Exception[] = [
-        new MethodNotAllowedException("Exception 1"),
-        new MethodNotAllowedException("Exception 2", { method: "TRACE" }),
-      ];
-
-      expect(exceptions.length).toBe(2);
-      expect(exceptions[0]).toBeInstanceOf(Exception);
-      expect(exceptions[1]).toBeInstanceOf(Exception);
-    });
-  });
-
-  describe("Comparison with base Exception", () => {
-    test("should have same interface as Exception but with fixed status", () => {
-      const baseException = new Exception("Base exception", {
-        status: Status.Code.InternalServerError,
-        data: { key: "value" },
+    test("should handle custom HTTP method restrictions", () => {
+      const exception = new MethodNotAllowedException("Custom HTTP method not supported", {
+        customMethod: "PURGE",
+        standardMethods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+        serverCapabilities: ["standard-http", "rest-api"],
+        missingCapability: "custom-methods",
+        suggestion: "Use DELETE for cache invalidation",
       });
 
-      const methodNotAllowedException = new MethodNotAllowedException("Method not allowed exception", {
-        key: "value",
-      });
-
-      // Both should have same property types
-      expect(typeof baseException.message).toBe("string");
-      expect(typeof methodNotAllowedException.message).toBe("string");
-
-      expect(typeof baseException.status).toBe("number");
-      expect(typeof methodNotAllowedException.status).toBe("number");
-
-      expect(baseException.date).toBeInstanceOf(Date);
-      expect(methodNotAllowedException.date).toBeInstanceOf(Date);
-
-      // But different status values
-      expect(baseException.status).toBe(Status.Code.InternalServerError);
-      expect(methodNotAllowedException.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.message).toBe("Custom HTTP method not supported");
+      expect(exception.data?.customMethod).toBe("PURGE");
+      expect(exception.data?.standardMethods).toContain("DELETE");
+      expect(exception.data?.suggestion).toContain("DELETE");
     });
 
-    test("should maintain consistent behavior with Exception", () => {
-      const data = { method: "HEAD", allowed: ["GET", "POST"] };
-
-      const baseException = new Exception("Test", {
-        status: Status.Code.MethodNotAllowed,
-        data,
+    test("should handle safe vs unsafe method restrictions", () => {
+      const exception = new MethodNotAllowedException("Unsafe method not allowed", {
+        method: "POST",
+        methodType: "unsafe",
+        safeMethodsOnly: true,
+        allowedSafeMethods: ["GET", "HEAD", "OPTIONS"],
+        resource: "/api/readonly/data",
+        securityPolicy: "read-only-api",
       });
 
-      const methodNotAllowedException = new MethodNotAllowedException("Test", data);
+      expect(exception.message).toBe("Unsafe method not allowed");
+      expect(exception.data?.method).toBe("POST");
+      expect(exception.data?.methodType).toBe("unsafe");
+      expect(exception.data?.safeMethodsOnly).toBe(true);
+    });
 
-      expect(baseException.message).toBe(methodNotAllowedException.message);
-      expect(baseException.status).toBe(methodNotAllowedException.status);
-      expect(baseException.data).toEqual(methodNotAllowedException.data);
+    test("should handle idempotent method requirements", () => {
+      const exception = new MethodNotAllowedException("Non-idempotent method not allowed", {
+        method: "POST",
+        requiresIdempotency: true,
+        idempotentMethods: ["GET", "PUT", "DELETE", "HEAD", "OPTIONS"],
+        operation: "critical-update",
+        retryPolicy: "automatic",
+        reason: "Operation must be safely retryable",
+      });
+
+      expect(exception.message).toBe("Non-idempotent method not allowed");
+      expect(exception.data?.method).toBe("POST");
+      expect(exception.data?.requiresIdempotency).toBe(true);
+      expect(exception.data?.idempotentMethods).toContain("PUT");
     });
   });
 });

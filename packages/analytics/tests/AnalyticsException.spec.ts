@@ -12,6 +12,19 @@ describe("AnalyticsException", () => {
     });
   });
 
+  describe("Immutable Data", () => {
+    test("should have immutable data property", () => {
+      const data = { key: "value", count: 42 };
+      const exception = new AnalyticsException("Test message", data);
+
+      expect(Object.isFrozen(exception.data)).toBe(true);
+      expect(() => {
+        // @ts-expect-error - intentionally trying to modify readonly property
+        exception.data.key = "modified";
+      }).toThrow();
+    });
+  });
+
   describe("Constructor", () => {
     test("should create AnalyticsException with message only", () => {
       const message = "Analytics tracking failed";

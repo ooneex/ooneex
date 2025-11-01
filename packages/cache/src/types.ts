@@ -1,4 +1,4 @@
-export interface RedisCacheAdapterType {
+export type RedisCacheAdapterType = {
   connectionString?: string;
   connectionTimeout?: number;
   idleTimeout?: number;
@@ -7,7 +7,14 @@ export interface RedisCacheAdapterType {
   enableOfflineQueue?: boolean;
   enableAutoPipelining?: boolean;
   tls?: boolean | object;
-}
+};
+
+export type FilesystemCacheAdapterType = {
+  cacheDir?: string;
+  maxFileSize?: number;
+  cleanupInterval?: number;
+  enableCleanup?: boolean;
+};
 
 export interface ICache {
   // Basic operations

@@ -4,6 +4,14 @@ import { Status } from "@ooneex/http-status";
 import { AnalyticsException } from "@/index";
 
 describe("AnalyticsException", () => {
+  describe("Name", () => {
+    test("should have correct exception name", () => {
+      const exception = new AnalyticsException("Test message");
+
+      expect(exception.name).toBe("AnalyticsException");
+    });
+  });
+
   describe("Constructor", () => {
     test("should create AnalyticsException with message only", () => {
       const message = "Analytics tracking failed";

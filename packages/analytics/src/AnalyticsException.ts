@@ -7,13 +7,5 @@ export class AnalyticsException<T = unknown> extends Exception<T> {
       status: Status.Code.InternalServerError,
       data: data,
     });
-
-    // Set the correct name for the exception
-    this.name = "AnalyticsException";
-
-    // Freeze the data if it exists to make it readonly
-    if (this.data) {
-      Object.freeze(this.data);
-    }
   }
 }

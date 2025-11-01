@@ -13,6 +13,10 @@ export class Exception<T = unknown> extends Error {
     this.status = options?.status;
     this.data = options?.data;
     this.native = message instanceof Error ? (message as Error) : undefined;
+
+    if (this.data) {
+      Object.freeze(this.data);
+    }
   }
 
   /**

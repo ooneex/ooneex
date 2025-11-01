@@ -110,6 +110,90 @@ describe("Exception", () => {
       expect(typeof ex.data).toBe("object");
     });
 
+    test("should freeze data property to prevent mutation", () => {
+      const data = {
+        count: 1,
+        nested: { value: "test" },
+        array: [1, 2, 3],
+      };
+      const ex = new Exception("Test", { data });
+
+      // Verify data is frozen
+      expect(Object.isFrozen(ex.data)).toBe(true);
+
+      // Verify that attempting to modify frozen data throws in strict mode
+      expect(() => {
+        // @ts-expect-error - Intentionally trying to modify frozen object
+        ex.data.count = 2;
+      }).toThrow("Attempted to assign to readonly property.");
+
+      expect(() => {
+        // @ts-expect-error - Intentionally trying to add property
+        ex.data.newProp = "new";
+      }).toThrow();
+
+      expect(() => {
+        // @ts-expect-error - Intentionally trying to delete property
+        delete ex.data.count;
+      }).toThrow();
+
+      // Verify data remains unchanged after attempted modifications
+      expect(ex.data?.count).toBe(1);
+      expect(ex.data).not.toHaveProperty("newProp");
+      expect(ex.data).toHaveProperty("count");
+
+      // Note: Object.freeze is shallow - nested objects are not frozen
+      expect(Object.isFrozen(ex.data?.nested)).toBe(false);
+      expect(Object.isFrozen(ex.data?.array)).toBe(false);
+    });
+
+    test("should not freeze data when data is undefined", () => {
+      const ex = new Exception("Test");
+      expect(ex.data).toBeUndefined();
+    });
+
+    test("should not freeze data when data is null", () => {
+      const ex = new Exception("Test", { data: null });
+      expect(ex.data).toBeNull();
+    });
+
+    test("should freeze data with different data types", () => {
+      // Test with array
+      const arrayData = [1, 2, 3, { nested: "value" }];
+      const exArray = new Exception("Test", { data: arrayData });
+      expect(Object.isFrozen(exArray.data)).toBe(true);
+
+      // Test with string (primitives can't be frozen, but should not throw)
+      const stringData = "test string";
+      const exString = new Exception("Test", { data: stringData });
+      expect(exString.data).toBe(stringData);
+
+      // Test with number
+      const numberData = 42;
+      const exNumber = new Exception("Test", { data: numberData });
+      expect(exNumber.data).toBe(numberData);
+
+      // Test with boolean
+      const booleanData = true;
+      const exBoolean = new Exception("Test", { data: booleanData });
+      expect(exBoolean.data).toBe(booleanData);
+
+      // Test with complex nested object
+      const complexData = {
+        level1: {
+          level2: {
+            level3: "deep value",
+          },
+          array: [1, 2, { item: "value" }],
+        },
+        primitive: 123,
+      };
+      const exComplex = new Exception("Test", { data: complexData });
+      expect(Object.isFrozen(exComplex.data)).toBe(true);
+      // Nested objects should not be frozen (shallow freeze)
+      expect(Object.isFrozen(exComplex.data?.level1)).toBe(false);
+    });
+
     test("should have readonly native property", () => {
       const originalError = new Error("Original");
       const ex = new Exception(originalError);

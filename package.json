@@ -20,10 +20,11 @@
   "private": true,
   "scripts": {
     "graph": "bunx nx graph",
+    "dev": "bunx nx run-many -t test --watch",
     "graph:affected": "bunx nx graph --affected",
-    "build": "bunx nx affected -t build --output-style=stream --verbose",
-    "test": "bunx nx affected -t test --output-style=stream --verbose",
-    "test:watch": "bunx nx affected -t test:watch",
+    "build": "bunx nx run-many -t build --output-style=stream --verbose",
+    "test": "bunx nx run-many -t test --output-style=stream --verbose",
+    "test:watch": "bunx nx run-many -t test:watch",
     "fmt": "bunx biome format --write",
     "lint": "bunx biome lint",
     "prepare": "husky"

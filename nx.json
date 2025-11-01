@@ -8,6 +8,9 @@
     "compile": {
       "cache": true
     },
+    "fmt": {
+      "cache": true
+    },
     "lint": {
       "cache": true
     },

@@ -22,6 +22,7 @@
     "graph": "bunx nx graph",
     "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
     "graph:affected": "bunx nx graph --affected",
+    "compile": "bunx nx run-many -t compile --output-style=stream --verbose",
     "build": "bunx nx run-many -t build --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "test:watch": "bunx nx run-many -t test:watch",

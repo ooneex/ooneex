@@ -38,7 +38,7 @@
     },
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "bunx nx run-many -t build --output-style=stream --verbose",
+      "preVersionCommand": "bunx nx run-many -t compile build --output-style=stream --verbose",
       "fallbackCurrentVersionResolver": "disk",
       "versionPrefix": "auto"
     },

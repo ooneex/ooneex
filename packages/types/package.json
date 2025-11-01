@@ -19,6 +19,7 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/http-header": "workspace:*",
+    "@ooneex/analytics": "workspace:*",
     "@ooneex/container": "workspace:*"
   },
   "peerDependencies": {},

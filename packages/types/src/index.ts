@@ -1,3 +1,4 @@
+export type { IAnalytics, PostHogAdapterCaptureType } from "@ooneex/analytics";
 export type { EContainerScope, IContainer } from "@ooneex/container";
 export type { ExceptionStackFrameType, IException } from "@ooneex/exception";
 export type {

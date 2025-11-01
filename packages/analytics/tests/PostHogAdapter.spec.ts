@@ -1,0 +1,784 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AnalyticsException } from "@/AnalyticsException";
+import { PostHogAdapter } from "@/PostHogAdapter";
+import type { PostHogAdapterCaptureType } from "@/types";
+
+// Create mock PostHog instance
+const mockPostHogInstance = {
+  capture: mock(() => {}),
+  shutdown: mock(() => {}),
+};
+
+// Mock the PostHog constructor
+const MockPostHog = mock(() => mockPostHogInstance);
+
+// Mock the entire posthog-node module
+mock.module("posthog-node", () => ({
+  PostHog: MockPostHog,
+}));
+
+describe("PostHogAdapter", () => {
+  let originalEnv: Record<string, string | undefined>;
+
+  beforeEach(() => {
+    // Store original environment variables
+    originalEnv = {
+      POSTHOG_API_KEY: Bun.env.POSTHOG_API_KEY,
+      POSTHOG_HOST: Bun.env.POSTHOG_HOST,
+    };
+
+    // Reset all mocks
+    mockPostHogInstance.capture.mockClear();
+    mockPostHogInstance.shutdown.mockClear();
+    MockPostHog.mockClear();
+
+    // Reset mock implementations to default
+    mockPostHogInstance.capture.mockImplementation(() => {});
+    mockPostHogInstance.shutdown.mockImplementation(() => {});
+    MockPostHog.mockImplementation(() => mockPostHogInstance);
+  });
+
+  afterEach(() => {
+    // Restore original environment variables
+    if (originalEnv.POSTHOG_API_KEY !== undefined) {
+      Bun.env.POSTHOG_API_KEY = originalEnv.POSTHOG_API_KEY;
+    } else {
+      delete Bun.env.POSTHOG_API_KEY;
+    }
+
+    if (originalEnv.POSTHOG_HOST !== undefined) {
+      Bun.env.POSTHOG_HOST = originalEnv.POSTHOG_HOST;
+    } else {
+      delete Bun.env.POSTHOG_HOST;
+    }
+  });
+
+  describe("Constructor", () => {
+    test("should throw AnalyticsException when no API key is provided", () => {
+      delete Bun.env.POSTHOG_API_KEY;
+
+      expect(() => new PostHogAdapter()).toThrow(AnalyticsException);
+      expect(() => new PostHogAdapter()).toThrow(
+        "PostHog API key is required. Please provide an API key either through the constructor options or set the POSTHOG_API_KEY environment variable.",
+      );
+    });
+
+    test("should throw AnalyticsException when empty API key is provided via options", () => {
+      delete Bun.env.POSTHOG_API_KEY;
+
+      expect(() => new PostHogAdapter({ apiKey: "" })).toThrow(AnalyticsException);
+    });
+
+    test("should throw AnalyticsException when undefined API key is provided via options", () => {
+      delete Bun.env.POSTHOG_API_KEY;
+
+      expect(() => new PostHogAdapter({ apiKey: undefined })).toThrow(AnalyticsException);
+    });
+
+    test("should create instance successfully with API key from environment", () => {
+      Bun.env.POSTHOG_API_KEY = "test-api-key";
+
+      const adapter = new PostHogAdapter();
+
+      expect(adapter).toBeInstanceOf(PostHogAdapter);
+      expect(adapter).toHaveProperty("capture");
+      expect(typeof adapter.capture).toBe("function");
+    });
+
+    test("should create instance successfully with API key from options", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      expect(adapter).toBeInstanceOf(PostHogAdapter);
+      expect(adapter).toHaveProperty("capture");
+    });
+
+    test("should prioritize options API key over environment variable", () => {
+      Bun.env.POSTHOG_API_KEY = "env-api-key";
+
+      new PostHogAdapter({ apiKey: "options-api-key" });
+
+      expect(MockPostHog).toHaveBeenCalledWith("options-api-key", expect.any(Object));
+    });
+
+    test("should use default host when none provided", () => {
+      new PostHogAdapter({ apiKey: "test-api-key" });
+
+      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
+        host: "https://eu.i.posthog.com",
+      });
+    });
+
+    test("should use host from options when provided", () => {
+      const customHost = "https://custom.posthog.com";
+
+      new PostHogAdapter({ apiKey: "test-api-key", host: customHost });
+
+      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
+        host: customHost,
+      });
+    });
+
+    test("should use host from environment when no options host provided", () => {
+      Bun.env.POSTHOG_HOST = "https://env.posthog.com";
+
+      new PostHogAdapter({ apiKey: "test-api-key" });
+
+      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
+        host: "https://env.posthog.com",
+      });
+    });
+
+    test("should prioritize options host over environment host", () => {
+      Bun.env.POSTHOG_HOST = "https://env.posthog.com";
+      const optionsHost = "https://options.posthog.com";
+
+      new PostHogAdapter({ apiKey: "test-api-key", host: optionsHost });
+
+      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
+        host: optionsHost,
+      });
+    });
+
+    test("should not initialize PostHog client when API key comes from environment", () => {
+      Bun.env.POSTHOG_API_KEY = "env-api-key";
+
+      new PostHogAdapter();
+
+      expect(MockPostHog).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("capture method", () => {
+    let adapter: PostHogAdapter;
+
+    beforeEach(() => {
+      adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+    });
+
+    test("should call PostHog capture with correct parameters", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-123",
+        event: "button_clicked",
+        properties: { buttonId: "submit", page: "checkout" },
+        groups: { company: "acme-corp", plan: "enterprise" },
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-123",
+        event: "button_clicked",
+        properties: {
+          $set: { buttonId: "submit", page: "checkout" },
+        },
+        timestamp: expect.any(Date),
+        groups: { company: "acme-corp", plan: "enterprise" },
+      });
+    });
+
+    test("should handle capture with minimal data", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-456",
+        event: "page_view",
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-456",
+        event: "page_view",
+        properties: {
+          $set: undefined,
+        },
+        timestamp: expect.any(Date),
+        groups: undefined,
+      });
+    });
+
+    test("should handle capture with empty properties", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-789",
+        event: "form_submit",
+        properties: {},
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-789",
+        event: "form_submit",
+        properties: {
+          $set: {},
+        },
+        timestamp: expect.any(Date),
+        groups: undefined,
+      });
+    });
+
+    test("should handle capture with empty groups", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-000",
+        event: "purchase",
+        groups: {},
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-000",
+        event: "purchase",
+        properties: {
+          $set: undefined,
+        },
+        timestamp: expect.any(Date),
+        groups: {},
+      });
+    });
+
+    test("should handle capture with complex properties", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-complex",
+        event: "complex_event",
+        properties: {
+          stringProp: "test",
+          numberProp: 42,
+          booleanProp: true,
+          objectProp: { nested: "value" },
+          arrayProp: [1, 2, 3],
+          nullProp: null,
+          undefinedProp: undefined,
+        },
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-complex",
+        event: "complex_event",
+        properties: {
+          $set: captureData.properties,
+        },
+        timestamp: expect.any(Date),
+        groups: undefined,
+      });
+    });
+
+    test("should handle capture with numeric group values", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-numeric",
+        event: "numeric_groups_event",
+        groups: {
+          companyId: 123,
+          teamId: 456,
+          projectId: "project-789",
+        },
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "user-numeric",
+        event: "numeric_groups_event",
+        properties: {
+          $set: undefined,
+        },
+        timestamp: expect.any(Date),
+        groups: {
+          companyId: 123,
+          teamId: 456,
+          projectId: "project-789",
+        },
+      });
+    });
+
+    test("should always call shutdown after capture", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-shutdown",
+        event: "shutdown_test",
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.shutdown).toHaveBeenCalledTimes(1);
+    });
+
+    test("should generate timestamp for each capture call", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-timestamp",
+        event: "timestamp_test",
+      };
+
+      adapter.capture(captureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledTimes(1);
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          timestamp: expect.any(Date),
+        }),
+      );
+    });
+
+    test("should not throw error when client is null", () => {
+      // Create adapter without initializing client (using env API key)
+      Bun.env.POSTHOG_API_KEY = "env-key";
+      const adapterWithNullClient = new PostHogAdapter();
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-null-client",
+        event: "null_client_test",
+      };
+
+      expect(() => adapterWithNullClient.capture(captureData)).not.toThrow();
+    });
+
+    test("should handle special characters in event names and properties", () => {
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-special",
+        event: "special_event_💡_with_émojis",
+        properties: {
+          "property with spaces": "value",
+          "property-with-dashes": "value",
+          property_with_underscores: "value",
+          "property.with.dots": "value",
+          "property/with/slashes": "value",
+          特殊文字: "Unicode value",
+        },
+      };
+
+      expect(() => adapter.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: "special_event_💡_with_émojis",
+          properties: {
+            $set: captureData.properties,
+          },
+        }),
+      );
+    });
+  });
+
+  describe("IAnalytics interface compliance", () => {
+    test("should implement IAnalytics interface correctly", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      expect(adapter).toHaveProperty("capture");
+      expect(typeof adapter.capture).toBe("function");
+    });
+
+    test("should accept generic capture type", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      interface CustomCaptureType extends PostHogAdapterCaptureType {
+        customProperty: string;
+      }
+
+      const customData: CustomCaptureType = {
+        id: "user-custom",
+        event: "custom_event",
+        customProperty: "custom value",
+        properties: { test: "value" },
+      };
+
+      expect(() => adapter.capture(customData)).not.toThrow();
+    });
+  });
+
+  describe("Error scenarios", () => {
+    test("should handle PostHog capture errors gracefully", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      // Create a fresh mock for this test to avoid affecting others
+      const errorMock = mock(() => {
+        throw new Error("PostHog API error");
+      });
+      mockPostHogInstance.capture.mockImplementation(errorMock);
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-error",
+        event: "error_test",
+      };
+
+      expect(() => adapter.capture(captureData)).toThrow("PostHog API error");
+    });
+
+    test("should handle PostHog shutdown errors gracefully", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      // Reset capture to default behavior and only mock shutdown to throw
+      mockPostHogInstance.capture.mockImplementation(() => {});
+      mockPostHogInstance.shutdown.mockImplementation(() => {
+        throw new Error("Shutdown error");
+      });
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-shutdown-error",
+        event: "shutdown_error_test",
+      };
+
+      expect(() => adapter.capture(captureData)).toThrow("Shutdown error");
+    });
+  });
+
+  describe("Multiple capture calls", () => {
+    test("should handle multiple sequential capture calls", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const captureData1: PostHogAdapterCaptureType = {
+        id: "user-1",
+        event: "event_1",
+      };
+
+      const captureData2: PostHogAdapterCaptureType = {
+        id: "user-2",
+        event: "event_2",
+      };
+
+      adapter.capture(captureData1);
+      adapter.capture(captureData2);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledTimes(2);
+      expect(mockPostHogInstance.shutdown).toHaveBeenCalledTimes(2);
+
+      expect(mockPostHogInstance.capture).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          distinctId: "user-1",
+          event: "event_1",
+        }),
+      );
+
+      expect(mockPostHogInstance.capture).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          distinctId: "user-2",
+          event: "event_2",
+        }),
+      );
+    });
+  });
+
+  describe("Real-world usage scenarios", () => {
+    test("should handle user signup event", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const signupData: PostHogAdapterCaptureType = {
+        id: "new-user-123",
+        event: "user_signup",
+        properties: {
+          email: "user@example.com",
+          source: "organic",
+          plan: "free",
+          referrer: "https://google.com",
+        },
+        groups: {
+          company: "startup-inc",
+        },
+      };
+
+      adapter.capture(signupData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith({
+        distinctId: "new-user-123",
+        event: "user_signup",
+        properties: {
+          $set: signupData.properties,
+        },
+        timestamp: expect.any(Date),
+        groups: signupData.groups,
+      });
+    });
+
+    test("should handle e-commerce purchase event", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const purchaseData: PostHogAdapterCaptureType = {
+        id: "customer-456",
+        event: "purchase_completed",
+        properties: {
+          orderId: "order-789",
+          revenue: 99.99,
+          currency: "USD",
+          products: ["product-a", "product-b"],
+          paymentMethod: "credit_card",
+          discount: 10.0,
+        },
+        groups: {
+          store: "main-store",
+          region: "north-america",
+        },
+      };
+
+      adapter.capture(purchaseData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          distinctId: "customer-456",
+          event: "purchase_completed",
+          properties: {
+            $set: purchaseData.properties,
+          },
+          groups: purchaseData.groups,
+        }),
+      );
+    });
+
+    test("should handle feature usage tracking", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const featureData: PostHogAdapterCaptureType = {
+        id: "power-user-789",
+        event: "feature_used",
+        properties: {
+          feature: "advanced_analytics",
+          sessionDuration: 1800,
+          actionsCount: 25,
+          source: "dashboard",
+        },
+        groups: {
+          tier: "premium",
+          segment: "power-users",
+        },
+      };
+
+      adapter.capture(featureData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          distinctId: "power-user-789",
+          event: "feature_used",
+          properties: {
+            $set: featureData.properties,
+          },
+          groups: featureData.groups,
+        }),
+      );
+    });
+  });
+
+  describe("Edge cases", () => {
+    test("should handle very long user IDs", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+      const longId = `user-${"x".repeat(1000)}`;
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: longId,
+        event: "long_id_test",
+      };
+
+      expect(() => adapter.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          distinctId: longId,
+        }),
+      );
+    });
+
+    test("should handle very long event names", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+      const longEventName = `event_${"x".repeat(500)}`;
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-long-event",
+        event: longEventName,
+      };
+
+      expect(() => adapter.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: longEventName,
+        }),
+      );
+    });
+
+    test("should handle large property objects", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+      const largeProperties: Record<string, unknown> = {};
+
+      // Create a large properties object
+      for (let i = 0; i < 100; i++) {
+        largeProperties[`property_${i}`] = `value_${i}`;
+      }
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-large-props",
+        event: "large_properties_test",
+        properties: largeProperties,
+      };
+
+      expect(() => adapter.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          properties: {
+            $set: largeProperties,
+          },
+        }),
+      );
+    });
+
+    test("should handle deeply nested property values", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const nestedProperties = {
+        level1: {
+          level2: {
+            level3: {
+              level4: {
+                deepValue: "found it!",
+                deepArray: [1, 2, { nested: "array object" }],
+              },
+            },
+          },
+        },
+      };
+
+      const captureData: PostHogAdapterCaptureType = {
+        id: "user-nested",
+        event: "nested_properties_test",
+        properties: nestedProperties,
+      };
+
+      expect(() => adapter.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          properties: {
+            $set: nestedProperties,
+          },
+        }),
+      );
+    });
+  });
+
+  describe("Performance and reliability", () => {
+    test("should handle rapid successive capture calls", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      // Simulate rapid successive calls
+      for (let i = 0; i < 10; i++) {
+        adapter.capture({
+          id: `user-${i}`,
+          event: `rapid_event_${i}`,
+        });
+      }
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledTimes(10);
+      expect(mockPostHogInstance.shutdown).toHaveBeenCalledTimes(10);
+    });
+
+    test("should handle capture calls with varying data sizes", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      // Small data
+      adapter.capture({
+        id: "user-small",
+        event: "small",
+      });
+
+      // Medium data
+      adapter.capture({
+        id: "user-medium",
+        event: "medium_event",
+        properties: { prop1: "value1", prop2: "value2" },
+        groups: { group1: "value1" },
+      });
+
+      // Large data
+      const largeProps: Record<string, unknown> = {};
+      for (let i = 0; i < 50; i++) {
+        largeProps[`prop_${i}`] = `value_${i}`;
+      }
+      adapter.capture({
+        id: "user-large",
+        event: "large_event",
+        properties: largeProps,
+        groups: { group1: "value1", group2: "value2", group3: "value3" },
+      });
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledTimes(3);
+      expect(mockPostHogInstance.shutdown).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe("Data integrity", () => {
+    test("should preserve all property types correctly", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const mixedData: PostHogAdapterCaptureType = {
+        id: "user-mixed",
+        event: "mixed_data_test",
+        properties: {
+          stringValue: "test string",
+          numberValue: 42,
+          floatValue: Math.PI,
+          booleanTrue: true,
+          booleanFalse: false,
+          nullValue: null,
+          undefinedValue: undefined,
+          arrayValue: [1, "two", { three: 3 }],
+          objectValue: {
+            nested: {
+              deeply: {
+                value: "deep value",
+              },
+            },
+          },
+          dateValue: new Date("2023-01-01"),
+        },
+      };
+
+      adapter.capture(mixedData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          properties: {
+            $set: mixedData.properties,
+          },
+        }),
+      );
+    });
+
+    test("should handle special numeric values", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      const numericData: PostHogAdapterCaptureType = {
+        id: "user-numeric",
+        event: "numeric_test",
+        properties: {
+          zero: 0,
+          negativeNumber: -42,
+          positiveNumber: 42,
+          largeNumber: Number.MAX_SAFE_INTEGER,
+          smallNumber: Number.MIN_SAFE_INTEGER,
+          infinity: Number.POSITIVE_INFINITY,
+          negativeInfinity: Number.NEGATIVE_INFINITY,
+          notANumber: Number.NaN,
+        },
+      };
+
+      adapter.capture(numericData);
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          properties: {
+            $set: numericData.properties,
+          },
+        }),
+      );
+    });
+
+    test("should maintain timestamp precision", () => {
+      const adapter = new PostHogAdapter({ apiKey: "test-api-key" });
+
+      adapter.capture({
+        id: "user-timestamp-precision",
+        event: "timestamp_precision_test",
+      });
+
+      expect(mockPostHogInstance.capture).toHaveBeenCalledTimes(1);
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          timestamp: expect.any(Date),
+        }),
+      );
+    });
+  });
+});

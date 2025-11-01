@@ -39,6 +39,10 @@
     "packages/cache": {
       "name": "@ooneex/cache",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
     },
     "packages/container": {
       "name": "@ooneex/container",

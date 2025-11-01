@@ -54,7 +54,11 @@ export class Container {
   }
 
   public getConstant<T>(identifier: string | symbol): T {
-    return di.get<T>(identifier);
+    try {
+      return di.get<T>(identifier);
+    } catch (_e) {
+      throw new ContainerException(`Failed to resolve constant: ${identifier.toString()}`);
+    }
   }
 
   public hasConstant(identifier: string | symbol): boolean {

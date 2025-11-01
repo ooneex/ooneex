@@ -343,6 +343,211 @@ describe("Container - Dependency Injection", () => {
         expect(container.hasConstant(UNREGISTERED_KEY)).toBe(false);
         expect(() => container.getConstant(UNREGISTERED_KEY)).toThrow();
       });
+
+      test("should throw ContainerException with specific message for unregistered string constants", () => {
+        const UNREGISTERED_KEY = "missing-string-constant";
+
+        expect(() => container.getConstant(UNREGISTERED_KEY)).toThrow(
+          `Failed to resolve constant: ${UNREGISTERED_KEY}`,
+        );
+      });
+
+      test("should throw ContainerException with specific message for unregistered symbol constants", () => {
+        const UNREGISTERED_SYMBOL = Symbol("missing-symbol");
+
+        expect(() => container.getConstant(UNREGISTERED_SYMBOL)).toThrow(
+          `Failed to resolve constant: ${UNREGISTERED_SYMBOL.toString()}`,
+        );
+      });
+
+      test("should retrieve complex object constants correctly", () => {
+        const COMPLEX_OBJECT_KEY = "complex-object";
+        const complexObject = {
+          nested: {
+            array: [1, 2, 3],
+            boolean: true,
+            nullValue: null,
+            undefinedValue: undefined,
+          },
+          function: () => "test",
+          date: new Date("2023-01-01"),
+        };
+
+        container.addConstant(COMPLEX_OBJECT_KEY, complexObject);
+
+        const retrieved = container.getConstant<typeof complexObject>(COMPLEX_OBJECT_KEY);
+        expect(retrieved).toBe(complexObject);
+        expect(retrieved.nested.array).toEqual([1, 2, 3]);
+        expect(retrieved.nested.boolean).toBe(true);
+        expect(retrieved.nested.nullValue).toBe(null);
+        expect(retrieved.nested.undefinedValue).toBe(undefined);
+        expect(typeof retrieved.function).toBe("function");
+        expect(retrieved.function()).toBe("test");
+        expect(retrieved.date).toBeInstanceOf(Date);
+      });
+
+      test("should retrieve primitive constants with correct types", () => {
+        const STRING_KEY = "string-test";
+        const NUMBER_KEY = "number-test";
+        const BOOLEAN_KEY = "boolean-test";
+        const BIGINT_KEY = "bigint-test";
+
+        container.addConstant(STRING_KEY, "hello world");
+        container.addConstant(NUMBER_KEY, 42);
+        container.addConstant(BOOLEAN_KEY, true);
+        container.addConstant(BIGINT_KEY, BigInt(9007199254740991));
+
+        expect(container.getConstant<string>(STRING_KEY)).toBe("hello world");
+        expect(container.getConstant<number>(NUMBER_KEY)).toBe(42);
+        expect(container.getConstant<boolean>(BOOLEAN_KEY)).toBe(true);
+        expect(container.getConstant<bigint>(BIGINT_KEY)).toBe(BigInt(9007199254740991));
+      });
+
+      test("should handle symbol constants with different symbol types", () => {
+        const GLOBAL_SYMBOL = Symbol.for("global-symbol");
+        const LOCAL_SYMBOL = Symbol("local-symbol");
+
+        container.addConstant(GLOBAL_SYMBOL, "global-value");
+        container.addConstant(LOCAL_SYMBOL, "local-value");
+
+        expect(container.getConstant<string>(GLOBAL_SYMBOL)).toBe("global-value");
+        expect(container.getConstant<string>(LOCAL_SYMBOL)).toBe("local-value");
+      });
+
+      test("should maintain constant immutability after retrieval", () => {
+        const IMMUTABLE_KEY = "immutable-test";
+        const originalObject = { count: 1, data: ["a", "b"] };
+
+        container.addConstant(IMMUTABLE_KEY, originalObject);
+
+        const retrieved1 = container.getConstant<typeof originalObject>(IMMUTABLE_KEY);
+        const retrieved2 = container.getConstant<typeof originalObject>(IMMUTABLE_KEY);
+
+        // Should be the same reference
+        expect(retrieved1).toBe(retrieved2);
+        expect(retrieved1).toBe(originalObject);
+
+        // Modifying the retrieved object affects the original (this is expected behavior)
+        retrieved1.count = 999;
+        expect(container.getConstant<typeof originalObject>(IMMUTABLE_KEY).count).toBe(999);
+      });
+
+      test("should handle empty string and numeric zero constants", () => {
+        const EMPTY_STRING_KEY = "empty-string";
+        const ZERO_KEY = "zero-number";
+        const FALSE_KEY = "false-boolean";
+
+        container.addConstant(EMPTY_STRING_KEY, "");
+        container.addConstant(ZERO_KEY, 0);
+        container.addConstant(FALSE_KEY, false);
+
+        expect(container.getConstant<string>(EMPTY_STRING_KEY)).toBe("");
+        expect(container.getConstant<number>(ZERO_KEY)).toBe(0);
+        expect(container.getConstant<boolean>(FALSE_KEY)).toBe(false);
+
+        // These should still be considered as valid constants
+        expect(container.hasConstant(EMPTY_STRING_KEY)).toBe(true);
+        expect(container.hasConstant(ZERO_KEY)).toBe(true);
+        expect(container.hasConstant(FALSE_KEY)).toBe(true);
+      });
+
+      test("should handle class instances as constants", () => {
+        class TestClass {
+          constructor(public value: string) {}
+          getValue() {
+            return this.value;
+          }
+        }
+
+        const CLASS_INSTANCE_KEY = "class-instance";
+        const instance = new TestClass("test-value");
+
+        container.addConstant(CLASS_INSTANCE_KEY, instance);
+
+        const retrieved = container.getConstant<TestClass>(CLASS_INSTANCE_KEY);
+        expect(retrieved).toBe(instance);
+        expect(retrieved.getValue()).toBe("test-value");
+        expect(retrieved).toBeInstanceOf(TestClass);
+      });
+
+      test("should handle function constants", () => {
+        const FUNCTION_KEY = "function-constant";
+        const testFunction = (x: number, y: number) => x + y;
+
+        container.addConstant(FUNCTION_KEY, testFunction);
+
+        const retrieved = container.getConstant<typeof testFunction>(FUNCTION_KEY);
+        expect(retrieved).toBe(testFunction);
+        expect(typeof retrieved).toBe("function");
+        expect(retrieved(2, 3)).toBe(5);
+      });
+
+      test("should handle array constants with mixed types", () => {
+        const ARRAY_KEY = "mixed-array";
+        const mixedArray = [1, "string", true, null, { nested: "object" }, [1, 2, 3]];
+
+        container.addConstant(ARRAY_KEY, mixedArray);
+
+        const retrieved = container.getConstant<typeof mixedArray>(ARRAY_KEY);
+        expect(retrieved).toBe(mixedArray);
+        expect(Array.isArray(retrieved)).toBe(true);
+        expect(retrieved[0]).toBe(1);
+        expect(retrieved[1]).toBe("string");
+        expect(retrieved[2]).toBe(true);
+        expect(retrieved[3]).toBe(null);
+        expect(retrieved[4]).toEqual({ nested: "object" });
+        expect(retrieved[5]).toEqual([1, 2, 3]);
+      });
+
+      test("should throw ContainerException type for unregistered constants", () => {
+        const MISSING_KEY = "definitely-missing";
+
+        try {
+          container.getConstant(MISSING_KEY);
+          expect(true).toBe(false); // Should not reach here
+        } catch (error) {
+          expect((error as Error & { name: string }).name).toBe("ContainerException");
+          expect((error as Error).message).toContain("Failed to resolve constant");
+          expect((error as Error).message).toContain(MISSING_KEY);
+        }
+      });
+
+      test("should handle Map and Set constants", () => {
+        const MAP_KEY = "map-constant";
+        const SET_KEY = "set-constant";
+
+        const testMap = new Map([
+          ["key1", "value1"],
+          ["key2", "value2"],
+        ]);
+        const testSet = new Set([1, 2, 3, 4]);
+
+        container.addConstant(MAP_KEY, testMap);
+        container.addConstant(SET_KEY, testSet);
+
+        const retrievedMap = container.getConstant<Map<string, string>>(MAP_KEY);
+        const retrievedSet = container.getConstant<Set<number>>(SET_KEY);
+
+        expect(retrievedMap).toBe(testMap);
+        expect(retrievedMap.get("key1")).toBe("value1");
+        expect(retrievedMap.size).toBe(2);
+
+        expect(retrievedSet).toBe(testSet);
+        expect(retrievedSet.has(3)).toBe(true);
+        expect(retrievedSet.size).toBe(4);
+      });
+
+      test("should handle RegExp constants", () => {
+        const REGEX_KEY = "regex-constant";
+        const testRegex = /^[a-z]+$/i;
+
+        container.addConstant(REGEX_KEY, testRegex);
+
+        const retrieved = container.getConstant<RegExp>(REGEX_KEY);
+        expect(retrieved).toBe(testRegex);
+        expect(retrieved.test("hello")).toBe(true);
+        expect(retrieved.test("123")).toBe(false);
+      });
     });
 
     describe("Service overriding", () => {

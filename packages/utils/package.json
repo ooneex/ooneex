@@ -3,12 +3,6 @@
   "version": "0.0.8",
   "description": "",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -21,8 +15,6 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
     "publish": "bun run build && bun publish --access public"
   },
-  "devDependencies": {},
-  "peerDependencies": {},
   "dependencies": {
     "nanoid": "^5.1.6"
   },

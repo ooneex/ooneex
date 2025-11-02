@@ -11,6 +11,10 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
     "publish": "bun run build && bun publish --access public"
   },
+  "dependencies": {
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/http-header": "workspace:*"
+  },
   "devDependencies": {},
   "peerDependencies": {},
   "files": [

@@ -1,6 +1,6 @@
 # @ooneex/url
 
-A comprehensive TypeScript/JavaScript library for parsing and working with URLs. This package provides a robust URL parsing utility that extracts all URL components including protocol, domain, subdomain, path, query parameters, and fragments with intelligent type conversion.
+A comprehensive TypeScript/JavaScript library for working with URLs. This package provides powerful URL parsing, manipulation, and building capabilities with a clean, type-safe API for web applications.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,21 +11,23 @@ A comprehensive TypeScript/JavaScript library for parsing and working with URLs.
 
 ## Features
 
-✅ **Complete URL Parsing** - Extracts all URL components with precision
-
-✅ **Smart Type Conversion** - Automatically converts query parameters to appropriate types (string, number, bigint, boolean)
-
-✅ **Subdomain Detection** - Intelligently separates subdomains from main domains
+✅ **Complete URL Parsing** - Parse and extract all URL components (protocol, hostname, port, path, queries, fragment)
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Lightweight** - Minimal dependencies and optimized bundle size
+✅ **Immutable & Mutable** - Choose between ReadonlyUrl for parsing or Url for manipulation
 
 ✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 
-✅ **Native URL Integration** - Built on top of the native URL API
+✅ **Smart Query Parsing** - Automatically converts query parameters to appropriate types (string, number, boolean)
 
-✅ **Flexible Input** - Accepts both string URLs and native URL objects
+✅ **Subdomain Detection** - Intelligently separates subdomains from domains
+
+✅ **Port Handling** - Proper default port detection and custom port support
+
+✅ **Path Normalization** - Clean path handling with proper slash management
+
+✅ **Zero Dependencies** - No external dependencies required (uses workspace utilities)
 
 ## Installation
 
@@ -51,302 +53,403 @@ npm install @ooneex/url
 
 ## Usage
 
-### Basic Usage
+### Basic URL Parsing
 
 ```typescript
-import { Url } from '@ooneex/url';
+import { ReadonlyUrl } from '@ooneex/url';
 
-// Parse a URL from string
-const url = new Url('https://blog.example.com:3000/posts/123?active=true&limit=10#comments');
+const url = new ReadonlyUrl('https://blog.example.com:3000/posts/123?page=2&sort=desc#comments');
 
-console.log(url.protocol);   // "https"
-console.log(url.subdomain);  // "blog"
-console.log(url.domain);     // "example.com"
-console.log(url.hostname);   // "blog.example.com"
-console.log(url.port);       // 3000
-console.log(url.path);       // "/posts/123"
-console.log(url.queries);    // { active: true, limit: 10 }
-console.log(url.fragment);   // "comments"
-console.log(url.base);       // "https://blog.example.com:3000"
-console.log(url.origin);     // "https://blog.example.com:3000"
+// Get URL components
+console.log(url.getProtocol()); // "https"
+console.log(url.getHostname()); // "blog.example.com"
+console.log(url.getSubdomain()); // "blog"
+console.log(url.getDomain()); // "example.com"
+console.log(url.getPort()); // 3000
+console.log(url.getPath()); // "/posts/123"
+console.log(url.getQueries()); // { page: 2, sort: "desc" }
+console.log(url.getFragment()); // "comments"
+console.log(url.getOrigin()); // "https://blog.example.com:3000"
 ```
 
-### Working with Query Parameters
+### URL Manipulation
 
 ```typescript
 import { Url } from '@ooneex/url';
 
-const url = new Url('https://api.example.com/users?name=john&age=25&active=true&score=98.5');
+const url = new Url('https://example.com');
 
-// Query parameters are automatically type-converted
-console.log(url.queries.name);    // "john" (string)
-console.log(url.queries.age);     // 25 (number)
-console.log(url.queries.active);  // true (boolean)
-console.log(url.queries.score);   // 98.5 (number)
+// Chain modifications
+url.setProtocol('http')
+   .setHostname('api.example.com')
+   .setPort(8080)
+   .setPath('/v1/users')
+   .addQuery('limit', 10)
+   .addQuery('offset', 0)
+   .setFragment('results');
 
-// Access all queries
-Object.entries(url.queries).forEach(([key, value]) => {
-  console.log(`${key}: ${value} (${typeof value})`);
-});
-```
-
-### Subdomain Handling
-
-```typescript
-import { Url } from '@ooneex/url';
-
-// Single subdomain
-const blog = new Url('https://blog.example.com');
-console.log(blog.subdomain); // "blog"
-console.log(blog.domain);    // "example.com"
-
-// Multiple subdomains
-const api = new Url('https://dev.api.example.com');
-console.log(api.subdomain);  // "dev.api"
-console.log(api.domain);     // "example.com"
-
-// No subdomain
-const main = new Url('https://example.com');
-console.log(main.subdomain); // null
-console.log(main.domain);    // "example.com"
-```
-
-### Working with Native URL Objects
-
-```typescript
-import { Url } from '@ooneex/url';
-
-// Create from native URL object
-const nativeUrl = new URL('https://example.com/path?query=value');
-const url = new Url(nativeUrl);
-
-// Access the original native URL
-console.log(url.native); // Original URL object
-console.log(url.native.searchParams.get('query')); // "value"
+console.log(url.toString()); // "http://api.example.com:8080/v1/users?limit=10&offset=0#results"
 ```
 
 ### Advanced Usage
 
 ```typescript
-import { Url, IUrl } from '@ooneex/url';
+import { Url, ReadonlyUrl } from '@ooneex/url';
 
-class UrlAnalyzer {
-  private url: IUrl;
+// Parse complex URLs with multiple subdomains
+const complexUrl = new ReadonlyUrl('https://dev.api.example.com/v2/users?active=true&count=100');
+console.log(complexUrl.getSubdomain()); // "dev.api"
+console.log(complexUrl.getDomain()); // "example.com"
+console.log(complexUrl.getQueries()); // { active: true, count: 100 }
 
-  constructor(urlString: string) {
-    this.url = new Url(urlString);
-  }
+// Build URLs programmatically
+const apiUrl = new Url('https://api.example.com')
+  .setPath('/users')
+  .setQueries({
+    page: 1,
+    limit: 20,
+    active: true,
+    search: 'john'
+  });
 
-  isSecure(): boolean {
-    return this.url.protocol === 'https';
-  }
+console.log(apiUrl.toString()); // "https://api.example.com/users?page=1&limit=20&active=true&search=john"
 
-  isLocalhost(): boolean {
-    return this.url.domain === 'localhost' || this.url.domain === '127.0.0.1';
-  }
+// Handle localhost and IP addresses
+const localUrl = new ReadonlyUrl('http://localhost:3000/dashboard');
+console.log(localUrl.getSubdomain()); // null
+console.log(localUrl.getDomain()); // "localhost"
 
-  hasSubdomain(): boolean {
-    return this.url.subdomain !== null;
-  }
-
-  getQueryCount(): number {
-    return Object.keys(this.url.queries).length;
-  }
-
-  hasFragment(): boolean {
-    return this.url.fragment.length > 0;
-  }
-
-  analyze(): object {
-    return {
-      url: this.url.base + this.url.path,
-      secure: this.isSecure(),
-      localhost: this.isLocalhost(),
-      subdomain: this.hasSubdomain() ? this.url.subdomain : 'none',
-      queryParams: this.getQueryCount(),
-      hasFragment: this.hasFragment(),
-      components: {
-        protocol: this.url.protocol,
-        domain: this.url.domain,
-        port: this.url.port,
-        path: this.url.path,
-        queries: this.url.queries,
-        fragment: this.url.fragment
-      }
-    };
-  }
-}
-
-// Usage
-const analyzer = new UrlAnalyzer('https://api.example.com:8080/v1/users?limit=10&active=true#section1');
-console.log(analyzer.analyze());
+const ipUrl = new ReadonlyUrl('http://192.168.1.1:8080/status');
+console.log(ipUrl.getSubdomain()); // null
+console.log(ipUrl.getDomain()); // "192.168.1.1"
 ```
 
 ## API Reference
 
+### `ReadonlyUrl` Class
+
+Immutable URL parsing class that provides read-only access to URL components.
+
+#### Constructor
+
+##### `new ReadonlyUrl(url: string | URL)`
+Creates a new ReadonlyUrl instance from a URL string or URL object.
+
+**Parameters:**
+- `url` - The URL string or URL object to parse
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com/path?query=value#fragment');
+const urlFromObject = new ReadonlyUrl(new URL('https://example.com'));
+```
+
+#### Methods
+
+##### `getNative(): URL`
+Returns the native JavaScript URL object.
+
+**Returns:** Native URL object
+
+**Example:**
+```typescript
+const nativeUrl = url.getNative();
+console.log(nativeUrl instanceof URL); // true
+```
+
+##### `getProtocol(): string`
+Gets the protocol (without the colon).
+
+**Returns:** Protocol string (e.g., "https", "http")
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com');
+console.log(url.getProtocol()); // "https"
+```
+
+##### `getSubdomain(): string | null`
+Gets the subdomain portion of the hostname.
+
+**Returns:** Subdomain string or null if no subdomain
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://blog.example.com');
+console.log(url.getSubdomain()); // "blog"
+
+const url2 = new ReadonlyUrl('https://example.com');
+console.log(url2.getSubdomain()); // null
+```
+
+##### `getDomain(): string`
+Gets the domain portion of the hostname.
+
+**Returns:** Domain string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://blog.example.com');
+console.log(url.getDomain()); // "example.com"
+```
+
+##### `getHostname(): string`
+Gets the full hostname.
+
+**Returns:** Hostname string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://blog.example.com:3000');
+console.log(url.getHostname()); // "blog.example.com"
+```
+
+##### `getPort(): number`
+Gets the port number.
+
+**Returns:** Port number (defaults to 80 if not specified)
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com:3000');
+console.log(url.getPort()); // 3000
+
+const url2 = new ReadonlyUrl('https://example.com');
+console.log(url2.getPort()); // 80
+```
+
+##### `getPath(): string`
+Gets the URL path.
+
+**Returns:** Path string (always starts with "/")
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com/users/123');
+console.log(url.getPath()); // "/users/123"
+```
+
+##### `getQueries(): Record<string, ScalarType>`
+Gets all query parameters as an object with automatically parsed types.
+
+**Returns:** Object with query parameters (values can be string, number, or boolean)
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com?page=1&active=true&name=john');
+console.log(url.getQueries()); // { page: 1, active: true, name: "john" }
+```
+
+##### `getFragment(): string`
+Gets the URL fragment (without the hash).
+
+**Returns:** Fragment string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com#section');
+console.log(url.getFragment()); // "section"
+```
+
+##### `getBase(): string`
+Gets the base URL (protocol + hostname + port).
+
+**Returns:** Base URL string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com:3000/path?query=value');
+console.log(url.getBase()); // "https://example.com:3000"
+```
+
+##### `getOrigin(): string`
+Gets the origin (protocol + hostname + port).
+
+**Returns:** Origin string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com:3000/path');
+console.log(url.getOrigin()); // "https://example.com:3000"
+```
+
+##### `toString(): string`
+Converts the URL to its string representation.
+
+**Returns:** Full URL string
+
+**Example:**
+```typescript
+const url = new ReadonlyUrl('https://example.com/path?query=value#fragment');
+console.log(url.toString()); // "https://example.com/path?query=value#fragment"
+```
+
 ### `Url` Class
 
-The main class for parsing and working with URLs.
+Mutable URL class that extends ReadonlyUrl with modification capabilities.
 
 #### Constructor
 
 ##### `new Url(url: string | URL)`
-
-Creates a new Url instance from a string or native URL object.
+Creates a new Url instance from a URL string or URL object.
 
 **Parameters:**
-- `url` - The URL to parse (string or native URL object)
-
-**Example:**
-```typescript
-const url1 = new Url('https://example.com/path');
-const url2 = new Url(new URL('https://example.com/path'));
-```
-
-#### Properties
-
-All properties are read-only and computed during construction.
-
-##### `protocol: string`
-The protocol scheme without the trailing colon.
+- `url` - The URL string or URL object to parse
 
 **Example:**
 ```typescript
 const url = new Url('https://example.com');
-console.log(url.protocol); // "https"
 ```
 
-##### `subdomain: string | null`
-The subdomain portion, or null if no subdomain exists.
+#### Modification Methods
 
-**Example:**
-```typescript
-const url = new Url('https://blog.example.com');
-console.log(url.subdomain); // "blog"
+##### `setProtocol(protocol: string): Url`
+Sets the protocol.
 
-const url2 = new Url('https://example.com');
-console.log(url2.subdomain); // null
-```
+**Parameters:**
+- `protocol` - Protocol string (with or without colon)
 
-##### `domain: string`
-The main domain name.
-
-**Example:**
-```typescript
-const url = new Url('https://blog.example.com');
-console.log(url.domain); // "example.com"
-```
-
-##### `hostname: string`
-The complete hostname including subdomains.
-
-**Example:**
-```typescript
-const url = new Url('https://blog.example.com');
-console.log(url.hostname); // "blog.example.com"
-```
-
-##### `port: number`
-The port number (defaults to 80 if not specified).
-
-**Example:**
-```typescript
-const url1 = new Url('https://example.com:3000');
-console.log(url1.port); // 3000
-
-const url2 = new Url('https://example.com');
-console.log(url2.port); // 80
-```
-
-##### `path: string`
-The URL path, always starting with a forward slash.
-
-**Example:**
-```typescript
-const url = new Url('https://example.com/users/123');
-console.log(url.path); // "/users/123"
-
-const url2 = new Url('https://example.com');
-console.log(url2.path); // "/"
-```
-
-##### `queries: Record<string, boolean | number | bigint | string>`
-An object containing all query parameters with automatic type conversion.
-
-**Example:**
-```typescript
-const url = new Url('https://example.com?name=john&age=25&active=true');
-console.log(url.queries); // { name: "john", age: 25, active: true }
-```
-
-##### `fragment: string`
-The URL fragment (hash) without the leading '#'.
-
-**Example:**
-```typescript
-const url = new Url('https://example.com#section1');
-console.log(url.fragment); // "section1"
-```
-
-##### `base: string`
-The base URL including protocol, hostname, and port.
-
-**Example:**
-```typescript
-const url = new Url('https://example.com:3000/path?query=value');
-console.log(url.base); // "https://example.com:3000"
-```
-
-##### `origin: string`
-The origin of the URL (protocol + hostname + port).
-
-**Example:**
-```typescript
-const url = new Url('https://example.com:3000/path');
-console.log(url.origin); // "https://example.com:3000"
-```
-
-##### `native: URL`
-The original native URL object.
+**Returns:** Self for chaining
 
 **Example:**
 ```typescript
 const url = new Url('https://example.com');
-console.log(url.native instanceof URL); // true
+url.setProtocol('http');
+console.log(url.getProtocol()); // "http"
 ```
 
-### Interface
+##### `setHostname(hostname: string): Url`
+Sets the hostname and automatically parses subdomain/domain.
+
+**Parameters:**
+- `hostname` - Hostname string
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com');
+url.setHostname('api.example.com');
+console.log(url.getSubdomain()); // "api"
+console.log(url.getDomain()); // "example.com"
+```
+
+##### `setPort(port: number): Url`
+Sets the port number.
+
+**Parameters:**
+- `port` - Port number
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com');
+url.setPort(8080);
+console.log(url.getPort()); // 8080
+```
+
+##### `setPath(path: string): Url`
+Sets the URL path.
+
+**Parameters:**
+- `path` - Path string (leading/trailing slashes are normalized)
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com');
+url.setPath('/api/users');
+console.log(url.getPath()); // "/api/users"
+```
+
+##### `addQuery(key: string, value: ScalarType): Url`
+Adds or updates a query parameter.
+
+**Parameters:**
+- `key` - Query parameter name
+- `value` - Query parameter value (string, number, or boolean)
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com');
+url.addQuery('page', 1)
+   .addQuery('active', true)
+   .addQuery('search', 'john');
+console.log(url.getQueries()); // { page: 1, active: true, search: "john" }
+```
+
+##### `setQueries(queries: Record<string, ScalarType>): Url`
+Sets all query parameters, replacing existing ones.
+
+**Parameters:**
+- `queries` - Object with query parameters
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com?old=value');
+url.setQueries({ page: 1, limit: 10 });
+console.log(url.getQueries()); // { page: 1, limit: 10 }
+```
+
+##### `removeQuery(key: string): Url`
+Removes a specific query parameter.
+
+**Parameters:**
+- `key` - Query parameter name to remove
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com?page=1&limit=10');
+url.removeQuery('page');
+console.log(url.getQueries()); // { limit: 10 }
+```
+
+##### `clearQueries(): Url`
+Removes all query parameters.
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com?page=1&limit=10');
+url.clearQueries();
+console.log(url.getQueries()); // {}
+```
+
+##### `setFragment(fragment: string): Url`
+Sets the URL fragment.
+
+**Parameters:**
+- `fragment` - Fragment string (with or without hash)
+
+**Returns:** Self for chaining
+
+**Example:**
+```typescript
+const url = new Url('https://example.com');
+url.setFragment('section');
+console.log(url.getFragment()); // "section"
+console.log(url.toString()); // "https://example.com#section"
+```
+
+### Types
+
+#### `IReadonlyUrl`
+Interface defining all available read-only URL methods.
 
 #### `IUrl`
-Interface defining the structure of a parsed URL.
+Interface defining all available URL manipulation methods (extends IReadonlyUrl).
 
-**Example:**
-```typescript
-import { IUrl } from '@ooneex/url';
-
-function processUrl(url: IUrl) {
-  console.log(`Processing ${url.protocol}://${url.hostname}${url.path}`);
-  return url.queries;
-}
-```
-
-## Type Conversion
-
-The `@ooneex/url` package automatically converts query parameter values to appropriate types:
-
-- **Numbers**: String values that represent valid numbers are converted to `number`
-- **Booleans**: String values "true" and "false" are converted to `boolean`
-- **BigInt**: String values that represent large integers are converted to `bigint` when appropriate
-- **Strings**: All other values remain as `string`
-
-```typescript
-const url = new Url('https://example.com?count=42&active=true&name=john&id=9007199254740992');
-
-console.log(typeof url.queries.count);  // "number"
-console.log(typeof url.queries.active); // "boolean"
-console.log(typeof url.queries.name);   // "string"
-console.log(typeof url.queries.id);     // "bigint" (if the number is too large for regular number)
-```
+#### `ScalarType`
+Type representing valid query parameter values (string, number, or boolean).
 
 ## License
 

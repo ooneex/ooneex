@@ -14,8 +14,10 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
     "publish": "bun run build && bun publish --access public"
   },
-  "devDependencies": {},
-  "peerDependencies": {},
+  "dependencies": {
+    "@ooneex/types": "workspace:*",
+    "@ooneex/utils": "workspace:*"
+  },
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"

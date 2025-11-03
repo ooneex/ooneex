@@ -168,6 +168,16 @@
         "@ooneex/http-status": "workspace:*",
       },
     },
+    "packages/translation": {
+      "name": "@ooneex/translation",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+        "@ooneex/types": "workspace:*",
+        "@ooneex/utils": "workspace:*",
+      },
+    },
     "packages/types": {
       "name": "@ooneex/types",
       "version": "0.0.0",
@@ -526,6 +536,8 @@
     "@ooneex/socket": ["@ooneex/socket@workspace:packages/socket"],
 
     "@ooneex/storage": ["@ooneex/storage@workspace:packages/storage"],
+
+    "@ooneex/translation": ["@ooneex/translation@workspace:packages/translation"],
 
     "@ooneex/types": ["@ooneex/types@workspace:packages/types"],
 

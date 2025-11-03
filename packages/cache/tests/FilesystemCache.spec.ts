@@ -2,16 +2,16 @@ import { afterAll, afterEach, beforeEach, describe, expect, jest, test } from "b
 import { rmdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { CacheException, FilesystemCacheAdapter } from "@/index";
+import { CacheException, FilesystemCache } from "@/index";
 
 describe("FilesystemCacheAdapter", () => {
-  let adapter: FilesystemCacheAdapter;
+  let adapter: FilesystemCache;
   const testKey = "test:key";
   const testValue = "test:value";
   const testCacheDir = join(tmpdir(), "ooneex-cache-test");
 
   beforeEach(async () => {
-    adapter = new FilesystemCacheAdapter({
+    adapter = new FilesystemCache({
       cacheDir: testCacheDir,
       enableCleanup: false, // Disable cleanup for tests
     });
@@ -37,8 +37,8 @@ describe("FilesystemCacheAdapter", () => {
 
   describe("constructor and connection", () => {
     test("should create FilesystemCacheAdapter with default options", () => {
-      const defaultAdapter = new FilesystemCacheAdapter();
-      expect(defaultAdapter).toBeInstanceOf(FilesystemCacheAdapter);
+      const defaultAdapter = new FilesystemCache();
+      expect(defaultAdapter).toBeInstanceOf(FilesystemCache);
     });
 
     test("should create FilesystemCacheAdapter with custom options", () => {
@@ -48,12 +48,12 @@ describe("FilesystemCacheAdapter", () => {
         cleanupInterval: 10 * 60 * 1000,
         enableCleanup: false,
       };
-      const customAdapter = new FilesystemCacheAdapter(options);
-      expect(customAdapter).toBeInstanceOf(FilesystemCacheAdapter);
+      const customAdapter = new FilesystemCache(options);
+      expect(customAdapter).toBeInstanceOf(FilesystemCache);
     });
 
     test("should connect and create cache directory", async () => {
-      const newAdapter = new FilesystemCacheAdapter({ cacheDir: testCacheDir });
+      const newAdapter = new FilesystemCache({ cacheDir: testCacheDir });
       await newAdapter.connect();
 
       // Directory should exist after connect
@@ -65,7 +65,7 @@ describe("FilesystemCacheAdapter", () => {
     });
 
     test("should close and cleanup timers", async () => {
-      const newAdapter = new FilesystemCacheAdapter({
+      const newAdapter = new FilesystemCache({
         cacheDir: testCacheDir,
         enableCleanup: true,
         cleanupInterval: 1000,
@@ -83,7 +83,7 @@ describe("FilesystemCacheAdapter", () => {
       const mockMkdir = jest.fn().mockRejectedValue(new Error("Permission denied"));
       require("node:fs/promises").mkdir = mockMkdir;
 
-      const failingAdapter = new FilesystemCacheAdapter({ cacheDir: "/invalid/path" });
+      const failingAdapter = new FilesystemCache({ cacheDir: "/invalid/path" });
 
       expect(failingAdapter.connect()).rejects.toThrow(CacheException);
 
@@ -260,7 +260,7 @@ describe("FilesystemCacheAdapter", () => {
     });
 
     test("should throw CacheException when exceeding max file size", async () => {
-      const smallAdapter = new FilesystemCacheAdapter({
+      const smallAdapter = new FilesystemCache({
         cacheDir: testCacheDir,
         maxFileSize: 100, // 100 bytes
       });

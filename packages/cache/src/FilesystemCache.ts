@@ -9,7 +9,7 @@ type CacheEntryType<T = unknown> = {
   originalKey: string;
 };
 
-export class FilesystemCacheAdapter implements ICache {
+export class FilesystemCache implements ICache {
   private cacheDir: string;
   private maxFileSize: number;
   private cleanupInterval: number;

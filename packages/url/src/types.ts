@@ -1,13 +1,28 @@
-export interface IUrl {
-  readonly protocol: string;
-  readonly subdomain: string | null;
-  readonly domain: string;
-  readonly hostname: string;
-  readonly port: number;
-  readonly path: string;
-  readonly queries: Record<string, boolean | number | bigint | string>;
-  readonly fragment: string;
-  readonly base: string;
-  readonly origin: string;
-  readonly native: URL;
+import type { ScalarType } from "@ooneex/types";
+
+export interface IReadonlyUrl {
+  getNative: () => URL;
+  getProtocol: () => string;
+  getSubdomain: () => string | null;
+  getDomain: () => string;
+  getHostname: () => string;
+  getPort: () => number;
+  getPath: () => string;
+  getQueries: () => Record<string, ScalarType>;
+  getFragment: () => string;
+  getBase: () => string;
+  getOrigin: () => string;
+  toString: () => string;
+}
+
+export interface IUrl extends IReadonlyUrl {
+  setProtocol: (protocol: string) => IUrl;
+  setHostname: (hostname: string) => IUrl;
+  setPort: (port: number) => IUrl;
+  setPath: (path: string) => IUrl;
+  setFragment: (fragment: string) => IUrl;
+  addQuery: (key: string, value: ScalarType) => IUrl;
+  setQueries: (queries: Record<string, ScalarType>) => IUrl;
+  removeQuery: (key: string) => IUrl;
+  clearQueries: () => IUrl;
 }

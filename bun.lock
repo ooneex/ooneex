@@ -163,6 +163,10 @@
     "packages/storage": {
       "name": "@ooneex/storage",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
     },
     "packages/types": {
       "name": "@ooneex/types",

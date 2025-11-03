@@ -588,7 +588,7 @@ describe("RedisCacheAdapter", () => {
 
       // Setup mocks for concurrent operations
       mockRedisClient.exists.mockImplementation(async (key: string) => {
-        return key === key1 ? true : false;
+        return key === key1;
       });
       mockRedisClient.del.mockImplementation(async (key: string) => {
         return key === key1 ? 1 : 0;

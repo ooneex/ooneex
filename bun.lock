@@ -175,6 +175,10 @@
     "packages/url": {
       "name": "@ooneex/url",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/types": "workspace:*",
+        "@ooneex/utils": "workspace:*",
+      },
     },
     "packages/user": {
       "name": "@ooneex/user",

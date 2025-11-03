@@ -32,6 +32,9 @@ describe("RedisCacheAdapter", () => {
   const testValue = "test-value";
 
   beforeAll(async () => {
+    // Set environment variable for tests that rely on it
+    Bun.env.REDIS_URL = "redis://localhost:6379";
+
     adapter = new RedisCacheAdapter({
       connectionString: "redis://localhost:6379/1",
     });
@@ -40,6 +43,8 @@ describe("RedisCacheAdapter", () => {
 
   afterAll(() => {
     adapter.close();
+    // Clean up environment variable
+    delete Bun.env.REDIS_URL;
   });
 
   beforeEach(() => {
@@ -101,9 +106,20 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should use default connection string from env", () => {
+      // Ensure environment variable is set for this test
+      const originalRedisUrl = Bun.env.REDIS_URL;
+      Bun.env.REDIS_URL = "redis://localhost:6379";
+
       new RedisCacheAdapter();
 
       expect(MockRedisClient).toHaveBeenCalledWith("redis://localhost:6379", {});
+
+      // Restore original value
+      if (originalRedisUrl) {
+        Bun.env.REDIS_URL = originalRedisUrl;
+      } else {
+        delete Bun.env.REDIS_URL;
+      }
     });
 
     test("should pass additional client options", () => {
@@ -117,25 +133,34 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should connect to Redis", async () => {
-      const adapter = new RedisCacheAdapter();
+      const adapter = new RedisCacheAdapter({
+        connectionString: "redis://localhost:6379/1",
+      });
       await adapter.connect();
 
       expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
     });
 
     test("should close Redis connection", () => {
-      const adapter = new RedisCacheAdapter();
+      const adapter = new RedisCacheAdapter({
+        connectionString: "redis://localhost:6379/1",
+      });
       adapter.close();
 
       expect(mockRedisClient.close).toHaveBeenCalledTimes(1);
     });
 
     test("should return connection status", () => {
-      const adapter = new RedisCacheAdapter();
+      const adapter = new RedisCacheAdapter({
+        connectionString: "redis://localhost:6379/1",
+      });
       expect(adapter.connected).toBe(true);
 
       mockRedisClient.connected = false;
       expect(adapter.connected).toBe(false);
+
+      // Reset for other tests
+      mockRedisClient.connected = true;
     });
   });
 

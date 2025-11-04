@@ -136,12 +136,12 @@ export type StatusCodeType = (typeof STATUS_CODE)[keyof typeof STATUS_CODE];
 export type StatusTextType = (typeof STATUS_TEXT)[keyof typeof STATUS_TEXT];
 
 export interface IStatus {
-  isInformational(code: StatusCodeType): boolean;
-  isSuccessful(code: StatusCodeType): boolean;
-  isRedirect(code: StatusCodeType): boolean;
-  isClientError(code: StatusCodeType): boolean;
-  isServerError(code: StatusCodeType): boolean;
-  isError(code: StatusCodeType): boolean;
+  isInformational: (code: StatusCodeType) => boolean;
+  isSuccessful: (code: StatusCodeType) => boolean;
+  isRedirect: (code: StatusCodeType) => boolean;
+  isClientError: (code: StatusCodeType) => boolean;
+  isServerError: (code: StatusCodeType) => boolean;
+  isError: (code: StatusCodeType) => boolean;
 }
 
 export class Status implements IStatus {

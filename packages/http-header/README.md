@@ -597,6 +597,22 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
+### Development Setup
+
+1. Clone the repository
+2. Install dependencies: `bun install`
+3. Run tests: `bun run test`
+4. Build the project: `bun run build`
+
+### Guidelines
+
+- Write
+ tests for new features
+- Follow the existing code style
+- Update
+ documentation for API changes
+- Ensure all tests pass before submitting PR
+
 ---
 
 Made with ❤️ by the Ooneex team

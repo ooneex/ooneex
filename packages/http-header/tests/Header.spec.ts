@@ -130,6 +130,106 @@ describe("Header", () => {
         expect(result).toBe(header);
       });
     });
+
+    describe("clearContentType", () => {
+      test("should remove Content-Type header", () => {
+        header.contentType("application/json");
+        header.clearContentType();
+        expect(header.has("Content-Type")).toBe(false);
+      });
+
+      test("should remove Accept-Charset header", () => {
+        header.contentType("text/html", "UTF-8");
+        header.clearContentType();
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should remove both Content-Type and Accept-Charset headers", () => {
+        header.contentType("application/json", "UTF-8");
+        expect(header.get("Content-Type")).toBe("application/json; charset=UTF-8");
+        expect(header.get("Accept-Charset")).toBe("UTF-8");
+
+        header.clearContentType();
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should not throw when clearing non-existent headers", () => {
+        expect(() => header.clearContentType()).not.toThrow();
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should only remove Content-Type and Accept-Charset headers", () => {
+        header.contentType("application/json");
+        header.setUserAgent("TestAgent");
+        header.setHost("example.com");
+
+        header.clearContentType();
+
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+        expect(header.get("User-Agent")).toBe("TestAgent");
+        expect(header.get("Host")).toBe("example.com");
+      });
+
+      test("should work with different content types", () => {
+        // Test with text type that sets Accept-Charset
+        header.contentType("text/plain", "UTF-8");
+        header.clearContentType();
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+
+        // Test with binary type that doesn't set Accept-Charset
+        header.contentType("image/png");
+        header.clearContentType();
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should work after convenience methods", () => {
+        header.setJson("UTF-8");
+        expect(header.has("Content-Type")).toBe(true);
+        expect(header.has("Accept-Charset")).toBe(true);
+
+        header.clearContentType();
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should return this for chaining", () => {
+        const result = header.clearContentType();
+        expect(result).toBe(header);
+      });
+
+      test("should work in method chains", () => {
+        const result = header.contentType("application/json", "UTF-8").clearContentType().setUserAgent("TestAgent");
+
+        expect(result).toBe(header);
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+        expect(header.get("User-Agent")).toBe("TestAgent");
+      });
+
+      test("should handle multiple calls", () => {
+        header.contentType("application/json");
+        header.clearContentType();
+        header.clearContentType(); // Second call should not throw
+
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+
+      test("should work with manually set Accept-Charset", () => {
+        header.add("Content-Type", "application/json");
+        header.add("Accept-Charset", "iso-8859-1");
+
+        header.clearContentType();
+
+        expect(header.has("Content-Type")).toBe(false);
+        expect(header.has("Accept-Charset")).toBe(false);
+      });
+    });
   });
 
   describe("content type convenience methods", () => {

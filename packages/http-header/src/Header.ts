@@ -45,6 +45,12 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Content-Disposition", value);
   }
 
+  public clearContentType(): this {
+    this.remove("Content-Type");
+    this.remove("Accept-Charset");
+    return this;
+  }
+
   // Content type convenience methods
   public setJson(charset?: CharsetType): this {
     this.add("Accept", "application/json");

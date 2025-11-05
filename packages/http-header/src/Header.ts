@@ -1,6 +1,7 @@
 import type { MimeType } from "@ooneex/http-mimes";
+import type { CharsetType, EncodingType, HttpMethodType } from "@ooneex/types";
 import { ReadonlyHeader } from "./ReadonlyHeader";
-import type { CharsetType, EncodingType, HeaderFieldType, IHeader, MethodType } from "./types";
+import type { HeaderFieldType, IHeader } from "./types";
 
 export class Header extends ReadonlyHeader implements IHeader {
   constructor(headers?: Headers) {
@@ -226,7 +227,7 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Access-Control-Allow-Origin", origin);
   }
 
-  public setAccessControlAllowMethods(methods: MethodType[]): this {
+  public setAccessControlAllowMethods(methods: HttpMethodType[]): this {
     const value = methods.join(", ");
     return this.add("Access-Control-Allow-Methods", value);
   }

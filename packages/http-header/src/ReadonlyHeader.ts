@@ -1,6 +1,7 @@
 import type { MimeType } from "@ooneex/http-mimes";
+import type { CharsetType, EncodingType, HttpMethodType } from "@ooneex/types";
 import { UAParser } from "ua-parser-js";
-import type { CharsetType, EncodingType, HeaderFieldType, IReadonlyHeader, IUserAgent, MethodType } from "./types";
+import type { HeaderFieldType, IReadonlyHeader, IUserAgent } from "./types";
 
 export class ReadonlyHeader implements IReadonlyHeader {
   constructor(public readonly native: Headers) {}
@@ -240,14 +241,14 @@ export class ReadonlyHeader implements IReadonlyHeader {
     return this.get("Access-Control-Allow-Origin");
   }
 
-  public getAccessControlAllowMethods(): MethodType[] | null {
+  public getAccessControlAllowMethods(): HttpMethodType[] | null {
     const methods = this.get("Access-Control-Allow-Methods");
 
     if (!methods) {
       return null;
     }
 
-    return methods.split(",").map((method) => method.trim()) as MethodType[];
+    return methods.split(",").map((method) => method.trim()) as HttpMethodType[];
   }
 
   public getAccessControlAllowHeaders(): string[] | null {

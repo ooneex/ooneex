@@ -87,23 +87,21 @@ import { Header } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Set content types
-header.contentType('application/json');
-header.contentType('text/html', 'UTF-8');
+// Setting content types with optional charset
+header.contentType('application/json', 'UTF-8');
 
-// Content type convenience methods
-header.setJson(); // Sets application/json
-header.setHtml('UTF-8'); // Sets text/html with charset
-header.setText(); // Sets text/plain
-header.setForm(); // Sets application/x-www-form-urlencoded
-header.setFormData(); // Sets multipart/form-data
+// Convenience methods
+header.setJson('UTF-8')        // application/json; charset=UTF-8
+      .setHtml('UTF-8')        // text/html; charset=UTF-8
+      .setText('UTF-8')        // text/plain; charset=UTF-8
+      .setForm('UTF-8')        // application/x-www-form-urlencoded; charset=UTF-8
+      .setFormData()           // multipart/form-data
+      .setBlobType();          // application/octet-stream
 
-// Clear content type and charset
-header.clearContentType(); // Removes Content-Type and Accept-Charset headers
-
-// Check what's set
-console.log(header.getContentType()); // Returns content type or null
-console.log(header.getCharset()); // Returns charset or null
+// Content negotiation
+header.setAccept('application/json')
+      .setLang('en-US')
+      .setAcceptEncoding(['gzip', 'br', 'deflate']);
 ```
 
 ### Authentication Headers
@@ -268,19 +266,12 @@ import { Header } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Chain multiple operations
-const response = header
-  .setJson('UTF-8')
-  .setCacheControl('public, max-age=3600')
-  .setAccessControlAllowOrigin('*')
-  .setCookie('session', 'abc123', { httpOnly: true })
-  .setCustom('MyApp Response');
-
-// Later, clear content type and set new one
-header
-  .clearContentType()
-  .setHtml('UTF-8')
-  .setEtag('"new-etag"');
+// Fluent API
+header.setJson()
+      .setBearerToken('token')
+      .setCookie('session', 'abc123', { httpOnly: true })
+      .setAccessControlAllowOrigin('*')
+      .setCacheControl('no-cache');
 ```
 
 ### Working with Native Headers

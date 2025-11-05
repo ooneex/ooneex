@@ -15,17 +15,17 @@ A comprehensive TypeScript/JavaScript library for working with HTTP headers. Thi
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **User Agent Parsing** - Built-in user agent detection and parsing
+✅ **User Agent Parsing** - Built-in user agent detection and parsing with device information
 
 ✅ **Content Type Handling** - Easy MIME type and charset management
 
 ✅ **Authentication Support** - Built-in methods for Basic Auth, Bearer tokens
 
-✅ **Cookie Management** - Comprehensive cookie parsing and setting
+✅ **Cookie Management** - Comprehensive cookie parsing and setting with all options
 
 ✅ **CORS Support** - Easy Cross-Origin Resource Sharing header management
 
-✅ **Security Headers** - Built-in support for common security headers
+✅ **Security Headers** - Built-in support for common security headers (CSP, HSTS, XSS)
 
 ✅ **Caching Headers** - Cache control and ETags management
 
@@ -68,16 +68,18 @@ import { Header } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Add headers
-header.add('X-Custom-Header', 'value');
-header.set('User-Agent', 'MyApp/1.0');
+// Adding headers
+header.add('Content-Type', 'application/json')
+      .add('Accept', 'application/json')
+      .set('Authorization', 'Bearer token123');
 
-// Read headers
-console.log(header.get('User-Agent')); // 'MyApp/1.0'
-console.log(header.has('X-Custom-Header')); // true
+// Reading headers
+const contentType = header.get('Content-Type'); // "application/json"
+const hasAuth = header.has('Authorization'); // true
 
-// Remove headers
-header.remove('X-Custom-Header');
+// Converting to JSON
+const headerObj = header.toJson();
+console.log(headerObj); // { "Content-Type": "application/json", ... }
 ```
 
 ### Content Type Management
@@ -112,16 +114,15 @@ import { Header } from '@ooneex/http-header';
 const header = new Header();
 
 // Basic authentication
-header.setBasicAuth('dXNlcjpwYXNzd29yZA=='); // base64 encoded
-header.setAuthorization('Basic dXNlcjpwYXNzd29yZA==');
+header.setBasicAuth('dXNlcjpwYXNz'); // Sets "Authorization: Basic dXNlcjpwYXNz"
 
 // Bearer token
-header.setBearerToken('your-jwt-token-here');
+header.setBearerToken('your-jwt-token'); // Sets "Authorization: Bearer your-jwt-token"
 
 // Custom authorization
-header.setAuthorization('Custom token=abc123');
+header.setAuthorization('Custom token123');
 
-// Read authentication
+// Reading authentication (using ReadonlyHeader)
 console.log(header.getBasicAuth()); // Returns token or null
 console.log(header.getBearerToken()); // Returns token or null
 console.log(header.getAuthorization()); // Returns full header or null
@@ -130,12 +131,12 @@ console.log(header.getAuthorization()); // Returns full header or null
 ### Cookie Management
 
 ```typescript
-import { Header } from '@ooneex/http-header';
+import { Header, ReadonlyHeader } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Set cookies
-header.setCookie('session', 'abc123', {
+// Setting cookies with options
+header.setCookie('sessionId', 'abc123', {
   httpOnly: true,
   secure: true,
   maxAge: 3600,
@@ -144,18 +145,19 @@ header.setCookie('session', 'abc123', {
   sameSite: 'Strict'
 });
 
-// Set multiple cookies
+// Setting multiple cookies
 header.setCookies([
-  { name: 'user', value: '12345', options: { maxAge: 86400 } },
-  { name: 'theme', value: 'dark', options: { path: '/' } }
+  { name: 'user', value: 'john', options: { maxAge: 86400 } },
+  { name: 'theme', value: 'dark', options: { path: '/app' } }
 ]);
 
-// Remove cookies
-header.removeCookie('session', { path: '/', domain: '.example.com' });
+// Reading cookies (from request headers)
+const readonlyHeader = new ReadonlyHeader(requestHeaders);
+const cookies = readonlyHeader.getCookies(); // { sessionId: 'abc123', user: 'john' }
+const userCookie = readonlyHeader.getCookie('user'); // 'john'
 
-// Read cookies (from Cookie header)
-const cookies = header.getCookies(); // Returns object with all cookies
-const userCookie = header.getCookie('user'); // Returns specific cookie value
+// Removing cookies
+header.removeCookie('sessionId', { path: '/', domain: '.example.com' });
 ```
 
 ### CORS Headers
@@ -165,15 +167,15 @@ import { Header } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Set CORS headers
-header.setAccessControlAllowOrigin('https://example.com');
-header.setAccessControlAllowMethods(['GET', 'POST', 'PUT']);
-header.setAccessControlAllowHeaders(['Content-Type', 'Authorization']);
-header.setAccessControlAllowCredentials(true);
+// CORS configuration
+header.setAccessControlAllowOrigin('*')
+      .setAccessControlAllowMethods(['GET', 'POST', 'PUT', 'DELETE'])
+      .setAccessControlAllowHeaders(['Content-Type', 'Authorization'])
+      .setAccessControlAllowCredentials(true);
 
-// Read CORS settings
-console.log(header.getAccessControlAllowOrigin()); // 'https://example.com'
-console.log(header.getAccessControlAllowMethods()); // ['GET', 'POST', 'PUT']
+// Reading CORS settings
+console.log(header.getAccessControlAllowOrigin()); // '*'
+console.log(header.getAccessControlAllowMethods()); // ['GET', 'POST', 'PUT', 'DELETE']
 ```
 
 ### Security Headers
@@ -183,14 +185,14 @@ import { Header } from '@ooneex/http-header';
 
 const header = new Header();
 
-// Security headers
-header.setContentSecurityPolicy("default-src 'self'; script-src 'self' 'unsafe-inline'");
-header.setStrictTransportSecurity(31536000, true, true); // max-age, includeSubDomains, preload
-header.setXContentTypeOptions('nosniff');
-header.setXFrameOptions('DENY');
-header.setXXSSProtection(true, 'block');
+// Security headers setup
+header.setContentSecurityPolicy("default-src 'self'; script-src 'unsafe-inline'")
+      .setStrictTransportSecurity(31536000, true, true) // 1 year, includeSubDomains, preload
+      .setXContentTypeOptions('nosniff')
+      .setXFrameOptions('DENY')
+      .setXXSSProtection(true, 'block');
 
-// Read security headers
+// Reading security headers
 console.log(header.getContentSecurityPolicy());
 console.log(header.getStrictTransportSecurity());
 ```
@@ -203,14 +205,12 @@ import { Header } from '@ooneex/http-header';
 const header = new Header();
 
 // Cache control
-header.setCacheControl('public, max-age=3600');
-header.setEtag('"abc123"');
-header.setLastModified(new Date());
+header.setCacheControl('public, max-age=3600')
+      .setEtag('"abc123"')
+      .setLastModified(new Date())
+      .setIfModifiedSince(new Date(Date.now() - 86400000));
 
-// Conditional requests
-header.setIfModifiedSince(new Date('2024-01-01'));
-
-// Read cache headers
+// Reading cache headers
 console.log(header.getCacheControl()); // 'public, max-age=3600'
 console.log(header.getEtag()); // '"abc123"'
 console.log(header.getLastModified()); // Date object
@@ -224,39 +224,49 @@ import { Header } from '@ooneex/http-header';
 const header = new Header();
 
 // Request headers
-header.setHost('api.example.com');
-header.setUserAgent('MyApp/1.0 (Windows NT 10.0; Win64; x64)');
-header.setReferer('https://example.com/page');
-header.setOrigin('https://example.com');
+header.setHost('api.example.com')
+      .setUserAgent('MyApp/1.0')
+      .setReferer('https://example.com/page')
+      .setOrigin('https://example.com');
 
-// Content negotiation
-header.setAccept('application/json');
-header.setAcceptLanguage(['en-US', 'en', 'fr']);
-header.setAcceptEncoding(['gzip', 'deflate', 'br']);
-
-// Read request info
+// Reading request info
 console.log(header.getHost()); // 'api.example.com'
 console.log(header.getUserAgent()); // Parsed user agent object
-console.log(header.getAcceptLanguage()); // ['en-US', 'en', 'fr']
+console.log(header.getReferer()); // 'https://example.com/page'
 ```
 
 ### Client IP Detection
 
 ```typescript
-import { Header } from '@ooneex/http-header';
+import { ReadonlyHeader } from '@ooneex/http-header';
 
-// Typically used with incoming request headers
-const requestHeader = new Header(request.headers);
+const requestHeader = new ReadonlyHeader(incomingHeaders);
 
-// Get client IP (checks X-Forwarded-For, then X-Real-IP)
-const clientIp = requestHeader.getIp(); // '192.168.1.100'
+// Get client IP (tries X-Forwarded-For, then X-Real-IP)
+const clientIp = requestHeader.getIp();
 
-// Get all possible client IPs
-const allIps = requestHeader.getClientIps(); // ['192.168.1.100', '10.0.0.1']
+// Get all possible IPs
+const allIps = requestHeader.getClientIps();
 
-// Check specific headers
-const forwardedFor = requestHeader.getXForwardedFor(); // '192.168.1.100, 10.0.0.1'
-const realIp = requestHeader.getXRealIP(); // '192.168.1.100'
+// Specific headers
+const forwardedFor = requestHeader.getXForwardedFor();
+const realIp = requestHeader.getXRealIP();
+```
+
+### User Agent Parsing
+
+```typescript
+import { ReadonlyHeader } from '@ooneex/http-header';
+
+const header = new ReadonlyHeader(requestHeaders);
+
+const userAgent = header.getUserAgent();
+if (userAgent) {
+  console.log(userAgent.browser.name);    // 'Chrome'
+  console.log(userAgent.browser.version); // '91.0.4472.124'
+  console.log(userAgent.os.name);         // 'Windows'
+  console.log(userAgent.device.type);     // 'mobile'
+}
 ```
 
 ### Method Chaining
@@ -279,22 +289,20 @@ header.setJson()
 ```typescript
 import { Header, ReadonlyHeader } from '@ooneex/http-header';
 
-// Create from existing Headers object
+// From native Headers object
 const nativeHeaders = new Headers();
 nativeHeaders.set('Content-Type', 'application/json');
 
 const header = new Header(nativeHeaders);
 
-// Access native Headers object
-const native = header.native; // Returns the underlying Headers object
+// Access native Headers instance
+const native = header.native;
 
-// Convert to JSON
-const headerObject = header.toJson(); // Returns plain object
+// Convert to plain object
+const headerObject = header.toJson();
 
-// Readonly wrapper for parsing only
+// Create readonly instance
 const readonlyHeader = new ReadonlyHeader(nativeHeaders);
-console.log(readonlyHeader.getContentType()); // 'application/json'
-// readonlyHeader.set() // Error: Method doesn't exist
 ```
 
 ### Request Type Detection

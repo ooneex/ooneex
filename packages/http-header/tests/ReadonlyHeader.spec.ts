@@ -953,7 +953,7 @@ describe("ReadonlyHeader", () => {
       expect(readonlyHeader.getAccept() as unknown).toBe(
         "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       );
-      expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US", "en"]);
+      expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
       expect(readonlyHeader.getAcceptEncoding()).toEqual(["gzip", "deflate", "br"]);
       expect(readonlyHeader.getHost()).toBe("api.example.com");
       expect(readonlyHeader.getUserAgent()).not.toBeNull();

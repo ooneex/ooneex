@@ -1003,7 +1003,7 @@ describe("Header", () => {
         .setBearerToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
         .setUserAgent("MyApp/1.0.0")
         .setOrigin("https://myapp.com")
-        .setAcceptLanguage(["en-US", "en"]);
+        .setLang("en-US, en");
 
       expect(header.get("Content-Type")).toBe("application/json; charset=UTF-8");
       expect(header.get("Host")).toBe("api.example.com");

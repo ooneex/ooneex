@@ -357,28 +357,6 @@ describe("Header", () => {
       });
     });
 
-    describe("setAcceptLanguage", () => {
-      test("should set single language", () => {
-        header.setAcceptLanguage(["en-US"]);
-        expect(header.get("Accept-Language")).toBe("en-US");
-      });
-
-      test("should set multiple languages", () => {
-        header.setAcceptLanguage(["en-US", "fr-FR", "de-DE"]);
-        expect(header.get("Accept-Language")).toBe("en-US, fr-FR, de-DE");
-      });
-
-      test("should handle empty array", () => {
-        header.setAcceptLanguage([]);
-        expect(header.get("Accept-Language")).toBe("");
-      });
-
-      test("should return this for chaining", () => {
-        const result = header.setAcceptLanguage(["en"]);
-        expect(result).toBe(header);
-      });
-    });
-
     describe("setAcceptEncoding", () => {
       test("should set single encoding", () => {
         header.setAcceptEncoding(["gzip"]);
@@ -398,6 +376,86 @@ describe("Header", () => {
       test("should return this for chaining", () => {
         const result = header.setAcceptEncoding(["identity"]);
         expect(result).toBe(header);
+      });
+    });
+
+    describe("setLang", () => {
+      test("should set single language", () => {
+        header.setLang("en-US");
+        expect(header.get("Accept-Language")).toBe("en-US");
+      });
+
+      test("should set multiple languages as string", () => {
+        header.setLang("en-US, fr-FR, de-DE");
+        expect(header.get("Accept-Language")).toBe("en-US, fr-FR, de-DE");
+      });
+
+      test("should set single language", () => {
+        header.setLang("en-US");
+        expect(header.get("Accept-Language")).toBe("en-US");
+      });
+
+      test("should set multiple languages from string", () => {
+        header.setLang("en-US, fr-FR, de-DE");
+        expect(header.get("Accept-Language")).toBe("en-US, fr-FR, de-DE");
+      });
+
+      test("should handle empty string", () => {
+        header.setLang("");
+        expect(header.get("Accept-Language")).toBe("");
+      });
+
+      test("should handle whitespace string", () => {
+        header.setLang("  ");
+        expect(header.get("Accept-Language")).toBe("");
+      });
+
+      test("should replace existing accept language", () => {
+        header.setLang("en-US");
+        header.setLang("fr-FR");
+        expect(header.get("Accept-Language")).toBe("fr-FR");
+      });
+
+      test("should handle language with region codes", () => {
+        header.setLang("en-US, en-GB, fr-CA");
+        expect(header.get("Accept-Language")).toBe("en-US, en-GB, fr-CA");
+      });
+
+      test("should return this for chaining", () => {
+        const result = header.setLang("en-US");
+        expect(result).toBe(header);
+      });
+
+      test("should handle whitespace in language string", () => {
+        header.setLang("  en-US  , fr-FR , de-DE  ");
+        expect(header.get("Accept-Language")).toBe("en-US  , fr-FR , de-DE");
+      });
+
+      test("should handle mixed case language codes", () => {
+        header.setLang("EN-us, fr-FR, DE-de");
+        expect(header.get("Accept-Language")).toBe("EN-us, fr-FR, DE-de");
+      });
+
+      test("should handle single character language codes", () => {
+        header.setLang("en, fr, de");
+        expect(header.get("Accept-Language")).toBe("en, fr, de");
+      });
+
+      test("should handle single language code", () => {
+        header.setLang("zh-CN");
+        expect(header.get("Accept-Language")).toBe("zh-CN");
+      });
+
+      test("should work with method chaining", () => {
+        const result = header.setLang("en-US").setJson().setLang("fr-FR, de-DE");
+
+        expect(header.get("Accept-Language")).toBe("fr-FR, de-DE");
+        expect(result).toBe(header);
+      });
+
+      test("should handle ISO 639 language codes", () => {
+        header.setLang("zh-Hans-CN, pt-BR, es-419");
+        expect(header.get("Accept-Language")).toBe("zh-Hans-CN, pt-BR, es-419");
       });
     });
   });

@@ -192,37 +192,6 @@ describe("ReadonlyHeader", () => {
       });
     });
 
-    describe("getAcceptLanguage", () => {
-      test("should return null when not present", () => {
-        expect(readonlyHeader.getAcceptLanguage()).toBeNull();
-      });
-
-      test("should parse single language", () => {
-        headers.set("Accept-Language", "en-US");
-        expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US"]);
-      });
-
-      test("should parse multiple languages", () => {
-        headers.set("Accept-Language", "en-US, fr-FR, de-DE");
-        expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US", "fr-FR", "de-DE"]);
-      });
-
-      test("should ignore quality values", () => {
-        headers.set("Accept-Language", "en-US;q=0.8, fr-FR;q=0.6");
-        expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US", "fr-FR"]);
-      });
-
-      test("should handle spaces correctly", () => {
-        headers.set("Accept-Language", "en-US ,  fr-FR  , de-DE");
-        expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US", "fr-FR", "de-DE"]);
-      });
-
-      test("should filter out empty values", () => {
-        headers.set("Accept-Language", "en-US, , fr-FR");
-        expect(readonlyHeader.getAcceptLanguage()).toEqual(["en-US", "fr-FR"]);
-      });
-    });
-
     describe("getAcceptEncoding", () => {
       test("should return null when not present", () => {
         expect(readonlyHeader.getAcceptEncoding()).toBeNull();
@@ -241,6 +210,62 @@ describe("ReadonlyHeader", () => {
       test("should handle spaces correctly", () => {
         headers.set("Accept-Encoding", "gzip , deflate  ,br");
         expect(readonlyHeader.getAcceptEncoding()).toEqual(["gzip", "deflate", "br"]);
+      });
+    });
+
+    describe("getLang", () => {
+      test("should return null when not present", () => {
+        expect(readonlyHeader.getLang()).toBeNull();
+      });
+
+      test("should return language object for single language", () => {
+        headers.set("Accept-Language", "en-US");
+        expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
+      });
+
+      test("should return language object for first language in multiple", () => {
+        headers.set("Accept-Language", "en-US, fr-FR, de-DE");
+        expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
+      });
+
+      test("should handle language without region", () => {
+        headers.set("Accept-Language", "fr");
+        expect(readonlyHeader.getLang()).toEqual({ code: "fr" });
+      });
+
+      test("should handle language without region in multiple", () => {
+        headers.set("Accept-Language", "fr, en-US");
+        expect(readonlyHeader.getLang()).toEqual({ code: "fr" });
+      });
+
+      test("should ignore quality values", () => {
+        headers.set("Accept-Language", "en-US;q=0.8, fr-FR;q=0.6");
+        expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
+      });
+
+      test("should handle spaces correctly", () => {
+        headers.set("Accept-Language", " en-US , fr-FR");
+        expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
+      });
+
+      test("should handle empty accept language", () => {
+        headers.set("Accept-Language", "");
+        expect(readonlyHeader.getLang()).toBeNull();
+      });
+
+      test("should handle whitespace-only accept language", () => {
+        headers.set("Accept-Language", "   ");
+        expect(readonlyHeader.getLang()).toBeNull();
+      });
+
+      test("should handle malformed language tags", () => {
+        headers.set("Accept-Language", ", , en-US");
+        expect(readonlyHeader.getLang()).toEqual({ code: "en", region: "US" });
+      });
+
+      test("should handle complex language tags", () => {
+        headers.set("Accept-Language", "zh-Hans-CN");
+        expect(readonlyHeader.getLang()).toEqual({ code: "zh", region: "Hans" });
       });
     });
   });

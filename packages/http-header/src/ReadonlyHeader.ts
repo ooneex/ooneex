@@ -58,19 +58,41 @@ export class ReadonlyHeader implements IReadonlyHeader {
     return (this.get("Accept") ?? null) as MimeType | "*/*" | null;
   }
 
-  public getAcceptLanguage(): string[] | null {
+  public getLang(): { code: string; region?: string } | null {
     const acceptLanguage = this.get("Accept-Language");
 
-    if (!acceptLanguage) {
+    if (!acceptLanguage || acceptLanguage.trim() === "") {
       return null;
     }
 
-    return acceptLanguage
+    // Parse the first language from Accept-Language header (same logic as getAcceptLanguage)
+    const firstLang = acceptLanguage
       .split(",")
       .map((lang) => {
         return lang.split(";")[0]?.trim();
       })
-      .filter((lang): lang is string => Boolean(lang));
+      .filter((lang): lang is string => Boolean(lang))[0];
+
+    if (!firstLang) {
+      return null;
+    }
+
+    const parts = firstLang.split("-");
+
+    const code = parts[0];
+    if (!code) {
+      return null;
+    }
+
+    if (parts.length === 1) {
+      return { code };
+    }
+
+    const region = parts[1];
+    return {
+      code,
+      region,
+    };
   }
 
   public getAcceptEncoding(): EncodingType[] | null {

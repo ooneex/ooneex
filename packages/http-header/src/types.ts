@@ -68,8 +68,8 @@ export interface IHeader extends IReadonlyHeader {
 
   // Content negotiation
   setAccept: (mimeType: MimeType) => IHeader;
-  setAcceptLanguage: (languages: string[]) => IHeader;
-  setAcceptEncoding: (encodings: string[]) => IHeader;
+  setLang: (language: string) => IHeader;
+  setAcceptEncoding: (encodings: EncodingType[]) => IHeader;
 
   // Request information
   setHost: (host: string) => IHeader;
@@ -177,7 +177,7 @@ export interface IReadonlyHeader {
 
   // Content negotiation
   getAccept: () => MimeType | "*/*" | null;
-  getAcceptLanguage: () => string[] | null;
+  getLang: () => { code: string; region?: string } | null;
   getAcceptEncoding: () => EncodingType[] | null;
 
   // Request information

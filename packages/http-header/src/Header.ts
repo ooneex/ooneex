@@ -1,6 +1,6 @@
 import type { MimeType } from "@ooneex/http-mimes";
 import { ReadonlyHeader } from "./ReadonlyHeader";
-import type { CharsetType, HeaderFieldType, IHeader, MethodType } from "./types";
+import type { CharsetType, EncodingType, HeaderFieldType, IHeader, MethodType } from "./types";
 
 export class Header extends ReadonlyHeader implements IHeader {
   constructor(headers?: Headers) {
@@ -83,14 +83,12 @@ export class Header extends ReadonlyHeader implements IHeader {
     return this.add("Accept", mimeType as string);
   }
 
-  public setAcceptLanguage(languages: string[]): this {
-    const value = languages.join(", ");
-    return this.add("Accept-Language", value);
+  public setLang(language: string): this {
+    return this.set("Accept-Language", language);
   }
 
-  public setAcceptEncoding(encodings: string[]): this {
-    const value = encodings.join(", ");
-    return this.add("Accept-Encoding", value);
+  public setAcceptEncoding(encodings: EncodingType[]): this {
+    return this.add("Accept-Encoding", encodings.join(", "));
   }
 
   // Request information

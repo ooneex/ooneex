@@ -181,8 +181,6 @@
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
-        "@ooneex/types": "workspace:*",
-        "@ooneex/utils": "workspace:*",
       },
     },
     "packages/types": {

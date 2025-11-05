@@ -79,12 +79,19 @@
     "packages/fetcher": {
       "name": "@ooneex/fetcher",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/http-header": "workspace:*",
+        "@ooneex/http-mimes": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/http-header": {
       "name": "@ooneex/http-header",
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/http-mimes": "workspace:*",
+        "@ooneex/types": "workspace:*",
         "ua-parser-js": "^2.0.6",
       },
     },

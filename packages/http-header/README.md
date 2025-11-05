@@ -310,178 +310,815 @@ const readonlyHeader = new ReadonlyHeader(nativeHeaders);
 ```typescript
 import { ReadonlyHeader } from '@ooneex/http-header';
 
-// Typically used with incoming request headers
-const requestHeader = new ReadonlyHeader(request.headers);
+const requestHeader = new ReadonlyHeader(incomingHeaders);
 
 // Check request characteristics
-console.log(requestHeader.isSecure()); // true if X-Forwarded-Proto: https
-console.log(requestHeader.isAjax()); // true if X-Requested-With: XMLHttpRequest
-console.log(requestHeader.isCorsRequest()); // true if Origin header present
+const isSecure = requestHeader.isSecure();        // HTTPS check via X-Forwarded-Proto
+const isAjax = requestHeader.isAjax();           // XMLHttpRequest check
+const isCors = requestHeader.isCorsRequest();    // Has Origin header
 ```
 
 ## API Reference
 
 ### `Header` Class
 
-The main mutable header class that extends `ReadonlyHeader`.
+The main class for creating and manipulating HTTP headers with full read/write capabilities.
 
 #### Constructor
 
-```typescript
-new Header(headers?: Headers)
-```
+**`new Header(headers?: Headers)`**
 
 Creates a new Header instance, optionally from existing Headers object.
 
+**Parameters:**
+- `headers` - Optional existing Headers object
+
+**Example:**
+```typescript
+const header = new Header();
+const headerFromExisting = new Header(existingHeaders);
+```
+
 #### Core Methods
 
-- `add(name: string, value: string): this` - Add header (appends if exists)
-- `set(name: string, value: string): this` - Set header (replaces if exists)
-- `remove(name: string): this` - Remove header
+**`add(name: HeaderFieldType, value: string): Header`**
+
+Append header value (multiple values allowed).
+
+**Example:**
+```typescript
+header.add('Accept', 'application/json')
+      .add('Accept', 'text/html'); // Results in: "application/json, text/html"
+```
+
+**`set(name: HeaderFieldType, value: string): Header`**
+
+Set header value (overwrites existing).
+
+**Example:**
+```typescript
+header.set('Content-Type', 'application/json');
+```
+
+**`remove(name: HeaderFieldType): Header`**
+
+Remove header completely.
+
+**Example:**
+```typescript
+header.remove('Authorization');
+```
+
+**`get(name: HeaderFieldType): string | null`**
+
+Get header value.
+
+**Example:**
+```typescript
+const contentType = header.get('Content-Type'); // 'application/json' or null
+```
+
+**`has(name: HeaderFieldType): boolean`**
+
+Check if header exists.
+
+**Example:**
+```typescript
+const hasAuth = header.has('Authorization'); // true or false
+```
 
 #### Content Type Methods
 
-- `contentType(type: MimeType, charset?: string): this` - Set content type
-- `clearContentType(): this` - Remove Content-Type and Accept-Charset headers
-- `contentLength(length: number): this` - Set content length
-- `contentDisposition(value: string): this` - Set content disposition
+**`contentType(type: MimeType, charset?: CharsetType): Header`**
+
+Set content type with optional charset.
+
+**Example:**
+```typescript
+header.contentType('application/json', 'UTF-8');
+```
+
+**`contentLength(length: number): Header`**
+
+Set content length.
+
+**Example:**
+```typescript
+header.contentLength(1024);
+```
+
+**`contentDisposition(value: string): Header`**
+
+Set content disposition.
+
+**Example:**
+```typescript
+header.contentDisposition('attachment; filename="file.pdf"');
+```
 
 #### Content Type Convenience Methods
 
-- `setJson(charset?: string): this` - Set JSON content type
-- `setHtml(charset?: string): this` - Set HTML content type
-- `setText(charset?: string): this` - Set plain text content type
-- `setForm(charset?: string): this` - Set form-encoded content type
-- `setFormData(charset?: string): this` - Set multipart form content type
-- `setBlobType(charset?: string): this` - Set binary content type
+**`setJson(charset?: CharsetType): Header`**
+
+Set JSON content type.
+
+**Example:**
+```typescript
+header.setJson('UTF-8'); // Sets "application/json; charset=UTF-8"
+```
+
+**`setHtml(charset?: CharsetType): Header`**
+
+Set HTML content type.
+
+**Example:**
+```typescript
+header.setHtml('UTF-8'); // Sets "text/html; charset=UTF-8"
+```
+
+**`setText(charset?: CharsetType): Header`**
+
+Set plain text content type.
+
+**Example:**
+```typescript
+header.setText('UTF-8'); // Sets "text/plain; charset=UTF-8"
+```
+
+**`setForm(charset?: CharsetType): Header`**
+
+Set form URL encoded content type.
+
+**Example:**
+```typescript
+header.setForm(); // Sets "application/x-www-form-urlencoded"
+```
+
+**`setFormData(charset?: CharsetType): Header`**
+
+Set multipart form data content type.
+
+**Example:**
+```typescript
+header.setFormData(); // Sets "multipart/form-data"
+```
+
+**`setBlobType(charset?: CharsetType): Header`**
+
+Set binary content type.
+
+**Example:**
+```typescript
+header.setBlobType(); // Sets "application/octet-stream"
+```
 
 #### Authentication Methods
 
-- `setAuthorization(value: string): this` - Set authorization header
-- `setBasicAuth(token: string): this` - Set basic auth
-- `setBearerToken(token: string): this` - Set bearer token
+**`setAuthorization(value: string): Header`**
+
+Set authorization header.
+
+**Example:**
+```typescript
+header.setAuthorization('Bearer token123');
+```
+
+**`setBasicAuth(token: string): Header`**
+
+Set basic authentication.
+
+**Example:**
+```typescript
+header.setBasicAuth('dXNlcjpwYXNzd29yZA==');
+```
+
+**`setBearerToken(token: string): Header`**
+
+Set bearer token authentication.
+
+**Example:**
+```typescript
+header.setBearerToken('your-jwt-token');
+```
 
 #### Cookie Methods
 
-- `setCookie(name: string, value: string, options?: CookieOptions): this`
-- `setCookies(cookies: CookieConfig[]): this`
-- `addCookie(name: string, value: string, options?: CookieOptions): this`
-- `removeCookie(name: string, options?: CookieOptions): this`
+**`setCookie(name: string, value: string, options?: CookieOptions): Header`**
+
+Set single cookie with options.
+
+**Example:**
+```typescript
+header.setCookie('session', 'abc123', {
+  httpOnly: true,
+  secure: true,
+  maxAge: 3600
+});
+```
+
+**`setCookies(cookies: Array<{name: string, value: string, options?: CookieOptions}>): Header`**
+
+Set multiple cookies.
+
+**Example:**
+```typescript
+header.setCookies([
+  { name: 'user', value: 'john', options: { maxAge: 86400 } },
+  { name: 'theme', value: 'dark' }
+]);
+```
+
+**`removeCookie(name: string, options?: {domain?: string, path?: string}): Header`**
+
+Remove cookie by setting expiry in the past.
+
+**Example:**
+```typescript
+header.removeCookie('session', { path: '/', domain: '.example.com' });
+```
 
 #### CORS Methods
 
-- `setAccessControlAllowOrigin(origin: string): this`
-- `setAccessControlAllowMethods(methods: string[]): this`
-- `setAccessControlAllowHeaders(headers: string[]): this`
-- `setAccessControlAllowCredentials(allow: boolean): this`
+**`setAccessControlAllowOrigin(origin: string): Header`**
+
+Set allowed origins for CORS.
+
+**Example:**
+```typescript
+header.setAccessControlAllowOrigin('*');
+header.setAccessControlAllowOrigin('https://example.com');
+```
+
+**`setAccessControlAllowMethods(methods: MethodType[]): Header`**
+
+Set allowed HTTP methods for CORS.
+
+**Example:**
+```typescript
+header.setAccessControlAllowMethods(['GET', 'POST', 'PUT', 'DELETE']);
+```
+
+**`setAccessControlAllowHeaders(headers: string[]): Header`**
+
+Set allowed headers for CORS.
+
+**Example:**
+```typescript
+header.setAccessControlAllowHeaders(['Content-Type', 'Authorization']);
+```
+
+**`setAccessControlAllowCredentials(allow: boolean): Header`**
+
+Set credentials policy for CORS.
+
+**Example:**
+```typescript
+header.setAccessControlAllowCredentials(true);
+```
 
 #### Security Methods
 
-- `setContentSecurityPolicy(policy: string): this`
-- `setStrictTransportSecurity(maxAge: number, includeSubDomains?: boolean, preload?: boolean): this`
-- `setXContentTypeOptions(value?: string): this`
-- `setXFrameOptions(value: string): this`
-- `setXXSSProtection(enabled?: boolean, mode?: string): this`
+**`setContentSecurityPolicy(policy: string): Header`**
+
+Set Content Security Policy.
+
+**Example:**
+```typescript
+header.setContentSecurityPolicy("default-src 'self'; script-src 'unsafe-inline'");
+```
+
+**`setStrictTransportSecurity(maxAge: number, includeSubDomains?: boolean, preload?: boolean): Header`**
+
+Set HTTP Strict Transport Security.
+
+**Example:**
+```typescript
+header.setStrictTransportSecurity(31536000, true, true); // 1 year, include subdomains, preload
+```
+
+**`setXContentTypeOptions(value?: string): Header`**
+
+Set X-Content-Type-Options header.
+
+**Example:**
+```typescript
+header.setXContentTypeOptions('nosniff');
+```
+
+**`setXFrameOptions(value: "DENY" | "SAMEORIGIN" | string): Header`**
+
+Set X-Frame-Options header.
+
+**Example:**
+```typescript
+header.setXFrameOptions('DENY');
+```
+
+**`setXXSSProtection(enabled?: boolean, mode?: string): Header`**
+
+Set XSS protection header.
+
+**Example:**
+```typescript
+header.setXXSSProtection(true, 'block');
+```
 
 #### Caching Methods
 
-- `setCacheControl(value: string): this`
-- `setEtag(value: string): this`
-- `setLastModified(date: Date): this`
-- `setIfModifiedSince(date: Date): this`
+**`setCacheControl(value: string): Header`**
+
+Set cache control header.
+
+**Example:**
+```typescript
+header.setCacheControl('public, max-age=3600');
+```
+
+**`setEtag(value: string): Header`**
+
+Set entity tag for caching.
+
+**Example:**
+```typescript
+header.setEtag('"abc123"');
+```
+
+**`setLastModified(date: Date): Header`**
+
+Set last modified date.
+
+**Example:**
+```typescript
+header.setLastModified(new Date());
+```
+
+**`setIfModifiedSince(date: Date): Header`**
+
+Set conditional request date.
+
+**Example:**
+```typescript
+header.setIfModifiedSince(new Date(Date.now() - 86400000));
+```
 
 #### Request Methods
 
-- `setHost(host: string): this`
-- `setUserAgent(userAgent: string): this`
-- `setReferer(referer: string): this`
-- `setOrigin(origin: string): this`
-- `setAccept(mimeType: string): this`
-- `setAcceptLanguage(languages: string[]): this`
-- `setAcceptEncoding(encodings: string[]): this`
+**`setHost(host: string): Header`**
+
+Set host header.
+
+**Example:**
+```typescript
+header.setHost('api.example.com');
+```
+
+**`setUserAgent(userAgent: string): Header`**
+
+Set user agent string.
+
+**Example:**
+```typescript
+header.setUserAgent('MyApp/1.0 (Windows NT 10.0)');
+```
+
+**`setReferer(referer: string): Header`**
+
+Set referer header.
+
+**Example:**
+```typescript
+header.setReferer('https://example.com/page');
+```
+
+**`setOrigin(origin: string): Header`**
+
+Set origin header.
+
+**Example:**
+```typescript
+header.setOrigin('https://example.com');
+```
 
 #### Utility Methods
 
-- `setLocation(location: string): this` - Set redirect location
-- `setCustom(value: string): this` - Set X-Custom header
+**`setLocation(location: string): Header`**
+
+Set location header for redirects.
+
+**Example:**
+```typescript
+header.setLocation('https://example.com/new-page');
+```
+
+**`setCustom(value: string): Header`**
+
+Set custom X-Custom header.
+
+**Example:**
+```typescript
+header.setCustom('MyApp Response');
+```
+
+**`toJson(): Record<string, string>`**
+
+Convert headers to plain object.
+
+**Example:**
+```typescript
+const headerObj = header.toJson();
+console.log(headerObj); // { "Content-Type": "application/json", ... }
+```
 
 ### `ReadonlyHeader` Class
 
-Read-only header class for parsing and accessing header values.
+Read-only interface for safely accessing header information without modification capabilities.
 
 #### Getter Methods
 
-- `get(name: string): string | null` - Get header value
-- `has(name: string): boolean` - Check if header exists
-- `toJson(): Record<string, string>` - Convert to plain object
+**`get(name: HeaderFieldType): string | null`**
+
+Get header value.
+
+**Example:**
+```typescript
+const contentType = readonlyHeader.get('Content-Type');
+```
+
+**`has(name: HeaderFieldType): boolean`**
+
+Check header existence.
+
+**Example:**
+```typescript
+const hasAuth = readonlyHeader.has('Authorization');
+```
+
+**`toJson(): Record<string, string>`**
+
+Convert to object.
+
+**Example:**
+```typescript
+const headers = readonlyHeader.toJson();
+```
 
 #### Content Methods
 
-- `getContentType(): string | null`
-- `getContentLength(): number`
-- `getCharset(): string | null`
-- `getContentDisposition(): string | null`
+**`getContentType(): MimeType | "*/*" | null`**
+
+Get content type.
+
+**Example:**
+```typescript
+const contentType = readonlyHeader.getContentType(); // 'application/json'
+```
+
+**`getContentLength(): number`**
+
+Get content length (0 if not set).
+
+**Example:**
+```typescript
+const length = readonlyHeader.getContentLength(); // 1024
+```
+
+**`getCharset(): CharsetType | null`**
+
+Extract charset from content type.
+
+**Example:**
+```typescript
+const charset = readonlyHeader.getCharset(); // 'UTF-8'
+```
+
+**`getContentDisposition(): string | null`**
+
+Get content disposition.
+
+**Example:**
+```typescript
+const disposition = readonlyHeader.getContentDisposition();
+```
+
+**`getAccept(): MimeType | "*/*" | null`**
+
+Get accept header.
+
+**Example:**
+```typescript
+const accept = readonlyHeader.getAccept(); // 'application/json'
+```
+
+**`getLang(): {code: string, region?: string} | null`**
+
+Parse accept-language header.
+
+**Example:**
+```typescript
+const lang = readonlyHeader.getLang(); // { code: 'en', region: 'US' }
+```
+
+**`getAcceptEncoding(): EncodingType[] | null`**
+
+Get accepted encodings.
+
+**Example:**
+```typescript
+const encodings = readonlyHeader.getAcceptEncoding(); // ['gzip', 'br']
+```
 
 #### Authentication Methods
 
-- `getAuthorization(): string | null`
-- `getBasicAuth(): string | null`
-- `getBearerToken(): string | null`
+**`getAuthorization(): string | null`**
+
+Get authorization header.
+
+**Example:**
+```typescript
+const auth = readonlyHeader.getAuthorization(); // 'Bearer token123'
+```
+
+**`getBasicAuth(): string | null`**
+
+Extract basic auth token.
+
+**Example:**
+```typescript
+const token = readonlyHeader.getBasicAuth(); // 'dXNlcjpwYXNz'
+```
+
+**`getBearerToken(): string | null`**
+
+Extract bearer token.
+
+**Example:**
+```typescript
+const token = readonlyHeader.getBearerToken(); // 'your-jwt-token'
+```
 
 #### Cookie Methods
 
-- `getCookies(): Record<string, string> | null`
-- `getCookie(name: string): string | null`
+**`getCookies(): Record<string, string> | null`**
+
+Parse all cookies.
+
+**Example:**
+```typescript
+const cookies = readonlyHeader.getCookies(); // { session: 'abc123', user: 'john' }
+```
+
+**`getCookie(name: string): string | null`**
+
+Get specific cookie value.
+
+**Example:**
+```typescript
+const sessionId = readonlyHeader.getCookie('session'); // 'abc123'
+```
 
 #### Request Info Methods
 
-- `getHost(): string | null`
-- `getUserAgent(): UserAgent | null`
-- `getReferer(): string | null`
-- `getOrigin(): string | null`
-- `getAccept(): string | null`
-- `getAcceptLanguage(): string[]`
-- `getAcceptEncoding(): string[]`
+**`getHost(): string | null`**
+
+Get host header.
+
+**Example:**
+```typescript
+const host = readonlyHeader.getHost(); // 'api.example.com'
+```
+
+**`getUserAgent(): IUserAgent | null`**
+
+Parse user agent string.
+
+**Example:**
+```typescript
+const ua = readonlyHeader.getUserAgent();
+console.log(ua?.browser.name); // 'Chrome'
+```
+
+**`getReferer(): string | null`**
+
+Get referer header.
+
+**Example:**
+```typescript
+const referer = readonlyHeader.getReferer(); // 'https://example.com'
+```
+
+**`getOrigin(): string | null`**
+
+Get origin header.
+
+**Example:**
+```typescript
+const origin = readonlyHeader.getOrigin(); // 'https://example.com'
+```
 
 #### IP Detection Methods
 
-- `getIp(): string | null`
-- `getXForwardedFor(): string | null`
-- `getXRealIP(): string | null`
-- `getClientIps(): string[]`
+**`getIp(): string | null`**
+
+Get client IP using smart detection.
+
+**Example:**
+```typescript
+const ip = readonlyHeader.getIp(); // '192.168.1.100'
+```
+
+**`getXForwardedFor(): string | null`**
+
+Get X-Forwarded-For header.
+
+**Example:**
+```typescript
+const forwarded = readonlyHeader.getXForwardedFor(); // '192.168.1.100, 10.0.0.1'
+```
+
+**`getXRealIP(): string | null`**
+
+Get X-Real-IP header.
+
+**Example:**
+```typescript
+const realIp = readonlyHeader.getXRealIP(); // '192.168.1.100'
+```
+
+**`getClientIps(): string[]`**
+
+Get all possible client IPs.
+
+**Example:**
+```typescript
+const ips = readonlyHeader.getClientIps(); // ['192.168.1.100', '10.0.0.1']
+```
 
 #### CORS Methods
 
-- `getAccessControlAllowOrigin(): string | null`
-- `getAccessControlAllowMethods(): string[]`
-- `getAccessControlAllowHeaders(): string[]`
-- `getAccessControlAllowCredentials(): boolean | null`
+**`getAccessControlAllowOrigin(): string | null`**
+
+Get allowed origins.
+
+**Example:**
+```typescript
+const origin = readonlyHeader.getAccessControlAllowOrigin(); // '*'
+```
+
+**`getAccessControlAllowMethods(): MethodType[] | null`**
+
+Get allowed methods.
+
+**Example:**
+```typescript
+const methods = readonlyHeader.getAccessControlAllowMethods(); // ['GET', 'POST']
+```
+
+**`getAccessControlAllowHeaders(): string[] | null`**
+
+Get allowed headers.
+
+**Example:**
+```typescript
+const headers = readonlyHeader.getAccessControlAllowHeaders(); // ['Content-Type']
+```
+
+**`getAccessControlAllowCredentials(): boolean | null`**
+
+Get credentials policy.
+
+**Example:**
+```typescript
+const credentials = readonlyHeader.getAccessControlAllowCredentials(); // true
+```
 
 #### Security Methods
 
-- `getContentSecurityPolicy(): string | null`
-- `getStrictTransportSecurity(): string | null`
-- `getXContentTypeOptions(): string | null`
-- `getXFrameOptions(): string | null`
-- `getXXSSProtection(): string | null`
+**`getContentSecurityPolicy(): string | null`**
+
+Get CSP policy.
+
+**Example:**
+```typescript
+const csp = readonlyHeader.getContentSecurityPolicy();
+```
+
+**`getStrictTransportSecurity(): string | null`**
+
+Get HSTS header.
+
+**Example:**
+```typescript
+const hsts = readonlyHeader.getStrictTransportSecurity();
+```
+
+**`getXContentTypeOptions(): string | null`**
+
+Get X-Content-Type-Options.
+
+**Example:**
+```typescript
+const options = readonlyHeader.getXContentTypeOptions(); // 'nosniff'
+```
+
+**`getXFrameOptions(): string | null`**
+
+Get X-Frame-Options.
+
+**Example:**
+```typescript
+const frameOptions = readonlyHeader.getXFrameOptions(); // 'DENY'
+```
+
+**`getXXSSProtection(): string | null`**
+
+Get XSS protection header.
+
+**Example:**
+```typescript
+const xssProtection = readonlyHeader.getXXSSProtection(); // '1; mode=block'
+```
 
 #### Caching Methods
 
-- `getCacheControl(): string | null`
-- `getEtag(): string | null`
-- `getLastModified(): Date | null`
-- `getIfModifiedSince(): Date | null`
-- `getIfNoneMatch(): string | null`
+**`getCacheControl(): string | null`**
+
+Get cache control.
+
+**Example:**
+```typescript
+const cacheControl = readonlyHeader.getCacheControl(); // 'public, max-age=3600'
+```
+
+**`getEtag(): string | null`**
+
+Get entity tag.
+
+**Example:**
+```typescript
+const etag = readonlyHeader.getEtag(); // '"abc123"'
+```
+
+**`getLastModified(): Date | null`**
+
+Get last modified date.
+
+**Example:**
+```typescript
+const lastModified = readonlyHeader.getLastModified(); // Date object
+```
+
+**`getIfModifiedSince(): Date | null`**
+
+Get conditional date.
+
+**Example:**
+```typescript
+const ifModifiedSince = readonlyHeader.getIfModifiedSince(); // Date object
+```
+
+**`getIfNoneMatch(): string | null`**
+
+Get if-none-match header.
+
+**Example:**
+```typescript
+const ifNoneMatch = readonlyHeader.getIfNoneMatch(); // '"abc123"'
+```
 
 #### Detection Methods
 
-- `isSecure(): boolean` - Check if request is HTTPS
-- `isAjax(): boolean` - Check if AJAX request
-- `isCorsRequest(): boolean` - Check if CORS request
+**`isSecure(): boolean`**
+
+Check if HTTPS (via X-Forwarded-Proto).
+
+**Example:**
+```typescript
+const isHttps = readonlyHeader.isSecure(); // true
+```
+
+**`isAjax(): boolean`**
+
+Check if XMLHttpRequest.
+
+**Example:**
+```typescript
+const isAjax = readonlyHeader.isAjax(); // true
+```
+
+**`isCorsRequest(): boolean`**
+
+Check if CORS request (has Origin).
+
+**Example:**
+```typescript
+const isCors = readonlyHeader.isCorsRequest(); // true
+```
 
 ### Type Definitions
 
 #### `CookieOptions`
+
+Interface for cookie configuration options.
 
 ```typescript
 interface CookieOptions {
@@ -491,19 +1128,97 @@ interface CookieOptions {
   maxAge?: number;
   secure?: boolean;
   httpOnly?: boolean;
-  sameSite?: 'Strict' | 'Lax' | 'None';
+  sameSite?: "Strict" | "Lax" | "None";
 }
 ```
 
-#### `UserAgent`
+**Example:**
+```typescript
+const options: CookieOptions = {
+  httpOnly: true,
+  secure: true,
+  maxAge: 3600,
+  sameSite: 'Strict'
+};
+```
+
+#### `IUserAgent`
+
+Interface representing parsed user agent information.
 
 ```typescript
-interface UserAgent {
-  browser: string;
-  version: string;
-  os: string;
-  device?: string;
+interface IUserAgent {
+  readonly browser: {
+    name?: string;
+    version?: string;
+    major?: string;
+  };
+  readonly engine: {
+    name?: string;
+    version?: string;
+  };
+  readonly os: {
+    name?: string;
+    version?: string;
+  };
+  readonly device: {
+    vendor?: string;
+    model?: string;
+    type?: string;
+  };
+  readonly cpu: {
+    architecture?: string;
+  };
 }
+```
+
+**Example:**
+```typescript
+const userAgent: IUserAgent = {
+  browser: { name: 'Chrome', version: '91.0.4472.124' },
+  os: { name: 'Windows', version: '10' },
+  device: { type: 'desktop' },
+  // ... other properties
+};
+```
+
+#### Other Types
+
+**`HeaderFieldType`**
+
+Union type of standard header names plus custom headers.
+
+**Example:**
+```typescript
+const headerName: HeaderFieldType = 'Content-Type';
+const customHeader: HeaderFieldType = 'X-Custom-Header';
+```
+
+**`MethodType`**
+
+HTTP methods type.
+
+**Example:**
+```typescript
+const method: MethodType = 'GET'; // 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD'
+```
+
+**`EncodingType`**
+
+Content encoding types.
+
+**Example:**
+```typescript
+const encoding: EncodingType = 'gzip'; // 'deflate' | 'gzip' | 'compress' | 'br' | 'identity' | '*'
+```
+
+**`CharsetType`**
+
+Character set types.
+
+**Example:**
+```typescript
+const charset: CharsetType = 'UTF-8'; // 'ISO-8859-1' | '7-BIT' | 'UTF-8' | 'UTF-16' | 'US-ASCII'
 ```
 
 ## Integration Examples
@@ -512,37 +1227,38 @@ interface UserAgent {
 
 ```typescript
 import express from 'express';
-import { Header } from '@ooneex/http-header';
+import { Header, ReadonlyHeader } from '@ooneex/http-header';
 
 const app = express();
 
 app.use((req, res, next) => {
   // Parse incoming headers
-  const incomingHeader = new ReadonlyHeader(req.headers as any);
+  const incomingHeader = new ReadonlyHeader(new Headers(req.headers as any));
 
   // Create response headers
-  const responseHeader = new Header();
-  responseHeader
-    .setAccessControlAllowOrigin('*')
+  const responseHeader = new Header()
+    .setJson()
     .setCacheControl('no-cache')
-    .setXContentTypeOptions();
+    .setAccessControlAllowOrigin('*');
 
-  // Apply to Express response
-  Object.entries(responseHeader.toJson()).forEach(([name, value]) => {
-    res.setHeader(name, value);
+  // Apply headers to response
+  responseHeader.native.forEach((value, key) => {
+    res.setHeader(key, value);
   });
 
   next();
 });
+
+app.listen(3000);
 ```
 
 ### Fetch API Integration
 
 ```typescript
-import { Header } from '@ooneex/http-header';
+import { Header, ReadonlyHeader } from '@ooneex/http-header';
 
-const requestHeader = new Header();
-requestHeader
+// Create request headers
+const requestHeader = new Header()
   .setJson()
   .setBearerToken('your-token')
   .setUserAgent('MyApp/1.0');
@@ -555,7 +1271,7 @@ const response = await fetch('https://api.example.com/data', {
 
 // Parse response headers
 const responseHeader = new ReadonlyHeader(response.headers);
-console.log(responseHeader.getContentType());
+const contentType = responseHeader.getContentType();
 ```
 
 ### Bun Server Integration
@@ -565,24 +1281,21 @@ import { Header, ReadonlyHeader } from '@ooneex/http-header';
 
 Bun.serve({
   port: 3000,
-  async fetch(req) {
+  fetch(request) {
     // Parse request headers
-    const requestHeader = new ReadonlyHeader(req.headers);
+    const requestHeader = new ReadonlyHeader(request.headers);
 
     // Create response headers
-    const responseHeader = new Header();
-    responseHeader
+    const responseHeader = new Header()
       .setJson()
-      .setCacheControl('public, max-age=3600')
+      .setCookie('session', 'abc123', { httpOnly: true })
       .setAccessControlAllowOrigin('*');
-
-    if (requestHeader.isAjax()) {
-      responseHeader.add('X-Requested-Via', 'Ajax');
-    }
 
     return new Response(
       JSON.stringify({ message: 'Hello World' }),
-      { headers: responseHeader.native }
+      {
+        headers: responseHeader.native
+      }
     );
   }
 });
@@ -605,11 +1318,9 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ### Guidelines
 
-- Write
- tests for new features
+- Write tests for new features
 - Follow the existing code style
-- Update
- documentation for API changes
+- Update documentation for API changes
 - Ensure all tests pass before submitting PR
 
 ---

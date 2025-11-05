@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
+import type { HttpMethodType } from "@ooneex/types";
 import { Header } from "@/index";
-import type { MethodType } from "../src/types";
 
 describe("Header", () => {
   let header: Header;
@@ -691,7 +691,7 @@ describe("Header", () => {
       });
 
       test("should set multiple methods", () => {
-        const methods: MethodType[] = ["GET", "POST", "PUT", "DELETE"];
+        const methods: HttpMethodType[] = ["GET", "POST", "PUT", "DELETE"];
         header.setAccessControlAllowMethods(methods);
         expect(header.get("Access-Control-Allow-Methods")).toBe("GET, POST, PUT, DELETE");
       });

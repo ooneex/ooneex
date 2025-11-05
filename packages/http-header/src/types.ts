@@ -1,4 +1,5 @@
 import type { MimeType } from "@ooneex/http-mimes";
+import type { CharsetType, EncodingType, HttpMethodType } from "@ooneex/types";
 import type { HEADERS } from "./constants";
 
 export type HeaderFieldType = (typeof HEADERS)[number] | `X-Custom-${string}` | "X-Real-IP";
@@ -40,10 +41,6 @@ export interface IUserAgent {
   readonly device: UserAgentDeviceType;
   readonly cpu: UserAgentCpuType;
 }
-
-export type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD";
-export type EncodingType = "deflate" | "gzip" | "compress" | "br" | "identity" | "*";
-export type CharsetType = "ISO-8859-1" | "7-BIT" | "UTF-8" | "UTF-16" | "US-ASCII";
 
 export interface IHeader extends IReadonlyHeader {
   readonly native: Headers;
@@ -143,7 +140,7 @@ export interface IHeader extends IReadonlyHeader {
 
   // CORS
   setAccessControlAllowOrigin: (origin: string) => IHeader;
-  setAccessControlAllowMethods: (methods: MethodType[]) => IHeader;
+  setAccessControlAllowMethods: (methods: HttpMethodType[]) => IHeader;
   setAccessControlAllowHeaders: (headers: string[]) => IHeader;
   setAccessControlAllowCredentials: (allow: boolean) => IHeader;
 
@@ -210,7 +207,7 @@ export interface IReadonlyHeader {
 
   // CORS
   getAccessControlAllowOrigin: () => string | null;
-  getAccessControlAllowMethods: () => MethodType[] | null;
+  getAccessControlAllowMethods: () => HttpMethodType[] | null;
   getAccessControlAllowHeaders: () => string[] | null;
   getAccessControlAllowCredentials: () => boolean | null;
 

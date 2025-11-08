@@ -14,8 +14,6 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
     "publish": "bun run build && bun publish --access public"
   },
-  "devDependencies": {},
-  "peerDependencies": {},
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"

@@ -56,7 +56,7 @@ const Configuration: UserConfig = {
     "subject-full-stop": [RuleConfigSeverity.Error, "never", "."],
     "header-max-length": [RuleConfigSeverity.Error, "always", 100],
     "body-leading-blank": [RuleConfigSeverity.Error, "always"],
-    "body-max-line-length": [RuleConfigSeverity.Error, "always", 200],
+    "body-max-line-length": [RuleConfigSeverity.Error, "always", 100],
     "footer-leading-blank": [RuleConfigSeverity.Error, "always"],
   },
   prompt: {

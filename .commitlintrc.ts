@@ -14,6 +14,7 @@ const Configuration: UserConfig = {
       RuleConfigSeverity.Error,
       "always",
       [
+        "common",
         "analytics",
         "auth",
         "cache",
@@ -50,7 +51,7 @@ const Configuration: UserConfig = {
     ],
     "scope-case": [RuleConfigSeverity.Error, "always", "lower-case"],
     "scope-empty": [RuleConfigSeverity.Error, "never"],
-    "subject-case": [RuleConfigSeverity.Error, "never", ["sentence-case", "start-case", "pascal-case", "upper-case"]],
+    "subject-case": [RuleConfigSeverity.Error, "always", ["sentence-case", "start-case", "pascal-case", "upper-case"]],
     "subject-empty": [RuleConfigSeverity.Error, "never"],
     "subject-full-stop": [RuleConfigSeverity.Error, "never", "."],
     "header-max-length": [RuleConfigSeverity.Error, "always", 100],

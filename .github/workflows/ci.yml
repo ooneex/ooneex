@@ -5,10 +5,16 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: '0 2 * * 1' # Run Renovate every Monday at 2am UTC
+  workflow_dispatch: # Allow manual triggering of Renovate
 
 permissions:
   actions: read
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
+  checks: read
 
 jobs:
   main:
@@ -35,5 +41,26 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
       - run: bunx nx affected -t lint
       - run: bunx nx affected -t test
-      - run: bunx nx fix-ci
-        if: always()
+
+  renovate-config-validator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Renovate config
+        uses: rinchsan/renovate-config-validator@v0.2.0
+        with:
+          pattern: 'renovate.json'
+
+  renovate:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v40.3.2
+        with:
+          configurationFile: renovate.json
+          token: ${{ secrets.RENOVATE_TOKEN }}
+        env:
+          LOG_LEVEL: info

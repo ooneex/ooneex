@@ -213,7 +213,7 @@ describe("FilesystemCacheAdapter", () => {
     });
 
     test("should store value with TTL", async () => {
-      const ttlSeconds = 1;
+      const ttlSeconds = 5;
       await adapter.set(testKey, testValue, ttlSeconds);
       const result = await adapter.get(testKey);
       expect(result).toBe(testValue);

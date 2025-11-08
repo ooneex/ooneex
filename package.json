@@ -1,22 +1,6 @@
 {
   "name": "ooneex",
   "module": "index.ts",
-  "devDependencies": {
-    "@biomejs/biome": "2.3.0",
-    "@nx/js": "^22.0.2",
-    "@nx/workspace": "^22.0.2",
-    "@swc-node/register": "^1.11.1",
-    "@swc/core": "^1.14.0",
-    "@swc/helpers": "~0.5.11",
-    "@types/bun": "latest",
-    "@types/node": "^24.9.2",
-    "husky": "^9.1.7",
-    "nx": "22.0.2",
-    "undici-types": "^7.16.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
   "private": true,
   "scripts": {
     "graph": "bunx nx graph",
@@ -28,7 +12,8 @@
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "test:watch": "bunx nx run-many -t test:watch",
     "fmt": "bunx biome format --write",
-    "lint": "bunx biome lint",
+    "lint": "bunx biome check",
+    "commit": "bunx commit",
     "prepare": "husky"
   },
   "type": "module",
@@ -36,6 +21,33 @@
     "packages/*"
   ],
   "dependencies": {
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.27"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.0",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@commitlint/prompt-cli": "^20.1.0",
+    "@nx/js": "^22.0.2",
+    "@nx/workspace": "^22.0.2",
+    "@swc-node/register": "^1.11.1",
+    "@swc/core": "^1.14.0",
+    "@swc/helpers": "~0.5.11",
+    "@types/bun": "latest",
+    "@types/node": "^24.9.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "nx": "22.0.2",
+    "undici-types": "^7.16.0"
+  },
+  "lint-staged": {
+    "*": [
+      "bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true",
+      "bunx nx affected -t test"
+    ]
   }
 }

@@ -105,7 +105,7 @@ describe("Fetcher", () => {
       const result = fetcher.setLang(lang);
 
       expect(result).toBe(fetcher);
-      expect(fetcher.header.get("Content-Language")).toBe(lang);
+      expect(fetcher.header.get("Accept-Language")).toBe(lang);
     });
 
     test("should chain header methods", () => {
@@ -114,7 +114,7 @@ describe("Fetcher", () => {
       expect(result).toBe(fetcher);
       expect(fetcher.header.get("Authorization")).toBe("Bearer token123");
       expect(fetcher.header.get("Content-Type")).toBe("application/json");
-      expect(fetcher.header.get("Content-Language")).toBe("fr-FR");
+      expect(fetcher.header.get("Accept-Language")).toBe("fr-FR");
     });
   });
 
@@ -715,7 +715,7 @@ describe("Fetcher", () => {
 
         expect(headers.get("Authorization")).toBe("Bearer my-token");
         expect(headers.get("Content-Type")).toBe("application/json");
-        expect(headers.get("Content-Language")).toBe("en-US");
+        expect(headers.get("Accept-Language")).toBe("en-US");
       }
       expect(response.data).toEqual({});
     });

@@ -171,7 +171,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
         expect(dbError.message).toBe(
-          "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database.",
+          "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database. Alternatively, set the SQLITE_DATABASE_PATH environment variable.",
         );
         expect(dbError.data).toEqual({
           ...options,
@@ -508,7 +508,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
         expect(dbError.message).toBe(
-          "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database.",
+          "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database. Alternatively, set the SQLITE_DATABASE_PATH environment variable.",
         );
         expect(dbError.data).toEqual({
           database: "",

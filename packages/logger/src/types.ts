@@ -1,9 +1,9 @@
+import type { IException } from "@ooneex/exception";
+import type { ScalarType } from "@ooneex/types";
+
 export interface ILogger {
-  log: (...message: string[]) => void;
-  fatal: (...message: string[]) => void;
-  error: (...message: string[]) => void;
-  warn: (...message: string[]) => void;
-  info: (...message: string[]) => void;
-  debug: (...message: string[]) => void;
-  trace: (...message: string[]) => void;
+  error: (message: string | IException<ScalarType>, data?: Record<string, ScalarType>) => void;
+  warn: (message: string, data?: Record<string, ScalarType>) => void;
+  info: (message: string, data?: Record<string, ScalarType>) => void;
+  debug: (message: string, data?: Record<string, ScalarType>) => void;
 }

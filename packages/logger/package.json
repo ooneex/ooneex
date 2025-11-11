@@ -11,10 +11,15 @@
     "compile": "tsc -p tsconfig.build.json",
     "test": "bun test tests",
     "test:watch": "bun test tests --watch",
-    "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --format esm --packages external --minify",
     "publish": "bun run build && bun publish --access public"
   },
-  "devDependencies": {},
+  "dependencies": {
+    "@ooneex/exception": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {},
   "files": [
     "dist/**/*.js",

@@ -5,6 +5,7 @@
     "": {
       "name": "ooneex",
       "dependencies": {
+        "nanoid": "^5.1.6",
         "reflect-metadata": "^0.2.2",
         "typeorm": "^0.3.27",
       },
@@ -133,6 +134,7 @@
       "name": "@ooneex/logger",
       "version": "0.0.0",
       "dependencies": {
+        "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
       },
       "devDependencies": {
@@ -216,9 +218,6 @@
     "packages/utils": {
       "name": "@ooneex/utils",
       "version": "0.0.8",
-      "dependencies": {
-        "nanoid": "^5.1.6",
-      },
     },
     "packages/validation": {
       "name": "@ooneex/validation",

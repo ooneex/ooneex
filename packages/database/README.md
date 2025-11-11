@@ -24,8 +24,6 @@ A comprehensive TypeScript/JavaScript database library designed for Bun runtime.
 
 ✅ **Environment Support** - Automatic environment variable detection
 
-✅ **Repository Pattern** - Built-in repository interface for data access
-
 ✅ **Zero Configuration** - Works out of the box with sensible defaults
 
 ## Installation
@@ -36,50 +34,6 @@ bun add @ooneex/database
 ```
 
 ## Usage
-
-### Basic Database Operations
-
-```typescript
-import { Database } from '@ooneex/database';
-
-// Using connection string
-const db = new Database('sqlite://./myapp.db');
-
-// Using environment variable (DATABASE_URL)
-const db = new Database();
-
-// Using URL object
-const db = new Database(new URL('postgresql://user:pass@localhost:5432/mydb'));
-
-// With custom options
-const db = new Database('mysql://user:pass@localhost:3306/mydb', {
-  timeout: 5000,
-  ssl: true
-});
-```
-
-### Database Lifecycle Management
-
-```typescript
-import { Database } from '@ooneex/database';
-
-const db = new Database('sqlite://./example.db');
-
-// Open connection
-await db.open();
-
-// Get the underlying Bun.SQL client
-const client = db.getClient();
-
-// Execute queries
-const result = await client`SELECT * FROM users`;
-
-// Close connection
-await db.close();
-
-// Drop database (caution: destructive operation)
-await db.drop();
-```
 
 ### TypeORM PostgreSQL Adapter
 
@@ -158,51 +112,6 @@ await productRepository.save(product);
 
 // Close connection
 await adapter.close();
-```
-
-### Custom Repository Implementation
-
-```typescript
-import { IRepository } from '@ooneex/database';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-class UserRepository implements IRepository<User> {
-  constructor(private db: Database) {}
-
-  async create(user: User): Promise<User> {
-    const client = this.db.getClient();
-    await client`INSERT INTO users (id, name, email) VALUES (${user.id}, ${user.name}, ${user.email})`;
-    return user;
-  }
-
-  async find(id: string): Promise<User | null> {
-    const client = this.db.getClient();
-    const result = await client`SELECT * FROM users WHERE id = ${id}`;
-    return result[0] || null;
-  }
-
-  async findBy(criteria: Partial<User>): Promise<User[]> {
-    const client = this.db.getClient();
-    // Implementation based on criteria
-    return client`SELECT * FROM users WHERE name = ${criteria.name}`;
-  }
-
-  async update(user: User): Promise<User> {
-    const client = this.db.getClient();
-    await client`UPDATE users SET name = ${user.name}, email = ${user.email} WHERE id = ${user.id}`;
-    return user;
-  }
-
-  async delete(criteria: { id: string }) {
-    const client = this.db.getClient();
-    return await client`DELETE FROM users WHERE id = ${criteria.id}`;
-  }
-}
 ```
 
 ### Error Handling
@@ -363,18 +272,6 @@ interface IDatabase {
   open(): Promise<void>;
   close(): Promise<void>;
   drop(): Promise<void>;
-}
-```
-
-#### `IRepository<Entity>`
-
-```typescript
-interface IRepository<Entity> {
-  create(entity: Entity, options?: unknown): Promise<Entity>;
-  find(id: string): Promise<Entity | null>;
-  findBy(criteria: unknown): Promise<Entity[]>;
-  update(entity: Entity, options?: unknown): Promise<Entity>;
-  delete<UpdateResult>(criteria: unknown): Promise<UpdateResult>;
 }
 ```
 

@@ -88,7 +88,7 @@ export class TerminalLogger implements ILogger {
     }
   }
 
-  error(message: string | IException<ScalarType>, data?: Record<string, ScalarType>): void {
+  public error(message: string | IException<ScalarType>, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {
       this.writeToConsole({
         level: "ERROR",
@@ -118,7 +118,7 @@ export class TerminalLogger implements ILogger {
     }
   }
 
-  warn(message: string, data?: Record<string, ScalarType>): void {
+  public warn(message: string, data?: Record<string, ScalarType>): void {
     this.writeToConsole({
       level: "WARN",
       message,
@@ -126,7 +126,7 @@ export class TerminalLogger implements ILogger {
     });
   }
 
-  info(message: string, data?: Record<string, ScalarType>): void {
+  public info(message: string, data?: Record<string, ScalarType>): void {
     this.writeToConsole({
       level: "INFO",
       message,
@@ -134,7 +134,7 @@ export class TerminalLogger implements ILogger {
     });
   }
 
-  debug(message: string, data?: Record<string, ScalarType>): void {
+  public debug(message: string, data?: Record<string, ScalarType>): void {
     this.writeToConsole({
       level: "DEBUG",
       message,

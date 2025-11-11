@@ -7,5 +7,6 @@ export class CacheException<T = unknown> extends Exception<T> {
       status: Status.Code.InternalServerError,
       data,
     });
+    this.name = "CacheException";
   }
 }

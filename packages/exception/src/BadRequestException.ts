@@ -7,5 +7,6 @@ export class BadRequestException<T = unknown> extends Exception<T> {
       status: Status.Code.BadRequest,
       data,
     });
+    this.name = "BadRequestException";
   }
 }

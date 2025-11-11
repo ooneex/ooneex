@@ -7,5 +7,6 @@ export class NotFoundException<T = unknown> extends Exception<T> {
       status: Status.Code.NotFound,
       data,
     });
+    this.name = "NotFoundException";
   }
 }

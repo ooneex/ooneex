@@ -7,5 +7,6 @@ export class MethodNotAllowedException<T = unknown> extends Exception<T> {
       status: Status.Code.MethodNotAllowed,
       data,
     });
+    this.name = "MethodNotAllowedException";
   }
 }

@@ -7,5 +7,6 @@ export class TranslationException<T = unknown> extends Exception<T> {
       status: Status.Code.NotFound,
       data,
     });
+    this.name = "TranslationException";
   }
 }

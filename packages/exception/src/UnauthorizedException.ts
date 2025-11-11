@@ -7,5 +7,6 @@ export class UnauthorizedException<T = unknown> extends Exception<T> {
       status: Status.Code.Unauthorized,
       data,
     });
+    this.name = "UnauthorizedException";
   }
 }

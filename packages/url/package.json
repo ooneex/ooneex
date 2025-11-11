@@ -15,8 +15,10 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/types": "workspace:*",
     "@ooneex/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
   },
   "files": [
     "dist/**/*.js",

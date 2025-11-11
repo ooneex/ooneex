@@ -15,11 +15,12 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/types": "workspace:*",
     "@ooneex/http-mimes": "workspace:*",
     "ua-parser-js": "^2.0.6"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {},
   "files": [
     "dist/**/*.js",

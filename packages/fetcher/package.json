@@ -17,8 +17,10 @@
   "dependencies": {
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/http-header": "workspace:*",
-    "@ooneex/types": "workspace:*",
     "@ooneex/http-status": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
   },
   "files": [
     "dist/**/*.js",

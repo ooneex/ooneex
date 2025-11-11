@@ -85,6 +85,8 @@
         "@ooneex/http-header": "workspace:*",
         "@ooneex/http-mimes": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+      },
+      "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
@@ -93,8 +95,10 @@
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/http-mimes": "workspace:*",
-        "@ooneex/types": "workspace:*",
         "ua-parser-js": "^2.0.6",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/http-mimes": {
@@ -128,6 +132,12 @@
     "packages/logger": {
       "name": "@ooneex/logger",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/mailer": {
       "name": "@ooneex/mailer",
@@ -193,8 +203,10 @@
       "name": "@ooneex/url",
       "version": "0.0.0",
       "dependencies": {
-        "@ooneex/types": "workspace:*",
         "@ooneex/utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/user": {

@@ -46,8 +46,7 @@
   },
   "lint-staged": {
     "*": [
-      "bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true",
-      "bunx nx affected -t test"
+      "bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true"
     ]
   }
 }

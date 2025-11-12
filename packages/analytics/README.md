@@ -155,7 +155,7 @@ analytics.capture({
 import { IAnalytics, PostHogAdapterCaptureType } from '@ooneex/analytics';
 
 class CustomAnalytics implements IAnalytics {
-  capture<T extends PostHogAdapterCaptureType>(options: T): void {
+  capture(options: PostHogAdapterCaptureType): void {
     // Custom analytics implementation
     console.log('Tracking event:', options.event, 'for user:', options.id);
 
@@ -196,7 +196,7 @@ const analytics = new PostHogAdapter({
 
 #### Methods
 
-##### `capture<T extends PostHogAdapterCaptureType>(options: T): void`
+##### `capture(options: PostHogAdapterCaptureType): void`
 
 Captures an analytics event with user properties and groups.
 
@@ -231,7 +231,7 @@ Interface defining the analytics contract.
 
 ```typescript
 interface IAnalytics {
-  capture: <T extends PostHogAdapterCaptureType>(options: T) => void;
+  capture: (options: PostHogAdapterCaptureType) => void;
 }
 ```
 

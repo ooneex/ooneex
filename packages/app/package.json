@@ -1,0 +1,31 @@
+{
+  "name": "@ooneex/app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "test": "bun test tests",
+    "test:watch": "bun test tests --watch",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --format esm --packages external --minify",
+    "publish": "bun run build && bun publish --access public",
+    "dev": "bun run src/dev.ts"
+  },
+  "dependencies": {
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/container": "workspace:*",
+    "@ooneex/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
+  "peerDependencies": {},
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ]
+}

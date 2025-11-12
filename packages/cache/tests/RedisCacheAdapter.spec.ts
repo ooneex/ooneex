@@ -33,7 +33,7 @@ describe("RedisCacheAdapter", () => {
 
   beforeAll(async () => {
     // Set environment variable for tests that rely on it
-    Bun.env.REDIS_URL = "redis://localhost:6379";
+    Bun.env.CACHE_REDIS_URL = "redis://localhost:6379";
 
     adapter = new RedisCacheAdapter({
       connectionString: "redis://localhost:6379/1",
@@ -44,7 +44,7 @@ describe("RedisCacheAdapter", () => {
   afterAll(() => {
     adapter.close();
     // Clean up environment variable
-    delete Bun.env.REDIS_URL;
+    delete Bun.env.CACHE_REDIS_URL;
   });
 
   beforeEach(() => {
@@ -107,8 +107,8 @@ describe("RedisCacheAdapter", () => {
 
     test("should use default connection string from env", () => {
       // Ensure environment variable is set for this test
-      const originalRedisUrl = Bun.env.REDIS_URL;
-      Bun.env.REDIS_URL = "redis://localhost:6379";
+      const originalRedisUrl = Bun.env.CACHE_REDIS_URL;
+      Bun.env.CACHE_REDIS_URL = "redis://localhost:6379";
 
       new RedisCacheAdapter();
 
@@ -116,9 +116,9 @@ describe("RedisCacheAdapter", () => {
 
       // Restore original value
       if (originalRedisUrl) {
-        Bun.env.REDIS_URL = originalRedisUrl;
+        Bun.env.CACHE_REDIS_URL = originalRedisUrl;
       } else {
-        delete Bun.env.REDIS_URL;
+        delete Bun.env.CACHE_REDIS_URL;
       }
     });
 

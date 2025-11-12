@@ -5,11 +5,11 @@ export class RedisCacheAdapter implements ICache {
   private client: Bun.RedisClient;
 
   constructor(options: RedisCacheAdapterType = {}) {
-    const connectionString = options.connectionString || Bun.env.REDIS_URL;
+    const connectionString = options.connectionString || Bun.env.CACHE_REDIS_URL;
 
     if (!connectionString) {
       throw new CacheException(
-        "Redis connection string is required. Please provide a connection string either through the constructor options or set the REDIS_URL environment variable.",
+        "Redis connection string is required. Please provide a connection string either through the constructor options or set the CACHE_REDIS_URL environment variable.",
       );
     }
 

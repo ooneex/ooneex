@@ -4,10 +4,10 @@ import { StorageException } from "../src/StorageException";
 
 // Mock environment variables
 const mockEnv = {
-  CLOUDFLARE_ACCESS_KEY: "mock-access-key",
-  CLOUDFLARE_SECRET_KEY: "mock-secret-key",
-  CLOUDFLARE_ENDPOINT: "https://mock.r2.cloudflarestorage.com",
-  CLOUDFLARE_REGION: "WEUR",
+  STORAGE_CLOUDFLARE_ACCESS_KEY: "mock-access-key",
+  STORAGE_CLOUDFLARE_SECRET_KEY: "mock-secret-key",
+  STORAGE_CLOUDFLARE_ENDPOINT: "https://mock.r2.cloudflarestorage.com",
+  STORAGE_CLOUDFLARE_REGION: "WEUR",
 };
 
 describe("CloudflareStorageAdapter", () => {
@@ -16,10 +16,10 @@ describe("CloudflareStorageAdapter", () => {
   beforeEach(() => {
     // Store original environment variables
     originalEnv = {
-      CLOUDFLARE_ACCESS_KEY: Bun.env.CLOUDFLARE_ACCESS_KEY,
-      CLOUDFLARE_SECRET_KEY: Bun.env.CLOUDFLARE_SECRET_KEY,
-      CLOUDFLARE_ENDPOINT: Bun.env.CLOUDFLARE_ENDPOINT,
-      CLOUDFLARE_REGION: Bun.env.CLOUDFLARE_REGION,
+      STORAGE_CLOUDFLARE_ACCESS_KEY: Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY,
+      STORAGE_CLOUDFLARE_SECRET_KEY: Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY,
+      STORAGE_CLOUDFLARE_ENDPOINT: Bun.env.STORAGE_CLOUDFLARE_ENDPOINT,
+      STORAGE_CLOUDFLARE_REGION: Bun.env.STORAGE_CLOUDFLARE_REGION,
     };
 
     // Set mock environment variables
@@ -62,15 +62,15 @@ describe("CloudflareStorageAdapter", () => {
 
         expect(adapter.getOptions()).toEqual({
           accessKeyId: "custom-access-key",
-          secretAccessKey: mockEnv.CLOUDFLARE_SECRET_KEY,
-          endpoint: mockEnv.CLOUDFLARE_ENDPOINT,
+          secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
+          endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
           bucket: undefined,
-          region: mockEnv.CLOUDFLARE_REGION,
+          region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
       });
 
       test("should use EEUR as default region when not provided", () => {
-        delete Bun.env.CLOUDFLARE_REGION;
+        delete Bun.env.STORAGE_CLOUDFLARE_REGION;
 
         const options = {
           accessKey: "test-access-key",
@@ -106,11 +106,11 @@ describe("CloudflareStorageAdapter", () => {
         const adapter = new CloudflareStorageAdapter();
 
         expect(adapter.getOptions()).toEqual({
-          accessKeyId: mockEnv.CLOUDFLARE_ACCESS_KEY,
-          secretAccessKey: mockEnv.CLOUDFLARE_SECRET_KEY,
-          endpoint: mockEnv.CLOUDFLARE_ENDPOINT,
+          accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
+          secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
+          endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
           bucket: undefined,
-          region: mockEnv.CLOUDFLARE_REGION,
+          region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
       });
 
@@ -118,40 +118,40 @@ describe("CloudflareStorageAdapter", () => {
         const adapter = new CloudflareStorageAdapter({});
 
         expect(adapter.getOptions()).toEqual({
-          accessKeyId: mockEnv.CLOUDFLARE_ACCESS_KEY,
-          secretAccessKey: mockEnv.CLOUDFLARE_SECRET_KEY,
-          endpoint: mockEnv.CLOUDFLARE_ENDPOINT,
+          accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
+          secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
+          endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
           bucket: undefined,
-          region: mockEnv.CLOUDFLARE_REGION,
+          region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
       });
     });
 
     describe("Error Cases", () => {
       test("should throw StorageException when access key is missing", () => {
-        delete Bun.env.CLOUDFLARE_ACCESS_KEY;
+        delete Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
 
         expect(() => new CloudflareStorageAdapter()).toThrow(StorageException);
         expect(() => new CloudflareStorageAdapter()).toThrow(
-          "Cloudflare access key is required. Please provide an access key either through the constructor options or set the CLOUDFLARE_ACCESS_KEY environment variable.",
+          "Cloudflare access key is required. Please provide an access key either through the constructor options or set the STORAGE_CLOUDFLARE_ACCESS_KEY environment variable.",
         );
       });
 
       test("should throw StorageException when secret key is missing", () => {
-        delete Bun.env.CLOUDFLARE_SECRET_KEY;
+        delete Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
 
         expect(() => new CloudflareStorageAdapter()).toThrow(StorageException);
         expect(() => new CloudflareStorageAdapter()).toThrow(
-          "Cloudflare secret key is required. Please provide a secret key either through the constructor options or set the CLOUDFLARE_SECRET_KEY environment variable.",
+          "Cloudflare secret key is required. Please provide a secret key either through the constructor options or set the STORAGE_CLOUDFLARE_SECRET_KEY environment variable.",
         );
       });
 
       test("should throw StorageException when endpoint is missing", () => {
-        delete Bun.env.CLOUDFLARE_ENDPOINT;
+        delete Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
         expect(() => new CloudflareStorageAdapter()).toThrow(StorageException);
         expect(() => new CloudflareStorageAdapter()).toThrow(
-          "Cloudflare endpoint is required. Please provide an endpoint either through the constructor options or set the CLOUDFLARE_ENDPOINT environment variable.",
+          "Cloudflare endpoint is required. Please provide an endpoint either through the constructor options or set the STORAGE_CLOUDFLARE_ENDPOINT environment variable.",
         );
       });
 
@@ -165,7 +165,7 @@ describe("CloudflareStorageAdapter", () => {
         const adapter = new CloudflareStorageAdapter(options);
 
         // Should use env var when empty string is provided
-        expect(adapter.getOptions().accessKeyId).toBe(mockEnv.CLOUDFLARE_ACCESS_KEY);
+        expect(adapter.getOptions().accessKeyId).toBe(mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY);
         expect(adapter.getOptions().secretAccessKey).toBe("test-secret-key");
       });
 
@@ -180,7 +180,7 @@ describe("CloudflareStorageAdapter", () => {
 
         // Should use env var when empty string is provided
         expect(adapter.getOptions().accessKeyId).toBe("test-access-key");
-        expect(adapter.getOptions().secretAccessKey).toBe(mockEnv.CLOUDFLARE_SECRET_KEY);
+        expect(adapter.getOptions().secretAccessKey).toBe(mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY);
       });
 
       test("should fallback to environment variables when options endpoint is empty string", () => {
@@ -195,13 +195,13 @@ describe("CloudflareStorageAdapter", () => {
         // Should use env var when empty string is provided
         expect(adapter.getOptions().accessKeyId).toBe("test-access-key");
         expect(adapter.getOptions().secretAccessKey).toBe("test-secret-key");
-        expect(adapter.getOptions().endpoint).toBe(mockEnv.CLOUDFLARE_ENDPOINT);
+        expect(adapter.getOptions().endpoint).toBe(mockEnv.STORAGE_CLOUDFLARE_ENDPOINT);
       });
 
       test("should handle all missing credentials at once", () => {
-        delete Bun.env.CLOUDFLARE_ACCESS_KEY;
-        delete Bun.env.CLOUDFLARE_SECRET_KEY;
-        delete Bun.env.CLOUDFLARE_ENDPOINT;
+        delete Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
+        delete Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
+        delete Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
         // Should throw for the first missing credential (access key)
         expect(() => new CloudflareStorageAdapter()).toThrow(StorageException);
@@ -346,11 +346,11 @@ describe("CloudflareStorageAdapter", () => {
       const adapter = new CloudflareStorageAdapter(undefined);
 
       expect(adapter.getOptions()).toEqual({
-        accessKeyId: mockEnv.CLOUDFLARE_ACCESS_KEY,
-        secretAccessKey: mockEnv.CLOUDFLARE_SECRET_KEY,
-        endpoint: mockEnv.CLOUDFLARE_ENDPOINT,
+        accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
+        secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
+        endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
         bucket: undefined,
-        region: mockEnv.CLOUDFLARE_REGION,
+        region: mockEnv.STORAGE_CLOUDFLARE_REGION,
       });
     });
 
@@ -373,9 +373,9 @@ describe("CloudflareStorageAdapter", () => {
 
   describe("Environment Variable Handling", () => {
     test("should handle whitespace in environment variables", () => {
-      Bun.env.CLOUDFLARE_ACCESS_KEY = "  key-with-spaces  ";
-      Bun.env.CLOUDFLARE_SECRET_KEY = "  secret-with-spaces  ";
-      Bun.env.CLOUDFLARE_ENDPOINT = "  https://endpoint.com  ";
+      Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY = "  key-with-spaces  ";
+      Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY = "  secret-with-spaces  ";
+      Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "  https://endpoint.com  ";
 
       const adapter = new CloudflareStorageAdapter();
 
@@ -397,17 +397,17 @@ describe("CloudflareStorageAdapter", () => {
 
       expect(adapter.getOptions()).toEqual({
         accessKeyId: "constructor-key",
-        secretAccessKey: mockEnv.CLOUDFLARE_SECRET_KEY,
-        endpoint: mockEnv.CLOUDFLARE_ENDPOINT,
+        secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
+        endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
         bucket: undefined,
         region: "NAM",
       });
     });
 
     test("should handle falsy but defined environment variables", () => {
-      Bun.env.CLOUDFLARE_ACCESS_KEY = "";
-      Bun.env.CLOUDFLARE_SECRET_KEY = "0";
-      Bun.env.CLOUDFLARE_ENDPOINT = "false";
+      Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY = "";
+      Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY = "0";
+      Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "false";
 
       expect(() => new CloudflareStorageAdapter()).toThrow(StorageException);
       expect(() => new CloudflareStorageAdapter()).toThrow("access key is required");

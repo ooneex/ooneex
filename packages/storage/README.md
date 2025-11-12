@@ -129,7 +129,7 @@ const storage = new CloudflareStorageAdapter({
 });
 
 // Or using environment variables:
-// CLOUDFLARE_ACCESS_KEY, CLOUDFLARE_SECRET_KEY, CLOUDFLARE_ENDPOINT, CLOUDFLARE_REGION
+// STORAGE_CLOUDFLARE_ACCESS_KEY, STORAGE_CLOUDFLARE_SECRET_KEY, STORAGE_CLOUDFLARE_ENDPOINT, STORAGE_CLOUDFLARE_REGION
 const storage = new CloudflareStorageAdapter();
 
 storage.setBucket('my-bucket');
@@ -141,9 +141,9 @@ storage.setBucket('my-bucket');
 import { CloudflareStorageAdapter } from '@ooneex/storage';
 
 const storage = new CloudflareStorageAdapter({
-  accessKey: process.env.CLOUDFLARE_ACCESS_KEY!,
-  secretKey: process.env.CLOUDFLARE_SECRET_KEY!,
-  endpoint: process.env.CLOUDFLARE_ENDPOINT!,
+  accessKey: process.env.STORAGE_CLOUDFLARE_ACCESS_KEY!,
+  secretKey: process.env.STORAGE_CLOUDFLARE_SECRET_KEY!,
+  endpoint: process.env.STORAGE_CLOUDFLARE_ENDPOINT!,
   region: 'EEUR'
 }).setBucket('media-files');
 
@@ -383,10 +383,10 @@ constructor(options?: {
 ```
 
 **Parameters:**
-- `options.accessKey` - Cloudflare R2 access key (or use `CLOUDFLARE_ACCESS_KEY` env var)
-- `options.secretKey` - Cloudflare R2 secret key (or use `CLOUDFLARE_SECRET_KEY` env var)
-- `options.endpoint` - Cloudflare R2 endpoint URL (or use `CLOUDFLARE_ENDPOINT` env var)
-- `options.region` - Cloudflare R2 region (or use `CLOUDFLARE_REGION` env var)
+- `options.accessKey` - Cloudflare R2 access key (or use `STORAGE_CLOUDFLARE_ACCESS_KEY` env var)
+- `options.secretKey` - Cloudflare R2 secret key (or use `STORAGE_CLOUDFLARE_SECRET_KEY` env var)
+- `options.endpoint` - Cloudflare R2 endpoint URL (or use `STORAGE_CLOUDFLARE_ENDPOINT` env var)
+- `options.region` - Cloudflare R2 region (or use `STORAGE_CLOUDFLARE_REGION` env var)
 
 **Example:**
 ```typescript
@@ -442,10 +442,10 @@ abstract class AbstractStorage implements IStorage {
 
 ### Cloudflare R2 Storage
 
-- `CLOUDFLARE_ACCESS_KEY` - R2 access key
-- `CLOUDFLARE_SECRET_KEY` - R2 secret key
-- `CLOUDFLARE_ENDPOINT` - R2 endpoint URL
-- `CLOUDFLARE_REGION` - R2 region (EEUR, WEUR, APAC, NAM)
+- `STORAGE_CLOUDFLARE_ACCESS_KEY` - R2 access key
+- `STORAGE_CLOUDFLARE_SECRET_KEY` - R2 secret key
+- `STORAGE_CLOUDFLARE_ENDPOINT` - R2 endpoint URL
+- `STORAGE_CLOUDFLARE_REGION` - R2 region (EEUR, WEUR, APAC, NAM)
 
 ## Error Handling
 
@@ -478,10 +478,10 @@ Common error scenarios:
 ```typescript
 // .env file
 FILESYSTEM_STORAGE_PATH=./storage
-CLOUDFLARE_ACCESS_KEY=your-access-key
-CLOUDFLARE_SECRET_KEY=your-secret-key
-CLOUDFLARE_ENDPOINT=https://your-account.r2.cloudflarestorage.com
-CLOUDFLARE_REGION=EEUR
+STORAGE_CLOUDFLARE_ACCESS_KEY=your-access-key
+STORAGE_CLOUDFLARE_SECRET_KEY=your-secret-key
+STORAGE_CLOUDFLARE_ENDPOINT=https://your-account.r2.cloudflarestorage.com
+STORAGE_CLOUDFLARE_REGION=EEUR
 
 // Application code
 const storage = new FilesystemStorage(); // Uses env vars

@@ -17,30 +17,30 @@ export class CloudflareStorageAdapter extends AbstractStorage {
   }) {
     super();
 
-    const accessKey = options?.accessKey || Bun.env.CLOUDFLARE_ACCESS_KEY;
-    const secretKey = options?.secretKey || Bun.env.CLOUDFLARE_SECRET_KEY;
-    const endpoint = options?.endpoint || Bun.env.CLOUDFLARE_ENDPOINT;
+    const accessKey = options?.accessKey || Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
+    const secretKey = options?.secretKey || Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
+    const endpoint = options?.endpoint || Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
     if (!accessKey) {
       throw new StorageException(
-        "Cloudflare access key is required. Please provide an access key either through the constructor options or set the CLOUDFLARE_ACCESS_KEY environment variable.",
+        "Cloudflare access key is required. Please provide an access key either through the constructor options or set the STORAGE_CLOUDFLARE_ACCESS_KEY environment variable.",
       );
     }
     if (!secretKey) {
       throw new StorageException(
-        "Cloudflare secret key is required. Please provide a secret key either through the constructor options or set the CLOUDFLARE_SECRET_KEY environment variable.",
+        "Cloudflare secret key is required. Please provide a secret key either through the constructor options or set the STORAGE_CLOUDFLARE_SECRET_KEY environment variable.",
       );
     }
     if (!endpoint) {
       throw new StorageException(
-        "Cloudflare endpoint is required. Please provide an endpoint either through the constructor options or set the CLOUDFLARE_ENDPOINT environment variable.",
+        "Cloudflare endpoint is required. Please provide an endpoint either through the constructor options or set the STORAGE_CLOUDFLARE_ENDPOINT environment variable.",
       );
     }
 
     this.accessKey = accessKey;
     this.secretKey = secretKey;
     this.endpoint = endpoint;
-    this.region = options?.region || Bun.env.CLOUDFLARE_REGION || "EEUR";
+    this.region = options?.region || Bun.env.STORAGE_CLOUDFLARE_REGION || "EEUR";
   }
 
   public getOptions(): S3Options {

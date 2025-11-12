@@ -23,8 +23,8 @@ describe("PostHogAdapter", () => {
   beforeEach(() => {
     // Store original environment variables
     originalEnv = {
-      POSTHOG_API_KEY: Bun.env.POSTHOG_API_KEY,
-      POSTHOG_HOST: Bun.env.POSTHOG_HOST,
+      ANALYTICS_POSTHOG_API_KEY: Bun.env.ANALYTICS_POSTHOG_API_KEY,
+      ANALYTICS_POSTHOG_HOST: Bun.env.ANALYTICS_POSTHOG_HOST,
     };
 
     // Reset all mocks
@@ -40,43 +40,43 @@ describe("PostHogAdapter", () => {
 
   afterEach(() => {
     // Restore original environment variables
-    if (originalEnv.POSTHOG_API_KEY !== undefined) {
-      Bun.env.POSTHOG_API_KEY = originalEnv.POSTHOG_API_KEY;
+    if (originalEnv.ANALYTICS_POSTHOG_API_KEY !== undefined) {
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = originalEnv.ANALYTICS_POSTHOG_API_KEY;
     } else {
-      delete Bun.env.POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
     }
 
-    if (originalEnv.POSTHOG_HOST !== undefined) {
-      Bun.env.POSTHOG_HOST = originalEnv.POSTHOG_HOST;
+    if (originalEnv.ANALYTICS_POSTHOG_HOST !== undefined) {
+      Bun.env.ANALYTICS_POSTHOG_HOST = originalEnv.ANALYTICS_POSTHOG_HOST;
     } else {
-      delete Bun.env.POSTHOG_HOST;
+      delete Bun.env.ANALYTICS_POSTHOG_HOST;
     }
   });
 
   describe("Constructor", () => {
     test("should throw AnalyticsException when no API key is provided", () => {
-      delete Bun.env.POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
       expect(() => new PostHogAdapter()).toThrow(AnalyticsException);
       expect(() => new PostHogAdapter()).toThrow(
-        "PostHog API key is required. Please provide an API key either through the constructor options or set the POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please provide an API key either through the constructor options or set the ANALYTICS_POSTHOG_API_KEY environment variable.",
       );
     });
 
     test("should throw AnalyticsException when empty API key is provided via options", () => {
-      delete Bun.env.POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
       expect(() => new PostHogAdapter({ apiKey: "" })).toThrow(AnalyticsException);
     });
 
     test("should throw AnalyticsException when undefined API key is provided via options", () => {
-      delete Bun.env.POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
       expect(() => new PostHogAdapter({ apiKey: undefined })).toThrow(AnalyticsException);
     });
 
     test("should create instance successfully with API key from environment", () => {
-      Bun.env.POSTHOG_API_KEY = "test-api-key";
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
 
       const adapter = new PostHogAdapter();
 
@@ -93,7 +93,7 @@ describe("PostHogAdapter", () => {
     });
 
     test("should prioritize options API key over environment variable", () => {
-      Bun.env.POSTHOG_API_KEY = "env-api-key";
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
 
       new PostHogAdapter({ apiKey: "options-api-key" });
 
@@ -119,7 +119,7 @@ describe("PostHogAdapter", () => {
     });
 
     test("should use host from environment when no options host provided", () => {
-      Bun.env.POSTHOG_HOST = "https://env.posthog.com";
+      Bun.env.ANALYTICS_POSTHOG_HOST = "https://env.posthog.com";
 
       new PostHogAdapter({ apiKey: "test-api-key" });
 
@@ -129,7 +129,7 @@ describe("PostHogAdapter", () => {
     });
 
     test("should prioritize options host over environment host", () => {
-      Bun.env.POSTHOG_HOST = "https://env.posthog.com";
+      Bun.env.ANALYTICS_POSTHOG_HOST = "https://env.posthog.com";
       const optionsHost = "https://options.posthog.com";
 
       new PostHogAdapter({ apiKey: "test-api-key", host: optionsHost });
@@ -140,7 +140,7 @@ describe("PostHogAdapter", () => {
     });
 
     test("should not initialize PostHog client when API key comes from environment", () => {
-      Bun.env.POSTHOG_API_KEY = "env-api-key";
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
 
       new PostHogAdapter();
 
@@ -320,7 +320,7 @@ describe("PostHogAdapter", () => {
 
     test("should not throw error when client is null", () => {
       // Create adapter without initializing client (using env API key)
-      Bun.env.POSTHOG_API_KEY = "env-key";
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-key";
       const adapterWithNullClient = new PostHogAdapter();
 
       const captureData: PostHogAdapterCaptureType = {

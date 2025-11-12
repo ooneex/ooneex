@@ -41,10 +41,10 @@ Set the following environment variables in your project:
 
 ```bash
 # Required: Your PostHog API key
-POSTHOG_API_KEY=your_posthog_api_key_here
+ANALYTICS_POSTHOG_API_KEY=your_posthog_api_key_here
 
 # Optional: PostHog host (defaults to https://eu.i.posthog.com)
-POSTHOG_HOST=https://eu.i.posthog.com
+ANALYTICS_POSTHOG_HOST=https://eu.i.posthog.com
 ```
 
 ### Configuration Options
@@ -177,7 +177,7 @@ new PostHogAdapter(options?: { apiKey?: string; host?: string })
 ```
 
 **Parameters:**
-- `options.apiKey` - PostHog API key (optional, can use `POSTHOG_API_KEY` env var)
+- `options.apiKey` - PostHog API key (optional, can use `ANALYTICS_POSTHOG_API_KEY` env var)
 - `options.host` - PostHog host URL (optional, defaults to `https://eu.i.posthog.com`)
 
 **Throws:** `AnalyticsException` if no API key is provided
@@ -278,20 +278,20 @@ try {
 
 ```bash
 # PostHog API Key (required)
-POSTHOG_API_KEY=phc_your_api_key_here
+ANALYTICS_POSTHOG_API_KEY=phc_your_api_key_here
 ```
 
 ### Optional Environment Variables
 
 ```bash
 # PostHog Host (optional, defaults to EU instance)
-POSTHOG_HOST=https://app.posthog.com
+ANALYTICS_POSTHOG_HOST=https://app.posthog.com
 
 # For US instance
-POSTHOG_HOST=https://us.i.posthog.com
+ANALYTICS_POSTHOG_HOST=https://us.i.posthog.com
 
 # For self-hosted instance
-POSTHOG_HOST=https://your-posthog-instance.com
+ANALYTICS_POSTHOG_HOST=https://your-posthog-instance.com
 ```
 
 ## Best Practices
@@ -379,7 +379,7 @@ This package is optimized for **Bun runtime only**. It leverages Bun-specific fe
 
 ```typescript
 // Automatic environment variable access
-const analytics = new PostHogAdapter(); // Uses Bun.env.POSTHOG_API_KEY
+const analytics = new PostHogAdapter(); // Uses Bun.env.ANALYTICS_POSTHOG_API_KEY
 ```
 
 ## License

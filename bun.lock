@@ -136,6 +136,7 @@
       "dependencies": {
         "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
+        "@ooneex/utils": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/types": "workspace:*",

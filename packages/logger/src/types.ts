@@ -2,6 +2,14 @@ import type { IException } from "@ooneex/exception";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import type { LogsEntity } from "./LogsEntity";
 
+export type LoggerClassType =
+  | (new (
+      ...args: unknown[]
+    ) => ILogger)
+  | (new (
+      options?: Bun.SQL.SQLiteOptions,
+    ) => ILogger<LogsEntity>);
+
 export interface ILogger<Data = Record<string, ScalarType>> {
   error: (message: string | IException<ScalarType>, data?: Data) => Promise<void> | void;
   warn: (message: string, data?: Data) => Promise<void> | void;

@@ -43,6 +43,7 @@
       "name": "@ooneex/app",
       "version": "0.0.0",
       "dependencies": {
+        "@ooneex/analytics": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -76,6 +77,7 @@
       "name": "@ooneex/controller",
       "version": "0.0.0",
       "dependencies": {
+        "@ooneex/analytics": "workspace:*",
         "@ooneex/logger": "workspace:*",
       },
       "devDependencies": {

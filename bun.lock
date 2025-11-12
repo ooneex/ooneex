@@ -39,6 +39,18 @@
         "posthog-node": "^5.11.0",
       },
     },
+    "packages/app": {
+      "name": "@ooneex/app",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/logger": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/auth": {
       "name": "@ooneex/auth",
       "version": "0.0.0",
@@ -63,6 +75,12 @@
     "packages/controller": {
       "name": "@ooneex/controller",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/logger": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/database": {
       "name": "@ooneex/database",
@@ -545,6 +563,8 @@
     "@nx/workspace": ["@nx/workspace@22.0.2", "", { "dependencies": { "@nx/devkit": "22.0.2", "@zkochan/js-yaml": "0.0.7", "chalk": "4.1.2", "enquirer": "2.3.6", "nx": "22.0.2", "picomatch": "4.0.2", "semver": "7.7.3", "tslib": "2.8.1", "yargs-parser": "21.1.1" } }, "sha512-wfVE0X5auqVrQus/S3EiZkheX59aR+FAwXGFCFCYGTGakhykcya4/N+tUZCCpDSUziFXR7F8n8cw4ZLBM5zWlA=="],
 
     "@ooneex/analytics": ["@ooneex/analytics@workspace:packages/analytics"],
+
+    "@ooneex/app": ["@ooneex/app@workspace:packages/app"],
 
     "@ooneex/auth": ["@ooneex/auth@workspace:packages/auth"],
 

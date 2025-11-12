@@ -16,6 +16,7 @@ const Configuration: UserConfig = {
       [
         "common",
         "analytics",
+        "app",
         "auth",
         "cache",
         "container",

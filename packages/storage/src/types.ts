@@ -1,5 +1,8 @@
 import type { BunFile, S3File } from "bun";
 
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type StorageClassType = new (...args: any[]) => IStorage;
+
 export interface IStorage {
   setBucket(name: string): this;
   list(): Promise<string[]>;

@@ -15,7 +15,8 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/logger": "workspace:*"
+    "@ooneex/logger": "workspace:*",
+    "@ooneex/analytics": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"

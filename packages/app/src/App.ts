@@ -4,7 +4,7 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { logger, container, analytics, cache } = this.config;
+    const { logger, container, analytics, cache, storage } = this.config;
 
     logger.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
@@ -17,6 +17,10 @@ export class App {
 
     if (cache) {
       container.add(cache, EContainerScope.Singleton);
+    }
+
+    if (storage) {
+      container.add(storage, EContainerScope.Singleton);
     }
   }
 }

@@ -48,6 +48,7 @@
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/types": "workspace:*",
@@ -81,6 +82,7 @@
         "@ooneex/analytics": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/types": "workspace:*",

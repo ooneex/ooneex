@@ -44,6 +44,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
+        "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -78,6 +79,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
+        "@ooneex/cache": "workspace:*",
         "@ooneex/logger": "workspace:*",
       },
       "devDependencies": {

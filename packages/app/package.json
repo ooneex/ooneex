@@ -16,6 +16,7 @@
     "dev": "bun run src/dev.ts"
   },
   "dependencies": {
+    "@ooneex/cache": "workspace:*",
     "@ooneex/analytics": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/container": "workspace:*",

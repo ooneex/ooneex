@@ -811,4 +811,143 @@ describe("Container - Dependency Injection", () => {
       });
     });
   });
+
+  describe("Alias functionality", () => {
+    test("should add and retrieve service by alias", () => {
+      class TestService {
+        public getValue(): string {
+          return "test-value";
+        }
+      }
+
+      container.add(TestService);
+      container.addAlias("testService", TestService);
+
+      const service = container.get<TestService>("testService");
+      expect(service.getValue()).toBe("test-value");
+    });
+
+    test("should throw error for non-existent alias", () => {
+      expect(() => {
+        container.get("nonExistentAlias");
+      }).toThrow("Failed to resolve alias: nonExistentAlias");
+    });
+
+    test("should check if alias exists using has method", () => {
+      class AliasTestService {
+        public process(): string {
+          return "processed";
+        }
+      }
+
+      container.add(AliasTestService);
+      container.addAlias("aliasTest", AliasTestService);
+
+      expect(container.has("aliasTest")).toBe(true);
+      expect(container.has("nonExistentAlias")).toBe(false);
+    });
+
+    test("should check if service exists using has method with constructor", () => {
+      class DirectTestService {
+        public execute(): string {
+          return "executed";
+        }
+      }
+
+      container.add(DirectTestService);
+      expect(container.has(DirectTestService)).toBe(true);
+    });
+
+    test("should remove service using alias with remove method", () => {
+      class RemovableByAliasService {
+        public getData(): string {
+          return "data";
+        }
+      }
+
+      container.add(RemovableByAliasService);
+      container.addAlias("removableAlias", RemovableByAliasService);
+
+      expect(container.has("removableAlias")).toBe(true);
+      container.remove("removableAlias");
+      expect(container.has("removableAlias")).toBe(false);
+    });
+
+    test("should remove service using constructor with remove method", () => {
+      class DirectRemovableService {
+        public getInfo(): string {
+          return "info";
+        }
+      }
+
+      container.add(DirectRemovableService);
+      expect(container.has(DirectRemovableService)).toBe(true);
+      container.remove(DirectRemovableService);
+      expect(container.has(DirectRemovableService)).toBe(false);
+    });
+
+    test("should handle alias resolution in has method for non-existent alias", () => {
+      expect(container.has("nonExistentAlias")).toBe(false);
+    });
+
+    test("should throw error when resolving non-existent alias in get method", () => {
+      expect(() => {
+        container.get("missingAlias");
+      }).toThrow("Failed to resolve alias: missingAlias");
+    });
+
+    test("should throw error when resolving non-existent alias in remove method", () => {
+      expect(() => {
+        container.remove("missingAliasForRemoval");
+      }).toThrow("Failed to resolve alias: missingAliasForRemoval");
+    });
+
+    test("should allow multiple aliases for the same service", () => {
+      class MultiAliasService {
+        public performAction(): string {
+          return "action-performed";
+        }
+      }
+
+      container.add(MultiAliasService);
+      container.addAlias("firstAlias", MultiAliasService);
+      container.addAlias("secondAlias", MultiAliasService);
+
+      const service1 = container.get<MultiAliasService>("firstAlias");
+      const service2 = container.get<MultiAliasService>("secondAlias");
+      const service3 = container.get<MultiAliasService>(MultiAliasService);
+
+      expect(service1.performAction()).toBe("action-performed");
+      expect(service2.performAction()).toBe("action-performed");
+      expect(service3.performAction()).toBe("action-performed");
+
+      // All should be the same instance (singleton scope)
+      expect(service1).toBe(service2);
+      expect(service2).toBe(service3);
+    });
+
+    test("should work with different scopes through aliases", () => {
+      class TransientAliasService {
+        private static instanceCount = 0;
+        public readonly instanceId: number;
+
+        constructor() {
+          TransientAliasService.instanceCount++;
+          this.instanceId = TransientAliasService.instanceCount;
+        }
+
+        public getId(): number {
+          return this.instanceId;
+        }
+      }
+
+      container.add(TransientAliasService, EContainerScope.Transient);
+      container.addAlias("transientAlias", TransientAliasService);
+
+      const instance1 = container.get<TransientAliasService>("transientAlias");
+      const instance2 = container.get<TransientAliasService>("transientAlias");
+
+      expect(instance1.getId()).not.toBe(instance2.getId());
+    });
+  });
 });

@@ -13,14 +13,17 @@ export class App {
 
     if (analytics) {
       container.add(analytics, EContainerScope.Singleton);
+      container.addAlias("analytics", analytics);
     }
 
     if (cache) {
       container.add(cache, EContainerScope.Singleton);
+      container.addAlias("cache", cache);
     }
 
     if (storage) {
       container.add(storage, EContainerScope.Singleton);
+      container.addAlias("storage", storage);
     }
   }
 }

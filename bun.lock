@@ -46,6 +46,7 @@
         "@ooneex/analytics": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
+        "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/storage": "workspace:*",
@@ -81,6 +82,7 @@
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/cache": "workspace:*",
+        "@ooneex/database": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },

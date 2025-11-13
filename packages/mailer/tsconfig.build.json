@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowUmdGlobalAccess": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "ES2022",

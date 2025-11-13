@@ -1,4 +1,5 @@
 import type { IAnalytics } from "@ooneex/analytics";
+import type { IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
 import type { IDatabase } from "@ooneex/database";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
@@ -11,4 +12,7 @@ export type ActionType = {
   cache?: ICache;
   storage?: IStorage;
   database?: IDatabase;
+  app: {
+    env: IAppEnv;
+  };
 };

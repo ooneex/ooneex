@@ -76,7 +76,7 @@ export class LogsDatabase implements IDatabase {
           port INTEGER,
           subdomain TEXT,
           domain TEXT,
-          hostname TEXT,
+          hostname TEXT
         )
       `;
 

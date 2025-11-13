@@ -1,4 +1,5 @@
 import type { AnalyticsClassType } from "@ooneex/analytics";
+import type { AppEnvClassType } from "@ooneex/app-env";
 import type { CacheClassType } from "@ooneex/cache";
 import type { IContainer } from "@ooneex/container";
 import type { IDatabase, ITypeormDatabaseAdapter } from "@ooneex/database";
@@ -12,4 +13,5 @@ export type AppConfigType = {
   cache?: CacheClassType;
   storage?: StorageClassType;
   database?: IDatabase | ITypeormDatabaseAdapter;
+  env: AppEnvClassType;
 };

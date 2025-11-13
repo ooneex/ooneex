@@ -1,4 +1,5 @@
 import { PostHogAdapter } from "@ooneex/analytics";
+import { AppEnv } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
 import { container } from "@ooneex/container";
 import { TypeormPgDatabaseAdapter } from "@ooneex/database";
@@ -17,4 +18,5 @@ new App({
   cache: RedisCacheAdapter,
   storage: CloudflareStorageAdapter,
   database,
+  env: AppEnv,
 });

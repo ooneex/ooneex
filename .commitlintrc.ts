@@ -36,6 +36,7 @@ const Configuration: UserConfig = {
         "mailer",
         "middleware",
         "migrations",
+        "permission",
         "queue",
         "rate-limit",
         "repository",

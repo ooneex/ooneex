@@ -3,6 +3,7 @@ import type { IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
 import type { IDatabase } from "@ooneex/database";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
+import type { IMailer } from "@ooneex/mailer";
 import type { IStorage } from "@ooneex/storage";
 import type { ScalarType } from "@ooneex/types";
 
@@ -12,6 +13,7 @@ export type ActionType = {
   cache?: ICache;
   storage?: IStorage;
   database?: IDatabase;
+  mailer?: IMailer;
   app: {
     env: IAppEnv;
   };

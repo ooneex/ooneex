@@ -20,6 +20,7 @@
     "@ooneex/storage": "workspace:*",
     "@ooneex/cache": "workspace:*",
     "@ooneex/logger": "workspace:*",
+    "@ooneex/mailer": "workspace:*",
     "@ooneex/analytics": "workspace:*"
   },
   "devDependencies": {

@@ -1,9 +1,14 @@
-import type { ENV_VALUES } from "./constants";
-
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type AppEnvClassType = new (...args: any[]) => IAppEnv;
 
-export type EnvType = (typeof ENV_VALUES)[number];
+export enum Environment {
+  LOCAL = "local",
+  DEVELOPMENT = "development",
+  STAGING = "staging",
+  PRODUCTION = "production",
+}
+
+export type EnvType = `${Environment}`;
 
 export interface IAppEnv {
   readonly env: EnvType;

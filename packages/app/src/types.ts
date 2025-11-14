@@ -2,6 +2,7 @@ import type { AnalyticsClassType } from "@ooneex/analytics";
 import type { IAppEnv } from "@ooneex/app-env";
 import type { CacheClassType } from "@ooneex/cache";
 import type { IContainer } from "@ooneex/container";
+import type { CronClassType } from "@ooneex/cron";
 import type { IDatabase, ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
@@ -14,6 +15,7 @@ export type AppConfigType = {
   cache?: CacheClassType;
   storage?: StorageClassType;
   mailer?: MailerClassType;
+  cronJobs?: CronClassType[];
   database?: IDatabase | ITypeormDatabaseAdapter;
   env: IAppEnv;
 };

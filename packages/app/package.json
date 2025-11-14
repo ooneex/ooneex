@@ -22,6 +22,7 @@
     "@ooneex/cache": "workspace:*",
     "@ooneex/analytics": "workspace:*",
     "@ooneex/exception": "workspace:*",
+    "@ooneex/cron": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/mailer": "workspace:*",
     "@ooneex/logger": "workspace:*"

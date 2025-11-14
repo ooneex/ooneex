@@ -4,7 +4,7 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { logger, container, analytics, cache, storage, database, env } = this.config;
+    const { logger, container, analytics, cache, storage, database, env, mailer } = this.config;
 
     logger.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
@@ -12,8 +12,7 @@ export class App {
     container.addConstant("logger", loggerFunc(logger, container));
 
     if (env) {
-      container.add(env, EContainerScope.Singleton);
-      container.addAlias("app.env", env);
+      container.addConstant("app.env", env);
     }
 
     if (analytics) {
@@ -29,6 +28,11 @@ export class App {
     if (storage) {
       container.add(storage, EContainerScope.Singleton);
       container.addAlias("storage", storage);
+    }
+
+    if (mailer) {
+      container.add(mailer, EContainerScope.Singleton);
+      container.addAlias("mailer", mailer);
     }
 
     if (database) {

@@ -23,6 +23,7 @@
     "@ooneex/analytics": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/container": "workspace:*",
+    "@ooneex/mailer": "workspace:*",
     "@ooneex/logger": "workspace:*"
   },
   "devDependencies": {

@@ -47,9 +47,11 @@
         "@ooneex/app-env": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
+        "@ooneex/cron": "workspace:*",
         "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/mailer": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {
@@ -94,10 +96,19 @@
         "@ooneex/cache": "workspace:*",
         "@ooneex/database": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/mailer": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/types": "workspace:*",
+      },
+    },
+    "packages/cron": {
+      "name": "@ooneex/cron",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
       },
     },
     "packages/database": {
@@ -182,16 +193,15 @@
       "name": "@ooneex/mailer",
       "version": "0.0.0",
       "dependencies": {
-        "nodemailer": "^7.0.10",
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
         "resend": "^6.4.2",
         "server": "react-dom/server",
       },
       "devDependencies": {
-        "@ooneex/exception": "workspace:*",
-        "@ooneex/http-status": "workspace:*",
-        "@ooneex/types": "workspace:*",
         "@types/nodemailer": "^7.0.3",
         "@types/react-dom": "^19.2.3",
+        "nodemailer": "^7.0.10",
       },
     },
     "packages/middleware": {
@@ -667,6 +677,8 @@
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
 
     "@ooneex/controller": ["@ooneex/controller@workspace:packages/controller"],
+
+    "@ooneex/cron": ["@ooneex/cron@workspace:packages/cron"],
 
     "@ooneex/database": ["@ooneex/database@workspace:packages/database"],
 

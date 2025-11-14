@@ -22,6 +22,7 @@ const Configuration: UserConfig = {
         "cache",
         "container",
         "controller",
+        "cron",
         "database",
         "exception",
         "fetcher",

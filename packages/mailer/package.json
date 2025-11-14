@@ -23,8 +23,7 @@
   "devDependencies": {
     "nodemailer": "^7.0.10",
     "@types/nodemailer": "^7.0.3",
-    "@types/react-dom": "^19.2.3",
-    "@ooneex/types": "workspace:*"
+    "@types/react-dom": "^19.2.3"
   },
   "peerDependencies": {},
   "files": [

@@ -1,5 +1,3 @@
-import type { ScalarType } from "@ooneex/types";
-
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type MailerClassType = new (...args: any[]) => IMailer;
 
@@ -8,7 +6,6 @@ export interface IMailer {
     to: string[];
     subject: string;
     content: React.ReactNode;
-    params?: Record<string, ScalarType>;
     from?: { name: string; address: string };
   }) => Promise<void>;
 }

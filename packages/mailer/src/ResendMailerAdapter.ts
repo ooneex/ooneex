@@ -1,4 +1,3 @@
-import type { ScalarType } from "@ooneex/types";
 import { renderToString } from "react-dom/server";
 import { Resend } from "resend";
 import { MailerException } from "./MailerException";
@@ -27,7 +26,6 @@ export class ResendMailerAdapter implements IMailer {
     to: string[];
     subject: string;
     content: React.ReactNode;
-    params?: Record<string, ScalarType>;
     from?: { name: string; address: string };
   }): Promise<void> {
     const senderName = config.from?.name || this.from?.name || "";
@@ -51,7 +49,7 @@ export class ResendMailerAdapter implements IMailer {
       to: config.to,
       from: `${senderName} <${senderAddress}>`,
       subject: `${config.subject}`,
-      html: renderToString(config.content, config.params),
+      html: renderToString(config.content),
     });
   }
 }

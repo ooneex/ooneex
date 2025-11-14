@@ -7,9 +7,8 @@ export type EnvType = (typeof ENV_VALUES)[number];
 
 export interface IAppEnv {
   readonly env: EnvType;
-
-  isLocal: () => boolean;
-  isDevelopment: () => boolean;
-  isStaging: () => boolean;
-  isProduction: () => boolean;
+  readonly isLocal: boolean;
+  readonly isDevelopment: boolean;
+  readonly isStaging: boolean;
+  readonly isProduction: boolean;
 }

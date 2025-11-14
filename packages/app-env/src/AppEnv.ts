@@ -3,6 +3,10 @@ import type { EnvType, IAppEnv } from "./types";
 
 export class AppEnv implements IAppEnv {
   public readonly env: EnvType;
+  public readonly isLocal: boolean;
+  public readonly isDevelopment: boolean;
+  public readonly isStaging: boolean;
+  public readonly isProduction: boolean;
 
   public constructor() {
     this.env = Bun.env.APP_ENV?.trim() as EnvType;
@@ -10,21 +14,10 @@ export class AppEnv implements IAppEnv {
     if (!this.env) {
       throw new AppEnvException("APP_ENV is not set");
     }
-  }
 
-  public isLocal(): boolean {
-    return this.env === "local";
-  }
-
-  public isDevelopment(): boolean {
-    return this.env === "development";
-  }
-
-  public isStaging(): boolean {
-    return this.env === "staging";
-  }
-
-  public isProduction(): boolean {
-    return this.env === "production";
+    this.isLocal = this.env === "local";
+    this.isDevelopment = this.env === "development";
+    this.isStaging = this.env === "staging";
+    this.isProduction = this.env === "production";
   }
 }

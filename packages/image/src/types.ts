@@ -1,4 +1,5 @@
 import type { IStatus } from "@ooneex/status";
+import type { ITag } from "@ooneex/tag";
 import type { IBase, ScalarType } from "@ooneex/types";
 
 export type ImageFormatType =
@@ -31,7 +32,6 @@ export type ImageMimeType =
   | "image/heif";
 
 export interface IImage extends IBase {
-  id: string;
   url: string;
   width?: number;
   height?: number;
@@ -43,5 +43,5 @@ export interface IImage extends IBase {
   size?: number;
   metadata?: Record<string, ScalarType>;
   status?: IStatus;
-  tags?: string[];
+  tags?: ITag[];
 }

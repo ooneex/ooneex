@@ -1,16 +1,3 @@
-export enum EStatus {
-  IN_REVIEW = "inReview",
-  REVIEWED = "reviewed",
-  DONE = "done",
-  DELETE = "delete",
-  PENDING = "pending",
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  ARCHIVED = "archived",
-}
-
-export type StatusType = `${EStatus}`;
-
 type HexDigitType =
   | "0"
   | "1"

@@ -1,4 +1,5 @@
 import type { IColor } from "@ooneex/color";
+import type { IBase } from "@ooneex/types";
 
 export enum EStatus {
   IN_REVIEW = "inReview",
@@ -13,7 +14,7 @@ export enum EStatus {
 
 export type StatusType = `${EStatus}`;
 
-export interface IStatus {
+export interface IStatus extends IBase {
   status: StatusType;
   color?: IColor;
   description?: string;

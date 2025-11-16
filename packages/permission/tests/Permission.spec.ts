@@ -244,7 +244,7 @@ describe("Permission", () => {
         name: "Test User",
         lastName: "User",
         firstName: "Test",
-        role: ERole.USER,
+        roles: [ERole.USER],
       };
     });
 
@@ -256,7 +256,7 @@ describe("Permission", () => {
 
     describe("SYSTEM Role", () => {
       test("should grant manage all permissions", () => {
-        mockUser.role = ERole.SYSTEM;
+        mockUser.roles = [ERole.SYSTEM];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -270,7 +270,7 @@ describe("Permission", () => {
 
     describe("SUPER_ADMIN Role", () => {
       test("should grant manage all permissions", () => {
-        mockUser.role = ERole.SUPER_ADMIN;
+        mockUser.roles = [ERole.SUPER_ADMIN];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -284,7 +284,7 @@ describe("Permission", () => {
 
     describe("ADMIN Role", () => {
       test("should grant manage all permissions", () => {
-        mockUser.role = ERole.ADMIN;
+        mockUser.roles = [ERole.ADMIN];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -298,7 +298,7 @@ describe("Permission", () => {
 
     describe("USER Role", () => {
       test("should grant read and update on own user entities", () => {
-        mockUser.role = ERole.USER;
+        mockUser.roles = [ERole.USER];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -317,7 +317,7 @@ describe("Permission", () => {
 
     describe("MEMBER Role", () => {
       test("should grant read and update on own user entities", () => {
-        mockUser.role = ERole.MEMBER;
+        mockUser.roles = [ERole.MEMBER];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -335,7 +335,7 @@ describe("Permission", () => {
 
     describe("SUBSCRIBER Role", () => {
       test("should grant read only on own user entities", () => {
-        mockUser.role = ERole.SUBSCRIBER;
+        mockUser.roles = [ERole.SUBSCRIBER];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -351,7 +351,7 @@ describe("Permission", () => {
 
     describe("TRIAL_USER Role", () => {
       test("should grant read only on limited user entities", () => {
-        mockUser.role = ERole.TRIAL_USER;
+        mockUser.roles = [ERole.TRIAL_USER];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -366,7 +366,7 @@ describe("Permission", () => {
 
     describe("SUSPENDED Role", () => {
       test("should grant read only on own user entities", () => {
-        mockUser.role = ERole.SUSPENDED;
+        mockUser.roles = [ERole.SUSPENDED];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -381,7 +381,7 @@ describe("Permission", () => {
 
     describe("GUEST Role", () => {
       test("should grant read only on public user entities", () => {
-        mockUser.role = ERole.GUEST;
+        mockUser.roles = [ERole.GUEST];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -396,7 +396,7 @@ describe("Permission", () => {
 
     describe("Unknown Role", () => {
       test("should not grant any specific permissions for unknown roles", () => {
-        mockUser.role = "ROLE_UNKNOWN" as ERole;
+        mockUser.roles = ["ROLE_UNKNOWN" as ERole];
 
         permission.setCommonPermissions(mockUser).build();
 
@@ -408,7 +408,7 @@ describe("Permission", () => {
     });
 
     test("should allow chaining with other permission methods", () => {
-      mockUser.role = ERole.USER;
+      mockUser.roles = [ERole.USER];
 
       const result = permission.setCommonPermissions(mockUser).allow("read", "System").forbid("delete", "all").build();
 
@@ -416,6 +416,66 @@ describe("Permission", () => {
       expect(permission.can("read", "User")).toBe(true);
       expect(permission.can("read", "System")).toBe(true);
       expect(permission.can("delete", "User")).toBe(false);
+    });
+
+    describe("Multiple Roles", () => {
+      test("should handle user with multiple roles correctly", () => {
+        mockUser.roles = [ERole.USER, ERole.SUBSCRIBER];
+
+        permission.setCommonPermissions(mockUser).build();
+
+        // Should get permissions from both USER and SUBSCRIBER roles
+        expect(permission.can("read", "User")).toBe(true);
+        expect(permission.can("update", "User")).toBe(true); // From USER role
+        expect(permission.can("read", "UserEntity")).toBe(true);
+        expect(permission.can("update", "UserEntity")).toBe(true); // From USER role
+        expect(permission.can("delete", "User")).toBe(false);
+      });
+
+      test("should prioritize admin roles when mixed with regular roles", () => {
+        mockUser.roles = [ERole.USER, ERole.ADMIN];
+
+        permission.setCommonPermissions(mockUser).build();
+
+        // Should get admin permissions (manage all)
+        expect(permission.can("manage", "all")).toBe(true);
+        expect(permission.can("delete", "User")).toBe(true);
+        expect(permission.can("create", "System")).toBe(true);
+      });
+
+      test("should combine permissions from multiple non-admin roles", () => {
+        mockUser.roles = [ERole.MEMBER, ERole.TRIAL_USER];
+
+        permission.setCommonPermissions(mockUser).build();
+
+        // Should get combined permissions
+        expect(permission.can("read", "User")).toBe(true);
+        expect(permission.can("update", "User")).toBe(true); // From MEMBER role
+        expect(permission.can("read", "AuthUser")).toBe(true); // From both roles
+        expect(permission.can("read", "UserEntity")).toBe(true); // From MEMBER role
+        expect(permission.can("delete", "User")).toBe(false);
+      });
+
+      test("should handle empty roles array gracefully", () => {
+        mockUser.roles = [];
+
+        permission.setCommonPermissions(mockUser).build();
+
+        // Should not grant any specific permissions
+        expect(permission.can("manage", "all")).toBe(false);
+        expect(permission.can("read", "User")).toBe(false);
+        expect(permission.can("update", "User")).toBe(false);
+      });
+
+      test("should handle system role mixed with other roles", () => {
+        mockUser.roles = [ERole.SYSTEM, ERole.GUEST];
+
+        permission.setCommonPermissions(mockUser).build();
+
+        // SYSTEM role should grant manage all permissions
+        expect(permission.can("manage", "all")).toBe(true);
+        expect(permission.can("delete", "System")).toBe(true);
+      });
     });
   });
 
@@ -431,7 +491,7 @@ describe("Permission", () => {
         name: "Admin User",
         lastName: "User",
         firstName: "Admin",
-        role: ERole.ADMIN,
+        roles: [ERole.ADMIN],
       };
 
       regularUser = {
@@ -440,7 +500,7 @@ describe("Permission", () => {
         name: "Regular User",
         lastName: "User",
         firstName: "Regular",
-        role: ERole.USER,
+        roles: [ERole.USER],
       };
 
       guestUser = {
@@ -449,7 +509,7 @@ describe("Permission", () => {
         name: "Guest User",
         lastName: "User",
         firstName: "Guest",
-        role: ERole.GUEST,
+        roles: [ERole.GUEST],
       };
     });
 
@@ -597,7 +657,7 @@ describe("Permission", () => {
         name: "Chain User",
         lastName: "User",
         firstName: "Chain",
-        role: ERole.USER,
+        roles: [ERole.USER],
       };
 
       const result = permission

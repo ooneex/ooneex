@@ -50,52 +50,35 @@ export class Permission<S extends string = string> {
   }
 
   public setCommonPermissions(user: IUser): this {
-    const { role } = user;
+    const { roles } = user;
 
-    if (role === ERole.SYSTEM) {
+    // Check for highest privilege roles first
+    if (roles.includes(ERole.SYSTEM) || roles.includes(ERole.SUPER_ADMIN) || roles.includes(ERole.ADMIN)) {
       this.allow("manage", "all");
       return this;
     }
 
-    if (role === ERole.SUPER_ADMIN) {
-      this.allow("manage", "all");
-      return this;
-    }
+    // Apply permissions for each role
+    for (const role of roles) {
+      if (role === ERole.USER || role === ERole.MEMBER) {
+        this.allow(["read", "update"], ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
+      }
 
-    if (role === ERole.ADMIN) {
-      this.allow("manage", "all");
-      return this;
-    }
+      if (role === ERole.SUBSCRIBER) {
+        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
+      }
 
-    if (role === ERole.USER) {
-      this.allow(["read", "update"], ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      return this;
-    }
+      if (role === ERole.TRIAL_USER) {
+        this.allow("read", ["User", "AuthUser"], { id: user.id });
+      }
 
-    // Member and subscriber roles
-    if (role === ERole.MEMBER) {
-      this.allow(["read", "update"], ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
+      if (role === ERole.SUSPENDED) {
+        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
+      }
 
-      return this;
-    }
-    if (role === ERole.SUBSCRIBER) {
-      this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      return this;
-    }
-
-    if (role === ERole.TRIAL_USER) {
-      this.allow("read", ["User", "AuthUser"], { id: user.id });
-      return this;
-    }
-
-    if (role === ERole.SUSPENDED) {
-      this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      return this;
-    }
-
-    if (role === ERole.GUEST) {
-      this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { public: true });
-      return this;
+      if (role === ERole.GUEST) {
+        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { public: true });
+      }
     }
 
     return this;

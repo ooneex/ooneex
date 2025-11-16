@@ -21,6 +21,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "nanoid": "^5.1.6",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.27"

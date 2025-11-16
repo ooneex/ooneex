@@ -80,6 +80,13 @@
         "@ooneex/http-status": "workspace:*",
       },
     },
+    "packages/color": {
+      "name": "@ooneex/color",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/container": {
       "name": "@ooneex/container",
       "version": "0.0.0",
@@ -113,6 +120,10 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
       },
+    },
+    "packages/currencies": {
+      "name": "@ooneex/currencies",
+      "version": "0.0.0",
     },
     "packages/database": {
       "name": "@ooneex/database",
@@ -179,6 +190,15 @@
     "packages/http-status": {
       "name": "@ooneex/http-status",
       "version": "0.0.0",
+    },
+    "packages/image": {
+      "name": "@ooneex/image",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/logger": {
       "name": "@ooneex/logger",
@@ -251,12 +271,40 @@
       "name": "@ooneex/socket",
       "version": "0.0.0",
     },
+    "packages/status": {
+      "name": "@ooneex/status",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/color": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/storage": {
       "name": "@ooneex/storage",
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+      },
+    },
+    "packages/subscription": {
+      "name": "@ooneex/subscription",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/currencies": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/image": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
+    },
+    "packages/tag": {
+      "name": "@ooneex/tag",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/color": "workspace:*",
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/translation": {
@@ -286,6 +334,9 @@
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/role": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/utils": {
@@ -690,11 +741,15 @@
 
     "@ooneex/cache": ["@ooneex/cache@workspace:packages/cache"],
 
+    "@ooneex/color": ["@ooneex/color@workspace:packages/color"],
+
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
 
     "@ooneex/controller": ["@ooneex/controller@workspace:packages/controller"],
 
     "@ooneex/cron": ["@ooneex/cron@workspace:packages/cron"],
+
+    "@ooneex/currencies": ["@ooneex/currencies@workspace:packages/currencies"],
 
     "@ooneex/database": ["@ooneex/database@workspace:packages/database"],
 
@@ -713,6 +768,8 @@
     "@ooneex/http-response": ["@ooneex/http-response@workspace:packages/http-response"],
 
     "@ooneex/http-status": ["@ooneex/http-status@workspace:packages/http-status"],
+
+    "@ooneex/image": ["@ooneex/image@workspace:packages/image"],
 
     "@ooneex/logger": ["@ooneex/logger@workspace:packages/logger"],
 
@@ -738,7 +795,13 @@
 
     "@ooneex/socket": ["@ooneex/socket@workspace:packages/socket"],
 
+    "@ooneex/status": ["@ooneex/status@workspace:packages/status"],
+
     "@ooneex/storage": ["@ooneex/storage@workspace:packages/storage"],
+
+    "@ooneex/subscription": ["@ooneex/subscription@workspace:packages/subscription"],
+
+    "@ooneex/tag": ["@ooneex/tag@workspace:packages/tag"],
 
     "@ooneex/translation": ["@ooneex/translation@workspace:packages/translation"],
 

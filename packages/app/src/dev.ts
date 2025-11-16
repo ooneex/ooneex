@@ -5,6 +5,7 @@ import { container } from "@ooneex/container";
 import { TypeormPgDatabaseAdapter } from "@ooneex/database";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
 import { NodeMailerAdapter, ResendMailerAdapter } from "@ooneex/mailer";
+import { Permission } from "@ooneex/permission";
 import { CloudflareStorageAdapter } from "@ooneex/storage";
 import { App } from "./App";
 
@@ -20,6 +21,7 @@ new App({
   analytics: PostHogAdapter,
   cache: RedisCacheAdapter,
   storage: CloudflareStorageAdapter,
+  permission: Permission,
   mailer: appEnv.isLocal ? NodeMailerAdapter : ResendMailerAdapter,
   database,
   env: appEnv,

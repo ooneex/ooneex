@@ -25,6 +25,7 @@
     "@ooneex/cron": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/mailer": "workspace:*",
+    "@ooneex/permission": "workspace:*",
     "@ooneex/logger": "workspace:*"
   },
   "devDependencies": {

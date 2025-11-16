@@ -4,7 +4,7 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { logger, container, analytics, cache, storage, database, env, mailer, cronJobs } = this.config;
+    const { logger, container, analytics, cache, storage, database, env, mailer, cronJobs, permission } = this.config;
 
     logger.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
@@ -23,6 +23,11 @@ export class App {
     if (cache) {
       container.add(cache, EContainerScope.Singleton);
       container.addAlias("cache", cache);
+    }
+
+    if (permission) {
+      container.add(permission, EContainerScope.Singleton);
+      container.addAlias("permission", permission);
     }
 
     if (storage) {

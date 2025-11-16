@@ -4,13 +4,13 @@ export type CharsetType = "ISO-8859-1" | "7-BIT" | "UTF-8" | "UTF-16" | "US-ASCI
 export type ScalarType = boolean | number | bigint | string;
 
 export interface IBase {
+  id: string;
   isLocked?: boolean;
   lockedAt?: Date;
   isBlocked?: boolean;
   blockedAt?: Date;
   blockReason?: string;
   isPublic?: boolean;
-  isActive?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

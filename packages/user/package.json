@@ -17,7 +17,9 @@
   "dependencies": {
     "@ooneex/role": "workspace:*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {},
   "files": [
     "dist/**/*.js",

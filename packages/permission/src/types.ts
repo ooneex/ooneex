@@ -1,3 +1,4 @@
+import type { MongoQuery } from "@casl/ability";
 import type { IUser } from "@ooneex/user";
 
 export enum EPermissionAction {
@@ -73,16 +74,19 @@ export enum EPermissionAction {
 export type PermissionActionType = `${EPermissionAction}`;
 export type Subjects = "UserEntity" | "AuthUserEntity" | "AuthUser" | "SystemEntity" | "System" | "User" | "all";
 
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type PermissionClassType = new (...args: any[]) => IPermission;
+
 export interface IPermission<S extends string = string> {
   allow: (
     action: PermissionActionType | PermissionActionType[],
     subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: import("@casl/ability").MongoQuery<Record<string, unknown>>,
+    conditions?: MongoQuery<Record<string, unknown>>,
   ) => IPermission<S>;
   forbid: (
     action: PermissionActionType | PermissionActionType[],
     subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: import("@casl/ability").MongoQuery<Record<string, unknown>>,
+    conditions?: MongoQuery<Record<string, unknown>>,
   ) => IPermission<S>;
   build: () => IPermission<S>;
   can: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;

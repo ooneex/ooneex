@@ -53,6 +53,7 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/mailer": "workspace:*",
+        "@ooneex/permission": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {
@@ -98,6 +99,7 @@
         "@ooneex/database": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/mailer": "workspace:*",
+        "@ooneex/permission": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },
       "devDependencies": {

@@ -1,3 +1,5 @@
+import type { IBase } from "@ooneex/types";
+
 type HexDigitType =
   | "0"
   | "1"
@@ -37,7 +39,7 @@ export type HSLAType = `hsla(${number}, ${number}%, ${number}%, ${number})`;
 
 export type ColorType = HexaType | RGBType | RGBAType | HSLType | HSLAType;
 
-export interface IColor {
+export interface IColor extends IBase {
   hex?: HexaType;
   rgb?: RGBType;
   rgba?: RGBAType;

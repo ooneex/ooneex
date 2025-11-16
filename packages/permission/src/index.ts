@@ -1,3 +1,3 @@
-export * from "./constants";
-export * from "./Permission";
+export { Permission } from "./Permission";
+export { PermissionException } from "./PermissionException";
 export * from "./types";

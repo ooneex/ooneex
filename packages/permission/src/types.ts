@@ -1,4 +1,5 @@
-// Common permission actions
+import type { IUser } from "@ooneex/user";
+
 export enum EPermissionAction {
   CREATE = "create",
   READ = "read",
@@ -24,6 +25,7 @@ export enum EPermissionAction {
   COMMENT = "comment",
   RATE = "rate",
   LIKE = "like",
+  DISLIKE = "dislike",
   FOLLOW = "follow",
   UNFOLLOW = "unfollow",
   SUBSCRIBE = "subscribe",
@@ -64,6 +66,26 @@ export enum EPermissionAction {
   RESUME = "resume",
   SCHEDULE = "schedule",
   UNSCHEDULE = "unschedule",
+  JOIN = "join",
+  HIDE = "hide",
 }
 
 export type PermissionActionType = `${EPermissionAction}`;
+export type Subjects = "UserEntity" | "AuthUserEntity" | "AuthUser" | "SystemEntity" | "System" | "User" | "all";
+
+export interface IPermission<S extends string = string> {
+  allow: (
+    action: PermissionActionType | PermissionActionType[],
+    subject: (Subjects | S) | (Subjects | S)[],
+    conditions?: import("@casl/ability").MongoQuery<Record<string, unknown>>,
+  ) => IPermission<S>;
+  forbid: (
+    action: PermissionActionType | PermissionActionType[],
+    subject: (Subjects | S) | (Subjects | S)[],
+    conditions?: import("@casl/ability").MongoQuery<Record<string, unknown>>,
+  ) => IPermission<S>;
+  build: () => IPermission<S>;
+  can: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
+  cannot: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
+  setCommonPermissions: (user: IUser) => IPermission<S>;
+}

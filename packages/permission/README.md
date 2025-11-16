@@ -1,6 +1,6 @@
 # @ooneex/permission
 
-A flexible permission system for TypeScript/JavaScript applications, inspired by CanCan. This package provides both a modern permission-based authorization system and maintains backward compatibility with the legacy role-based system.
+A flexible permission system for TypeScript/JavaScript applications, built on top of CASL with full type safety. This package provides both a modern permission-based authorization system with TypeScript support and maintains backward compatibility with the legacy role-based system.
 
 ## Installation
 
@@ -11,6 +11,44 @@ bun add @ooneex/permission
 ```
 
 ## Quick Start
+
+### Using the Type-Safe Permission Class
+
+```typescript
+import { Permission, EPermissionAction, type IUser } from '@ooneex/permission';
+import { ERole } from '@ooneex/role';
+
+// Create a permission instance
+const permission = new Permission();
+
+// Define a user
+const user: IUser = {
+  id: "user-123",
+  email: "john@example.com",
+  name: "John Doe",
+  firstName: "John",
+  lastName: "Doe",
+  role: ERole.USER
+};
+
+// Set common permissions based on user role
+permission
+  .setCommonPermissions(user)
+  .build();
+
+// Check permissions with type safety
+console.log(permission.can('read', 'UserEntity')); // true
+console.log(permission.can('delete', 'UserEntity')); // false
+console.log(permission.cannot('manage', 'SystemEntity')); // true
+
+// Use type-safe helper methods with conditions
+permission
+  .allowUserEntity('update', { id: user.id })
+  .forbidUserEntity('delete', { role: ERole.SUPER_ADMIN })
+  .build();
+```
+
+### Legacy Quick Start
 
 ```typescript
 import { allow, can, cannot, authorize } from '@ooneex/permission';
@@ -43,7 +81,98 @@ authorize(user, 'view', post); // OK
 
 ## API Reference
 
-### Core Functions
+### Type-Safe Permission System
+
+The modern Permission class provides full TypeScript support with CASL integration:
+
+#### `Permission` Class
+
+```typescript
+import { Permission, EPermissionAction } from '@ooneex/permission';
+
+const permission = new Permission();
+```
+
+#### Core Methods
+
+- **`allow(action, subject, conditions?)`**: Grant permissions with type safety
+- **`forbid(action, subject, conditions?)`**: Deny permissions with type safety
+- **`build()`**: Build the permission rules (required before checking permissions)
+- **`can(action, subject, field?)`**: Check if action is allowed
+- **`cannot(action, subject, field?)`**: Check if action is denied
+- **`canWithObject(action, object)`**: Check permissions against an actual object
+- **`setCommonPermissions(user)`**: Set role-based permissions automatically
+
+#### Type-Safe Helper Methods
+
+The Permission class provides type-safe helper methods for each entity:
+
+```typescript
+// UserEntity helpers
+permission.allowUserEntity('read', { id: 'user-123' });
+permission.forbidUserEntity('delete', { role: ERole.ADMIN });
+
+// AuthUserEntity helpers
+permission.allowAuthUserEntity('update', { verified: true });
+permission.forbidAuthUserEntity('create');
+
+// SystemEntity helpers
+permission.allowSystemEntity('read');
+permission.forbidSystemEntity('manage');
+
+// SuperAdminEntity helpers
+permission.allowSuperAdminEntity('read', { id: 'admin-456' });
+permission.forbidSuperAdminEntity('delete');
+```
+
+#### Available Actions
+
+```typescript
+import { EPermissionAction } from '@ooneex/permission';
+
+// Use enum values for type safety
+EPermissionAction.CREATE    // "create"
+EPermissionAction.READ      // "read"  
+EPermissionAction.UPDATE    // "update"
+EPermissionAction.DELETE    // "delete"
+EPermissionAction.MANAGE    // "manage" (all actions)
+EPermissionAction.VIEW      // "view"
+EPermissionAction.EDIT      // "edit"
+// ... and many more
+```
+
+#### Supported Entities
+
+- `"UserEntity"`: User data with fields like `id`, `role`, `public`
+- `"AuthUserEntity"`: Authentication data with `id`, `role`, `public`, `verified`
+- `"SystemEntity"`: System resources with `id`, `name`, `type`
+- `"SuperAdminEntity"`: Super admin resources with `id`
+- `"User"`: Generic user reference
+- `"all"`: All entities
+
+#### TypeScript Interfaces
+
+```typescript
+import type { 
+  IUserEntity, 
+  IAuthUserEntity, 
+  ISystemEntity, 
+  ISuperAdminEntity,
+  AppSubjects,
+  PermissionActionType
+} from '@ooneex/permission';
+
+// Type-safe conditions
+const userConditions: MongoQuery<IUserEntity> = {
+  id: "user-123",
+  role: ERole.USER,
+  public: true
+};
+
+permission.allowUserEntity('read', userConditions);
+```
+
+### Legacy API - Core Functions
 
 #### `allow(model, action, target, condition?)`
 
@@ -237,6 +366,67 @@ can(admin, 'view', 'admin_panel'); // true
 
 ## Real-World Examples
 
+### Type-Safe Blog System
+
+```typescript
+import { Permission, EPermissionAction } from '@ooneex/permission';
+import { ERole } from '@ooneex/role';
+import type { IUser } from '@ooneex/user';
+
+const permission = new Permission();
+
+// Admin user
+const admin: IUser = {
+  id: "admin-1",
+  email: "admin@example.com",
+  name: "Admin User",
+  firstName: "Admin",
+  lastName: "User",
+  role: ERole.ADMIN
+};
+
+// Regular user  
+const user: IUser = {
+  id: "user-1", 
+  email: "user@example.com",
+  name: "Regular User",
+  firstName: "Regular",
+  lastName: "User", 
+  role: ERole.USER
+};
+
+// Set permissions based on roles
+permission.setCommonPermissions(admin).build();
+
+// Admin can manage everything except system entities
+console.log(permission.can('manage', 'all')); // true
+console.log(permission.can('manage', 'SystemEntity')); // false
+
+// Reset and set user permissions
+const userPermission = new Permission();
+userPermission.setCommonPermissions(user).build();
+
+// User can only access their own data
+console.log(userPermission.can('read', 'UserEntity')); // true
+console.log(userPermission.can('delete', 'UserEntity')); // false
+
+// Custom business logic
+const customPermission = new Permission();
+
+customPermission
+  .allowUserEntity(['create', 'read'], { public: true })
+  .allowUserEntity('update', { id: user.id })
+  .forbidUserEntity('delete') // No deletes allowed
+  .allowAuthUserEntity('read', { verified: true })
+  .build();
+
+// Check custom permissions
+console.log(customPermission.can('create', 'UserEntity')); // true
+console.log(customPermission.can('delete', 'UserEntity')); // false
+```
+
+### Legacy Blog System
+
 ### Blog System
 
 ```typescript
@@ -347,7 +537,61 @@ if (can(user, 'edit', post)) {
 
 ## TypeScript Support
 
-The package is written in TypeScript and provides full type safety:
+The package is written in TypeScript and provides full type safety with CASL integration:
+
+### Type-Safe Permissions
+
+```typescript
+import type { 
+  PermissionActionType, 
+  AppSubjects, 
+  IUserEntity,
+  MongoQuery 
+} from '@ooneex/permission';
+
+// Type-safe action
+const action: PermissionActionType = 'read';
+
+// Type-safe subject
+const subject: AppSubjects = 'UserEntity';
+
+// Type-safe conditions with IntelliSense
+const conditions: MongoQuery<IUserEntity> = {
+  id: 'user-123',
+  role: ERole.USER,
+  public: true
+};
+
+const permission = new Permission();
+permission.allowUserEntity(action, conditions);
+```
+
+### Entity Type Definitions
+
+```typescript
+// All entity interfaces are exported for custom use
+import type { 
+  IUserEntity,
+  IAuthUserEntity, 
+  ISystemEntity,
+  ISuperAdminEntity
+} from '@ooneex/permission';
+
+// Custom function with type safety
+function checkUserAccess(user: IUserEntity, target: IUserEntity): boolean {
+  const permission = new Permission();
+  permission.allowUserEntity('read', { id: target.id });
+  permission.build();
+  
+  return permission.canWithObject('read', { 
+    id: user.id,
+    role: user.role,
+    // ... other user properties
+  });
+}
+```
+
+### Legacy Type Support
 
 ```typescript
 import type { ConditionFunction, PermissionRule } from '@ooneex/permission';

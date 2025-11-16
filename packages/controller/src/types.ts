@@ -4,6 +4,7 @@ import type { ICache } from "@ooneex/cache";
 import type { IDatabase } from "@ooneex/database";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
+import type { IPermission } from "@ooneex/permission";
 import type { IStorage } from "@ooneex/storage";
 import type { ScalarType } from "@ooneex/types";
 
@@ -11,6 +12,7 @@ export type ActionType = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
   analytics?: IAnalytics;
   cache?: ICache;
+  permission?: IPermission;
   storage?: IStorage;
   database?: IDatabase;
   mailer?: IMailer;

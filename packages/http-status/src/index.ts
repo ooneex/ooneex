@@ -68,68 +68,68 @@ const STATUS_CODE = {
 } as const;
 
 const STATUS_TEXT = {
-  [STATUS_CODE.Accepted]: "Accepted",
-  [STATUS_CODE.AlreadyReported]: "Already Reported",
-  [STATUS_CODE.BadGateway]: "Bad Gateway",
-  [STATUS_CODE.BadRequest]: "Bad Request",
-  [STATUS_CODE.Conflict]: "Conflict",
-  [STATUS_CODE.Continue]: "Continue",
-  [STATUS_CODE.Created]: "Created",
-  [STATUS_CODE.EarlyHints]: "Early Hints",
-  [STATUS_CODE.ExpectationFailed]: "Expectation Failed",
-  [STATUS_CODE.FailedDependency]: "Failed Dependency",
-  [STATUS_CODE.Forbidden]: "Forbidden",
-  [STATUS_CODE.Found]: "Found",
-  [STATUS_CODE.GatewayTimeout]: "Gateway Timeout",
-  [STATUS_CODE.Gone]: "Gone",
-  [STATUS_CODE.HTTPVersionNotSupported]: "HTTP Version Not Supported",
-  [STATUS_CODE.IMUsed]: "IM Used",
-  [STATUS_CODE.InsufficientStorage]: "Insufficient Storage",
-  [STATUS_CODE.InternalServerError]: "Internal Server Error",
-  [STATUS_CODE.LengthRequired]: "Length Required",
-  [STATUS_CODE.Locked]: "Locked",
-  [STATUS_CODE.LoopDetected]: "Loop Detected",
-  [STATUS_CODE.MethodNotAllowed]: "Method Not Allowed",
-  [STATUS_CODE.MisdirectedRequest]: "Misdirected Request",
-  [STATUS_CODE.MovedPermanently]: "Moved Permanently",
-  [STATUS_CODE.MultiStatus]: "Multi Status",
-  [STATUS_CODE.MultipleChoices]: "Multiple Choices",
-  [STATUS_CODE.NetworkAuthenticationRequired]: "Network Authentication Required",
-  [STATUS_CODE.NoContent]: "No Content",
-  [STATUS_CODE.NonAuthoritativeInfo]: "Non Authoritative Info",
-  [STATUS_CODE.NotAcceptable]: "Not Acceptable",
-  [STATUS_CODE.NotExtended]: "Not Extended",
-  [STATUS_CODE.NotFound]: "Not Found",
-  [STATUS_CODE.NotImplemented]: "Not Implemented",
-  [STATUS_CODE.NotModified]: "Not Modified",
-  [STATUS_CODE.OK]: "OK",
-  [STATUS_CODE.PartialContent]: "Partial Content",
-  [STATUS_CODE.PaymentRequired]: "Payment Required",
-  [STATUS_CODE.PermanentRedirect]: "Permanent Redirect",
-  [STATUS_CODE.PreconditionFailed]: "Precondition Failed",
-  [STATUS_CODE.PreconditionRequired]: "Precondition Required",
-  [STATUS_CODE.Processing]: "Processing",
-  [STATUS_CODE.ProxyAuthRequired]: "Proxy Auth Required",
-  [STATUS_CODE.ContentTooLarge]: "Content Too Large",
-  [STATUS_CODE.RequestHeaderFieldsTooLarge]: "Request Header Fields Too Large",
-  [STATUS_CODE.RequestTimeout]: "Request Timeout",
-  [STATUS_CODE.URITooLong]: "URI Too Long",
-  [STATUS_CODE.RangeNotSatisfiable]: "Range Not Satisfiable",
-  [STATUS_CODE.ResetContent]: "Reset Content",
-  [STATUS_CODE.SeeOther]: "See Other",
-  [STATUS_CODE.ServiceUnavailable]: "Service Unavailable",
-  [STATUS_CODE.SwitchingProtocols]: "Switching Protocols",
-  [STATUS_CODE.Teapot]: "I'm a teapot",
-  [STATUS_CODE.TemporaryRedirect]: "Temporary Redirect",
-  [STATUS_CODE.TooEarly]: "Too Early",
-  [STATUS_CODE.TooManyRequests]: "Too Many Requests",
-  [STATUS_CODE.Unauthorized]: "Unauthorized",
-  [STATUS_CODE.UnavailableForLegalReasons]: "Unavailable For Legal Reasons",
-  [STATUS_CODE.UnprocessableEntity]: "Unprocessable Entity",
-  [STATUS_CODE.UnsupportedMediaType]: "Unsupported Media Type",
-  [STATUS_CODE.UpgradeRequired]: "Upgrade Required",
-  [STATUS_CODE.UseProxy]: "Use Proxy",
-  [STATUS_CODE.VariantAlsoNegotiates]: "Variant Also Negotiates",
+  202: "Accepted",
+  208: "Already Reported",
+  502: "Bad Gateway",
+  400: "Bad Request",
+  409: "Conflict",
+  100: "Continue",
+  201: "Created",
+  103: "Early Hints",
+  417: "Expectation Failed",
+  424: "Failed Dependency",
+  403: "Forbidden",
+  302: "Found",
+  504: "Gateway Timeout",
+  410: "Gone",
+  505: "HTTP Version Not Supported",
+  226: "IM Used",
+  507: "Insufficient Storage",
+  500: "Internal Server Error",
+  411: "Length Required",
+  423: "Locked",
+  508: "Loop Detected",
+  405: "Method Not Allowed",
+  421: "Misdirected Request",
+  301: "Moved Permanently",
+  207: "Multi Status",
+  300: "Multiple Choices",
+  511: "Network Authentication Required",
+  204: "No Content",
+  203: "Non Authoritative Info",
+  406: "Not Acceptable",
+  510: "Not Extended",
+  404: "Not Found",
+  501: "Not Implemented",
+  304: "Not Modified",
+  200: "OK",
+  206: "Partial Content",
+  402: "Payment Required",
+  308: "Permanent Redirect",
+  412: "Precondition Failed",
+  428: "Precondition Required",
+  102: "Processing",
+  407: "Proxy Auth Required",
+  413: "Content Too Large",
+  431: "Request Header Fields Too Large",
+  408: "Request Timeout",
+  414: "URI Too Long",
+  416: "Range Not Satisfiable",
+  205: "Reset Content",
+  303: "See Other",
+  503: "Service Unavailable",
+  101: "Switching Protocols",
+  418: "I'm a teapot",
+  307: "Temporary Redirect",
+  425: "Too Early",
+  429: "Too Many Requests",
+  401: "Unauthorized",
+  451: "Unavailable For Legal Reasons",
+  422: "Unprocessable Entity",
+  415: "Unsupported Media Type",
+  426: "Upgrade Required",
+  305: "Use Proxy",
+  506: "Variant Also Negotiates",
 } as const;
 
 export type StatusCodeType = (typeof STATUS_CODE)[keyof typeof STATUS_CODE];
@@ -145,30 +145,30 @@ export interface IStatus {
 }
 
 export class Status implements IStatus {
-  public static Code = STATUS_CODE;
-  public static Text = STATUS_TEXT;
+  public static Code: typeof STATUS_CODE = STATUS_CODE;
+  public static Text: typeof STATUS_TEXT = STATUS_TEXT;
 
-  public isInformational = (code: StatusCodeType) => {
+  public isInformational: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return code >= STATUS_CODE.Continue && code < STATUS_CODE.OK;
   };
 
-  public isSuccessful = (code: StatusCodeType) => {
+  public isSuccessful: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return code >= STATUS_CODE.OK && code < STATUS_CODE.MultipleChoices;
   };
 
-  public isRedirect = (code: StatusCodeType) => {
+  public isRedirect: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return code >= STATUS_CODE.MultipleChoices && code < STATUS_CODE.BadRequest;
   };
 
-  public isClientError = (code: StatusCodeType) => {
+  public isClientError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return code >= STATUS_CODE.BadRequest && code < STATUS_CODE.InternalServerError;
   };
 
-  public isServerError = (code: StatusCodeType) => {
+  public isServerError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return code >= STATUS_CODE.InternalServerError && code < 600;
   };
 
-  public isError = (code: StatusCodeType) => {
+  public isError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
     return this.isClientError(code) || this.isServerError(code);
   };
 }

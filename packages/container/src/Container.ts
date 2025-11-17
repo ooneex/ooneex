@@ -4,7 +4,7 @@ import * as inversify from "inversify";
 import { ContainerException } from "./ContainerException";
 import { EContainerScope } from "./types";
 
-export const di = new inversify.Container();
+export const di: inversify.Container = new inversify.Container();
 
 export class Container {
   private alias: Record<string, any> = {};
@@ -107,4 +107,4 @@ export class Container {
   }
 }
 
-export const container = new Container();
+export const container: Container = new Container();

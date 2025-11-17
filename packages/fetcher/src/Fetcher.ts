@@ -6,7 +6,7 @@ import type { FetcherResponseType } from "./types";
 
 export class Fetcher {
   private abortController: AbortController;
-  public readonly header = new Header();
+  public readonly header: Header = new Header();
 
   constructor(private baseURL: string) {
     this.abortController = new AbortController();

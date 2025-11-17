@@ -1,10 +1,20 @@
 {
   "name": "@ooneex/socket",
-  "version": "0.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist"
+  ],
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf dist",
@@ -15,9 +25,5 @@
     "publish": "bun run build && bun publish --access public"
   },
   "devDependencies": {},
-  "peerDependencies": {},
-  "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts"
-  ]
+  "peerDependencies": {}
 }

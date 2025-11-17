@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --target ES2022 --moduleResolution bundler --outfile dist/index.d.ts",
-    "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --packages external --minify",
+    "build": "bunup",
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {

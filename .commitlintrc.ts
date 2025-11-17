@@ -26,6 +26,7 @@ const Configuration: UserConfig = {
         "cron",
         "currencies",
         "database",
+        "entities",
         "exception",
         "fetcher",
         "http-header",

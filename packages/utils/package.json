@@ -21,10 +21,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf dist",
-    "compile": "tsc -p tsconfig.build.json",
     "test": "bun test tests",
-    "test:watch": "bun test tests --watch",
     "build": "bunup",
     "publish": "bun run build && bun publish --access public"
   }

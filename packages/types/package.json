@@ -24,5 +24,8 @@
     "test": "bun test tests",
     "build": "bunup",
     "publish": "bun run build && bun publish --access public"
+  },
+  "devDependencies": {
+    "@ooneex/translation": "workspace:*"
   }
 }

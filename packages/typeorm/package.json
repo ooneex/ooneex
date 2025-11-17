@@ -1,0 +1,43 @@
+{
+  "name": "@ooneex/typeorm",
+  "description": "",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist"
+  ],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "bunup",
+    "publish": "bun run build && bun publish --access public"
+  },
+  "dependencies": {
+    "typeorm": "^0.3.27",
+    "@ooneex/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/payment": "workspace:*",
+    "@ooneex/color": "workspace:*",
+    "@ooneex/image": "workspace:*",
+    "@ooneex/tag": "workspace:*",
+    "@ooneex/category": "workspace:*",
+    "@ooneex/folder": "workspace:*",
+    "@ooneex/types": "workspace:*",
+    "@ooneex/currencies": "workspace:*",
+    "@ooneex/status": "workspace:*"
+  },
+  "peerDependencies": {}
+}

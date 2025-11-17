@@ -1,5 +1,8 @@
 export * from "typeorm";
 export { BaseEntity } from "./BaseEntity";
+export { BookAuthorEntity } from "./BookAuthorEntity";
+export { BookEntity } from "./BookEntity";
+export { BookPublisherEntity } from "./BookPublisherEntity";
 export { CategoryEntity } from "./CategoryEntity";
 export { ColorEntity } from "./ColorEntity";
 export { FolderEntity } from "./FolderEntity";

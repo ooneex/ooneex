@@ -71,6 +71,16 @@
       "name": "@ooneex/auth",
       "version": "0.0.0",
     },
+    "packages/book": {
+      "name": "@ooneex/book",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/category": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/cache": {
       "name": "@ooneex/cache",
       "version": "0.0.0",
@@ -334,14 +344,18 @@
       "name": "@ooneex/typeorm",
       "version": "0.0.0",
       "dependencies": {
+        "@ooneex/utils": "workspace:*",
         "typeorm": "^0.3.27",
       },
       "devDependencies": {
+        "@ooneex/book": "workspace:*",
         "@ooneex/category": "workspace:*",
         "@ooneex/color": "workspace:*",
+        "@ooneex/currencies": "workspace:*",
         "@ooneex/folder": "workspace:*",
         "@ooneex/image": "workspace:*",
         "@ooneex/payment": "workspace:*",
+        "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
@@ -772,6 +786,8 @@
     "@ooneex/app-env": ["@ooneex/app-env@workspace:packages/app-env"],
 
     "@ooneex/auth": ["@ooneex/auth@workspace:packages/auth"],
+
+    "@ooneex/book": ["@ooneex/book@workspace:packages/book"],
 
     "@ooneex/cache": ["@ooneex/cache@workspace:packages/cache"],
 

@@ -19,6 +19,7 @@ const Configuration: UserConfig = {
         "app",
         "app-env",
         "auth",
+        "book",
         "cache",
         "category",
         "color",

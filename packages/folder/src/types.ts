@@ -1,5 +1,5 @@
 import type { IColor } from "@ooneex/color";
-import type { IBase, ScalarType } from "@ooneex/types";
+import type { IBase } from "@ooneex/types";
 
 export interface IFolder extends IBase {
   name: string;
@@ -7,5 +7,4 @@ export interface IFolder extends IBase {
   description?: string;
   parent?: IFolder;
   children?: IFolder[];
-  metadata?: Record<string, ScalarType>;
 }

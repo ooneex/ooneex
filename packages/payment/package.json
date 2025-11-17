@@ -1,5 +1,5 @@
 {
-  "name": "@ooneex/subscription",
+  "name": "@ooneex/payment",
   "description": "",
   "version": "0.0.0",
   "type": "module",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*",
+    "@ooneex/category": "workspace:*",
     "@ooneex/image": "workspace:*",
     "@ooneex/tag": "workspace:*"
   },

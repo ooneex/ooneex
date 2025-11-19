@@ -1,6 +1,6 @@
 # @ooneex/database
 
-A comprehensive TypeScript/JavaScript database library designed for Bun runtime. This package provides a unified interface for database operations with support for SQLite, PostgreSQL, and MySQL, along with TypeORM adapters for advanced ORM functionality.
+A comprehensive TypeScript/JavaScript database library designed for Bun runtime. This package provides a unified interface for database operations with support for SQLite, PostgreSQL, MySQL, and Redis, along with TypeORM adapters for advanced ORM functionality.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
@@ -8,7 +8,7 @@ A comprehensive TypeScript/JavaScript database library designed for Bun runtime.
 
 ## Features
 
-✅ **Multi-Database Support** - SQLite, PostgreSQL, and MySQL support
+✅ **Multi-Database Support** - SQLite, PostgreSQL, MySQL, and Redis support
 
 ✅ **Bun Native** - Built specifically for Bun runtime with Bun.SQL
 
@@ -142,6 +142,11 @@ DATABASE_URL=mysql://user:password@localhost:3306/mydb
 
 # For SQLite adapter
 SQLITE_DATABASE_PATH=./myapp.db
+
+# For Redis adapter
+REDIS_URL=redis://localhost:6379
+# or
+VALKEY_URL=redis://localhost:6379
 ```
 
 ## API Reference
@@ -249,6 +254,55 @@ constructor(options: Omit<SqliteConnectionOptions, "type">)
 
 Same methods as `TypeormPgDatabaseAdapter` but optimized for SQLite.
 
+### `RedisDatabaseAdapter` Class
+
+Redis adapter using Bun's native Redis client.
+
+#### Constructor
+
+```typescript
+constructor(options: RedisConnectionOptions = {})
+```
+
+**Parameters:**
+- `options` - Redis connection configuration
+
+**Options:**
+- `url` - Redis connection URL (defaults to environment variables or localhost)
+- `connectionTimeout` - Connection timeout in milliseconds (default: 10000)
+- `idleTimeout` - Idle timeout in milliseconds (default: 0)
+- `autoReconnect` - Whether to automatically reconnect (default: true)
+- `maxRetries` - Maximum reconnection attempts (default: 10)
+- `enableOfflineQueue` - Queue commands when disconnected (default: true)
+- `enableAutoPipelining` - Automatically pipeline commands (default: true)
+- `tls` - TLS configuration (default: false)
+
+#### Methods
+
+##### `getClient(): RedisClient`
+Returns the underlying Bun Redis client instance.
+
+##### `open(): Promise<void>`
+Opens the Redis connection.
+
+##### `close(): Promise<void>`
+Closes the Redis connection.
+
+##### `drop(): Promise<void>`
+Flushes the current Redis database (FLUSHDB).
+
+##### `ping(): Promise<string>`
+Pings the Redis server.
+
+##### `info(section?: string): Promise<string>`
+Gets Redis server information.
+
+##### `isConnected(): boolean`
+Returns connection status.
+
+##### `getBufferedAmount(): number`
+Returns buffered data amount in bytes.
+
 ### `DatabaseException` Class
 
 Custom exception class for database-related errors.
@@ -311,12 +365,70 @@ interface ITypeormDatabaseAdapter {
 'mysql2://user:password@localhost:3306/database'
 ```
 
+### Redis
+```typescript
+// Standard Redis URL
+'redis://localhost:6379'
+
+// With authentication
+'redis://username:password@localhost:6379'
+
+// With database number
+'redis://localhost:6379/0'
+
+// TLS connections
+'rediss://localhost:6379'
+'redis+tls://localhost:6379'
+
+// Unix socket connections
+'redis+unix:///path/to/socket'
+'redis+tls+unix:///path/to/socket'
+```
+
 ## Best Practices
 
 ### Connection Management
 - Always call `close()` when done with database operations
 - Use try-catch blocks for proper error handling
 - Consider connection pooling for high-traffic applications
+
+### Redis Adapter
+
+```typescript
+import { RedisDatabaseAdapter } from '@ooneex/database';
+
+const adapter = new RedisDatabaseAdapter({
+  url: 'redis://localhost:6379',
+  connectionTimeout: 10000,
+  autoReconnect: true,
+  maxRetries: 10
+});
+
+// Open connection
+await adapter.open();
+
+// Get Redis client for operations
+const client = adapter.getClient();
+
+// Basic operations
+await client.set('user:1', 'Alice');
+const user = await client.get('user:1');
+
+// Hash operations
+await client.hmset('user:2', ['name', 'Bob', 'email', 'bob@example.com']);
+const userFields = await client.hmget('user:2', ['name', 'email']);
+
+// Set operations
+await client.sadd('tags', 'redis', 'database', 'cache');
+const tags = await client.smembers('tags');
+
+// Utility methods
+const pingResult = await adapter.ping();
+const serverInfo = await adapter.info('server');
+
+// Close connection
+await adapter.close();
+```
 
 ### Error Handling
 - Catch `DatabaseException` specifically for database errors
@@ -366,6 +478,105 @@ const adapter = new TypeormSqliteDatabaseAdapter({
   enableWAL: true, // Write-Ahead Logging for better performance
   busyTimeout: 30000
 });
+```
+
+## Redis Integration
+
+This package provides a native Redis adapter built specifically for Bun's Redis client, offering high-performance Redis operations with full TypeScript support.
+
+### Basic Redis Usage
+
+```typescript
+import { RedisDatabaseAdapter } from '@ooneex/database';
+
+const adapter = new RedisDatabaseAdapter({
+  url: process.env.REDIS_URL,
+  connectionTimeout: 5000,
+  autoReconnect: true
+});
+
+await adapter.open();
+const client = adapter.getClient();
+
+// String operations
+await client.set('key', 'value');
+const value = await client.get('key');
+
+// Numeric operations
+await client.incr('counter');
+await client.decr('counter');
+
+// Hash operations
+await client.hmset('user:1', ['name', 'Alice', 'email', 'alice@example.com']);
+const userData = await client.hmget('user:1', ['name', 'email']);
+
+// Set operations
+await client.sadd('tags', 'redis', 'cache');
+const allTags = await client.smembers('tags');
+
+await adapter.close();
+```
+
+### Redis Pub/Sub
+
+```typescript
+const publisher = new RedisDatabaseAdapter();
+const subscriber = new RedisDatabaseAdapter();
+
+await publisher.open();
+await subscriber.open();
+
+// Set up subscription
+const subClient = subscriber.getClient();
+await subClient.subscribe('notifications', (message, channel) => {
+  console.log(`Received: ${message} on ${channel}`);
+});
+
+// Publish message
+const pubClient = publisher.getClient();
+await pubClient.publish('notifications', 'Hello subscribers!');
+```
+
+### Redis Caching Pattern
+
+```typescript
+async function getUserWithCache(userId: number) {
+  const cacheKey = `user:${userId}`;
+  
+  // Try cache first
+  const cached = await client.get(cacheKey);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+  
+  // Fetch from database
+  const user = await database.getUser(userId);
+  
+  // Cache with expiration
+  await client.set(cacheKey, JSON.stringify(user));
+  await client.expire(cacheKey, 3600); // 1 hour
+  
+  return user;
+}
+```
+
+### Redis Rate Limiting
+
+```typescript
+async function rateLimit(ip: string, limit: number = 100, windowSecs: number = 3600) {
+  const key = `ratelimit:${ip}`;
+  
+  const count = await client.incr(key);
+  
+  if (count === 1) {
+    await client.expire(key, windowSecs);
+  }
+  
+  return {
+    allowed: count <= limit,
+    remaining: Math.max(0, limit - count)
+  };
+}
 ```
 
 ## License

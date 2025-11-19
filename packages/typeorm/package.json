@@ -17,6 +17,24 @@
         "default": "./dist/index.js"
       }
     },
+    "./books": {
+      "import": {
+        "types": "./dist/books.d.ts",
+        "default": "./dist/books.js"
+      }
+    },
+    "./payment": {
+      "import": {
+        "types": "./dist/payment.d.ts",
+        "default": "./dist/payment.js"
+      }
+    },
+    "./videos": {
+      "import": {
+        "types": "./dist/videos.d.ts",
+        "default": "./dist/videos.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -29,6 +47,7 @@
     "@ooneex/utils": "workspace:*"
   },
   "devDependencies": {
+    "@ooneex/video": "workspace:*",
     "@ooneex/book": "workspace:*",
     "@ooneex/payment": "workspace:*",
     "@ooneex/color": "workspace:*",

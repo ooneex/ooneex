@@ -1,17 +1,8 @@
 export * from "typeorm";
 export { BaseEntity } from "./BaseEntity";
-export { BookAuthorEntity } from "./BookAuthorEntity";
-export { BookEntity } from "./BookEntity";
-export { BookPublisherEntity } from "./BookPublisherEntity";
 export { CategoryEntity } from "./CategoryEntity";
 export { ColorEntity } from "./ColorEntity";
 export { FolderEntity } from "./FolderEntity";
 export { ImageEntity } from "./ImageEntity";
-export { PaymentCouponEntity } from "./PaymentCouponEntity";
-export { PaymentCreditEntity } from "./PaymentCreditEntity";
-export { PaymentFeatureEntity } from "./PaymentFeatureEntity";
-export { PaymentPlanEntity } from "./PaymentPlanEntity";
-export { PaymentProductEntity } from "./PaymentProductEntity";
-export { PaymentSubscriptionEntity } from "./PaymentSubscriptionEntity";
 export { StatusEntity } from "./StatusEntity";
 export { TagEntity } from "./TagEntity";

@@ -3,7 +3,7 @@ import type { IAppEnv } from "@ooneex/app-env";
 import type { CacheClassType } from "@ooneex/cache";
 import type { IContainer } from "@ooneex/container";
 import type { CronClassType } from "@ooneex/cron";
-import type { IDatabase, ITypeormDatabaseAdapter } from "@ooneex/database";
+import type { IDatabase, IRedisDatabaseAdapter, ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
 import type { PermissionClassType } from "@ooneex/permission";
@@ -18,6 +18,7 @@ export type AppConfigType = {
   storage?: StorageClassType;
   mailer?: MailerClassType;
   cronJobs?: CronClassType[];
+  redis?: IRedisDatabaseAdapter;
   database?: IDatabase | ITypeormDatabaseAdapter;
   env: IAppEnv;
 };

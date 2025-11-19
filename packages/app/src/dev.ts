@@ -3,7 +3,7 @@ import { AppEnv } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
 import { container } from "@ooneex/container";
 import type { CronTimeType, ICron } from "@ooneex/cron";
-import { TypeormPgDatabaseAdapter } from "@ooneex/database";
+import { RedisDatabaseAdapter, TypeormPgDatabaseAdapter } from "@ooneex/database";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
 import { NodeMailerAdapter, ResendMailerAdapter } from "@ooneex/mailer";
 import { Permission } from "@ooneex/permission";
@@ -13,6 +13,8 @@ import { App } from "./App";
 const database = new TypeormPgDatabaseAdapter({
   entities: [],
 });
+
+const redis = new RedisDatabaseAdapter();
 
 const appEnv = new AppEnv();
 
@@ -47,5 +49,6 @@ new App({
   permission: Permission, // Create PermissionMiddleware to get current user and set permissions
   mailer: appEnv.isLocal ? NodeMailerAdapter : ResendMailerAdapter,
   database,
+  redis,
   env: appEnv,
 });

@@ -4,7 +4,8 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { logger, container, analytics, cache, storage, database, env, mailer, cronJobs, permission } = this.config;
+    const { logger, container, analytics, cache, storage, database, env, mailer, cronJobs, permission, redis } =
+      this.config;
 
     logger.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
@@ -42,6 +43,10 @@ export class App {
 
     if (database) {
       container.addConstant("database", database);
+    }
+
+    if (redis) {
+      container.addConstant("redis", redis);
     }
 
     if (cronJobs) {

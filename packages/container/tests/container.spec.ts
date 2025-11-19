@@ -39,6 +39,7 @@ describe("Container - Dependency Injection", () => {
 
     test("should respect singleton scope for single service", () => {
       class LoggerService {
+        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 
@@ -65,6 +66,7 @@ describe("Container - Dependency Injection", () => {
 
     test("should create new instances for transient scope", () => {
       class RequestIdService {
+        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static requestCount = 0;
         public readonly requestId: number;
 
@@ -150,6 +152,7 @@ describe("Container - Dependency Injection", () => {
   describe("Advanced scoping scenarios", () => {
     test("should demonstrate different scoping behavior", () => {
       class CounterService {
+        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static count = 0;
         public readonly id: number;
 
@@ -175,6 +178,7 @@ describe("Container - Dependency Injection", () => {
 
     test("should handle transient scoping correctly", () => {
       class TransientService {
+        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 
@@ -236,6 +240,7 @@ describe("Container - Dependency Injection", () => {
     describe("Request scope", () => {
       test("should handle request scope (behaves like singleton in this context)", () => {
         class RequestScopedService {
+          // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
           private static instanceCount = 0;
           public readonly instanceId: number;
 
@@ -687,6 +692,7 @@ describe("Container - Dependency Injection", () => {
 
       test("should handle singleton dependencies correctly with manual resolution", () => {
         class SingletonService {
+          // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
           private static instanceCount = 0;
           public readonly instanceId: number;
 
@@ -928,6 +934,7 @@ describe("Container - Dependency Injection", () => {
 
     test("should work with different scopes through aliases", () => {
       class TransientAliasService {
+        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 

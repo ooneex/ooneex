@@ -3,6 +3,7 @@ import { logger as loggerFunc } from "./logger";
 import type { AppConfigType } from "./types";
 
 export class App {
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
   constructor(private readonly config: AppConfigType) {
     const { logger, container, analytics, cache, storage, database, env, mailer, cronJobs, permission, redis } =
       this.config;

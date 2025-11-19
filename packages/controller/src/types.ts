@@ -1,7 +1,7 @@
 import type { IAnalytics } from "@ooneex/analytics";
 import type { IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
-import type { IDatabase } from "@ooneex/database";
+import type { IDatabase, IRedisDatabaseAdapter } from "@ooneex/database";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
 import type { IPermission } from "@ooneex/permission";
@@ -15,6 +15,7 @@ export type ActionType = {
   permission?: IPermission;
   storage?: IStorage;
   database?: IDatabase;
+  redis?: IRedisDatabaseAdapter;
   mailer?: IMailer;
   app: {
     env: IAppEnv;

@@ -358,6 +358,7 @@
         "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
         "@ooneex/types": "workspace:*",
+        "@ooneex/video": "workspace:*",
       },
     },
     "packages/types": {
@@ -394,6 +395,16 @@
     "packages/validation": {
       "name": "@ooneex/validation",
       "version": "0.0.0",
+    },
+    "packages/video": {
+      "name": "@ooneex/video",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/category": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
     },
   },
   "packages": {
@@ -870,6 +881,8 @@
     "@ooneex/utils": ["@ooneex/utils@workspace:packages/utils"],
 
     "@ooneex/validation": ["@ooneex/validation@workspace:packages/validation"],
+
+    "@ooneex/video": ["@ooneex/video@workspace:packages/video"],
 
     "@oxc-resolver/binding-android-arm-eabi": ["@oxc-resolver/binding-android-arm-eabi@11.12.0", "", { "os": "android", "cpu": "arm" }, "sha512-/IfGWLNdmS1kVYM2g+Xw4qXNWtCPZ/i5YMprflA8FC3vAjT4N0VucQcDxUPHxatQwre4qnhbFFWqRa1mz6Cgkw=="],
 

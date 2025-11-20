@@ -130,6 +130,10 @@
         "@ooneex/types": "workspace:*",
       },
     },
+    "packages/country": {
+      "name": "@ooneex/country",
+      "version": "0.0.0",
+    },
     "packages/cron": {
       "name": "@ooneex/cron",
       "version": "0.0.0",
@@ -809,6 +813,8 @@
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
 
     "@ooneex/controller": ["@ooneex/controller@workspace:packages/controller"],
+
+    "@ooneex/country": ["@ooneex/country@workspace:packages/country"],
 
     "@ooneex/cron": ["@ooneex/cron@workspace:packages/cron"],
 

@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { AppEnvException } from "@/AppEnvException";
-import { AppEnv, type IAppEnv } from "@/index";
+import { AppEnv, AppEnvException, type IAppEnv } from "@/index";
 
 // Store original environment for cleanup
 const originalAppEnv = Bun.env.APP_ENV;
@@ -134,7 +133,6 @@ describe("AppEnv", () => {
     });
 
     test("should throw AppEnvException when APP_ENV is null", () => {
-      // @ts-expect-error - testing edge case
       Bun.env.APP_ENV = null;
 
       expect(() => new AppEnv()).toThrow(AppEnvException);

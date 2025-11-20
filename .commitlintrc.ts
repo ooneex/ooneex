@@ -25,6 +25,7 @@ const Configuration: UserConfig = {
         "color",
         "container",
         "controller",
+        "country",
         "cron",
         "currencies",
         "database",

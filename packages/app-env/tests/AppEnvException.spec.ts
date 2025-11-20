@@ -19,7 +19,6 @@ describe("AppEnvException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });

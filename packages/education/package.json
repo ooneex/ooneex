@@ -1,5 +1,5 @@
 {
-  "name": "@ooneex/payment",
+  "name": "@ooneex/education",
   "description": "",
   "version": "0.0.0",
   "type": "module",
@@ -9,12 +9,14 @@
     "dist"
   ],
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "import": "./dist/index.js"
+    },
+    "./medecine": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/medecine.d.ts",
+        "default": "./dist/medecine.js"
       }
     },
     "./package.json": "./package.json"
@@ -22,17 +24,13 @@
   "license": "MIT",
   "scripts": {
     "build": "bunup",
+    "test": "bun test",
     "lint": "tsgo --noEmit",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {
-    "@ooneex/currencies": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@ooneex/types": "workspace:*",
-    "@ooneex/category": "workspace:*",
-    "@ooneex/image": "workspace:*",
-    "@ooneex/tag": "workspace:*"
+    "@ooneex/translation": "workspace:*"
   },
   "peerDependencies": {}
 }

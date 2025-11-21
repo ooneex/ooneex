@@ -22,6 +22,7 @@
   "license": "MIT",
   "scripts": {
     "build": "bunup",
+    "lint": "tsgo --noEmit",
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {},

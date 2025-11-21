@@ -133,7 +133,7 @@ describe("AppEnv", () => {
     });
 
     test("should throw AppEnvException when APP_ENV is null", () => {
-      Bun.env.APP_ENV = null;
+      Bun.env.APP_ENV = undefined;
 
       expect(() => new AppEnv()).toThrow(AppEnvException);
       expect(() => new AppEnv()).toThrow("APP_ENV is not set");

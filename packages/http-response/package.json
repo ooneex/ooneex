@@ -23,7 +23,7 @@
   "scripts": {
     "compile": "tsc ./src/index.ts --declaration --emitDeclarationOnly --target ES2022 --moduleResolution bundler --outfile dist/index.d.ts",
     "build": "bunup",
-    "lint": "tsgo --noEmit",
+    "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {

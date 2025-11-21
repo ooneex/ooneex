@@ -19,7 +19,9 @@ describe("AppEnvException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        exception.data.key = "modified";
+        if (exception.data) {
+          exception.data.key = "modified";
+        }
       }).toThrow();
     });
   });

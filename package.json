@@ -9,7 +9,7 @@
     "build": "bunx nx run-many -t build --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "fmt": "bunx biome check --write",
-    "lint": "bunx biome lint && bunx nx run-many -t lint --output-style=stream --verbose",
+    "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
     "commit": "bunx commit",
     "prepare": "husky"
   },

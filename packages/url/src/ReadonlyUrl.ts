@@ -79,51 +79,55 @@ export class ReadonlyUrl implements IReadonlyUrl {
     }
   }
 
-  public getNative = (): URL => {
+  public getNative(): URL {
     return this.native;
-  };
+  }
 
-  public getProtocol = (): string => {
+  public getProtocol(): string {
     return this.protocol;
-  };
+  }
 
-  public getSubdomain = (): string | null => {
+  public getSubdomain(): string | null {
     return this.subdomain;
-  };
+  }
 
-  public getDomain = (): string => {
+  public getDomain(): string {
     return this.domain;
-  };
+  }
 
-  public getHostname = (): string => {
+  public getHostname(): string {
     return this.hostname;
-  };
+  }
 
-  public getPort = (): number => {
+  public getPort(): number {
     return this.port;
-  };
+  }
 
-  public getPath = (): string => {
+  public getPath(): string {
     return this.path;
-  };
+  }
 
-  public getQueries = (): Record<string, ScalarType> => {
+  public getQueries(): Record<string, ScalarType> {
     return { ...this.queries };
-  };
+  }
 
-  public getFragment = (): string => {
+  public getQuery(name: string): ScalarType | null {
+    return this.queries[name] || null;
+  }
+
+  public getFragment(): string {
     return this.fragment;
-  };
+  }
 
-  public getBase = (): string => {
+  public getBase(): string {
     return this.base;
-  };
+  }
 
-  public getOrigin = (): string => {
+  public getOrigin(): string {
     return this.origin;
-  };
+  }
 
-  public toString = (): string => {
+  public toString(): string {
     return this.native.toString();
-  };
+  }
 }

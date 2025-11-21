@@ -12,6 +12,7 @@ export interface IReadonlyUrl {
   getFragment: () => string;
   getBase: () => string;
   getOrigin: () => string;
+  getQuery: (name: string) => ScalarType | null;
   toString: () => string;
 }
 

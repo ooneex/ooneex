@@ -4,7 +4,7 @@ import { ReadonlyUrl } from "./ReadonlyUrl";
 import type { IUrl } from "./types";
 
 export class Url extends ReadonlyUrl implements IUrl {
-  public setProtocol = (protocol: string): this => {
+  public setProtocol(protocol: string): this {
     const oldProtocol = this.protocol;
     this.protocol = trim(protocol, ":");
 
@@ -17,9 +17,9 @@ export class Url extends ReadonlyUrl implements IUrl {
 
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public setHostname = (hostname: string): this => {
+  public setHostname(hostname: string): this {
     this.hostname = hostname;
 
     this.subdomain = null;
@@ -41,15 +41,15 @@ export class Url extends ReadonlyUrl implements IUrl {
 
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public setPort = (port: number): this => {
+  public setPort(port: number): this {
     this.port = port;
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public setPath = (path: string): this => {
+  public setPath(path: string): this {
     if (path === "") {
       this.path = "/";
     } else {
@@ -57,39 +57,39 @@ export class Url extends ReadonlyUrl implements IUrl {
     }
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public addQuery = (key: string, value: ScalarType): this => {
+  public addQuery(key: string, value: ScalarType): this {
     this.queries[key] = value;
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public removeQuery = (key: string): this => {
+  public removeQuery(key: string): this {
     delete this.queries[key];
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public setQueries = (queries: Record<string, ScalarType>): this => {
+  public setQueries(queries: Record<string, ScalarType>): this {
     this.queries = { ...queries };
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public clearQueries = (): this => {
+  public clearQueries(): this {
     this.queries = {};
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  public setFragment = (fragment: string): this => {
+  public setFragment(fragment: string): this {
     this.fragment = trim(fragment, "#");
     this.updateNativeUrl();
     return this;
-  };
+  }
 
-  private updateNativeUrl = () => {
+  private updateNativeUrl() {
     const protocol = this.protocol.includes(":") ? this.protocol : `${this.protocol}:`;
     const port = this.shouldShowPort() ? `:${this.port}` : "";
     const path = this.path;
@@ -99,21 +99,21 @@ export class Url extends ReadonlyUrl implements IUrl {
     this.native = new URL(urlString);
     this.base = this.shouldShowPort() ? `${protocol}//${this.hostname}${port}` : `${protocol}//${this.hostname}`;
     this.origin = this.shouldShowPort() ? `${protocol}//${this.hostname}${port}` : `${protocol}//${this.hostname}`;
-  };
+  }
 
-  private shouldShowPort = (): boolean => {
+  private shouldShowPort(): boolean {
     if (this.protocol === "http" && this.port === 80) return false;
     if (this.protocol === "https" && this.port === 443) return false;
     if (this.port === 80) return false; // Don't show default port 80
     return true;
-  };
+  }
 
-  private buildQueryString = (): string => {
+  private buildQueryString(): string {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(this.queries)) {
       params.set(key, String(value));
     }
     const queryString = params.toString();
     return queryString ? `?${queryString}` : "";
-  };
+  }
 }

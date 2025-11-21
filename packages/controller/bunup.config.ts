@@ -2,7 +2,7 @@ import { defineConfig } from "bunup";
 import { copy } from "bunup/plugins";
 
 export default defineConfig({
-  target: "bun",
+  target: "browser",
   format: ["esm"],
   drop: ["console", "debugger"],
   packages: "external",

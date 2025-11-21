@@ -21,12 +21,12 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@ooneex/app-env": "workspace:*",
     "@ooneex/permission": "workspace:*",
     "@ooneex/database": "workspace:*",
@@ -34,10 +34,12 @@
     "@ooneex/cache": "workspace:*",
     "@ooneex/logger": "workspace:*",
     "@ooneex/mailer": "workspace:*",
+    "@ooneex/types": "workspace:*",
+    "@ooneex/user": "workspace:*",
+    "@ooneex/http-request": "workspace:*",
+    "@ooneex/http-header": "workspace:*",
+    "@ooneex/http-response": "workspace:*",
     "@ooneex/analytics": "workspace:*"
-  },
-  "devDependencies": {
-    "@ooneex/types": "workspace:*"
   },
   "peerDependencies": {}
 }

@@ -1,5 +1,8 @@
 import type { JWTHeaderParameters } from "jose";
 
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type JwtClassType = new (...args: any[]) => IJwt;
+
 export type JwtExpiresInType = `${number}s` | `${number}m` | `${number}h` | `${number}d` | `${number}w` | `${number}y`;
 
 export type JwtDefaultPayloadType = {

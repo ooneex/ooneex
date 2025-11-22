@@ -123,7 +123,7 @@ describe("ReadonlyUrl", () => {
 
     test("should parse high port numbers", () => {
       const url = new ReadonlyUrl("http://example.com:65535");
-      expect(url.getPort()).toBe(65535);
+      expect(url.getPort()).toBe(65_535);
     });
 
     test("should parse port 0", () => {

@@ -119,8 +119,12 @@ describe("RequestFile", () => {
       });
 
       test("should generate unique IDs for different files", () => {
-        const file1 = new File(["content1"], "file1.txt", { type: "text/plain" });
-        const file2 = new File(["content2"], "file2.txt", { type: "text/plain" });
+        const file1 = new File(["content1"], "file1.txt", {
+          type: "text/plain",
+        });
+        const file2 = new File(["content2"], "file2.txt", {
+          type: "text/plain",
+        });
 
         const requestFile1 = new RequestFile(file1);
         const requestFile2 = new RequestFile(file2);
@@ -279,7 +283,9 @@ describe("RequestFile", () => {
 
     test("should handle binary data", async () => {
       const binaryData = new Uint8Array([0, 1, 2, 3, 255]);
-      mockFile = new File([binaryData], "binary.bin", { type: "application/octet-stream" });
+      mockFile = new File([binaryData], "binary.bin", {
+        type: "application/octet-stream",
+      });
       const requestFile = new RequestFile(mockFile);
 
       const result = await requestFile.readAsArrayBuffer();
@@ -310,7 +316,7 @@ describe("RequestFile", () => {
     });
 
     test("should handle large file stream", () => {
-      const largeContent = "x".repeat(10000);
+      const largeContent = "x".repeat(10_000);
       mockFile = new File([largeContent], "large.txt", { type: "text/plain" });
       const requestFile = new RequestFile(mockFile);
 
@@ -352,7 +358,9 @@ describe("RequestFile", () => {
 
     test("should handle JSON content", async () => {
       const jsonContent = '{"message": "Hello", "emoji": "👋"}';
-      mockFile = new File([jsonContent], "data.json", { type: "application/json" });
+      mockFile = new File([jsonContent], "data.json", {
+        type: "application/json",
+      });
       const requestFile = new RequestFile(mockFile);
 
       const result = await requestFile.readAsText();
@@ -446,7 +454,9 @@ describe("RequestFile", () => {
     });
 
     test("should have consistent property values", () => {
-      mockFile = new File(["test"], "document.pdf", { type: "application/pdf" });
+      mockFile = new File(["test"], "document.pdf", {
+        type: "application/pdf",
+      });
       const requestFile = new RequestFile(mockFile);
 
       expect(requestFile.extension).toBe("pdf");
@@ -591,8 +601,12 @@ describe("RequestFile", () => {
     test("should work with different File constructor patterns", () => {
       // Test different ways to create File objects
       const file1 = new File(["content"], "test1.txt", { type: "text/plain" });
-      const file2 = new File([new Blob(["content"])], "test2.txt", { type: "text/plain" });
-      const file3 = new File([new ArrayBuffer(10)], "test3.bin", { type: "application/octet-stream" });
+      const file2 = new File([new Blob(["content"])], "test2.txt", {
+        type: "text/plain",
+      });
+      const file3 = new File([new ArrayBuffer(10)], "test3.bin", {
+        type: "application/octet-stream",
+      });
 
       const requestFile1 = new RequestFile(file1);
       const requestFile2 = new RequestFile(file2);
@@ -636,7 +650,9 @@ describe("RequestFile", () => {
       const files = [
         new File(["text1"], "file1.txt", { type: "text/plain" }),
         new File(["text2"], "file2.md", { type: "text/markdown" }),
-        new File([new Uint8Array([1, 2, 3])], "file3.bin", { type: "application/octet-stream" }),
+        new File([new Uint8Array([1, 2, 3])], "file3.bin", {
+          type: "application/octet-stream",
+        }),
       ];
 
       const requestFiles = files.map((file) => new RequestFile(file));

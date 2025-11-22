@@ -24,7 +24,7 @@ export class TypeormSqliteDatabaseAdapter implements ITypeormDatabaseAdapter {
       entities: [],
       enableWAL: true,
       busyErrorRetry: 2000,
-      busyTimeout: 30000,
+      busyTimeout: 30_000,
       ...options,
       database,
       type: "sqlite",

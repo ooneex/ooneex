@@ -21,13 +21,13 @@ export class RedisDatabaseAdapter implements IRedisDatabaseAdapter {
 
     // Create Redis client with options
     this.client = new RedisClient(this.connectionUrl, {
-      connectionTimeout: options.connectionTimeout || 10000,
+      connectionTimeout: options.connectionTimeout || 10_000,
       idleTimeout: options.idleTimeout || 0,
       autoReconnect: options.autoReconnect ?? true,
       maxRetries: options.maxRetries || 10,
       enableOfflineQueue: options.enableOfflineQueue ?? true,
       enableAutoPipelining: options.enableAutoPipelining ?? true,
-      tls: options.tls || false,
+      tls: options.tls,
     });
   }
 

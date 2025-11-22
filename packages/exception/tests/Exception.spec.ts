@@ -600,8 +600,8 @@ describe("Exception", () => {
         status: 408,
         data: {
           operation: "database_query",
-          timeout: 30000,
-          elapsed: 30001,
+          timeout: 30_000,
+          elapsed: 30_001,
           query: "SELECT * FROM users WHERE active = true",
           connectionPool: {
             active: 8,

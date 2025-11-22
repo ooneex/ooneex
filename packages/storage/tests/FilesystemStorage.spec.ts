@@ -177,7 +177,9 @@ describe("FilesystemStorageAdapter", () => {
 
   describe("setBucket", () => {
     test("should set bucket and create directory", () => {
-      const adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      const adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
       const result = adapter.setBucket("test-bucket");
 
       expect(result).toBe(adapter); // Method chaining
@@ -185,7 +187,9 @@ describe("FilesystemStorageAdapter", () => {
     });
 
     test("should handle existing bucket directory gracefully", async () => {
-      const adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      const adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
       const bucketPath = join(join(tmpdir(), "ooneex-test-storage"), "existing-bucket");
 
       await mkdir(bucketPath, { recursive: true });
@@ -198,7 +202,9 @@ describe("FilesystemStorageAdapter", () => {
     });
 
     test("should throw error if bucket name is required for operations", async () => {
-      const adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      const adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
 
       expect(adapter.list()).rejects.toThrow(StorageException);
       expect(adapter.exists("test-key")).rejects.toThrow(StorageException);
@@ -209,7 +215,9 @@ describe("FilesystemStorageAdapter", () => {
     let adapter: FilesystemStorage;
 
     beforeEach(() => {
-      adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
       adapter.setBucket("test-bucket");
     });
 
@@ -356,7 +364,9 @@ describe("FilesystemStorageAdapter", () => {
       });
 
       test("should return empty array for non-existing bucket", async () => {
-        const newAdapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+        const newAdapter = new FilesystemStorage({
+          storagePath: join(tmpdir(), "ooneex-test-storage"),
+        });
         newAdapter.setBucket("non-existing-bucket");
 
         const files = await newAdapter.list();
@@ -389,7 +399,9 @@ describe("FilesystemStorageAdapter", () => {
       });
 
       test("should handle clearing non-existing bucket gracefully", async () => {
-        const newAdapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+        const newAdapter = new FilesystemStorage({
+          storagePath: join(tmpdir(), "ooneex-test-storage"),
+        });
         newAdapter.setBucket("non-existing-bucket");
 
         const result = await newAdapter.clearBucket();
@@ -442,7 +454,9 @@ describe("FilesystemStorageAdapter", () => {
     let adapter: FilesystemStorage;
 
     beforeEach(() => {
-      adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
       adapter.setBucket("test-bucket");
     });
 
@@ -462,7 +476,9 @@ describe("FilesystemStorageAdapter", () => {
 
   describe("Integration with AbstractStorage", () => {
     test("should extend AbstractStorage", () => {
-      const adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      const adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
 
       expect(adapter).toHaveProperty("setBucket");
       expect(adapter).toHaveProperty("list");
@@ -477,7 +493,9 @@ describe("FilesystemStorageAdapter", () => {
     });
 
     test("should support method chaining with setBucket", () => {
-      const adapter = new FilesystemStorage({ storagePath: join(tmpdir(), "ooneex-test-storage") });
+      const adapter = new FilesystemStorage({
+        storagePath: join(tmpdir(), "ooneex-test-storage"),
+      });
       const result = adapter.setBucket("chaining-test");
 
       expect(result).toBe(adapter);

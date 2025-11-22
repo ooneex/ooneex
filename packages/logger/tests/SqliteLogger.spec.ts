@@ -113,7 +113,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "ERROR",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -130,7 +130,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "ERROR",
-          message: message,
+          message,
           userId: "user123",
           status: 500,
           date: expect.any(Date),
@@ -200,7 +200,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "WARN",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -218,7 +218,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "WARN",
-          message: message,
+          message,
           userId: "user456",
           path: "/api/warning",
           method: "POST",
@@ -236,7 +236,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "WARN",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -252,7 +252,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "INFO",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -277,7 +277,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "INFO",
-          message: message,
+          message,
           userId: "user789",
           email: "user@example.com",
           firstName: "John",
@@ -303,7 +303,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "DEBUG",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -320,7 +320,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "DEBUG",
-          message: message,
+          message,
           params: { table: "users", limit: 10 },
           payload: { query: "SELECT * FROM users" },
           date: expect.any(Date),
@@ -338,7 +338,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "LOG",
-          message: message,
+          message,
           date: expect.any(Date),
         }),
       );
@@ -357,7 +357,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "LOG",
-          message: message,
+          message,
           method: "GET",
           path: "/api/users",
           status: 200,
@@ -436,7 +436,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "ERROR",
-          message: message,
+          message,
           status: 404,
         }),
       );
@@ -472,8 +472,8 @@ describe("SqliteLogger", () => {
 
         expect(mockCreateSpy).toHaveBeenCalledWith(
           expect.objectContaining({
-            level: level,
-            message: message,
+            level,
+            message,
             date: expect.any(Date),
           }),
         );
@@ -548,7 +548,7 @@ describe("SqliteLogger", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "A".repeat(10000);
+      const longMessage = "A".repeat(10_000);
 
       logger.error(longMessage);
 
@@ -664,7 +664,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "INFO",
-          message: message,
+          message,
           userId: "user456",
           method: "PUT",
           path: "/api/users/profile",
@@ -686,7 +686,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "WARN",
-          message: message,
+          message,
           ip: "suspicious-ip-address",
           userAgent: "automated-tool/1.0",
           params: { attempts: 10, timespan: "5min" },
@@ -708,7 +708,7 @@ describe("SqliteLogger", () => {
       expect(mockCreateSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           level: "DEBUG",
-          message: message,
+          message,
           params: {
             active_connections: 5,
             max_connections: 20,

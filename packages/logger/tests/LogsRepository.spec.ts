@@ -970,8 +970,16 @@ describe("LogsRepository", () => {
       mixedLog.message = "Mixed data test";
       mixedLog.date = new Date();
       mixedLog.status = 500;
-      mixedLog.params = { stringValue: "test", numberValue: 42, boolValue: true };
-      mixedLog.payload = { stringValue: "test", numberValue: 42, boolValue: true };
+      mixedLog.params = {
+        stringValue: "test",
+        numberValue: 42,
+        boolValue: true,
+      };
+      mixedLog.payload = {
+        stringValue: "test",
+        numberValue: 42,
+        boolValue: true,
+      };
 
       // Override mock for mixed data test
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {

@@ -80,7 +80,7 @@ describe("RedisDatabaseAdapter", () => {
       const options: RedisConnectionOptionsType = {
         url: testConnectionUrl,
         connectionTimeout: 5000,
-        idleTimeout: 30000,
+        idleTimeout: 30_000,
         autoReconnect: false,
         maxRetries: 3,
         enableOfflineQueue: false,
@@ -97,7 +97,7 @@ describe("RedisDatabaseAdapter", () => {
     test("should create RedisClient with partial custom options and defaults", () => {
       const options: RedisConnectionOptionsType = {
         url: testConnectionUrl,
-        connectionTimeout: 15000,
+        connectionTimeout: 15_000,
         maxRetries: 5,
       };
 
@@ -696,7 +696,9 @@ describe("RedisDatabaseAdapter", () => {
     test("should handle invalid TLS configuration gracefully", () => {
       const options: RedisConnectionOptionsType = {
         url: testConnectionUrl,
-        tls: { invalidProperty: true } as unknown as RedisConnectionOptionsType["tls"], // Invalid TLS config to test error handling
+        tls: {
+          invalidProperty: true,
+        } as unknown as RedisConnectionOptionsType["tls"], // Invalid TLS config to test error handling
       };
 
       expect(() => {

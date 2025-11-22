@@ -243,7 +243,10 @@ describe("HttpResponse", () => {
     test("should return Web API Response for exception", async () => {
       const message = "Test error";
       const data = { code: "ERR001" };
-      response.exception(message, { status: Status.Code.UnprocessableEntity, data });
+      response.exception(message, {
+        status: Status.Code.UnprocessableEntity,
+        data,
+      });
 
       const webResponse = response.get();
       expect(webResponse).toBeInstanceOf(Response);
@@ -282,7 +285,9 @@ describe("HttpResponse", () => {
 
     test("should support method chaining for exception", () => {
       const message = "Chaining error";
-      const result = response.exception(message, { status: Status.Code.BadRequest });
+      const result = response.exception(message, {
+        status: Status.Code.BadRequest,
+      });
 
       expect(result).toBe(response);
 

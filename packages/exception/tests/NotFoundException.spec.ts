@@ -150,7 +150,7 @@ describe("NotFoundException", () => {
       const numberData: Record<string, number> = {
         userId: 404,
         attempts: 3,
-        lastFoundTimestamp: 1640995200,
+        lastFoundTimestamp: 1_640_995_200,
       };
 
       const exception = new NotFoundException<typeof numberData>("Number data test", numberData);
@@ -206,14 +206,14 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException("Database record not found", {
         table: "orders",
         primaryKey: "id",
-        value: 99999,
+        value: 99_999,
         query: "SELECT * FROM orders WHERE id = ?",
         database: "ecommerce",
       });
 
       expect(exception.message).toBe("Database record not found");
       expect(exception.data?.table).toBe("orders");
-      expect(exception.data?.value).toBe(99999);
+      expect(exception.data?.value).toBe(99_999);
     });
   });
 
@@ -321,7 +321,7 @@ describe("NotFoundException", () => {
         metadata: {
           searchEngine: "elasticsearch",
           indexName: "products",
-          totalIndexed: 50000,
+          totalIndexed: 50_000,
         },
         suggestions: {
           similarTerms: ["missing", "unavailable", "deleted"],
@@ -334,7 +334,7 @@ describe("NotFoundException", () => {
       expect(exception.data).toEqual(complexData);
       expect(exception.data?.search.results).toBe(0);
       expect(exception.data?.search.filters).toHaveLength(2);
-      expect(exception.data?.metadata.totalIndexed).toBe(50000);
+      expect(exception.data?.metadata.totalIndexed).toBe(50_000);
       expect(exception.data?.suggestions.similarTerms).toContain("missing");
     });
 

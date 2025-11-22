@@ -148,27 +148,21 @@ export class Status implements IStatus {
   public static Code: typeof STATUS_CODE = STATUS_CODE;
   public static Text: typeof STATUS_TEXT = STATUS_TEXT;
 
-  public isInformational: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return code >= STATUS_CODE.Continue && code < STATUS_CODE.OK;
-  };
+  public isInformational: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    code >= STATUS_CODE.Continue && code < STATUS_CODE.OK;
 
-  public isSuccessful: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return code >= STATUS_CODE.OK && code < STATUS_CODE.MultipleChoices;
-  };
+  public isSuccessful: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    code >= STATUS_CODE.OK && code < STATUS_CODE.MultipleChoices;
 
-  public isRedirect: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return code >= STATUS_CODE.MultipleChoices && code < STATUS_CODE.BadRequest;
-  };
+  public isRedirect: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    code >= STATUS_CODE.MultipleChoices && code < STATUS_CODE.BadRequest;
 
-  public isClientError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return code >= STATUS_CODE.BadRequest && code < STATUS_CODE.InternalServerError;
-  };
+  public isClientError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    code >= STATUS_CODE.BadRequest && code < STATUS_CODE.InternalServerError;
 
-  public isServerError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return code >= STATUS_CODE.InternalServerError && code < 600;
-  };
+  public isServerError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    code >= STATUS_CODE.InternalServerError && code < 600;
 
-  public isError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean => {
-    return this.isClientError(code) || this.isServerError(code);
-  };
+  public isError: (code: StatusCodeType) => boolean = (code: StatusCodeType): boolean =>
+    this.isClientError(code) || this.isServerError(code);
 }

@@ -1256,9 +1256,24 @@ describe("Mime", () => {
 
     test("should handle form-related MIME types correctly", () => {
       const formTypes = [
-        { mime: "application/x-www-form-urlencoded", isForm: true, isFormData: false, isMultipart: false },
-        { mime: "multipart/form-data", isForm: false, isFormData: false, isMultipart: true },
-        { mime: "application/form-data", isForm: false, isFormData: true, isMultipart: false },
+        {
+          mime: "application/x-www-form-urlencoded",
+          isForm: true,
+          isFormData: false,
+          isMultipart: false,
+        },
+        {
+          mime: "multipart/form-data",
+          isForm: false,
+          isFormData: false,
+          isMultipart: true,
+        },
+        {
+          mime: "application/form-data",
+          isForm: false,
+          isFormData: true,
+          isMultipart: false,
+        },
       ];
 
       formTypes.forEach(({ mime: mimeType, isForm, isFormData, isMultipart }) => {
@@ -1270,10 +1285,30 @@ describe("Mime", () => {
 
     test("should handle text-related MIME types correctly", () => {
       const textTypes = [
-        { mime: "text/plain", isText: true, isPlainText: true, isMarkdown: false },
-        { mime: "text/markdown", isText: false, isPlainText: false, isMarkdown: true },
-        { mime: "text/x-markdown", isText: false, isPlainText: false, isMarkdown: true },
-        { mime: "text/html", isText: false, isPlainText: false, isMarkdown: false },
+        {
+          mime: "text/plain",
+          isText: true,
+          isPlainText: true,
+          isMarkdown: false,
+        },
+        {
+          mime: "text/markdown",
+          isText: false,
+          isPlainText: false,
+          isMarkdown: true,
+        },
+        {
+          mime: "text/x-markdown",
+          isText: false,
+          isPlainText: false,
+          isMarkdown: true,
+        },
+        {
+          mime: "text/html",
+          isText: false,
+          isPlainText: false,
+          isMarkdown: false,
+        },
       ];
 
       textTypes.forEach(({ mime: mimeType, isText, isPlainText, isMarkdown }) => {

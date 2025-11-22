@@ -62,7 +62,11 @@ export class SqliteLogger implements ILogger<LogsEntity> {
 
   private writeLog(
     level: LevelType,
-    config?: { message?: string; data?: LogsEntity; exception?: IException<ScalarType> },
+    config?: {
+      message?: string;
+      data?: LogsEntity;
+      exception?: IException<ScalarType>;
+    },
   ): void {
     const { message, data, exception } = config || {};
 

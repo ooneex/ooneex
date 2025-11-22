@@ -15,7 +15,11 @@ export class StatusEntity extends BaseEntity implements IStatus {
   })
   status: StatusType;
 
-  @ManyToOne(() => ColorEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => ColorEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "color_id" })
   color?: IColor;
 

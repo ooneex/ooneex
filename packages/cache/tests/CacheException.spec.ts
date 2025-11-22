@@ -214,7 +214,7 @@ describe("CacheException", () => {
         store: "redis",
         host: "cache.example.com",
         port: 6379,
-        lastConnected: new Date(Date.now() - 30000).toISOString(),
+        lastConnected: new Date(Date.now() - 30_000).toISOString(),
         retryCount: 3,
         maxRetries: 5,
       });
@@ -244,8 +244,8 @@ describe("CacheException", () => {
     test("should handle memory cache errors", () => {
       const exception = new CacheException("Memory cache overflow", {
         store: "memory",
-        currentSize: 1073741824, // 1GB
-        maxSize: 1073741824, // 1GB
+        currentSize: 1_073_741_824, // 1GB
+        maxSize: 1_073_741_824, // 1GB
         evictionPolicy: "lru",
         evictedKeys: ["old:key:1", "old:key:2"],
         operation: "set",
@@ -378,10 +378,10 @@ describe("CacheException", () => {
           hitRate: 0.92,
           missRate: 0.08,
           averageResponseTime: 2.5,
-          peakMemoryUsage: 512000000,
+          peakMemoryUsage: 512_000_000,
         },
         configuration: {
-          maxMemory: 1073741824,
+          maxMemory: 1_073_741_824,
           evictionPolicy: "allkeys-lru",
           persistence: {
             enabled: true,
@@ -446,8 +446,8 @@ describe("CacheException", () => {
           "trending:categories": "Data source unavailable",
           "popular:products": "Query timeout",
         },
-        duration: 45000,
-        expectedDuration: 15000,
+        duration: 45_000,
+        expectedDuration: 15_000,
       });
 
       expect(exception.message).toBe("Cache warming failed");
@@ -479,10 +479,10 @@ describe("CacheException", () => {
         key: "session:active:789",
         originalTtl: 1800,
         remainingTtl: 0,
-        lastAccessed: new Date(Date.now() - 2000000).toISOString(),
+        lastAccessed: new Date(Date.now() - 2_000_000).toISOString(),
         slidingWindow: 1800,
         maxIdleTime: 900,
-        absoluteExpiration: new Date(Date.now() + 86400000).toISOString(),
+        absoluteExpiration: new Date(Date.now() + 86_400_000).toISOString(),
       });
 
       expect(exception.message).toBe("Expiration policy violation");
@@ -495,10 +495,10 @@ describe("CacheException", () => {
       const exception = new CacheException("Cache size limit exceeded", {
         operation: "set",
         key: "large:dataset:001",
-        valueSize: 10485760, // 10MB
-        maxValueSize: 5242880, // 5MB
-        totalCacheSize: 1073741824, // 1GB
-        maxCacheSize: 1073741824, // 1GB
+        valueSize: 10_485_760, // 10MB
+        maxValueSize: 5_242_880, // 5MB
+        totalCacheSize: 1_073_741_824, // 1GB
+        maxCacheSize: 1_073_741_824, // 1GB
         compressionEnabled: true,
         compressionRatio: 0.7,
         suggestedAction: "Split data into smaller chunks",

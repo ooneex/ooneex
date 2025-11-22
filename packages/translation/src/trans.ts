@@ -1,13 +1,16 @@
 import { TranslationException } from "./TranslationException";
 import type { LocaleType } from "./types";
 
-const getNestedValue = (dict: unknown, path: string): unknown => {
-  return path.split(".").reduce((current, key) => {
-    return current && typeof current === "object" && current !== null && key in current
-      ? (current as Record<string, unknown>)[key]
-      : undefined;
-  }, dict);
-};
+const getNestedValue = (dict: unknown, path: string): unknown =>
+  path
+    .split(".")
+    .reduce(
+      (current, key) =>
+        current && typeof current === "object" && current !== null && key in current
+          ? (current as Record<string, unknown>)[key]
+          : undefined,
+      dict,
+    );
 
 export const trans = <T extends string>(
   key: string | Record<LocaleType, string>,
@@ -46,7 +49,9 @@ export const trans = <T extends string>(
 
     const translationEntry = getNestedValue(dict, translationKey) as Record<LocaleType, string>;
 
-    if (!translationEntry) {
+    if (translationEntry) {
+      text = translationEntry[lang as keyof typeof translationEntry] || translationEntry.en || key;
+    } else {
       // Fallback to original key if plural form not found
       if (translationKey !== key) {
         const fallbackEntry = getNestedValue(dict, key) as Record<LocaleType, string>;
@@ -58,8 +63,6 @@ export const trans = <T extends string>(
       } else {
         throw new TranslationException(`Translation key "${key}" not found`);
       }
-    } else {
-      text = translationEntry[lang as keyof typeof translationEntry] || translationEntry.en || key;
     }
   } else if (typeof key === "object") {
     text = key[lang as keyof typeof key] || key.en;

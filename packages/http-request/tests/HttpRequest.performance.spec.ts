@@ -83,7 +83,9 @@ describe("HttpRequest Performance Tests", () => {
       for (let i = 0; i < 20; i++) {
         const size = Math.floor(Math.random() * 1000) + 100; // 100-1100 bytes
         const content = new Array(size).fill("x").join("");
-        const file = new File([content], `file${i}.txt`, { type: "text/plain" });
+        const file = new File([content], `file${i}.txt`, {
+          type: "text/plain",
+        });
         formData.append(`file${i}`, file);
       }
 
@@ -102,7 +104,9 @@ describe("HttpRequest Performance Tests", () => {
       for (let i = 0; i < 25; i++) {
         if (i % 2 === 0) {
           // Add file
-          const file = new File([`content${i}`], `doc${i}.txt`, { type: "text/plain" });
+          const file = new File([`content${i}`], `doc${i}.txt`, {
+            type: "text/plain",
+          });
           formData.append(`file${i}`, file);
         } else {
           // Add regular field
@@ -244,7 +248,7 @@ describe("HttpRequest Performance Tests", () => {
 
     test("should handle large payload data efficiently", () => {
       const largePayload = {
-        data: new Array(10000).fill(0).map((_, i) => ({
+        data: new Array(10_000).fill(0).map((_, i) => ({
           id: i,
           name: `item${i}`,
           description: `Description for item ${i}`,
@@ -378,7 +382,9 @@ describe("HttpRequest Performance Tests", () => {
 
       files.forEach((fileInfo, index) => {
         const content = new Array(fileInfo.size).fill("x").join("");
-        const file = new File([content], fileInfo.name, { type: fileInfo.type });
+        const file = new File([content], fileInfo.name, {
+          type: fileInfo.type,
+        });
         formData.append(`file${index}`, file);
       });
 

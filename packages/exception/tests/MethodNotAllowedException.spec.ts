@@ -88,7 +88,9 @@ describe("MethodNotAllowedException", () => {
 
     test("should always set status to MethodNotAllowed", () => {
       const exception1 = new MethodNotAllowedException("Error 1");
-      const exception2 = new MethodNotAllowedException("Error 2", { key: "value" });
+      const exception2 = new MethodNotAllowedException("Error 2", {
+        key: "value",
+      });
 
       expect(exception1.status).toBe(Status.Code.MethodNotAllowed);
       expect(exception2.status).toBe(Status.Code.MethodNotAllowed);

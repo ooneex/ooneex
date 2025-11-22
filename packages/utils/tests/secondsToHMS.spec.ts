@@ -30,7 +30,7 @@ describe("secondsToHMS", () => {
     test("should pad minutes with leading zero when hours present", () => {
       expect(secondsToHMS(3660)).toBe("1:01:00");
       expect(secondsToHMS(3605)).toBe("1:00:05");
-      expect(secondsToHMS(32400 + 60 + 5)).toBe("9:01:05");
+      expect(secondsToHMS(32_400 + 60 + 5)).toBe("9:01:05");
     });
 
     test("should pad seconds with leading zero when minutes present", () => {
@@ -73,7 +73,7 @@ describe("secondsToHMS", () => {
     });
 
     test("should handle maximum safe integer values", () => {
-      const largeValue = 999999999; // 999,999,999 seconds
+      const largeValue = 999_999_999; // 999,999,999 seconds
       const result = secondsToHMS(largeValue);
       expect(typeof result).toBe("string");
       expect(result).toMatch(/^\d+:\d{2}:\d{2}$/);
@@ -100,10 +100,10 @@ describe("secondsToHMS", () => {
     });
 
     test("should handle floating point precision edge cases", () => {
-      expect(secondsToHMS(59.999999)).toBe("59");
-      expect(secondsToHMS(60.000001)).toBe("1:00");
-      expect(secondsToHMS(3599.999999)).toBe("59:59");
-      expect(secondsToHMS(3600.000001)).toBe("1:00:00");
+      expect(secondsToHMS(59.999_999)).toBe("59");
+      expect(secondsToHMS(60.000_001)).toBe("1:00");
+      expect(secondsToHMS(3599.999_999)).toBe("59:59");
+      expect(secondsToHMS(3600.000_001)).toBe("1:00:00");
     });
   });
 
@@ -117,8 +117,8 @@ describe("secondsToHMS", () => {
       [3600, "1:00:00"],
       [3661, "1:01:01"],
       [7200, "2:00:00"],
-      [86400, "24:00:00"], // 1 day
-      [90061, "25:01:01"], // 25 hours 1 minute 1 second
+      [86_400, "24:00:00"], // 1 day
+      [90_061, "25:01:01"], // 25 hours 1 minute 1 second
       [1.5, "1"], // decimal handling
       [61.7, "1:01"], // decimal handling with minutes
       [3661.9, "1:01:01"], // decimal handling with hours
@@ -305,7 +305,7 @@ describe("secondsToHMS", () => {
     });
 
     test("should handle very long durations", () => {
-      const result = secondsToHMS(999999);
+      const result = secondsToHMS(999_999);
       expect(typeof result).toBe("string");
       expect(result).toMatch(/^\d+:\d{2}:\d{2}$/);
     });
@@ -332,7 +332,7 @@ describe("secondsToHMS", () => {
     test("should handle large inputs efficiently", () => {
       const start = Date.now();
       for (let i = 0; i < 1000; i++) {
-        secondsToHMS(999999);
+        secondsToHMS(999_999);
       }
       const end = Date.now();
       expect(end - start).toBeLessThan(100); // Should be very fast

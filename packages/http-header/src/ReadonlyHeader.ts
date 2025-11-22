@@ -69,9 +69,7 @@ export class ReadonlyHeader implements IReadonlyHeader {
     // Parse the first language from Accept-Language header (same logic as getAcceptLanguage)
     const firstLang = acceptLanguage
       .split(",")
-      .map((lang) => {
-        return lang.split(";")[0]?.trim();
-      })
+      .map((lang) => lang.split(";")[0]?.trim())
       .filter((lang): lang is string => Boolean(lang))[0];
 
     if (!firstLang) {
@@ -103,9 +101,7 @@ export class ReadonlyHeader implements IReadonlyHeader {
       return null;
     }
 
-    return encoding.split(",").map((val) => {
-      return val.trim();
-    }) as EncodingType[] | null;
+    return encoding.split(",").map((val) => val.trim()) as EncodingType[] | null;
   }
 
   public getHost(): string | null {

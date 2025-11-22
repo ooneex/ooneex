@@ -619,7 +619,7 @@ describe("FilesystemCacheAdapter", () => {
     });
 
     test("should handle very large TTL values", async () => {
-      const largeTtl = 86400 * 365; // 1 year in seconds
+      const largeTtl = 86_400 * 365; // 1 year in seconds
       await adapter.set(testKey, testValue, largeTtl);
       const result = await adapter.ttl(testKey);
       expect(result).toBeGreaterThan(0);

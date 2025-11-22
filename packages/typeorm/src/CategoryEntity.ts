@@ -11,7 +11,11 @@ export class CategoryEntity extends BaseEntity implements ICategory {
   @Column({ name: "name", type: "varchar", length: 100 })
   name: string;
 
-  @ManyToOne(() => ColorEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => ColorEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "color_id" })
   color?: IColor;
 

@@ -386,7 +386,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         entities: [TestEntity],
         enableWAL: false,
         busyErrorRetry: 1000,
-        busyTimeout: 15000,
+        busyTimeout: 15_000,
         logging: true,
       };
 
@@ -601,7 +601,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         entities: [TestEntity],
         enableWAL: false,
         busyErrorRetry: 5000,
-        busyTimeout: 60000,
+        busyTimeout: 60_000,
       };
 
       expect(() => {
@@ -616,7 +616,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         database: "/tmp/sqlite-config-test.db",
         enableWAL: true,
         busyErrorRetry: 3000,
-        busyTimeout: 45000,
+        busyTimeout: 45_000,
         prepareDatabase: (db: unknown) => {
           // Custom preparation function
           return db;

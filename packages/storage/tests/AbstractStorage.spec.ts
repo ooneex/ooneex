@@ -20,7 +20,7 @@ const createMockS3Client = () => ({
     contents: [{ key: "file1.txt" }, { key: "file2.txt" }, { key: "folder/file3.txt" }],
   })),
   exists: mock(async () => true),
-  delete: mock(async () => undefined),
+  delete: mock(async () => {}),
   file: mock((path: string) => createMockS3File(path)),
 });
 

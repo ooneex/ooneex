@@ -18,7 +18,11 @@ export class PaymentCouponEntity extends BaseEntity implements ICoupon {
   @Column({ name: "description", type: "text", nullable: true })
   description?: string;
 
-  @Column({ name: "discount_type", type: "enum", enum: ["percentage", "fixed"] })
+  @Column({
+    name: "discount_type",
+    type: "enum",
+    enum: ["percentage", "fixed"],
+  })
   discountType: "percentage" | "fixed";
 
   @Column({ name: "discount_value", type: "decimal", precision: 10, scale: 2 })
@@ -42,10 +46,20 @@ export class PaymentCouponEntity extends BaseEntity implements ICoupon {
   @Column({ name: "is_active", type: "boolean", default: true, nullable: true })
   isActive?: boolean;
 
-  @Column({ name: "minimum_amount", type: "decimal", precision: 10, scale: 2, nullable: true })
+  @Column({
+    name: "minimum_amount",
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   minimumAmount?: number;
 
-  @ManyToMany(() => PaymentProductEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentProductEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_coupons_applicable_products",
     joinColumn: { name: "coupon_id", referencedColumnName: "id" },
@@ -53,7 +67,11 @@ export class PaymentCouponEntity extends BaseEntity implements ICoupon {
   })
   applicableProducts?: IProduct[];
 
-  @ManyToMany(() => PaymentPlanEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentPlanEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_coupons_applicable_plans",
     joinColumn: { name: "coupon_id", referencedColumnName: "id" },

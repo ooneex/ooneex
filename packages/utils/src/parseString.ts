@@ -26,9 +26,7 @@ export const parseString = <T = unknown>(text: string): T => {
 
     let values: unknown[] = trimmedText.split(/, */);
 
-    values = values.map((value) => {
-      return parseString(value as string);
-    });
+    values = values.map((value) => parseString(value as string));
 
     return values as T;
   }

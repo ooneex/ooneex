@@ -12,9 +12,9 @@ export class HttpRequest<Config extends RequestConfigType = RequestConfigType> i
   public readonly method: HttpMethodType;
   public readonly header: Header;
   public readonly userAgent: IUserAgent | null;
-  public readonly params: Config['params'] = {};
-  public readonly payload: Config['payload'] = {};
-  public readonly queries: Config['queries'] = {};
+  public readonly params: Config["params"] = {};
+  public readonly payload: Config["payload"] = {};
+  public readonly queries: Config["queries"] = {};
   public readonly form: FormData | null;
   public readonly files: Record<string, IRequestFile> = {};
   public readonly ip: string | null;

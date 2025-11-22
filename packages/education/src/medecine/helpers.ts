@@ -10,14 +10,11 @@ import type {
 } from "./types";
 import { YEARS_EN } from "./years";
 
-export const getDisciplineByCode = (code: MedecineDisciplineCodeType): MedecineDisciplineType | undefined => {
-  return DISCIPLINES_EN.find((discipline) => discipline.code === code);
-};
+export const getDisciplineByCode = (code: MedecineDisciplineCodeType): MedecineDisciplineType | undefined =>
+  DISCIPLINES_EN.find((discipline) => discipline.code === code);
 
-export const getYearByCode = (code: MedecineYearCodeType): MedecineYearType | undefined => {
-  return YEARS_EN.find((year) => year.code === code);
-};
+export const getYearByCode = (code: MedecineYearCodeType): MedecineYearType | undefined =>
+  YEARS_EN.find((year) => year.code === code);
 
-export const getFieldByCode = (code: MedecineFieldCodeType): MedecineFieldType | undefined => {
-  return FIELDS_EN.find((field) => field.code === code);
-};
+export const getFieldByCode = (code: MedecineFieldCodeType): MedecineFieldType | undefined =>
+  FIELDS_EN.find((field) => field.code === code);

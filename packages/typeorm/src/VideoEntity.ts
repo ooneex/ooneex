@@ -35,7 +35,11 @@ export class VideoEntity extends BaseEntity implements IVideo {
   @Column({ name: "duration", type: "int", nullable: true })
   duration?: number;
 
-  @ManyToOne(() => CategoryEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => CategoryEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "category_id" })
   category?: ICategory;
 
@@ -69,22 +73,44 @@ export class VideoEntity extends BaseEntity implements IVideo {
   @Column({ name: "bitrate", type: "int", nullable: true })
   bitrate?: number;
 
-  @Column({ name: "frame_rate", type: "decimal", precision: 5, scale: 2, nullable: true })
+  @Column({
+    name: "frame_rate",
+    type: "decimal",
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
   frameRate?: number;
 
   @Column({ name: "audio_codec", type: "varchar", length: 50, nullable: true })
   audioCodec?: AudioCodecType;
 
-  @Column({ name: "audio_channels", type: "varchar", length: 20, nullable: true })
+  @Column({
+    name: "audio_channels",
+    type: "varchar",
+    length: 20,
+    nullable: true,
+  })
   audioChannels?: AudioChannelsType;
 
-  @Column({ name: "average_rating", type: "decimal", precision: 3, scale: 2, nullable: true })
+  @Column({
+    name: "average_rating",
+    type: "decimal",
+    precision: 3,
+    scale: 2,
+    nullable: true,
+  })
   averageRating?: number;
 
   @Column({ name: "ratings_count", type: "int", nullable: true })
   ratingsCount?: number;
 
-  @Column({ name: "content_rating", type: "varchar", length: 10, nullable: true })
+  @Column({
+    name: "content_rating",
+    type: "varchar",
+    length: 10,
+    nullable: true,
+  })
   contentRating?: string;
 
   @ManyToMany(() => TagEntity, { eager: false, cascade: ["insert", "update"] })
@@ -95,7 +121,11 @@ export class VideoEntity extends BaseEntity implements IVideo {
   })
   tags?: ITag[];
 
-  @ManyToOne(() => StatusEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => StatusEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "status_id" })
   status?: IStatus;
 }

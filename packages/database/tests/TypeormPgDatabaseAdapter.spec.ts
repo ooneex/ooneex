@@ -395,7 +395,7 @@ describe("TypeormPgDatabaseAdapter", () => {
         extra: {
           max: 50,
           ssl: { rejectUnauthorized: false },
-          idleTimeoutMillis: 60000,
+          idleTimeoutMillis: 60_000,
         },
         logging: true,
       };
@@ -630,7 +630,7 @@ describe("TypeormPgDatabaseAdapter", () => {
         logging: true,
         extra: {
           max: 100,
-          idleTimeoutMillis: 30000,
+          idleTimeoutMillis: 30_000,
           connectionTimeoutMillis: 2000,
         },
         ssl: {

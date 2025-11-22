@@ -20,13 +20,21 @@ export class PaymentPlanEntity extends BaseEntity implements IPlan {
   @Column({ name: "price", type: "decimal", precision: 10, scale: 2 })
   price: number;
 
-  @Column({ name: "period", type: "enum", enum: ["monthly", "yearly", "weekly", "daily"] })
+  @Column({
+    name: "period",
+    type: "enum",
+    enum: ["monthly", "yearly", "weekly", "daily"],
+  })
   period: "monthly" | "yearly" | "weekly" | "daily";
 
   @Column({ name: "period_count", type: "int", default: 1, nullable: true })
   periodCount?: number;
 
-  @ManyToMany(() => PaymentFeatureEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentFeatureEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_plans_features",
     joinColumn: { name: "plan_id", referencedColumnName: "id" },

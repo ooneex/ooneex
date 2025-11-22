@@ -40,7 +40,11 @@ describe("PermissionException", () => {
 
     test("should create PermissionException with message and data", () => {
       const message = "Insufficient permissions for resource access";
-      const data = { resource: "user_data", action: "delete", userId: "user-123" };
+      const data = {
+        resource: "user_data",
+        action: "delete",
+        userId: "user-123",
+      };
       const exception = new PermissionException(message, data);
 
       expect(exception.message).toBe(message);
@@ -142,7 +146,7 @@ describe("PermissionException", () => {
 
     test("should support number generic type", () => {
       const numberData = {
-        userId: 12345,
+        userId: 12_345,
         requiredLevel: 5,
         currentLevel: 2,
         resourceCost: 100,
@@ -150,7 +154,7 @@ describe("PermissionException", () => {
 
       const exception = new PermissionException<typeof numberData>("Insufficient permission level", numberData);
 
-      expect(exception.data?.userId).toBe(12345);
+      expect(exception.data?.userId).toBe(12_345);
       expect(exception.data?.requiredLevel).toBe(5);
       expect(exception.data?.currentLevel).toBe(2);
       expect(exception.data?.resourceCost).toBe(100);
@@ -352,11 +356,11 @@ describe("PermissionException", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "A".repeat(10000);
+      const longMessage = "A".repeat(10_000);
       const exception = new PermissionException(longMessage);
 
       expect(exception.message).toBe(longMessage);
-      expect(exception.message.length).toBe(10000);
+      expect(exception.message.length).toBe(10_000);
     });
 
     test("should handle special characters in message", () => {

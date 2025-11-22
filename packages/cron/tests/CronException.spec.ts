@@ -71,7 +71,7 @@ describe("CronException", () => {
   describe("Inheritance and Properties", () => {
     test("should inherit all properties from Exception", () => {
       const message = "Cron job timeout";
-      const data = { timeout: 30000, jobId: "job-123", retries: 5 };
+      const data = { timeout: 30_000, jobId: "job-123", retries: 5 };
       const exception = new CronException(message, data);
 
       expect(exception).toBeInstanceOf(Error);
@@ -84,7 +84,9 @@ describe("CronException", () => {
 
     test("should always set status to InternalServerError", () => {
       const exception1 = new CronException("Job failed");
-      const exception2 = new CronException("Scheduler error", { error: "timeout" });
+      const exception2 = new CronException("Scheduler error", {
+        error: "timeout",
+      });
 
       expect(exception1.status).toBe(Status.Code.InternalServerError);
       expect(exception2.status).toBe(Status.Code.InternalServerError);
@@ -126,7 +128,7 @@ describe("CronException", () => {
         executionInfo: {
           attempt: 2,
           maxRetries: 3,
-          timeout: 60000,
+          timeout: 60_000,
         },
       };
 
@@ -152,16 +154,16 @@ describe("CronException", () => {
 
     test("should support number generic type", () => {
       const numberData = {
-        executionTime: 15000,
-        maxExecutionTime: 10000,
+        executionTime: 15_000,
+        maxExecutionTime: 10_000,
         queueSize: 25,
         maxQueueSize: 100,
       };
 
       const exception = new CronException<typeof numberData>("Execution timeout", numberData);
 
-      expect(exception.data?.executionTime).toBe(15000);
-      expect(exception.data?.maxExecutionTime).toBe(10000);
+      expect(exception.data?.executionTime).toBe(15_000);
+      expect(exception.data?.maxExecutionTime).toBe(10_000);
     });
   });
 
@@ -197,13 +199,13 @@ describe("CronException", () => {
       const exception = new CronException("Job execution timeout", {
         jobName: "data-export",
         startTime: new Date("2024-01-15T10:00:00Z"),
-        timeout: 300000,
-        actualDuration: 450000,
+        timeout: 300_000,
+        actualDuration: 450_000,
         status: "timeout",
       });
 
       expect(exception.data?.jobName).toBe("data-export");
-      expect(exception.data?.actualDuration).toBe(450000);
+      expect(exception.data?.actualDuration).toBe(450_000);
     });
 
     test("should handle scheduler service errors", () => {
@@ -377,7 +379,7 @@ describe("CronException", () => {
         },
         configuration: {
           maxConcurrent: 5,
-          timeoutDefault: 300000,
+          timeoutDefault: 300_000,
           retryPolicy: {
             maxRetries: 3,
             backoffMultiplier: 2,
@@ -444,14 +446,14 @@ describe("CronException", () => {
         oldestJob: {
           name: "daily-cleanup",
           scheduledAt: new Date("2024-01-15T02:00:00Z"),
-          waitTime: 28800000, // 8 hours in ms
+          waitTime: 28_800_000, // 8 hours in ms
         },
         recommendation: "Increase queue size or add more workers",
       });
 
       expect(exception.data?.currentSize).toBe(1000);
       expect(exception.data?.droppedJobs).toContain("backup-retry");
-      expect(exception.data?.oldestJob.waitTime).toBe(28800000);
+      expect(exception.data?.oldestJob.waitTime).toBe(28_800_000);
     });
 
     test("should handle cron job persistence errors", () => {

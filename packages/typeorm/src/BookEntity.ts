@@ -20,7 +20,10 @@ export class BookEntity extends BaseEntity implements IBook {
   @Column({ name: "subtitle", type: "varchar", length: 500, nullable: true })
   subtitle?: string;
 
-  @ManyToMany(() => BookAuthorEntity, { eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => BookAuthorEntity, {
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "books_authors",
     joinColumn: { name: "book_id", referencedColumnName: "id" },
@@ -34,7 +37,11 @@ export class BookEntity extends BaseEntity implements IBook {
   @Column({ name: "isbn13", type: "varchar", length: 17, nullable: true })
   isbn13?: string;
 
-  @ManyToOne(() => BookPublisherEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => BookPublisherEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "publisher_id" })
   publisher?: IPublisher;
 
@@ -47,7 +54,11 @@ export class BookEntity extends BaseEntity implements IBook {
   @Column({ name: "page_count", type: "int", nullable: true })
   pageCount?: number;
 
-  @ManyToOne(() => CategoryEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => CategoryEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "category_id" })
   category?: ICategory;
 
@@ -63,7 +74,13 @@ export class BookEntity extends BaseEntity implements IBook {
   @Column({ name: "cover_image", type: "text", nullable: true })
   coverImage?: string;
 
-  @Column({ name: "average_rating", type: "decimal", precision: 3, scale: 2, nullable: true })
+  @Column({
+    name: "average_rating",
+    type: "decimal",
+    precision: 3,
+    scale: 2,
+    nullable: true,
+  })
   averageRating?: number;
 
   @Column({ name: "ratings_count", type: "int", nullable: true })
@@ -86,7 +103,11 @@ export class BookEntity extends BaseEntity implements IBook {
   })
   tags?: ITag[];
 
-  @ManyToOne(() => StatusEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => StatusEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "status_id" })
   status?: IStatus;
 }

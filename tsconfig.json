@@ -1,19 +1,14 @@
 {
   "compilerOptions": {
-    // Environment setup & latest features
     "lib": ["ES2022", "DOM"],
     "target": "ES2022",
     "module": "ESNext",
     "moduleDetection": "force",
     "allowJs": true,
-
-    // Bundler mode
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-
-    // Best practices
     "strict": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
@@ -24,9 +19,8 @@
     "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
-
-    // Decorators
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "strictNullChecks": true
   }
 }

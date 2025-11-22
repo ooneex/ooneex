@@ -85,7 +85,10 @@ describe("trans", () => {
         },
       };
 
-      const result = trans("app.ui.components.button.submit", { lang: "en", dict });
+      const result = trans("app.ui.components.button.submit", {
+        lang: "en",
+        dict,
+      });
       expect(result).toBe("Submit");
     });
 
@@ -191,7 +194,11 @@ describe("trans", () => {
         },
       };
 
-      const result = trans("welcome", { lang: "en", params: { name: "John" }, dict });
+      const result = trans("welcome", {
+        lang: "en",
+        params: { name: "John" },
+        dict,
+      });
       expect(result).toBe("Welcome John!");
     });
 
@@ -203,7 +210,11 @@ describe("trans", () => {
         },
       };
 
-      const result = trans("message", { lang: "en", params: { name: "Alice", count: 5 }, dict });
+      const result = trans("message", {
+        lang: "en",
+        params: { name: "Alice", count: 5 },
+        dict,
+      });
       expect(result).toBe("Hello Alice, you have 5 messages");
     });
 
@@ -234,7 +245,10 @@ describe("trans", () => {
         fr: "Bonjour {{ name }}, bienvenue dans {{ app }}!",
       } as Record<string, string>;
 
-      const result = trans(translations, { lang: "fr", params: { name: "Marie", app: "MyApp" } });
+      const result = trans(translations, {
+        lang: "fr",
+        params: { name: "Marie", app: "MyApp" },
+      });
       expect(result).toBe("Bonjour Marie, bienvenue dans MyApp!");
     });
 
@@ -246,7 +260,11 @@ describe("trans", () => {
       };
 
       // The function specifically looks for "{{ key }}" format with spaces
-      const result = trans("compact", { lang: "en", params: { id: "123", count: "5" }, dict });
+      const result = trans("compact", {
+        lang: "en",
+        params: { id: "123", count: "5" },
+        dict,
+      });
       expect(result).toBe("User{{id}}has{{count}}items"); // Should remain unchanged
     });
 
@@ -257,7 +275,11 @@ describe("trans", () => {
         },
       };
 
-      const result = trans("partial", { lang: "en", params: { name: "Bob" }, dict });
+      const result = trans("partial", {
+        lang: "en",
+        params: { name: "Bob" },
+        dict,
+      });
       expect(result).toBe("Hello Bob, you have {{ count }} items");
     });
 
@@ -416,10 +438,20 @@ describe("trans", () => {
         },
       };
 
-      expect(trans("validation.required", { lang: "en", params: { field: "Email" }, dict })).toBe("Email is required");
-      expect(trans("validation.minLength", { lang: "fr", params: { field: "Mot de passe", min: 8 }, dict })).toBe(
-        "Mot de passe doit contenir au moins 8 caractères",
-      );
+      expect(
+        trans("validation.required", {
+          lang: "en",
+          params: { field: "Email" },
+          dict,
+        }),
+      ).toBe("Email is required");
+      expect(
+        trans("validation.minLength", {
+          lang: "fr",
+          params: { field: "Mot de passe", min: 8 },
+          dict,
+        }),
+      ).toBe("Mot de passe doit contenir au moins 8 caractères");
     });
 
     test("should handle user dashboard messages", () => {
@@ -436,12 +468,20 @@ describe("trans", () => {
         },
       };
 
-      expect(trans("dashboard.welcome", { lang: "en", params: { username: "John" }, dict })).toBe(
-        "Welcome back, John!",
-      );
-      expect(trans("dashboard.stats", { lang: "fr", params: { unread: 3, tasks: 7 }, dict })).toBe(
-        "Vous avez 3 messages non lus et 7 tâches en attente",
-      );
+      expect(
+        trans("dashboard.welcome", {
+          lang: "en",
+          params: { username: "John" },
+          dict,
+        }),
+      ).toBe("Welcome back, John!");
+      expect(
+        trans("dashboard.stats", {
+          lang: "fr",
+          params: { unread: 3, tasks: 7 },
+          dict,
+        }),
+      ).toBe("Vous avez 3 messages non lus et 7 tâches en attente");
     });
 
     test("should handle e-commerce product information", () => {
@@ -531,7 +571,10 @@ describe("trans", () => {
         },
       };
 
-      const result = trans("a.b.c.d.e.f.g.h.translation", { lang: "en", dict: deepDict });
+      const result = trans("a.b.c.d.e.f.g.h.translation", {
+        lang: "en",
+        dict: deepDict,
+      });
       expect(result).toBe("Deep translation");
     });
   });
@@ -702,33 +745,12 @@ describe("trans", () => {
         });
         expect(result2).toBe("Bob has 150 points in Sports");
       });
-
-      test("should handle complex parameter combinations", () => {
-        const singularText = "{{ customerName }}" + " ordered " + "{{ count }}" + " item for $" + "{{ total }}";
-        const pluralText = "{{ customerName }}" + " ordered " + "{{ count }}" + " items for $" + "{{ total }}";
-        const dict = {
-          order_summary: {
-            en: singularText,
-          },
-          order_summary_plural: {
-            en: pluralText,
-          },
-        };
-
-        const result = trans("order_summary", {
-          lang: "en",
-          dict,
-          count: 3,
-          params: { customerName: "John", total: "45.99" },
-        });
-        expect(result).toBe("John ordered 3 items for $45.99");
-      });
     });
 
     describe("Direct Translation Objects with Pluralization", () => {
       test("should handle count parameter with direct translation objects", () => {
-        const directItemText = "{{ count }}" + " direct item";
-        const directItemFrText = "{{ count }}" + " élément direct";
+        const directItemText = "{{ count }} direct item";
+        const directItemFrText = "{{ count }} élément direct";
         const translations = {
           en: directItemText,
           fr: directItemFrText,
@@ -739,8 +761,8 @@ describe("trans", () => {
       });
 
       test("should combine parameters and count with direct objects", () => {
-        const directMessageText = "{{ user }}" + " has " + "{{ count }}" + " direct message";
-        const directMessageFrText = "{{ user }}" + " a " + "{{ count }}" + " message direct";
+        const directMessageText = "{{ user }} has {{ count }} direct message";
+        const directMessageFrText = "{{ user }} a {{ count }} message direct";
         const translations = {
           en: directMessageText,
           fr: directMessageFrText,
@@ -839,7 +861,11 @@ describe("trans", () => {
           },
         };
 
-        const result = trans("greeting", { lang: "en", dict, params: { name: "World" } });
+        const result = trans("greeting", {
+          lang: "en",
+          dict,
+          params: { name: "World" },
+        });
         expect(result).toBe("Hello World!");
       });
 

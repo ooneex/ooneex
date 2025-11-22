@@ -22,8 +22,8 @@ describe("parseString", () => {
     });
 
     test("should parse large integers", () => {
-      expect(parseString("2147483647") as number).toBe(2147483647);
-      expect(parseString("-2147483648") as number).toBe(-2147483648);
+      expect(parseString("2147483647") as number).toBe(2_147_483_647);
+      expect(parseString("-2147483648") as number).toBe(-2_147_483_648);
     });
   });
 
@@ -32,7 +32,7 @@ describe("parseString", () => {
       expect(parseString("123.45") as number).toBe(123.45);
       expect(parseString("0.5") as number).toBe(0.5);
       // biome-ignore lint/suspicious/noApproximativeNumericConstant: trust me
-      expect(parseString("3.14159") as number).toBe(3.14159);
+      expect(parseString("3.14159") as number).toBe(3.141_59);
     });
 
     test("should parse negative floats", () => {
@@ -49,18 +49,18 @@ describe("parseString", () => {
 
   describe("scientific notation parsing", () => {
     test("should parse basic scientific notation", () => {
-      expect(parseString("1e5") as number).toBe(100000);
+      expect(parseString("1e5") as number).toBe(100_000);
       expect(parseString("2e3") as number).toBe(2000);
       expect(parseString("5e0") as number).toBe(5);
     });
 
     test("should parse negative base scientific notation", () => {
-      expect(parseString("-1e5") as number).toBe(-100000);
+      expect(parseString("-1e5") as number).toBe(-100_000);
       expect(parseString("-2.5e3") as number).toBe(-2500);
     });
 
     test("should parse scientific notation with positive exponent", () => {
-      expect(parseString("1e+5") as number).toBe(100000);
+      expect(parseString("1e+5") as number).toBe(100_000);
       expect(parseString("2.5e+3") as number).toBe(2500);
       expect(parseString("1.23e+2") as number).toBe(123);
     });
@@ -72,9 +72,9 @@ describe("parseString", () => {
     });
 
     test("should parse uppercase E notation", () => {
-      expect(parseString("1E5") as number).toBe(100000);
+      expect(parseString("1E5") as number).toBe(100_000);
       expect(parseString("2.5E-3") as number).toBe(0.0025);
-      expect(parseString("-1.2E+10") as number).toBe(-12000000000);
+      expect(parseString("-1.2E+10") as number).toBe(-12_000_000_000);
     });
 
     test("should parse decimal scientific notation", () => {

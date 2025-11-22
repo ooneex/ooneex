@@ -40,7 +40,11 @@ describe("AnalyticsException", () => {
 
     test("should create AnalyticsException with message and data", () => {
       const message = "Event processing failed";
-      const data = { eventType: "user_action", userId: "12345", timestamp: Date.now() };
+      const data = {
+        eventType: "user_action",
+        userId: "12345",
+        timestamp: Date.now(),
+      };
       const exception = new AnalyticsException(message, data);
 
       expect(exception.message).toBe(message);
@@ -358,7 +362,7 @@ describe("AnalyticsException", () => {
         },
         userId: "user_456",
         sessionId: "sess_789",
-        timestamp: 1699123456789,
+        timestamp: 1_699_123_456_789,
       };
 
       const exception = new AnalyticsException<AnalyticsEvent>("Failed to process purchase event", eventData);

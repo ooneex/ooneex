@@ -5,20 +5,20 @@ describe("millisecondsToHMS", () => {
   describe("basic functionality", () => {
     test("should convert seconds only (< 1 minute)", () => {
       expect(millisecondsToHMS(5000)).toBe("5");
-      expect(millisecondsToHMS(30000)).toBe("30");
-      expect(millisecondsToHMS(59000)).toBe("59");
+      expect(millisecondsToHMS(30_000)).toBe("30");
+      expect(millisecondsToHMS(59_000)).toBe("59");
     });
 
     test("should convert minutes and seconds (< 1 hour)", () => {
-      expect(millisecondsToHMS(60000)).toBe("1:00");
-      expect(millisecondsToHMS(90000)).toBe("1:30");
-      expect(millisecondsToHMS(3599000)).toBe("59:59");
+      expect(millisecondsToHMS(60_000)).toBe("1:00");
+      expect(millisecondsToHMS(90_000)).toBe("1:30");
+      expect(millisecondsToHMS(3_599_000)).toBe("59:59");
     });
 
     test("should convert hours, minutes and seconds (>= 1 hour)", () => {
-      expect(millisecondsToHMS(3600000)).toBe("1:00:00");
-      expect(millisecondsToHMS(3661000)).toBe("1:01:01");
-      expect(millisecondsToHMS(7200000)).toBe("2:00:00");
+      expect(millisecondsToHMS(3_600_000)).toBe("1:00:00");
+      expect(millisecondsToHMS(3_661_000)).toBe("1:01:01");
+      expect(millisecondsToHMS(7_200_000)).toBe("2:00:00");
     });
 
     test("should handle zero milliseconds", () => {
@@ -28,15 +28,15 @@ describe("millisecondsToHMS", () => {
 
   describe("formatting", () => {
     test("should pad minutes with leading zero when hours present", () => {
-      expect(millisecondsToHMS(3660000)).toBe("1:01:00");
-      expect(millisecondsToHMS(3605000)).toBe("1:00:05");
-      expect(millisecondsToHMS(32400000 + 60000 + 5000)).toBe("9:01:05");
+      expect(millisecondsToHMS(3_660_000)).toBe("1:01:00");
+      expect(millisecondsToHMS(3_605_000)).toBe("1:00:05");
+      expect(millisecondsToHMS(32_400_000 + 60_000 + 5000)).toBe("9:01:05");
     });
 
     test("should pad seconds with leading zero when minutes present", () => {
-      expect(millisecondsToHMS(65000)).toBe("1:05");
-      expect(millisecondsToHMS(600000 + 1000)).toBe("10:01");
-      expect(millisecondsToHMS(3600000 + 60000 + 1000)).toBe("1:01:01");
+      expect(millisecondsToHMS(65_000)).toBe("1:05");
+      expect(millisecondsToHMS(600_000 + 1000)).toBe("10:01");
+      expect(millisecondsToHMS(3_600_000 + 60_000 + 1000)).toBe("1:01:01");
     });
 
     test("should not pad single digits when no higher unit present", () => {
@@ -46,9 +46,9 @@ describe("millisecondsToHMS", () => {
     });
 
     test("should handle double-digit values correctly", () => {
-      expect(millisecondsToHMS(10000)).toBe("10");
-      expect(millisecondsToHMS(600000 + 15000)).toBe("10:15");
-      expect(millisecondsToHMS(3600000 + 600000 + 15000)).toBe("1:10:15");
+      expect(millisecondsToHMS(10_000)).toBe("10");
+      expect(millisecondsToHMS(600_000 + 15_000)).toBe("10:15");
+      expect(millisecondsToHMS(3_600_000 + 600_000 + 15_000)).toBe("1:10:15");
     });
   });
 
@@ -56,7 +56,7 @@ describe("millisecondsToHMS", () => {
     test("should handle milliseconds that don't divide evenly", () => {
       expect(millisecondsToHMS(1500)).toBe("1"); // 1.5 seconds -> 1 second
       expect(millisecondsToHMS(1999)).toBe("1"); // 1.999 seconds -> 1 second
-      expect(millisecondsToHMS(61500)).toBe("1:01"); // 61.5 seconds -> 1:01
+      expect(millisecondsToHMS(61_500)).toBe("1:01"); // 61.5 seconds -> 1:01
     });
 
     test("should handle very small millisecond values", () => {
@@ -66,13 +66,13 @@ describe("millisecondsToHMS", () => {
     });
 
     test("should handle large hour values", () => {
-      expect(millisecondsToHMS(24 * 3600000)).toBe("24:00:00"); // 24 hours
-      expect(millisecondsToHMS(100 * 3600000)).toBe("100:00:00"); // 100 hours
-      expect(millisecondsToHMS(999 * 3600000)).toBe("999:00:00"); // 999 hours
+      expect(millisecondsToHMS(24 * 3_600_000)).toBe("24:00:00"); // 24 hours
+      expect(millisecondsToHMS(100 * 3_600_000)).toBe("100:00:00"); // 100 hours
+      expect(millisecondsToHMS(999 * 3_600_000)).toBe("999:00:00"); // 999 hours
     });
 
     test("should handle maximum safe integer values", () => {
-      const largeValue = 999999999000; // 999,999,999 seconds
+      const largeValue = 999_999_999_000; // 999,999,999 seconds
       const result = millisecondsToHMS(largeValue);
       expect(typeof result).toBe("string");
       expect(result).toMatch(/^\d+:\d{2}:\d{2}$/);
@@ -87,15 +87,15 @@ describe("millisecondsToHMS", () => {
     });
 
     test("should calculate minutes correctly", () => {
-      expect(millisecondsToHMS(60000)).toBe("1:00");
-      expect(millisecondsToHMS(119000)).toBe("1:59");
-      expect(millisecondsToHMS(120000)).toBe("2:00");
+      expect(millisecondsToHMS(60_000)).toBe("1:00");
+      expect(millisecondsToHMS(119_000)).toBe("1:59");
+      expect(millisecondsToHMS(120_000)).toBe("2:00");
     });
 
     test("should calculate hours correctly", () => {
-      expect(millisecondsToHMS(3600000)).toBe("1:00:00");
-      expect(millisecondsToHMS(7199000)).toBe("1:59:59");
-      expect(millisecondsToHMS(7200000)).toBe("2:00:00");
+      expect(millisecondsToHMS(3_600_000)).toBe("1:00:00");
+      expect(millisecondsToHMS(7_199_000)).toBe("1:59:59");
+      expect(millisecondsToHMS(7_200_000)).toBe("2:00:00");
     });
   });
 
@@ -103,14 +103,14 @@ describe("millisecondsToHMS", () => {
     test.each([
       [0, "0"],
       [1000, "1"],
-      [10000, "10"],
-      [60000, "1:00"],
-      [90000, "1:30"],
-      [3600000, "1:00:00"],
-      [3661000, "1:01:01"],
-      [7200000, "2:00:00"],
-      [86400000, "24:00:00"], // 1 day
-      [90061000, "25:01:01"], // 25 hours 1 minute 1 second
+      [10_000, "10"],
+      [60_000, "1:00"],
+      [90_000, "1:30"],
+      [3_600_000, "1:00:00"],
+      [3_661_000, "1:01:01"],
+      [7_200_000, "2:00:00"],
+      [86_400_000, "24:00:00"], // 1 day
+      [90_061_000, "25:01:01"], // 25 hours 1 minute 1 second
     ])("millisecondsToHMS(%i) should return %s", (input, expected) => {
       expect(millisecondsToHMS(input)).toBe(expected);
     });
@@ -118,30 +118,30 @@ describe("millisecondsToHMS", () => {
 
   describe("real world examples", () => {
     test("should handle common video durations", () => {
-      expect(millisecondsToHMS(30000)).toBe("30"); // 30 second video
-      expect(millisecondsToHMS(300000)).toBe("5:00"); // 5 minute video
-      expect(millisecondsToHMS(1800000)).toBe("30:00"); // 30 minute video
-      expect(millisecondsToHMS(5400000)).toBe("1:30:00"); // 1.5 hour movie
-      expect(millisecondsToHMS(7200000)).toBe("2:00:00"); // 2 hour movie
+      expect(millisecondsToHMS(30_000)).toBe("30"); // 30 second video
+      expect(millisecondsToHMS(300_000)).toBe("5:00"); // 5 minute video
+      expect(millisecondsToHMS(1_800_000)).toBe("30:00"); // 30 minute video
+      expect(millisecondsToHMS(5_400_000)).toBe("1:30:00"); // 1.5 hour movie
+      expect(millisecondsToHMS(7_200_000)).toBe("2:00:00"); // 2 hour movie
     });
 
     test("should handle common music track durations", () => {
-      expect(millisecondsToHMS(180000)).toBe("3:00"); // 3 minute song
-      expect(millisecondsToHMS(213000)).toBe("3:33"); // 3:33 song
-      expect(millisecondsToHMS(267000)).toBe("4:27"); // 4:27 song
+      expect(millisecondsToHMS(180_000)).toBe("3:00"); // 3 minute song
+      expect(millisecondsToHMS(213_000)).toBe("3:33"); // 3:33 song
+      expect(millisecondsToHMS(267_000)).toBe("4:27"); // 4:27 song
     });
 
     test("should handle timer/stopwatch use cases", () => {
       expect(millisecondsToHMS(5000)).toBe("5"); // 5 second countdown
-      expect(millisecondsToHMS(300000)).toBe("5:00"); // 5 minute timer
-      expect(millisecondsToHMS(900000)).toBe("15:00"); // 15 minute timer
-      expect(millisecondsToHMS(3600000)).toBe("1:00:00"); // 1 hour timer
+      expect(millisecondsToHMS(300_000)).toBe("5:00"); // 5 minute timer
+      expect(millisecondsToHMS(900_000)).toBe("15:00"); // 15 minute timer
+      expect(millisecondsToHMS(3_600_000)).toBe("1:00:00"); // 1 hour timer
     });
 
     test("should handle workout/exercise durations", () => {
-      expect(millisecondsToHMS(45000)).toBe("45"); // 45 second exercise
-      expect(millisecondsToHMS(90000)).toBe("1:30"); // 90 second rest
-      expect(millisecondsToHMS(1800000)).toBe("30:00"); // 30 minute workout
+      expect(millisecondsToHMS(45_000)).toBe("45"); // 45 second exercise
+      expect(millisecondsToHMS(90_000)).toBe("1:30"); // 90 second rest
+      expect(millisecondsToHMS(1_800_000)).toBe("30:00"); // 30 minute workout
     });
   });
 
@@ -149,11 +149,11 @@ describe("millisecondsToHMS", () => {
     test("should always return string type", () => {
       expect(typeof millisecondsToHMS(0)).toBe("string");
       expect(typeof millisecondsToHMS(1000)).toBe("string");
-      expect(typeof millisecondsToHMS(3600000)).toBe("string");
+      expect(typeof millisecondsToHMS(3_600_000)).toBe("string");
     });
 
     test("should handle consecutive calls consistently", () => {
-      const testValue = 3661000;
+      const testValue = 3_661_000;
       const result1 = millisecondsToHMS(testValue);
       const result2 = millisecondsToHMS(testValue);
       expect(result1).toBe(result2);
@@ -161,7 +161,7 @@ describe("millisecondsToHMS", () => {
     });
 
     test("should not mutate input or have side effects", () => {
-      const originalValue = 3661000;
+      const originalValue = 3_661_000;
       const valueCopy = originalValue;
       const result = millisecondsToHMS(originalValue);
       expect(originalValue).toBe(valueCopy);
@@ -176,12 +176,12 @@ describe("millisecondsToHMS", () => {
     });
 
     test("minutes format should be M:SS", () => {
-      const result = millisecondsToHMS(90000);
+      const result = millisecondsToHMS(90_000);
       expect(result).toMatch(/^\d+:\d{2}$/);
     });
 
     test("hours format should be H:MM:SS", () => {
-      const result = millisecondsToHMS(3661000);
+      const result = millisecondsToHMS(3_661_000);
       expect(result).toMatch(/^\d+:\d{2}:\d{2}$/);
     });
 
@@ -191,8 +191,8 @@ describe("millisecondsToHMS", () => {
       const results = [
         millisecondsToHMS(0),
         millisecondsToHMS(1000),
-        millisecondsToHMS(60000),
-        millisecondsToHMS(3600000),
+        millisecondsToHMS(60_000),
+        millisecondsToHMS(3_600_000),
       ];
 
       results.forEach((result) => {
@@ -201,9 +201,9 @@ describe("millisecondsToHMS", () => {
     });
 
     test("should maintain consistent padding", () => {
-      expect(millisecondsToHMS(3605000)).toBe("1:00:05"); // H:MM:SS
-      expect(millisecondsToHMS(3065000)).toBe("51:05"); // M:SS when < 1 hour
-      expect(millisecondsToHMS(65000)).toBe("1:05"); // M:SS
+      expect(millisecondsToHMS(3_605_000)).toBe("1:00:05"); // H:MM:SS
+      expect(millisecondsToHMS(3_065_000)).toBe("51:05"); // M:SS when < 1 hour
+      expect(millisecondsToHMS(65_000)).toBe("1:05"); // M:SS
     });
   });
 });

@@ -118,7 +118,7 @@ describe("ReadonlyHeader", () => {
 
       test("should parse large numbers correctly", () => {
         headers.set("Content-Length", "9999999999");
-        expect(readonlyHeader.getContentLength()).toBe(9999999999);
+        expect(readonlyHeader.getContentLength()).toBe(9_999_999_999);
       });
 
       test("should handle malformed content-length", () => {
@@ -265,7 +265,10 @@ describe("ReadonlyHeader", () => {
 
       test("should handle complex language tags", () => {
         headers.set("Accept-Language", "zh-Hans-CN");
-        expect(readonlyHeader.getLang()).toEqual({ code: "zh", region: "Hans" });
+        expect(readonlyHeader.getLang()).toEqual({
+          code: "zh",
+          region: "Hans",
+        });
       });
     });
   });
@@ -446,7 +449,9 @@ describe("ReadonlyHeader", () => {
 
       test("should handle cookies with equals in value", () => {
         headers.set("Cookie", "name=value=with=equals");
-        expect(readonlyHeader.getCookies()).toEqual({ name: "value=with=equals" });
+        expect(readonlyHeader.getCookies()).toEqual({
+          name: "value=with=equals",
+        });
       });
 
       test("should return null for empty cookies object", () => {
@@ -921,7 +926,7 @@ describe("ReadonlyHeader", () => {
     });
 
     test("should handle very long header values", () => {
-      const longValue = "a".repeat(10000);
+      const longValue = "a".repeat(10_000);
       headers.set("Long-Header", longValue);
       // @ts-expect-error
       expect(readonlyHeader.get("Long-Header")).toBe(longValue);

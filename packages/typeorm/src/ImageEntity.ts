@@ -48,11 +48,19 @@ export class ImageEntity extends BaseEntity implements IImage {
   @Column({ name: "metadata", type: "jsonb", nullable: true })
   metadata?: Record<string, ScalarType>;
 
-  @ManyToOne(() => StatusEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => StatusEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "status_id" })
   status?: IStatus;
 
-  @ManyToMany(() => TagEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => TagEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "images_tags",
     joinColumn: { name: "image_id", referencedColumnName: "id" },

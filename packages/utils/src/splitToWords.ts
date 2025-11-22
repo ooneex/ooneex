@@ -9,6 +9,4 @@ const WORD_OR_NUMBER_REGEXP = new RegExp(
   "gu",
 );
 
-export const splitToWords = (input: string): string[] => {
-  return input.match(WORD_OR_NUMBER_REGEXP) ?? [];
-};
+export const splitToWords = (input: string): string[] => input.match(WORD_OR_NUMBER_REGEXP) ?? [];

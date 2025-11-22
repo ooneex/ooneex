@@ -21,7 +21,7 @@ export class PostHogAdapter implements IAnalytics {
     }
   }
 
-  public capture = <T extends PostHogAdapterCaptureType>(options: T): void => {
+  public capture<T extends PostHogAdapterCaptureType>(options: T): void {
     this.client?.capture({
       distinctId: options.id,
       event: options.event,
@@ -32,5 +32,5 @@ export class PostHogAdapter implements IAnalytics {
       groups: options.groups,
     });
     this.client?.shutdown();
-  };
+  }
 }

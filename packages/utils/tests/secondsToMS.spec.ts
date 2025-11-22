@@ -26,7 +26,7 @@ describe("secondsToMS", () => {
     test("should handle large minute values", () => {
       expect(secondsToMS(3600)).toBe("60:00"); // 1 hour = 60 minutes
       expect(secondsToMS(7200)).toBe("120:00"); // 2 hours = 120 minutes
-      expect(secondsToMS(86400)).toBe("1440:00"); // 24 hours = 1440 minutes
+      expect(secondsToMS(86_400)).toBe("1440:00"); // 24 hours = 1440 minutes
     });
   });
 
@@ -82,10 +82,10 @@ describe("secondsToMS", () => {
     });
 
     test("should handle floating point precision edge cases", () => {
-      expect(secondsToMS(59.999999)).toBe("0:59.999999");
-      expect(secondsToMS(60.000001)).toBe("1:9.999999974752427e-7");
-      expect(secondsToMS(119.999999)).toBe("1:59.999999");
-      expect(secondsToMS(120.000001)).toBe("2:9.999999974752427e-7");
+      expect(secondsToMS(59.999_999)).toBe("0:59.999999");
+      expect(secondsToMS(60.000_001)).toBe("1:9.999999974752427e-7");
+      expect(secondsToMS(119.999_999)).toBe("1:59.999999");
+      expect(secondsToMS(120.000_001)).toBe("2:9.999999974752427e-7");
     });
 
     test("should handle floating point precision patterns", () => {
@@ -125,13 +125,13 @@ describe("secondsToMS", () => {
 
   describe("edge cases", () => {
     test("should handle very large values", () => {
-      expect(secondsToMS(99999)).toBe("1666:39");
-      expect(secondsToMS(999999)).toBe("16666:39");
-      expect(secondsToMS(9999999)).toBe("166666:39");
+      expect(secondsToMS(99_999)).toBe("1666:39");
+      expect(secondsToMS(999_999)).toBe("16666:39");
+      expect(secondsToMS(9_999_999)).toBe("166666:39");
     });
 
     test("should handle maximum safe integer values", () => {
-      const largeValue = 999999999;
+      const largeValue = 999_999_999;
       const result = secondsToMS(largeValue);
       expect(typeof result).toBe("string");
       expect(result).toMatch(/^\d+:\d{2}$/);
@@ -333,7 +333,7 @@ describe("secondsToMS", () => {
       // Even for very large values, it converts to minutes
       expect(secondsToMS(3600)).toBe("60:00"); // 1 hour = 60 minutes
       expect(secondsToMS(7200)).toBe("120:00"); // 2 hours = 120 minutes
-      expect(secondsToMS(86400)).toBe("1440:00"); // 24 hours = 1440 minutes
+      expect(secondsToMS(86_400)).toBe("1440:00"); // 24 hours = 1440 minutes
     });
 
     test("should preserve decimal precision in seconds", () => {
@@ -384,7 +384,7 @@ describe("secondsToMS", () => {
     });
 
     test("should handle very long durations", () => {
-      const result = secondsToMS(999999);
+      const result = secondsToMS(999_999);
       expect(typeof result).toBe("string");
       expect(result).toMatch(/^\d+:\d+$/); // Changed to allow decimal seconds
     });
@@ -411,7 +411,7 @@ describe("secondsToMS", () => {
     test("should handle large inputs efficiently", () => {
       const start = Date.now();
       for (let i = 0; i < 1000; i++) {
-        secondsToMS(999999);
+        secondsToMS(999_999);
       }
       const end = Date.now();
       expect(end - start).toBeLessThan(100); // Should be very fast
@@ -431,7 +431,7 @@ describe("secondsToMS", () => {
     test("should always show minutes even for large hour values", () => {
       expect(secondsToMS(3600)).toBe("60:00"); // 1 hour = 60 minutes
       expect(secondsToMS(7200)).toBe("120:00"); // 2 hours = 120 minutes
-      expect(secondsToMS(86400)).toBe("1440:00"); // 24 hours = 1440 minutes
+      expect(secondsToMS(86_400)).toBe("1440:00"); // 24 hours = 1440 minutes
     });
 
     test("should handle fractional minutes correctly", () => {

@@ -129,7 +129,7 @@ describe("HttpRequest Edge Cases", () => {
     });
 
     test("should handle very long header values", () => {
-      const longValue = "x".repeat(10000);
+      const longValue = "x".repeat(10_000);
       mockHeaders.set("X-Long-Header", longValue);
 
       const request = new HttpRequest(mockRequest);
@@ -231,7 +231,9 @@ describe("HttpRequest Edge Cases", () => {
       ];
 
       unusualNames.forEach((name, index) => {
-        const file = new File([`content${index}`], name, { type: "text/plain" });
+        const file = new File([`content${index}`], name, {
+          type: "text/plain",
+        });
         formData.append(`file${index}`, file);
       });
 
@@ -322,9 +324,10 @@ describe("HttpRequest Edge Cases", () => {
 
   describe("Performance Edge Cases", () => {
     test("should handle request with massive query string efficiently", () => {
-      const massiveQuery = Array.from({ length: 5000 }, (_, i) => {
-        return `param${i}=${encodeURIComponent(`value with spaces and symbols ${i} !@#$%^&*()`)}`;
-      }).join("&");
+      const massiveQuery = Array.from(
+        { length: 5000 },
+        (_, i) => `param${i}=${encodeURIComponent(`value with spaces and symbols ${i} !@#$%^&*()`)}`,
+      ).join("&");
 
       const massiveRequest = {
         ...mockRequest,
@@ -348,7 +351,9 @@ describe("HttpRequest Edge Cases", () => {
         formData.append(`data[${i}][value]`, `value${i}`);
 
         if (i % 10 === 0) {
-          const file = new File([`content${i}`], `file${i}.txt`, { type: "text/plain" });
+          const file = new File([`content${i}`], `file${i}.txt`, {
+            type: "text/plain",
+          });
           formData.append(`data[${i}][file]`, file);
         }
       }
@@ -365,7 +370,7 @@ describe("HttpRequest Edge Cases", () => {
   describe("Memory and Resource Management", () => {
     test("should not retain references to large temporary objects", () => {
       const largePayload = {
-        data: new Array(10000).fill(0).map((_, i) => ({
+        data: new Array(10_000).fill(0).map((_, i) => ({
           id: i,
           data: `${"x".repeat(1000)}-${i}`,
         })),
@@ -374,7 +379,7 @@ describe("HttpRequest Edge Cases", () => {
       const request = new HttpRequest(mockRequest, { payload: largePayload });
 
       // Verify the payload is accessible
-      expect((request.payload as unknown as LargePayload).data).toHaveLength(10000);
+      expect((request.payload as unknown as LargePayload).data).toHaveLength(10_000);
       expect((request.payload as unknown as LargePayload).data[0]?.data).toContain("x".repeat(1000));
 
       // The request should maintain reference to the payload
@@ -400,7 +405,7 @@ describe("HttpRequest Edge Cases", () => {
       const mixedParams = {
         stringParam: "hello",
         numberParam: 42,
-        bigintParam: BigInt(999999999999999),
+        bigintParam: BigInt(999_999_999_999_999),
         booleanParam: true,
         nullParam: "null", // Testing runtime behavior with string representation
         undefinedParam: "undefined",
@@ -410,7 +415,7 @@ describe("HttpRequest Edge Cases", () => {
 
       expect(request.params.stringParam).toBe("hello");
       expect(request.params.numberParam).toBe(42);
-      expect(request.params.bigintParam).toBe(BigInt(999999999999999));
+      expect(request.params.bigintParam).toBe(BigInt(999_999_999_999_999));
       expect(request.params.booleanParam).toBe(true);
     });
 

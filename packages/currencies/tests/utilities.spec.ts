@@ -4,17 +4,11 @@ import type { CurrencyCodeType } from "../src/types";
 
 describe("Currency Utilities", () => {
   // Helper functions that could be used with the currencies
-  const getCurrencyByCode = (code: CurrencyCodeType) => {
-    return CURRENCIES.find((currency) => currency.code === code);
-  };
+  const getCurrencyByCode = (code: CurrencyCodeType) => CURRENCIES.find((currency) => currency.code === code);
 
-  const getCurrenciesBySymbol = (symbol: string) => {
-    return CURRENCIES.filter((currency) => currency.symbol === symbol);
-  };
+  const getCurrenciesBySymbol = (symbol: string) => CURRENCIES.filter((currency) => currency.symbol === symbol);
 
-  const getCurrenciesByRegion = (countryFlag: string) => {
-    return CURRENCIES.filter((currency) => currency.icon === countryFlag);
-  };
+  const getCurrenciesByRegion = (countryFlag: string) => CURRENCIES.filter((currency) => currency.icon === countryFlag);
 
   const formatAmount = (amount: number, currencyCode: CurrencyCodeType) => {
     const currency = getCurrencyByCode(currencyCode);
@@ -31,13 +25,10 @@ describe("Currency Utilities", () => {
     );
   };
 
-  const createCurrencyMap = () => {
-    return new Map(CURRENCIES.map((currency) => [currency.code, currency]));
-  };
+  const createCurrencyMap = () => new Map(CURRENCIES.map((currency) => [currency.code, currency]));
 
-  const validateCurrencyCode = (code: string): code is CurrencyCodeType => {
-    return CURRENCIES.some((currency) => currency.code === code);
-  };
+  const validateCurrencyCode = (code: string): code is CurrencyCodeType =>
+    CURRENCIES.some((currency) => currency.code === code);
 
   describe("getCurrencyByCode", () => {
     it("should return currency for valid code", () => {

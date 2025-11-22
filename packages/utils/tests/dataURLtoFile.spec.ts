@@ -56,13 +56,31 @@ describe("dataURLtoFile", () => {
   describe("mime type handling", () => {
     test("should extract correct mime type from data URL", () => {
       const testCases = [
-        { dataUrl: "data:image/jpeg;base64,/9j/4AAQ", expectedType: "image/jpeg" },
-        { dataUrl: "data:application/pdf;base64,JVBERi0x", expectedType: "application/pdf" },
-        { dataUrl: "data:video/mp4;base64,AAAAIGZ0eXA=", expectedType: "video/mp4" },
-        { dataUrl: "data:audio/mpeg;base64,SUQzAwAAAAA=", expectedType: "audio/mpeg" },
-        { dataUrl: "data:text/html;base64,PGh0bWw+", expectedType: "text/html" },
+        {
+          dataUrl: "data:image/jpeg;base64,/9j/4AAQ",
+          expectedType: "image/jpeg",
+        },
+        {
+          dataUrl: "data:application/pdf;base64,JVBERi0x",
+          expectedType: "application/pdf",
+        },
+        {
+          dataUrl: "data:video/mp4;base64,AAAAIGZ0eXA=",
+          expectedType: "video/mp4",
+        },
+        {
+          dataUrl: "data:audio/mpeg;base64,SUQzAwAAAAA=",
+          expectedType: "audio/mpeg",
+        },
+        {
+          dataUrl: "data:text/html;base64,PGh0bWw+",
+          expectedType: "text/html",
+        },
         { dataUrl: "data:text/css;base64,Ym9keSB7", expectedType: "text/css" },
-        { dataUrl: "data:text/javascript;base64,Y29uc29sZS5sb2c=", expectedType: "text/javascript" },
+        {
+          dataUrl: "data:text/javascript;base64,Y29uc29sZS5sb2c=",
+          expectedType: "text/javascript",
+        },
       ];
 
       testCases.forEach(({ dataUrl, expectedType }) => {

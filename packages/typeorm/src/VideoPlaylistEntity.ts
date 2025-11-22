@@ -17,7 +17,10 @@ export class VideoPlaylistEntity extends BaseEntity implements IPlaylist {
   @Column({ name: "description", type: "text", nullable: true })
   description?: string;
 
-  @ManyToMany(() => VideoEntity, { eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => VideoEntity, {
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "playlists_videos",
     joinColumn: { name: "playlist_id", referencedColumnName: "id" },
@@ -33,7 +36,11 @@ export class VideoPlaylistEntity extends BaseEntity implements IPlaylist {
   })
   tags?: ITag[];
 
-  @ManyToOne(() => StatusEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => StatusEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "status_id" })
   status?: IStatus;
 }

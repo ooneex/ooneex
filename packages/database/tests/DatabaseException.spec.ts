@@ -81,7 +81,9 @@ describe("DatabaseException", () => {
 
     test("should always set status to InternalServerError", () => {
       const exception1 = new DatabaseException("Connection lost");
-      const exception2 = new DatabaseException("Query failed", { key: "value" });
+      const exception2 = new DatabaseException("Query failed", {
+        key: "value",
+      });
 
       expect(exception1.status).toBe(Status.Code.InternalServerError);
       expect(exception2.status).toBe(Status.Code.InternalServerError);
@@ -147,7 +149,7 @@ describe("DatabaseException", () => {
     test("should support number generic type", () => {
       const numberData: Record<string, number> = {
         attempts: 5,
-        timeout: 30000,
+        timeout: 30_000,
         activeConnections: 25,
       };
 
@@ -289,10 +291,10 @@ describe("DatabaseException", () => {
     });
 
     test("should handle very long messages", () => {
-      const longMessage = "A".repeat(10000);
+      const longMessage = "A".repeat(10_000);
       const exception = new DatabaseException(longMessage);
       expect(exception.message).toBe(longMessage);
-      expect(exception.message.length).toBe(10000);
+      expect(exception.message.length).toBe(10_000);
     });
 
     test("should handle special characters in message", () => {
@@ -314,13 +316,13 @@ describe("DatabaseException", () => {
           average_time: 250.5,
         },
         tables: {
-          users: { rows: 50000, size: "10MB" },
-          sessions: { rows: 25000, size: "5MB" },
-          logs: { rows: 100000, size: "50MB" },
+          users: { rows: 50_000, size: "10MB" },
+          sessions: { rows: 25_000, size: "5MB" },
+          logs: { rows: 100_000, size: "50MB" },
         },
         configuration: {
           poolSize: 20,
-          timeout: 30000,
+          timeout: 30_000,
           retries: 3,
           ssl: true,
         },
@@ -351,7 +353,7 @@ describe("DatabaseException", () => {
       const queryData: QueryPlan = {
         operation: "SELECT",
         cost: 1500.75,
-        rows: 25000,
+        rows: 25_000,
         filters: ["WHERE user_id = ?", "AND created_at > ?"],
         indexes: [
           { name: "idx_user_id", used: true, effectiveness: 0.95 },
@@ -375,8 +377,8 @@ describe("DatabaseException", () => {
         poolSize: 20,
         activeConnections: 20,
         queuedRequests: 150,
-        maxWaitTime: 30000,
-        currentWaitTime: 45000,
+        maxWaitTime: 30_000,
+        currentWaitTime: 45_000,
         poolStatus: "exhausted",
         recommendedAction: "increase_pool_size",
       });
@@ -429,7 +431,7 @@ describe("DatabaseException", () => {
         replicaServers: ["db-replica-1.example.com", "db-replica-2.example.com"],
         maxAllowedLag: 5000,
         currentLag: {
-          "db-replica-1.example.com": 12000,
+          "db-replica-1.example.com": 12_000,
           "db-replica-2.example.com": 8500,
         },
         affectedQueries: 25,
@@ -439,7 +441,7 @@ describe("DatabaseException", () => {
 
       expect(exception.message).toBe("Database replication lag detected");
       expect(exception.data?.replicaServers).toHaveLength(2);
-      expect(exception.data?.currentLag["db-replica-1.example.com"]).toBe(12000);
+      expect(exception.data?.currentLag["db-replica-1.example.com"]).toBe(12_000);
       expect(exception.data?.autoFailoverEnabled).toBe(false);
     });
   });

@@ -39,7 +39,6 @@ describe("Container - Dependency Injection", () => {
 
     test("should respect singleton scope for single service", () => {
       class LoggerService {
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 
@@ -66,7 +65,6 @@ describe("Container - Dependency Injection", () => {
 
     test("should create new instances for transient scope", () => {
       class RequestIdService {
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static requestCount = 0;
         public readonly requestId: number;
 
@@ -152,7 +150,6 @@ describe("Container - Dependency Injection", () => {
   describe("Advanced scoping scenarios", () => {
     test("should demonstrate different scoping behavior", () => {
       class CounterService {
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static count = 0;
         public readonly id: number;
 
@@ -178,7 +175,6 @@ describe("Container - Dependency Injection", () => {
 
     test("should handle transient scoping correctly", () => {
       class TransientService {
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 
@@ -240,7 +236,6 @@ describe("Container - Dependency Injection", () => {
     describe("Request scope", () => {
       test("should handle request scope (behaves like singleton in this context)", () => {
         class RequestScopedService {
-          // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
           private static instanceCount = 0;
           public readonly instanceId: number;
 
@@ -400,12 +395,12 @@ describe("Container - Dependency Injection", () => {
         container.addConstant(STRING_KEY, "hello world");
         container.addConstant(NUMBER_KEY, 42);
         container.addConstant(BOOLEAN_KEY, true);
-        container.addConstant(BIGINT_KEY, BigInt(9007199254740991));
+        container.addConstant(BIGINT_KEY, BigInt(9_007_199_254_740_991));
 
         expect(container.getConstant<string>(STRING_KEY)).toBe("hello world");
         expect(container.getConstant<number>(NUMBER_KEY)).toBe(42);
         expect(container.getConstant<boolean>(BOOLEAN_KEY)).toBe(true);
-        expect(container.getConstant<bigint>(BIGINT_KEY)).toBe(BigInt(9007199254740991));
+        expect(container.getConstant<bigint>(BIGINT_KEY)).toBe(BigInt(9_007_199_254_740_991));
       });
 
       test("should handle symbol constants with different symbol types", () => {
@@ -692,7 +687,6 @@ describe("Container - Dependency Injection", () => {
 
       test("should handle singleton dependencies correctly with manual resolution", () => {
         class SingletonService {
-          // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
           private static instanceCount = 0;
           public readonly instanceId: number;
 
@@ -934,7 +928,6 @@ describe("Container - Dependency Injection", () => {
 
     test("should work with different scopes through aliases", () => {
       class TransientAliasService {
-        // biome-ignore lint/correctness/noUnusedPrivateClassMembers: trust me
         private static instanceCount = 0;
         public readonly instanceId: number;
 

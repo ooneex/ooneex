@@ -18,13 +18,13 @@ export class RedisCacheAdapter implements ICache {
     this.client = new Bun.RedisClient(connectionString, clientOptions);
   }
 
-  public connect = async (): Promise<void> => {
+  public async connect(): Promise<void> {
     await this.client.connect();
-  };
+  }
 
-  public close = (): void => {
+  public close(): void {
     this.client.close();
-  };
+  }
 
   /**
    * Get connection status
@@ -34,11 +34,11 @@ export class RedisCacheAdapter implements ICache {
   }
 
   // Basic operations
-  public get = async <T = unknown>(key: string): Promise<T | undefined> => {
+  public async get<T = unknown>(key: string): Promise<T | undefined> {
     try {
       const value = await this.client.get(key);
       if (value === null) {
-        return undefined;
+        return;
       }
 
       // Try to parse as JSON, fallback to raw value
@@ -50,9 +50,9 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to get key "${key}": ${error}`);
     }
-  };
+  }
 
-  public set = async <T = unknown>(key: string, value: T, ttl?: number): Promise<void> => {
+  public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
     try {
       // Convert undefined to null for Redis compatibility
       const normalizedValue = value === undefined ? null : value;
@@ -66,27 +66,27 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to set key "${key}": ${error}`);
     }
-  };
+  }
 
-  public delete = async (key: string): Promise<boolean> => {
+  public async delete(key: string): Promise<boolean> {
     try {
       const result = await this.client.del(key);
       return result > 0;
     } catch (error) {
       throw new CacheException(`Failed to delete key "${key}": ${error}`);
     }
-  };
+  }
 
-  public has = async (key: string): Promise<boolean> => {
+  public async has(key: string): Promise<boolean> {
     try {
       return await this.client.exists(key);
     } catch (error) {
       throw new CacheException(`Failed to check if key "${key}" exists: ${error}`);
     }
-  };
+  }
 
   // Bulk operations
-  public mget = async <T = unknown>(keys: string[]): Promise<(T | undefined)[]> => {
+  public async mget<T = unknown>(keys: string[]): Promise<(T | undefined)[]> {
     if (keys.length === 0) {
       return [];
     }
@@ -108,9 +108,9 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to get multiple keys: ${error}`);
     }
-  };
+  }
 
-  public mset = async <T = unknown>(entries: { key: string; value: T; ttl?: number }[]): Promise<void> => {
+  public async mset<T = unknown>(entries: { key: string; value: T; ttl?: number }[]): Promise<void> {
     if (entries.length === 0) {
       return;
     }
@@ -150,10 +150,10 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to set multiple keys: ${error}`);
     }
-  };
+  }
 
   // TTL / metadata
-  public ttl = async (key: string): Promise<number | null> => {
+  public async ttl(key: string): Promise<number | null> {
     try {
       const result = await this.client.ttl(key);
 
@@ -171,19 +171,19 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to get TTL for key "${key}": ${error}`);
     }
-  };
+  }
 
-  public expire = async (key: string, ttl: number): Promise<boolean> => {
+  public async expire(key: string, ttl: number): Promise<boolean> {
     try {
       const result = await this.client.expire(key, ttl);
       return result === 1;
     } catch (error) {
       throw new CacheException(`Failed to set TTL for key "${key}": ${error}`);
     }
-  };
+  }
 
   // Counters (atomic operations)
-  public incr = async (key: string, delta = 1): Promise<number> => {
+  public async incr(key: string, delta = 1): Promise<number> {
     try {
       if (delta === 1) {
         return await this.client.incr(key);
@@ -193,9 +193,9 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to increment key "${key}" by ${delta}: ${error}`);
     }
-  };
+  }
 
-  public decr = async (key: string, delta = 1): Promise<number> => {
+  public async decr(key: string, delta = 1): Promise<number> {
     try {
       if (delta === 1) {
         return await this.client.decr(key);
@@ -205,22 +205,22 @@ export class RedisCacheAdapter implements ICache {
     } catch (error) {
       throw new CacheException(`Failed to decrement key "${key}" by ${delta}: ${error}`);
     }
-  };
+  }
 
   // Maintenance
-  public keys = async (pattern = "*"): Promise<string[]> => {
+  public async keys(pattern = "*"): Promise<string[]> {
     try {
       return await this.client.send("KEYS", [pattern]);
     } catch (error) {
       throw new CacheException(`Failed to get keys with pattern "${pattern}": ${error}`);
     }
-  };
+  }
 
-  public flush = async (): Promise<void> => {
+  public async flush(): Promise<void> {
     try {
       await this.client.send("FLUSHDB", []);
     } catch (error) {
       throw new CacheException(`Failed to flush database: ${error}`);
     }
-  };
+  }
 }

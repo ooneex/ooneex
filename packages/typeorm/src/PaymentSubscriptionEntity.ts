@@ -9,7 +9,11 @@ import { PaymentPlanEntity } from "./PaymentPlanEntity";
   name: "payment_subscriptions",
 })
 export class PaymentSubscriptionEntity extends BaseEntity implements Omit<ISubscription, "isActive"> {
-  @ManyToMany(() => PaymentCouponEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentCouponEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_subscriptions_coupons",
     joinColumn: { name: "subscription_id", referencedColumnName: "id" },
@@ -17,7 +21,11 @@ export class PaymentSubscriptionEntity extends BaseEntity implements Omit<ISubsc
   })
   coupons?: ICoupon[];
 
-  @ManyToMany(() => PaymentPlanEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentPlanEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_subscriptions_plans",
     joinColumn: { name: "subscription_id", referencedColumnName: "id" },
@@ -25,7 +33,11 @@ export class PaymentSubscriptionEntity extends BaseEntity implements Omit<ISubsc
   })
   plans?: IPlan[];
 
-  @ManyToMany(() => PaymentCreditEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => PaymentCreditEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_subscriptions_credits",
     joinColumn: { name: "subscription_id", referencedColumnName: "id" },

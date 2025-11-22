@@ -587,12 +587,8 @@ describe("RedisCacheAdapter", () => {
       const key2 = "concurrent-key-2";
 
       // Setup mocks for concurrent operations
-      mockRedisClient.exists.mockImplementation(async (key: string) => {
-        return key === key1;
-      });
-      mockRedisClient.del.mockImplementation(async (key: string) => {
-        return key === key1 ? 1 : 0;
-      });
+      mockRedisClient.exists.mockImplementation(async (key: string) => key === key1);
+      mockRedisClient.del.mockImplementation(async (key: string) => (key === key1 ? 1 : 0));
 
       // Run operations concurrently
       const [exists1, exists2, deleted1, deleted2] = await Promise.all([
@@ -614,12 +610,8 @@ describe("RedisCacheAdapter", () => {
       const allKeys = [...existingKeys, ...nonExistingKeys];
 
       // Setup mocks
-      mockRedisClient.exists.mockImplementation(async (key: string) => {
-        return existingKeys.includes(key);
-      });
-      mockRedisClient.del.mockImplementation(async (key: string) => {
-        return existingKeys.includes(key) ? 1 : 0;
-      });
+      mockRedisClient.exists.mockImplementation(async (key: string) => existingKeys.includes(key));
+      mockRedisClient.del.mockImplementation(async (key: string) => (existingKeys.includes(key) ? 1 : 0));
 
       // Check existence of all keys
       const existenceResults = await Promise.all(allKeys.map((key) => adapter.has(key)));
@@ -1128,7 +1120,7 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should return specific positive TTL values", async () => {
-      const ttlValues = [1, 30, 300, 3600, 86400]; // 1 sec, 30 sec, 5 min, 1 hour, 1 day
+      const ttlValues = [1, 30, 300, 3600, 86_400]; // 1 sec, 30 sec, 5 min, 1 hour, 1 day
 
       for (const ttl of ttlValues) {
         mockRedisClient.ttl.mockResolvedValue(ttl);
@@ -1138,7 +1130,7 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should handle very large TTL values", async () => {
-      const largeTtl = 2147483647; // Max 32-bit signed int
+      const largeTtl = 2_147_483_647; // Max 32-bit signed int
       mockRedisClient.ttl.mockResolvedValue(largeTtl);
 
       const result = await adapter.ttl(testKey);
@@ -1248,7 +1240,7 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should set different TTL values", async () => {
-      const ttlValues = [1, 30, 300, 3600, 86400]; // Various time periods
+      const ttlValues = [1, 30, 300, 3600, 86_400]; // Various time periods
 
       for (const ttl of ttlValues) {
         mockRedisClient.expire.mockResolvedValue(1);
@@ -1267,7 +1259,7 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should handle very large TTL values", async () => {
-      const largeTtl = 2147483647; // Max 32-bit signed int
+      const largeTtl = 2_147_483_647; // Max 32-bit signed int
       mockRedisClient.expire.mockResolvedValue(1);
 
       const result = await adapter.expire(testKey, largeTtl);
@@ -1349,9 +1341,7 @@ describe("RedisCacheAdapter", () => {
       const keys = ["concurrent-exp-1", "concurrent-exp-2"];
       const ttls = [100, 200];
 
-      mockRedisClient.expire.mockImplementation(async (_key: string) => {
-        return keys.includes(_key) ? 1 : 0;
-      });
+      mockRedisClient.expire.mockImplementation(async (_key: string) => (keys.includes(_key) ? 1 : 0));
 
       const results = await Promise.all(keys.map((key, index) => adapter.expire(key, ttls[index] || 100)));
 
@@ -1533,11 +1523,11 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should handle large increment values", async () => {
-      const largeIncrement = 1000000;
-      mockRedisClient.send.mockResolvedValue(1000005);
+      const largeIncrement = 1_000_000;
+      mockRedisClient.send.mockResolvedValue(1_000_005);
 
       const result = await adapter.incr(testKey, largeIncrement);
-      expect(result).toBe(1000005);
+      expect(result).toBe(1_000_005);
       expect(mockRedisClient.send).toHaveBeenCalledWith("INCRBY", [testKey, "1000000"]);
     });
 
@@ -1691,11 +1681,11 @@ describe("RedisCacheAdapter", () => {
     });
 
     test("should handle large decrement values", async () => {
-      const largeDecrement = 1000000;
-      mockRedisClient.send.mockResolvedValue(-999995);
+      const largeDecrement = 1_000_000;
+      mockRedisClient.send.mockResolvedValue(-999_995);
 
       const result = await adapter.decr(testKey, largeDecrement);
-      expect(result).toBe(-999995);
+      expect(result).toBe(-999_995);
       expect(mockRedisClient.send).toHaveBeenCalledWith("DECRBY", [testKey, "1000000"]);
     });
 
@@ -2041,10 +2031,16 @@ describe("RedisCacheAdapter", () => {
     test("should handle various wildcard patterns", async () => {
       const patterns = [
         { pattern: "user:*", keys: ["user:1", "user:2", "user:3"] },
-        { pattern: "cache:*:data", keys: ["cache:session:data", "cache:user:data"] },
+        {
+          pattern: "cache:*:data",
+          keys: ["cache:session:data", "cache:user:data"],
+        },
         { pattern: "temp_*", keys: ["temp_file1", "temp_file2"] },
         { pattern: "prefix?suffix", keys: ["prefix1suffix", "prefix2suffix"] },
-        { pattern: "*:config", keys: ["app:config", "db:config", "redis:config"] },
+        {
+          pattern: "*:config",
+          keys: ["app:config", "db:config", "redis:config"],
+        },
       ];
 
       for (const { pattern, keys } of patterns) {

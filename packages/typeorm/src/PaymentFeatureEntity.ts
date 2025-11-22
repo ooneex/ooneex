@@ -12,7 +12,12 @@ export class PaymentFeatureEntity extends BaseEntity implements IFeature {
   @Column({ name: "description", type: "text", nullable: true })
   description?: string;
 
-  @Column({ name: "is_enabled", type: "boolean", default: true, nullable: true })
+  @Column({
+    name: "is_enabled",
+    type: "boolean",
+    default: true,
+    nullable: true,
+  })
   isEnabled?: boolean;
 
   @Column({ name: "limit", type: "int", nullable: true })

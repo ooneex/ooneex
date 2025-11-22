@@ -21,7 +21,13 @@ export class ColorEntity extends BaseEntity implements IColor {
   @Column({ name: "hsla", type: "varchar", length: 60, nullable: true })
   hsla?: HSLAType;
 
-  @Column({ name: "alpha", type: "decimal", precision: 3, scale: 2, nullable: true })
+  @Column({
+    name: "alpha",
+    type: "decimal",
+    precision: 3,
+    scale: 2,
+    nullable: true,
+  })
   alpha?: number;
 
   @Column({ name: "red", type: "int", nullable: true })

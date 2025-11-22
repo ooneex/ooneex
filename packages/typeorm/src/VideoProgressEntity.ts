@@ -7,7 +7,11 @@ import { VideoEntity } from "./VideoEntity";
   name: "video_progress",
 })
 export class VideoProgressEntity extends BaseEntity implements IVideoProgress {
-  @ManyToOne(() => VideoEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToOne(() => VideoEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinColumn({ name: "video_id" })
   video?: IVideo;
 
@@ -20,7 +24,12 @@ export class VideoProgressEntity extends BaseEntity implements IVideoProgress {
   @Column({ name: "duration", type: "int", nullable: true })
   duration?: number;
 
-  @Column({ name: "completed", type: "boolean", default: false, nullable: true })
+  @Column({
+    name: "completed",
+    type: "boolean",
+    default: false,
+    nullable: true,
+  })
   completed?: boolean;
 
   @Column({ name: "last_watched", type: "timestamptz", nullable: true })

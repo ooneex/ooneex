@@ -514,7 +514,11 @@ describe("Header", () => {
         header.setCookies([
           { name: "cookie1", value: "value1" },
           { name: "cookie2", value: "value2", options: { maxAge: 3600 } },
-          { name: "cookie3", value: "value3", options: { secure: true, httpOnly: true } },
+          {
+            name: "cookie3",
+            value: "value3",
+            options: { secure: true, httpOnly: true },
+          },
         ]);
 
         const cookies = header.native.getSetCookie();
@@ -763,22 +767,22 @@ describe("Header", () => {
 
     describe("setStrictTransportSecurity", () => {
       test("should set HSTS with max-age only", () => {
-        header.setStrictTransportSecurity(31536000);
+        header.setStrictTransportSecurity(31_536_000);
         expect(header.get("Strict-Transport-Security")).toBe("max-age=31536000");
       });
 
       test("should set HSTS with includeSubDomains", () => {
-        header.setStrictTransportSecurity(31536000, true);
+        header.setStrictTransportSecurity(31_536_000, true);
         expect(header.get("Strict-Transport-Security")).toBe("max-age=31536000; includeSubDomains");
       });
 
       test("should set HSTS with all options", () => {
-        header.setStrictTransportSecurity(31536000, true, true);
+        header.setStrictTransportSecurity(31_536_000, true, true);
         expect(header.get("Strict-Transport-Security")).toBe("max-age=31536000; includeSubDomains; preload");
       });
 
       test("should set HSTS with preload but not includeSubDomains", () => {
-        header.setStrictTransportSecurity(31536000, false, true);
+        header.setStrictTransportSecurity(31_536_000, false, true);
         expect(header.get("Strict-Transport-Security")).toBe("max-age=31536000; preload");
       });
 
@@ -955,7 +959,7 @@ describe("Header", () => {
       expect(header1.get("Content-Length")).toBe("0");
 
       const header2 = new Header();
-      header2.contentLength(9999999999);
+      header2.contentLength(9_999_999_999);
       expect(header2.get("Content-Length")).toBe("9999999999");
     });
 
@@ -1029,7 +1033,7 @@ describe("Header", () => {
     test("should handle secure response headers", () => {
       header
         .setContentSecurityPolicy("default-src 'self'; script-src 'self' 'unsafe-inline'")
-        .setStrictTransportSecurity(31536000, true, true)
+        .setStrictTransportSecurity(31_536_000, true, true)
         .setXContentTypeOptions()
         .setXFrameOptions("DENY")
         .setXXSSProtection(true, "block");
@@ -1044,7 +1048,7 @@ describe("Header", () => {
     test("should handle file download response", () => {
       header
         .contentType("application/pdf")
-        .contentLength(1048576)
+        .contentLength(1_048_576)
         .contentDisposition('attachment; filename="document.pdf"')
         .setCacheControl("private, no-cache")
         .setEtag('"abc123"');
@@ -1066,7 +1070,7 @@ describe("Header", () => {
           path: "/",
         })
         .setCookie("preferences", "theme=dark", {
-          maxAge: 86400,
+          maxAge: 86_400,
           sameSite: "Lax",
         });
 

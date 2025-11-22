@@ -384,7 +384,12 @@ describe("BadRequestException", () => {
     test("should handle query parameter validation errors", () => {
       const exception = new BadRequestException("Invalid query parameters", {
         invalidParameters: [
-          { name: "limit", value: "abc", expectedType: "number", maxValue: 100 },
+          {
+            name: "limit",
+            value: "abc",
+            expectedType: "number",
+            maxValue: 100,
+          },
           { name: "offset", value: -5, expectedType: "number", minValue: 0 },
         ],
         validParameters: ["sort", "filter"],
@@ -401,7 +406,13 @@ describe("BadRequestException", () => {
     test("should handle request header validation errors", () => {
       const exception = new BadRequestException("Invalid request headers", {
         missingHeaders: ["Authorization", "Content-Type"],
-        invalidHeaders: [{ name: "Accept", value: "text/plain", expectedValue: "application/json" }],
+        invalidHeaders: [
+          {
+            name: "Accept",
+            value: "text/plain",
+            expectedValue: "application/json",
+          },
+        ],
         providedHeaders: ["User-Agent", "Accept"],
         requiredHeaders: ["Authorization", "Content-Type", "Accept"],
       });
@@ -429,8 +440,8 @@ describe("BadRequestException", () => {
 
     test("should handle request size limit errors", () => {
       const exception = new BadRequestException("Request payload too large", {
-        currentSize: 10485760, // 10MB
-        maxSize: 5242880, // 5MB
+        currentSize: 10_485_760, // 10MB
+        maxSize: 5_242_880, // 5MB
         sizeUnit: "bytes",
         contentType: "application/json",
         endpoint: "/api/upload",

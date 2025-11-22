@@ -118,14 +118,14 @@ describe("StorageException", () => {
         uploadError: {
           bucket: "user-uploads",
           key: "images/avatar.jpg",
-          size: 2048000,
+          size: 2_048_000,
           contentType: "image/jpeg",
         },
         downloadError: {
           bucket: "public-assets",
           key: "documents/manual.pdf",
           requestedAt: new Date(),
-          timeout: 30000,
+          timeout: 30_000,
         },
       };
 
@@ -151,16 +151,16 @@ describe("StorageException", () => {
 
     test("should support number generic type", () => {
       const numberData = {
-        bytesUploaded: 1024000,
-        totalQuota: 5000000,
-        remainingQuota: 3976000,
+        bytesUploaded: 1_024_000,
+        totalQuota: 5_000_000,
+        remainingQuota: 3_976_000,
         retryCount: 3,
       };
 
       const exception = new StorageException<typeof numberData>("Upload quota tracking", numberData);
 
       expect(exception.data).toEqual(numberData);
-      expect(exception.data?.bytesUploaded).toBe(1024000);
+      expect(exception.data?.bytesUploaded).toBe(1_024_000);
     });
   });
 
@@ -170,7 +170,7 @@ describe("StorageException", () => {
         operation: "upload",
         bucket: "user-content",
         key: "uploads/image.png",
-        size: 2048000,
+        size: 2_048_000,
         contentType: "image/png",
         error: "Network timeout",
       });
@@ -215,7 +215,7 @@ describe("StorageException", () => {
         provider: "s3",
         endpoint: "s3.amazonaws.com",
         region: "us-west-2",
-        lastConnected: new Date(Date.now() - 30000),
+        lastConnected: new Date(Date.now() - 30_000),
         retryCount: 5,
         maxRetries: 3,
       });
@@ -263,8 +263,8 @@ describe("StorageException", () => {
         provider: "filesystem",
         path: "/var/storage/uploads",
         filename: "large-file.zip",
-        diskSpace: 1024000,
-        requiredSpace: 2048000,
+        diskSpace: 1_024_000,
+        requiredSpace: 2_048_000,
         permission: "read-write",
         error: "Insufficient disk space",
       });
@@ -376,7 +376,7 @@ describe("StorageException", () => {
           errorRate: 0.02,
         },
         configuration: {
-          maxFileSize: 100000000,
+          maxFileSize: 100_000_000,
           allowedTypes: ["image/*", "application/pdf", "text/*"],
           encryption: {
             enabled: true,
@@ -415,21 +415,21 @@ describe("StorageException", () => {
         files: [
           {
             name: "document.pdf",
-            size: 1024000,
+            size: 1_024_000,
             lastModified: new Date(),
             contentType: "application/pdf",
           },
           {
             name: "image.jpg",
-            size: 512000,
+            size: 512_000,
             lastModified: new Date(),
             contentType: "image/jpeg",
           },
         ],
         quota: {
-          used: 1536000,
-          total: 5000000,
-          available: 3464000,
+          used: 1_536_000,
+          total: 5_000_000,
+          available: 3_464_000,
         },
       };
 
@@ -438,7 +438,7 @@ describe("StorageException", () => {
       expect(exception.data?.bucket).toBe("user-data-bucket");
       expect(exception.data?.files).toHaveLength(2);
       expect(exception.data?.files[0]?.name).toBe("document.pdf");
-      expect(exception.data?.quota.used).toBe(1536000);
+      expect(exception.data?.quota.used).toBe(1_536_000);
     });
   });
 
@@ -463,8 +463,8 @@ describe("StorageException", () => {
           "oversized-archive.zip": "Exceeds size limit",
           "unauthorized-file.exe": "File type not allowed",
         },
-        duration: 45000,
-        expectedDuration: 30000,
+        duration: 45_000,
+        expectedDuration: 30_000,
       });
 
       expect(exception.data?.operation).toBe("bulk-upload");
@@ -476,15 +476,15 @@ describe("StorageException", () => {
     test("should handle storage quota exceeded errors", () => {
       const exception = new StorageException("Storage quota exceeded", {
         operation: "upload",
-        currentUsage: 4950000000,
-        quotaLimit: 5000000000,
-        requestedSize: 100000000,
-        availableSpace: 50000000,
+        currentUsage: 4_950_000_000,
+        quotaLimit: 5_000_000_000,
+        requestedSize: 100_000_000,
+        availableSpace: 50_000_000,
         buckets: ["documents", "images", "backups"],
         largestFiles: [
-          { name: "backup-2024.zip", size: 1000000000 },
-          { name: "video-archive.mp4", size: 800000000 },
-          { name: "database-dump.sql", size: 500000000 },
+          { name: "backup-2024.zip", size: 1_000_000_000 },
+          { name: "video-archive.mp4", size: 800_000_000 },
+          { name: "database-dump.sql", size: 500_000_000 },
         ],
       });
 
@@ -507,7 +507,7 @@ describe("StorageException", () => {
           { file: "image.png", reason: "Checksum mismatch" },
         ],
         strategy: "incremental",
-        lastSyncAt: new Date(Date.now() - 86400000),
+        lastSyncAt: new Date(Date.now() - 86_400_000),
       });
 
       expect(exception.data?.operation).toBe("sync");
@@ -521,11 +521,11 @@ describe("StorageException", () => {
         fromProvider: "aws-s3",
         toProvider: "cloudflare-r2",
         progress: {
-          totalObjects: 10000,
+          totalObjects: 10_000,
           migratedObjects: 7500,
           failedObjects: 250,
           remainingObjects: 2250,
-          bytesTransferred: 50000000000,
+          bytesTransferred: 50_000_000_000,
           estimatedTimeRemaining: 3600,
         },
         errors: {
@@ -533,7 +533,7 @@ describe("StorageException", () => {
           "network-timeout": 75,
           "invalid-format": 25,
         },
-        startedAt: new Date(Date.now() - 7200000),
+        startedAt: new Date(Date.now() - 7_200_000),
         strategy: "parallel",
         workers: 10,
       });

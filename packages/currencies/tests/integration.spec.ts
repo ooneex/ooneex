@@ -46,9 +46,7 @@ describe("Constants and Types Integration", () => {
     });
 
     it("should work with currency lookup functions", () => {
-      const findCurrencyByCode = (code: CurrencyCodeType) => {
-        return CURRENCIES.find((currency) => currency.code === code);
-      };
+      const findCurrencyByCode = (code: CurrencyCodeType) => CURRENCIES.find((currency) => currency.code === code);
 
       const usd = findCurrencyByCode("USD");
       expect(usd).toBeDefined();
@@ -60,9 +58,8 @@ describe("Constants and Types Integration", () => {
     });
 
     it("should work with currency filtering functions", () => {
-      const filterCurrenciesBySymbol = (symbol: CurrencySymbolType) => {
-        return CURRENCIES.filter((currency) => currency.symbol === symbol);
-      };
+      const filterCurrenciesBySymbol = (symbol: CurrencySymbolType) =>
+        CURRENCIES.filter((currency) => currency.symbol === symbol);
 
       const dollarCurrencies = filterCurrenciesBySymbol("$");
       expect(dollarCurrencies.length).toBeGreaterThan(0);
@@ -113,9 +110,8 @@ describe("Constants and Types Integration", () => {
     });
 
     it("should support currency validation scenarios", () => {
-      const isValidCurrencyCode = (code: string): code is CurrencyCodeType => {
-        return CURRENCIES.some((currency) => currency.code === code);
-      };
+      const isValidCurrencyCode = (code: string): code is CurrencyCodeType =>
+        CURRENCIES.some((currency) => currency.code === code);
 
       expect(isValidCurrencyCode("USD")).toBe(true);
       expect(isValidCurrencyCode("EUR")).toBe(true);

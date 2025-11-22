@@ -148,7 +148,7 @@ describe("UnauthorizedException", () => {
 
     test("should support number generic type", () => {
       const numberData: Record<string, number> = {
-        userId: 12345,
+        userId: 12_345,
         attempts: 3,
         maxAttempts: 5,
       };
@@ -425,8 +425,8 @@ describe("UnauthorizedException", () => {
         keyExpired: true,
         expiresAt: "2024-01-10T00:00:00Z",
         usage: {
-          current: 10500,
-          limit: 10000,
+          current: 10_500,
+          limit: 10_000,
           remaining: -500,
         },
         permissions: ["read"],

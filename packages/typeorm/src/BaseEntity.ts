@@ -6,13 +6,23 @@ export abstract class BaseEntity implements IBase {
   @PrimaryColumn({ name: "id", type: "varchar", length: 15 })
   id: string = random.nanoid(15);
 
-  @Column({ name: "is_locked", type: "boolean", default: false, nullable: true })
+  @Column({
+    name: "is_locked",
+    type: "boolean",
+    default: false,
+    nullable: true,
+  })
   isLocked?: boolean;
 
   @Column({ name: "locked_at", type: "timestamptz", nullable: true })
   lockedAt?: Date;
 
-  @Column({ name: "is_blocked", type: "boolean", default: false, nullable: true })
+  @Column({
+    name: "is_blocked",
+    type: "boolean",
+    default: false,
+    nullable: true,
+  })
   isBlocked?: boolean;
 
   @Column({ name: "blocked_at", type: "timestamptz", nullable: true })

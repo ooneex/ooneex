@@ -512,7 +512,7 @@ describe("LogsEntity", () => {
   describe("Edge Cases and Boundary Values", () => {
     test("should handle very long string values", () => {
       const entity = new LogsEntity();
-      const longString = "A".repeat(10000);
+      const longString = "A".repeat(10_000);
       const veryLongMessage =
         "This is a very long error message that could potentially cause issues with storage or processing. ".repeat(
           100,
@@ -903,7 +903,7 @@ describe("LogsEntity", () => {
 
     test("should handle buffer overflow simulation data", () => {
       const entity = new LogsEntity();
-      const overflowData = "A".repeat(10000);
+      const overflowData = "A".repeat(10_000);
 
       entity.id = "buffer-overflow-test";
       entity.level = "ERROR";
@@ -914,7 +914,7 @@ describe("LogsEntity", () => {
       expect(entity.message).toBe(overflowData);
       expect(entity.userAgent).toBe(overflowData);
       expect(entity.path).toBe(`/${overflowData}`);
-      expect(entity.message?.length).toBe(10000);
+      expect(entity.message?.length).toBe(10_000);
     });
   });
 
@@ -994,7 +994,7 @@ describe("LogsEntity", () => {
       // Test with different date formats and timezones
       const utcDate = new Date("2024-01-01T12:00:00.000Z");
       const localDate = new Date("2024-01-01T12:00:00");
-      const timestampDate = new Date(1704110400000);
+      const timestampDate = new Date(1_704_110_400_000);
 
       entity.date = utcDate;
       expect(entity.date).toBe(utcDate);
@@ -1062,7 +1062,13 @@ describe("LogsEntity", () => {
       const entity = new LogsEntity();
       const originalParams = { key: "value", count: 1 };
       const originalStackTrace: ExceptionStackFrameType[] = [
-        { fileName: "test.ts", lineNumber: 1, columnNumber: 1, functionName: "test", source: "test" },
+        {
+          fileName: "test.ts",
+          lineNumber: 1,
+          columnNumber: 1,
+          functionName: "test",
+          source: "test",
+        },
       ];
 
       entity.params = originalParams;
@@ -1211,7 +1217,10 @@ describe("LogsEntity", () => {
         entity.status = i % 5 === 0 ? 500 : 200;
         entity.method = "POST";
         entity.path = `/api/batch/${i}`;
-        entity.params = { batchId: `batch_${Math.floor(i / 10)}`, itemIndex: i };
+        entity.params = {
+          batchId: `batch_${Math.floor(i / 10)}`,
+          itemIndex: i,
+        };
 
         entities.push(entity);
       }

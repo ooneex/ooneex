@@ -2492,9 +2492,8 @@ export class Mime implements IMime {
    * @param mime - The MIME type to check
    * @returns true if the MIME type is JSON-related, false otherwise
    */
-  public isJson = (mime: string): boolean => {
-    return /(application\/(json|json5|jsonml\+json|jsonpath|(?:ld\+)?json)|text\/json)/i.test(mime);
-  };
+  public isJson = (mime: string): boolean =>
+    /(application\/(json|json5|jsonml\+json|jsonpath|(?:ld\+)?json)|text\/json)/i.test(mime);
 
   /**
    * Checks if a given MIME type is audio-related
@@ -2523,90 +2522,70 @@ export class Mime implements IMime {
    * @param mime - The MIME type to check
    * @returns true if the MIME type is MP4-related, false otherwise
    */
-  public isMp4 = (mime: string): boolean => {
-    return /(video|application)\/mp4/i.test(mime);
-  };
+  public isMp4 = (mime: string): boolean => /(video|application)\/mp4/i.test(mime);
 
   /**
    * Checks if a given MIME type is MP3-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is MP3-related, false otherwise
    */
-  public isMp3 = (mime: string): boolean => {
-    return /audio\/(mp3|mpeg)/i.test(mime);
-  };
+  public isMp3 = (mime: string): boolean => /audio\/(mp3|mpeg)/i.test(mime);
 
   /**
    * Checks if a given MIME type is SVG-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is SVG-related, false otherwise
    */
-  public isSvg = (mime: string): boolean => {
-    return /image\/svg\+xml/i.test(mime);
-  };
+  public isSvg = (mime: string): boolean => /image\/svg\+xml/i.test(mime);
 
   /**
    * Checks if a given MIME type is JPEG-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is JPEG-related, false otherwise
    */
-  public isJpeg = (mime: string): boolean => {
-    return /image\/(jpeg|pjpeg)/i.test(mime);
-  };
+  public isJpeg = (mime: string): boolean => /image\/(jpeg|pjpeg)/i.test(mime);
 
   /**
    * Checks if a given MIME type is CSV-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is CSV-related, false otherwise
    */
-  public isCsv = (mime: string): boolean => {
-    return /text\/csv/i.test(mime);
-  };
+  public isCsv = (mime: string): boolean => /text\/csv/i.test(mime);
 
   /**
    * Checks if a given MIME type is JPG-related (alias for JPEG)
    * @param mime - The MIME type to check
    * @returns true if the MIME type is JPG-related, false otherwise
    */
-  public isJpg = (mime: string): boolean => {
-    return this.isJpeg(mime);
-  };
+  public isJpg = (mime: string): boolean => this.isJpeg(mime);
 
   /**
    * Checks if a given MIME type is PNG-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is PNG-related, false otherwise
    */
-  public isPng = (mime: string): boolean => {
-    return /image\/png/i.test(mime);
-  };
+  public isPng = (mime: string): boolean => /image\/png/i.test(mime);
 
   /**
    * Checks if a given MIME type is PDF-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is PDF-related, false otherwise
    */
-  public isPdf = (mime: string): boolean => {
-    return /application\/pdf/i.test(mime);
-  };
+  public isPdf = (mime: string): boolean => /application\/pdf/i.test(mime);
 
   /**
    * Checks if a given MIME type is HTML-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is HTML-related, false otherwise
    */
-  public isHtml = (mime: string): boolean => {
-    return /text\/html/i.test(mime);
-  };
+  public isHtml = (mime: string): boolean => /text\/html/i.test(mime);
 
   /**
    * Checks if a given MIME type is CSS-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is CSS-related, false otherwise
    */
-  public isCss = (mime: string): boolean => {
-    return /text\/css/i.test(mime);
-  };
+  public isCss = (mime: string): boolean => /text\/css/i.test(mime);
 
   /**
    * Checks if a given MIME type is JavaScript-related
@@ -2625,96 +2604,79 @@ export class Mime implements IMime {
    * @param mime - The MIME type to check
    * @returns true if the MIME type is ZIP-related, false otherwise
    */
-  public isZip = (mime: string): boolean => {
-    return /application\/zip/i.test(mime);
-  };
+  public isZip = (mime: string): boolean => /application\/zip/i.test(mime);
 
   /**
    * Checks if a given MIME type is GIF-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is GIF-related, false otherwise
    */
-  public isGif = (mime: string): boolean => {
-    return /image\/gif/i.test(mime);
-  };
+  public isGif = (mime: string): boolean => /image\/gif/i.test(mime);
 
   /**
    * Checks if a given MIME type is WebP-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is WebP-related, false otherwise
    */
-  public isWebp = (mime: string): boolean => {
-    return /image\/webp/i.test(mime);
-  };
+  public isWebp = (mime: string): boolean => /image\/webp/i.test(mime);
 
   /**
    * Checks if a given MIME type is XML-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is XML-related, false otherwise
    */
-  public isXml = (mime: string): boolean => {
-    return /(text|application)\/xml|.*\+xml/i.test(mime);
-  };
+  public isXml = (mime: string): boolean => /(text|application)\/xml|.*\+xml/i.test(mime);
 
   /**
    * Checks if a given MIME type is plain text-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is plain text-related, false otherwise
    */
-  public isText = (mime: string): boolean => {
-    return /text\/plain/i.test(mime);
-  };
+  public isText = (mime: string): boolean => /text\/plain/i.test(mime);
 
   /**
    * Checks if a given MIME type is octet-stream (binary data)
    * @param mime - The MIME type to check
    * @returns true if the MIME type is octet-stream, false otherwise
    */
-  public isOctetStream = (mime: string): boolean => {
-    return /application\/octet-stream/i.test(mime);
-  };
+  public isOctetStream = (mime: string): boolean => /application\/octet-stream/i.test(mime);
 
   /**
    * Checks if a given MIME type is font-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is font-related, false otherwise
    */
-  public isFont = (mime: string): boolean => {
-    return /font\/|application\/font-(woff2?|sfnt|tdpfr)/i.test(mime);
-  };
+  public isFont = (mime: string): boolean => /font\/|application\/font-(woff2?|sfnt|tdpfr)/i.test(mime);
 
   /**
    * Checks if a given MIME type is Microsoft Word-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is Word-related, false otherwise
    */
-  public isWord = (mime: string): boolean => {
-    return /application\/(msword|vnd\.(openxmlformats-officedocument\.wordprocessingml\.(document|template)|ms-word\.(document|template)\.macroenabled\.12))/i.test(
+  public isWord = (mime: string): boolean =>
+    /application\/(msword|vnd\.(openxmlformats-officedocument\.wordprocessingml\.(document|template)|ms-word\.(document|template)\.macroenabled\.12))/i.test(
       mime,
     );
-  };
 
   /**
    * Checks if a given MIME type is Microsoft Excel-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is Excel-related, false otherwise
    */
-  public isExcel = (mime: string): boolean => {
-    return /application\/vnd\.(ms-excel(\.(sheet|template|addin)\.macroenabled\.12|\.sheet\.binary\.macroenabled\.12)?|openxmlformats-officedocument\.spreadsheetml\.(sheet|template))/i.test(
+  public isExcel = (mime: string): boolean =>
+    /application\/vnd\.(ms-excel(\.(sheet|template|addin)\.macroenabled\.12|\.sheet\.binary\.macroenabled\.12)?|openxmlformats-officedocument\.spreadsheetml\.(sheet|template))/i.test(
       mime,
     );
-  };
 
   /**
    * Checks if a given MIME type is Microsoft PowerPoint-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is PowerPoint-related, false otherwise
    */
-  public isPowerPoint = (mime: string): boolean => {
-    return /application\/vnd\.(ms-powerpoint(\.(addin|presentation|template|slideshow)\.macroenabled\.12)?|openxmlformats-officedocument\.presentationml\.(presentation|template|slideshow))/i.test(
+  public isPowerPoint = (mime: string): boolean =>
+    /application\/vnd\.(ms-powerpoint(\.(addin|presentation|template|slideshow)\.macroenabled\.12)?|openxmlformats-officedocument\.presentationml\.(presentation|template|slideshow))/i.test(
       mime,
     );
-  };
 
   /**
    * Checks if a given MIME type is image-related
@@ -2732,31 +2694,23 @@ export class Mime implements IMime {
    * @param mime - The MIME type to check
    * @returns true if the MIME type is blob-related, false otherwise
    */
-  public isBlob = (mime: string): boolean => {
-    return /application\/octet-stream/i.test(mime);
-  };
+  public isBlob = (mime: string): boolean => /application\/octet-stream/i.test(mime);
 
   /**
    * Checks if a given MIME type is stream-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is stream-related, false otherwise
    */
-  public isStream = (mime: string): boolean => {
-    return /application\/(octet-stream|stream)/i.test(mime);
-  };
+  public isStream = (mime: string): boolean => /application\/(octet-stream|stream)/i.test(mime);
 
   /**
    * Checks if a given MIME type is form data-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is form data-related, false otherwise
    */
-  public isFormData = (mime: string): boolean => {
-    return /application\/form-data/i.test(mime);
-  };
+  public isFormData = (mime: string): boolean => /application\/form-data/i.test(mime);
 
-  public isForm = (mime: string): boolean => {
-    return /application\/x-www-form-urlencoded/i.test(mime);
-  };
+  public isForm = (mime: string): boolean => /application\/x-www-form-urlencoded/i.test(mime);
 
   /**
    * Checks if a given MIME type is multipart-related
@@ -2774,36 +2728,28 @@ export class Mime implements IMime {
    * @param mime - The MIME type to check
    * @returns true if the MIME type is plain text-related, false otherwise
    */
-  public isPlainText = (mime: string): boolean => {
-    return /text\/plain/i.test(mime);
-  };
+  public isPlainText = (mime: string): boolean => /text\/plain/i.test(mime);
 
   /**
    * Checks if a given MIME type is markdown-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is markdown-related, false otherwise
    */
-  public isMarkdown = (mime: string): boolean => {
-    return /text\/(markdown|x-markdown)/i.test(mime);
-  };
+  public isMarkdown = (mime: string): boolean => /text\/(markdown|x-markdown)/i.test(mime);
 
   /**
    * Checks if a given MIME type is RTF-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is RTF-related, false otherwise
    */
-  public isRtf = (mime: string): boolean => {
-    return /application\/rtf/i.test(mime);
-  };
+  public isRtf = (mime: string): boolean => /application\/rtf/i.test(mime);
 
   /**
    * Checks if a given MIME type is gzip-related
    * @param mime - The MIME type to check
    * @returns true if the MIME type is gzip-related, false otherwise
    */
-  public isGzip = (mime: string): boolean => {
-    return /application\/(gzip|x-gzip)/i.test(mime);
-  };
+  public isGzip = (mime: string): boolean => /application\/(gzip|x-gzip)/i.test(mime);
 
   private formatMimeType = (mime: string): string => {
     if (!mime || typeof mime !== "string") {

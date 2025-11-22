@@ -219,9 +219,15 @@ describe("HttpRequest Integration Tests", () => {
       const formData = new FormData();
 
       // Test different file types
-      const textFile = new File(["Hello world"], "document.txt", { type: "text/plain" });
-      const imageFile = new File([new ArrayBuffer(1024)], "photo.jpg", { type: "image/jpeg" });
-      const pdfFile = new File([new ArrayBuffer(2048)], "manual.pdf", { type: "application/pdf" });
+      const textFile = new File(["Hello world"], "document.txt", {
+        type: "text/plain",
+      });
+      const imageFile = new File([new ArrayBuffer(1024)], "photo.jpg", {
+        type: "image/jpeg",
+      });
+      const pdfFile = new File([new ArrayBuffer(2048)], "manual.pdf", {
+        type: "application/pdf",
+      });
 
       formData.append("document", textFile);
       formData.append("image", imageFile);
@@ -262,7 +268,9 @@ describe("HttpRequest Integration Tests", () => {
 
     test("should handle files with no extension", () => {
       const formData = new FormData();
-      const fileWithoutExt = new File(["content"], "README", { type: "text/plain" });
+      const fileWithoutExt = new File(["content"], "README", {
+        type: "text/plain",
+      });
       formData.append("readme", fileWithoutExt);
 
       const request = new HttpRequest(mockRequest, { form: formData });
@@ -274,8 +282,12 @@ describe("HttpRequest Integration Tests", () => {
 
     test("should handle duplicate file names", () => {
       const formData = new FormData();
-      const file1 = new File(["content1"], "document.txt", { type: "text/plain" });
-      const file2 = new File(["content2"], "document.txt", { type: "text/plain" });
+      const file1 = new File(["content1"], "document.txt", {
+        type: "text/plain",
+      });
+      const file2 = new File(["content2"], "document.txt", {
+        type: "text/plain",
+      });
 
       formData.append("file1", file1);
       formData.append("file2", file2);

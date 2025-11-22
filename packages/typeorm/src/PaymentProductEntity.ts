@@ -20,7 +20,11 @@ export class PaymentProductEntity extends BaseEntity implements IProduct {
   @Column({ name: "description", type: "text", nullable: true })
   description?: string;
 
-  @ManyToMany(() => CategoryEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => CategoryEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_products_categories",
     joinColumn: { name: "product_id", referencedColumnName: "id" },
@@ -37,7 +41,11 @@ export class PaymentProductEntity extends BaseEntity implements IProduct {
   @Column({ name: "barcode", type: "varchar", length: 255, nullable: true })
   barcode?: string;
 
-  @ManyToMany(() => ImageEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => ImageEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_products_images",
     joinColumn: { name: "product_id", referencedColumnName: "id" },
@@ -48,7 +56,11 @@ export class PaymentProductEntity extends BaseEntity implements IProduct {
   @Column({ name: "attributes", type: "jsonb", nullable: true })
   attributes?: Record<string, ScalarType>;
 
-  @ManyToMany(() => TagEntity, { nullable: true, eager: false, cascade: ["insert", "update"] })
+  @ManyToMany(() => TagEntity, {
+    nullable: true,
+    eager: false,
+    cascade: ["insert", "update"],
+  })
   @JoinTable({
     name: "payment_products_tags",
     joinColumn: { name: "product_id", referencedColumnName: "id" },

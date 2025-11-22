@@ -44,7 +44,12 @@ export const CURRENCIES = [
   { code: "TND", name: "Tunisian Dinar", icon: "🇹🇳", symbol: "د.ت" },
   { code: "DZD", name: "Algerian Dinar", icon: "🇩🇿", symbol: "د.ج" },
   { code: "XOF", name: "West African CFA Franc", icon: "🌍", symbol: "CFA" },
-  { code: "XAF", name: "Central African CFA Franc", icon: "🌍", symbol: "FCFA" },
+  {
+    code: "XAF",
+    name: "Central African CFA Franc",
+    icon: "🌍",
+    symbol: "FCFA",
+  },
   { code: "BWP", name: "Botswana Pula", icon: "🇧🇼", symbol: "P" },
   { code: "MUR", name: "Mauritian Rupee", icon: "🇲🇺", symbol: "₨" },
   { code: "ETB", name: "Ethiopian Birr", icon: "🇪🇹", symbol: "Br" },
@@ -82,5 +87,10 @@ export const CURRENCIES = [
   { code: "AZN", name: "Azerbaijani Manat", icon: "🇦🇿", symbol: "₼" },
   { code: "AMD", name: "Armenian Dram", icon: "🇦🇲", symbol: "֏" },
   { code: "KZT", name: "Kazakhstani Tenge", icon: "🇰🇿", symbol: "₸" },
-  { code: "XDR", name: "Special Drawing Rights (IMF)", icon: "🏛️", symbol: "XDR" },
+  {
+    code: "XDR",
+    name: "Special Drawing Rights (IMF)",
+    icon: "🏛️",
+    symbol: "XDR",
+  },
 ] as const;

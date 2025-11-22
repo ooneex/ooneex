@@ -4,35 +4,43 @@
   "version": "0.0.0",
   "type": "module",
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
     "dist"
   ],
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
+    "./entities/book": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/entities/book/index.d.ts",
+        "default": "./dist/entities/book/index.js"
       }
     },
-    "./books": {
+    "./entities/common": {
       "import": {
-        "types": "./dist/books.d.ts",
-        "default": "./dist/books.js"
+        "types": "./dist/entities/common/index.d.ts",
+        "default": "./dist/entities/common/index.js"
       }
     },
-    "./payment": {
+    "./entities/image": {
       "import": {
-        "types": "./dist/payment.d.ts",
-        "default": "./dist/payment.js"
+        "types": "./dist/entities/image/index.d.ts",
+        "default": "./dist/entities/image/index.js"
       }
     },
-    "./videos": {
+    "./entities/payment": {
       "import": {
-        "types": "./dist/videos.d.ts",
-        "default": "./dist/videos.js"
+        "types": "./dist/entities/payment/index.d.ts",
+        "default": "./dist/entities/payment/index.js"
+      }
+    },
+    "./entities/video": {
+      "import": {
+        "types": "./dist/entities/video/index.d.ts",
+        "default": "./dist/entities/video/index.js"
+      }
+    },
+    "./repositories/book": {
+      "import": {
+        "types": "./dist/repositories/book/index.d.ts",
+        "default": "./dist/repositories/book/index.js"
       }
     },
     "./package.json": "./package.json"
@@ -45,6 +53,8 @@
   },
   "dependencies": {
     "typeorm": "^0.3.27",
+    "@ooneex/database": "workspace:*",
+    "@ooneex/container": "workspace:*",
     "@ooneex/utils": "workspace:*"
   },
   "devDependencies": {

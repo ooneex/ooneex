@@ -2,7 +2,14 @@ import { defineConfig } from "bunup";
 import { copy } from "bunup/plugins";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/books.ts", "src/payment.ts", "src/videos.ts"],
+  entry: [
+    "src/entities/book/index.ts",
+    "src/entities/common/index.ts",
+    "src/entities/image/index.ts",
+    "src/entities/payment/index.ts",
+    "src/entities/video/index.ts",
+    "src/repositories/book/index.ts",
+  ],
   target: "bun",
   format: ["esm"],
   drop: ["console", "debugger"],

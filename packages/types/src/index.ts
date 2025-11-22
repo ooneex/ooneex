@@ -18,3 +18,11 @@ export interface IBase {
   deletedAt?: Date;
   language?: LocaleType;
 }
+
+export type FilterResultType<T> = {
+  resources: T[];
+  total: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+};

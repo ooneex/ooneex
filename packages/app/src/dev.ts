@@ -1,7 +1,6 @@
 import { PostHogAdapter } from "@ooneex/analytics";
 import { AppEnv } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
-import { container } from "@ooneex/container";
 import type { CronTimeType, ICron } from "@ooneex/cron";
 import { RedisDatabaseAdapter, TypeormPgDatabaseAdapter } from "@ooneex/database";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
@@ -40,7 +39,6 @@ class DocParserCron implements ICron {
 }
 
 new App({
-  container,
   logger: [SqliteLogger, TerminalLogger],
   analytics: PostHogAdapter,
   cache: RedisCacheAdapter,

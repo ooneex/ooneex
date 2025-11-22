@@ -158,6 +158,27 @@
         "@ooneex/http-status": "workspace:*",
       },
     },
+    "packages/datetime": {
+      "name": "@ooneex/datetime",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/utils": "workspace:*",
+        "typeorm": "^0.3.27",
+      },
+      "devDependencies": {
+        "@ooneex/book": "workspace:*",
+        "@ooneex/category": "workspace:*",
+        "@ooneex/color": "workspace:*",
+        "@ooneex/currencies": "workspace:*",
+        "@ooneex/folder": "workspace:*",
+        "@ooneex/image": "workspace:*",
+        "@ooneex/payment": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+        "@ooneex/video": "workspace:*",
+      },
+    },
     "packages/education": {
       "name": "@ooneex/education",
       "version": "0.0.0",
@@ -190,6 +211,27 @@
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
+      },
+    },
+    "packages/gamification": {
+      "name": "@ooneex/gamification",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/utils": "workspace:*",
+        "typeorm": "^0.3.27",
+      },
+      "devDependencies": {
+        "@ooneex/book": "workspace:*",
+        "@ooneex/category": "workspace:*",
+        "@ooneex/color": "workspace:*",
+        "@ooneex/currencies": "workspace:*",
+        "@ooneex/folder": "workspace:*",
+        "@ooneex/image": "workspace:*",
+        "@ooneex/payment": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+        "@ooneex/video": "workspace:*",
       },
     },
     "packages/http-header": {
@@ -250,6 +292,17 @@
         "@ooneex/types": "workspace:*",
       },
     },
+    "packages/jwt": {
+      "name": "@ooneex/jwt",
+      "version": "0.0.0",
+      "dependencies": {
+        "jose": "^6.1.2",
+      },
+      "devDependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
+    },
     "packages/logger": {
       "name": "@ooneex/logger",
       "version": "0.0.0",
@@ -283,6 +336,27 @@
     "packages/migrations": {
       "name": "@ooneex/migrations",
       "version": "0.0.0",
+    },
+    "packages/notification": {
+      "name": "@ooneex/notification",
+      "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/utils": "workspace:*",
+        "typeorm": "^0.3.27",
+      },
+      "devDependencies": {
+        "@ooneex/book": "workspace:*",
+        "@ooneex/category": "workspace:*",
+        "@ooneex/color": "workspace:*",
+        "@ooneex/currencies": "workspace:*",
+        "@ooneex/folder": "workspace:*",
+        "@ooneex/image": "workspace:*",
+        "@ooneex/payment": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+        "@ooneex/video": "workspace:*",
+      },
     },
     "packages/payment": {
       "name": "@ooneex/payment",
@@ -369,6 +443,8 @@
       "name": "@ooneex/typeorm",
       "version": "0.0.0",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
+        "@ooneex/database": "workspace:*",
         "@ooneex/utils": "workspace:*",
         "typeorm": "^0.3.27",
       },
@@ -410,6 +486,7 @@
         "@ooneex/role": "workspace:*",
       },
       "devDependencies": {
+        "@ooneex/image": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
     },
@@ -851,6 +928,8 @@
 
     "@ooneex/database": ["@ooneex/database@workspace:packages/database"],
 
+    "@ooneex/datetime": ["@ooneex/datetime@workspace:packages/datetime"],
+
     "@ooneex/education": ["@ooneex/education@workspace:packages/education"],
 
     "@ooneex/exception": ["@ooneex/exception@workspace:packages/exception"],
@@ -858,6 +937,8 @@
     "@ooneex/fetcher": ["@ooneex/fetcher@workspace:packages/fetcher"],
 
     "@ooneex/folder": ["@ooneex/folder@workspace:packages/folder"],
+
+    "@ooneex/gamification": ["@ooneex/gamification@workspace:packages/gamification"],
 
     "@ooneex/http-header": ["@ooneex/http-header@workspace:packages/http-header"],
 
@@ -873,6 +954,8 @@
 
     "@ooneex/image": ["@ooneex/image@workspace:packages/image"],
 
+    "@ooneex/jwt": ["@ooneex/jwt@workspace:packages/jwt"],
+
     "@ooneex/logger": ["@ooneex/logger@workspace:packages/logger"],
 
     "@ooneex/mailer": ["@ooneex/mailer@workspace:packages/mailer"],
@@ -880,6 +963,8 @@
     "@ooneex/middleware": ["@ooneex/middleware@workspace:packages/middleware"],
 
     "@ooneex/migrations": ["@ooneex/migrations@workspace:packages/migrations"],
+
+    "@ooneex/notification": ["@ooneex/notification@workspace:packages/notification"],
 
     "@ooneex/payment": ["@ooneex/payment@workspace:packages/payment"],
 
@@ -1452,6 +1537,8 @@
     "jest-diff": ["jest-diff@30.2.0", "", { "dependencies": { "@jest/diff-sequences": "30.0.1", "@jest/get-type": "30.1.0", "chalk": "4.1.2", "pretty-format": "30.2.0" } }, "sha512-dQHFo3Pt4/NLlG5z4PxZ/3yZTZ1C7s9hveiOj+GCN+uT109NC2QgsoVZsVOAvbJ3RgKkvyLGXZV9+piDpWbm6A=="],
 
     "jiti": ["jiti@2.6.1", "", { "bin": { "jiti": "lib/jiti-cli.mjs" } }, "sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ=="],
+
+    "jose": ["jose@6.1.2", "", {}, "sha512-MpcPtHLE5EmztuFIqB0vzHAWJPpmN1E6L4oo+kze56LIs3MyXIj9ZHMDxqOvkP38gBR7K1v3jqd4WU2+nrfONQ=="],
 
     "js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 

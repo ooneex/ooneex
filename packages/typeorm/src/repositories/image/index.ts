@@ -1,0 +1,1 @@
+export { ImageRepository } from "./ImageRepository";

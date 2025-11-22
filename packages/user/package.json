@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
     "dist"
   ],
   "module": "./dist/index.js",
@@ -29,6 +27,7 @@
     "@ooneex/role": "workspace:*"
   },
   "devDependencies": {
+    "@ooneex/image": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "peerDependencies": {}

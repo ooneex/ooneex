@@ -52,6 +52,7 @@
         "@ooneex/container": "workspace:*",
         "@ooneex/cron": "workspace:*",
         "@ooneex/database": "workspace:*",
+        "@ooneex/jwt": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/mailer": "workspace:*",
         "@ooneex/permission": "workspace:*",
@@ -158,27 +159,6 @@
         "@ooneex/http-status": "workspace:*",
       },
     },
-    "packages/datetime": {
-      "name": "@ooneex/datetime",
-      "version": "0.0.0",
-      "dependencies": {
-        "@ooneex/utils": "workspace:*",
-        "typeorm": "^0.3.27",
-      },
-      "devDependencies": {
-        "@ooneex/book": "workspace:*",
-        "@ooneex/category": "workspace:*",
-        "@ooneex/color": "workspace:*",
-        "@ooneex/currencies": "workspace:*",
-        "@ooneex/folder": "workspace:*",
-        "@ooneex/image": "workspace:*",
-        "@ooneex/payment": "workspace:*",
-        "@ooneex/status": "workspace:*",
-        "@ooneex/tag": "workspace:*",
-        "@ooneex/types": "workspace:*",
-        "@ooneex/video": "workspace:*",
-      },
-    },
     "packages/education": {
       "name": "@ooneex/education",
       "version": "0.0.0",
@@ -216,23 +196,6 @@
     "packages/gamification": {
       "name": "@ooneex/gamification",
       "version": "0.0.0",
-      "dependencies": {
-        "@ooneex/utils": "workspace:*",
-        "typeorm": "^0.3.27",
-      },
-      "devDependencies": {
-        "@ooneex/book": "workspace:*",
-        "@ooneex/category": "workspace:*",
-        "@ooneex/color": "workspace:*",
-        "@ooneex/currencies": "workspace:*",
-        "@ooneex/folder": "workspace:*",
-        "@ooneex/image": "workspace:*",
-        "@ooneex/payment": "workspace:*",
-        "@ooneex/status": "workspace:*",
-        "@ooneex/tag": "workspace:*",
-        "@ooneex/types": "workspace:*",
-        "@ooneex/video": "workspace:*",
-      },
     },
     "packages/http-header": {
       "name": "@ooneex/http-header",
@@ -340,23 +303,6 @@
     "packages/notification": {
       "name": "@ooneex/notification",
       "version": "0.0.0",
-      "dependencies": {
-        "@ooneex/utils": "workspace:*",
-        "typeorm": "^0.3.27",
-      },
-      "devDependencies": {
-        "@ooneex/book": "workspace:*",
-        "@ooneex/category": "workspace:*",
-        "@ooneex/color": "workspace:*",
-        "@ooneex/currencies": "workspace:*",
-        "@ooneex/folder": "workspace:*",
-        "@ooneex/image": "workspace:*",
-        "@ooneex/payment": "workspace:*",
-        "@ooneex/status": "workspace:*",
-        "@ooneex/tag": "workspace:*",
-        "@ooneex/types": "workspace:*",
-        "@ooneex/video": "workspace:*",
-      },
     },
     "packages/payment": {
       "name": "@ooneex/payment",
@@ -927,8 +873,6 @@
     "@ooneex/currencies": ["@ooneex/currencies@workspace:packages/currencies"],
 
     "@ooneex/database": ["@ooneex/database@workspace:packages/database"],
-
-    "@ooneex/datetime": ["@ooneex/datetime@workspace:packages/datetime"],
 
     "@ooneex/education": ["@ooneex/education@workspace:packages/education"],
 

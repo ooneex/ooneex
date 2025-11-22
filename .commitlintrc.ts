@@ -41,6 +41,7 @@ const Configuration: UserConfig = {
         "http-response",
         "http-status",
         "image",
+        "jwt",
         "logger",
         "mailer",
         "middleware",

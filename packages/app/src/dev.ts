@@ -3,6 +3,7 @@ import { AppEnv } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
 import type { CronTimeType, ICron } from "@ooneex/cron";
 import { RedisDatabaseAdapter, TypeormPgDatabaseAdapter } from "@ooneex/database";
+import { Jwt } from "@ooneex/jwt";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
 import { NodeMailerAdapter, ResendMailerAdapter } from "@ooneex/mailer";
 import { Permission } from "@ooneex/permission";
@@ -42,6 +43,7 @@ new App({
   logger: [SqliteLogger, TerminalLogger],
   analytics: PostHogAdapter,
   cache: RedisCacheAdapter,
+  jwt: Jwt,
   storage: CloudflareStorageAdapter,
   cronJobs: [DocParserCron],
   permission: Permission, // Create PermissionMiddleware to get current user and set permissions

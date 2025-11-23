@@ -199,6 +199,7 @@
       "devDependencies": {
         "@ooneex/image": "workspace:*",
         "@ooneex/status": "workspace:*",
+        "@ooneex/tag": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
     },

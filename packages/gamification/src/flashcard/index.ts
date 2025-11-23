@@ -1,4 +1,3 @@
+export * from "./algorithms";
 export * from "./constants";
-export * from "./flashcard";
-export * from "./mcq";
 export * from "./types";

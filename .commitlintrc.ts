@@ -34,6 +34,7 @@ const Configuration: UserConfig = {
         "exception",
         "fetcher",
         "folder",
+        "gamification",
         "http-header",
         "http-mimes",
         "http-request",

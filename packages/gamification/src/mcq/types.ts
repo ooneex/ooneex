@@ -1,5 +1,6 @@
 import type { IImage } from "@ooneex/image";
 import type { IStatus } from "@ooneex/status";
+import type { ITag } from "@ooneex/tag";
 import type { IBase, IStat } from "@ooneex/types";
 import type { EAnswerState, ESessionType, ILevel } from "@/types";
 
@@ -40,6 +41,7 @@ export interface IMcqQuestion extends IBase {
   stat?: IStat;
   status?: IStatus;
   image?: IImage;
+  tags?: ITag[];
 }
 
 export interface IMcqSession extends IBase {

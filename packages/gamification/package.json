@@ -21,6 +21,12 @@
         "default": "./dist/mcq/index.js"
       }
     },
+    "./flashcard": {
+      "import": {
+        "types": "./dist/flashcard/index.d.ts",
+        "default": "./dist/flashcard/index.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -31,6 +37,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@ooneex/tag": "workspace:*",
     "@ooneex/image": "workspace:*",
     "@ooneex/status": "workspace:*",
     "@ooneex/types": "workspace:*"

@@ -1,38 +1,38 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Status, type StatusCodeType } from "@/index";
+import { HttpStatus, type StatusCodeType } from "@/index";
 
 describe("Status", () => {
-  let status: Status;
+  let status: HttpStatus;
 
   beforeEach(() => {
-    status = new Status();
+    status = new HttpStatus();
   });
 
   describe("Static properties", () => {
     test("should have Code property with status codes", () => {
-      expect(Status.Code).toBeDefined();
-      expect(typeof Status.Code).toBe("object");
+      expect(HttpStatus.Code).toBeDefined();
+      expect(typeof HttpStatus.Code).toBe("object");
     });
 
     test("should have Text property with status texts", () => {
-      expect(Status.Text).toBeDefined();
-      expect(typeof Status.Text).toBe("object");
+      expect(HttpStatus.Text).toBeDefined();
+      expect(typeof HttpStatus.Text).toBe("object");
     });
   });
 
   describe("isInformational", () => {
     test("should return true for 1xx status codes", () => {
-      expect(status.isInformational(Status.Code.Continue)).toBe(true);
-      expect(status.isInformational(Status.Code.SwitchingProtocols)).toBe(true);
-      expect(status.isInformational(Status.Code.Processing)).toBe(true);
-      expect(status.isInformational(Status.Code.EarlyHints)).toBe(true);
+      expect(status.isInformational(HttpStatus.Code.Continue)).toBe(true);
+      expect(status.isInformational(HttpStatus.Code.SwitchingProtocols)).toBe(true);
+      expect(status.isInformational(HttpStatus.Code.Processing)).toBe(true);
+      expect(status.isInformational(HttpStatus.Code.EarlyHints)).toBe(true);
     });
 
     test("should return false for non-1xx status codes", () => {
-      expect(status.isInformational(Status.Code.OK)).toBe(false);
-      expect(status.isInformational(Status.Code.NotFound)).toBe(false);
-      expect(status.isInformational(Status.Code.InternalServerError)).toBe(false);
-      expect(status.isInformational(Status.Code.MultipleChoices)).toBe(false);
+      expect(status.isInformational(HttpStatus.Code.OK)).toBe(false);
+      expect(status.isInformational(HttpStatus.Code.NotFound)).toBe(false);
+      expect(status.isInformational(HttpStatus.Code.InternalServerError)).toBe(false);
+      expect(status.isInformational(HttpStatus.Code.MultipleChoices)).toBe(false);
     });
 
     test("should handle edge cases around boundaries", () => {
@@ -45,22 +45,22 @@ describe("Status", () => {
 
   describe("isSuccessful", () => {
     test("should return true for 2xx status codes", () => {
-      expect(status.isSuccessful(Status.Code.OK)).toBe(true);
-      expect(status.isSuccessful(Status.Code.Created)).toBe(true);
-      expect(status.isSuccessful(Status.Code.Accepted)).toBe(true);
-      expect(status.isSuccessful(Status.Code.NoContent)).toBe(true);
-      expect(status.isSuccessful(Status.Code.ResetContent)).toBe(true);
-      expect(status.isSuccessful(Status.Code.PartialContent)).toBe(true);
-      expect(status.isSuccessful(Status.Code.MultiStatus)).toBe(true);
-      expect(status.isSuccessful(Status.Code.AlreadyReported)).toBe(true);
-      expect(status.isSuccessful(Status.Code.IMUsed)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.OK)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.Created)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.Accepted)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.NoContent)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.ResetContent)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.PartialContent)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.MultiStatus)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.AlreadyReported)).toBe(true);
+      expect(status.isSuccessful(HttpStatus.Code.IMUsed)).toBe(true);
     });
 
     test("should return false for non-2xx status codes", () => {
-      expect(status.isSuccessful(Status.Code.Continue)).toBe(false);
-      expect(status.isSuccessful(Status.Code.MultipleChoices)).toBe(false);
-      expect(status.isSuccessful(Status.Code.BadRequest)).toBe(false);
-      expect(status.isSuccessful(Status.Code.InternalServerError)).toBe(false);
+      expect(status.isSuccessful(HttpStatus.Code.Continue)).toBe(false);
+      expect(status.isSuccessful(HttpStatus.Code.MultipleChoices)).toBe(false);
+      expect(status.isSuccessful(HttpStatus.Code.BadRequest)).toBe(false);
+      expect(status.isSuccessful(HttpStatus.Code.InternalServerError)).toBe(false);
     });
 
     test("should handle edge cases around boundaries", () => {
@@ -73,21 +73,21 @@ describe("Status", () => {
 
   describe("isRedirect", () => {
     test("should return true for 3xx status codes", () => {
-      expect(status.isRedirect(Status.Code.MultipleChoices)).toBe(true);
-      expect(status.isRedirect(Status.Code.MovedPermanently)).toBe(true);
-      expect(status.isRedirect(Status.Code.Found)).toBe(true);
-      expect(status.isRedirect(Status.Code.SeeOther)).toBe(true);
-      expect(status.isRedirect(Status.Code.NotModified)).toBe(true);
-      expect(status.isRedirect(Status.Code.UseProxy)).toBe(true);
-      expect(status.isRedirect(Status.Code.TemporaryRedirect)).toBe(true);
-      expect(status.isRedirect(Status.Code.PermanentRedirect)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.MultipleChoices)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.MovedPermanently)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.Found)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.SeeOther)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.NotModified)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.UseProxy)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.TemporaryRedirect)).toBe(true);
+      expect(status.isRedirect(HttpStatus.Code.PermanentRedirect)).toBe(true);
     });
 
     test("should return false for non-3xx status codes", () => {
-      expect(status.isRedirect(Status.Code.OK)).toBe(false);
-      expect(status.isRedirect(Status.Code.Continue)).toBe(false);
-      expect(status.isRedirect(Status.Code.BadRequest)).toBe(false);
-      expect(status.isRedirect(Status.Code.InternalServerError)).toBe(false);
+      expect(status.isRedirect(HttpStatus.Code.OK)).toBe(false);
+      expect(status.isRedirect(HttpStatus.Code.Continue)).toBe(false);
+      expect(status.isRedirect(HttpStatus.Code.BadRequest)).toBe(false);
+      expect(status.isRedirect(HttpStatus.Code.InternalServerError)).toBe(false);
     });
 
     test("should handle edge cases around boundaries", () => {
@@ -100,25 +100,25 @@ describe("Status", () => {
 
   describe("isClientError", () => {
     test("should return true for 4xx status codes", () => {
-      expect(status.isClientError(Status.Code.BadRequest)).toBe(true);
-      expect(status.isClientError(Status.Code.Unauthorized)).toBe(true);
-      expect(status.isClientError(Status.Code.PaymentRequired)).toBe(true);
-      expect(status.isClientError(Status.Code.Forbidden)).toBe(true);
-      expect(status.isClientError(Status.Code.NotFound)).toBe(true);
-      expect(status.isClientError(Status.Code.MethodNotAllowed)).toBe(true);
-      expect(status.isClientError(Status.Code.Conflict)).toBe(true);
-      expect(status.isClientError(Status.Code.Gone)).toBe(true);
-      expect(status.isClientError(Status.Code.Teapot)).toBe(true);
-      expect(status.isClientError(Status.Code.UnprocessableEntity)).toBe(true);
-      expect(status.isClientError(Status.Code.TooManyRequests)).toBe(true);
-      expect(status.isClientError(Status.Code.UnavailableForLegalReasons)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.BadRequest)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.Unauthorized)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.PaymentRequired)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.Forbidden)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.NotFound)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.MethodNotAllowed)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.Conflict)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.Gone)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.Teapot)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.UnprocessableEntity)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.TooManyRequests)).toBe(true);
+      expect(status.isClientError(HttpStatus.Code.UnavailableForLegalReasons)).toBe(true);
     });
 
     test("should return false for non-4xx status codes", () => {
-      expect(status.isClientError(Status.Code.OK)).toBe(false);
-      expect(status.isClientError(Status.Code.Continue)).toBe(false);
-      expect(status.isClientError(Status.Code.MultipleChoices)).toBe(false);
-      expect(status.isClientError(Status.Code.InternalServerError)).toBe(false);
+      expect(status.isClientError(HttpStatus.Code.OK)).toBe(false);
+      expect(status.isClientError(HttpStatus.Code.Continue)).toBe(false);
+      expect(status.isClientError(HttpStatus.Code.MultipleChoices)).toBe(false);
+      expect(status.isClientError(HttpStatus.Code.InternalServerError)).toBe(false);
     });
 
     test("should handle edge cases around boundaries", () => {
@@ -131,24 +131,24 @@ describe("Status", () => {
 
   describe("isServerError", () => {
     test("should return true for 5xx status codes", () => {
-      expect(status.isServerError(Status.Code.InternalServerError)).toBe(true);
-      expect(status.isServerError(Status.Code.NotImplemented)).toBe(true);
-      expect(status.isServerError(Status.Code.BadGateway)).toBe(true);
-      expect(status.isServerError(Status.Code.ServiceUnavailable)).toBe(true);
-      expect(status.isServerError(Status.Code.GatewayTimeout)).toBe(true);
-      expect(status.isServerError(Status.Code.HTTPVersionNotSupported)).toBe(true);
-      expect(status.isServerError(Status.Code.VariantAlsoNegotiates)).toBe(true);
-      expect(status.isServerError(Status.Code.InsufficientStorage)).toBe(true);
-      expect(status.isServerError(Status.Code.LoopDetected)).toBe(true);
-      expect(status.isServerError(Status.Code.NotExtended)).toBe(true);
-      expect(status.isServerError(Status.Code.NetworkAuthenticationRequired)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.InternalServerError)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.NotImplemented)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.BadGateway)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.ServiceUnavailable)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.GatewayTimeout)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.HTTPVersionNotSupported)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.VariantAlsoNegotiates)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.InsufficientStorage)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.LoopDetected)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.NotExtended)).toBe(true);
+      expect(status.isServerError(HttpStatus.Code.NetworkAuthenticationRequired)).toBe(true);
     });
 
     test("should return false for non-5xx status codes", () => {
-      expect(status.isServerError(Status.Code.OK)).toBe(false);
-      expect(status.isServerError(Status.Code.Continue)).toBe(false);
-      expect(status.isServerError(Status.Code.MultipleChoices)).toBe(false);
-      expect(status.isServerError(Status.Code.BadRequest)).toBe(false);
+      expect(status.isServerError(HttpStatus.Code.OK)).toBe(false);
+      expect(status.isServerError(HttpStatus.Code.Continue)).toBe(false);
+      expect(status.isServerError(HttpStatus.Code.MultipleChoices)).toBe(false);
+      expect(status.isServerError(HttpStatus.Code.BadRequest)).toBe(false);
     });
 
     test("should handle edge cases around boundaries", () => {
@@ -161,25 +161,25 @@ describe("Status", () => {
 
   describe("isError", () => {
     test("should return true for 4xx status codes", () => {
-      expect(status.isError(Status.Code.BadRequest)).toBe(true);
-      expect(status.isError(Status.Code.Unauthorized)).toBe(true);
-      expect(status.isError(Status.Code.NotFound)).toBe(true);
-      expect(status.isError(Status.Code.TooManyRequests)).toBe(true);
+      expect(status.isError(HttpStatus.Code.BadRequest)).toBe(true);
+      expect(status.isError(HttpStatus.Code.Unauthorized)).toBe(true);
+      expect(status.isError(HttpStatus.Code.NotFound)).toBe(true);
+      expect(status.isError(HttpStatus.Code.TooManyRequests)).toBe(true);
     });
 
     test("should return true for 5xx status codes", () => {
-      expect(status.isError(Status.Code.InternalServerError)).toBe(true);
-      expect(status.isError(Status.Code.NotImplemented)).toBe(true);
-      expect(status.isError(Status.Code.BadGateway)).toBe(true);
-      expect(status.isError(Status.Code.ServiceUnavailable)).toBe(true);
+      expect(status.isError(HttpStatus.Code.InternalServerError)).toBe(true);
+      expect(status.isError(HttpStatus.Code.NotImplemented)).toBe(true);
+      expect(status.isError(HttpStatus.Code.BadGateway)).toBe(true);
+      expect(status.isError(HttpStatus.Code.ServiceUnavailable)).toBe(true);
     });
 
     test("should return false for non-error status codes", () => {
-      expect(status.isError(Status.Code.Continue)).toBe(false);
-      expect(status.isError(Status.Code.OK)).toBe(false);
-      expect(status.isError(Status.Code.Created)).toBe(false);
-      expect(status.isError(Status.Code.MultipleChoices)).toBe(false);
-      expect(status.isError(Status.Code.MovedPermanently)).toBe(false);
+      expect(status.isError(HttpStatus.Code.Continue)).toBe(false);
+      expect(status.isError(HttpStatus.Code.OK)).toBe(false);
+      expect(status.isError(HttpStatus.Code.Created)).toBe(false);
+      expect(status.isError(HttpStatus.Code.MultipleChoices)).toBe(false);
+      expect(status.isError(HttpStatus.Code.MovedPermanently)).toBe(false);
     });
 
     test("should handle edge cases", () => {
@@ -194,74 +194,74 @@ describe("Status", () => {
 
   describe("STATUS_CODE constants", () => {
     test("should have correct values for informational codes", () => {
-      expect(Status.Code.Continue).toBe(100);
-      expect(Status.Code.SwitchingProtocols).toBe(101);
-      expect(Status.Code.Processing).toBe(102);
-      expect(Status.Code.EarlyHints).toBe(103);
+      expect(HttpStatus.Code.Continue).toBe(100);
+      expect(HttpStatus.Code.SwitchingProtocols).toBe(101);
+      expect(HttpStatus.Code.Processing).toBe(102);
+      expect(HttpStatus.Code.EarlyHints).toBe(103);
     });
 
     test("should have correct values for success codes", () => {
-      expect(Status.Code.OK).toBe(200);
-      expect(Status.Code.Created).toBe(201);
-      expect(Status.Code.Accepted).toBe(202);
-      expect(Status.Code.NoContent).toBe(204);
+      expect(HttpStatus.Code.OK).toBe(200);
+      expect(HttpStatus.Code.Created).toBe(201);
+      expect(HttpStatus.Code.Accepted).toBe(202);
+      expect(HttpStatus.Code.NoContent).toBe(204);
     });
 
     test("should have correct values for redirect codes", () => {
-      expect(Status.Code.MultipleChoices).toBe(300);
-      expect(Status.Code.MovedPermanently).toBe(301);
-      expect(Status.Code.Found).toBe(302);
-      expect(Status.Code.NotModified).toBe(304);
+      expect(HttpStatus.Code.MultipleChoices).toBe(300);
+      expect(HttpStatus.Code.MovedPermanently).toBe(301);
+      expect(HttpStatus.Code.Found).toBe(302);
+      expect(HttpStatus.Code.NotModified).toBe(304);
     });
 
     test("should have correct values for client error codes", () => {
-      expect(Status.Code.BadRequest).toBe(400);
-      expect(Status.Code.Unauthorized).toBe(401);
-      expect(Status.Code.Forbidden).toBe(403);
-      expect(Status.Code.NotFound).toBe(404);
-      expect(Status.Code.Teapot).toBe(418);
+      expect(HttpStatus.Code.BadRequest).toBe(400);
+      expect(HttpStatus.Code.Unauthorized).toBe(401);
+      expect(HttpStatus.Code.Forbidden).toBe(403);
+      expect(HttpStatus.Code.NotFound).toBe(404);
+      expect(HttpStatus.Code.Teapot).toBe(418);
     });
 
     test("should have correct values for server error codes", () => {
-      expect(Status.Code.InternalServerError).toBe(500);
-      expect(Status.Code.NotImplemented).toBe(501);
-      expect(Status.Code.BadGateway).toBe(502);
-      expect(Status.Code.ServiceUnavailable).toBe(503);
+      expect(HttpStatus.Code.InternalServerError).toBe(500);
+      expect(HttpStatus.Code.NotImplemented).toBe(501);
+      expect(HttpStatus.Code.BadGateway).toBe(502);
+      expect(HttpStatus.Code.ServiceUnavailable).toBe(503);
     });
   });
 
   describe("STATUS_TEXT constants", () => {
     test("should have correct text for common status codes", () => {
-      expect(Status.Text[Status.Code.OK]).toBe("OK");
-      expect(Status.Text[Status.Code.Created]).toBe("Created");
-      expect(Status.Text[Status.Code.BadRequest]).toBe("Bad Request");
-      expect(Status.Text[Status.Code.Unauthorized]).toBe("Unauthorized");
-      expect(Status.Text[Status.Code.Forbidden]).toBe("Forbidden");
-      expect(Status.Text[Status.Code.NotFound]).toBe("Not Found");
-      expect(Status.Text[Status.Code.InternalServerError]).toBe("Internal Server Error");
-      expect(Status.Text[Status.Code.Teapot]).toBe("I'm a teapot");
+      expect(HttpStatus.Text[HttpStatus.Code.OK]).toBe("OK");
+      expect(HttpStatus.Text[HttpStatus.Code.Created]).toBe("Created");
+      expect(HttpStatus.Text[HttpStatus.Code.BadRequest]).toBe("Bad Request");
+      expect(HttpStatus.Text[HttpStatus.Code.Unauthorized]).toBe("Unauthorized");
+      expect(HttpStatus.Text[HttpStatus.Code.Forbidden]).toBe("Forbidden");
+      expect(HttpStatus.Text[HttpStatus.Code.NotFound]).toBe("Not Found");
+      expect(HttpStatus.Text[HttpStatus.Code.InternalServerError]).toBe("Internal Server Error");
+      expect(HttpStatus.Text[HttpStatus.Code.Teapot]).toBe("I'm a teapot");
     });
 
     test("should have text for all status codes", () => {
       // Test that every status code has corresponding text
-      const codes = Object.values(Status.Code);
+      const codes = Object.values(HttpStatus.Code);
       for (const code of codes) {
-        expect(Status.Text[code]).toBeDefined();
-        expect(typeof Status.Text[code]).toBe("string");
-        expect(Status.Text[code].length).toBeGreaterThan(0);
+        expect(HttpStatus.Text[code]).toBeDefined();
+        expect(typeof HttpStatus.Text[code]).toBe("string");
+        expect(HttpStatus.Text[code].length).toBeGreaterThan(0);
       }
     });
 
     test("should have correct number of status text entries", () => {
-      const codeCount = Object.keys(Status.Code).length;
-      const textCount = Object.keys(Status.Text).length;
+      const codeCount = Object.keys(HttpStatus.Code).length;
+      const textCount = Object.keys(HttpStatus.Text).length;
       expect(textCount).toBe(codeCount);
     });
   });
 
   describe("Type safety", () => {
     test("should work with StatusCodeType", () => {
-      const code: StatusCodeType = Status.Code.OK;
+      const code: StatusCodeType = HttpStatus.Code.OK;
       expect(status.isSuccessful(code)).toBe(true);
       expect(status.isError(code)).toBe(false);
     });
@@ -276,11 +276,11 @@ describe("Status", () => {
   describe("Method consistency", () => {
     test("status categories should be mutually exclusive", () => {
       const testCodes = [
-        Status.Code.Continue, // 1xx
-        Status.Code.OK, // 2xx
-        Status.Code.MovedPermanently, // 3xx
-        Status.Code.BadRequest, // 4xx
-        Status.Code.InternalServerError, // 5xx
+        HttpStatus.Code.Continue, // 1xx
+        HttpStatus.Code.OK, // 2xx
+        HttpStatus.Code.MovedPermanently, // 3xx
+        HttpStatus.Code.BadRequest, // 4xx
+        HttpStatus.Code.InternalServerError, // 5xx
       ];
 
       for (const code of testCodes) {
@@ -299,7 +299,7 @@ describe("Status", () => {
     });
 
     test("isError should match isClientError || isServerError", () => {
-      const testCodes = Object.values(Status.Code);
+      const testCodes = Object.values(HttpStatus.Code);
 
       for (const code of testCodes) {
         const isError = status.isError(code);

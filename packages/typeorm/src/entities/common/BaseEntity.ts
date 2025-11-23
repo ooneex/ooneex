@@ -1,10 +1,11 @@
+import type { LocaleType } from "@ooneex/translation";
 import type { IBase } from "@ooneex/types";
 import { random } from "@ooneex/utils";
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 export abstract class BaseEntity implements IBase {
-  @PrimaryColumn({ name: "id", type: "varchar", length: 15 })
-  id: string = random.nanoid(15);
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.nanoid(25);
 
   @Column({
     name: "is_locked",
@@ -33,6 +34,9 @@ export abstract class BaseEntity implements IBase {
 
   @Column({ name: "is_public", type: "boolean", default: true, nullable: true })
   isPublic?: boolean;
+
+  @Column({ name: "language", type: "varchar", length: 10, nullable: true })
+  language?: LocaleType;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt?: Date;

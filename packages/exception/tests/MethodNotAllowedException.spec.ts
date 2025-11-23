@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { Exception } from "@/Exception";
 import { MethodNotAllowedException } from "@/MethodNotAllowedException";
 
@@ -34,7 +34,7 @@ describe("MethodNotAllowedException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("MethodNotAllowedException", () => {
       const exception = new MethodNotAllowedException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("MethodNotAllowedException", () => {
       const exception = new MethodNotAllowedException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual(data);
     });
 
@@ -63,7 +63,7 @@ describe("MethodNotAllowedException", () => {
       const exception = new MethodNotAllowedException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -76,7 +76,7 @@ describe("MethodNotAllowedException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -92,8 +92,8 @@ describe("MethodNotAllowedException", () => {
         key: "value",
       });
 
-      expect(exception1.status).toBe(Status.Code.MethodNotAllowed);
-      expect(exception2.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception1.status).toBe(HttpStatus.Code.MethodNotAllowed);
+      expect(exception2.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception1.status).toBe(405);
       expect(exception2.status).toBe(405);
     });
@@ -288,7 +288,7 @@ describe("MethodNotAllowedException", () => {
       const exception = new MethodNotAllowedException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.MethodNotAllowed);
+      expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
     });
 
     test("should handle very long messages", () => {

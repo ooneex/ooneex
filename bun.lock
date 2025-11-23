@@ -196,6 +196,11 @@
     "packages/gamification": {
       "name": "@ooneex/gamification",
       "version": "0.0.0",
+      "devDependencies": {
+        "@ooneex/image": "workspace:*",
+        "@ooneex/status": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/http-header": {
       "name": "@ooneex/http-header",

@@ -135,7 +135,7 @@ const STATUS_TEXT = {
 export type StatusCodeType = (typeof STATUS_CODE)[keyof typeof STATUS_CODE];
 export type StatusTextType = (typeof STATUS_TEXT)[keyof typeof STATUS_TEXT];
 
-export interface IStatus {
+export interface IHttpStatus {
   isInformational: (code: StatusCodeType) => boolean;
   isSuccessful: (code: StatusCodeType) => boolean;
   isRedirect: (code: StatusCodeType) => boolean;
@@ -144,7 +144,7 @@ export interface IStatus {
   isError: (code: StatusCodeType) => boolean;
 }
 
-export class Status implements IStatus {
+export class HttpStatus implements IHttpStatus {
   public static Code: typeof STATUS_CODE = STATUS_CODE;
   public static Text: typeof STATUS_TEXT = STATUS_TEXT;
 

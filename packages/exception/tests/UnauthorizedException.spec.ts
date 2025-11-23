@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { Exception } from "@/Exception";
 import { UnauthorizedException } from "@/UnauthorizedException";
 
@@ -34,7 +34,7 @@ describe("UnauthorizedException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("UnauthorizedException", () => {
       const exception = new UnauthorizedException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("UnauthorizedException", () => {
       const exception = new UnauthorizedException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual(data);
     });
 
@@ -63,7 +63,7 @@ describe("UnauthorizedException", () => {
       const exception = new UnauthorizedException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -76,7 +76,7 @@ describe("UnauthorizedException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -90,8 +90,8 @@ describe("UnauthorizedException", () => {
       const exception1 = new UnauthorizedException("Error 1");
       const exception2 = new UnauthorizedException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.Unauthorized);
-      expect(exception2.status).toBe(Status.Code.Unauthorized);
+      expect(exception1.status).toBe(HttpStatus.Code.Unauthorized);
+      expect(exception2.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception1.status).toBe(401);
       expect(exception2.status).toBe(401);
     });
@@ -291,7 +291,7 @@ describe("UnauthorizedException", () => {
       const exception = new UnauthorizedException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.Unauthorized);
+      expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
     });
 
     test("should handle very long messages", () => {

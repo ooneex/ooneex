@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { BadRequestException } from "@/BadRequestException";
 import { Exception } from "@/Exception";
 
@@ -34,7 +34,7 @@ describe("BadRequestException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("BadRequestException", () => {
       const exception = new BadRequestException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("BadRequestException", () => {
       const exception = new BadRequestException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toEqual(data);
     });
 
@@ -63,7 +63,7 @@ describe("BadRequestException", () => {
       const exception = new BadRequestException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -76,7 +76,7 @@ describe("BadRequestException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -90,8 +90,8 @@ describe("BadRequestException", () => {
       const exception1 = new BadRequestException("Error 1");
       const exception2 = new BadRequestException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.BadRequest);
-      expect(exception2.status).toBe(Status.Code.BadRequest);
+      expect(exception1.status).toBe(HttpStatus.Code.BadRequest);
+      expect(exception2.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception1.status).toBe(400);
       expect(exception2.status).toBe(400);
     });
@@ -284,7 +284,7 @@ describe("BadRequestException", () => {
       const exception = new BadRequestException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.BadRequest);
+      expect(exception.status).toBe(HttpStatus.Code.BadRequest);
     });
 
     test("should handle very long messages", () => {

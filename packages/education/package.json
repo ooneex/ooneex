@@ -13,8 +13,8 @@
     },
     "./medecine": {
       "import": {
-        "types": "./dist/medecine.d.ts",
-        "default": "./dist/medecine.js"
+        "types": "./dist/medecine/index.d.ts",
+        "default": "./dist/medecine/index.js"
       }
     },
     "./package.json": "./package.json"

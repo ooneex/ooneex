@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { CronException } from "../src/CronException";
 
 describe("CronException", () => {
@@ -30,7 +30,7 @@ describe("CronException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("CronException");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
       expect(exception.date).toBeInstanceOf(Date);
     });
@@ -42,7 +42,7 @@ describe("CronException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("CronException");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.data?.jobName).toBe("backup");
       expect(exception.data?.expression).toBe("0 0 * * *");
@@ -56,7 +56,7 @@ describe("CronException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.data).toEqual({});
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should handle null data gracefully", () => {
@@ -76,7 +76,7 @@ describe("CronException", () => {
 
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.stack).toBeDefined();
@@ -88,8 +88,8 @@ describe("CronException", () => {
         error: "timeout",
       });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should have readonly data property", () => {
@@ -325,7 +325,7 @@ describe("CronException", () => {
 
       expect(parsed.message).toBe("Serialization test");
       expect(parsed.name).toBe("CronException");
-      expect(parsed.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(parsed.data.jobName).toBe("test-job");
       expect(parsed.data.version).toBe("1.0.0");
     });

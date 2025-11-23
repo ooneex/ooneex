@@ -19,6 +19,22 @@ export interface IBase {
   language?: LocaleType;
 }
 
+export interface IStat extends IBase {
+  commentCount: number;
+  likeCount: number;
+  shareCount: number;
+  viewCount: number;
+  downloadCount: number;
+  bookmarkCount: number;
+  repostCount: number;
+  impressionCount: number;
+  clickCount: number;
+  engagementRate: number;
+  reach: number;
+  followerCount: number;
+  followingCount: number;
+}
+
 export type FilterResultType<T> = {
   resources: T[];
   total: number;

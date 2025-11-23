@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { CacheException } from "@/index";
 
 describe("CacheException", () => {
@@ -34,7 +34,7 @@ describe("CacheException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("CacheException", () => {
       const exception = new CacheException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("CacheException", () => {
       const exception = new CacheException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -63,7 +63,7 @@ describe("CacheException", () => {
       const exception = new CacheException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -76,7 +76,7 @@ describe("CacheException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -90,8 +90,8 @@ describe("CacheException", () => {
       const exception1 = new CacheException("Error 1");
       const exception2 = new CacheException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception1.status).toBe(500);
       expect(exception2.status).toBe(500);
     });
@@ -345,7 +345,7 @@ describe("CacheException", () => {
       const exception = new CacheException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should handle very long messages", () => {

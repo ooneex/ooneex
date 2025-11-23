@@ -1,5 +1,5 @@
 import type { IColor } from "@ooneex/color";
-import { EStatus, type IStatus, type StatusType } from "@ooneex/status";
+import { EStatus, type IStatus } from "@ooneex/status";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
 import { ColorEntity } from "./ColorEntity";
@@ -13,7 +13,7 @@ export class StatusEntity extends BaseEntity implements IStatus {
     type: "enum",
     enum: EStatus,
   })
-  status: StatusType;
+  status: EStatus;
 
   @ManyToOne(() => ColorEntity, {
     nullable: true,

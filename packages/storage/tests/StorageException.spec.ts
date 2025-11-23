@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { StorageException } from "@/index";
 
 describe("StorageException", () => {
@@ -34,7 +34,7 @@ describe("StorageException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("StorageException", () => {
       const exception = new StorageException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("StorageException", () => {
       const exception = new StorageException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual({});
     });
 
@@ -75,7 +75,7 @@ describe("StorageException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("StorageException");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.stack).toBeDefined();
@@ -85,8 +85,8 @@ describe("StorageException", () => {
       const exception1 = new StorageException("Test 1");
       const exception2 = new StorageException("Test 2", { bucket: "test" });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should have readonly data property", () => {
@@ -321,7 +321,7 @@ describe("StorageException", () => {
 
       expect(parsed.message).toBe("Serialization test");
       expect(parsed.name).toBe("StorageException");
-      expect(parsed.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(parsed.data?.provider).toBe("r2");
       expect(parsed.data?.encrypted).toBe(true);
       expect(parsed.data?.metadata.author).toBe("system");

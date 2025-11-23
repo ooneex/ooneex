@@ -368,12 +368,12 @@ interface IException<T = unknown> {
 
 ```typescript
 import { Exception } from '@ooneex/exception';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 class PaymentException<T = unknown> extends Exception<T> {
   constructor(message: string, data?: T) {
     super(message, {
-      status: Status.Code.PaymentRequired, // 402
+      status: HttpStatus.Code.PaymentRequired, // 402
       data
     });
   }

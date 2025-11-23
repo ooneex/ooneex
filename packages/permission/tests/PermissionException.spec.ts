@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { PermissionException } from "@/index";
 
 describe("PermissionException", () => {
@@ -34,7 +34,7 @@ describe("PermissionException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
 
@@ -48,7 +48,7 @@ describe("PermissionException", () => {
       const exception = new PermissionException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -58,7 +58,7 @@ describe("PermissionException", () => {
       const exception = new PermissionException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -67,7 +67,7 @@ describe("PermissionException", () => {
       const exception = new PermissionException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -80,7 +80,7 @@ describe("PermissionException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
       expect(exception.name).toBe("PermissionException");
@@ -91,8 +91,8 @@ describe("PermissionException", () => {
       const exception1 = new PermissionException("Error 1");
       const exception2 = new PermissionException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception1.status).toBe(500);
       expect(exception2.status).toBe(500);
     });
@@ -313,7 +313,7 @@ describe("PermissionException", () => {
 
       expect(parsed.message).toBe("Permission serialization test");
       expect(parsed.name).toBe("PermissionException");
-      expect(parsed.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(parsed.data.component).toBe("permission_manager");
       expect(parsed.data.version).toBe("1.0.0");
       expect(parsed.data.secureMode).toBe(true);
@@ -352,7 +352,7 @@ describe("PermissionException", () => {
       const exception = new PermissionException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should handle very long messages", () => {

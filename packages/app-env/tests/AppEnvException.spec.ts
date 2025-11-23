@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { AppEnvException } from "@/index";
 
 describe("AppEnvException", () => {
@@ -35,7 +35,7 @@ describe("AppEnvException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
 
@@ -45,7 +45,7 @@ describe("AppEnvException", () => {
       const exception = new AppEnvException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -55,7 +55,7 @@ describe("AppEnvException", () => {
       const exception = new AppEnvException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
     });
 
@@ -64,7 +64,7 @@ describe("AppEnvException", () => {
       const exception = new AppEnvException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -77,7 +77,7 @@ describe("AppEnvException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -91,8 +91,8 @@ describe("AppEnvException", () => {
       const exception1 = new AppEnvException("Error 1");
       const exception2 = new AppEnvException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception1.status).toBe(500);
       expect(exception2.status).toBe(500);
     });
@@ -313,7 +313,7 @@ describe("AppEnvException", () => {
       const exception = new AppEnvException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should handle very long messages", () => {

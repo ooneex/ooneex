@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { Header } from "@ooneex/http-header";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { HttpResponse, type IResponse } from "@/index";
 
 describe("HttpResponse", () => {
@@ -35,16 +35,16 @@ describe("HttpResponse", () => {
       expect(response.header.get("Content-Type")).toBe("application/json");
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.OK);
+      expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual(data);
     });
 
     test("should set JSON data with custom status", () => {
       const data = { message: "Created" };
-      response.json(data, Status.Code.Created);
+      response.json(data, HttpStatus.Code.Created);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Created);
+      expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual(data);
     });
 
@@ -57,7 +57,7 @@ describe("HttpResponse", () => {
       response.json(data);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.OK);
+      expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual(data);
     });
 
@@ -83,12 +83,12 @@ describe("HttpResponse", () => {
       expect(response.header.get("Content-Type")).toBe("application/json");
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.InternalServerError);
+      expect(webResponse.status).toBe(HttpStatus.Code.InternalServerError);
 
       expect(webResponse.json()).resolves.toEqual({
         error: true,
         message,
-        status: Status.Code.InternalServerError,
+        status: HttpStatus.Code.InternalServerError,
         data: null,
       });
     });
@@ -97,19 +97,19 @@ describe("HttpResponse", () => {
       const message = "Bad Request Error";
       const data = { field: "email", reason: "invalid format" };
       const config = {
-        status: Status.Code.BadRequest,
+        status: HttpStatus.Code.BadRequest,
         data,
       };
 
       response.exception(message, config);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.BadRequest);
+      expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
 
       expect(webResponse.json()).resolves.toEqual({
         error: true,
         message,
-        status: Status.Code.BadRequest,
+        status: HttpStatus.Code.BadRequest,
         data,
       });
     });
@@ -122,7 +122,7 @@ describe("HttpResponse", () => {
       response.exception("Error occurred");
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.InternalServerError);
+      expect(webResponse.status).toBe(HttpStatus.Code.InternalServerError);
       expect(response.header.get("Location")).toBeNull();
     });
   });
@@ -136,12 +136,12 @@ describe("HttpResponse", () => {
       expect(response.header.get("Content-Type")).toBe("application/json");
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.NotFound);
+      expect(webResponse.status).toBe(HttpStatus.Code.NotFound);
 
       expect(webResponse.json()).resolves.toEqual({
         error: true,
         message,
-        status: Status.Code.NotFound,
+        status: HttpStatus.Code.NotFound,
         data: null,
       });
     });
@@ -150,19 +150,19 @@ describe("HttpResponse", () => {
       const message = "User not found";
       const data = { userId: 123 };
       const config = {
-        status: Status.Code.Gone,
+        status: HttpStatus.Code.Gone,
         data,
       };
 
       response.notFound(message, config);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Gone);
+      expect(webResponse.status).toBe(HttpStatus.Code.Gone);
 
       expect(webResponse.json()).resolves.toEqual({
         error: true,
         message,
-        status: Status.Code.Gone,
+        status: HttpStatus.Code.Gone,
         data,
       });
     });
@@ -177,18 +177,18 @@ describe("HttpResponse", () => {
       expect(response.header.get("Location")).toBe(url);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Found);
+      expect(webResponse.status).toBe(HttpStatus.Code.Found);
       expect(webResponse.body).toBeNull();
     });
 
     test("should set redirect with URL object and custom status", () => {
       const url = new URL("https://example.com/path");
-      response.redirect(url, Status.Code.MovedPermanently);
+      response.redirect(url, HttpStatus.Code.MovedPermanently);
 
       expect(response.header.get("Location")).toBe(url.toString());
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.MovedPermanently);
+      expect(webResponse.status).toBe(HttpStatus.Code.MovedPermanently);
       expect(webResponse.body).toBeNull();
     });
 
@@ -200,7 +200,7 @@ describe("HttpResponse", () => {
       response.redirect("https://example.com");
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Found);
+      expect(webResponse.status).toBe(HttpStatus.Code.Found);
       expect(webResponse.body).toBeNull();
     });
 
@@ -211,18 +211,18 @@ describe("HttpResponse", () => {
       expect(response.header.get("Location")).toBe(url);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Found);
+      expect(webResponse.status).toBe(HttpStatus.Code.Found);
     });
   });
 
   describe("get method", () => {
     test("should return Web API Response for JSON data", async () => {
       const data = { message: "test" };
-      response.json(data, Status.Code.Created);
+      response.json(data, HttpStatus.Code.Created);
 
       const webResponse = response.get();
       expect(webResponse).toBeInstanceOf(Response);
-      expect(webResponse.status).toBe(Status.Code.Created);
+      expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.headers.get("Content-Type")).toBe("application/json");
 
       const responseData = await webResponse.json();
@@ -231,11 +231,11 @@ describe("HttpResponse", () => {
 
     test("should return Web API Response for redirect", () => {
       const url = "https://example.com";
-      response.redirect(url, Status.Code.SeeOther);
+      response.redirect(url, HttpStatus.Code.SeeOther);
 
       const webResponse = response.get();
       expect(webResponse).toBeInstanceOf(Response);
-      expect(webResponse.status).toBe(Status.Code.SeeOther);
+      expect(webResponse.status).toBe(HttpStatus.Code.SeeOther);
       expect(webResponse.headers.get("Location")).toBe(url);
       expect(webResponse.body).toBeNull();
     });
@@ -244,20 +244,20 @@ describe("HttpResponse", () => {
       const message = "Test error";
       const data = { code: "ERR001" };
       response.exception(message, {
-        status: Status.Code.UnprocessableEntity,
+        status: HttpStatus.Code.UnprocessableEntity,
         data,
       });
 
       const webResponse = response.get();
       expect(webResponse).toBeInstanceOf(Response);
-      expect(webResponse.status).toBe(Status.Code.UnprocessableEntity);
+      expect(webResponse.status).toBe(HttpStatus.Code.UnprocessableEntity);
       expect(webResponse.headers.get("Content-Type")).toBe("application/json");
 
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
         error: true,
         message,
-        status: Status.Code.UnprocessableEntity,
+        status: HttpStatus.Code.UnprocessableEntity,
         data,
       });
     });
@@ -274,45 +274,45 @@ describe("HttpResponse", () => {
   describe("method chaining", () => {
     test("should support method chaining for json", () => {
       const data = { message: "chaining test" };
-      const result = response.json(data, Status.Code.Created);
+      const result = response.json(data, HttpStatus.Code.Created);
 
       expect(result).toBe(response);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Created);
+      expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual(data);
     });
 
     test("should support method chaining for exception", () => {
       const message = "Chaining error";
       const result = response.exception(message, {
-        status: Status.Code.BadRequest,
+        status: HttpStatus.Code.BadRequest,
       });
 
       expect(result).toBe(response);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.BadRequest);
+      expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
     });
 
     test("should support method chaining for notFound", () => {
       const message = "Not found chaining";
-      const result = response.notFound(message, { status: Status.Code.Gone });
+      const result = response.notFound(message, { status: HttpStatus.Code.Gone });
 
       expect(result).toBe(response);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.Gone);
+      expect(webResponse.status).toBe(HttpStatus.Code.Gone);
     });
 
     test("should support method chaining for redirect", () => {
       const url = "https://chain.example.com";
-      const result = response.redirect(url, Status.Code.MovedPermanently);
+      const result = response.redirect(url, HttpStatus.Code.MovedPermanently);
 
       expect(result).toBe(response);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.MovedPermanently);
+      expect(webResponse.status).toBe(HttpStatus.Code.MovedPermanently);
       expect(response.header.get("Location")).toBe(url);
     });
   });
@@ -320,13 +320,13 @@ describe("HttpResponse", () => {
   describe("state transitions", () => {
     test("should properly transition from json to exception", async () => {
       // Start with JSON
-      response.json({ message: "initial" }, Status.Code.OK);
+      response.json({ message: "initial" }, HttpStatus.Code.OK);
 
       // Switch to exception
-      response.exception("Error occurred", { status: Status.Code.BadRequest });
+      response.exception("Error occurred", { status: HttpStatus.Code.BadRequest });
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.BadRequest);
+      expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
 
       const data = await webResponse.json();
       expect(data.error).toBe(true);
@@ -338,10 +338,10 @@ describe("HttpResponse", () => {
       response.exception("Initial error");
 
       // Switch to JSON
-      response.json({ success: true }, Status.Code.OK);
+      response.json({ success: true }, HttpStatus.Code.OK);
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.OK);
+      expect(webResponse.status).toBe(HttpStatus.Code.OK);
 
       const data = await webResponse.json();
       expect(data).toEqual({ success: true });
@@ -355,7 +355,7 @@ describe("HttpResponse", () => {
       response.json({ message: "switched" });
 
       const webResponse = response.get();
-      expect(webResponse.status).toBe(Status.Code.OK);
+      expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(response.header.get("Location")).toBeNull();
 
       const data = await webResponse.json();

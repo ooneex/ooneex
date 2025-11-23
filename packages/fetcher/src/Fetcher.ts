@@ -1,6 +1,6 @@
 import { Header, ReadonlyHeader } from "@ooneex/http-header";
 import type { MimeType } from "@ooneex/http-mimes";
-import { Status, type StatusCodeType } from "@ooneex/http-status";
+import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
 import type { HttpMethodType } from "@ooneex/types";
 import type { FetcherResponseType } from "./types";
 
@@ -95,7 +95,7 @@ export class Fetcher {
     const fullURL = this.buildURL(path);
     const requestOptions = this.buildRequestOptions(method, data);
     const response = await fetch(fullURL, requestOptions);
-    const status = new Status();
+    const status = new HttpStatus();
     const statusCode = response.status as StatusCodeType;
 
     let responseData = null;

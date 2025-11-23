@@ -59,7 +59,7 @@ npm install @ooneex/http-response
 
 ```typescript
 import { HttpResponse } from '@ooneex/http-response';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 const response = new HttpResponse();
 
@@ -81,7 +81,7 @@ response
 
 ```typescript
 import { HttpResponse } from '@ooneex/http-response';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 const response = new HttpResponse();
 
@@ -132,7 +132,7 @@ response
 
 ```typescript
 import { HttpResponse } from '@ooneex/http-response';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 const response = new HttpResponse();
 
@@ -214,7 +214,7 @@ errorResponse.exception('Validation error', {
 
 ```typescript
 import { HttpResponse } from '@ooneex/http-response';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 const response = new HttpResponse();
 
@@ -443,7 +443,7 @@ Interface defining the response builder contract.
 ```typescript
 import express from 'express';
 import { HttpResponse } from '@ooneex/http-response';
-import { Status } from '@ooneex/http-status';
+import { HttpStatus } from '@ooneex/http-status';
 
 const app = express();
 

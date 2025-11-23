@@ -1,5 +1,5 @@
 import { Header, type IHeader } from "@ooneex/http-header";
-import { Status, type StatusCodeType } from "@ooneex/http-status";
+import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
 import type { IResponse } from "./types";
 
 export class HttpResponse<DataType extends Record<string, unknown> = Record<string, unknown>>
@@ -7,7 +7,7 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
 {
   public readonly header: IHeader;
   private data: DataType | null = null;
-  private status: StatusCodeType = Status.Code.OK;
+  private status: StatusCodeType = HttpStatus.Code.OK;
   private redirectUrl: string | URL | null = null;
   private message: string | null = null;
   private isException = false;
@@ -16,7 +16,7 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
     this.header = header || new Header();
   }
 
-  public json(data: DataType, status: StatusCodeType = Status.Code.OK): IResponse<DataType> {
+  public json(data: DataType, status: StatusCodeType = HttpStatus.Code.OK): IResponse<DataType> {
     this.data = data;
     this.status = status;
     this.header.setJson();
@@ -36,7 +36,7 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
     },
   ): IResponse<DataType> {
     this.message = message;
-    this.status = config?.status || Status.Code.InternalServerError;
+    this.status = config?.status ?? HttpStatus.Code.InternalServerError;
     this.data = config?.data || null;
     this.isException = true;
     this.redirectUrl = null;
@@ -54,7 +54,7 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
     },
   ): IResponse<DataType> {
     this.message = message;
-    this.status = config?.status || Status.Code.NotFound;
+    this.status = config?.status || HttpStatus.Code.NotFound;
     this.data = config?.data || null;
     this.isException = true;
     this.redirectUrl = null;
@@ -64,7 +64,7 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
     return this;
   }
 
-  public redirect(url: string | URL, status: StatusCodeType = Status.Code.Found): IResponse<DataType> {
+  public redirect(url: string | URL, status: StatusCodeType = HttpStatus.Code.Found): IResponse<DataType> {
     this.redirectUrl = url;
     this.status = status;
     this.header.setLocation(url.toString());

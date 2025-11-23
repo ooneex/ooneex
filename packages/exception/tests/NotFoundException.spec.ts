@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { Exception } from "@/Exception";
 import { NotFoundException } from "@/NotFoundException";
 
@@ -34,7 +34,7 @@ describe("NotFoundException", () => {
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toBeUndefined();
     });
 
@@ -44,7 +44,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
     });
 
@@ -54,7 +54,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException(message, data);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
     });
 
@@ -63,7 +63,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toBeUndefined();
     });
   });
@@ -76,7 +76,7 @@ describe("NotFoundException", () => {
 
       // Properties from Exception
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
       expect(exception.native).toBeUndefined();
 
@@ -90,8 +90,8 @@ describe("NotFoundException", () => {
       const exception1 = new NotFoundException("Error 1");
       const exception2 = new NotFoundException("Error 2", { key: "value" });
 
-      expect(exception1.status).toBe(Status.Code.NotFound);
-      expect(exception2.status).toBe(Status.Code.NotFound);
+      expect(exception1.status).toBe(HttpStatus.Code.NotFound);
+      expect(exception2.status).toBe(HttpStatus.Code.NotFound);
       expect(exception1.status).toBe(404);
       expect(exception2.status).toBe(404);
     });
@@ -288,7 +288,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException("");
 
       expect(exception.message).toBe("");
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
     });
 
     test("should handle very long messages", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { TranslationException } from "@/index";
 
 describe("TranslationException", () => {
@@ -33,7 +33,7 @@ describe("TranslationException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("TranslationException");
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toBeUndefined();
       expect(exception.date).toBeInstanceOf(Date);
     });
@@ -48,7 +48,7 @@ describe("TranslationException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.data).toEqual(data);
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
     });
 
     test("should create TranslationException with empty data object", () => {
@@ -81,7 +81,7 @@ describe("TranslationException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("TranslationException");
-      expect(exception.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
       expect(exception.date).toBeInstanceOf(Date);
       expect(typeof exception.stack).toBe("string");
@@ -94,8 +94,8 @@ describe("TranslationException", () => {
         key: "error.validation",
       });
 
-      expect(exception1.status).toBe(Status.Code.NotFound);
-      expect(exception2.status).toBe(Status.Code.NotFound);
+      expect(exception1.status).toBe(HttpStatus.Code.NotFound);
+      expect(exception2.status).toBe(HttpStatus.Code.NotFound);
     });
 
     test("should have readonly data property", () => {
@@ -274,7 +274,7 @@ describe("TranslationException", () => {
 
       expect(parsed.message).toBe("Serialization test");
       expect(parsed.name).toBe("TranslationException");
-      expect(parsed.status).toBe(Status.Code.NotFound);
+      expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(parsed.data).toHaveProperty("locale", "fr");
       expect(parsed.data).toHaveProperty("namespace", "validation");
       expect(parsed.data).toHaveProperty("keysLoaded", 45);

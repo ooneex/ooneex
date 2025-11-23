@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Status } from "@ooneex/http-status";
+import { HttpStatus } from "@ooneex/http-status";
 import { DatabaseException } from "@/index";
 
 describe("DatabaseException", () => {
@@ -30,7 +30,7 @@ describe("DatabaseException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("DatabaseException");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toBeUndefined();
       expect(exception.date).toBeInstanceOf(Date);
     });
@@ -42,7 +42,7 @@ describe("DatabaseException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.data).toEqual(data);
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should create DatabaseException with empty data object", () => {
@@ -52,7 +52,7 @@ describe("DatabaseException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.data).toEqual({});
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should handle null data gracefully", () => {
@@ -73,7 +73,7 @@ describe("DatabaseException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("DatabaseException");
-      expect(exception.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.data).toEqual(data);
       expect(exception.date).toBeInstanceOf(Date);
       expect(typeof exception.stackToJson).toBe("function");
@@ -85,8 +85,8 @@ describe("DatabaseException", () => {
         key: "value",
       });
 
-      expect(exception1.status).toBe(Status.Code.InternalServerError);
-      expect(exception2.status).toBe(Status.Code.InternalServerError);
+      expect(exception1.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(exception2.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should have readonly data property", () => {
@@ -265,7 +265,7 @@ describe("DatabaseException", () => {
       const parsed = serialized;
       expect(parsed.message).toBe("Serialization test");
       expect(parsed.name).toBe("DatabaseException");
-      expect(parsed.status).toBe(Status.Code.InternalServerError);
+      expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(parsed.data).toEqual(exception.data);
 
       // Test data properties

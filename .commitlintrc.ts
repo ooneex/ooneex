@@ -44,6 +44,7 @@ const Configuration: UserConfig = {
         "jwt",
         "logger",
         "mailer",
+        "mcq",
         "middleware",
         "migrations",
         "payment",

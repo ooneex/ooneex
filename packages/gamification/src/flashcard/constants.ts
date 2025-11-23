@@ -41,22 +41,22 @@ export const ANKI_DEFAULTS = {
 /**
  * Rating multipliers for interval calculation
  */
-export const RATING_MULTIPLIERS = {
+export const RATING_MULTIPLIERS: Record<EFlashcardRating, number> = Object.freeze({
   [EFlashcardRating.AGAIN]: 0, // Reset to learning
   [EFlashcardRating.HARD]: 1.2,
   [EFlashcardRating.GOOD]: 2.5, // Default ease factor
   [EFlashcardRating.EASY]: 2.5 * 1.3, // Easy bonus applied
-} as const;
+});
 
 /**
  * Ease factor adjustments based on rating
  */
-export const EASE_ADJUSTMENTS = {
+export const EASE_ADJUSTMENTS: Record<EFlashcardRating, number> = Object.freeze({
   [EFlashcardRating.AGAIN]: -0.2, // Decrease ease by 20%
   [EFlashcardRating.HARD]: -0.15, // Decrease ease by 15%
   [EFlashcardRating.GOOD]: 0, // No change
   [EFlashcardRating.EASY]: 0.15, // Increase ease by 15%
-} as const;
+});
 
 /**
  * Minimum and maximum ease factor bounds
@@ -69,32 +69,44 @@ export const EASE_BOUNDS = {
 /**
  * Card state transitions based on rating
  */
-export const STATE_TRANSITIONS = {
-  [EFlashcardState.NEW]: {
+export const STATE_TRANSITIONS: Record<EFlashcardState, Record<EFlashcardRating, EFlashcardState>> = Object.freeze({
+  [EFlashcardState.NEW]: Object.freeze({
     [EFlashcardRating.AGAIN]: EFlashcardState.LEARNING,
     [EFlashcardRating.HARD]: EFlashcardState.LEARNING,
     [EFlashcardRating.GOOD]: EFlashcardState.LEARNING,
     [EFlashcardRating.EASY]: EFlashcardState.REVIEW,
-  },
-  [EFlashcardState.LEARNING]: {
+  }),
+  [EFlashcardState.LEARNING]: Object.freeze({
     [EFlashcardRating.AGAIN]: EFlashcardState.LEARNING, // Restart learning
     [EFlashcardRating.HARD]: EFlashcardState.LEARNING, // Repeat current step
     [EFlashcardRating.GOOD]: EFlashcardState.LEARNING, // Next step or graduate
     [EFlashcardRating.EASY]: EFlashcardState.REVIEW, // Skip to review
-  },
-  [EFlashcardState.REVIEW]: {
+  }),
+  [EFlashcardState.REVIEW]: Object.freeze({
     [EFlashcardRating.AGAIN]: EFlashcardState.RELEARNING,
     [EFlashcardRating.HARD]: EFlashcardState.REVIEW,
     [EFlashcardRating.GOOD]: EFlashcardState.REVIEW,
     [EFlashcardRating.EASY]: EFlashcardState.REVIEW,
-  },
-  [EFlashcardState.RELEARNING]: {
+  }),
+  [EFlashcardState.RELEARNING]: Object.freeze({
     [EFlashcardRating.AGAIN]: EFlashcardState.RELEARNING, // Restart relearning
     [EFlashcardRating.HARD]: EFlashcardState.RELEARNING, // Repeat current step
     [EFlashcardRating.GOOD]: EFlashcardState.RELEARNING, // Next step or back to review
     [EFlashcardRating.EASY]: EFlashcardState.REVIEW, // Skip to review
-  },
-} as const;
+  }),
+  [EFlashcardState.BURIED]: Object.freeze({
+    [EFlashcardRating.AGAIN]: EFlashcardState.BURIED, // Remains buried
+    [EFlashcardRating.HARD]: EFlashcardState.BURIED, // Remains buried
+    [EFlashcardRating.GOOD]: EFlashcardState.BURIED, // Remains buried
+    [EFlashcardRating.EASY]: EFlashcardState.BURIED, // Remains buried
+  }),
+  [EFlashcardState.SUSPENDED]: Object.freeze({
+    [EFlashcardRating.AGAIN]: EFlashcardState.SUSPENDED, // Remains suspended
+    [EFlashcardRating.HARD]: EFlashcardState.SUSPENDED, // Remains suspended
+    [EFlashcardRating.GOOD]: EFlashcardState.SUSPENDED, // Remains suspended
+    [EFlashcardRating.EASY]: EFlashcardState.SUSPENDED, // Remains suspended
+  }),
+});
 
 /**
  * Learning step multipliers for Hard button
@@ -115,12 +127,12 @@ export const FUZZ_FACTOR = {
 /**
  * Session scoring weights
  */
-export const SCORE_WEIGHTS = {
+export const SCORE_WEIGHTS: Record<EFlashcardRating, number> = Object.freeze({
   [EFlashcardRating.AGAIN]: 0, // 0 points
   [EFlashcardRating.HARD]: 50, // 50 points
   [EFlashcardRating.GOOD]: 80, // 80 points
   [EFlashcardRating.EASY]: 100, // 100 points
-} as const;
+});
 
 /**
  * Card maturity threshold (days)
@@ -172,21 +184,41 @@ export const DEFAULT_PRESETS = {
 /**
  * Algorithm-specific constants
  */
-export const ALGORITHM_CONSTANTS = {
-  [EFlashcardAlgorithm.SM2]: {
+interface SM2Constants {
+  MIN_EASE_FACTOR: number;
+  MAX_EASE_FACTOR: number;
+  EASE_ADJUSTMENT_STEP: number;
+}
+
+interface FSRSConstants {
+  MIN_DIFFICULTY: number;
+  MAX_DIFFICULTY: number;
+  MIN_STABILITY: number;
+  MAX_STABILITY: number;
+  MIN_RETRIEVABILITY: number;
+  MAX_RETRIEVABILITY: number;
+}
+
+type AlgorithmConstants = {
+  [EFlashcardAlgorithm.SM2]: SM2Constants;
+  [EFlashcardAlgorithm.FSRS]: FSRSConstants;
+};
+
+export const ALGORITHM_CONSTANTS: AlgorithmConstants = Object.freeze({
+  [EFlashcardAlgorithm.SM2]: Object.freeze({
     MIN_EASE_FACTOR: 1.3,
     MAX_EASE_FACTOR: 2.5,
     EASE_ADJUSTMENT_STEP: 0.15,
-  },
-  [EFlashcardAlgorithm.FSRS]: {
+  }),
+  [EFlashcardAlgorithm.FSRS]: Object.freeze({
     MIN_DIFFICULTY: 1,
     MAX_DIFFICULTY: 10,
     MIN_STABILITY: 0.1,
     MAX_STABILITY: 36500,
     MIN_RETRIEVABILITY: 0.01,
     MAX_RETRIEVABILITY: 0.99,
-  },
-} as const;
+  }),
+});
 
 /**
  * Utility functions for common calculations

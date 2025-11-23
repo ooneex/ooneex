@@ -1,6 +1,13 @@
 import { ESessionType } from "./types";
 
-export const SESSION_TYPES_EN = [
+type SessionTypeItem = {
+  readonly code: ESessionType;
+  readonly name: string;
+  readonly description: string;
+  readonly color: string;
+};
+
+export const SESSION_TYPES_EN: readonly SessionTypeItem[] = [
   {
     code: ESessionType.TRAINING,
     name: "Training",
@@ -66,7 +73,7 @@ export const SESSION_TYPES_EN = [
   },
 ] as const;
 
-export const SESSION_TYPES_FR = [
+export const SESSION_TYPES_FR: readonly SessionTypeItem[] = [
   {
     code: ESessionType.TRAINING,
     name: "Formation",
@@ -132,7 +139,7 @@ export const SESSION_TYPES_FR = [
   },
 ] as const;
 
-export const SESSION_TYPES_RO = [
+export const SESSION_TYPES_RO: readonly SessionTypeItem[] = [
   {
     code: ESessionType.TRAINING,
     name: "Antrenament",

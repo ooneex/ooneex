@@ -2,7 +2,8 @@ import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
-import { PaymentProductEntity } from "@/entities/payment/PaymentProductEntity";
+import { ILike } from "typeorm";
+import { PaymentProductEntity } from "../../entities/payment/PaymentProductEntity";
 
 export class PaymentProductRepository {
   constructor(
@@ -19,11 +20,11 @@ export class PaymentProductRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<PaymentProductEntity> & { page?: number; limit?: number },
+    criteria: FindManyOptions<PaymentProductEntity> & { page?: number; limit?: number; q?: string },
   ): Promise<FilterResultType<PaymentProductEntity>> {
     const repository = await this.open();
 
-    const { page = 1, limit = 100, ...rest } = criteria;
+    const { page = 1, limit = 100, q, ...rest } = criteria;
 
     let skip: number | undefined;
     const take = limit === 0 ? 100 : limit;
@@ -32,9 +33,40 @@ export class PaymentProductRepository {
       skip = (page - 1) * take;
     }
 
-    const result = await repository.find({ ...rest, skip, take });
+    // Apply product search if q parameter is provided
+    let findOptions = { ...rest, skip, take };
+    if (q) {
+      const searchConditions = [
+        { name: ILike(`%${q}%`) },
+        { description: ILike(`%${q}%`) },
+        { barcode: ILike(`%${q}%`) },
+      ];
 
-    const total = await this.count(rest.where);
+      findOptions = {
+        ...findOptions,
+        where: rest.where
+          ? [...searchConditions.map((condition) => ({ ...rest.where, ...condition }))]
+          : searchConditions,
+      };
+    }
+
+    const result = await repository.find(findOptions);
+
+    // Apply the same where conditions for count including search
+    let countWhere = rest.where;
+    if (q) {
+      const searchConditions = [
+        { name: ILike(`%${q}%`) },
+        { description: ILike(`%${q}%`) },
+        { barcode: ILike(`%${q}%`) },
+      ];
+
+      countWhere = rest.where
+        ? [...searchConditions.map((condition) => ({ ...rest.where, ...condition }))]
+        : searchConditions;
+    }
+
+    const total = await this.count(countWhere);
     const totalPages = Math.ceil(total / limit);
 
     return {

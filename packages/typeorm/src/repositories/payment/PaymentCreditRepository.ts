@@ -2,7 +2,8 @@ import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
-import { PaymentCreditEntity } from "@/entities/payment/PaymentCreditEntity";
+import { ILike } from "typeorm";
+import { PaymentCreditEntity } from "../../entities/payment/PaymentCreditEntity";
 
 export class PaymentCreditRepository {
   constructor(
@@ -19,11 +20,11 @@ export class PaymentCreditRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<PaymentCreditEntity> & { page?: number; limit?: number },
+    criteria: FindManyOptions<PaymentCreditEntity> & { page?: number; limit?: number; q?: string },
   ): Promise<FilterResultType<PaymentCreditEntity>> {
     const repository = await this.open();
 
-    const { page = 1, limit = 100, ...rest } = criteria;
+    const { page = 1, limit = 100, q, ...rest } = criteria;
 
     let skip: number | undefined;
     const take = limit === 0 ? 100 : limit;
@@ -32,9 +33,30 @@ export class PaymentCreditRepository {
       skip = (page - 1) * take;
     }
 
-    const result = await repository.find({ ...rest, skip, take });
+    // Apply credit description search if q parameter is provided
+    let findOptions = { ...rest, skip, take };
+    if (q) {
+      findOptions = {
+        ...findOptions,
+        where: {
+          ...rest.where,
+          description: ILike(`%${q}%`),
+        },
+      };
+    }
 
-    const total = await this.count(rest.where);
+    const result = await repository.find(findOptions);
+
+    // Apply the same where conditions for count including description search
+    let countWhere = rest.where;
+    if (q) {
+      countWhere = {
+        ...rest.where,
+        description: ILike(`%${q}%`),
+      };
+    }
+
+    const total = await this.count(countWhere);
     const totalPages = Math.ceil(total / limit);
 
     return {

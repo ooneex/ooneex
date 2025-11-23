@@ -113,6 +113,12 @@ export class VideoEntity extends BaseEntity implements IVideo {
   })
   contentRating?: string;
 
+  @Column({ name: "context", type: "varchar", length: 255, nullable: true })
+  context?: string;
+
+  @Column({ name: "context_id", type: "varchar", length: 25, nullable: true })
+  contextId?: string;
+
   @ManyToMany(() => TagEntity, { eager: false, cascade: ["insert", "update"] })
   @JoinTable({
     name: "videos_tags",

@@ -50,4 +50,6 @@ export interface IImage extends IBase {
   metadata?: Record<string, ScalarType>;
   status?: IStatus;
   tags?: ITag[];
+  context?: string;
+  contextId?: string;
 }

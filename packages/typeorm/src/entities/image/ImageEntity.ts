@@ -48,6 +48,12 @@ export class ImageEntity extends BaseEntity implements IImage {
   @Column({ name: "metadata", type: "jsonb", nullable: true })
   metadata?: Record<string, ScalarType>;
 
+  @Column({ name: "context", type: "varchar", length: 255, nullable: true })
+  context?: string;
+
+  @Column({ name: "context_id", type: "varchar", length: 25, nullable: true })
+  contextId?: string;
+
   @ManyToOne(() => StatusEntity, {
     nullable: true,
     eager: false,

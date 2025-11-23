@@ -7,40 +7,76 @@
     "dist"
   ],
   "exports": {
-    "./entities/book": {
+    "./src/repositories/common": {
       "import": {
-        "types": "./dist/entities/book/index.d.ts",
-        "default": "./dist/entities/book/index.js"
+        "types": "./dist/src/repositories/common/index.d.ts",
+        "default": "./dist/src/repositories/common/index.js"
       }
     },
-    "./entities/common": {
+    "./src/repositories/image": {
       "import": {
-        "types": "./dist/entities/common/index.d.ts",
-        "default": "./dist/entities/common/index.js"
+        "types": "./dist/src/repositories/image/index.d.ts",
+        "default": "./dist/src/repositories/image/index.js"
       }
     },
-    "./entities/image": {
+    "./src/repositories/payment": {
       "import": {
-        "types": "./dist/entities/image/index.d.ts",
-        "default": "./dist/entities/image/index.js"
+        "types": "./dist/src/repositories/payment/index.d.ts",
+        "default": "./dist/src/repositories/payment/index.js"
       }
     },
-    "./entities/payment": {
+    "./src/repositories/video": {
       "import": {
-        "types": "./dist/entities/payment/index.d.ts",
-        "default": "./dist/entities/payment/index.js"
+        "types": "./dist/src/repositories/video/index.d.ts",
+        "default": "./dist/src/repositories/video/index.js"
       }
     },
-    "./entities/video": {
+    "./src/entities/book": {
       "import": {
-        "types": "./dist/entities/video/index.d.ts",
-        "default": "./dist/entities/video/index.js"
+        "types": "./dist/src/entities/book/index.d.ts",
+        "default": "./dist/src/entities/book/index.js"
       }
     },
-    "./repositories/book": {
+    "./src/entities/common": {
       "import": {
-        "types": "./dist/repositories/book/index.d.ts",
-        "default": "./dist/repositories/book/index.js"
+        "types": "./dist/src/entities/common/index.d.ts",
+        "default": "./dist/src/entities/common/index.js"
+      }
+    },
+    "./src/entities/image": {
+      "import": {
+        "types": "./dist/src/entities/image/index.d.ts",
+        "default": "./dist/src/entities/image/index.js"
+      }
+    },
+    "./src/entities/payment": {
+      "import": {
+        "types": "./dist/src/entities/payment/index.d.ts",
+        "default": "./dist/src/entities/payment/index.js"
+      }
+    },
+    "./src/entities/video": {
+      "import": {
+        "types": "./dist/src/entities/video/index.d.ts",
+        "default": "./dist/src/entities/video/index.js"
+      }
+    },
+    "./src/entities/gamification": {
+      "import": {
+        "types": "./dist/src/entities/gamification/index.d.ts",
+        "default": "./dist/src/entities/gamification/index.js"
+      }
+    },
+    "./src/entities/gamification/mcq": {
+      "import": {
+        "types": "./dist/src/entities/gamification/mcq/index.d.ts",
+        "default": "./dist/src/entities/gamification/mcq/index.js"
+      }
+    },
+    "./src/repositories/book": {
+      "import": {
+        "types": "./dist/src/repositories/book/index.d.ts",
+        "default": "./dist/src/repositories/book/index.js"
       }
     },
     "./package.json": "./package.json"

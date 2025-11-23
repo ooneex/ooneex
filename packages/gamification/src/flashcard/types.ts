@@ -2,7 +2,7 @@ import type { IImage } from "@ooneex/image";
 import type { IStatus } from "@ooneex/status";
 import type { ITag } from "@ooneex/tag";
 import type { IBase, IStat } from "@ooneex/types";
-import type { ESessionType, ILevel } from "@/types";
+import type { ESessionType, ILevel } from "../types";
 
 export enum EFlashcardState {
   /** Brand new card that hasn't been studied yet */

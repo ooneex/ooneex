@@ -141,6 +141,8 @@ export interface IVideo extends IBase {
   contentRating?: string; // e.g., "G", "PG", "PG-13", "R", "NC-17"
   tags?: ITag[];
   status?: IStatus;
+  context?: string;
+  contextId?: string;
 }
 
 export interface IPlaylist extends IBase {

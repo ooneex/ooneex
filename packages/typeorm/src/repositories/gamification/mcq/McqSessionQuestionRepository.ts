@@ -3,16 +3,16 @@ import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike } from "typeorm";
-import { TagEntity } from "../../entities/common/TagEntity";
+import { McqSessionQuestionEntity } from "../../../entities/gamification/mcq/McqSessionQuestionEntity";
 
-export class TagRepository {
+export class McqSessionQuestionRepository {
   constructor(
     @inject("database")
     private readonly database: ITypeormDatabaseAdapter,
   ) {}
 
-  public async open(): Promise<Repository<TagEntity>> {
-    return await this.database.open(TagEntity);
+  public async open(): Promise<Repository<McqSessionQuestionEntity>> {
+    return await this.database.open(McqSessionQuestionEntity);
   }
 
   public async close(): Promise<void> {
@@ -20,8 +20,8 @@ export class TagRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<TagEntity> & { page?: number; limit?: number; q?: string },
-  ): Promise<FilterResultType<TagEntity>> {
+    criteria: FindManyOptions<McqSessionQuestionEntity> & { page?: number; limit?: number; q?: string },
+  ): Promise<FilterResultType<McqSessionQuestionEntity>> {
     const repository = await this.open();
 
     const { page = 1, limit = 100, q, ...rest } = criteria;
@@ -33,26 +33,30 @@ export class TagRepository {
       skip = (page - 1) * take;
     }
 
-    // Apply tag name search if q parameter is provided
+    // Apply question text search if q parameter is provided
     let findOptions = { ...rest, skip, take };
     if (q) {
       findOptions = {
         ...findOptions,
         where: {
           ...rest.where,
-          name: ILike(`%${q}%`),
+          question: {
+            text: ILike(`%${q}%`),
+          },
         },
       };
     }
 
     const result = await repository.find(findOptions);
 
-    // Apply the same where conditions for count including name search
+    // Apply the same where conditions for count including question text search
     let countWhere = rest.where;
     if (q) {
       countWhere = {
         ...rest.where,
-        name: ILike(`%${q}%`),
+        question: {
+          text: ILike(`%${q}%`),
+        },
       };
     }
 
@@ -68,7 +72,7 @@ export class TagRepository {
     };
   }
 
-  public async findOne(id: string): Promise<TagEntity | null> {
+  public async findOne(id: string): Promise<McqSessionQuestionEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -76,7 +80,9 @@ export class TagRepository {
     });
   }
 
-  public async findOneBy(criteria: FindOptionsWhere<TagEntity>): Promise<TagEntity | null> {
+  public async findOneBy(
+    criteria: FindOptionsWhere<McqSessionQuestionEntity>,
+  ): Promise<McqSessionQuestionEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -84,33 +90,43 @@ export class TagRepository {
     });
   }
 
-  public async create(entity: TagEntity, options?: SaveOptions): Promise<TagEntity> {
+  public async create(entity: McqSessionQuestionEntity, options?: SaveOptions): Promise<McqSessionQuestionEntity> {
     const repository = await this.open();
 
     return await repository.save(entity, options);
   }
 
-  public async createMany(entities: TagEntity[], options?: SaveOptions): Promise<TagEntity[]> {
+  public async createMany(
+    entities: McqSessionQuestionEntity[],
+    options?: SaveOptions,
+  ): Promise<McqSessionQuestionEntity[]> {
     const repository = await this.open();
 
     return await repository.save(entities, options);
   }
 
-  public async update(entity: TagEntity, options?: SaveOptions): Promise<TagEntity> {
+  public async update(entity: McqSessionQuestionEntity, options?: SaveOptions): Promise<McqSessionQuestionEntity> {
     return await this.create(entity, options);
   }
 
-  public async updateMany(entities: TagEntity[], options?: SaveOptions): Promise<TagEntity[]> {
+  public async updateMany(
+    entities: McqSessionQuestionEntity[],
+    options?: SaveOptions,
+  ): Promise<McqSessionQuestionEntity[]> {
     return await this.createMany(entities, options);
   }
 
-  public async delete(criteria: FindOptionsWhere<TagEntity> | FindOptionsWhere<TagEntity>[]): Promise<UpdateResult> {
+  public async delete(
+    criteria: FindOptionsWhere<McqSessionQuestionEntity> | FindOptionsWhere<McqSessionQuestionEntity>[],
+  ): Promise<UpdateResult> {
     const repository = await this.open();
 
     return await repository.softDelete(criteria);
   }
 
-  public async count(criteria?: FindOptionsWhere<TagEntity> | FindOptionsWhere<TagEntity>[]): Promise<number> {
+  public async count(
+    criteria?: FindOptionsWhere<McqSessionQuestionEntity> | FindOptionsWhere<McqSessionQuestionEntity>[],
+  ): Promise<number> {
     const repository = await this.open();
 
     return await repository.count({ where: criteria });

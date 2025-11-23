@@ -22,6 +22,12 @@ export class FolderEntity extends BaseEntity implements IFolder {
   @Column({ name: "description", type: "text", nullable: true })
   description?: string;
 
+  @Column({ name: "context", type: "varchar", length: 255, nullable: true })
+  context?: string;
+
+  @Column({ name: "context_id", type: "varchar", length: 25, nullable: true })
+  contextId?: string;
+
   @ManyToOne(() => FolderEntity, { nullable: true, eager: false })
   @JoinColumn({ name: "parent_id" })
   parent?: IFolder;

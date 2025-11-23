@@ -45,4 +45,6 @@ export interface IBook extends IBase {
   seriesVolume?: number;
   tags?: ITag[];
   status?: IStatus;
+  context?: string;
+  contextId?: string;
 }

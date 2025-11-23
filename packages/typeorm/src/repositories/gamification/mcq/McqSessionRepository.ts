@@ -3,16 +3,16 @@ import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike } from "typeorm";
-import { TagEntity } from "../../entities/common/TagEntity";
+import { McqSessionEntity } from "../../../entities/gamification/mcq/McqSessionEntity";
 
-export class TagRepository {
+export class McqSessionRepository {
   constructor(
     @inject("database")
     private readonly database: ITypeormDatabaseAdapter,
   ) {}
 
-  public async open(): Promise<Repository<TagEntity>> {
-    return await this.database.open(TagEntity);
+  public async open(): Promise<Repository<McqSessionEntity>> {
+    return await this.database.open(McqSessionEntity);
   }
 
   public async close(): Promise<void> {
@@ -20,8 +20,8 @@ export class TagRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<TagEntity> & { page?: number; limit?: number; q?: string },
-  ): Promise<FilterResultType<TagEntity>> {
+    criteria: FindManyOptions<McqSessionEntity> & { page?: number; limit?: number; q?: string },
+  ): Promise<FilterResultType<McqSessionEntity>> {
     const repository = await this.open();
 
     const { page = 1, limit = 100, q, ...rest } = criteria;
@@ -33,7 +33,7 @@ export class TagRepository {
       skip = (page - 1) * take;
     }
 
-    // Apply tag name search if q parameter is provided
+    // Apply session name search if q parameter is provided
     let findOptions = { ...rest, skip, take };
     if (q) {
       findOptions = {
@@ -68,7 +68,7 @@ export class TagRepository {
     };
   }
 
-  public async findOne(id: string): Promise<TagEntity | null> {
+  public async findOne(id: string): Promise<McqSessionEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -76,7 +76,7 @@ export class TagRepository {
     });
   }
 
-  public async findOneBy(criteria: FindOptionsWhere<TagEntity>): Promise<TagEntity | null> {
+  public async findOneBy(criteria: FindOptionsWhere<McqSessionEntity>): Promise<McqSessionEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -84,33 +84,37 @@ export class TagRepository {
     });
   }
 
-  public async create(entity: TagEntity, options?: SaveOptions): Promise<TagEntity> {
+  public async create(entity: McqSessionEntity, options?: SaveOptions): Promise<McqSessionEntity> {
     const repository = await this.open();
 
     return await repository.save(entity, options);
   }
 
-  public async createMany(entities: TagEntity[], options?: SaveOptions): Promise<TagEntity[]> {
+  public async createMany(entities: McqSessionEntity[], options?: SaveOptions): Promise<McqSessionEntity[]> {
     const repository = await this.open();
 
     return await repository.save(entities, options);
   }
 
-  public async update(entity: TagEntity, options?: SaveOptions): Promise<TagEntity> {
+  public async update(entity: McqSessionEntity, options?: SaveOptions): Promise<McqSessionEntity> {
     return await this.create(entity, options);
   }
 
-  public async updateMany(entities: TagEntity[], options?: SaveOptions): Promise<TagEntity[]> {
+  public async updateMany(entities: McqSessionEntity[], options?: SaveOptions): Promise<McqSessionEntity[]> {
     return await this.createMany(entities, options);
   }
 
-  public async delete(criteria: FindOptionsWhere<TagEntity> | FindOptionsWhere<TagEntity>[]): Promise<UpdateResult> {
+  public async delete(
+    criteria: FindOptionsWhere<McqSessionEntity> | FindOptionsWhere<McqSessionEntity>[],
+  ): Promise<UpdateResult> {
     const repository = await this.open();
 
     return await repository.softDelete(criteria);
   }
 
-  public async count(criteria?: FindOptionsWhere<TagEntity> | FindOptionsWhere<TagEntity>[]): Promise<number> {
+  public async count(
+    criteria?: FindOptionsWhere<McqSessionEntity> | FindOptionsWhere<McqSessionEntity>[],
+  ): Promise<number> {
     const repository = await this.open();
 
     return await repository.count({ where: criteria });

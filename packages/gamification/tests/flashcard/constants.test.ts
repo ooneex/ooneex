@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { EFlashcardAlgorithm, EFlashcardRating, EFlashcardState } from "@/flashcard";
 import {
   ALGORITHM_CONSTANTS,
   ANKI_DEFAULTS,
@@ -13,7 +14,6 @@ import {
   STATE_TRANSITIONS,
   UTILS,
 } from "@/flashcard/constants";
-import { EFlashcardAlgorithm, EFlashcardRating, EFlashcardState } from "../../src/flashcard/types";
 
 describe("Flashcard Constants", () => {
   describe("ANKI_DEFAULTS", () => {

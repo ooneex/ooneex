@@ -74,6 +74,12 @@ export class BookEntity extends BaseEntity implements IBook {
   @Column({ name: "cover_image", type: "text", nullable: true })
   coverImage?: string;
 
+  @Column({ name: "context", type: "varchar", length: 255, nullable: true })
+  context?: string;
+
+  @Column({ name: "context_id", type: "varchar", length: 25, nullable: true })
+  contextId?: string;
+
   @Column({
     name: "average_rating",
     type: "decimal",

@@ -2,7 +2,7 @@ import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
-import { StatusEntity } from "@/entities/common/StatusEntity";
+import { StatusEntity } from "../../entities/common/StatusEntity";
 
 export class StatusRepository {
   constructor(

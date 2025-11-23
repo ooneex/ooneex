@@ -7,4 +7,6 @@ export interface IFolder extends IBase {
   description?: string;
   parent?: IFolder;
   children?: IFolder[];
+  context?: string;
+  contextId?: string;
 }

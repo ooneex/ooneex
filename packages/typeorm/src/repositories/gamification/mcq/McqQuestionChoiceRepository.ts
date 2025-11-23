@@ -2,16 +2,16 @@ import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
-import { PaymentSubscriptionEntity } from "../../entities/payment/PaymentSubscriptionEntity";
+import { McqQuestionChoiceEntity } from "../../../entities/gamification/mcq/McqQuestionChoiceEntity";
 
-export class PaymentSubscriptionRepository {
+export class McqQuestionChoiceRepository {
   constructor(
     @inject("database")
     private readonly database: ITypeormDatabaseAdapter,
   ) {}
 
-  public async open(): Promise<Repository<PaymentSubscriptionEntity>> {
-    return await this.database.open(PaymentSubscriptionEntity);
+  public async open(): Promise<Repository<McqQuestionChoiceEntity>> {
+    return await this.database.open(McqQuestionChoiceEntity);
   }
 
   public async close(): Promise<void> {
@@ -19,8 +19,8 @@ export class PaymentSubscriptionRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<PaymentSubscriptionEntity> & { page?: number; limit?: number },
-  ): Promise<FilterResultType<PaymentSubscriptionEntity>> {
+    criteria: FindManyOptions<McqQuestionChoiceEntity> & { page?: number; limit?: number },
+  ): Promise<FilterResultType<McqQuestionChoiceEntity>> {
     const repository = await this.open();
 
     const { page = 1, limit = 100, ...rest } = criteria;
@@ -46,7 +46,7 @@ export class PaymentSubscriptionRepository {
     };
   }
 
-  public async findOne(id: string): Promise<PaymentSubscriptionEntity | null> {
+  public async findOne(id: string): Promise<McqQuestionChoiceEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -54,9 +54,7 @@ export class PaymentSubscriptionRepository {
     });
   }
 
-  public async findOneBy(
-    criteria: FindOptionsWhere<PaymentSubscriptionEntity>,
-  ): Promise<PaymentSubscriptionEntity | null> {
+  public async findOneBy(criteria: FindOptionsWhere<McqQuestionChoiceEntity>): Promise<McqQuestionChoiceEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -64,34 +62,55 @@ export class PaymentSubscriptionRepository {
     });
   }
 
-  public async create(entity: PaymentSubscriptionEntity, options?: SaveOptions): Promise<PaymentSubscriptionEntity> {
+  public async findByQuestion(questionId: string): Promise<McqQuestionChoiceEntity[]> {
+    const repository = await this.open();
+
+    return await repository.find({
+      where: { question: { id: questionId } },
+      order: { letter: "ASC" },
+    });
+  }
+
+  public async findCorrectChoicesByQuestion(questionId: string): Promise<McqQuestionChoiceEntity[]> {
+    const repository = await this.open();
+
+    return await repository.find({
+      where: {
+        question: { id: questionId },
+        isCorrect: true,
+      },
+      order: { letter: "ASC" },
+    });
+  }
+
+  public async create(entity: McqQuestionChoiceEntity, options?: SaveOptions): Promise<McqQuestionChoiceEntity> {
     const repository = await this.open();
 
     return await repository.save(entity, options);
   }
 
   public async createMany(
-    entities: PaymentSubscriptionEntity[],
+    entities: McqQuestionChoiceEntity[],
     options?: SaveOptions,
-  ): Promise<PaymentSubscriptionEntity[]> {
+  ): Promise<McqQuestionChoiceEntity[]> {
     const repository = await this.open();
 
     return await repository.save(entities, options);
   }
 
-  public async update(entity: PaymentSubscriptionEntity, options?: SaveOptions): Promise<PaymentSubscriptionEntity> {
+  public async update(entity: McqQuestionChoiceEntity, options?: SaveOptions): Promise<McqQuestionChoiceEntity> {
     return await this.create(entity, options);
   }
 
   public async updateMany(
-    entities: PaymentSubscriptionEntity[],
+    entities: McqQuestionChoiceEntity[],
     options?: SaveOptions,
-  ): Promise<PaymentSubscriptionEntity[]> {
+  ): Promise<McqQuestionChoiceEntity[]> {
     return await this.createMany(entities, options);
   }
 
   public async delete(
-    criteria: FindOptionsWhere<PaymentSubscriptionEntity> | FindOptionsWhere<PaymentSubscriptionEntity>[],
+    criteria: FindOptionsWhere<McqQuestionChoiceEntity> | FindOptionsWhere<McqQuestionChoiceEntity>[],
   ): Promise<UpdateResult> {
     const repository = await this.open();
 
@@ -99,7 +118,7 @@ export class PaymentSubscriptionRepository {
   }
 
   public async count(
-    criteria?: FindOptionsWhere<PaymentSubscriptionEntity> | FindOptionsWhere<PaymentSubscriptionEntity>[],
+    criteria?: FindOptionsWhere<McqQuestionChoiceEntity> | FindOptionsWhere<McqQuestionChoiceEntity>[],
   ): Promise<number> {
     const repository = await this.open();
 

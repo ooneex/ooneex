@@ -9,14 +9,13 @@ const sharedDI = new InversifyContainer();
 
 export class Container implements IContainer {
   private alias: Record<string, any> = {};
-  private di: InversifyContainer = sharedDI;
 
   public add(target: new (...args: any[]) => any, scope: EContainerScope = EContainerScope.Singleton): void {
     try {
-      this.di.unbind(target);
+      sharedDI.unbind(target);
     } catch {}
 
-    const binding = this.di.bind(target).toSelf();
+    const binding = sharedDI.bind(target).toSelf();
 
     switch (scope) {
       case EContainerScope.Request:
@@ -55,7 +54,7 @@ export class Container implements IContainer {
     const resolvedTarget = this.resolveAlias(target, true);
 
     try {
-      return this.di.get<T>(resolvedTarget as new (...args: any[]) => T);
+      return sharedDI.get<T>(resolvedTarget as new (...args: any[]) => T);
     } catch (_e) {
       throw new ContainerException(
         `Failed to resolve dependency: ${typeof target === "string" ? target : target.name}`,
@@ -68,39 +67,39 @@ export class Container implements IContainer {
     if (resolvedTarget === null) {
       return false;
     }
-    return this.di.isBound(resolvedTarget);
+    return sharedDI.isBound(resolvedTarget);
   }
 
   public remove(target: (new (...args: unknown[]) => unknown) | string): void {
     const resolvedTarget = this.resolveAlias(target, true);
-    if (resolvedTarget && this.di.isBound(resolvedTarget)) {
-      this.di.unbind(resolvedTarget);
+    if (resolvedTarget && sharedDI.isBound(resolvedTarget)) {
+      sharedDI.unbind(resolvedTarget);
     }
   }
 
   public addConstant<T>(identifier: string | symbol, value: T): void {
     try {
-      this.di.unbind(identifier);
+      sharedDI.unbind(identifier);
     } catch {}
 
-    this.di.bind<T>(identifier).toConstantValue(value);
+    sharedDI.bind<T>(identifier).toConstantValue(value);
   }
 
   public getConstant<T>(identifier: string | symbol): T {
     try {
-      return this.di.get<T>(identifier);
+      return sharedDI.get<T>(identifier);
     } catch (_e) {
       throw new ContainerException(`Failed to resolve constant: ${identifier.toString()}`);
     }
   }
 
   public hasConstant(identifier: string | symbol): boolean {
-    return this.di.isBound(identifier);
+    return sharedDI.isBound(identifier);
   }
 
   public removeConstant(identifier: string | symbol): void {
-    if (this.di.isBound(identifier)) {
-      this.di.unbind(identifier);
+    if (sharedDI.isBound(identifier)) {
+      sharedDI.unbind(identifier);
     }
   }
 

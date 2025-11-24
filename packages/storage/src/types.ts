@@ -4,7 +4,7 @@ import type { BunFile, S3File } from "bun";
 export type StorageClassType = new (...args: any[]) => IStorage;
 
 export interface IStorage {
-  setBucket(name: string): this;
+  setBucket(name: string): IStorage;
   list(): Promise<string[]>;
   clearBucket(): Promise<this>;
   exists(key: string): Promise<boolean>;

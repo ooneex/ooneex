@@ -1,5 +1,5 @@
-import type { IMcqQuestion, IMcqQuestionChoice, IMcqSession, IMcqSessionQuestion } from "@ooneex/gamification";
 import { EAnswerState } from "@ooneex/gamification";
+import type { IMcqQuestion, IMcqQuestionChoice, IMcqSession, IMcqSessionQuestion } from "@ooneex/gamification/mcq";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../common/BaseEntity";
 import { McqQuestionChoiceEntity } from "./McqQuestionChoiceEntity";

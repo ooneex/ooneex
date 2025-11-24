@@ -107,6 +107,10 @@
         "@ooneex/types": "workspace:*",
       },
     },
+    "packages/config": {
+      "name": "@ooneex/config",
+      "version": "0.0.0",
+    },
     "packages/container": {
       "name": "@ooneex/container",
       "version": "0.0.0",
@@ -114,6 +118,21 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "inversify": "^7.10.4",
+      },
+      "devDependencies": {
+        "@ooneex/analytics": "workspace:*",
+        "@ooneex/cache": "workspace:*",
+        "@ooneex/config": "workspace:*",
+        "@ooneex/cron": "workspace:*",
+        "@ooneex/database": "workspace:*",
+        "@ooneex/logger": "workspace:*",
+        "@ooneex/middleware": "workspace:*",
+        "@ooneex/model": "workspace:*",
+        "@ooneex/permission": "workspace:*",
+        "@ooneex/repository": "workspace:*",
+        "@ooneex/seeds": "workspace:*",
+        "@ooneex/service": "workspace:*",
+        "@ooneex/storage": "workspace:*",
       },
     },
     "packages/controller": {
@@ -306,6 +325,10 @@
       "name": "@ooneex/migrations",
       "version": "0.0.0",
     },
+    "packages/model": {
+      "name": "@ooneex/model",
+      "version": "0.0.0",
+    },
     "packages/notification": {
       "name": "@ooneex/notification",
       "version": "0.0.0",
@@ -353,6 +376,10 @@
     },
     "packages/seeds": {
       "name": "@ooneex/seeds",
+      "version": "0.0.0",
+    },
+    "packages/service": {
+      "name": "@ooneex/service",
       "version": "0.0.0",
     },
     "packages/socket": {
@@ -868,6 +895,8 @@
 
     "@ooneex/color": ["@ooneex/color@workspace:packages/color"],
 
+    "@ooneex/config": ["@ooneex/config@workspace:packages/config"],
+
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
 
     "@ooneex/controller": ["@ooneex/controller@workspace:packages/controller"],
@@ -914,6 +943,8 @@
 
     "@ooneex/migrations": ["@ooneex/migrations@workspace:packages/migrations"],
 
+    "@ooneex/model": ["@ooneex/model@workspace:packages/model"],
+
     "@ooneex/notification": ["@ooneex/notification@workspace:packages/notification"],
 
     "@ooneex/payment": ["@ooneex/payment@workspace:packages/payment"],
@@ -931,6 +962,8 @@
     "@ooneex/routing": ["@ooneex/routing@workspace:packages/routing"],
 
     "@ooneex/seeds": ["@ooneex/seeds@workspace:packages/seeds"],
+
+    "@ooneex/service": ["@ooneex/service@workspace:packages/service"],
 
     "@ooneex/socket": ["@ooneex/socket@workspace:packages/socket"],
 

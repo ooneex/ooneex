@@ -1,1 +1,1 @@
-# @ooneex/router
+# @ooneex/seeds

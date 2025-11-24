@@ -1,5 +1,7 @@
-import type { ILevel, IMcqQuestion, IMcqSession } from "@ooneex/gamification";
-import { EMcqSessionStatus, ESessionType } from "@ooneex/gamification";
+import type { ILevel } from "@ooneex/gamification";
+import { ESessionType } from "@ooneex/gamification";
+import type { IMcqQuestion, IMcqSession } from "@ooneex/gamification/mcq";
+import { EMcqSessionStatus } from "@ooneex/gamification/mcq";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../common/BaseEntity";
 import { LevelEntity } from "../LevelEntity";

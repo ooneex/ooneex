@@ -9,6 +9,7 @@ export default defineConfig({
     "src/entities/payment/index.ts",
     "src/entities/video/index.ts",
     "src/entities/gamification/index.ts",
+    "src/entities/gamification/flashcard/index.ts",
     "src/entities/gamification/mcq/index.ts",
 
     "src/repositories/book/index.ts",
@@ -17,6 +18,7 @@ export default defineConfig({
     "src/repositories/payment/index.ts",
     "src/repositories/video/index.ts",
     "src/repositories/gamification/index.ts",
+    "src/repositories/gamification/flashcard/index.ts",
     "src/repositories/gamification/mcq/index.ts",
   ],
   target: "bun",

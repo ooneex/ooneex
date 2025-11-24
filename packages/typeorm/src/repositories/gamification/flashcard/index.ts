@@ -1,2 +1,7 @@
-// Placeholder for flashcard repositories
-// This file will be updated when flashcard entities are added
+export { FlashcardDeckRepository } from "./FlashcardDeckRepository";
+export { FlashcardPresetRepository } from "./FlashcardPresetRepository";
+export { FlashcardRepository } from "./FlashcardRepository";
+export { FlashcardReviewRepository } from "./FlashcardReviewRepository";
+export { FlashcardScheduleRepository } from "./FlashcardScheduleRepository";
+export { FlashcardSessionRepository } from "./FlashcardSessionRepository";
+export { FlashcardStatsRepository } from "./FlashcardStatsRepository";

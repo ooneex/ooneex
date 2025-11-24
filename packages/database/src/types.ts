@@ -1,6 +1,9 @@
 import type { RedisClient } from "bun";
 import type { EntityTarget, ObjectLiteral, Repository } from "typeorm";
 
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type DatabaseClassType = new (...args: any[]) => IDatabase | IRedisDatabaseAdapter | ITypeormDatabaseAdapter;
+
 export type RedisConnectionOptionsType = {
   url?: string;
   connectionTimeout?: number;

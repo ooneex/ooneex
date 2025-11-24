@@ -7,6 +7,7 @@ export type CronClassType = new (...args: any[]) => ICron;
 
 export interface ICron {
   getTime: () => CronTimeType;
+  setTime?: (tim: CronTimeType) => ICron;
   start: () => Promise<void>;
   stop: () => Promise<void>;
   job: () => Promise<void>;

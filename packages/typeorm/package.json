@@ -7,6 +7,12 @@
     "dist"
   ],
   "exports": {
+    "./src/repositories/book": {
+      "import": {
+        "types": "./dist/src/repositories/book/index.d.ts",
+        "default": "./dist/src/repositories/book/index.js"
+      }
+    },
     "./src/repositories/common": {
       "import": {
         "types": "./dist/src/repositories/common/index.d.ts",
@@ -29,6 +35,24 @@
       "import": {
         "types": "./dist/src/repositories/video/index.d.ts",
         "default": "./dist/src/repositories/video/index.js"
+      }
+    },
+    "./src/repositories/gamification": {
+      "import": {
+        "types": "./dist/src/repositories/gamification/index.d.ts",
+        "default": "./dist/src/repositories/gamification/index.js"
+      }
+    },
+    "./src/repositories/gamification/flashcard": {
+      "import": {
+        "types": "./dist/src/repositories/gamification/flashcard/index.d.ts",
+        "default": "./dist/src/repositories/gamification/flashcard/index.js"
+      }
+    },
+    "./src/repositories/gamification/mcq": {
+      "import": {
+        "types": "./dist/src/repositories/gamification/mcq/index.d.ts",
+        "default": "./dist/src/repositories/gamification/mcq/index.js"
       }
     },
     "./src/entities/book": {
@@ -67,16 +91,16 @@
         "default": "./dist/src/entities/gamification/index.js"
       }
     },
+    "./src/entities/gamification/flashcard": {
+      "import": {
+        "types": "./dist/src/entities/gamification/flashcard/index.d.ts",
+        "default": "./dist/src/entities/gamification/flashcard/index.js"
+      }
+    },
     "./src/entities/gamification/mcq": {
       "import": {
         "types": "./dist/src/entities/gamification/mcq/index.d.ts",
         "default": "./dist/src/entities/gamification/mcq/index.js"
-      }
-    },
-    "./src/repositories/book": {
-      "import": {
-        "types": "./dist/src/repositories/book/index.d.ts",
-        "default": "./dist/src/repositories/book/index.js"
       }
     },
     "./package.json": "./package.json"

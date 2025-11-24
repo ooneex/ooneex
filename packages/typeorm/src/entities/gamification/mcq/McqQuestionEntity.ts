@@ -1,4 +1,4 @@
-import type { IMcqQuestion, IMcqQuestionChoice } from "@ooneex/gamification";
+import type { IMcqQuestion, IMcqQuestionChoice } from "@ooneex/gamification/mcq";
 import type { IImage } from "@ooneex/image";
 import type { IStatus } from "@ooneex/status";
 import type { ITag } from "@ooneex/tag";

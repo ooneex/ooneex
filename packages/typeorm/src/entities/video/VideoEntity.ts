@@ -1,14 +1,14 @@
 import type { ICategory } from "@ooneex/category";
 import type { IStatus } from "@ooneex/status";
 import type { ITag } from "@ooneex/tag";
-import type {
-  AudioChannelsType,
-  AudioCodecType,
-  IVideo,
-  VideoCodecType,
-  VideoFormatType,
-  VideoQualityType,
-  VideoResolutionType,
+import {
+  type AudioChannelsType,
+  type AudioCodecType,
+  EVideoCodec,
+  EVideoFormat,
+  EVideoQuality,
+  EVideoResolution,
+  type IVideo,
 } from "@ooneex/video";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { BaseEntity } from "../common/BaseEntity";
@@ -58,17 +58,37 @@ export class VideoEntity extends BaseEntity implements IVideo {
   @Column({ name: "thumbnail_image", type: "text", nullable: true })
   thumbnailImage?: string;
 
-  @Column({ name: "resolution", type: "varchar", length: 50, nullable: true })
-  resolution?: VideoResolutionType;
+  @Column({
+    name: "resolution",
+    type: "enum",
+    enum: EVideoResolution,
+    nullable: true,
+  })
+  resolution?: EVideoResolution;
 
-  @Column({ name: "quality", type: "varchar", length: 50, nullable: true })
-  quality?: VideoQualityType;
+  @Column({
+    name: "quality",
+    type: "enum",
+    enum: EVideoQuality,
+    nullable: true,
+  })
+  quality?: EVideoQuality;
 
-  @Column({ name: "format", type: "varchar", length: 20, nullable: true })
-  format?: VideoFormatType;
+  @Column({
+    name: "format",
+    type: "enum",
+    enum: EVideoFormat,
+    nullable: true,
+  })
+  format?: EVideoFormat;
 
-  @Column({ name: "codec", type: "varchar", length: 50, nullable: true })
-  codec?: VideoCodecType;
+  @Column({
+    name: "codec",
+    type: "enum",
+    enum: EVideoCodec,
+    nullable: true,
+  })
+  codec?: EVideoCodec;
 
   @Column({ name: "bitrate", type: "int", nullable: true })
   bitrate?: number;

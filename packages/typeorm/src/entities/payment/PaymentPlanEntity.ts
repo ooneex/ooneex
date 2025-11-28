@@ -1,5 +1,5 @@
 import type { CurrencyCodeType } from "@ooneex/currencies";
-import type { IFeature, IPlan } from "@ooneex/payment";
+import { ESubscriptionPeriod, type IFeature, type IPlan } from "@ooneex/payment";
 import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { BaseEntity } from "../common/BaseEntity";
 import { PaymentFeatureEntity } from "./PaymentFeatureEntity";
@@ -23,9 +23,9 @@ export class PaymentPlanEntity extends BaseEntity implements IPlan {
   @Column({
     name: "period",
     type: "enum",
-    enum: ["monthly", "yearly", "weekly", "daily"],
+    enum: ESubscriptionPeriod,
   })
-  period: "monthly" | "yearly" | "weekly" | "daily";
+  period: ESubscriptionPeriod;
 
   @Column({ name: "period_count", type: "int", default: 1, nullable: true })
   periodCount?: number;

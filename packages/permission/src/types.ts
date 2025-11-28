@@ -71,8 +71,18 @@ export enum EPermissionAction {
   HIDE = "hide",
 }
 
+export enum EPermissionSubject {
+  USER_ENTITY = "UserEntity",
+  AUTH_USER_ENTITY = "AuthUserEntity",
+  AUTH_USER = "AuthUser",
+  SYSTEM_ENTITY = "SystemEntity",
+  SYSTEM = "System",
+  USER = "User",
+  ALL = "all",
+}
+
 export type PermissionActionType = `${EPermissionAction}`;
-export type Subjects = "UserEntity" | "AuthUserEntity" | "AuthUser" | "SystemEntity" | "System" | "User" | "all";
+export type Subjects = `${EPermissionSubject}`;
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type PermissionClassType = new (...args: any[]) => IPermission;

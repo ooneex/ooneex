@@ -4,6 +4,21 @@ import type { IImage } from "@ooneex/image";
 import type { ITag } from "@ooneex/tag";
 import type { IBase, ScalarType } from "@ooneex/types";
 
+export enum EDiscountType {
+  PERCENTAGE = "percentage",
+  FIXED = "fixed",
+}
+
+export enum ESubscriptionPeriod {
+  MONTHLY = "monthly",
+  YEARLY = "yearly",
+  WEEKLY = "weekly",
+  DAILY = "daily",
+}
+
+export type DiscountType = `${EDiscountType}`;
+export type SubscriptionPeriodType = `${ESubscriptionPeriod}`;
+
 export interface IProduct extends IBase {
   name: string;
   description?: string;
@@ -27,7 +42,7 @@ export interface ICoupon extends IBase {
   code: string;
   name?: string;
   description?: string;
-  discountType: "percentage" | "fixed";
+  discountType: EDiscountType;
   discountValue: number;
   currency?: CurrencyCodeType;
   maxUses?: number;
@@ -45,7 +60,7 @@ export interface IPlan extends IBase {
   description?: string;
   currency: CurrencyCodeType;
   price: number;
-  period: "monthly" | "yearly" | "weekly" | "daily";
+  period: ESubscriptionPeriod;
   periodCount?: number;
   features?: IFeature[];
   isActive?: boolean;

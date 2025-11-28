@@ -2,6 +2,20 @@ import type { MimeType } from "@ooneex/http-mimes";
 import type { CharsetType, EncodingType, HttpMethodType } from "@ooneex/types";
 import type { HEADERS } from "./constants";
 
+export enum ECookieSameSite {
+  STRICT = "Strict",
+  LAX = "Lax",
+  NONE = "None",
+}
+
+export enum EXFrameOptions {
+  DENY = "DENY",
+  SAMEORIGIN = "SAMEORIGIN",
+}
+
+export type CookieSameSiteType = `${ECookieSameSite}`;
+export type XFrameOptionsType = `${EXFrameOptions}` | string;
+
 export type HeaderFieldType = (typeof HEADERS)[number] | `X-Custom-${string}` | "X-Real-IP";
 
 export type UserAgentType = {
@@ -90,7 +104,7 @@ export interface IHeader extends IReadonlyHeader {
       maxAge?: number;
       secure?: boolean;
       httpOnly?: boolean;
-      sameSite?: "Strict" | "Lax" | "None";
+      sameSite?: CookieSameSiteType;
     },
   ) => IHeader;
 
@@ -105,7 +119,7 @@ export interface IHeader extends IReadonlyHeader {
         maxAge?: number;
         secure?: boolean;
         httpOnly?: boolean;
-        sameSite?: "Strict" | "Lax" | "None";
+        sameSite?: CookieSameSiteType;
       };
     }>,
   ) => IHeader;
@@ -120,7 +134,7 @@ export interface IHeader extends IReadonlyHeader {
       maxAge?: number;
       secure?: boolean;
       httpOnly?: boolean;
-      sameSite?: "Strict" | "Lax" | "None";
+      sameSite?: CookieSameSiteType;
     },
   ) => IHeader;
 
@@ -148,7 +162,7 @@ export interface IHeader extends IReadonlyHeader {
   setContentSecurityPolicy: (policy: string) => IHeader;
   setStrictTransportSecurity: (maxAge: number, includeSubDomains?: boolean, preload?: boolean) => IHeader;
   setXContentTypeOptions: (value?: string) => IHeader;
-  setXFrameOptions: (value: "DENY" | "SAMEORIGIN" | string) => IHeader;
+  setXFrameOptions: (value: XFrameOptionsType) => IHeader;
   setXXSSProtection: (enabled?: boolean, mode?: string) => IHeader;
 
   // Redirects

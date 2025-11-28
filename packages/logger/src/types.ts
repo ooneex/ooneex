@@ -18,10 +18,18 @@ export interface ILogger<Data = Record<string, ScalarType>> {
   log: (message: string, data?: Data) => Promise<void> | void;
 }
 
-export type LevelType = "ERROR" | "WARN" | "INFO" | "DEBUG" | "LOG";
+export enum ELogLevel {
+  ERROR = "ERROR",
+  WARN = "WARN",
+  INFO = "INFO",
+  DEBUG = "DEBUG",
+  LOG = "LOG",
+}
+
+export type LevelType = `${ELogLevel}`;
 
 export type FindByCriteriaType = {
-  level?: LevelType;
+  level?: ELogLevel;
   userId?: string;
   email?: string;
   lastName?: string;

@@ -115,12 +115,12 @@
     "typeorm": "^0.3.27",
     "@ooneex/database": "workspace:*",
     "@ooneex/container": "workspace:*",
-    "@ooneex/utils": "workspace:*"
+    "@ooneex/utils": "workspace:*",
+    "@ooneex/payment": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/video": "workspace:*",
     "@ooneex/book": "workspace:*",
-    "@ooneex/payment": "workspace:*",
     "@ooneex/color": "workspace:*",
     "@ooneex/image": "workspace:*",
     "@ooneex/tag": "workspace:*",

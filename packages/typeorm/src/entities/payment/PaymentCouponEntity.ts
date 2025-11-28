@@ -1,5 +1,5 @@
 import type { CurrencyCodeType } from "@ooneex/currencies";
-import type { ICoupon, IPlan, IProduct } from "@ooneex/payment";
+import { EDiscountType, type ICoupon, type IPlan, type IProduct } from "@ooneex/payment";
 import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { BaseEntity } from "../common/BaseEntity";
 import { PaymentPlanEntity } from "./PaymentPlanEntity";
@@ -21,9 +21,9 @@ export class PaymentCouponEntity extends BaseEntity implements ICoupon {
   @Column({
     name: "discount_type",
     type: "enum",
-    enum: ["percentage", "fixed"],
+    enum: EDiscountType,
   })
-  discountType: "percentage" | "fixed";
+  discountType: EDiscountType;
 
   @Column({ name: "discount_value", type: "decimal", precision: 10, scale: 2 })
   discountValue: number;

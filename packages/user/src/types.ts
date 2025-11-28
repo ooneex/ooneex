@@ -2,6 +2,32 @@ import type { IImage } from "@ooneex/image";
 import type { ERole } from "@ooneex/role";
 import type { IBase } from "@ooneex/types";
 
+export enum EAccountType {
+  OAUTH = "oauth",
+  EMAIL = "email",
+  CREDENTIALS = "credentials",
+  WEBAUTHN = "webauthn",
+}
+
+export enum EVerificationType {
+  EMAIL = "email",
+  PHONE = "phone",
+  PASSWORD_RESET = "password_reset",
+  TWO_FACTOR = "two_factor",
+  ACCOUNT_ACTIVATION = "account_activation",
+}
+
+export enum EProfileUpdateStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  FAILED = "failed",
+  REVERTED = "reverted",
+}
+
+export type AccountType = `${EAccountType}`;
+export type VerificationType = `${EVerificationType}`;
+export type ProfileUpdateStatusType = `${EProfileUpdateStatus}`;
+
 export interface IUser extends IBase {
   email: string;
   roles: ERole[];
@@ -67,7 +93,7 @@ export interface IAccount extends IBase {
   // Unique account ID from the external provider
   providerAccountId?: string;
   // Authentication method used for this account
-  type: "oauth" | "email" | "credentials" | "webauthn";
+  type: EAccountType;
   // Hashed password for credentials-based accounts
   password?: string;
   // Token for accessing provider APIs on behalf of the user
@@ -109,7 +135,7 @@ export interface IVerification extends IBase {
   // Secure token used for verification (typically UUID or similar)
   token: string;
   // Type of verification being performed
-  type: "email" | "phone" | "password_reset" | "two_factor" | "account_activation";
+  type: EVerificationType;
   // Short numeric code sent to user (alternative to token for SMS/email)
   code?: string;
   // Whether this verification has been successfully completed
@@ -148,7 +174,7 @@ export interface IUserProfileUpdate extends IBase {
   // Whether this update requires verification (e.g., email/phone changes)
   requiresVerification?: boolean;
   // Status of the update (e.g., "pending", "completed", "failed", "reverted")
-  status: "pending" | "completed" | "failed" | "reverted";
+  status: EProfileUpdateStatus;
   // When the update was applied/completed
   appliedAt?: Date;
   // Additional metadata specific to the update

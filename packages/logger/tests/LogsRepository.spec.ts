@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import type { ExceptionStackFrameType } from "@ooneex/exception";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import { random } from "@ooneex/utils";
-import type { FindByCriteriaType, LevelType } from "@/index";
-import { LogsEntity, LogsRepository } from "@/index";
+import type { FindByCriteriaType } from "@/index";
+import { ELogLevel, LogsEntity, LogsRepository } from "@/index";
 
 // Mock types
 type MockSQLClient = (strings: TemplateStringsArray, ...values: unknown[]) => Promise<unknown[]>;
@@ -590,7 +590,7 @@ describe("LogsRepository", () => {
     test("should handle criteria filtering", async () => {
       // Test that criteria are processed (actual filtering tested through integration)
       const criteria: FindByCriteriaType = {
-        level: "ERROR",
+        level: ELogLevel.ERROR,
         userId: "user-1",
         page: 1,
         limit: 5,
@@ -693,7 +693,7 @@ describe("LogsRepository", () => {
     });
 
     test("should handle all level types", async () => {
-      const levels: LevelType[] = ["ERROR", "WARN", "INFO", "DEBUG", "LOG"];
+      const levels: ELogLevel[] = [ELogLevel.ERROR, ELogLevel.WARN, ELogLevel.INFO, ELogLevel.DEBUG, ELogLevel.LOG];
 
       for (const level of levels) {
         const criteria: FindByCriteriaType = { level };
@@ -767,7 +767,7 @@ describe("LogsRepository", () => {
 
     test("should get client for each operation", async () => {
       const logEntity = new LogsEntity();
-      logEntity.level = "INFO";
+      logEntity.level = ELogLevel.INFO;
       logEntity.date = new Date();
 
       await repository.create(logEntity);
@@ -780,7 +780,7 @@ describe("LogsRepository", () => {
 
   describe("SQL query construction", () => {
     test("should construct proper queries for single condition", async () => {
-      const criteria: FindByCriteriaType = { level: "ERROR" };
+      const criteria: FindByCriteriaType = { level: ELogLevel.ERROR };
 
       // We can't easily test the SQL construction due to mocking limitations
       // but we can verify the method executes without error
@@ -793,7 +793,7 @@ describe("LogsRepository", () => {
 
     test("should construct proper queries for multiple conditions", async () => {
       const criteria: FindByCriteriaType = {
-        level: "ERROR",
+        level: ELogLevel.ERROR,
         userId: "user-123",
         status: 500,
       };
@@ -922,7 +922,7 @@ describe("LogsRepository", () => {
     test("should handle complete CRUD-like operations", async () => {
       // Create
       const logEntity = new LogsEntity();
-      logEntity.level = "INFO";
+      logEntity.level = ELogLevel.INFO;
       logEntity.message = "Integration test";
       logEntity.date = new Date();
 
@@ -936,7 +936,7 @@ describe("LogsRepository", () => {
       }
 
       // FindBy
-      const results = await repository.findBy({ level: "INFO" });
+      const results = await repository.findBy({ level: ELogLevel.INFO });
       expect(results.logs.length).toBeGreaterThanOrEqual(0);
     });
 
@@ -944,7 +944,7 @@ describe("LogsRepository", () => {
       // Simulate creating multiple logs
       const logs = Array.from({ length: 5 }, (_, i) => {
         const log = new LogsEntity();
-        log.level = "INFO";
+        log.level = ELogLevel.INFO;
         log.message = `Bulk log ${i}`;
         log.date = new Date();
         return log;

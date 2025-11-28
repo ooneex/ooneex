@@ -434,6 +434,7 @@
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
+        "@ooneex/payment": "workspace:*",
         "@ooneex/utils": "workspace:*",
         "typeorm": "^0.3.27",
       },
@@ -444,7 +445,6 @@
         "@ooneex/currencies": "workspace:*",
         "@ooneex/folder": "workspace:*",
         "@ooneex/image": "workspace:*",
-        "@ooneex/payment": "workspace:*",
         "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
         "@ooneex/types": "workspace:*",

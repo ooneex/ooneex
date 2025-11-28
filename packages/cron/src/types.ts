@@ -1,5 +1,19 @@
-type PrefixType = "in" | "every";
-type SuffixType = "seconds" | "minutes" | "hours" | "days" | "months" | "years";
+export enum ECronPrefix {
+  IN = "in",
+  EVERY = "every",
+}
+
+export enum ECronSuffix {
+  SECONDS = "seconds",
+  MINUTES = "minutes",
+  HOURS = "hours",
+  DAYS = "days",
+  MONTHS = "months",
+  YEARS = "years",
+}
+
+export type PrefixType = `${ECronPrefix}`;
+export type SuffixType = `${ECronSuffix}`;
 export type CronTimeType = `${PrefixType} ${number} ${SuffixType}`;
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me

@@ -1,5 +1,5 @@
 import { CronException } from "./CronException";
-import type { CronTimeType } from "./types";
+import type { CronTimeType, SuffixType } from "./types";
 
 /**
  * Converts a CronTimeType string to a standard crontab expression
@@ -15,7 +15,7 @@ export const convertToCrontab = (cronTime: CronTimeType): string => {
 
   const prefix = parts[0] as "in" | "every";
   const value = Number.parseInt(parts[1] || "1", 10);
-  const suffix = parts[2] as "seconds" | "minutes" | "hours" | "days" | "months" | "years";
+  const suffix = parts[2] as SuffixType;
 
   if (Number.isNaN(value) || value <= 0) {
     throw new Error(`Invalid number value in CronTimeType: ${parts[1]}`);

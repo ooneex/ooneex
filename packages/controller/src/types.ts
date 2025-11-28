@@ -14,12 +14,19 @@ import type { LocaleInfoType } from "@ooneex/translation";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import type { IUser } from "@ooneex/user";
 
-export type ActionConfigType = {
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type ControllerClassType = new (...args: any[]) => IController;
+
+export interface IController<T extends ContextConfigType = ContextConfigType> {
+  index: (context: ContextType<T>) => Promise<IResponse<T["response"]>> | IResponse<T["response"]>;
+}
+
+export type ContextConfigType = {
   response: Record<string, unknown>;
   request: RequestConfigType;
 };
 
-export type ActionType<T extends ActionConfigType = ActionConfigType> = {
+export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
   analytics?: IAnalytics;
   cache?: ICache;

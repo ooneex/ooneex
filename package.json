@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "@casl/ability": "^6.7.3",
-    "@typescript/native-preview": "^7.0.0-dev.20251121.1",
     "nanoid": "^5.1.6",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.27"
@@ -39,11 +38,13 @@
     "@swc/helpers": "~0.5.11",
     "@types/bun": "latest",
     "@types/node": "^24.9.2",
+    "bunup": "^0.16.10",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "nx": "22.0.2",
     "ultracite": "6.3.5",
-    "undici-types": "^7.16.0"
+    "undici-types": "^7.16.0",
+    "@typescript/native-preview": "^7.0.0-dev.20251121.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [

@@ -23,7 +23,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ooneex/http-response": "workspace:*"
+  },
   "devDependencies": {
     "@ooneex/app-env": "workspace:*",
     "@ooneex/permission": "workspace:*",

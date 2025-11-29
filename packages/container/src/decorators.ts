@@ -7,7 +7,6 @@ import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
 import type { MiddlewareClassType } from "@ooneex/middleware";
 import type { MigrationClassType } from "@ooneex/migrations";
-import type { ModelClassType } from "@ooneex/model";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { RepositoryClassType } from "@ooneex/repository";
 import type { SeedClassType } from "@ooneex/seeds";
@@ -78,14 +77,6 @@ export const decorator = {
     return (target: MiddlewareClassType): void => {
       if (!target.name.endsWith("Middleware")) {
         throw new ContainerException(`Class name "${target.name}" must end with "Middleware"`);
-      }
-      container.add(target, scope);
-    };
-  },
-  model: (scope: EContainerScope = EContainerScope.Singleton) => {
-    return (target: ModelClassType): void => {
-      if (!target.name.endsWith("Model")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Model"`);
       }
       container.add(target, scope);
     };

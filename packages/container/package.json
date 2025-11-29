@@ -32,7 +32,6 @@
     "@ooneex/storage": "workspace:*",
     "@ooneex/seeds": "workspace:*",
     "@ooneex/repository": "workspace:*",
-    "@ooneex/model": "workspace:*",
     "@ooneex/middleware": "workspace:*",
     "@ooneex/database": "workspace:*",
     "@ooneex/config": "workspace:*",

@@ -24,7 +24,17 @@ describe("AppEnv", () => {
       expect(appEnv).toHaveProperty("isLocal");
       expect(appEnv).toHaveProperty("isDevelopment");
       expect(appEnv).toHaveProperty("isStaging");
+      expect(appEnv).toHaveProperty("isTesting");
       expect(appEnv).toHaveProperty("isTest");
+      expect(appEnv).toHaveProperty("isQa");
+      expect(appEnv).toHaveProperty("isUat");
+      expect(appEnv).toHaveProperty("isIntegration");
+      expect(appEnv).toHaveProperty("isPreview");
+      expect(appEnv).toHaveProperty("isDemo");
+      expect(appEnv).toHaveProperty("isSandbox");
+      expect(appEnv).toHaveProperty("isBeta");
+      expect(appEnv).toHaveProperty("isCanary");
+      expect(appEnv).toHaveProperty("isHotfix");
       expect(appEnv).toHaveProperty("isProduction");
 
       // Check that properties are defined (readonly is enforced at TypeScript level)
@@ -32,7 +42,17 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBeDefined();
       expect(appEnv.isDevelopment).toBeDefined();
       expect(appEnv.isStaging).toBeDefined();
+      expect(appEnv.isTesting).toBeDefined();
       expect(appEnv.isTest).toBeDefined();
+      expect(appEnv.isQa).toBeDefined();
+      expect(appEnv.isUat).toBeDefined();
+      expect(appEnv.isIntegration).toBeDefined();
+      expect(appEnv.isPreview).toBeDefined();
+      expect(appEnv.isDemo).toBeDefined();
+      expect(appEnv.isSandbox).toBeDefined();
+      expect(appEnv.isBeta).toBeDefined();
+      expect(appEnv.isCanary).toBeDefined();
+      expect(appEnv.isHotfix).toBeDefined();
       expect(appEnv.isProduction).toBeDefined();
     });
 
@@ -58,7 +78,17 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(true);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -70,7 +100,17 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(true);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -82,7 +122,39 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(true);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'testing' environment", () => {
+      Bun.env.APP_ENV = "testing";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("testing");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(true);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -94,6 +166,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(true);
     });
@@ -106,8 +179,238 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(true);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
       expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'qa' environment", () => {
+      Bun.env.APP_ENV = "qa";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("qa");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(true);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'uat' environment", () => {
+      Bun.env.APP_ENV = "uat";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("uat");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(true);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'integration' environment", () => {
+      Bun.env.APP_ENV = "integration";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("integration");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(true);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'preview' environment", () => {
+      Bun.env.APP_ENV = "preview";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("preview");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(true);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'demo' environment", () => {
+      Bun.env.APP_ENV = "demo";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("demo");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(true);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'sandbox' environment", () => {
+      Bun.env.APP_ENV = "sandbox";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("sandbox");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(true);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'beta' environment", () => {
+      Bun.env.APP_ENV = "beta";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("beta");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(true);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'canary' environment", () => {
+      Bun.env.APP_ENV = "canary";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("canary");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(true);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'hotfix' environment", () => {
+      Bun.env.APP_ENV = "hotfix";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("hotfix");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(true);
+      expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should create AppEnv with 'production' environment", () => {
+      Bun.env.APP_ENV = "production";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("production");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
+      expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
+      expect(appEnv.isProduction).toBe(true);
     });
   });
 
@@ -221,7 +524,17 @@ describe("AppEnv", () => {
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
@@ -237,7 +550,17 @@ describe("AppEnv", () => {
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
@@ -253,12 +576,48 @@ describe("AppEnv", () => {
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(1);
       expect(appEnv.isStaging).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - testing", () => {
+      Bun.env.APP_ENV = "testing";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isTesting).toBe(true);
     });
 
     test("should ensure only one environment flag is true - production", () => {
@@ -269,7 +628,17 @@ describe("AppEnv", () => {
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
@@ -285,7 +654,17 @@ describe("AppEnv", () => {
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
@@ -294,14 +673,24 @@ describe("AppEnv", () => {
     });
 
     test("should have all flags false for invalid environment", () => {
-      Bun.env.APP_ENV = "testing";
+      Bun.env.APP_ENV = "invalid";
       const appEnv = new AppEnv();
 
       const trueFlags = [
         appEnv.isLocal,
         appEnv.isDevelopment,
         appEnv.isStaging,
+        appEnv.isTesting,
         appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
         appEnv.isProduction,
       ].filter(Boolean);
 
@@ -309,8 +698,252 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTesting).toBe(false);
       expect(appEnv.isTest).toBe(false);
+      expect(appEnv.isQa).toBe(false);
+      expect(appEnv.isUat).toBe(false);
+      expect(appEnv.isIntegration).toBe(false);
+      expect(appEnv.isPreview).toBe(false);
+      expect(appEnv.isDemo).toBe(false);
+      expect(appEnv.isSandbox).toBe(false);
+      expect(appEnv.isBeta).toBe(false);
+      expect(appEnv.isCanary).toBe(false);
+      expect(appEnv.isHotfix).toBe(false);
       expect(appEnv.isProduction).toBe(false);
+    });
+
+    test("should ensure only one environment flag is true - qa", () => {
+      Bun.env.APP_ENV = "qa";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isQa).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - uat", () => {
+      Bun.env.APP_ENV = "uat";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isUat).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - integration", () => {
+      Bun.env.APP_ENV = "integration";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isIntegration).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - preview", () => {
+      Bun.env.APP_ENV = "preview";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isPreview).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - demo", () => {
+      Bun.env.APP_ENV = "demo";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isDemo).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - sandbox", () => {
+      Bun.env.APP_ENV = "sandbox";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isSandbox).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - beta", () => {
+      Bun.env.APP_ENV = "beta";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isBeta).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - canary", () => {
+      Bun.env.APP_ENV = "canary";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isCanary).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - hotfix", () => {
+      Bun.env.APP_ENV = "hotfix";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTesting,
+        appEnv.isTest,
+        appEnv.isQa,
+        appEnv.isUat,
+        appEnv.isIntegration,
+        appEnv.isPreview,
+        appEnv.isDemo,
+        appEnv.isSandbox,
+        appEnv.isBeta,
+        appEnv.isCanary,
+        appEnv.isHotfix,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isHotfix).toBe(true);
     });
   });
 
@@ -547,7 +1180,17 @@ describe("AppEnv", () => {
         isLocal: appEnv.isLocal,
         isDevelopment: appEnv.isDevelopment,
         isStaging: appEnv.isStaging,
+        isTesting: appEnv.isTesting,
         isTest: appEnv.isTest,
+        isQa: appEnv.isQa,
+        isUat: appEnv.isUat,
+        isIntegration: appEnv.isIntegration,
+        isPreview: appEnv.isPreview,
+        isDemo: appEnv.isDemo,
+        isSandbox: appEnv.isSandbox,
+        isBeta: appEnv.isBeta,
+        isCanary: appEnv.isCanary,
+        isHotfix: appEnv.isHotfix,
         isProduction: appEnv.isProduction,
       });
       const parsed = JSON.parse(serialized);
@@ -590,12 +1233,22 @@ describe("AppEnv", () => {
 
       // Should only have the defined properties
       const ownProps = Object.getOwnPropertyNames(appEnv);
-      expect(ownProps).toHaveLength(6);
+      expect(ownProps).toHaveLength(16);
       expect(ownProps).toContain("env");
       expect(ownProps).toContain("isLocal");
       expect(ownProps).toContain("isDevelopment");
       expect(ownProps).toContain("isStaging");
+      expect(ownProps).toContain("isTesting");
       expect(ownProps).toContain("isTest");
+      expect(ownProps).toContain("isQa");
+      expect(ownProps).toContain("isUat");
+      expect(ownProps).toContain("isIntegration");
+      expect(ownProps).toContain("isPreview");
+      expect(ownProps).toContain("isDemo");
+      expect(ownProps).toContain("isSandbox");
+      expect(ownProps).toContain("isBeta");
+      expect(ownProps).toContain("isCanary");
+      expect(ownProps).toContain("isHotfix");
       expect(ownProps).toContain("isProduction");
     });
 

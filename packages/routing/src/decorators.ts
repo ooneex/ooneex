@@ -1,7 +1,7 @@
+import { Environment } from "@ooneex/app-env";
 import type { ContextType, ControllerClassType } from "@ooneex/controller";
 import type { HttpMethodType } from "@ooneex/types";
 import { Assert, type AssertType } from "@ooneex/validation";
-import { AssertAppEnv } from "@ooneex/validation/constraints";
 import { router } from "./Router";
 import type { ExtractParameters, RouteConfigType, RoutePathType } from "./types";
 
@@ -59,7 +59,7 @@ type TypedRouteConfigType = {
   payload: Assert({
     name: "string.url",
   }),
-  env: AssertAppEnv,
+  env: [Environment.LOCAL],
 })
 export class DeleteUserController {
   public async index(context: ContextType<TypedRouteConfigType>) {

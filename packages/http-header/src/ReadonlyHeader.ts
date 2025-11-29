@@ -90,7 +90,7 @@ export class ReadonlyHeader implements IReadonlyHeader {
     const region = parts[1];
     return {
       code,
-      region,
+      ...(region && { region }),
     };
   }
 

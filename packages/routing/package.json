@@ -24,7 +24,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ooneex/validation": "workspace:*"
+  },
   "devDependencies": {
     "@ooneex/app-env": "workspace:*",
     "@ooneex/role": "workspace:*",

@@ -19,7 +19,6 @@ describe("JwtException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("JwtException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create JwtException with message and data", () => {
@@ -64,7 +63,7 @@ describe("JwtException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -127,11 +126,11 @@ describe("JwtException", () => {
         },
       };
 
-      const exception = new JwtException<typeof errorData>("Token validation failed", errorData);
+      const exception = new JwtException("Token validation failed", errorData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.tokenError?.algorithm).toBe("HS256");
-      expect(exception.data?.tokenError?.tokenType).toBe("access");
+      expect((exception.data?.tokenError as { algorithm: string })?.algorithm).toBe("HS256");
+      expect((exception.data?.tokenError as { tokenType: string })?.tokenType).toBe("access");
     });
 
     test("should support string generic type", () => {
@@ -141,7 +140,7 @@ describe("JwtException", () => {
         algorithm: "HS256",
       };
 
-      const exception = new JwtException<typeof stringData>("String data test", stringData);
+      const exception = new JwtException("String data test", stringData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -154,7 +153,7 @@ describe("JwtException", () => {
         retryAfter: 300,
       };
 
-      const exception = new JwtException<typeof numberData>("Number data test", numberData);
+      const exception = new JwtException("Number data test", numberData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.statusCode).toBe("number");
@@ -203,7 +202,7 @@ describe("JwtException", () => {
       expect(exception.message).toBe("JWT token expired");
       expect(exception.data?.tokenType).toBe("access");
       expect(exception.data?.expiredAt).toBe(1640995200);
-      expect(exception.data?.currentTime).toBeGreaterThan(exception.data?.expiredAt || 0);
+      expect(exception.data?.currentTime).toBeGreaterThan((exception.data?.expiredAt as number) || 0);
     });
 
     test("should handle JWT parsing errors", () => {
@@ -343,14 +342,14 @@ describe("JwtException", () => {
         },
       };
 
-      const exception = new JwtException<typeof complexData>("Complex JWT error", complexData);
+      const exception = new JwtException("Complex JWT error", complexData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.token.header.alg).toBe("HS256");
-      expect(exception.data?.validation.errors).toHaveLength(2);
-      expect(exception.data?.validation.errors).toContain("signature_invalid");
-      expect(exception.data?.context.userId).toBe("user123");
-      expect(exception.data?.suggestions.regenerateToken).toContain("auth service");
+      expect((exception.data?.token as { header: { alg: string } })?.header.alg).toBe("HS256");
+      expect((exception.data?.validation as { errors: string[] })?.errors).toHaveLength(2);
+      expect((exception.data?.validation as { errors: string[] })?.errors).toContain("signature_invalid");
+      expect((exception.data?.context as { userId: string })?.userId).toBe("user123");
+      expect((exception.data?.suggestions as { regenerateToken: string[] })?.regenerateToken).toContain("auth service");
     });
 
     test("should handle JWT-specific error structures", () => {
@@ -408,14 +407,16 @@ describe("JwtException", () => {
         },
       };
 
-      const exception = new JwtException<JwtValidationError>("JWT validation failed", jwtData);
+      const exception = new JwtException("JWT validation failed", jwtData as unknown as Record<string, unknown>);
 
       expect(exception.data?.tokenId).toBe("jwt_123456789");
       expect(exception.data?.validationSteps).toHaveLength(3);
-      expect(exception.data?.validationSteps[2]?.success).toBe(false);
-      expect(exception.data?.validationSteps[2]?.error).toBe("Invalid signature");
-      expect(exception.data?.tokenMetadata.audience).toContain("api-service");
-      expect(exception.data?.secretMetadata.isValid).toBe(false);
+      expect((exception.data?.validationSteps as { success: boolean; error: string }[])?.[2]?.success).toBe(false);
+      expect((exception.data?.validationSteps as { success: boolean; error: string }[])?.[2]?.error).toBe(
+        "Invalid signature",
+      );
+      expect((exception.data?.tokenMetadata as { audience: string[] })?.audience).toContain("api-service");
+      expect((exception.data?.secretMetadata as { isValid: boolean })?.isValid).toBe(false);
     });
   });
 

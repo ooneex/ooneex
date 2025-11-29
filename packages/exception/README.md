@@ -370,8 +370,8 @@ interface IException<T = unknown> {
 import { Exception } from '@ooneex/exception';
 import { HttpStatus } from '@ooneex/http-status';
 
-class PaymentException<T = unknown> extends Exception<T> {
-  constructor(message: string, data?: T) {
+class PaymentException extends Exception {
+  constructor(message: string, data: Record<string, unknown> = {}) {
     super(message, {
       status: HttpStatus.Code.PaymentRequired, // 402
       data

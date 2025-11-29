@@ -34,7 +34,7 @@ export class BookRepository {
     }
 
     // Apply title search if q parameter is provided
-    let findOptions = { ...rest, skip, take };
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       findOptions = {
         ...findOptions,
@@ -113,6 +113,6 @@ export class BookRepository {
   public async count(criteria?: FindOptionsWhere<BookEntity> | FindOptionsWhere<BookEntity>[]): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

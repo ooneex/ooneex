@@ -1,23 +1,23 @@
 import type { StatusCodeType } from "@ooneex/http-status";
-import type { ExceptionStackFrameType } from "./types";
+import type { ExceptionStackFrameType, IException } from "./types";
 
-export class Exception<T = unknown> extends Error {
+export class Exception extends Error implements IException {
   public readonly date: Date = new Date();
-  public readonly status?: StatusCodeType;
-  public readonly data?: T;
+  public readonly status: StatusCodeType;
+  public readonly data: Record<string, unknown>;
   public readonly native?: Error;
 
-  constructor(message: string | Error, options?: { status?: StatusCodeType; data?: T }) {
+  constructor(message: string | Error, options?: { status?: StatusCodeType; data?: Record<string, unknown> }) {
     super(message instanceof Error ? (message as Error).message : message);
 
-    this.status = options?.status;
-    this.data = options?.data;
-    this.native = message instanceof Error ? (message as Error) : undefined;
-    this.name = this.constructor.name;
+    this.status = options?.status || 500;
+    this.data = options?.data || {};
 
-    if (this.data) {
-      this.data = Object.freeze(this.data);
+    if (message instanceof Error) {
+      this.native = message as Error;
     }
+    this.name = this.constructor.name;
+    this.data = Object.freeze(this.data);
   }
 
   /**
@@ -53,26 +53,50 @@ export class Exception<T = unknown> extends Error {
         // Check if it has parentheses (function name with location)
         const funcWithLocationMatch = content?.match(/^(.+?)\s+\((.+)\)$/);
         if (funcWithLocationMatch) {
-          frame.functionName = funcWithLocationMatch[1];
+          const functionName = funcWithLocationMatch[1];
           const location = funcWithLocationMatch[2];
+
+          if (functionName) {
+            frame.functionName = functionName;
+          }
 
           // Parse file:line:column
           const locationMatch = location?.match(/^(.+):(\d+):(\d+)$/);
           if (locationMatch) {
-            frame.fileName = locationMatch[1];
-            frame.lineNumber = Number.parseInt(locationMatch[2] as string, 10);
-            frame.columnNumber = Number.parseInt(locationMatch[3] as string, 10);
-          } else {
+            const fileName = locationMatch[1];
+            const lineNum = locationMatch[2];
+            const colNum = locationMatch[3];
+
+            if (fileName) {
+              frame.fileName = fileName;
+            }
+            if (lineNum) {
+              frame.lineNumber = Number.parseInt(lineNum, 10);
+            }
+            if (colNum) {
+              frame.columnNumber = Number.parseInt(colNum, 10);
+            }
+          } else if (location) {
             frame.fileName = location;
           }
         } else {
           // Direct file:line:column format
           const directLocationMatch = content?.match(/^(.+):(\d+):(\d+)$/);
           if (directLocationMatch) {
-            frame.fileName = directLocationMatch[1];
-            frame.lineNumber = Number.parseInt(directLocationMatch[2] as string, 10);
-            frame.columnNumber = Number.parseInt(directLocationMatch[3] as string, 10);
-          } else {
+            const fileName = directLocationMatch[1];
+            const lineNum = directLocationMatch[2];
+            const colNum = directLocationMatch[3];
+
+            if (fileName) {
+              frame.fileName = fileName;
+            }
+            if (lineNum) {
+              frame.lineNumber = Number.parseInt(lineNum, 10);
+            }
+            if (colNum) {
+              frame.columnNumber = Number.parseInt(colNum, 10);
+            }
+          } else if (content) {
             // Assume it's a function name or location without line numbers
             frame.functionName = content;
           }

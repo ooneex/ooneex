@@ -48,7 +48,6 @@ describe("CloudflareStorageAdapter", () => {
           accessKeyId: "test-access-key",
           secretAccessKey: "test-secret-key",
           endpoint: "https://test.r2.cloudflarestorage.com",
-          bucket: undefined,
           region: "APAC",
         });
       });
@@ -60,13 +59,14 @@ describe("CloudflareStorageAdapter", () => {
 
         const adapter = new CloudflareStorageAdapter(options);
 
-        expect(adapter.getOptions()).toEqual({
+        const adapterOptions = adapter.getOptions();
+        expect(adapterOptions).toMatchObject({
           accessKeyId: "custom-access-key",
           secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
           endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
-          bucket: undefined,
           region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
+        expect(adapterOptions.bucket).toBeUndefined();
       });
 
       test("should use EEUR as default region when not provided", () => {
@@ -109,7 +109,6 @@ describe("CloudflareStorageAdapter", () => {
           accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
           secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
           endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
-          bucket: undefined,
           region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
       });
@@ -121,7 +120,6 @@ describe("CloudflareStorageAdapter", () => {
           accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
           secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
           endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
-          bucket: undefined,
           region: mockEnv.STORAGE_CLOUDFLARE_REGION,
         });
       });
@@ -349,7 +347,6 @@ describe("CloudflareStorageAdapter", () => {
         accessKeyId: mockEnv.STORAGE_CLOUDFLARE_ACCESS_KEY,
         secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
         endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
-        bucket: undefined,
         region: mockEnv.STORAGE_CLOUDFLARE_REGION,
       });
     });
@@ -399,7 +396,6 @@ describe("CloudflareStorageAdapter", () => {
         accessKeyId: "constructor-key",
         secretAccessKey: mockEnv.STORAGE_CLOUDFLARE_SECRET_KEY,
         endpoint: mockEnv.STORAGE_CLOUDFLARE_ENDPOINT,
-        bucket: undefined,
         region: "NAM",
       });
     });

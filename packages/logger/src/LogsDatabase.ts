@@ -1,7 +1,7 @@
 import { DatabaseException, type IDatabase } from "@ooneex/database";
 
 export class LogsDatabase implements IDatabase {
-  private client?: Bun.SQL;
+  private client: Bun.SQL | undefined;
   private options: Bun.SQL.SQLiteOptions;
 
   constructor(options?: Bun.SQL.SQLiteOptions) {
@@ -101,7 +101,7 @@ export class LogsDatabase implements IDatabase {
   public async close(): Promise<void> {
     try {
       await this.client?.close();
-      this.client = undefined;
+      this.client = undefined as Bun.SQL | undefined;
     } catch (_e) {
       throw new DatabaseException("Failed to close log database connection");
     }

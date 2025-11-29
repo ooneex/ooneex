@@ -1,5 +1,5 @@
 import type { IException } from "@ooneex/exception";
-import type { ScalarType } from "@ooneex/types";
+
 import { LogsDatabase } from "./LogsDatabase";
 import { LogsEntity } from "./LogsEntity";
 import { LogsRepository } from "./LogsRepository";
@@ -19,11 +19,11 @@ export class SqliteLogger implements ILogger<LogsEntity> {
     await this.db.createTable();
   }
 
-  public error(message: string | IException<ScalarType>, data?: LogsEntity): void {
+  public error(message: string | IException, data?: LogsEntity): void {
     if (typeof message === "string") {
       this.writeLog("ERROR", {
         message,
-        data,
+        ...(data && { data }),
       });
     } else {
       this.writeLog("ERROR", {
@@ -35,28 +35,28 @@ export class SqliteLogger implements ILogger<LogsEntity> {
   public warn(message: string, data?: LogsEntity): void {
     this.writeLog("WARN", {
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
   public info(message: string, data?: LogsEntity): void {
     this.writeLog("INFO", {
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
   public debug(message: string, data?: LogsEntity): void {
     this.writeLog("DEBUG", {
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
   public log(message: string, data?: LogsEntity): void {
     this.writeLog("LOG", {
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
@@ -65,30 +65,36 @@ export class SqliteLogger implements ILogger<LogsEntity> {
     config?: {
       message?: string;
       data?: LogsEntity;
-      exception?: IException<ScalarType>;
+      exception?: IException;
     },
   ): void {
     const { message, data, exception } = config || {};
 
     const logEntry = new LogsEntity();
     logEntry.level = level;
-    logEntry.message = message || exception?.message;
+    if (message) logEntry.message = message;
+    else if (exception?.message) logEntry.message = exception.message;
     logEntry.date = exception?.date || new Date();
-    logEntry.userId = data?.userId;
-    logEntry.email = data?.email;
-    logEntry.lastName = data?.lastName;
-    logEntry.firstName = data?.firstName;
-    logEntry.status = exception?.status || data?.status;
-    logEntry.exceptionName = exception?.name;
-    logEntry.stackTrace = exception?.stackToJson() || undefined;
-    logEntry.ip = data?.ip;
-    logEntry.method = data?.method;
-    logEntry.path = data?.path;
-    logEntry.userAgent = data?.userAgent;
-    logEntry.referer = data?.referer;
-    logEntry.params = data?.params;
-    logEntry.payload = data?.payload;
-    logEntry.queries = data?.queries;
+    if (data?.userId !== undefined) logEntry.userId = data.userId;
+    if (data?.email !== undefined) logEntry.email = data.email;
+    if (data?.lastName !== undefined) logEntry.lastName = data.lastName;
+    if (data?.firstName !== undefined) logEntry.firstName = data.firstName;
+    if (exception?.status !== undefined) {
+      logEntry.status = exception.status;
+    } else if (data?.status !== undefined) {
+      logEntry.status = data.status;
+    }
+    if (exception?.name !== undefined) logEntry.exceptionName = exception.name;
+    const stackTrace = exception?.stackToJson();
+    if (stackTrace !== undefined && stackTrace !== null) logEntry.stackTrace = stackTrace;
+    if (data?.ip !== undefined) logEntry.ip = data.ip;
+    if (data?.method !== undefined) logEntry.method = data.method;
+    if (data?.path !== undefined) logEntry.path = data.path;
+    if (data?.userAgent !== undefined) logEntry.userAgent = data.userAgent;
+    if (data?.referer !== undefined) logEntry.referer = data.referer;
+    if (data?.params !== undefined) logEntry.params = data.params;
+    if (data?.payload !== undefined) logEntry.payload = data.payload;
+    if (data?.queries !== undefined) logEntry.queries = data.queries;
 
     // Save to database asynchronously
     this.repository.create(logEntry);

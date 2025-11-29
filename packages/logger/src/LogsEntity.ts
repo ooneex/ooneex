@@ -3,8 +3,8 @@ import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import type { LevelType } from "./types";
 
 export class LogsEntity {
-  id: string;
-  level: LevelType;
+  id?: string;
+  level?: LevelType;
   message?: string;
   date: Date = new Date();
   userId?: string;

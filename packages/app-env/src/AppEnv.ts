@@ -6,6 +6,7 @@ export class AppEnv implements IAppEnv {
   public readonly isLocal: boolean;
   public readonly isDevelopment: boolean;
   public readonly isStaging: boolean;
+  public readonly isTest: boolean;
   public readonly isProduction: boolean;
 
   public constructor() {
@@ -18,6 +19,7 @@ export class AppEnv implements IAppEnv {
     this.isLocal = this.env === "local";
     this.isDevelopment = this.env === "development";
     this.isStaging = this.env === "staging";
+    this.isTest = this.env === "test";
     this.isProduction = this.env === "production";
   }
 }

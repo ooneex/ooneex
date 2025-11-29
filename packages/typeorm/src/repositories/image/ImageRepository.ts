@@ -34,7 +34,7 @@ export class ImageRepository {
     }
 
     // Apply image search if q parameter is provided
-    let findOptions = { ...rest, skip, take };
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       const searchConditions = [{ alt: ILike(`%${q}%`) }, { title: ILike(`%${q}%`) }];
 
@@ -117,6 +117,6 @@ export class ImageRepository {
   public async count(criteria?: FindOptionsWhere<ImageEntity> | FindOptionsWhere<ImageEntity>[]): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

@@ -19,7 +19,6 @@ describe("MethodNotAllowedException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("MethodNotAllowedException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create MethodNotAllowedException with message and data", () => {
@@ -64,7 +63,7 @@ describe("MethodNotAllowedException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -128,11 +127,11 @@ describe("MethodNotAllowedException", () => {
         },
       };
 
-      const exception = new MethodNotAllowedException<typeof errorData>("Method not supported", errorData);
+      const exception = new MethodNotAllowedException("Method not supported", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.deleteError?.method).toBe("DELETE");
-      expect(exception.data?.patchError?.reason).toBe("Partial updates not supported");
+      expect((exception.data?.deleteError as MethodError)?.method).toBe("DELETE");
+      expect((exception.data?.patchError as MethodError)?.reason).toBe("Partial updates not supported");
     });
 
     test("should support string generic type", () => {
@@ -142,7 +141,7 @@ describe("MethodNotAllowedException", () => {
         endpoint: "/api/health",
       };
 
-      const exception = new MethodNotAllowedException<typeof stringData>("String data test", stringData);
+      const exception = new MethodNotAllowedException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.method).toBe("string");
@@ -155,7 +154,7 @@ describe("MethodNotAllowedException", () => {
         allowedMethodsCount: 3,
       };
 
-      const exception = new MethodNotAllowedException<typeof numberData>("Number data test", numberData);
+      const exception = new MethodNotAllowedException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.statusCode).toBe("number");
@@ -330,13 +329,13 @@ describe("MethodNotAllowedException", () => {
         },
       };
 
-      const exception = new MethodNotAllowedException<typeof complexData>("Complex data test", complexData);
+      const exception = new MethodNotAllowedException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.request.method).toBe("TRACE");
-      expect(exception.data?.restrictions.allowedMethods).toHaveLength(3);
-      expect(exception.data?.restrictions.deniedReasons).toContain("security");
-      expect(exception.data?.suggestions.alternative).toContain("GET method");
+      expect((exception.data?.request as { method: string })?.method).toBe("TRACE");
+      expect((exception.data?.restrictions as { allowedMethods: string[] })?.allowedMethods).toHaveLength(3);
+      expect((exception.data?.restrictions as { deniedReasons: string[] })?.deniedReasons).toContain("security");
+      expect((exception.data?.suggestions as { alternative: string })?.alternative).toContain("GET method");
     });
 
     test("should handle HTTP method specific data structures", () => {
@@ -358,12 +357,15 @@ describe("MethodNotAllowedException", () => {
         rfc: "RFC 7231",
       };
 
-      const exception = new MethodNotAllowedException<HttpMethodInfo>("HTTP method analysis failed", methodData);
+      const exception = new MethodNotAllowedException(
+        "HTTP method analysis failed",
+        methodData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.method).toBe("CONNECT");
-      expect(exception.data?.safe).toBe(false);
-      expect(exception.data?.idempotent).toBe(false);
-      expect(exception.data?.rfc).toBe("RFC 7231");
+      expect((exception.data as { safe: boolean })?.safe).toBe(false);
+      expect((exception.data as { idempotent: boolean })?.idempotent).toBe(false);
+      expect((exception.data as { rfc: string })?.rfc).toBe("RFC 7231");
     });
   });
 

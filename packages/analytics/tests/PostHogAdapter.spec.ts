@@ -72,7 +72,7 @@ describe("PostHogAdapter", () => {
     test("should throw AnalyticsException when undefined API key is provided via options", () => {
       delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
-      expect(() => new PostHogAdapter({ apiKey: undefined })).toThrow(AnalyticsException);
+      expect(() => new PostHogAdapter({})).toThrow(AnalyticsException);
     });
 
     test("should create instance successfully with API key from environment", () => {

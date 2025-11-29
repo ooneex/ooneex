@@ -1,7 +1,7 @@
 export const dataURLtoFile = (dataurl: string, filename: string): File => {
   const arr = dataurl.split(",");
   const mimeMatch = arr[0]?.match(/:(.*?);/);
-  const mime = mimeMatch ? mimeMatch[1] : "";
+  const mime = mimeMatch?.[1] || "";
   const bstr = atob(arr[1] as string);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);

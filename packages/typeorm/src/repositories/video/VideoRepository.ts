@@ -34,7 +34,7 @@ export class VideoRepository {
     }
 
     // Apply video search if q parameter is provided
-    let findOptions = { ...rest, skip, take };
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       const searchConditions = [
         { title: ILike(`%${q}%`) },
@@ -125,6 +125,6 @@ export class VideoRepository {
   public async count(criteria?: FindOptionsWhere<VideoEntity> | FindOptionsWhere<VideoEntity>[]): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

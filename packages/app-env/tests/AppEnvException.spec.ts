@@ -36,7 +36,7 @@ describe("AppEnvException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create AppEnvException with message and data", () => {
@@ -65,7 +65,7 @@ describe("AppEnvException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -128,11 +128,14 @@ describe("AppEnvException", () => {
         },
       };
 
-      const exception = new AppEnvException<typeof errorData>("Environment validation failed", errorData);
+      const exception = new AppEnvException(
+        "Environment validation failed",
+        errorData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.databaseConfig?.variable).toBe("DATABASE_URL");
-      expect(exception.data?.portConfig?.currentValue).toBe("invalid");
+      expect((exception.data?.databaseConfig as { variable: string })?.variable).toBe("DATABASE_URL");
+      expect((exception.data?.portConfig as { currentValue: string })?.currentValue).toBe("invalid");
     });
 
     test("should support string generic type", () => {
@@ -142,7 +145,7 @@ describe("AppEnvException", () => {
         variable: "API_KEY",
       };
 
-      const exception = new AppEnvException<typeof stringData>("String data test", stringData);
+      const exception = new AppEnvException("String data test", stringData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -155,7 +158,7 @@ describe("AppEnvException", () => {
         missingCount: 3,
       };
 
-      const exception = new AppEnvException<typeof numberData>("Number data test", numberData);
+      const exception = new AppEnvException("Number data test", numberData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.expectedVariables).toBe("number");
@@ -355,13 +358,13 @@ describe("AppEnvException", () => {
         },
       };
 
-      const exception = new AppEnvException<typeof complexData>("Complex data test", complexData);
+      const exception = new AppEnvException("Complex data test", complexData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.environment.name).toBe("production");
-      expect(exception.data?.variables.loaded).toHaveLength(3);
-      expect(exception.data?.variables.missing).toContain("REDIS_URL");
-      expect(exception.data?.validation.passed).toBe(47);
+      expect((exception.data?.environment as { name: string })?.name).toBe("production");
+      expect((exception.data?.variables as { loaded: string[] })?.loaded).toHaveLength(3);
+      expect((exception.data?.variables as { missing: string[] })?.missing).toContain("REDIS_URL");
+      expect((exception.data?.validation as { passed: number })?.passed).toBe(47);
     });
 
     test("should handle app-env-specific data structures", () => {
@@ -393,13 +396,16 @@ describe("AppEnvException", () => {
         },
       };
 
-      const exception = new AppEnvException<typeof configData>("Failed to process environment config", configData);
+      const exception = new AppEnvException(
+        "Failed to process environment config",
+        configData as unknown as Record<string, unknown>,
+      );
 
-      expect(exception.data?.DATABASE_URL?.name).toBe("DATABASE_URL");
-      expect(exception.data?.DATABASE_URL?.value).toBe("postgresql://localhost:5432/app");
-      expect(exception.data?.DATABASE_URL?.required).toBe(true);
-      expect(exception.data?.PORT?.value).toBeNull();
-      expect(exception.data?.PORT?.validated).toBe(false);
+      expect((exception.data?.DATABASE_URL as { name: string })?.name).toBe("DATABASE_URL");
+      expect((exception.data?.DATABASE_URL as { value: string })?.value).toBe("postgresql://localhost:5432/app");
+      expect((exception.data?.DATABASE_URL as { required: boolean })?.required).toBe(true);
+      expect((exception.data?.PORT as { value: null })?.value).toBeNull();
+      expect((exception.data?.PORT as { validated: boolean })?.validated).toBe(false);
     });
   });
 
@@ -500,7 +506,7 @@ describe("AppEnvException", () => {
       expect(exception.data?.fromEnvironment).toBe("development");
       expect(exception.data?.toEnvironment).toBe("production");
       expect(exception.data?.incompatibleVariables).toContain("DEBUG");
-      expect(exception.data?.configDiff.added).toContain("REDIS_URL");
+      expect((exception.data?.configDiff as { added: string[] })?.added).toContain("REDIS_URL");
     });
   });
 });

@@ -214,7 +214,7 @@ describe("formatRelativeNumber", () => {
     });
 
     test("should use defaults when config properties are undefined", () => {
-      expect(formatRelativeNumber(1500, { precision: undefined, lang: undefined })).toBe("1.5K");
+      expect(formatRelativeNumber(1500, {})).toBe("1.5K");
     });
   });
 

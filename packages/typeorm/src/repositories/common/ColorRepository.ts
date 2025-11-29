@@ -32,7 +32,7 @@ export class ColorRepository {
       skip = (page - 1) * take;
     }
 
-    const result = await repository.find({ ...rest, skip, take });
+    const result = await repository.find({ ...rest, take, ...(skip !== undefined && { skip }) });
 
     const total = await this.count(rest.where);
     const totalPages = Math.ceil(total / limit);
@@ -93,6 +93,6 @@ export class ColorRepository {
   public async count(criteria?: FindOptionsWhere<ColorEntity> | FindOptionsWhere<ColorEntity>[]): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

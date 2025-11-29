@@ -34,7 +34,7 @@ export class FlashcardSessionRepository {
     }
 
     // Apply session name search if q parameter is provided
-    let findOptions = { ...rest, skip, take };
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       findOptions = {
         ...findOptions,
@@ -123,6 +123,6 @@ export class FlashcardSessionRepository {
   ): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

@@ -34,7 +34,7 @@ export class BookAuthorRepository {
     }
 
     // Apply author name search if q parameter is provided
-    let findOptions = { ...rest, skip, take };
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       const searchConditions = [
         { firstName: ILike(`%${q}%`) },
@@ -127,6 +127,6 @@ export class BookAuthorRepository {
   ): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

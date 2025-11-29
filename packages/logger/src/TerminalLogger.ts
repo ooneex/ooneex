@@ -89,18 +89,18 @@ export class TerminalLogger implements ILogger {
     }
   }
 
-  public error(message: string | IException<ScalarType>, data?: Record<string, ScalarType>): void {
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {
       this.writeToConsole({
         level: "ERROR",
         message,
-        data,
+        ...(data && { data }),
       });
     } else {
       // Handle IException object
       const exceptionData: Record<string, ScalarType> = {
-        ...message.data,
-        ...data,
+        ...(message.data as Record<string, ScalarType>),
+        ...(data as Record<string, ScalarType>),
       };
 
       if (message.status) {
@@ -113,7 +113,7 @@ export class TerminalLogger implements ILogger {
         level: message.name,
         message: message.message,
         data: exceptionData,
-        stackTrace: stackJson || undefined,
+        ...(stackJson && { stackTrace: stackJson }),
         date: message.date,
       });
     }
@@ -123,7 +123,7 @@ export class TerminalLogger implements ILogger {
     this.writeToConsole({
       level: "WARN",
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
@@ -131,7 +131,7 @@ export class TerminalLogger implements ILogger {
     this.writeToConsole({
       level: "INFO",
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
@@ -139,7 +139,7 @@ export class TerminalLogger implements ILogger {
     this.writeToConsole({
       level: "DEBUG",
       message,
-      data,
+      ...(data && { data }),
     });
   }
 
@@ -147,7 +147,7 @@ export class TerminalLogger implements ILogger {
     this.writeToConsole({
       level: "LOG",
       message,
-      data,
+      ...(data && { data }),
     });
   }
 }

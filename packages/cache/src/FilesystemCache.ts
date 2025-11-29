@@ -14,7 +14,7 @@ export class FilesystemCache implements ICache {
   private maxFileSize: number;
   private cleanupInterval: number;
   private enableCleanup: boolean;
-  private cleanupTimer?: Timer;
+  private cleanupTimer: Timer | undefined;
 
   constructor(options: FilesystemCacheAdapterType = {}) {
     this.cacheDir = options.cacheDir || `${process.cwd()}/.cache`;
@@ -44,7 +44,7 @@ export class FilesystemCache implements ICache {
   public async close(): Promise<void> {
     if (this.cleanupTimer) {
       clearInterval(this.cleanupTimer);
-      this.cleanupTimer = undefined;
+      this.cleanupTimer = undefined as Timer | undefined;
     }
   }
 
@@ -62,9 +62,9 @@ export class FilesystemCache implements ICache {
     try {
       const entry: CacheEntryType<T> = {
         value,
-        ttl,
         createdAt: Date.now(),
         originalKey: key,
+        ...(ttl !== undefined && { ttl }),
       };
 
       await this.writeCacheEntry(key, entry);
@@ -135,9 +135,9 @@ export class FilesystemCache implements ICache {
       const promises = entries.map(async ({ key, value, ttl }) => {
         const entry: CacheEntryType<T> = {
           value,
-          ttl,
           createdAt: now,
           originalKey: key,
+          ...(ttl !== undefined && { ttl }),
         };
 
         return this.writeCacheEntry(key, entry);
@@ -205,9 +205,9 @@ export class FilesystemCache implements ICache {
 
       const newEntry: CacheEntryType<number> = {
         value: newValue,
-        ttl: entry?.ttl,
-        createdAt: entry?.createdAt || Date.now(),
+        createdAt: entry?.createdAt ?? Date.now(),
         originalKey: key,
+        ...(entry?.ttl !== undefined && { ttl: entry.ttl }),
       };
 
       await this.writeCacheEntry(key, newEntry);
@@ -225,9 +225,9 @@ export class FilesystemCache implements ICache {
 
       const newEntry: CacheEntryType<number> = {
         value: newValue,
-        ttl: entry?.ttl,
         createdAt: entry?.createdAt || Date.now(),
         originalKey: key,
+        ...(entry?.ttl !== undefined && { ttl: entry.ttl }),
       };
 
       await this.writeCacheEntry(key, newEntry);

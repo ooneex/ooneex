@@ -19,7 +19,6 @@ describe("ContainerException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("ContainerException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create ContainerException with message and data", () => {
@@ -64,7 +63,7 @@ describe("ContainerException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -126,11 +125,14 @@ describe("ContainerException", () => {
         },
       };
 
-      const exception = new ContainerException<typeof errorData>("Service resolution failed", errorData);
+      const exception = new ContainerException(
+        "Service resolution failed",
+        errorData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.userService?.serviceId).toBe("user.service");
-      expect(exception.data?.authService?.attemptCount).toBe(1);
+      expect((exception.data?.userService as { serviceId: string })?.serviceId).toBe("user.service");
+      expect((exception.data?.authService as { attemptCount: number })?.attemptCount).toBe(1);
     });
 
     test("should support string generic type", () => {
@@ -140,7 +142,7 @@ describe("ContainerException", () => {
         container: "main",
       };
 
-      const exception = new ContainerException<typeof stringData>("String data test", stringData);
+      const exception = new ContainerException("String data test", stringData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -153,7 +155,7 @@ describe("ContainerException", () => {
         registeredServices: 12,
       };
 
-      const exception = new ContainerException<typeof numberData>("Number data test", numberData);
+      const exception = new ContainerException("Number data test", numberData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.attempts).toBe("number");
@@ -333,13 +335,13 @@ describe("ContainerException", () => {
         },
       };
 
-      const exception = new ContainerException<typeof complexData>("Complex data test", complexData);
+      const exception = new ContainerException("Complex data test", complexData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.services.registered).toHaveLength(3);
-      expect(exception.data?.services.failed).toContain("DatabaseService");
-      expect(exception.data?.dependencies.resolved).toBe(15);
-      expect(exception.data?.configuration.autoWiring).toBe(true);
+      expect((exception.data?.services as { registered: string[] })?.registered).toHaveLength(3);
+      expect((exception.data?.services as { failed: string[] })?.failed).toContain("DatabaseService");
+      expect((exception.data?.dependencies as { resolved: number })?.resolved).toBe(15);
+      expect((exception.data?.configuration as { autoWiring: boolean })?.autoWiring).toBe(true);
     });
 
     test("should handle container-specific data structures", () => {
@@ -367,12 +369,15 @@ describe("ContainerException", () => {
         },
       };
 
-      const exception = new ContainerException<ServiceDefinition>("Failed to instantiate service", serviceData);
+      const exception = new ContainerException(
+        "Failed to instantiate service",
+        serviceData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.key).toBe("user.repository");
       expect(exception.data?.scope).toBe("singleton");
       expect(exception.data?.dependencies).toHaveLength(2);
-      expect(exception.data?.metadata.resolutionCount).toBe(42);
+      expect((exception.data?.metadata as { resolutionCount: number })?.resolutionCount).toBe(42);
     });
   });
 

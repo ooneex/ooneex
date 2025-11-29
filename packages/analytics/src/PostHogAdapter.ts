@@ -29,7 +29,7 @@ export class PostHogAdapter implements IAnalytics {
         $set: options.properties,
       },
       timestamp: new Date(),
-      groups: options.groups,
+      ...(options.groups && { groups: options.groups }),
     });
     this.client?.shutdown();
   }

@@ -19,7 +19,6 @@ describe("AnalyticsException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("AnalyticsException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create AnalyticsException with message and data", () => {
@@ -68,7 +67,7 @@ describe("AnalyticsException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -131,11 +130,11 @@ describe("AnalyticsException", () => {
         },
       };
 
-      const exception = new AnalyticsException<typeof errorData>("Event tracking failed", errorData);
+      const exception = new AnalyticsException("Event tracking failed", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.pageView?.eventId).toBe("page_view_001");
-      expect(exception.data?.conversion?.retryCount).toBe(0);
+      expect((exception.data?.pageView as AnalyticsError)?.eventId).toBe("page_view_001");
+      expect((exception.data?.conversion as AnalyticsError)?.retryCount).toBe(0);
     });
 
     test("should support string generic type", () => {
@@ -144,7 +143,7 @@ describe("AnalyticsException", () => {
         suggestion: "Check the analytics configuration",
       };
 
-      const exception = new AnalyticsException<typeof stringData>("String data test", stringData);
+      const exception = new AnalyticsException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -157,7 +156,7 @@ describe("AnalyticsException", () => {
         errorCode: 400,
       };
 
-      const exception = new AnalyticsException<typeof numberData>("Number data test", numberData);
+      const exception = new AnalyticsException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.attempts).toBe("number");
@@ -334,13 +333,13 @@ describe("AnalyticsException", () => {
         },
       };
 
-      const exception = new AnalyticsException<typeof complexData>("Complex data test", complexData);
+      const exception = new AnalyticsException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.events.tracked).toHaveLength(2);
-      expect(exception.data?.events.failed).toContain("form_submit");
-      expect(exception.data?.providers.active).toContain("google_analytics");
-      expect(exception.data?.metrics.successRate).toBe(0.85);
+      expect((exception.data?.events as { tracked: string[] })?.tracked).toHaveLength(2);
+      expect((exception.data?.events as { failed: string[] })?.failed).toContain("form_submit");
+      expect((exception.data?.providers as { active: string[] })?.active).toContain("google_analytics");
+      expect((exception.data?.metrics as { successRate: number })?.successRate).toBe(0.85);
     });
 
     test("should handle analytics-specific data structures", () => {
@@ -365,11 +364,14 @@ describe("AnalyticsException", () => {
         timestamp: 1_699_123_456_789,
       };
 
-      const exception = new AnalyticsException<AnalyticsEvent>("Failed to process purchase event", eventData);
+      const exception = new AnalyticsException(
+        "Failed to process purchase event",
+        eventData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.name).toBe("purchase_completed");
-      expect(exception.data?.properties.product_id).toBe("prod_123");
-      expect(exception.data?.properties.price).toBe(29.99);
+      expect((exception.data?.properties as Record<string, unknown>)?.product_id).toBe("prod_123");
+      expect((exception.data?.properties as Record<string, unknown>)?.price).toBe(29.99);
       expect(exception.data?.userId).toBe("user_456");
     });
   });
@@ -428,8 +430,8 @@ describe("AnalyticsException", () => {
       });
 
       expect(exception.message).toBe("Real-time event processing failed");
-      expect(exception.data?.eventBuffer.overflow).toBe(true);
-      expect(exception.data?.processingLatency).toBeGreaterThan(exception.data?.maxLatency || 0);
+      expect((exception.data?.eventBuffer as { overflow: boolean })?.overflow).toBe(true);
+      expect(exception.data?.processingLatency as number).toBeGreaterThan((exception.data?.maxLatency as number) || 0);
     });
   });
 });

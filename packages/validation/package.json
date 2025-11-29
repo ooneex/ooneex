@@ -7,9 +7,19 @@
     "dist"
   ],
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./constraints": {
+      "import": {
+        "types": "./dist/constraints.d.ts",
+        "default": "./dist/constraints.js"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -21,5 +31,8 @@
     "publish": "bun run build && bun publish --access public"
   },
   "devDependencies": {},
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "dependencies": {
+    "arktype": "^2.1.27"
+  }
 }

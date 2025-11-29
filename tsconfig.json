@@ -21,6 +21,7 @@
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true
   }
 }

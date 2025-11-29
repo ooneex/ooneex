@@ -17,7 +17,6 @@ describe("Exception", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -33,8 +32,8 @@ describe("Exception", () => {
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("Exception");
       expect(exception.date).toBeInstanceOf(Date);
-      expect(exception.status).toBeUndefined();
-      expect(exception.data).toBeUndefined();
+      expect(exception.status).toBe(500);
+      expect(exception.data).toEqual({});
       expect(exception.native).toBeUndefined();
     });
 
@@ -46,8 +45,8 @@ describe("Exception", () => {
       expect(exception.name).toBe("Exception");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.native).toBe(originalError);
-      expect(exception.status).toBeUndefined();
-      expect(exception.data).toBeUndefined();
+      expect(exception.status).toBe(500);
+      expect(exception.data).toEqual({});
     });
 
     test("should create Exception with string message and options", () => {
@@ -78,17 +77,17 @@ describe("Exception", () => {
       const exception = new Exception("Test", {});
 
       expect(exception.message).toBe("Test");
-      expect(exception.status).toBeUndefined();
-      expect(exception.data).toBeUndefined();
+      expect(exception.status).toBe(500);
+      expect(exception.data).toEqual({});
     });
 
     test("should handle partial options", () => {
       const ex1 = new Exception("Test", { status: 404 });
       expect(ex1.status).toBe(404);
-      expect(ex1.data).toBeUndefined();
+      expect(ex1.data).toEqual({});
 
       const ex2 = new Exception("Test", { data: { key: "value" } });
-      expect(ex2.status).toBeUndefined();
+      expect(ex2.status).toBe(500);
       expect(ex2.data?.key).toBe("value");
     });
   });
@@ -138,7 +137,6 @@ describe("Exception", () => {
 
       // Should not allow modifications
       expect(() => {
-        // @ts-expect-error - testing frozen object
         exception.data.count = 100;
       }).toThrow();
 
@@ -156,7 +154,7 @@ describe("Exception", () => {
 
     test("should not freeze data when data is undefined", () => {
       const exception = new Exception("Test");
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should have readonly native property", () => {
@@ -181,7 +179,7 @@ describe("Exception", () => {
   describe("Generic Type Support", () => {
     test("should support string data type", () => {
       const data = { message: "error message", code: "ERR_001" };
-      const exception = new Exception<typeof data>("Test", { data });
+      const exception = new Exception("Test", { data });
 
       expect(exception.data).toEqual(data);
       expect(typeof exception.data?.message).toBe("string");
@@ -189,7 +187,7 @@ describe("Exception", () => {
 
     test("should support number data type", () => {
       const data = { statusCode: 500, retryCount: 3 };
-      const exception = new Exception<typeof data>("Test", { data });
+      const exception = new Exception("Test", { data });
 
       expect(exception.data).toEqual(data);
       expect(typeof exception.data?.statusCode).toBe("number");
@@ -207,11 +205,11 @@ describe("Exception", () => {
       const data: UserData = {
         user: { id: 123, name: "John", roles: ["admin", "user"] },
       };
-      const exception = new Exception<UserData>("Test", { data });
+      const exception = new Exception("Test", { data: data as unknown as Record<string, unknown> });
 
-      expect(exception.data).toEqual(data);
-      expect(exception.data?.user.id).toBe(123);
-      expect(exception.data?.user.roles).toContain("admin");
+      expect(exception.data).toEqual(data as unknown as Record<string, unknown>);
+      expect((exception.data?.user as { id: number })?.id).toBe(123);
+      expect((exception.data?.user as { roles: string[] })?.roles).toContain("admin");
     });
   });
 
@@ -314,6 +312,7 @@ describe("Exception", () => {
 
     test("should return null when stack is undefined", () => {
       const exception = new Exception("Test");
+      // @ts-expect-error Testing edge case where stack is undefined
       exception.stack = undefined;
       const result = exception.stackToJson();
 
@@ -466,8 +465,8 @@ describe("Exception", () => {
         data: { circular: circularData },
       });
 
-      expect(exception.data?.circular?.name).toBe("circular");
-      expect(exception.data?.circular?.self).toBe(circularData);
+      expect((exception.data?.circular as { name: string })?.name).toBe("circular");
+      expect((exception.data?.circular as { self: unknown })?.self).toBe(circularData);
     });
 
     test("should handle nested Error objects", () => {
@@ -501,7 +500,7 @@ describe("Exception", () => {
 
     test("should handle zero status code", () => {
       const exception = new Exception("Test", { status: 0 as never });
-      expect(exception.status).toBe(0 as never);
+      expect(exception.status).toBe(500); // 0 is falsy, so defaults to 500
     });
   });
 
@@ -569,7 +568,7 @@ describe("Exception", () => {
       expect(exception.message).toBe("Business rule violation");
       expect(exception.data?.rule).toBe("insufficient_balance");
       expect(exception.data?.currentBalance).toBe(50.0);
-      expect(exception.data?.businessContext.dailyTransactions).toBe(5);
+      expect((exception.data?.businessContext as { dailyTransactions: number })?.dailyTransactions).toBe(5);
     });
 
     test("should handle data transformation errors", () => {
@@ -617,9 +616,9 @@ describe("Exception", () => {
       });
 
       expect(exception.message).toBe("Async operation timeout");
-      expect(exception.data?.elapsed).toBeGreaterThan(exception.data?.timeout || 0);
-      expect(exception.data?.connectionPool.active).toBe(8);
-      expect(exception.data?.retryPolicy.maxRetries).toBe(3);
+      expect(exception.data?.elapsed as number).toBeGreaterThan((exception.data?.timeout as number) || 0);
+      expect((exception.data?.connectionPool as { active: number })?.active).toBe(8);
+      expect((exception.data?.retryPolicy as { maxRetries: number })?.maxRetries).toBe(3);
     });
 
     test("should handle complex nested error scenarios", () => {
@@ -669,16 +668,16 @@ describe("Exception", () => {
         },
       };
 
-      const exception = new Exception<ComplexErrorData>("System failure with complex context", {
+      const exception = new Exception("System failure with complex context", {
         status: 500,
-        data: complexData,
+        data: complexData as unknown as Record<string, unknown>,
       });
 
-      expect(exception.data?.context.requestId).toBe("req_abc123");
-      expect(exception.data?.errorChain.primary).toBe("Database connection lost");
-      expect(exception.data?.systemState.memoryUsage).toBe(0.85);
-      expect(exception.data?.recovery.suggestions).toHaveLength(2);
-      expect(exception.data?.recovery.possible).toBe(true);
+      expect((exception.data?.context as { requestId: string })?.requestId).toBe("req_abc123");
+      expect((exception.data?.errorChain as { primary: string })?.primary).toBe("Database connection lost");
+      expect((exception.data?.systemState as { memoryUsage: number })?.memoryUsage).toBe(0.85);
+      expect((exception.data?.recovery as { suggestions: string[] })?.suggestions).toHaveLength(2);
+      expect((exception.data?.recovery as { possible: boolean })?.possible).toBe(true);
     });
   });
 });

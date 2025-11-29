@@ -415,7 +415,7 @@ describe("Fetcher", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: undefined,
+          method: "GET",
         }),
       );
     });
@@ -426,7 +426,7 @@ describe("Fetcher", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: undefined,
+          method: "HEAD",
         }),
       );
     });
@@ -437,7 +437,7 @@ describe("Fetcher", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: undefined,
+          method: "OPTIONS",
         }),
       );
     });

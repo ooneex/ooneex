@@ -174,7 +174,7 @@ export class Fetcher {
     const requestOptions: RequestInit = {
       method,
       headers,
-      body,
+      ...(body !== undefined && { body }),
       signal: this.abortController.signal,
     };
 

@@ -5,6 +5,7 @@ export enum Environment {
   LOCAL = "local",
   DEVELOPMENT = "development",
   STAGING = "staging",
+  TEST = "test",
   PRODUCTION = "production",
 }
 
@@ -15,5 +16,6 @@ export interface IAppEnv {
   readonly isLocal: boolean;
   readonly isDevelopment: boolean;
   readonly isStaging: boolean;
+  readonly isTest: boolean;
   readonly isProduction: boolean;
 }

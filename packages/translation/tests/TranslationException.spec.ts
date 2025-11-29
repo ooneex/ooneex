@@ -20,7 +20,6 @@ describe("TranslationException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -34,7 +33,7 @@ describe("TranslationException", () => {
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("TranslationException");
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
       expect(exception.date).toBeInstanceOf(Date);
     });
 
@@ -62,10 +61,10 @@ describe("TranslationException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Translation error";
-      const exception = new TranslationException(message, null);
+      const exception = new TranslationException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.data).toBeNull();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -137,10 +136,14 @@ describe("TranslationException", () => {
         },
       };
 
-      const exception = new TranslationException<TranslationError>("Multiple translation keys missing", errorData);
+      const exception = new TranslationException(
+        "Multiple translation keys missing",
+        errorData as unknown as Record<string, unknown>,
+      );
 
-      expect(exception.data?.userService.missingKeys).toContain("profile.title");
-      expect(exception.data?.adminService.locale).toBe("es");
+      expect(exception.data).toEqual(errorData as unknown as Record<string, unknown>);
+      expect((exception.data?.userService as { missingKeys: string[] })?.missingKeys).toContain("profile.title");
+      expect((exception.data?.adminService as { locale: string })?.locale).toBe("es");
     });
 
     test("should support string generic type", () => {
@@ -149,7 +152,10 @@ describe("TranslationException", () => {
         suggestion: "Add key to locale files",
         namespace: "common",
       };
-      const exception = new TranslationException<typeof stringData>("Translation key missing", stringData);
+      const exception = new TranslationException(
+        "Translation key missing",
+        stringData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.errorType).toBe("MISSING_TRANSLATION");
       expect(exception.data?.suggestion).toContain("Add key");
@@ -161,7 +167,10 @@ describe("TranslationException", () => {
         totalKeys: 250,
         completionPercentage: 94,
       };
-      const exception = new TranslationException<typeof numberData>("Translation incomplete", numberData);
+      const exception = new TranslationException(
+        "Translation incomplete",
+        numberData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.missingCount).toBe(15);
       expect(exception.data?.totalKeys).toBe(250);
@@ -339,8 +348,8 @@ describe("TranslationException", () => {
       const exception = new TranslationException("Complex translation system error", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.locales.loaded).toContain("en");
-      expect(exception.data?.configuration.interpolation.prefix).toBe("{{");
+      expect((exception.data?.locales as { loaded: string[] })?.loaded).toContain("en");
+      expect((exception.data?.configuration as { interpolation: { prefix: string } })?.interpolation.prefix).toBe("{{");
     });
 
     test("should handle translation-specific data structures", () => {
@@ -368,13 +377,13 @@ describe("TranslationException", () => {
         },
       };
 
-      const exception = new TranslationException<TranslationDefinition>(
-        "Translation validation error",
-        translationData,
+      const exception = new TranslationException(
+        "Translation validation failed",
+        translationData as unknown as Record<string, unknown>,
       );
 
-      expect(exception.data?.key).toBe("error.validation.email");
-      expect(exception.data?.metadata.reviewStatus).toBe("approved");
+      expect(exception.data).toEqual(translationData as unknown as Record<string, unknown>);
+      expect((exception.data?.metadata as { reviewStatus: string })?.reviewStatus).toBe("approved");
     });
   });
 

@@ -694,15 +694,15 @@ describe("RedisDatabaseAdapter", () => {
     });
 
     test("should handle invalid TLS configuration gracefully", () => {
-      const options: RedisConnectionOptionsType = {
+      const options = {
         url: testConnectionUrl,
         tls: {
           invalidProperty: true,
-        } as unknown as RedisConnectionOptionsType["tls"], // Invalid TLS config to test error handling
+        } as unknown as boolean, // Invalid TLS config to test error handling
       };
 
       expect(() => {
-        new RedisDatabaseAdapter(options);
+        new RedisDatabaseAdapter(options as RedisConnectionOptionsType);
       }).toThrow();
     });
   });
@@ -744,11 +744,8 @@ describe("RedisDatabaseAdapter", () => {
     });
 
     test("should handle undefined values by using defaults", () => {
-      const options: RedisConnectionOptionsType = {
+      const options = {
         url: testConnectionUrl,
-        autoReconnect: undefined,
-        enableOfflineQueue: undefined,
-        enableAutoPipelining: undefined,
       };
 
       adapter = new RedisDatabaseAdapter(options);

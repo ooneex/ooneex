@@ -19,7 +19,6 @@ describe("NotFoundException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("NotFoundException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create NotFoundException with message and data", () => {
@@ -64,7 +63,7 @@ describe("NotFoundException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -126,11 +125,12 @@ describe("NotFoundException", () => {
         },
       };
 
-      const exception = new NotFoundException<typeof errorData>("Resources not found", errorData);
+      const exception = new NotFoundException("Resource not found", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.userError?.id).toBe("user-456");
-      expect(exception.data?.documentError?.type).toBe("document");
+      expect((exception.data?.userError as ResourceError)?.id).toBe("user-456");
+      expect((exception.data?.userError as ResourceError)?.type).toBe("user");
+      expect((exception.data?.documentError as ResourceError)?.type).toBe("document");
     });
 
     test("should support string generic type", () => {
@@ -140,7 +140,7 @@ describe("NotFoundException", () => {
         endpoint: "/api/users",
       };
 
-      const exception = new NotFoundException<typeof stringData>("String data test", stringData);
+      const exception = new NotFoundException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.path).toBe("string");
@@ -153,7 +153,7 @@ describe("NotFoundException", () => {
         lastFoundTimestamp: 1_640_995_200,
       };
 
-      const exception = new NotFoundException<typeof numberData>("Number data test", numberData);
+      const exception = new NotFoundException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.userId).toBe("number");
@@ -329,13 +329,13 @@ describe("NotFoundException", () => {
         },
       };
 
-      const exception = new NotFoundException<typeof complexData>("Complex data test", complexData);
+      const exception = new NotFoundException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.search.results).toBe(0);
-      expect(exception.data?.search.filters).toHaveLength(2);
-      expect(exception.data?.metadata.totalIndexed).toBe(50_000);
-      expect(exception.data?.suggestions.similarTerms).toContain("missing");
+      expect((exception.data?.search as { results: number })?.results).toBe(0);
+      expect((exception.data?.search as { filters: string[] })?.filters).toHaveLength(2);
+      expect((exception.data?.metadata as { totalIndexed: number })?.totalIndexed).toBe(50_000);
+      expect((exception.data?.suggestions as { similarTerms: string[] })?.similarTerms).toContain("missing");
     });
 
     test("should handle resource-specific data structures", () => {
@@ -370,7 +370,10 @@ describe("NotFoundException", () => {
         relatedResources: ["user-123", "product-456"],
       };
 
-      const exception = new NotFoundException<ResourceSearchResult>("Resource search exhausted", resourceData);
+      const exception = new NotFoundException(
+        "Resource search failed",
+        resourceData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.resourceId).toBe("order-404");
       expect(exception.data?.resourceType).toBe("order");
@@ -428,7 +431,7 @@ describe("NotFoundException", () => {
 
       expect(exception.message).toBe("Document not accessible");
       expect(exception.data?.documentId).toBe("DOC-MISSING-001");
-      expect(exception.data?.permissions.read).toBe(false);
+      expect((exception.data?.permissions as { read: boolean })?.read).toBe(false);
       expect(exception.data?.archiveStatus).toBe("unknown");
     });
 

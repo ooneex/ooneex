@@ -32,7 +32,7 @@ export class FlashcardStatsRepository {
       skip = (page - 1) * take;
     }
 
-    const findOptions = { ...rest, skip, take };
+    const findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     const result = await repository.find(findOptions);
 
     const total = await this.count(rest.where);
@@ -96,6 +96,6 @@ export class FlashcardStatsRepository {
   ): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

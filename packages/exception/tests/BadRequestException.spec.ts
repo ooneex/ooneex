@@ -19,7 +19,6 @@ describe("BadRequestException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("BadRequestException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.BadRequest);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create BadRequestException with message and data", () => {
@@ -64,7 +63,7 @@ describe("BadRequestException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.BadRequest);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -126,11 +125,11 @@ describe("BadRequestException", () => {
         },
       };
 
-      const exception = new BadRequestException<typeof errorData>("Validation failed", errorData);
+      const exception = new BadRequestException("Validation failed", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.emailError?.field).toBe("email");
-      expect(exception.data?.passwordError?.code).toBe("WEAK_PASSWORD");
+      expect((exception.data?.emailError as ValidationError)?.field).toBe("email");
+      expect((exception.data?.passwordError as ValidationError)?.code).toBe("WEAK_PASSWORD");
     });
 
     test("should support string generic type", () => {
@@ -140,7 +139,7 @@ describe("BadRequestException", () => {
         endpoint: "/api/users",
       };
 
-      const exception = new BadRequestException<typeof stringData>("String data test", stringData);
+      const exception = new BadRequestException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -153,7 +152,7 @@ describe("BadRequestException", () => {
         retryAfter: 300,
       };
 
-      const exception = new BadRequestException<typeof numberData>("Number data test", numberData);
+      const exception = new BadRequestException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.statusCode).toBe("number");
@@ -326,13 +325,15 @@ describe("BadRequestException", () => {
         },
       };
 
-      const exception = new BadRequestException<typeof complexData>("Complex data test", complexData);
+      const exception = new BadRequestException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.validation.errors).toHaveLength(2);
-      expect(exception.data?.validation.warnings).toContain("username_exists");
-      expect(exception.data?.request.method).toBe("POST");
-      expect(exception.data?.suggestions.emailFormat).toContain("user@domain.com");
+      expect((exception.data?.validation as { errors: string[]; warnings: string[] })?.errors).toHaveLength(2);
+      expect((exception.data?.validation as { errors: string[]; warnings: string[] })?.warnings).toContain(
+        "username_exists",
+      );
+      expect((exception.data?.request as { method: string })?.method).toBe("POST");
+      expect((exception.data?.suggestions as { emailFormat: string })?.emailFormat).toContain("user@domain.com");
     });
 
     test("should handle request-specific data structures", () => {
@@ -370,12 +371,15 @@ describe("BadRequestException", () => {
         timestamp: new Date().toISOString(),
       };
 
-      const exception = new BadRequestException<RequestValidation>("Request validation failed", requestData);
+      const exception = new BadRequestException(
+        "Request validation failed",
+        requestData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.endpoint).toBe("/api/users/create");
-      expect(exception.data?.errors).toHaveLength(2);
-      expect(exception.data?.errors[0]?.field).toBe("email");
-      expect(exception.data?.errors[1]?.code).toBe("AGE_INVALID");
+      expect((exception.data?.errors as { length: number })?.length).toBe(2);
+      expect((exception.data?.errors as { field: string }[])?.[0]?.field).toBe("email");
+      expect((exception.data?.errors as { code: string }[])?.[1]?.code).toBe("AGE_INVALID");
       expect(exception.data?.requestId).toBe("req_123456789");
     });
   });
@@ -419,7 +423,7 @@ describe("BadRequestException", () => {
 
       expect(exception.message).toBe("Invalid request headers");
       expect(exception.data?.missingHeaders).toContain("Authorization");
-      expect(exception.data?.invalidHeaders[0]?.name).toBe("Accept");
+      expect((exception.data?.invalidHeaders as { name: string }[])?.[0]?.name).toBe("Accept");
       expect(exception.data?.requiredHeaders).toHaveLength(3);
     });
 
@@ -449,7 +453,7 @@ describe("BadRequestException", () => {
       });
 
       expect(exception.message).toBe("Request payload too large");
-      expect(exception.data?.currentSize).toBeGreaterThan(exception.data?.maxSize || 0);
+      expect(exception.data?.currentSize as number).toBeGreaterThan((exception.data?.maxSize as number) || 0);
       expect(exception.data?.sizeUnit).toBe("bytes");
       expect(exception.data?.suggestion).toContain("multipart upload");
     });

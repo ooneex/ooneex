@@ -71,13 +71,14 @@ describe("FilesystemStorageAdapter", () => {
         const adapter = new FilesystemStorage({ storagePath: customPath });
 
         expect(adapter).toBeInstanceOf(FilesystemStorage);
-        expect(adapter.getOptions()).toEqual({
+        const adapterOptions = adapter.getOptions();
+        expect(adapterOptions).toMatchObject({
           accessKeyId: "filesystem",
           secretAccessKey: "filesystem",
           endpoint: customPath,
-          bucket: undefined,
           region: "local",
         });
+        expect(adapterOptions.bucket).toBeUndefined();
         expect(existsSync(customPath)).toBe(true);
       });
 
@@ -152,13 +153,13 @@ describe("FilesystemStorageAdapter", () => {
 
       const options = adapter.getOptions();
 
-      expect(options).toEqual({
+      expect(options).toMatchObject({
         accessKeyId: "filesystem",
         secretAccessKey: "filesystem",
         endpoint: testStoragePath,
-        bucket: undefined,
         region: "local",
       });
+      expect(options.bucket).toBeUndefined();
     });
 
     test("should include bucket property after setBucket", () => {

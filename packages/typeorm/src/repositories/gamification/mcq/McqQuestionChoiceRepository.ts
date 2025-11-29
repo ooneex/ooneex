@@ -32,7 +32,7 @@ export class McqQuestionChoiceRepository {
       skip = (page - 1) * take;
     }
 
-    const result = await repository.find({ ...rest, skip, take });
+    const result = await repository.find({ ...rest, take, ...(skip !== undefined && { skip }) });
 
     const total = await this.count(rest.where);
     const totalPages = Math.ceil(total / limit);
@@ -122,6 +122,6 @@ export class McqQuestionChoiceRepository {
   ): Promise<number> {
     const repository = await this.open();
 
-    return await repository.count({ where: criteria });
+    return await repository.count(criteria ? { where: criteria } : {});
   }
 }

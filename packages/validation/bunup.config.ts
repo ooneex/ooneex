@@ -2,6 +2,7 @@ import { defineConfig } from "bunup";
 import { copy } from "bunup/plugins";
 
 export default defineConfig({
+  entry: ["src/index.ts", "src/constraints.ts"],
   target: "browser",
   format: ["esm"],
   drop: ["console", "debugger"],

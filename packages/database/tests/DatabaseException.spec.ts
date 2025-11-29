@@ -17,7 +17,6 @@ describe("DatabaseException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -31,7 +30,7 @@ describe("DatabaseException", () => {
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("DatabaseException");
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
       expect(exception.date).toBeInstanceOf(Date);
     });
 
@@ -57,10 +56,10 @@ describe("DatabaseException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Database schema validation failed";
-      const exception = new DatabaseException(message, null as unknown);
+      const exception = new DatabaseException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.data).toBeNull();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -96,7 +95,6 @@ describe("DatabaseException", () => {
       // The data property itself is not readonly at the property level,
       // but the data object is frozen, so modifying its contents should throw
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify frozen object
         exception.data.table = "modified";
       }).toThrow();
     });
@@ -123,14 +121,14 @@ describe("DatabaseException", () => {
         },
       };
 
-      const exception = new DatabaseException<Record<string, DatabaseError>>(
+      const exception = new DatabaseException(
         "Multiple database connections failed",
-        errorData,
+        errorData as unknown as Record<string, unknown>,
       );
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.primaryConnection?.connectionId).toBe("conn_001");
-      expect(exception.data?.replicaConnection?.retryCount).toBe(1);
+      expect((exception.data?.primaryConnection as { connectionId: string })?.connectionId).toBe("conn_001");
+      expect((exception.data?.replicaConnection as { retryCount: number })?.retryCount).toBe(1);
     });
 
     test("should support string generic type", () => {
@@ -140,7 +138,10 @@ describe("DatabaseException", () => {
         database: "production",
       };
 
-      const exception = new DatabaseException<Record<string, string>>("Database operation failed", stringData);
+      const exception = new DatabaseException(
+        "Database operation failed",
+        stringData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -153,7 +154,10 @@ describe("DatabaseException", () => {
         activeConnections: 25,
       };
 
-      const exception = new DatabaseException<Record<string, number>>("Database performance issue", numberData);
+      const exception = new DatabaseException(
+        "Database performance issue",
+        numberData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.attempts).toBe("number");
@@ -331,10 +335,10 @@ describe("DatabaseException", () => {
       const exception = new DatabaseException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.connections.active).toBe(15);
-      expect(exception.data?.queries.average_time).toBe(250.5);
-      expect(exception.data?.tables.users.size).toBe("10MB");
-      expect(exception.data?.configuration.ssl).toBe(true);
+      expect((exception.data?.connections as { active: number })?.active).toBe(15);
+      expect((exception.data?.queries as { average_time: number })?.average_time).toBe(250.5);
+      expect((exception.data?.tables as { users: { size: string } })?.users.size).toBe("10MB");
+      expect((exception.data?.configuration as { ssl: boolean })?.ssl).toBe(true);
     });
 
     test("should handle database-specific data structures", () => {
@@ -361,13 +365,16 @@ describe("DatabaseException", () => {
         ],
       };
 
-      const exception = new DatabaseException<QueryPlan>("Query optimization failed", queryData);
+      const exception = new DatabaseException(
+        "Query optimization failed",
+        queryData as unknown as Record<string, unknown>,
+      );
 
-      expect(exception.data).toEqual(queryData);
+      expect(exception.data).toEqual(queryData as unknown as Record<string, unknown>);
       expect(exception.data?.operation).toBe("SELECT");
       expect(exception.data?.cost).toBe(1500.75);
       expect(exception.data?.indexes).toHaveLength(2);
-      expect(exception.data?.indexes[0]?.used).toBe(true);
+      expect((exception.data?.indexes as { used: boolean }[])?.[0]?.used).toBe(true);
     });
   });
 
@@ -441,7 +448,7 @@ describe("DatabaseException", () => {
 
       expect(exception.message).toBe("Database replication lag detected");
       expect(exception.data?.replicaServers).toHaveLength(2);
-      expect(exception.data?.currentLag["db-replica-1.example.com"]).toBe(12_000);
+      expect((exception.data?.currentLag as Record<string, number>)?.["db-replica-1.example.com"]).toBe(12_000);
       expect(exception.data?.autoFailoverEnabled).toBe(false);
     });
   });

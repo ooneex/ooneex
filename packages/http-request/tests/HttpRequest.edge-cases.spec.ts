@@ -266,10 +266,7 @@ describe("HttpRequest Edge Cases", () => {
   describe("Configuration Edge Cases", () => {
     test("should handle null and undefined in config", () => {
       const config = {
-        params: undefined,
-        payload: undefined,
         form: null,
-        ip: undefined,
       };
 
       const request = new HttpRequest(mockRequest, config);

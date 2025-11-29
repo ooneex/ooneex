@@ -19,7 +19,6 @@ describe("CacheException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("CacheException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create CacheException with message and data", () => {
@@ -64,7 +63,7 @@ describe("CacheException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -130,11 +129,11 @@ describe("CacheException", () => {
         },
       };
 
-      const exception = new CacheException<typeof errorData>("Cache operation failed", errorData);
+      const exception = new CacheException("Cache operation failed", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.missedKey?.key).toBe("user:session:123");
-      expect(exception.data?.expiredKey?.ttl).toBe(0);
+      expect((exception.data?.missedKey as CacheError)?.key).toBe("user:session:123");
+      expect((exception.data?.expiredKey as CacheError)?.ttl).toBe(0);
     });
 
     test("should support string generic type", () => {
@@ -144,7 +143,7 @@ describe("CacheException", () => {
         store: "redis",
       };
 
-      const exception = new CacheException<typeof stringData>("String data test", stringData);
+      const exception = new CacheException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.error).toBe("string");
@@ -158,7 +157,7 @@ describe("CacheException", () => {
         ttl: 3600,
       };
 
-      const exception = new CacheException<typeof numberData>("Number data test", numberData);
+      const exception = new CacheException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.attempts).toBe("number");
@@ -391,13 +390,14 @@ describe("CacheException", () => {
         },
       };
 
-      const exception = new CacheException<typeof complexData>("Complex data test", complexData);
+      const exception = new CacheException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.operations.successful).toBe(95);
-      expect(exception.data?.stores.primary).toBe("redis");
-      expect(exception.data?.performance.hitRate).toBe(0.92);
-      expect(exception.data?.configuration.persistence.enabled).toBe(true);
+      expect((exception.data?.operations as { successful: number })?.successful).toBe(95);
+      expect((exception.data?.stores as { primary: string })?.primary).toBe("redis");
+      expect((exception.data?.performance as { hitRate: number })?.hitRate).toBe(0.92);
+      expect((exception.data?.configuration as { maxMemory: number })?.maxMemory).toBe(1_073_741_824);
+      expect((exception.data?.configuration as { persistence: { enabled: boolean } })?.persistence.enabled).toBe(true);
     });
 
     test("should handle cache-specific data structures", () => {
@@ -426,11 +426,14 @@ describe("CacheException", () => {
         accessCount: 15,
       };
 
-      const exception = new CacheException<CacheEntry>("Failed to process cache entry", entryData);
+      const exception = new CacheException(
+        "Failed to process cache entry",
+        entryData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.key).toBe("api:response:users");
-      expect(exception.data?.value.users).toHaveLength(2);
-      expect(exception.data?.value.total).toBe(2);
+      expect((exception.data?.value as { users: unknown[] })?.users).toHaveLength(2);
+      expect((exception.data?.value as { total: number })?.total).toBe(2);
       expect(exception.data?.accessCount).toBe(15);
     });
   });
@@ -453,7 +456,7 @@ describe("CacheException", () => {
       expect(exception.message).toBe("Cache warming failed");
       expect(exception.data?.warmedKeys).toHaveLength(1);
       expect(exception.data?.failedKeys).toHaveLength(2);
-      expect(exception.data?.duration).toBeGreaterThan(exception.data?.expectedDuration || 0);
+      expect(exception.data?.duration as number).toBeGreaterThan((exception.data?.expectedDuration as number) || 0);
     });
 
     test("should handle cache partition errors", () => {
@@ -498,14 +501,14 @@ describe("CacheException", () => {
         valueSize: 10_485_760, // 10MB
         maxValueSize: 5_242_880, // 5MB
         totalCacheSize: 1_073_741_824, // 1GB
-        maxCacheSize: 1_073_741_824, // 1GB
+        maxCacheSize: 536_870_912, // 512MB
         compressionEnabled: true,
         compressionRatio: 0.7,
         suggestedAction: "Split data into smaller chunks",
       });
 
       expect(exception.message).toBe("Cache size limit exceeded");
-      expect(exception.data?.valueSize).toBeGreaterThan(exception.data?.maxValueSize || 0);
+      expect(exception.data?.totalCacheSize as number).toBeGreaterThan((exception.data?.maxCacheSize as number) || 0);
       expect(exception.data?.compressionEnabled).toBe(true);
       expect(exception.data?.suggestedAction).toBe("Split data into smaller chunks");
     });

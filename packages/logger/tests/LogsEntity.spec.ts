@@ -499,9 +499,9 @@ describe("LogsEntity", () => {
       expect(entity.status).toBe(200);
 
       // Set to undefined
-      entity.message = undefined;
-      entity.userId = undefined;
-      entity.status = undefined;
+      delete entity.message;
+      delete entity.userId;
+      delete entity.status;
 
       expect(entity.message).toBeUndefined();
       expect(entity.userId).toBeUndefined();
@@ -557,9 +557,9 @@ describe("LogsEntity", () => {
       expect(entity.email).toBe("");
 
       // Undefined values
-      entity.message = undefined;
-      entity.userId = undefined;
-      entity.email = undefined;
+      delete entity.message;
+      delete entity.userId;
+      delete entity.email;
 
       expect(entity.message).toBeUndefined();
       expect(entity.userId).toBeUndefined();

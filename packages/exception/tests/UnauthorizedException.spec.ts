@@ -19,7 +19,6 @@ describe("UnauthorizedException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
         exception.data.key = "modified";
       }).toThrow();
     });
@@ -35,7 +34,7 @@ describe("UnauthorizedException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create UnauthorizedException with message and data", () => {
@@ -64,7 +63,7 @@ describe("UnauthorizedException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -126,11 +125,11 @@ describe("UnauthorizedException", () => {
         },
       };
 
-      const exception = new UnauthorizedException<typeof errorData>("Authentication failed", errorData);
+      const exception = new UnauthorizedException("Authentication failed", errorData);
 
       expect(exception.data).toEqual(errorData);
-      expect(exception.data?.tokenError?.token).toBe("expired_jwt");
-      expect(exception.data?.sessionError?.reason).toBe("Session not found");
+      expect((exception.data?.tokenError as AuthenticationError)?.token).toBe("expired_jwt");
+      expect((exception.data?.sessionError as AuthenticationError)?.reason).toBe("Session not found");
     });
 
     test("should support string generic type", () => {
@@ -140,7 +139,7 @@ describe("UnauthorizedException", () => {
         realm: "secure_api",
       };
 
-      const exception = new UnauthorizedException<typeof stringData>("String data test", stringData);
+      const exception = new UnauthorizedException("String data test", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.token).toBe("string");
@@ -153,7 +152,7 @@ describe("UnauthorizedException", () => {
         maxAttempts: 5,
       };
 
-      const exception = new UnauthorizedException<typeof numberData>("Number data test", numberData);
+      const exception = new UnauthorizedException("Number data test", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.userId).toBe("number");
@@ -338,13 +337,13 @@ describe("UnauthorizedException", () => {
         },
       };
 
-      const exception = new UnauthorizedException<typeof complexData>("Complex data test", complexData);
+      const exception = new UnauthorizedException("Complex data test", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.authentication.method).toBe("jwt");
-      expect(exception.data?.token.scopes).toHaveLength(2);
-      expect(exception.data?.user.roles).toContain("guest");
-      expect(exception.data?.metadata.attempt).toBe(3);
+      expect((exception.data?.authentication as { method: string })?.method).toBe("jwt");
+      expect((exception.data?.token as { type: string })?.type).toBe("Bearer");
+      expect((exception.data?.user as { roles: string[] })?.roles).toContain("guest");
+      expect((exception.data?.metadata as { attempt: number })?.attempt).toBe(3);
     });
 
     test("should handle authentication-specific data structures", () => {
@@ -390,13 +389,16 @@ describe("UnauthorizedException", () => {
         },
       };
 
-      const exception = new UnauthorizedException<AuthenticationContext>("Authentication context failed", authData);
+      const exception = new UnauthorizedException(
+        "Authentication context failed",
+        authData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.sessionId).toBe("session_xyz789");
-      expect(exception.data?.tokenInfo.type).toBe("JWT");
-      expect(exception.data?.tokenInfo.scopes).toHaveLength(3);
-      expect(exception.data?.userInfo.verified).toBe(true);
-      expect(exception.data?.security.mfaEnabled).toBe(true);
+      expect((exception.data?.tokenInfo as { type: string })?.type).toBe("JWT");
+      expect((exception.data?.tokenInfo as { scopes: string[] })?.scopes).toHaveLength(3);
+      expect((exception.data?.userInfo as { verified: boolean })?.verified).toBe(true);
+      expect((exception.data?.security as { mfaEnabled: boolean })?.mfaEnabled).toBe(true);
     });
   });
 
@@ -436,7 +438,7 @@ describe("UnauthorizedException", () => {
       expect(exception.message).toBe("API key validation failed");
       expect(exception.data?.keyValid).toBe(false);
       expect(exception.data?.keyExpired).toBe(true);
-      expect(exception.data?.usage.remaining).toBe(-500);
+      expect((exception.data?.usage as { remaining: number })?.remaining).toBe(-500);
     });
 
     test("should handle multi-factor authentication failures", () => {
@@ -475,7 +477,7 @@ describe("UnauthorizedException", () => {
       expect(exception.data?.attemptsRemaining).toBe(0);
       expect(exception.data?.maxAttempts).toBe(5);
       expect(exception.data?.windowDuration).toBe(3600);
-      expect(exception.data?.clientInfo.ipAddress).toBe("192.168.1.100");
+      expect((exception.data?.clientInfo as { ipAddress: string })?.ipAddress).toBe("192.168.1.100");
     });
 
     test("should handle token refresh scenarios", () => {
@@ -517,8 +519,8 @@ describe("UnauthorizedException", () => {
       expect(exception.message).toBe("Role-based access denied");
       expect(exception.data?.userRoles).toContain("editor");
       expect(exception.data?.requiredRoles).toContain("admin");
-      expect(exception.data?.resource.method).toBe("PUT");
-      expect(exception.data?.policy.strict).toBe(true);
+      expect((exception.data?.resource as { method: string })?.method).toBe("PUT");
+      expect((exception.data?.policy as { strict: boolean })?.strict).toBe(true);
     });
   });
 });

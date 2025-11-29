@@ -1,8 +1,8 @@
 import { HttpStatus } from "@ooneex/http-status";
 import { Exception } from "./Exception";
 
-export class NotFoundException<T = unknown> extends Exception<T> {
-  constructor(message: string, data?: T) {
+export class NotFoundException extends Exception {
+  constructor(message: string, data: Record<string, unknown> = {}) {
     super(message, {
       status: HttpStatus.Code.NotFound,
       data,

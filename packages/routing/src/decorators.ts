@@ -1,5 +1,7 @@
-import type { ContextType, ControllerClassType, IController } from "@ooneex/controller";
+import type { ContextType, ControllerClassType } from "@ooneex/controller";
 import type { HttpMethodType } from "@ooneex/types";
+import { Assert, type AssertType } from "@ooneex/validation";
+import { AssertAppEnv } from "@ooneex/validation/constraints";
 import { router } from "./Router";
 import type { ExtractParameters, RouteConfigType, RoutePathType } from "./types";
 
@@ -7,7 +9,7 @@ type TypedRouteConfig<T extends string> = Omit<
   RouteConfigType,
   "method" | "path" | "isSocket" | "controller" | "params"
 > & {
-  params?: ExtractParameters<T> extends never ? never : Record<ExtractParameters<T>, string | number>;
+  params?: ExtractParameters<T> extends never ? never : Record<ExtractParameters<T>, AssertType>;
 };
 
 type InferredRouteDecorator = (target: new (...args: unknown[]) => unknown) => void;
@@ -50,12 +52,16 @@ type TypedRouteConfigType = {
   name: "api.users.delete",
   description: "Delete a user by ID",
   params: {
-    state: "state",
-    id: "id",
-    emailId: "emailId",
+    state: Assert("string"),
+    id: Assert("string"),
+    emailId: Assert("string"),
   },
+  payload: Assert({
+    name: "string.url",
+  }),
+  env: AssertAppEnv,
 })
-export class DeleteUserController implements IController<TypedRouteConfigType> {
+export class DeleteUserController {
   public async index(context: ContextType<TypedRouteConfigType>) {
     const { id } = context.params;
 

@@ -8,10 +8,10 @@ export type ExceptionStackFrameType = {
   source: string;
 };
 
-export interface IException<T = unknown> {
+export interface IException {
   readonly date: Date;
-  readonly status?: StatusCodeType;
-  readonly data?: Readonly<Record<string, T>>;
+  readonly status: StatusCodeType;
+  readonly data: Readonly<Record<string, unknown>>;
   readonly native?: Error;
   readonly message: string;
   readonly name: string;

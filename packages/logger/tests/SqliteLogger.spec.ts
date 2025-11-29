@@ -9,19 +9,19 @@ import { SqliteLogger } from "@/SqliteLogger";
 import type { LevelType } from "@/types";
 
 // Mock types for testing
-interface MockException extends IException<ScalarType> {
+interface MockException extends IException {
   readonly date: Date;
-  readonly status?: StatusCodeType;
-  readonly data?: Readonly<Record<string, ScalarType>>;
+  readonly status: StatusCodeType;
+  readonly data: Readonly<Record<string, unknown>>;
   readonly native?: Error;
   readonly message: string;
   readonly name: string;
   readonly stack?: string;
   stackToJson: () => Array<{
+    functionName?: string;
     fileName?: string;
     lineNumber?: number;
     columnNumber?: number;
-    functionName?: string;
     source: string;
   }> | null;
 }
@@ -151,7 +151,7 @@ describe("SqliteLogger", () => {
             lineNumber: 10,
             columnNumber: 5,
             functionName: "testFunction",
-            source: "test source",
+            source: "    at testFunction (test.ts:10:5)",
           },
         ]),
       };
@@ -175,6 +175,8 @@ describe("SqliteLogger", () => {
         date: new Date(),
         message: "Simple exception",
         name: "SimpleException",
+        status: 500,
+        data: {},
         stackToJson: mock(() => null),
       };
 
@@ -387,6 +389,8 @@ describe("SqliteLogger", () => {
         date: exceptionDate,
         message: "Exception with custom date",
         name: "CustomDateException",
+        status: 500,
+        data: {},
         stackToJson: mock(() => null),
       };
 
@@ -408,6 +412,7 @@ describe("SqliteLogger", () => {
         message: "Status priority test",
         name: "StatusException",
         status: 500,
+        data: {},
         stackToJson: mock(() => null),
       };
 
@@ -580,6 +585,8 @@ describe("SqliteLogger", () => {
         date: new Date(),
         message: "Minimal exception",
         name: "MinimalException",
+        status: 500,
+        data: {},
         stackToJson: mock(() => null),
       };
 
@@ -590,7 +597,7 @@ describe("SqliteLogger", () => {
           level: "ERROR",
           message: "Minimal exception",
           exceptionName: "MinimalException",
-          status: undefined,
+          status: 500,
           stackTrace: undefined,
         }),
       );
@@ -598,9 +605,9 @@ describe("SqliteLogger", () => {
 
     test("should handle data with all properties set to null/undefined", () => {
       const data = new LogsEntity();
-      data.userId = undefined;
-      data.email = undefined;
-      data.status = undefined;
+      delete data.userId;
+      delete data.email;
+      delete data.status;
 
       logger.info("Test with null data", data);
 
@@ -782,6 +789,7 @@ describe("SqliteLogger", () => {
         message: "Database connection timeout",
         name: "TimeoutException",
         status: 504,
+        data: {},
         stackToJson: mock(() => complexStackTrace),
       };
 

@@ -405,7 +405,7 @@ The `CloudflareStorageAdapter` inherits all methods from `AbstractStorage` and i
 Custom exception class for storage-related errors.
 
 ```typescript
-class StorageException<T = unknown> extends Exception<T> {
+class StorageException extends Exception {
   constructor(message: string, data?: T)
 }
 ```

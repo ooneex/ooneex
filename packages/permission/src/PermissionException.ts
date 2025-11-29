@@ -1,8 +1,8 @@
 import { Exception } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
 
-export class PermissionException<T = unknown> extends Exception<T> {
-  constructor(message: string, data?: T) {
+export class PermissionException extends Exception {
+  constructor(message: string, data: Record<string, unknown> = {}) {
     super(message, {
       status: HttpStatus.Code.InternalServerError,
       data,

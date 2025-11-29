@@ -24,6 +24,7 @@ describe("AppEnv", () => {
       expect(appEnv).toHaveProperty("isLocal");
       expect(appEnv).toHaveProperty("isDevelopment");
       expect(appEnv).toHaveProperty("isStaging");
+      expect(appEnv).toHaveProperty("isTest");
       expect(appEnv).toHaveProperty("isProduction");
 
       // Check that properties are defined (readonly is enforced at TypeScript level)
@@ -31,6 +32,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBeDefined();
       expect(appEnv.isDevelopment).toBeDefined();
       expect(appEnv.isStaging).toBeDefined();
+      expect(appEnv.isTest).toBeDefined();
       expect(appEnv.isProduction).toBeDefined();
     });
 
@@ -42,6 +44,7 @@ describe("AppEnv", () => {
       expect(typeof appEnv.isLocal).toBe("boolean");
       expect(typeof appEnv.isDevelopment).toBe("boolean");
       expect(typeof appEnv.isStaging).toBe("boolean");
+      expect(typeof appEnv.isTest).toBe("boolean");
       expect(typeof appEnv.isProduction).toBe("boolean");
     });
   });
@@ -55,6 +58,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(true);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -66,6 +70,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(true);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -77,6 +82,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(true);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -88,7 +94,20 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(true);
+    });
+
+    test("should create AppEnv with 'test' environment", () => {
+      Bun.env.APP_ENV = "test";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("test");
+      expect(appEnv.isLocal).toBe(false);
+      expect(appEnv.isDevelopment).toBe(false);
+      expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(true);
+      expect(appEnv.isProduction).toBe(false);
     });
   });
 
@@ -161,6 +180,7 @@ describe("AppEnv", () => {
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
     });
   });
 
@@ -175,6 +195,7 @@ describe("AppEnv", () => {
       expect(appEnv.isDevelopment).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
 
@@ -196,7 +217,13 @@ describe("AppEnv", () => {
       Bun.env.APP_ENV = "local";
       const appEnv = new AppEnv();
 
-      const trueFlags = [appEnv.isLocal, appEnv.isDevelopment, appEnv.isStaging, appEnv.isProduction].filter(Boolean);
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(1);
       expect(appEnv.isLocal).toBe(true);
@@ -206,7 +233,13 @@ describe("AppEnv", () => {
       Bun.env.APP_ENV = "development";
       const appEnv = new AppEnv();
 
-      const trueFlags = [appEnv.isLocal, appEnv.isDevelopment, appEnv.isStaging, appEnv.isProduction].filter(Boolean);
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(1);
       expect(appEnv.isDevelopment).toBe(true);
@@ -216,7 +249,13 @@ describe("AppEnv", () => {
       Bun.env.APP_ENV = "staging";
       const appEnv = new AppEnv();
 
-      const trueFlags = [appEnv.isLocal, appEnv.isDevelopment, appEnv.isStaging, appEnv.isProduction].filter(Boolean);
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(1);
       expect(appEnv.isStaging).toBe(true);
@@ -226,22 +265,51 @@ describe("AppEnv", () => {
       Bun.env.APP_ENV = "production";
       const appEnv = new AppEnv();
 
-      const trueFlags = [appEnv.isLocal, appEnv.isDevelopment, appEnv.isStaging, appEnv.isProduction].filter(Boolean);
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(1);
       expect(appEnv.isProduction).toBe(true);
+    });
+
+    test("should ensure only one environment flag is true - test", () => {
+      Bun.env.APP_ENV = "test";
+      const appEnv = new AppEnv();
+
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
+
+      expect(trueFlags).toHaveLength(1);
+      expect(appEnv.isTest).toBe(true);
     });
 
     test("should have all flags false for invalid environment", () => {
       Bun.env.APP_ENV = "testing";
       const appEnv = new AppEnv();
 
-      const trueFlags = [appEnv.isLocal, appEnv.isDevelopment, appEnv.isStaging, appEnv.isProduction].filter(Boolean);
+      const trueFlags = [
+        appEnv.isLocal,
+        appEnv.isDevelopment,
+        appEnv.isStaging,
+        appEnv.isTest,
+        appEnv.isProduction,
+      ].filter(Boolean);
 
       expect(trueFlags).toHaveLength(0);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
+      expect(appEnv.isTest).toBe(false);
       expect(appEnv.isProduction).toBe(false);
     });
   });
@@ -258,6 +326,7 @@ describe("AppEnv", () => {
       expect(typeof appEnv.isLocal).toBe("boolean");
       expect(typeof appEnv.isDevelopment).toBe("boolean");
       expect(typeof appEnv.isStaging).toBe("boolean");
+      expect(typeof appEnv.isTest).toBe("boolean");
       expect(typeof appEnv.isProduction).toBe("boolean");
     });
 
@@ -478,6 +547,7 @@ describe("AppEnv", () => {
         isLocal: appEnv.isLocal,
         isDevelopment: appEnv.isDevelopment,
         isStaging: appEnv.isStaging,
+        isTest: appEnv.isTest,
         isProduction: appEnv.isProduction,
       });
       const parsed = JSON.parse(serialized);
@@ -486,6 +556,7 @@ describe("AppEnv", () => {
       expect(parsed.isLocal).toBe(false);
       expect(parsed.isDevelopment).toBe(false);
       expect(parsed.isStaging).toBe(true);
+      expect(parsed.isTest).toBe(false);
       expect(parsed.isProduction).toBe(false);
     });
 
@@ -519,11 +590,12 @@ describe("AppEnv", () => {
 
       // Should only have the defined properties
       const ownProps = Object.getOwnPropertyNames(appEnv);
-      expect(ownProps).toHaveLength(5);
+      expect(ownProps).toHaveLength(6);
       expect(ownProps).toContain("env");
       expect(ownProps).toContain("isLocal");
       expect(ownProps).toContain("isDevelopment");
       expect(ownProps).toContain("isStaging");
+      expect(ownProps).toContain("isTest");
       expect(ownProps).toContain("isProduction");
     });
 

@@ -35,7 +35,7 @@ describe("PermissionException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create PermissionException with message and data", () => {
@@ -68,7 +68,7 @@ describe("PermissionException", () => {
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -122,7 +122,7 @@ describe("PermissionException", () => {
         resourceId: "doc-456",
       };
 
-      const exception = new PermissionException<PermissionError>("Access denied", errorData);
+      const exception = new PermissionException("Access denied", errorData as unknown as Record<string, unknown>);
 
       expect(exception.data?.resourceType).toBe("document");
       expect(exception.data?.requiredPermission).toBe("document:write");
@@ -137,7 +137,7 @@ describe("PermissionException", () => {
         helpUrl: "https://docs.example.com/permissions",
       };
 
-      const exception = new PermissionException<typeof stringData>("Permission denied", stringData);
+      const exception = new PermissionException("Permission denied", stringData as unknown as Record<string, unknown>);
 
       expect(exception.data?.permission).toBe("admin_panel_access");
       expect(exception.data?.suggestion).toBe("Contact administrator for elevated permissions");
@@ -152,7 +152,10 @@ describe("PermissionException", () => {
         resourceCost: 100,
       };
 
-      const exception = new PermissionException<typeof numberData>("Insufficient permission level", numberData);
+      const exception = new PermissionException(
+        "Insufficient permission level",
+        numberData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.userId).toBe(12_345);
       expect(exception.data?.requiredLevel).toBe(5);
@@ -408,12 +411,12 @@ describe("PermissionException", () => {
 
       const exception = new PermissionException("Complex permission denied", complexData);
 
-      expect(exception.data?.authentication.method).toBe("oauth2");
-      expect(exception.data?.authorization.type).toBe("rbac");
-      expect(exception.data?.user.id).toBe("user-123");
-      expect(exception.data?.resource.type).toBe("document");
-      expect(exception.data?.metadata.ipAddress).toBe("192.168.1.1");
-      expect(exception.data?.context.feature).toBe("document_access");
+      expect((exception.data?.authentication as { method: string })?.method).toBe("oauth2");
+      expect((exception.data?.authorization as { type: string })?.type).toBe("rbac");
+      expect((exception.data?.user as { id: string })?.id).toBe("user-123");
+      expect((exception.data?.resource as { type: string })?.type).toBe("document");
+      expect((exception.data?.metadata as { ipAddress: string })?.ipAddress).toBe("192.168.1.1");
+      expect((exception.data?.context as { feature: string })?.feature).toBe("document_access");
     });
 
     test("should handle permission-specific data structures", () => {
@@ -455,18 +458,21 @@ describe("PermissionException", () => {
         },
       };
 
-      const exception = new PermissionException<PermissionContext>("Permission context error", permissionData);
+      const exception = new PermissionException(
+        "Permission context error",
+        permissionData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.sessionId).toBe("sess-abc123");
-      expect(exception.data?.permissions.granted).toEqual(["user:read", "file:list"]);
-      expect(exception.data?.permissions.denied).toEqual(["admin:write", "system:config"]);
-      expect(exception.data?.permissions.pending).toEqual(["user:write"]);
-      expect(exception.data?.policy.name).toBe("default_policy");
-      expect(exception.data?.policy.version).toBe("1.2.0");
-      expect(exception.data?.policy.strict).toBe(true);
-      expect(exception.data?.audit.enabled).toBe(true);
-      expect(exception.data?.audit.logLevel).toBe("warn");
-      expect(exception.data?.audit.retentionDays).toBe(90);
+      expect((exception.data?.permissions as { granted: string[] })?.granted).toEqual(["user:read", "file:list"]);
+      expect((exception.data?.permissions as { denied: string[] })?.denied).toEqual(["admin:write", "system:config"]);
+      expect((exception.data?.permissions as { pending: string[] })?.pending).toEqual(["user:write"]);
+      expect((exception.data?.policy as { name: string })?.name).toBe("default_policy");
+      expect((exception.data?.policy as { version: string })?.version).toBe("1.2.0");
+      expect((exception.data?.policy as { strict: boolean })?.strict).toBe(true);
+      expect((exception.data?.audit as { enabled: boolean })?.enabled).toBe(true);
+      expect((exception.data?.audit as { logLevel: string })?.logLevel).toBe("warn");
+      expect((exception.data?.audit as { retentionDays: number })?.retentionDays).toBe(90);
     });
   });
 

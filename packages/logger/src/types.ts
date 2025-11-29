@@ -11,7 +11,7 @@ export type LoggerClassType =
     ) => ILogger<LogsEntity>);
 
 export interface ILogger<Data = Record<string, ScalarType>> {
-  error: (message: string | IException<ScalarType>, data?: Data) => Promise<void> | void;
+  error: (message: string | IException, data?: Data) => Promise<void> | void;
   warn: (message: string, data?: Data) => Promise<void> | void;
   info: (message: string, data?: Data) => Promise<void> | void;
   debug: (message: string, data?: Data) => Promise<void> | void;

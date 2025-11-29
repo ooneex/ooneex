@@ -5,16 +5,15 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "compile": {
-      "cache": true
-    },
     "fmt": {
       "cache": true
     },
     "lint": {
+      "dependsOn": ["^build"],
       "cache": true
     },
     "test": {
+      "dependsOn": ["^build"],
       "cache": true
     },
     "publish": {

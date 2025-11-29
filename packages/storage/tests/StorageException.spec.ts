@@ -19,8 +19,7 @@ describe("StorageException", () => {
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
-        // @ts-expect-error - intentionally trying to modify readonly property
-        exception.data.bucket = "modified";
+        exception.data.key = "modified";
       }).toThrow();
     });
   });
@@ -35,7 +34,7 @@ describe("StorageException", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
     });
 
     test("should create StorageException with message and data", () => {
@@ -60,10 +59,10 @@ describe("StorageException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Null data test";
-      const exception = new StorageException(message, null);
+      const exception = new StorageException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.data).toBe(null);
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -129,21 +128,27 @@ describe("StorageException", () => {
         },
       };
 
-      const exception = new StorageException<StorageError>("Storage operation failed", errorData);
+      const exception = new StorageException(
+        "Storage operation failed",
+        errorData as unknown as Record<string, unknown>,
+      );
 
-      expect(exception.data).toEqual(errorData);
-      expect(exception.data?.uploadError.bucket).toBe("user-uploads");
-      expect(exception.data?.downloadError.key).toBe("documents/manual.pdf");
+      expect(exception.data).toEqual(errorData as unknown as Record<string, unknown>);
+      expect((exception.data?.uploadError as { bucket: string })?.bucket).toBe("user-uploads");
+      expect((exception.data?.downloadError as { key: string })?.key).toBe("documents/manual.pdf");
     });
 
     test("should support string generic type", () => {
       const stringData = {
         error: "Insufficient storage quota",
         suggestion: "Upgrade your plan",
-        provider: "cloudflare",
+        provider: "cloudflare-r2",
       };
 
-      const exception = new StorageException<typeof stringData>("Storage quota exceeded", stringData);
+      const exception = new StorageException(
+        "Storage quota exceeded",
+        stringData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data).toEqual(stringData);
       expect(exception.data?.error).toBe("Insufficient storage quota");
@@ -157,7 +162,7 @@ describe("StorageException", () => {
         retryCount: 3,
       };
 
-      const exception = new StorageException<typeof numberData>("Upload quota tracking", numberData);
+      const exception = new StorageException("Upload quota tracking", numberData as unknown as Record<string, unknown>);
 
       expect(exception.data).toEqual(numberData);
       expect(exception.data?.bytesUploaded).toBe(1_024_000);
@@ -271,7 +276,7 @@ describe("StorageException", () => {
 
       expect(exception.data?.provider).toBe("filesystem");
       expect(exception.data?.error).toBe("Insufficient disk space");
-      expect(exception.data?.diskSpace).toBeLessThan(exception.data?.requiredSpace || 0);
+      expect(exception.data?.diskSpace).toBeLessThan((exception.data?.requiredSpace as number) || 0);
     });
   });
 
@@ -389,9 +394,9 @@ describe("StorageException", () => {
       const exception = new StorageException("Complex storage operation failed", complexData);
 
       expect(exception.data).toEqual(complexData);
-      expect(exception.data?.operations.failed).toBe(3);
-      expect(exception.data?.providers.primary).toBe("cloudflare-r2");
-      expect(exception.data?.configuration.encryption.enabled).toBe(true);
+      expect((exception.data?.operations as { failed: number })?.failed).toBe(3);
+      expect((exception.data?.providers as { primary: string })?.primary).toBe("cloudflare-r2");
+      expect((exception.data?.configuration as { encryption: { enabled: boolean } })?.encryption.enabled).toBe(true);
     });
 
     test("should handle storage-specific data structures", () => {
@@ -433,12 +438,15 @@ describe("StorageException", () => {
         },
       };
 
-      const exception = new StorageException<StorageMetadata>("Storage metadata error", metadataData);
+      const exception = new StorageException(
+        "Storage metadata error",
+        metadataData as unknown as Record<string, unknown>,
+      );
 
       expect(exception.data?.bucket).toBe("user-data-bucket");
       expect(exception.data?.files).toHaveLength(2);
-      expect(exception.data?.files[0]?.name).toBe("document.pdf");
-      expect(exception.data?.quota.used).toBe(1_536_000);
+      expect((exception.data?.files as { name: string }[])?.[0]?.name).toBe("document.pdf");
+      expect((exception.data?.quota as { used: number })?.used).toBe(1_536_000);
     });
   });
 
@@ -470,7 +478,7 @@ describe("StorageException", () => {
       expect(exception.data?.operation).toBe("bulk-upload");
       expect(exception.data?.failedUploads).toBe(5);
       expect(exception.data?.failedFiles).toHaveLength(5);
-      expect(exception.data?.errors["large-video.mp4"]).toBe("File too large");
+      expect((exception.data?.errors as Record<string, string>)?.["large-video.mp4"]).toBe("File too large");
     });
 
     test("should handle storage quota exceeded errors", () => {
@@ -489,7 +497,7 @@ describe("StorageException", () => {
       });
 
       expect(exception.data?.operation).toBe("upload");
-      expect(exception.data?.currentUsage).toBeGreaterThan(exception.data?.availableSpace || 0);
+      expect(exception.data?.currentUsage).toBeGreaterThan((exception.data?.availableSpace as number) || 0);
       expect(exception.data?.largestFiles).toHaveLength(3);
     });
 
@@ -539,9 +547,9 @@ describe("StorageException", () => {
       });
 
       expect(exception.data?.operation).toBe("migration");
-      expect(exception.data?.progress.migratedObjects).toBe(7500);
+      expect((exception.data?.progress as { migratedObjects: number })?.migratedObjects).toBe(7500);
       expect(exception.data?.workers).toBe(10);
-      expect(exception.data?.errors["permission-denied"]).toBe(150);
+      expect((exception.data?.errors as Record<string, number>)?.["permission-denied"]).toBe(150);
     });
   });
 });

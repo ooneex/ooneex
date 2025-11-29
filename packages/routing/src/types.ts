@@ -1,7 +1,8 @@
-import type { Environment } from "@ooneex/app-env";
 import type { ControllerClassType } from "@ooneex/controller";
 import type { ERole } from "@ooneex/role";
 import type { HttpMethodType } from "@ooneex/types";
+import type { AssertType } from "@ooneex/validation";
+import type { AssertAppEnvType } from "@ooneex/validation/constraints";
 
 export type RouteNamespace =
   | "api"
@@ -692,13 +693,15 @@ export type RouteConfigType = {
   name: RouteNameType;
   path: `/${string}`;
   method: HttpMethodType;
-  params?: Record<string, string | number>;
-  queries?: Record<string, string | number>;
-  payload?: Record<string, unknown>;
-  response?: Record<string, unknown>;
+  params?: Record<string, AssertType>;
+  queries?: AssertType;
+  payload?: AssertType;
+  response?: AssertType;
   controller: ControllerClassType;
-  description?: string;
-  env?: Environment;
+  description: string;
+  env?: AssertAppEnvType;
+  ip?: AssertType;
+  host?: AssertType;
   roles?: ERole[];
 };
 

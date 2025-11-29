@@ -717,13 +717,7 @@ describe("LogsRepository", () => {
     });
 
     test("should handle undefined criteria values", async () => {
-      const criteria: FindByCriteriaType = {
-        level: undefined,
-        userId: undefined,
-        email: undefined,
-        page: undefined,
-        limit: undefined,
-      };
+      const criteria: FindByCriteriaType = {};
 
       const result = await repository.findBy(criteria);
 

@@ -16,7 +16,6 @@ describe("CronException", () => {
       const exception = new CronException("Test message", data);
 
       expect(() => {
-        // @ts-expect-error - Testing runtime immutability
         exception.data.key = "modified";
       }).toThrow();
       expect(exception.data?.key).toBe("value");
@@ -31,7 +30,7 @@ describe("CronException", () => {
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("CronException");
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
-      expect(exception.data).toBeUndefined();
+      expect(exception.data).toEqual({});
       expect(exception.date).toBeInstanceOf(Date);
     });
 
@@ -61,10 +60,10 @@ describe("CronException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Cron configuration error";
-      const exception = new CronException(message, null as unknown);
+      const exception = new CronException(message);
 
       expect(exception.message).toBe(message);
-      expect(exception.data).toBeNull();
+      expect(exception.data).toEqual({});
     });
   });
 
@@ -132,11 +131,11 @@ describe("CronException", () => {
         },
       };
 
-      const exception = new CronException<CronJobError>("Job execution failed", errorData);
+      const exception = new CronException("Job execution failed", errorData as unknown as Record<string, unknown>);
 
-      expect(exception.data?.jobDetails.name).toBe("daily-cleanup");
-      expect(exception.data?.jobDetails.expression).toBe("0 2 * * *");
-      expect(exception.data?.executionInfo.attempt).toBe(2);
+      expect((exception.data?.jobDetails as { name: string })?.name).toBe("daily-cleanup");
+      expect((exception.data?.jobDetails as { expression: string })?.expression).toBe("0 2 * * *");
+      expect((exception.data?.executionInfo as { attempt: number })?.attempt).toBe(2);
     });
 
     test("should support string generic type", () => {
@@ -146,7 +145,7 @@ describe("CronException", () => {
         documentation: "https://crontab.guru/",
       };
 
-      const exception = new CronException<typeof stringData>("Invalid expression", stringData);
+      const exception = new CronException("Invalid expression", stringData as unknown as Record<string, unknown>);
 
       expect(exception.data?.errorMessage).toBe("Cron expression validation failed");
       expect(exception.data?.suggestion).toBe("Use valid cron format: * * * * *");
@@ -160,7 +159,7 @@ describe("CronException", () => {
         maxQueueSize: 100,
       };
 
-      const exception = new CronException<typeof numberData>("Execution timeout", numberData);
+      const exception = new CronException("Execution timeout", numberData as unknown as Record<string, unknown>);
 
       expect(exception.data?.executionTime).toBe(15_000);
       expect(exception.data?.maxExecutionTime).toBe(10_000);
@@ -390,9 +389,11 @@ describe("CronException", () => {
 
       const exception = new CronException("Complex cron system error", complexData);
 
-      expect(exception.data?.jobs.successful).toBe(15);
-      expect(exception.data?.schedules.daily).toContain("reports");
-      expect(exception.data?.configuration.retryPolicy.maxRetries).toBe(3);
+      expect((exception.data?.jobs as { successful: number })?.successful).toBe(15);
+      expect((exception.data?.schedules as { daily: string[] })?.daily).toContain("reports");
+      expect((exception.data?.configuration as { retryPolicy: { maxRetries: number } })?.retryPolicy.maxRetries).toBe(
+        3,
+      );
     });
 
     test("should handle cron-specific data structures", () => {
@@ -428,11 +429,14 @@ describe("CronException", () => {
         },
       };
 
-      const exception = new CronException<{ config: CronJobConfig }>("Job config error", { config: jobConfig });
+      const exception = new CronException("Job config error", { config: jobConfig } as unknown as Record<
+        string,
+        unknown
+      >);
 
-      expect(exception.data?.config.name).toBe("user-notifications");
-      expect(exception.data?.config.options.timezone).toBe("America/New_York");
-      expect(exception.data?.config.metadata.createdBy).toBe("admin");
+      expect((exception.data?.config as { name: string })?.name).toBe("user-notifications");
+      expect((exception.data?.config as { options: { timezone: string } })?.options.timezone).toBe("America/New_York");
+      expect((exception.data?.config as { metadata: { createdBy: string } })?.metadata.createdBy).toBe("admin");
     });
   });
 
@@ -453,7 +457,7 @@ describe("CronException", () => {
 
       expect(exception.data?.currentSize).toBe(1000);
       expect(exception.data?.droppedJobs).toContain("backup-retry");
-      expect(exception.data?.oldestJob.waitTime).toBe(28_800_000);
+      expect((exception.data?.oldestJob as { waitTime: number })?.waitTime).toBe(28_800_000);
     });
 
     test("should handle cron job persistence errors", () => {
@@ -471,7 +475,7 @@ describe("CronException", () => {
       });
 
       expect(exception.data?.operation).toBe("save_state");
-      expect(exception.data?.errorDetails.retryable).toBe(true);
+      expect((exception.data?.errorDetails as { retryable: boolean })?.retryable).toBe(true);
     });
 
     test("should handle cron expression DST transition errors", () => {
@@ -507,9 +511,9 @@ describe("CronException", () => {
         resumeConditions: "memory < 6GB AND cpu < 70%",
       });
 
-      expect(exception.data?.currentUsage.memory).toBe(7.8);
+      expect((exception.data?.currentUsage as { memory: number })?.memory).toBe(7.8);
       expect(exception.data?.action).toBe("job_suspended");
-      expect(exception.data?.limits.cpu).toBe(90.0);
+      expect((exception.data?.limits as { cpu: number })?.cpu).toBe(90.0);
     });
   });
 });

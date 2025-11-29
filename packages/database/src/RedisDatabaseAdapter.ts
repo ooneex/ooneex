@@ -27,7 +27,7 @@ export class RedisDatabaseAdapter implements IRedisDatabaseAdapter {
       maxRetries: options.maxRetries || 10,
       enableOfflineQueue: options.enableOfflineQueue ?? true,
       enableAutoPipelining: options.enableAutoPipelining ?? true,
-      tls: options.tls,
+      ...(options.tls !== undefined && { tls: options.tls }),
     });
   }
 

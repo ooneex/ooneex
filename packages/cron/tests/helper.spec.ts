@@ -109,24 +109,11 @@ describe("convertToCrontab", () => {
       // Mock the Date constructor
       const OriginalDate = global.Date;
       global.Date = class MockDate extends OriginalDate {
-        constructor();
-        constructor(value: string | number | Date);
-        constructor(
-          year: number,
-          monthIndex: number,
-          date?: number,
-          hours?: number,
-          minutes?: number,
-          seconds?: number,
-          ms?: number,
-        );
-        constructor(
-          ...args: [] | [string | number | Date] | [number, number, number?, number?, number?, number?, number?]
-        ) {
+        constructor(...args: unknown[]) {
           if (args.length === 0) {
             super(mockDate.getTime());
           } else {
-            super(...(args as [string | number | Date]));
+            super(args[0] as string | number | Date);
           }
         }
       } as DateConstructor;

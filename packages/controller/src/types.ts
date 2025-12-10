@@ -36,6 +36,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   redis?: IRedisDatabaseAdapter;
   mailer?: IMailer;
   app: {
+    url: string;
     env: IAppEnv;
   };
   response: IResponse<T["response"]>;

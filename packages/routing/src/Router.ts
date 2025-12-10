@@ -17,6 +17,23 @@ export class Router implements IRouter {
     }
 
     const routes = this.routes.get(route.path) ?? [];
+
+    // Check for duplicate path and method combination (only for HTTP routes)
+    if (!route.isSocket) {
+      const duplicateRoute = routes.find(
+        (r) => !r.isSocket && "method" in r && "method" in route && r.method === route.method,
+      );
+      if (duplicateRoute && "method" in route) {
+        throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, route);
+      }
+    } else {
+      // For socket routes, check if there's already a socket route with the same path
+      const duplicateSocketRoute = routes.find((r) => r.isSocket);
+      if (duplicateSocketRoute) {
+        throw new RouterException(`Socket route with path '${route.path}' already exists`, route);
+      }
+    }
+
     routes.push(route);
     this.routes.set(route.path, routes);
     container.add(route.controller, EContainerScope.Singleton);
@@ -44,6 +61,32 @@ export class Router implements IRouter {
     return this.routes;
   }
 
+  public getSocketRoutes(): Map<string, RouteConfigType[]> {
+    const socketRoutes = new Map<string, RouteConfigType[]>();
+
+    for (const [path, routes] of this.routes) {
+      const filteredRoutes = routes.filter((route): route is RouteConfigType => route.isSocket);
+      if (filteredRoutes.length > 0) {
+        socketRoutes.set(path, filteredRoutes);
+      }
+    }
+
+    return socketRoutes;
+  }
+
+  public getHttpRoutes(): Map<string, RouteConfigType[]> {
+    const httpRoutes = new Map<string, RouteConfigType[]>();
+
+    for (const [path, routes] of this.routes) {
+      const filteredRoutes = routes.filter((route): route is RouteConfigType => !route.isSocket);
+      if (filteredRoutes.length > 0) {
+        httpRoutes.set(path, filteredRoutes);
+      }
+    }
+
+    return httpRoutes;
+  }
+
   public generate<P extends Record<string, string | number> = Record<string, string | number>>(
     name: string,
     params?: P,
@@ -63,7 +106,7 @@ export class Router implements IRouter {
       }
 
       for (const match of paramMatches) {
-        const paramName = match.substring(1); // Remove the colon
+        const paramName = match.substring(1);
         if (!(paramName in params)) {
           throw new RouterException(`Missing required parameter '${paramName}' for route '${name}'`);
         }

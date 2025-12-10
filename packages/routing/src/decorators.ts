@@ -21,6 +21,23 @@ const createRouteDecorator = (method: HttpMethodType) => {
         ...config,
         path,
         method,
+        isSocket: false,
+        controller: target as ControllerClassType,
+      };
+
+      router.addRoute(route);
+    };
+  };
+};
+
+const createSocketDecorator = () => {
+  return <T extends string>(path: RoutePathType<T>, config: TypedRouteConfig<T>): InferredRouteDecorator => {
+    return (target: new (...args: unknown[]) => unknown): void => {
+      const route: RouteConfigType = {
+        ...config,
+        path,
+        method: "GET",
+        isSocket: true,
         controller: target as ControllerClassType,
       };
 
@@ -37,6 +54,7 @@ export const Route = {
   patch: createRouteDecorator("PATCH"),
   options: createRouteDecorator("OPTIONS"),
   head: createRouteDecorator("HEAD"),
+  socket: createSocketDecorator(),
 };
 
 type TypedRouteConfigType = {

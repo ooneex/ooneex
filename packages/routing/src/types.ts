@@ -703,13 +703,18 @@ export type RouteConfigType = {
   ip?: string[];
   host?: string[];
   roles?: ERole[];
+  isSocket: boolean;
 };
+
+// export type SocketRouteConfigType = Omit<RouteConfigType, "method">;
 
 export interface IRouter {
   addRoute: (route: RouteConfigType) => this;
   findRouteByPath: (path: string) => RouteConfigType[] | null;
   findRouteByName: (name: RouteNameType) => RouteConfigType | null;
   getRoutes: () => Map<string, RouteConfigType[]>;
+  getSocketRoutes: () => Map<string, RouteConfigType[]>;
+  getHttpRoutes: () => Map<string, RouteConfigType[]>;
   generate: <P extends Record<string, string | number> = Record<string, string | number>>(
     name: RouteNameType,
     params?: P,

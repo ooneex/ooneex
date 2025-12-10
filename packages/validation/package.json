@@ -15,12 +15,6 @@
         "default": "./dist/index.js"
       }
     },
-    "./constraints": {
-      "import": {
-        "types": "./dist/constraints.d.ts",
-        "default": "./dist/constraints.js"
-      }
-    },
     "./package.json": "./package.json"
   },
   "license": "MIT",

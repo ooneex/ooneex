@@ -1,7 +1,7 @@
 import type { ResponseDataType } from "@ooneex/http-response";
-import type { RequestDataType } from "./types";
+import type { ISocket, RequestDataType } from "./types";
 
-export class Socket {
+export class Socket implements ISocket {
   private ws: WebSocket;
   private messageHandler?: <T extends Record<string, unknown>>(event: ResponseDataType<T>) => void;
   private openHandler?: (event: Event) => void;

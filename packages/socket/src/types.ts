@@ -27,13 +27,6 @@ export type ContextConfigType = {
   request: RequestConfigType;
 };
 
-export type RequestDataType = {
-  params?: Record<string, string | number>;
-  payload?: Record<string, unknown>;
-  queries?: Record<string, string | number>;
-  language?: LocaleInfoType;
-};
-
 export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
   analytics?: IAnalytics;
@@ -46,6 +39,14 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   app: {
     url: IAppEnv;
     env: IAppEnv;
+  };
+  channel: {
+    send: (response: IResponse<T["response"]>) => Promise<void>;
+    close(code?: number, reason?: string): void;
+    subscribe: () => Promise<void>;
+    isSubscribed(): boolean;
+    unsubscribe: () => Promise<void>;
+    publish: (response: IResponse<T["response"]>) => Promise<void>;
   };
   response: IResponse<T["response"]>;
   path: string;

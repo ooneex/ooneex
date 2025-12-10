@@ -1,5 +1,5 @@
 import { PostHogAdapter } from "@ooneex/analytics";
-import { AppEnv } from "@ooneex/app-env";
+import { AppEnv, type EnvType } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
 import type { CronTimeType, ICron } from "@ooneex/cron";
 import { RedisDatabaseAdapter, TypeormPgDatabaseAdapter } from "@ooneex/database";
@@ -16,7 +16,7 @@ const database = new TypeormPgDatabaseAdapter({
 
 const redis = new RedisDatabaseAdapter();
 
-const appEnv = new AppEnv();
+const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") as EnvType);
 
 class DocParserCron implements ICron {
   public getTime(): CronTimeType {

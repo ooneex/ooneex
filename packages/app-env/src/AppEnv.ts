@@ -19,8 +19,8 @@ export class AppEnv implements IAppEnv {
   public readonly isHotfix: boolean;
   public readonly isProduction: boolean;
 
-  public constructor() {
-    this.env = Bun.env.APP_ENV?.trim() as EnvType;
+  public constructor(env: EnvType) {
+    this.env = env;
 
     if (!this.env) {
       throw new AppEnvException("APP_ENV is not set");

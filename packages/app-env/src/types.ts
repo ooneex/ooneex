@@ -1,5 +1,4 @@
-// biome-ignore lint/suspicious/noExplicitAny: trust me
-export type AppEnvClassType = new (...args: any[]) => IAppEnv;
+export type AppEnvClassType = new (env: EnvType) => IAppEnv;
 
 export enum Environment {
   LOCAL = "local",

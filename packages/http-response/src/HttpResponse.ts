@@ -1,27 +1,25 @@
+import { Environment } from "@ooneex/app-env";
 import { Header, type IHeader } from "@ooneex/http-header";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
-import type { IResponse } from "./types";
+import type { IResponse, ResponseDataType } from "./types";
 
-export class HttpResponse<DataType extends Record<string, unknown> = Record<string, unknown>>
-  implements IResponse<DataType>
-{
+export class HttpResponse<Data extends Record<string, unknown> = Record<string, unknown>> implements IResponse<Data> {
   public readonly header: IHeader;
-  private data: DataType | null = null;
+  private data: Data | null = null;
   private status: StatusCodeType = HttpStatus.Code.OK;
   private redirectUrl: string | URL | null = null;
   private message: string | null = null;
-  private isException = false;
+  public done = false; // For socket
 
   constructor(header?: IHeader) {
     this.header = header || new Header();
   }
 
-  public json(data: DataType, status: StatusCodeType = HttpStatus.Code.OK): IResponse<DataType> {
+  public json(data: Data, status: StatusCodeType = HttpStatus.Code.OK): IResponse<Data> {
     this.data = data;
     this.status = status;
     this.header.setJson();
     this.header.remove("Location");
-    this.isException = false;
     this.redirectUrl = null;
     this.message = null;
 
@@ -31,14 +29,13 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
   public exception(
     message: string,
     config?: {
-      data?: DataType;
+      data?: Data;
       status?: StatusCodeType;
     },
-  ): IResponse<DataType> {
+  ): IResponse<Data> {
     this.message = message;
     this.status = config?.status ?? HttpStatus.Code.InternalServerError;
     this.data = config?.data || null;
-    this.isException = true;
     this.redirectUrl = null;
     this.header.setJson();
     this.header.remove("Location");
@@ -49,14 +46,13 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
   public notFound(
     message: string,
     config?: {
-      data?: DataType;
+      data?: Data;
       status?: StatusCodeType;
     },
-  ): IResponse<DataType> {
+  ): IResponse<Data> {
     this.message = message;
     this.status = config?.status || HttpStatus.Code.NotFound;
     this.data = config?.data || null;
-    this.isException = true;
     this.redirectUrl = null;
     this.header.setJson();
     this.header.remove("Location");
@@ -64,13 +60,12 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
     return this;
   }
 
-  public redirect(url: string | URL, status: StatusCodeType = HttpStatus.Code.Found): IResponse<DataType> {
+  public redirect(url: string | URL, status: StatusCodeType = HttpStatus.Code.Found): IResponse<Data> {
     this.redirectUrl = url;
     this.status = status;
     this.header.setLocation(url.toString());
     this.data = null;
     this.message = null;
-    this.isException = false;
 
     return this;
   }
@@ -83,22 +78,28 @@ export class HttpResponse<DataType extends Record<string, unknown> = Record<stri
       });
     }
 
-    if (this.isException) {
-      const errorData = {
-        error: true,
-        message: this.message,
-        status: this.status,
-        data: this.data,
-      };
+    const status = new HttpStatus();
 
-      return new Response(JSON.stringify(errorData), {
-        status: this.status,
-        headers: this.header.native,
-      });
-    }
-
-    return new Response(this.data ? JSON.stringify(this.data) : null, {
+    const responseData: ResponseDataType<Data> = {
+      data: this.data || ({} as Data),
+      message: this.message,
+      success: status.isSuccessful(this.status),
+      done: this.done,
       status: this.status,
+      isClientError: status.isClientError(this.status),
+      isServerError: status.isServerError(this.status),
+      isNotFound: false,
+      isUnauthorized: false,
+      isForbidden: false,
+      debug: false,
+      app: {
+        url: "",
+        env: Environment.PRODUCTION,
+      },
+    };
+
+    return new Response(JSON.stringify(responseData), {
+      status: responseData.status,
       headers: this.header.native,
     });
   }

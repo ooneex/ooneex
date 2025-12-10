@@ -28,6 +28,8 @@
     "@ooneex/http-status": "workspace:*",
     "@ooneex/http-header": "workspace:*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/app-env": "workspace:*"
+  },
   "peerDependencies": {}
 }

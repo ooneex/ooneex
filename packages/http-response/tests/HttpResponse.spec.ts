@@ -36,7 +36,22 @@ describe("HttpResponse", () => {
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
-      expect(webResponse.json()).resolves.toEqual(data);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
 
     test("should set JSON data with custom status", () => {
@@ -45,7 +60,22 @@ describe("HttpResponse", () => {
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
-      expect(webResponse.json()).resolves.toEqual(data);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 201,
+        success: true,
+      });
     });
 
     test("should reset other properties when setting JSON", () => {
@@ -58,7 +88,22 @@ describe("HttpResponse", () => {
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
-      expect(webResponse.json()).resolves.toEqual(data);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
 
     test("should handle complex data structures", () => {
@@ -70,7 +115,22 @@ describe("HttpResponse", () => {
 
       response.json(data);
       const webResponse = response.get();
-      expect(webResponse.json()).resolves.toEqual(data);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
   });
 
@@ -86,10 +146,20 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.InternalServerError);
 
       expect(webResponse.json()).resolves.toEqual({
-        error: true,
+        app: {
+          env: "",
+          url: "",
+        },
+        data: {},
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: true,
+        isUnauthorized: false,
         message,
         status: HttpStatus.Code.InternalServerError,
-        data: null,
+        success: false,
       });
     });
 
@@ -107,10 +177,20 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
 
       expect(webResponse.json()).resolves.toEqual({
-        error: true,
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: true,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
         message,
         status: HttpStatus.Code.BadRequest,
-        data,
+        success: false,
       });
     });
 
@@ -139,10 +219,20 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.NotFound);
 
       expect(webResponse.json()).resolves.toEqual({
-        error: true,
+        app: {
+          env: "",
+          url: "",
+        },
+        data: {},
+        debug: false,
+        isClientError: true,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
         message,
         status: HttpStatus.Code.NotFound,
-        data: null,
+        success: false,
       });
     });
 
@@ -160,10 +250,20 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.Gone);
 
       expect(webResponse.json()).resolves.toEqual({
-        error: true,
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: true,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
         message,
         status: HttpStatus.Code.Gone,
-        data,
+        success: false,
       });
     });
   });
@@ -226,7 +326,22 @@ describe("HttpResponse", () => {
       expect(webResponse.headers.get("Content-Type")).toBe("application/json");
 
       const responseData = await webResponse.json();
-      expect(responseData).toEqual(data);
+      expect(responseData).toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 201,
+        success: true,
+      });
     });
 
     test("should return Web API Response for redirect", () => {
@@ -255,10 +370,20 @@ describe("HttpResponse", () => {
 
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
-        error: true,
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: true,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
         message,
         status: HttpStatus.Code.UnprocessableEntity,
-        data,
+        success: false,
       });
     });
 
@@ -280,7 +405,22 @@ describe("HttpResponse", () => {
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
-      expect(webResponse.json()).resolves.toEqual(data);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 201,
+        success: true,
+      });
     });
 
     test("should support method chaining for exception", () => {
@@ -329,7 +469,7 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
 
       const data = await webResponse.json();
-      expect(data.error).toBe(true);
+      expect(data.success).toBe(false);
       expect(data.message).toBe("Error occurred");
     });
 
@@ -344,7 +484,22 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
 
       const data = await webResponse.json();
-      expect(data).toEqual({ success: true });
+      expect(data).toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data: { success: true },
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
 
     test("should properly transition from redirect to json", async () => {
@@ -359,7 +514,22 @@ describe("HttpResponse", () => {
       expect(response.header.get("Location")).toBeNull();
 
       const data = await webResponse.json();
-      expect(data).toEqual({ message: "switched" });
+      expect(data).toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data: { message: "switched" },
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
   });
 
@@ -381,7 +551,22 @@ describe("HttpResponse", () => {
       userResponse.json(userData);
 
       const webResponse = userResponse.get();
-      expect(webResponse.json()).resolves.toEqual(userData);
+      expect(webResponse.json()).resolves.toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data: userData,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
 
     test("should work with typed exception data", async () => {
@@ -440,7 +625,22 @@ describe("HttpResponse", () => {
 
       const webResponse = response.get();
       const data = await webResponse.json();
-      expect(data).toEqual(emptyData);
+      expect(data).toEqual({
+        app: {
+          env: "",
+          url: "",
+        },
+        data: emptyData,
+        debug: false,
+        isClientError: false,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message: null,
+        status: 200,
+        success: true,
+      });
     });
 
     test("should handle URL object toString conversion", () => {

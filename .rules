@@ -4,9 +4,8 @@ This project uses **Ultracite**, a zero-config Biome preset that enforces strict
 
 ## Quick Reference
 
-- **Format code**: `bunx ultracite fix`
-- **Check for issues**: `bunx ultracite check`
-- **Diagnose setup**: `bunx ultracite doctor`
+- **Format code**: `bun run fmt`
+- **Check for issues**: `bun run lint`
 
 Biome (the underlying engine) provides extremely fast Rust-based linting and formatting. Most issues are automatically fixable.
 
@@ -126,4 +125,4 @@ Biome's linter will catch most issues automatically. Focus your attention on:
 
 ---
 
-Most formatting and common issues are automatically fixed by Biome. Run `bunx ultracite fix` before committing to ensure compliance.
+Most formatting and common issues are automatically fixed by Biome. Run `bun run lint` before committing to ensure compliance.

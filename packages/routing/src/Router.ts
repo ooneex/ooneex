@@ -18,20 +18,12 @@ export class Router implements IRouter {
 
     const routes = this.routes.get(route.path) ?? [];
 
-    // Check for duplicate path and method combination (only for HTTP routes)
-    if (!route.isSocket) {
-      const duplicateRoute = routes.find(
-        (r) => !r.isSocket && "method" in r && "method" in route && r.method === route.method,
-      );
-      if (duplicateRoute && "method" in route) {
-        throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, route);
-      }
-    } else {
-      // For socket routes, check if there's already a socket route with the same path
-      const duplicateSocketRoute = routes.find((r) => r.isSocket);
-      if (duplicateSocketRoute) {
-        throw new RouterException(`Socket route with path '${route.path}' already exists`, route);
-      }
+    if (route.isSocket && routes.find((r) => r.isSocket)) {
+      throw new RouterException(`Socket route with path '${route.path}' already exists`, route);
+    }
+
+    if (!route.isSocket && routes.find((r) => !r.isSocket && r.method === route.method)) {
+      throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, route);
     }
 
     routes.push(route);
@@ -119,4 +111,4 @@ export class Router implements IRouter {
   }
 }
 
-export const router = new Router();
+export const router: Router = new Router();

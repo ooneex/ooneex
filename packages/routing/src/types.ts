@@ -2,7 +2,7 @@ import type { Environment } from "@ooneex/app-env";
 import type { ControllerClassType } from "@ooneex/controller";
 import type { ERole } from "@ooneex/role";
 import type { HttpMethodType } from "@ooneex/types";
-import type { AssertType } from "@ooneex/validation";
+import type { AssertType, IAssert } from "@ooneex/validation";
 
 export type RouteNamespace =
   | "api"
@@ -693,10 +693,10 @@ export type RouteConfigType = {
   name: RouteNameType;
   path: `/${string}`;
   method: HttpMethodType;
-  params?: Record<string, AssertType>;
-  queries?: AssertType;
-  payload?: AssertType;
-  response?: AssertType;
+  params?: Record<string, AssertType | AssertType[] | IAssert | IAssert[]>;
+  queries?: AssertType | AssertType[] | IAssert | IAssert[];
+  payload?: AssertType | AssertType[] | IAssert | IAssert[];
+  response?: AssertType | AssertType[] | IAssert | IAssert[];
   controller: ControllerClassType;
   description: string;
   env?: Environment[];
@@ -705,8 +705,6 @@ export type RouteConfigType = {
   roles?: ERole[];
   isSocket: boolean;
 };
-
-// export type SocketRouteConfigType = Omit<RouteConfigType, "method">;
 
 export interface IRouter {
   addRoute: (route: RouteConfigType) => this;

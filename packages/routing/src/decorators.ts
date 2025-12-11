@@ -1,7 +1,6 @@
-import { Environment } from "@ooneex/app-env";
-import type { ContextType, ControllerClassType } from "@ooneex/controller";
+import type { ControllerClassType } from "@ooneex/controller";
 import type { HttpMethodType } from "@ooneex/types";
-import { Assert, type AssertType } from "@ooneex/validation";
+import type { AssertType } from "@ooneex/validation";
 import { router } from "./Router";
 import type { ExtractParameters, RouteConfigType, RoutePathType } from "./types";
 
@@ -13,6 +12,11 @@ type TypedRouteConfig<T extends string> = Omit<
 };
 
 type InferredRouteDecorator = (target: new (...args: unknown[]) => unknown) => void;
+
+type RouteDecoratorFunction = <T extends string>(
+  path: RoutePathType<T>,
+  config: TypedRouteConfig<T>,
+) => InferredRouteDecorator;
 
 const createRouteDecorator = (method: HttpMethodType) => {
   return <T extends string>(path: RoutePathType<T>, config: TypedRouteConfig<T>): InferredRouteDecorator => {
@@ -47,45 +51,45 @@ const createSocketDecorator = () => {
 };
 
 export const Route = {
-  get: createRouteDecorator("GET"),
-  post: createRouteDecorator("POST"),
-  put: createRouteDecorator("PUT"),
-  delete: createRouteDecorator("DELETE"),
-  patch: createRouteDecorator("PATCH"),
-  options: createRouteDecorator("OPTIONS"),
-  head: createRouteDecorator("HEAD"),
-  socket: createSocketDecorator(),
+  get: createRouteDecorator("GET") as RouteDecoratorFunction,
+  post: createRouteDecorator("POST") as RouteDecoratorFunction,
+  put: createRouteDecorator("PUT") as RouteDecoratorFunction,
+  delete: createRouteDecorator("DELETE") as RouteDecoratorFunction,
+  patch: createRouteDecorator("PATCH") as RouteDecoratorFunction,
+  options: createRouteDecorator("OPTIONS") as RouteDecoratorFunction,
+  head: createRouteDecorator("HEAD") as RouteDecoratorFunction,
+  socket: createSocketDecorator() as RouteDecoratorFunction,
 };
 
-type TypedRouteConfigType = {
-  response: { success: boolean; message: string };
-  request: {
-    params: { id: string; emailId: string };
-    payload: never;
-    queries: never;
-  };
-};
+// type TypedRouteConfigType = {
+//   response: { success: boolean; message: string };
+//   request: {
+//     params: { id: string; emailId: string };
+//     payload: { name: string };
+//     queries: never;
+//   };
+// };
 
-@Route.delete("/users/:id/emails/:emailId/state/:state", {
-  name: "api.users.delete",
-  description: "Delete a user by ID",
-  params: {
-    state: Assert("string"),
-    id: Assert("string"),
-    emailId: Assert("string"),
-  },
-  payload: Assert({
-    name: "string.url",
-  }),
-  env: [Environment.LOCAL],
-})
-export class DeleteUserController {
-  public async index(context: ContextType<TypedRouteConfigType>) {
-    const { id } = context.params;
+// @Route.delete("/users/:id/emails/:emailId/state/:state", {
+//   name: "api.users.delete",
+//   description: "Delete a user by ID",
+//   params: {
+//     state: Assert("string"),
+//     id: Assert("string"),
+//     emailId: Assert("string"),
+//   },
+//   payload: Assert({
+//     name: "string.url",
+//   }),
+//   env: [Environment.LOCAL],
+// })
+// export class DeleteUserController {
+//   public async index(context: ContextType<TypedRouteConfigType>) {
+//     const { id } = context.params;
 
-    return context.response.json({
-      success: true,
-      message: `User with ID ${id} has been deleted`,
-    });
-  }
-}
+//     return context.response.json({
+//       success: true,
+//       message: `User with ID ${id} has been deleted`,
+//     });
+//   }
+// }

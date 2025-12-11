@@ -34,7 +34,6 @@
     "@ooneex/repository": "workspace:*",
     "@ooneex/middleware": "workspace:*",
     "@ooneex/database": "workspace:*",
-    "@ooneex/config": "workspace:*",
     "@ooneex/service": "workspace:*",
     "@ooneex/cache": "workspace:*"
   },

@@ -1,6 +1,5 @@
 import type { AnalyticsClassType } from "@ooneex/analytics";
 import type { CacheClassType } from "@ooneex/cache";
-import type { ConfigClassType } from "@ooneex/config";
 import type { CronClassType } from "@ooneex/cron";
 import type { DatabaseClassType } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
@@ -37,14 +36,6 @@ export const decorator = {
     return (target: CacheClassType): void => {
       if (!target.name.endsWith("Cache")) {
         throw new ContainerException(`Class name "${target.name}" must end with "Cache"`);
-      }
-      container.add(target, scope);
-    };
-  },
-  config: (scope: EContainerScope = EContainerScope.Singleton) => {
-    return (target: ConfigClassType): void => {
-      if (!target.name.endsWith("Config")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Config"`);
       }
       container.add(target, scope);
     };

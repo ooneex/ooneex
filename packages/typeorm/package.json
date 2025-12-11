@@ -103,6 +103,18 @@
         "default": "./dist/src/entities/gamification/mcq/index.js"
       }
     },
+    "./src/entities/user": {
+      "import": {
+        "types": "./dist/src/entities/user/index.d.ts",
+        "default": "./dist/src/entities/user/index.js"
+      }
+    },
+    "./src/repositories/user": {
+      "import": {
+        "types": "./dist/src/repositories/user/index.d.ts",
+        "default": "./dist/src/repositories/user/index.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -116,7 +128,9 @@
     "@ooneex/database": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/utils": "workspace:*",
-    "@ooneex/payment": "workspace:*"
+    "@ooneex/payment": "workspace:*",
+    "@ooneex/user": "workspace:*",
+    "@ooneex/role": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/video": "workspace:*",

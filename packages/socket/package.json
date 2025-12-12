@@ -31,21 +31,24 @@
     "publish": "bun run build && bun publish --access public"
   },
   "devDependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/url": "workspace:*",
-    "@ooneex/permission": "workspace:*",
-    "@ooneex/database": "workspace:*",
-    "@ooneex/storage": "workspace:*",
+    "@ooneex/analytics": "workspace:*",
     "@ooneex/cache": "workspace:*",
+    "@ooneex/database": "workspace:*",
+    "@ooneex/http-header": "workspace:*",
+    "@ooneex/http-request": "workspace:*",
+    "@ooneex/http-request-file": "workspace:*",
+    "@ooneex/http-response": "workspace:*",
     "@ooneex/logger": "workspace:*",
     "@ooneex/mailer": "workspace:*",
+    "@ooneex/permission": "workspace:*",
+    "@ooneex/storage": "workspace:*",
+    "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*",
-    "@ooneex/user": "workspace:*",
-    "@ooneex/http-request": "workspace:*",
-    "@ooneex/http-header": "workspace:*",
-    "@ooneex/http-response": "workspace:*",
-    "@ooneex/analytics": "workspace:*"
+    "@ooneex/url": "workspace:*",
+    "@ooneex/user": "workspace:*"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "dependencies": {
+    "@ooneex/app-env": "workspace:*"
+  }
 }

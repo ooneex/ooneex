@@ -25,7 +25,8 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/utils": "workspace:*",
-    "@ooneex/http-mimes": "workspace:*"
-  }
+    "@ooneex/http-mimes": "workspace:*",
+    "@ooneex/utils": "workspace:*"
+  },
+  "devDependencies": {}
 }

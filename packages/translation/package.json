@@ -25,7 +25,8 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/exception": "workspace:*"
-  }
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
+  },
+  "devDependencies": {}
 }

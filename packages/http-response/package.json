@@ -25,11 +25,10 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/http-header": "workspace:*"
+    "@ooneex/app-env": "workspace:*",
+    "@ooneex/http-header": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {
-    "@ooneex/app-env": "workspace:*"
-  },
+  "devDependencies": {},
   "peerDependencies": {}
 }

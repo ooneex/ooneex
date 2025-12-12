@@ -25,11 +25,11 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/http-mimes": "workspace:*",
     "@ooneex/http-header": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {
+    "@ooneex/http-mimes": "workspace:*",
     "@ooneex/types": "workspace:*"
   }
 }

@@ -124,25 +124,27 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "typeorm": "^0.3.27",
-    "@ooneex/database": "workspace:*",
     "@ooneex/container": "workspace:*",
-    "@ooneex/utils": "workspace:*",
+    "@ooneex/gamification": "workspace:*",
+    "@ooneex/image": "workspace:*",
     "@ooneex/payment": "workspace:*",
+    "@ooneex/status": "workspace:*",
     "@ooneex/user": "workspace:*",
-    "@ooneex/role": "workspace:*"
+    "@ooneex/utils": "workspace:*",
+    "typeorm": "^0.3.27"
   },
   "devDependencies": {
-    "@ooneex/video": "workspace:*",
     "@ooneex/book": "workspace:*",
-    "@ooneex/color": "workspace:*",
-    "@ooneex/image": "workspace:*",
-    "@ooneex/tag": "workspace:*",
     "@ooneex/category": "workspace:*",
-    "@ooneex/folder": "workspace:*",
-    "@ooneex/types": "workspace:*",
+    "@ooneex/color": "workspace:*",
     "@ooneex/currencies": "workspace:*",
-    "@ooneex/status": "workspace:*"
+    "@ooneex/database": "workspace:*",
+    "@ooneex/folder": "workspace:*",
+    "@ooneex/role": "workspace:*",
+    "@ooneex/tag": "workspace:*",
+    "@ooneex/translation": "workspace:*",
+    "@ooneex/types": "workspace:*",
+    "@ooneex/video": "workspace:*"
   },
   "peerDependencies": {}
 }

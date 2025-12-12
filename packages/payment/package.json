@@ -23,14 +23,13 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {
-    "@ooneex/currencies": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@ooneex/types": "workspace:*",
     "@ooneex/category": "workspace:*",
+    "@ooneex/currencies": "workspace:*",
     "@ooneex/image": "workspace:*",
-    "@ooneex/tag": "workspace:*"
+    "@ooneex/tag": "workspace:*",
+    "@ooneex/types": "workspace:*"
   },
   "peerDependencies": {}
 }

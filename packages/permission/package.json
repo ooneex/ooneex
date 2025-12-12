@@ -25,9 +25,13 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/user": "workspace:*",
-    "@casl/ability": "^6.7.3"
+    "@casl/ability": "^6.7.3",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/role": "workspace:*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/user": "workspace:*"
+  },
   "peerDependencies": {}
 }

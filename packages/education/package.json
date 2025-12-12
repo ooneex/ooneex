@@ -27,8 +27,6 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {},
-  "devDependencies": {
-    "@ooneex/translation": "workspace:*"
-  },
+  "devDependencies": {},
   "peerDependencies": {}
 }

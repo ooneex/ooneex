@@ -25,14 +25,12 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "resend": "^6.4.2",
+    "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
-    "@ooneex/exception": "workspace:*"
-  },
-  "devDependencies": {
     "nodemailer": "^7.0.10",
-    "@types/nodemailer": "^7.0.3",
-    "@types/react-dom": "^19.2.3"
+    "react-dom": "^19.0.0",
+    "resend": "^6.4.2"
   },
+  "devDependencies": {},
   "peerDependencies": {}
 }

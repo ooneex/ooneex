@@ -25,13 +25,17 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/validation": "workspace:*"
+    "@ooneex/container": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/app-env": "workspace:*",
-    "@ooneex/role": "workspace:*",
     "@ooneex/controller": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/http-response": "workspace:*",
+    "@ooneex/role": "workspace:*",
+    "@ooneex/types": "workspace:*",
+    "@ooneex/validation": "workspace:*"
   },
   "peerDependencies": {}
 }

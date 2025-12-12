@@ -1,6 +1,10 @@
+import type { SQL, TransactionSQL } from "bun";
+
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type MigrationClassType = new (...args: any[]) => IMigration;
 
 export interface IMigration {
-  get: <T>() => Promise<T>;
+  up: (tx: TransactionSQL, sql: SQL) => Promise<void>;
+  down: (tx: TransactionSQL, sql: SQL) => Promise<void>;
+  getVersion: () => string;
 }

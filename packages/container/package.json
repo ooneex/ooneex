@@ -30,7 +30,6 @@
     "@ooneex/analytics": "workspace:*",
     "@ooneex/cron": "workspace:*",
     "@ooneex/storage": "workspace:*",
-    "@ooneex/seeds": "workspace:*",
     "@ooneex/repository": "workspace:*",
     "@ooneex/middleware": "workspace:*",
     "@ooneex/database": "workspace:*",

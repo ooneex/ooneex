@@ -5,7 +5,6 @@ import type { DatabaseClassType } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
 import type { MiddlewareClassType } from "@ooneex/middleware";
-import type { MigrationClassType } from "@ooneex/migrations";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { RepositoryClassType } from "@ooneex/repository";
 import type { SeedClassType } from "@ooneex/seeds";
@@ -102,16 +101,6 @@ export const decorator = {
     return (target: SeedClassType): void => {
       if (!target.name.endsWith("Seed")) {
         throw new ContainerException(`Class name "${target.name}" must end with "Seed"`);
-      }
-      container.add(target, scope);
-
-      // Create own container
-    };
-  },
-  migration: (scope: EContainerScope = EContainerScope.Singleton) => {
-    return (target: MigrationClassType): void => {
-      if (!target.name.endsWith("Migration")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Migration"`);
       }
       container.add(target, scope);
 

@@ -18,8 +18,6 @@ hoistPattern = [
   "@types/bun",
   "husky",
   "nx",
-  "typeorm",
-  "nanoid",
   "typescript",
   "undici-types",
 ]

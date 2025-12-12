@@ -24,11 +24,10 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
     "jose": "^6.1.2"
   },
-  "devDependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
-  },
+  "devDependencies": {},
   "peerDependencies": {}
 }

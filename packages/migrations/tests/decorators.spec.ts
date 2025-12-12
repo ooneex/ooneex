@@ -1,0 +1,306 @@
+import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import { ContainerException, container, EContainerScope } from "@ooneex/container";
+import { MIGRATIONS_CONTAINER } from "@/container";
+import { migration } from "@/decorators";
+import type { IMigration, MigrationClassType } from "@/types";
+
+describe("migration decorator", () => {
+  // Store original container.add and restore after tests
+  let originalAdd: typeof container.add;
+
+  beforeEach(() => {
+    // Store the original container.add method
+    originalAdd = container.add;
+    // Mock container.add
+    container.add = jest.fn();
+    // Clear the migrations container
+    MIGRATIONS_CONTAINER.length = 0;
+  });
+
+  afterEach(() => {
+    // Restore original container.add
+    container.add = originalAdd;
+    // Clear the migrations container
+    MIGRATIONS_CONTAINER.length = 0;
+    jest.clearAllMocks();
+  });
+
+  test("should accept a class with name starting with 'Migration'", () => {
+    @migration()
+    class MigrationTest implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(container.add).toHaveBeenCalledWith(MigrationTest, EContainerScope.Singleton);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+    expect(MIGRATIONS_CONTAINER[0]).toBe(MigrationTest);
+  });
+
+  test("should throw ContainerException for class name not starting with 'Migration'", () => {
+    class TestMigration implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(() => migration()(TestMigration as MigrationClassType)).toThrow(ContainerException);
+  });
+
+  test("should throw ContainerException with correct error message", () => {
+    class InvalidClassName implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(() => migration()(InvalidClassName as MigrationClassType)).toThrow(
+      'Class name "InvalidClassName" must start with "Migration"',
+    );
+  });
+
+  test("should use Singleton scope by default", () => {
+    @migration()
+    class MigrationDefaultScope implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledWith(MigrationDefaultScope, EContainerScope.Singleton);
+  });
+
+  test("should accept custom scope parameter", () => {
+    @migration(EContainerScope.Transient)
+    class MigrationCustomScope implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledWith(MigrationCustomScope, EContainerScope.Transient);
+  });
+
+  test("should accept Request scope", () => {
+    @migration(EContainerScope.Request)
+    class MigrationRequestScope implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(container.add).toHaveBeenCalledWith(MigrationRequestScope, EContainerScope.Request);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+  });
+
+  test("should handle multiple migrations", () => {
+    @migration()
+    class MigrationFirst implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    @migration()
+    class MigrationSecond implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "002";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(2);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(2);
+    expect(MIGRATIONS_CONTAINER[0]).toBe(MigrationFirst);
+    expect(MIGRATIONS_CONTAINER[1]).toBe(MigrationSecond);
+  });
+
+  test("should accept class with 'Migration' prefix only", () => {
+    class Migration implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    migration()(Migration as MigrationClassType);
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+  });
+
+  test("should accept class with 'Migration' followed by numbers", () => {
+    class Migration20231201 implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "20231201";
+      }
+    }
+
+    migration()(Migration20231201 as MigrationClassType);
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+  });
+
+  test("should accept class with 'Migration' followed by special characters", () => {
+    class Migration_Create_Users_Table implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    migration()(Migration_Create_Users_Table as MigrationClassType);
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+  });
+
+  test("should reject class with lowercase 'migration' prefix", () => {
+    class migrationTest implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(() => migration()(migrationTest as MigrationClassType)).toThrow(ContainerException);
+  });
+
+  test("should reject class with 'Migration' in the middle", () => {
+    class TestMigrationClass implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(() => migration()(TestMigrationClass as MigrationClassType)).toThrow(ContainerException);
+  });
+
+  test("should add migration to container before adding to migrations array", () => {
+    const callOrder: string[] = [];
+
+    container.add = jest.fn(() => {
+      callOrder.push("container.add");
+    }) as typeof container.add;
+
+    const originalPush = MIGRATIONS_CONTAINER.push;
+    MIGRATIONS_CONTAINER.push = jest.fn((...args) => {
+      callOrder.push("MIGRATIONS_CONTAINER.push");
+      return originalPush.call(MIGRATIONS_CONTAINER, ...args);
+    }) as typeof MIGRATIONS_CONTAINER.push;
+
+    @migration()
+    class MigrationOrder implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(callOrder).toEqual(["container.add", "MIGRATIONS_CONTAINER.push"]);
+    expect(MigrationOrder).toBeDefined();
+
+    // Restore original push
+    MIGRATIONS_CONTAINER.push = originalPush;
+  });
+
+  test("should return void", () => {
+    const decorator = migration();
+
+    class MigrationReturnTest implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    const result = decorator(MigrationReturnTest as MigrationClassType);
+
+    expect(result).toBeUndefined();
+  });
+
+  test("should work with class extending a base class", () => {
+    abstract class BaseMigration implements IMigration {
+      abstract up(): Promise<void>;
+      abstract down(): Promise<void>;
+      abstract getVersion(): string;
+    }
+
+    @migration()
+    class MigrationExtended extends BaseMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+    expect(MigrationExtended).toBeDefined();
+  });
+
+  test("should work with class that has constructor parameters", () => {
+    @migration()
+    class MigrationWithConstructor implements IMigration {
+      constructor(private readonly version: string) {}
+
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return this.version;
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+    expect(MigrationWithConstructor).toBeDefined();
+  });
+
+  test("should work with class that has additional methods", () => {
+    @migration()
+    class MigrationWithExtraMethods implements IMigration {
+      async up(): Promise<void> {}
+      async down(): Promise<void> {}
+      getVersion(): string {
+        return "001";
+      }
+
+      public publicMethod(): string {
+        return "test";
+      }
+    }
+
+    expect(container.add).toHaveBeenCalledTimes(1);
+    expect(MIGRATIONS_CONTAINER).toHaveLength(1);
+    expect(MigrationWithExtraMethods).toBeDefined();
+  });
+});

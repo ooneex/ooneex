@@ -2,5 +2,7 @@
 export type SeedClassType = new (...args: any[]) => ISeed;
 
 export interface ISeed {
-  get: <T>() => Promise<T>;
+  run: <T = unknown>(data?: unknown[]) => Promise<T> | T;
+  isActive: () => Promise<boolean> | boolean;
+  getDependencies: () => Promise<SeedClassType[]> | SeedClassType[];
 }

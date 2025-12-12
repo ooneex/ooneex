@@ -1,0 +1,19 @@
+import { type SeedClassType, seed } from '@ooneex/seeds';
+
+@seed()
+export class {{ name }} implements ISeed {
+  public async run<T>(data?: any[]): Promise<T> {
+    // Your seed logic here
+    // console.log('{{ name }}!');
+
+    return data as T;
+  }
+
+  public isActive(): boolean {
+    return true;
+  }
+
+  public async getDependencies(): Promise<SeedClassType[]> {
+    return [];
+  }
+}

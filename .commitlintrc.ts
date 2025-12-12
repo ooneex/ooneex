@@ -23,7 +23,6 @@ const Configuration: UserConfig = {
         "cache",
         "category",
         "color",
-        "config",
         "container",
         "controller",
         "country",

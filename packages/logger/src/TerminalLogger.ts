@@ -24,6 +24,7 @@ export class TerminalLogger implements ILogger {
       INFO: "#007AFF",
       DEBUG: "#8E8E93",
       LOG: "#8E8E93",
+      SUCCESS: "#00C851",
     };
 
     return colorMap[level.toUpperCase()] || "white";
@@ -146,6 +147,14 @@ export class TerminalLogger implements ILogger {
   public log(message: string, data?: Record<string, ScalarType>): void {
     this.writeToConsole({
       level: "LOG",
+      message,
+      ...(data && { data }),
+    });
+  }
+
+  public success(message: string, data?: Record<string, ScalarType>): void {
+    this.writeToConsole({
+      level: "SUCCESS",
       message,
       ...(data && { data }),
     });

@@ -16,6 +16,7 @@ export interface ILogger<Data = Record<string, ScalarType>> {
   info: (message: string, data?: Data) => Promise<void> | void;
   debug: (message: string, data?: Data) => Promise<void> | void;
   log: (message: string, data?: Data) => Promise<void> | void;
+  success: (message: string, data?: Data) => Promise<void> | void;
 }
 
 export enum ELogLevel {
@@ -24,6 +25,7 @@ export enum ELogLevel {
   INFO = "INFO",
   DEBUG = "DEBUG",
   LOG = "LOG",
+  SUCCESS = "SUCCESS",
 }
 
 export type LevelType = `${ELogLevel}`;

@@ -60,6 +60,13 @@ export class SqliteLogger implements ILogger<LogsEntity> {
     });
   }
 
+  public success(message: string, data?: LogsEntity): void {
+    this.writeLog("SUCCESS", {
+      message,
+      ...(data && { data }),
+    });
+  }
+
   private writeLog(
     level: LevelType,
     config?: {

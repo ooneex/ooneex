@@ -20,6 +20,6 @@ export class LogsEntity {
   userAgent?: string;
   referer?: string;
   params?: Record<string, ScalarType>;
-  payload?: Record<string, ScalarType>;
+  payload?: Record<string, unknown>;
   queries?: Record<string, ScalarType>;
 }

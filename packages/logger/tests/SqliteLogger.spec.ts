@@ -94,13 +94,13 @@ describe("SqliteLogger", () => {
     test("should handle database initialization errors", async () => {
       mockDbOpenSpy.mockRejectedValueOnce(new Error("Database connection failed"));
 
-      await expect(logger.init()).rejects.toThrow("Database connection failed");
+      expect(logger.init()).rejects.toThrow("Database connection failed");
     });
 
     test("should handle table creation errors", async () => {
       mockDbCreateTableSpy.mockRejectedValueOnce(new Error("Table creation failed"));
 
-      await expect(logger.init()).rejects.toThrow("Table creation failed");
+      expect(logger.init()).rejects.toThrow("Table creation failed");
     });
   });
 

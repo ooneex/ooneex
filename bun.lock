@@ -122,7 +122,6 @@
         "@ooneex/middleware": "workspace:*",
         "@ooneex/permission": "workspace:*",
         "@ooneex/repository": "workspace:*",
-        "@ooneex/seeds": "workspace:*",
         "@ooneex/service": "workspace:*",
         "@ooneex/storage": "workspace:*",
       },
@@ -302,7 +301,6 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "nodemailer": "^7.0.10",
-        "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "resend": "^6.4.2",
       },
@@ -386,6 +384,14 @@
     "packages/seeds": {
       "name": "@ooneex/seeds",
       "version": "0.0.0",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+        "@ooneex/logger": "workspace:*",
+        "@ooneex/utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/exception": "workspace:*",
+      },
     },
     "packages/service": {
       "name": "@ooneex/service",

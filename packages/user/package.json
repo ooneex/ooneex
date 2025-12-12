@@ -23,11 +23,10 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun run build && bun publish --access public"
   },
-  "dependencies": {
-    "@ooneex/role": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@ooneex/image": "workspace:*",
+    "@ooneex/role": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "peerDependencies": {}

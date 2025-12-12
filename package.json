@@ -18,10 +18,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@casl/ability": "^6.7.3",
-    "nanoid": "^5.1.6",
-    "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.28"
+    "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"

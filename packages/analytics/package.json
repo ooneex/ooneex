@@ -27,8 +27,8 @@
   "devDependencies": {},
   "peerDependencies": {},
   "dependencies": {
-    "posthog-node": "^5.11.0",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/http-status": "workspace:*",
+    "posthog-node": "^5.11.0"
   }
 }

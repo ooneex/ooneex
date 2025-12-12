@@ -25,10 +25,10 @@
     "publish": "bun run build && bun publish --access public"
   },
   "dependencies": {
-    "@ooneex/http-mimes": "workspace:*",
     "ua-parser-js": "^2.0.6"
   },
   "devDependencies": {
+    "@ooneex/http-mimes": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "peerDependencies": {}

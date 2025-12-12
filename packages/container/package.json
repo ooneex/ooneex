@@ -34,7 +34,6 @@
     "@ooneex/middleware": "workspace:*",
     "@ooneex/permission": "workspace:*",
     "@ooneex/repository": "workspace:*",
-    "@ooneex/seeds": "workspace:*",
     "@ooneex/service": "workspace:*",
     "@ooneex/storage": "workspace:*"
   },

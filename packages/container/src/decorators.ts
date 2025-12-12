@@ -7,7 +7,6 @@ import type { MailerClassType } from "@ooneex/mailer";
 import type { MiddlewareClassType } from "@ooneex/middleware";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { RepositoryClassType } from "@ooneex/repository";
-import type { SeedClassType } from "@ooneex/seeds";
 import type { ServiceClassType } from "@ooneex/service";
 import type { StorageClassType } from "@ooneex/storage";
 import { container } from "./Container";
@@ -91,16 +90,6 @@ export const decorator = {
     return (target: CronClassType): void => {
       if (!target.name.endsWith("Cron")) {
         throw new ContainerException(`Class name "${target.name}" must end with "Cron"`);
-      }
-      container.add(target, scope);
-
-      // Create own container
-    };
-  },
-  seed: (scope: EContainerScope = EContainerScope.Singleton) => {
-    return (target: SeedClassType): void => {
-      if (!target.name.endsWith("Seed")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Seed"`);
       }
       container.add(target, scope);
 

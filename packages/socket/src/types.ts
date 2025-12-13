@@ -24,8 +24,7 @@ export interface IController<T extends ContextConfigType = ContextConfigType> {
 
 export type ContextConfigType = {
   response: Record<string, unknown>;
-  request: RequestConfigType;
-};
+} & RequestConfigType;
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
@@ -52,9 +51,9 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   path: string;
   url: IUrl;
   header: Header;
-  params: T["request"]["params"];
-  payload: T["request"]["payload"];
-  queries: T["request"]["queries"];
+  params: T["params"];
+  payload: T["payload"];
+  queries: T["queries"];
   files: Record<string, IRequestFile>;
   ip: string | null;
   host: string;

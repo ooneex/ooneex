@@ -4,7 +4,7 @@ import { SQL } from "bun";
 import { createMigrationTable } from "./createMigrationTable";
 import { getMigrations } from "./getMigrations";
 
-export const migrationUp = async (config?: { databaseUrl?: string; tableName?: string }) => {
+export const migrationUp = async (config?: { databaseUrl?: string; tableName?: string }): Promise<void> => {
   const tableName = config?.tableName || "migrations";
 
   const sql = new SQL({

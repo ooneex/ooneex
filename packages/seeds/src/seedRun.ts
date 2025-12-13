@@ -17,7 +17,7 @@ const run = async (seed: ISeed): Promise<void> => {
   await seed.run(data);
 };
 
-export const seedRun = async () => {
+export const seedRun = async (): Promise<void> => {
   const seeds = getSeeds();
   const logger = new TerminalLogger();
 

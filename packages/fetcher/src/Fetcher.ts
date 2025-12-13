@@ -1,10 +1,10 @@
-import { Header, ReadonlyHeader } from "@ooneex/http-header";
+import { Header } from "@ooneex/http-header";
 import type { MimeType } from "@ooneex/http-mimes";
-import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
+import type { ResponseDataType } from "@ooneex/http-response";
 import type { HttpMethodType } from "@ooneex/types";
-import type { FetcherResponseType } from "./types";
+import type { IFetcher } from "./types";
 
-export class Fetcher {
+export class Fetcher implements IFetcher {
   private abortController: AbortController;
   public readonly header: Header = new Header();
 
@@ -59,68 +59,72 @@ export class Fetcher {
     return new Fetcher(this.baseURL);
   }
 
-  public async get<T = unknown>(path: string): Promise<FetcherResponseType<T>> {
+  public async get<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("GET", path);
   }
 
-  public async post<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>> {
+  public async post<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("POST", path, data);
   }
 
-  public async put<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>> {
+  public async put<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("PUT", path, data);
   }
 
-  public async patch<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>> {
+  public async patch<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("PATCH", path, data);
   }
 
-  public async delete<T = unknown>(path: string): Promise<FetcherResponseType<T>> {
+  public async delete<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("DELETE", path);
   }
 
-  public async head<T = unknown>(path: string): Promise<FetcherResponseType<T>> {
+  public async head<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("HEAD", path);
   }
 
-  public async options<T = unknown>(path: string): Promise<FetcherResponseType<T>> {
+  public async options<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+  ): Promise<ResponseDataType<T>> {
     return this.request<T>("OPTIONS", path);
   }
 
-  public async request<T = unknown>(
+  public async request<T extends Record<string, unknown> = Record<string, unknown>>(
     method: HttpMethodType,
     path: string,
     data?: unknown,
-  ): Promise<FetcherResponseType<T>> {
+  ): Promise<ResponseDataType<T>> {
     const fullURL = this.buildURL(path);
     const requestOptions = this.buildRequestOptions(method, data);
     const response = await fetch(fullURL, requestOptions);
-    const status = new HttpStatus();
-    const statusCode = response.status as StatusCodeType;
-
-    let responseData = null;
-    let message = null;
 
     try {
-      responseData = await response.json();
+      return await response.json();
     } catch (error) {
-      message = error instanceof Error ? error.message : "Failed to parse JSON response";
+      throw new Error(error instanceof Error ? error.message : "Failed to parse JSON response");
     }
-
-    return {
-      data: responseData,
-      message,
-      header: new ReadonlyHeader(response.headers),
-      isInformational: status.isInformational(statusCode),
-      isSuccessful: status.isSuccessful(statusCode),
-      isRedirect: status.isRedirect(statusCode),
-      isClientError: status.isClientError(statusCode),
-      isServerError: status.isServerError(statusCode),
-      isError: status.isError(statusCode),
-    };
   }
 
-  public async upload<T = unknown>(path: string, file: File | Blob, name = "file"): Promise<FetcherResponseType<T>> {
+  public async upload<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    file: File | Blob,
+    name = "file",
+  ): Promise<ResponseDataType<T>> {
     const formData = new FormData();
     formData.append(name, file);
 

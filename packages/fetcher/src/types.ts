@@ -1,16 +1,7 @@
-import type { Header, HeaderFieldType, ReadonlyHeader } from "@ooneex/http-header";
-
-export type FetcherResponseType<T = unknown> = {
-  data: T | null;
-  message: string | null;
-  header: ReadonlyHeader;
-  isInformational: boolean;
-  isSuccessful: boolean;
-  isRedirect: boolean;
-  isClientError: boolean;
-  isServerError: boolean;
-  isError: boolean;
-};
+import type { Header } from "@ooneex/http-header";
+import type { MimeType } from "@ooneex/http-mimes";
+import type { ResponseDataType } from "@ooneex/http-response";
+import type { HttpMethodType } from "@ooneex/types";
 
 export interface IFetcher {
   readonly header: Header;
@@ -19,20 +10,35 @@ export interface IFetcher {
   setBasicToken(token: string): IFetcher;
   clearBearerToken(): IFetcher;
   clearBasicToken(): IFetcher;
-  setContentType(contentType: HeaderFieldType): IFetcher;
-  setAccept(mimeType: string): IFetcher;
-  setAcceptJson(): IFetcher;
+  setContentType(contentType: MimeType): IFetcher;
   setLang(lang: string): IFetcher;
   abort(): IFetcher;
   clone(): IFetcher;
 
-  get<T = unknown>(path: string): Promise<FetcherResponseType<T>>;
-  post<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>;
-  put<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>;
-  patch<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>;
-  delete<T = unknown>(path: string): Promise<FetcherResponseType<T>>;
-  head<T = unknown>(path: string): Promise<FetcherResponseType<T>>;
-  options<T = unknown>(path: string): Promise<FetcherResponseType<T>>;
-  request<T = unknown>(method: string, path: string, data?: unknown): Promise<FetcherResponseType<T>>;
-  upload<T = unknown>(path: string, file: File | Blob, name?: string): Promise<FetcherResponseType<T>>;
+  get<T extends Record<string, unknown> = Record<string, unknown>>(path: string): Promise<ResponseDataType<T>>;
+  post<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>>;
+  put<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>>;
+  patch<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>>;
+  delete<T extends Record<string, unknown> = Record<string, unknown>>(path: string): Promise<ResponseDataType<T>>;
+  head<T extends Record<string, unknown> = Record<string, unknown>>(path: string): Promise<ResponseDataType<T>>;
+  options<T extends Record<string, unknown> = Record<string, unknown>>(path: string): Promise<ResponseDataType<T>>;
+  request<T extends Record<string, unknown> = Record<string, unknown>>(
+    method: HttpMethodType,
+    path: string,
+    data?: unknown,
+  ): Promise<ResponseDataType<T>>;
+  upload<T extends Record<string, unknown> = Record<string, unknown>>(
+    path: string,
+    file: File | Blob,
+    name?: string,
+  ): Promise<ResponseDataType<T>>;
 }

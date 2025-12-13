@@ -192,6 +192,7 @@
       },
       "devDependencies": {
         "@ooneex/http-mimes": "workspace:*",
+        "@ooneex/http-response": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
     },
@@ -370,6 +371,7 @@
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
+        "@ooneex/fetcher": "workspace:*",
         "@ooneex/http-status": "workspace:*",
       },
       "devDependencies": {

@@ -1,4 +1,6 @@
 import type { ControllerClassType } from "@ooneex/controller";
+import { Fetcher } from "@ooneex/fetcher";
+import type { ResponseDataType } from "@ooneex/http-response";
 import type { HttpMethodType } from "@ooneex/types";
 import type { AssertType } from "@ooneex/validation";
 import { router } from "./Router";
@@ -61,15 +63,6 @@ export const Route = {
   socket: createSocketDecorator() as RouteDecoratorFunction,
 };
 
-// type TypedRouteConfigType = {
-//   response: { success: boolean; message: string };
-//   request: {
-//     params: { id: string; emailId: string };
-//     payload: { name: string };
-//     queries: never;
-//   };
-// };
-
 // @Route.delete("/users/:id/emails/:emailId/state/:state", {
 //   name: "api.users.delete",
 //   description: "Delete a user by ID",
@@ -79,17 +72,45 @@ export const Route = {
 //     emailId: Assert("string"),
 //   },
 //   payload: Assert({
-//     name: "string.url",
+//     name: "string",
+//   }),
+//   queries: Assert({
+//     limit: "number",
+//   }),
+//   response: Assert({
+//     success: "boolean",
+//     message: "string",
 //   }),
 //   env: [Environment.LOCAL],
 // })
 // export class DeleteUserController {
 //   public async index(context: ContextType<TypedRouteConfigType>) {
 //     const { id } = context.params;
-
+//
 //     return context.response.json({
 //       success: true,
 //       message: `User with ID ${id} has been deleted`,
 //     });
 //   }
 // }
+
+export type DeleteRouteConfigType = {
+  response: { success: boolean; message: string };
+  params: { id: string; emailId: string; state: string };
+  payload: { name: string };
+  queries: { limit: number };
+};
+
+export class ApiUsers {
+  constructor(private baseURL: string) {}
+
+  public async delete(config: {
+    params: DeleteRouteConfigType["params"];
+  }): Promise<ResponseDataType<DeleteRouteConfigType["response"]>> {
+    const fetcher = new Fetcher(this.baseURL);
+
+    return await fetcher.delete<DeleteRouteConfigType["response"]>(
+      `/users/${config.params.id}/emails/${config.params.emailId}/state/${config.params.state}`,
+    );
+  }
+}

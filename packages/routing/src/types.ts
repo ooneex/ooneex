@@ -693,10 +693,10 @@ export type RouteConfigType = {
   name: RouteNameType;
   path: `/${string}`;
   method: HttpMethodType;
-  params?: Record<string, AssertType | AssertType[] | IAssert | IAssert[]>;
-  queries?: AssertType | AssertType[] | IAssert | IAssert[];
-  payload?: AssertType | AssertType[] | IAssert | IAssert[];
-  response?: AssertType | AssertType[] | IAssert | IAssert[];
+  params?: Record<string, AssertType | IAssert>;
+  queries?: AssertType | IAssert;
+  payload?: AssertType | IAssert;
+  response?: AssertType | IAssert;
   controller: ControllerClassType;
   description: string;
   env?: Environment[];

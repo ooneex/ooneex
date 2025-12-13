@@ -1,6 +1,17 @@
 import { describe, expect, test } from "bun:test";
+import { Environment } from "@ooneex/app-env";
+import type { ContextType, IController } from "@ooneex/controller";
+import type { IResponse } from "@ooneex/http-response";
+import { ERole } from "@ooneex/role";
 import { type } from "arktype";
-import { extractParameterNames, isValidRoutePath, routeConfigToTypeString } from "../src/utils";
+import type { RouteConfigType } from "../src/types";
+import { extractParameterNames, isValidRoutePath, routeConfigToJsonDoc, routeConfigToTypeString } from "../src/utils";
+
+class MockController implements IController {
+  public async index(context: ContextType): Promise<IResponse> {
+    return context.response;
+  }
+}
 
 describe("isValidRoutePath", () => {
   test("validates correct paths", () => {
@@ -223,5 +234,495 @@ describe("routeConfigToTypeString", () => {
     expect(result).toMatch(/^\{\n/);
     expect(result).toMatch(/\n\}$/);
     expect(result).toContain(";\n  ");
+  });
+});
+
+describe("routeConfigToJsonDoc", () => {
+  test("converts minimal route config to JSON documentation", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List all users",
+      isSocket: false,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.name).toBe("api.users.list");
+    expect(result.path).toBe("/users");
+    expect(result.method).toBe("GET");
+    expect(result.description).toBe("List all users");
+    expect(result.isSocket).toBe(false);
+    expect(result.parameters).toEqual([]);
+    expect(result.schemas).toBeUndefined();
+    expect(result.security).toBeUndefined();
+  });
+
+  test("extracts parameters from route path", () => {
+    const config: RouteConfigType = {
+      name: "api.users.show",
+      path: "/users/:id",
+      method: "GET",
+      controller: MockController,
+      description: "Get user by ID",
+      isSocket: false,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.parameters).toEqual(["id"]);
+  });
+
+  test("extracts multiple parameters from route path", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:userId/emails/:emailId",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete user email",
+      isSocket: false,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.parameters).toEqual(["userId", "emailId"]);
+  });
+
+  test("converts params to JSON schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.show",
+      path: "/users/:id",
+      method: "GET",
+      controller: MockController,
+      description: "Get user by ID",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.params).toBeDefined();
+    const paramsSchema = schemas.params as Record<string, unknown>;
+    expect(paramsSchema.type).toBe("object");
+    expect(paramsSchema.properties).toBeDefined();
+    expect(paramsSchema.required).toEqual(["id"]);
+  });
+
+  test("converts multiple params to JSON schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:userId/emails/:emailId",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete user email",
+      isSocket: false,
+      params: {
+        userId: type("string"),
+        emailId: type("string"),
+      },
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    const schemas = result.schemas as Record<string, unknown>;
+    const paramsSchema = schemas.params as Record<string, unknown>;
+    expect(paramsSchema.required).toEqual(["userId", "emailId"]);
+    const properties = paramsSchema.properties as Record<string, unknown>;
+    expect(Object.keys(properties)).toHaveLength(2);
+  });
+
+  test("converts queries to JSON schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+      queries: type({
+        limit: "number",
+        offset: "number",
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.queries).toBeDefined();
+  });
+
+  test("converts payload to JSON schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create user",
+      isSocket: false,
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.payload).toBeDefined();
+  });
+
+  test("converts response to JSON schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create user",
+      isSocket: false,
+      response: type({
+        success: "boolean",
+        message: "string",
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.response).toBeDefined();
+  });
+
+  test("converts complete route config with all schemas", () => {
+    const config: RouteConfigType = {
+      name: "api.users.update",
+      path: "/users/:id",
+      method: "PUT",
+      controller: MockController,
+      description: "Update user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      queries: type({
+        validate: "boolean",
+      }),
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+      response: type({
+        success: "boolean",
+        data: {
+          id: "string",
+          name: "string",
+        },
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.params).toBeDefined();
+    expect(schemas.queries).toBeDefined();
+    expect(schemas.payload).toBeDefined();
+    expect(schemas.response).toBeDefined();
+  });
+
+  test("does not include security object when no security config provided", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeUndefined();
+  });
+
+  test("includes environments in security when provided", () => {
+    const config: RouteConfigType = {
+      name: "api.debug.info",
+      path: "/debug",
+      method: "GET",
+      controller: MockController,
+      description: "Debug info",
+      isSocket: false,
+      env: [Environment.LOCAL, Environment.DEVELOPMENT],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeDefined();
+    const security = result.security as Record<string, unknown>;
+    expect(security.environments).toEqual([Environment.LOCAL, Environment.DEVELOPMENT]);
+    expect(security.roles).toBeUndefined();
+    expect(security.allowedIPs).toBeUndefined();
+    expect(security.allowedHosts).toBeUndefined();
+  });
+
+  test("includes roles in security when provided", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/admin/users",
+      method: "GET",
+      controller: MockController,
+      description: "Admin users",
+      isSocket: false,
+      roles: [ERole.ADMIN, ERole.SUPER_ADMIN],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeDefined();
+    const security = result.security as Record<string, unknown>;
+    expect(security.roles).toEqual([ERole.ADMIN, ERole.SUPER_ADMIN]);
+    expect(security.environments).toBeUndefined();
+    expect(security.allowedIPs).toBeUndefined();
+    expect(security.allowedHosts).toBeUndefined();
+  });
+
+  test("includes allowedIPs in security when provided", () => {
+    const config: RouteConfigType = {
+      name: "api.internal.stats",
+      path: "/internal/stats",
+      method: "GET",
+      controller: MockController,
+      description: "Internal stats",
+      isSocket: false,
+      ip: ["127.0.0.1", "192.168.1.1"],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeDefined();
+    const security = result.security as Record<string, unknown>;
+    expect(security.allowedIPs).toEqual(["127.0.0.1", "192.168.1.1"]);
+    expect(security.environments).toBeUndefined();
+    expect(security.roles).toBeUndefined();
+    expect(security.allowedHosts).toBeUndefined();
+  });
+
+  test("includes allowedHosts in security when provided", () => {
+    const config: RouteConfigType = {
+      name: "api.webhook.receive",
+      path: "/webhook",
+      method: "POST",
+      controller: MockController,
+      description: "Webhook endpoint",
+      isSocket: false,
+      host: ["example.com", "api.example.com"],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeDefined();
+    const security = result.security as Record<string, unknown>;
+    expect(security.allowedHosts).toEqual(["example.com", "api.example.com"]);
+    expect(security.environments).toBeUndefined();
+    expect(security.roles).toBeUndefined();
+    expect(security.allowedIPs).toBeUndefined();
+  });
+
+  test("includes all security properties when all provided", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/secure",
+      method: "POST",
+      controller: MockController,
+      description: "Secure endpoint",
+      isSocket: false,
+      env: [Environment.PRODUCTION],
+      roles: [ERole.ADMIN],
+      ip: ["10.0.0.1"],
+      host: ["secure.example.com"],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeDefined();
+    const security = result.security as Record<string, unknown>;
+    expect(security.environments).toEqual([Environment.PRODUCTION]);
+    expect(security.roles).toEqual([ERole.ADMIN]);
+    expect(security.allowedIPs).toEqual(["10.0.0.1"]);
+    expect(security.allowedHosts).toEqual(["secure.example.com"]);
+  });
+
+  test("does not include empty arrays in security", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+      env: [],
+      roles: [],
+      ip: [],
+      host: [],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.security).toBeUndefined();
+  });
+
+  test("handles socket routes", () => {
+    const config: RouteConfigType = {
+      name: "api.chat.connect",
+      path: "/chat/:roomId",
+      method: "GET",
+      controller: MockController,
+      description: "Chat socket",
+      isSocket: true,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.isSocket).toBe(true);
+    expect(result.parameters).toEqual(["roomId"]);
+  });
+
+  test("handles complex nested payload schemas", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create user",
+      isSocket: false,
+      payload: type({
+        name: "string",
+        address: {
+          street: "string",
+          city: "string",
+        },
+        tags: "string[]",
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.payload).toBeDefined();
+  });
+
+  test("handles optional properties in schemas", () => {
+    const config: RouteConfigType = {
+      name: "api.users.update",
+      path: "/users/:id",
+      method: "PATCH",
+      controller: MockController,
+      description: "Update user",
+      isSocket: false,
+      payload: type({
+        name: "string",
+        "age?": "number",
+      }),
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeDefined();
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.payload).toBeDefined();
+  });
+
+  test("does not include schemas property when no schemas defined", () => {
+    const config: RouteConfigType = {
+      name: "api.health.check",
+      path: "/health",
+      method: "GET",
+      controller: MockController,
+      description: "Health check",
+      isSocket: false,
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.schemas).toBeUndefined();
+  });
+
+  test("handles route with only params schema", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.params).toBeDefined();
+    expect(schemas.queries).toBeUndefined();
+    expect(schemas.payload).toBeUndefined();
+    expect(schemas.response).toBeUndefined();
+  });
+
+  test("generates complete JSON documentation for complex route", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id/emails/:emailId/state/:state",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user by ID",
+      isSocket: false,
+      params: {
+        state: type("string"),
+        id: type("string"),
+        emailId: type("string"),
+      },
+      payload: type({
+        name: "string",
+      }),
+      queries: type({
+        limit: "number",
+      }),
+      response: type({
+        success: "boolean",
+        message: "string",
+      }),
+      env: [Environment.LOCAL],
+      roles: [ERole.ADMIN],
+    };
+
+    const result = routeConfigToJsonDoc(config);
+
+    expect(result.name).toBe("api.users.delete");
+    expect(result.path).toBe("/users/:id/emails/:emailId/state/:state");
+    expect(result.method).toBe("DELETE");
+    expect(result.description).toBe("Delete a user by ID");
+    expect(result.isSocket).toBe(false);
+    expect(result.parameters).toEqual(["id", "emailId", "state"]);
+    expect(result.schemas).toBeDefined();
+    expect(result.security).toBeDefined();
+
+    const schemas = result.schemas as Record<string, unknown>;
+    expect(schemas.params).toBeDefined();
+    expect(schemas.queries).toBeDefined();
+    expect(schemas.payload).toBeDefined();
+    expect(schemas.response).toBeDefined();
+
+    const security = result.security as Record<string, unknown>;
+    expect(security.environments).toEqual([Environment.LOCAL]);
+    expect(security.roles).toEqual([ERole.ADMIN]);
   });
 });

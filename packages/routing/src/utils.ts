@@ -186,3 +186,136 @@ export const routeConfigToTypeString = (
 
   return `{\n  ${typeProperties.join(";\n  ")};\n}`;
 };
+
+/**
+ * Helper function to convert AssertType/IAssert to JSON Schema
+ */
+const assertToJsonSchema = (assert: unknown): Record<string, unknown> => {
+  try {
+    const constraint =
+      assert && typeof assert === "object" && "getConstraint" in assert
+        ? (assert as { getConstraint: () => { toJsonSchema: () => Record<string, unknown> } }).getConstraint()
+        : (assert as { toJsonSchema: () => Record<string, unknown> });
+    return constraint.toJsonSchema();
+  } catch {
+    return { type: "unknown" };
+  }
+};
+
+/**
+ * Convert RouteConfigType to JSON documentation format
+ *
+ * @param config - Route configuration object
+ * @returns JSON documentation object with route metadata and schemas
+ *
+ * @example
+ * ```ts
+ * const config = {
+ *   name: "api.users.delete",
+ *   path: "/users/:id/emails/:emailId",
+ *   method: "DELETE",
+ *   description: "Delete a user by ID",
+ *   params: {
+ *     id: Assert("string"),
+ *     emailId: Assert("string"),
+ *   },
+ *   payload: Assert({ name: "string" }),
+ *   queries: Assert({ limit: "number" }),
+ *   response: Assert({ success: "boolean", message: "string" }),
+ *   env: [Environment.LOCAL],
+ *   roles: [ERole.ADMIN],
+ *   isSocket: false,
+ * };
+ *
+ * const jsonDoc = routeConfigToJsonDoc(config);
+ * // Returns:
+ * // {
+ * //   name: "api.users.delete",
+ * //   path: "/users/:id/emails/:emailId",
+ * //   method: "DELETE",
+ * //   description: "Delete a user by ID",
+ * //   isSocket: false,
+ * //   parameters: ["id", "emailId"],
+ * //   schemas: {
+ * //     params: { type: "object", properties: { id: { type: "string" }, emailId: { type: "string" } } },
+ * //     queries: { type: "object", properties: { limit: { type: "number" } } },
+ * //     payload: { type: "object", properties: { name: { type: "string" } } },
+ * //     response: { type: "object", properties: { success: { type: "boolean" }, message: { type: "string" } } }
+ * //   },
+ * //   security: {
+ * //     environments: ["LOCAL"],
+ * //     roles: ["ADMIN"],
+ * //     allowedIPs: [],
+ * //     allowedHosts: []
+ * //   }
+ * // }
+ * ```
+ */
+export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, unknown> => {
+  const doc: Record<string, unknown> = {
+    name: config.name,
+    path: config.path,
+    method: config.method,
+    description: config.description,
+    isSocket: config.isSocket,
+    parameters: extractParameterNames(config.path),
+  };
+
+  const schemas: Record<string, Record<string, unknown>> = {};
+
+  if (config.params) {
+    const paramsSchema: Record<string, unknown> = {
+      type: "object",
+      properties: {},
+      required: [] as string[],
+    };
+
+    for (const [key, assert] of Object.entries(config.params)) {
+      const schema = assertToJsonSchema(assert);
+      (paramsSchema.properties as Record<string, unknown>)[key] = schema;
+      (paramsSchema.required as string[]).push(key);
+    }
+
+    schemas.params = paramsSchema;
+  }
+
+  if (config.queries) {
+    schemas.queries = assertToJsonSchema(config.queries);
+  }
+
+  if (config.payload) {
+    schemas.payload = assertToJsonSchema(config.payload);
+  }
+
+  if (config.response) {
+    schemas.response = assertToJsonSchema(config.response);
+  }
+
+  if (Object.keys(schemas).length > 0) {
+    doc.schemas = schemas;
+  }
+
+  const security: Record<string, unknown> = {};
+
+  if (config.env && config.env.length > 0) {
+    security.environments = config.env;
+  }
+
+  if (config.roles && config.roles.length > 0) {
+    security.roles = config.roles;
+  }
+
+  if (config.ip && config.ip.length > 0) {
+    security.allowedIPs = config.ip;
+  }
+
+  if (config.host && config.host.length > 0) {
+    security.allowedHosts = config.host;
+  }
+
+  if (Object.keys(security).length > 0) {
+    doc.security = security;
+  }
+
+  return doc;
+};

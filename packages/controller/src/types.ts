@@ -23,8 +23,7 @@ export interface IController<T extends ContextConfigType = ContextConfigType> {
 
 export type ContextConfigType = {
   response: Record<string, unknown>;
-  request: RequestConfigType;
-};
+} & RequestConfigType;
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
@@ -40,10 +39,10 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
     env: IAppEnv;
   };
   response: IResponse<T["response"]>;
-  request: IRequest<T["request"]>;
-  params: T["request"]["params"];
-  payload: T["request"]["payload"];
-  queries: T["request"]["queries"];
+  request: IRequest<{ params: T["params"]; payload: T["payload"]; queries: T["queries"] }>;
+  params: T["params"];
+  payload: T["payload"];
+  queries: T["queries"];
   method: HttpMethodType;
   header: Header;
   files: Record<string, IRequestFile>;

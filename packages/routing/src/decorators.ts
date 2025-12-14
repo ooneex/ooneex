@@ -1,6 +1,4 @@
 import type { ControllerClassType } from "@ooneex/controller";
-import { Fetcher } from "@ooneex/fetcher";
-import type { ResponseDataType } from "@ooneex/http-response";
 import type { HttpMethodType } from "@ooneex/types";
 import type { AssertType } from "@ooneex/validation";
 import { router } from "./Router";
@@ -93,24 +91,3 @@ export const Route = {
 //     });
 //   }
 // }
-
-export type DeleteRouteConfigType = {
-  response: { success: boolean; message: string };
-  params: { id: string; emailId: string; state: string };
-  payload: { name: string };
-  queries: { limit: number };
-};
-
-export class ApiUsers {
-  constructor(private baseURL: string) {}
-
-  public async delete(config: {
-    params: DeleteRouteConfigType["params"];
-  }): Promise<ResponseDataType<DeleteRouteConfigType["response"]>> {
-    const fetcher = new Fetcher(this.baseURL);
-
-    return await fetcher.delete<DeleteRouteConfigType["response"]>(
-      `/users/${config.params.id}/emails/${config.params.emailId}/state/${config.params.state}`,
-    );
-  }
-}

@@ -188,7 +188,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@ooneex/http-header": "workspace:*",
-        "@ooneex/http-status": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/http-mimes": "workspace:*",
@@ -373,6 +372,7 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/fetcher": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+        "@ooneex/socket": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/app-env": "workspace:*",

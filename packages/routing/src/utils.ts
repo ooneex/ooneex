@@ -319,3 +319,165 @@ export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, un
 
   return doc;
 };
+
+/**
+ * Convert route name to PascalCase
+ * Example: "api.users.delete" -> "ApiUsersDelete"
+ */
+const routeNameToPascalCase = (name: string): string => {
+  return name
+    .split(".")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+};
+
+/**
+ * Get the action part from route name
+ * Example: "api.users.delete" -> "delete"
+ */
+const getRouteAction = (name: string): string => {
+  const parts = name.split(".");
+  return parts[parts.length - 1] || "";
+};
+
+/**
+ * Build URL path by replacing route parameters with template literals
+ * Example: "/users/:id/emails/:emailId" -> "/users/${config.params.id}/emails/${config.params.emailId}"
+ */
+const buildPathWithParams = (path: string, useConfigPrefix = true): string => {
+  const prefix = useConfigPrefix ? "config.params" : "params";
+  return path.replace(/:(\w+)/g, (_match, param) => `\${${prefix}.${param}}`);
+};
+
+export const routeConfigToFetcherString = (config: RouteConfigType): string => {
+  const action = getRouteAction(config.name);
+  const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
+  const className = `${routeNameToPascalCase(config.name)}Fetcher`;
+  const method = config.method.toLowerCase();
+
+  // Generate type definition
+  const typeString = routeConfigToTypeString(config);
+
+  const typeDefinition = `export type ${typeName} = ${typeString}`;
+
+  // Build config parameter type
+  const configProps: string[] = [];
+  const hasParams = config.params && Object.keys(config.params).length > 0;
+  const hasPayload = config.payload !== undefined;
+  const hasQueries = config.queries !== undefined;
+
+  if (hasParams) {
+    configProps.push(`params: ${typeName}["params"]`);
+  }
+  if (hasPayload) {
+    configProps.push(`payload: ${typeName}["payload"]`);
+  }
+  if (hasQueries) {
+    configProps.push(`queries: ${typeName}["queries"]`);
+  }
+
+  const configType = configProps.length > 0 ? `config: {\n    ${configProps.join(";\n    ")};\n  }` : "";
+
+  // Build URL with parameters
+  const urlPath = buildPathWithParams(config.path);
+  let urlExpression = `\`${urlPath}\``;
+
+  // Add query string if queries exist
+  if (hasQueries) {
+    urlExpression = `\`${urlPath}?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\``;
+  }
+
+  // Build method call based on HTTP method
+  const methodsWithPayload = ["post", "put", "patch"];
+  let methodCall = "";
+
+  if (methodsWithPayload.includes(method) && hasPayload) {
+    methodCall = `return await fetcher.${method}<${typeName}["response"]>(\n      ${urlExpression},\n      config.payload,\n    );`;
+  } else {
+    methodCall = `return await fetcher.${method}<${typeName}["response"]>(\n      ${urlExpression},\n    );`;
+  }
+
+  // Generate class
+  const classDefinition = `export class ${className} {
+  constructor(private baseURL: string) {}
+
+  public async ${action}(${configType}): Promise<ResponseDataType<${typeName}["response"]>> {
+    const fetcher = new Fetcher(this.baseURL);
+
+    ${methodCall}
+  }
+}`;
+
+  const imports = `import type { ResponseDataType } from "@ooneex/http-response";
+import { Fetcher } from "@ooneex/fetcher";`;
+
+  return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
+};
+
+export const routeConfigToSocketString = (config: RouteConfigType): string => {
+  const action = getRouteAction(config.name);
+  const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
+  const className = `${routeNameToPascalCase(config.name)}Socket`;
+
+  // Generate type definition
+  const typeString = routeConfigToTypeString(config);
+
+  const typeDefinition = `export type ${typeName} = ${typeString}`;
+
+  // Build config parameter type
+  const hasParams = config.params && Object.keys(config.params).length > 0;
+  const hasPayload = config.payload && Object.keys(config.payload).length > 0;
+  const hasQueries = config.queries && Object.keys(config.queries).length > 0;
+
+  // Method signature only includes params
+  const configType = hasParams ? `params: ${typeName}["params"]` : "";
+
+  // Build URL with parameters
+  const urlPath = buildPathWithParams(config.path, false);
+  const urlExpression = `\`\${this.baseURL}${urlPath}\``;
+
+  // Build SendData type for Socket
+  const sendDataTypeProps: string[] = [];
+  if (hasPayload) {
+    sendDataTypeProps.push(`payload: ${typeName}["payload"]`);
+  }
+  if (hasQueries) {
+    sendDataTypeProps.push(`queries: ${typeName}["queries"]`);
+  }
+  sendDataTypeProps.push("language?: LocaleInfoType");
+
+  const sendDataType = sendDataTypeProps.length > 0 ? `{ ${sendDataTypeProps.join("; ")} }` : "Record<string, unknown>";
+
+  // Generate class
+  const classDefinition = `export class ${className} {
+  constructor(private baseURL: string) {}
+
+  public ${action}(${configType}): ISocket {
+    const url = ${urlExpression};
+    const socket = new Socket<${sendDataType}, ${typeName}["response"]>(url);
+
+    socket.onMessage((response) => {
+      // TODO: Handle socket message event
+    });
+
+    socket.onOpen((event) => {
+      // TODO: Handle socket open event
+    });
+
+    socket.onClose((event) => {
+      // TODO: Handle socket close event
+    });
+
+    socket.onError((event) => {
+      // TODO: Handle socket error event
+    });
+
+    return socket;
+  }
+}`;
+
+  const imports = `import type { LocaleInfoType } from "@ooneex/translation";
+import { type ISocket, Socket } from "@ooneex/socket/client"`;
+
+  return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
+};

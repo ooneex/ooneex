@@ -5,7 +5,13 @@ import type { IResponse } from "@ooneex/http-response";
 import { ERole } from "@ooneex/role";
 import { type } from "arktype";
 import type { RouteConfigType } from "../src/types";
-import { extractParameterNames, isValidRoutePath, routeConfigToJsonDoc, routeConfigToTypeString } from "../src/utils";
+import {
+  extractParameterNames,
+  isValidRoutePath,
+  routeConfigToFetcherString,
+  routeConfigToJsonDoc,
+  routeConfigToTypeString,
+} from "../src/utils";
 
 class MockController implements IController {
   public async index(context: ContextType): Promise<IResponse> {
@@ -724,5 +730,345 @@ describe("routeConfigToJsonDoc", () => {
     const security = result.security as Record<string, unknown>;
     expect(security.environments).toEqual([Environment.LOCAL]);
     expect(security.roles).toEqual([ERole.ADMIN]);
+  });
+});
+
+describe("routeConfigToFetcherString", () => {
+  test("generates basic fetcher class with DELETE method and params only", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user by ID",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain('import type { ResponseDataType } from "@ooneex/http-response"');
+    expect(result).toContain('import { Fetcher } from "@ooneex/fetcher"');
+    expect(result).toContain("export type DeleteRouteConfigType");
+    expect(result).toContain("export class ApiUsersDeleteFetcher");
+    expect(result).toContain("constructor(private baseURL: string)");
+    expect(result).toContain("public async delete(");
+    expect(result).toContain('params: DeleteRouteConfigType["params"]');
+    expect(result).toContain('Promise<ResponseDataType<DeleteRouteConfigType["response"]>>');
+    expect(result).toContain("const fetcher = new Fetcher(this.baseURL)");
+    expect(result).toContain("return await fetcher.delete");
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
+    expect(result).toContain("/users/${config.params.id}");
+  });
+
+  test("generates fetcher class with multiple params", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id/emails/:emailId/state/:state",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user email by ID",
+      isSocket: false,
+      params: {
+        state: type("string"),
+        id: type("string"),
+        emailId: type("string"),
+      },
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiUsersDeleteFetcher");
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
+    expect(result).toContain("/users/${config.params.id}/emails/${config.params.emailId}/state/${config.params.state}");
+    expect(result).toContain('params: DeleteRouteConfigType["params"]');
+  });
+
+  test("generates fetcher class with POST method and payload", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create a new user",
+      isSocket: false,
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type CreateRouteConfigType");
+    expect(result).toContain("export class ApiUsersCreateFetcher");
+    expect(result).toContain("public async create(");
+    expect(result).toContain('payload: CreateRouteConfigType["payload"]');
+    expect(result).toContain("return await fetcher.post");
+    expect(result).toContain("config.payload");
+  });
+
+  test("generates fetcher class with PUT method, params and payload", () => {
+    const config: RouteConfigType = {
+      name: "api.users.update",
+      path: "/users/:id",
+      method: "PUT",
+      controller: MockController,
+      description: "Update a user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type UpdateRouteConfigType");
+    expect(result).toContain("export class ApiUsersUpdateFetcher");
+    expect(result).toContain("public async update(");
+    expect(result).toContain('params: UpdateRouteConfigType["params"]');
+    expect(result).toContain('payload: UpdateRouteConfigType["payload"]');
+    expect(result).toContain("return await fetcher.put");
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
+    expect(result).toContain("/users/${config.params.id}");
+    expect(result).toContain("config.payload");
+  });
+
+  test("generates fetcher class with PATCH method", () => {
+    const config: RouteConfigType = {
+      name: "api.users.edit",
+      path: "/users/:id",
+      method: "PATCH",
+      controller: MockController,
+      description: "Partially update a user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      payload: type({
+        name: "string?",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type EditRouteConfigType");
+    expect(result).toContain("export class ApiUsersEditFetcher");
+    expect(result).toContain("public async edit(");
+    expect(result).toContain("return await fetcher.patch");
+    expect(result).toContain("config.payload");
+  });
+
+  test("generates fetcher class with GET method and queries", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+      queries: type({
+        limit: "number",
+        offset: "number",
+      }),
+      response: type({
+        users: "unknown[]",
+        total: "number",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type ListRouteConfigType");
+    expect(result).toContain("export class ApiUsersListFetcher");
+    expect(result).toContain("public async list(");
+    expect(result).toContain('queries: ListRouteConfigType["queries"]');
+    expect(result).toContain("return await fetcher.get");
+    expect(result).toContain("new URLSearchParams(config.queries as Record<string, string>).toString()");
+  });
+
+  test("generates fetcher class with complete config (params, payload, queries, response)", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id/emails/:emailId/state/:state",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user by ID",
+      isSocket: false,
+      params: {
+        state: type("string"),
+        id: type("string"),
+        emailId: type("string"),
+      },
+      payload: type({
+        name: "string",
+      }),
+      queries: type({
+        limit: "number",
+      }),
+      response: type({
+        success: "boolean",
+        message: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type DeleteRouteConfigType");
+    expect(result).toContain("response:");
+    expect(result).toContain("success: boolean");
+    expect(result).toContain("message: string");
+    expect(result).toContain("params:");
+    expect(result).toContain("state: string");
+    expect(result).toContain("id: string");
+    expect(result).toContain("emailId: string");
+    expect(result).toContain("payload: { name: string }");
+    expect(result).toContain("queries: { limit: number }");
+    expect(result).toContain("export class ApiUsersDeleteFetcher");
+    expect(result).toContain('params: DeleteRouteConfigType["params"]');
+    expect(result).toContain('payload: DeleteRouteConfigType["payload"]');
+    expect(result).toContain('queries: DeleteRouteConfigType["queries"]');
+    expect(result).toContain('Promise<ResponseDataType<DeleteRouteConfigType["response"]>>');
+  });
+
+  test("generates fetcher class with HEAD method", () => {
+    const config: RouteConfigType = {
+      name: "api.users.check",
+      path: "/users/:id",
+      method: "HEAD",
+      controller: MockController,
+      description: "Check if user exists",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiUsersCheckFetcher");
+    expect(result).toContain("public async check(");
+    expect(result).toContain("return await fetcher.head");
+  });
+
+  test("generates fetcher class with OPTIONS method", () => {
+    const config: RouteConfigType = {
+      name: "api.users.info",
+      path: "/users",
+      method: "OPTIONS",
+      controller: MockController,
+      description: "Get available options",
+      isSocket: false,
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiUsersInfoFetcher");
+    expect(result).toContain("public async info(");
+    expect(result).toContain("return await fetcher.options");
+  });
+
+  test("generates correct class name for nested route names", () => {
+    const config: RouteConfigType = {
+      name: "admin.settings.update",
+      path: "/admin/settings",
+      method: "PUT",
+      controller: MockController,
+      description: "Update admin settings",
+      isSocket: false,
+      payload: type({
+        key: "string",
+        value: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class AdminSettingsUpdateFetcher");
+    expect(result).toContain("export type UpdateRouteConfigType");
+  });
+
+  test("generates fetcher without config parameter when no params, payload, or queries", () => {
+    const config: RouteConfigType = {
+      name: "api.health.check",
+      path: "/health",
+      method: "GET",
+      controller: MockController,
+      description: "Health check endpoint",
+      isSocket: false,
+      response: type({
+        status: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiHealthCheckFetcher");
+    expect(result).toContain("public async check()");
+    expect(result).not.toContain("config:");
+  });
+
+  test("handles complex nested response types", () => {
+    const config: RouteConfigType = {
+      name: "api.users.show",
+      path: "/users/:id",
+      method: "GET",
+      controller: MockController,
+      description: "Get user details",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      response: type({
+        user: {
+          id: "string",
+          name: "string",
+          email: "string",
+          address: {
+            street: "string",
+            city: "string",
+          },
+        },
+        success: "boolean",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export type ShowRouteConfigType");
+    expect(result).toContain("export class ApiUsersShowFetcher");
+    expect(result).toContain("public async show(");
+    expect(result).toContain("response:");
+    expect(result).toContain("user:");
+    expect(result).toContain("id: string");
+    expect(result).toContain("name: string");
+    expect(result).toContain("email: string");
+    expect(result).toContain("address:");
+    expect(result).toContain("street: string");
+    expect(result).toContain("city: string");
+    expect(result).toContain("success: boolean");
+  });
+
+  test("includes both imports in generated output", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    const lines = result.split("\n");
+    expect(lines[0]).toBe('import type { ResponseDataType } from "@ooneex/http-response";');
+    expect(lines[1]).toBe('import { Fetcher } from "@ooneex/fetcher";');
   });
 });

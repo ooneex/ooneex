@@ -57,3 +57,20 @@ clean-pnpm-lock:
 # Clean node_modules, dist directories, and pnpm-lock.yaml files
 clean-all: clean-node-modules clean-dist clean-pnpm-lock
 	@echo "$(GREEN)✓ Cleaned all node_modules, dist directories, and pnpm-lock.yaml files$(NC)"
+
+
+publish:
+	@echo "$(YELLOW)Publishing packages...$(NC)"
+	@for package in $(shell find . -maxdepth 2 -type d -name "package.json" -not -path "*/.nx/*" -not -path "*/dist/*" -not -path "*/node_modules/*"); do \
+		cd $$(dirname $$package); \
+		echo "$(YELLOW)Publishing $$package$(NC)"; \
+		bun publish ./dist --tolerate-republish --access public; \
+		echo "$(GREEN)✓ Published $$package$(NC)"; \
+	done
+
+publish.dry:
+	@echo "$(YELLOW)Publishing packages in dry-run mode...$(NC)"
+	echo "$(YELLOW)Publishing analytics$(NC)"; \
+	# bun publish ./packages/analytics/dist/ooneex-analytics-0.0.1.tgz --dry-run; \
+	cd ./packages/analytics/dist && bun pm pack --destination ./dist --filename my-package.tgz; \
+	echo "$(GREEN)✓ Published $$package$(NC)"; \

@@ -16,6 +16,12 @@
       "dependsOn": ["^build"],
       "cache": true
     },
+    "publish:pack": {
+      "dependsOn": ["^build"]
+    },
+    "publish:dry": {
+      "dependsOn": ["^build"]
+    },
     "publish": {
       "dependsOn": ["^publish"]
     },
@@ -37,7 +43,7 @@
     },
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "bunx nx run-many -t compile build --output-style=stream --verbose",
+      "preVersionCommand": "bun run build",
       "fallbackCurrentVersionResolver": "disk",
       "versionPrefix": "auto"
     },

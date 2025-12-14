@@ -481,3 +481,188 @@ import { type ISocket, Socket } from "@ooneex/socket/client"`;
 
   return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };
+
+/**
+ * Convert RouteConfigType to TanStack Query hook string
+ *
+ * @param config - Route configuration object
+ * @param baseURL - Base URL for API calls
+ * @returns React hook code for TanStack Query
+ *
+ * @example
+ * ```ts
+ * // For a GET request
+ * const config = {
+ *   name: "api.users.retrieve",
+ *   path: "/users/:id",
+ *   method: "GET",
+ *   params: { id: Assert("string") },
+ *   queries: { include: Assert("string") },
+ *   response: Assert({ name: "string", email: "string" }),
+ * };
+ *
+ * const hookString = routeConfigToUseQueryString(config);
+ * // Returns:
+ * // export const useApiUsersRetrieve = (config: {...}) => {
+ * //   return useQuery({
+ * //     queryKey: ['api', 'users', 'retrieve', config.params.id, config.queries],
+ * //     queryFn: async () => { ... },
+ * //   });
+ * // };
+ *
+ * // For a DELETE request
+ * const config = {
+ *   name: "api.users.delete",
+ *   path: "/users/:id",
+ *   method: "DELETE",
+ *   params: { id: Assert("string") },
+ *   response: Assert({ success: "boolean" }),
+ * };
+ *
+ * const hookString = routeConfigToUseQueryString(config);
+ * // Returns:
+ * // export const useApiUsersDelete = () => {
+ * //   const mutation = useMutation({
+ * //     mutationFn: async (config: {...}) => { ... },
+ * //   });
+ * //   return mutation;
+ * // };
+ * ```
+ */
+export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = ""): string => {
+  const action = getRouteAction(config.name);
+  const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
+  const hookName = `use${routeNameToPascalCase(config.name)}`;
+  const method = config.method.toUpperCase();
+
+  // Generate type definition
+  const typeString = routeConfigToTypeString(config);
+  const typeDefinition = `export type ${typeName} = ${typeString}`;
+
+  // Determine if this is a query or mutation based on HTTP method
+  const queryMethods = ["GET", "HEAD", "OPTIONS"];
+  const isQuery = queryMethods.includes(method);
+
+  const hasParams = config.params && Object.keys(config.params).length > 0;
+  const hasPayload = config.payload !== undefined;
+  const hasQueries = config.queries !== undefined;
+
+  if (isQuery) {
+    // Generate useQuery hook
+    const configProps: string[] = [];
+
+    if (hasParams) {
+      configProps.push(`params: ${typeName}["params"]`);
+    }
+    if (hasQueries) {
+      configProps.push(`queries?: ${typeName}["queries"]`);
+    }
+
+    const configParam = configProps.length > 0 ? `config: {\n  ${configProps.join(";\n  ")};\n}` : "";
+
+    // Build query key
+    const queryKeyParts = config.name.split(".");
+    const queryKeyBase = queryKeyParts.map((part) => `'${part}'`).join(", ");
+    let queryKey = `[${queryKeyBase}`;
+
+    if (hasParams && config.params) {
+      const paramKeys = Object.keys(config.params);
+      for (const paramKey of paramKeys) {
+        queryKey += `, config.params.${paramKey}`;
+      }
+    }
+
+    if (hasQueries) {
+      queryKey += ", config.queries";
+    }
+
+    queryKey += "]";
+
+    // Build URL
+    // Build URL with parameters
+    const urlPath = buildPathWithParams(config.path);
+    let urlExpression = `\`${urlPath}\``;
+
+    // Add query string if queries exist
+    if (hasQueries) {
+      urlExpression = `\`${urlPath}?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\``;
+    }
+
+    // Build fetcher call
+    const fetcherMethod = method.toLowerCase();
+    const fetchCall = `const fetcher = new Fetcher('${baseURL}');
+      const url = ${urlExpression};
+
+      return await fetcher.${fetcherMethod}<${typeName}["response"]>(url);`;
+
+    const hookDefinition = `export const ${hookName} = (${configParam}) => {
+  return useQuery({
+    queryKey: ${queryKey},
+    queryFn: async () => {
+      ${fetchCall}
+    },
+  });
+};`;
+
+    const imports = `import { useQuery } from '@tanstack/react-query';
+import { Fetcher } from '@ooneex/fetcher';`;
+
+    return `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
+  }
+
+  // Generate useMutation hook
+  const configProps: string[] = [];
+
+  if (hasParams) {
+    configProps.push(`params: ${typeName}["params"]`);
+  }
+  if (hasPayload) {
+    configProps.push(`payload: ${typeName}["payload"]`);
+  }
+  if (hasQueries) {
+    configProps.push(`queries?: ${typeName}["queries"]`);
+  }
+
+  const mutationConfigType =
+    configProps.length > 0 ? `config: {\n    ${configProps.join(";\n    ")};\n  }` : "config?: Record<string, never>";
+
+  // Build URL
+  const urlPath = buildPathWithParams(config.path);
+  let urlExpression = `\`${urlPath}\``;
+
+  // Add query string if queries exist
+  if (hasQueries) {
+    urlExpression = `\`${urlPath}\${config.queries ? \`?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\` : ''}\``;
+  }
+
+  // Build fetcher call
+  const methodsWithPayload = ["POST", "PUT", "PATCH"];
+  const hasFetchBody = methodsWithPayload.includes(method) && hasPayload;
+  const fetcherMethod = method.toLowerCase();
+
+  let fetchCall = `const fetcher = new Fetcher('${baseURL}');
+      const url = ${urlExpression};
+
+      `;
+
+  if (hasFetchBody) {
+    fetchCall += `return await fetcher.${fetcherMethod}<${typeName}["response"]>(url, config.payload);`;
+  } else {
+    fetchCall += `return await fetcher.${fetcherMethod}<${typeName}["response"]>(url);`;
+  }
+
+  const hookDefinition = `export const ${hookName} = () => {
+  const mutation = useMutation({
+    mutationFn: async (${mutationConfigType}) => {
+      ${fetchCall}
+    },
+  });
+
+  return mutation;
+};`;
+
+  const imports = `import { useMutation } from '@tanstack/react-query';
+import { Fetcher } from '@ooneex/fetcher';`;
+
+  return `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
+};

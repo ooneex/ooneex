@@ -425,7 +425,6 @@ export type RouteAction =
   | "dwell"
   | "live"
   | "exist"
-  | "be"
   | "become"
   | "turn"
   | "transform"
@@ -704,6 +703,11 @@ export type RouteConfigType = {
   host?: string[];
   roles?: ERole[];
   isSocket: boolean;
+  generate?: {
+    doc?: boolean;
+    fetcher?: boolean;
+    query?: boolean;
+  };
 };
 
 export interface IRouter {

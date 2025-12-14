@@ -11,6 +11,7 @@ import {
   routeConfigToFetcherString,
   routeConfigToJsonDoc,
   routeConfigToTypeString,
+  routeConfigToUseQueryString,
 } from "../src/utils";
 
 class MockController implements IController {
@@ -1070,5 +1071,288 @@ describe("routeConfigToFetcherString", () => {
     const lines = result.split("\n");
     expect(lines[0]).toBe('import type { ResponseDataType } from "@ooneex/http-response";');
     expect(lines[1]).toBe('import { Fetcher } from "@ooneex/fetcher";');
+  });
+});
+
+describe("routeConfigToUseQueryString", () => {
+  test("generates useQuery hook for GET request with params", () => {
+    const config: RouteConfigType = {
+      name: "api.users.retrieve",
+      path: "/users/:id",
+      method: "GET",
+      controller: MockController,
+      description: "Get user by ID",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      response: type({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config, "https://api.example.com");
+
+    expect(result).toContain("import { useQuery } from '@tanstack/react-query';");
+    expect(result).toContain("import { Fetcher } from '@ooneex/fetcher';");
+    expect(result).toContain("export type RetrieveRouteConfigType");
+    expect(result).toContain("export const useApiUsersRetrieve = (config: {");
+    expect(result).toContain('params: RetrieveRouteConfigType["params"]');
+    expect(result).toContain("return useQuery({");
+    expect(result).toContain("queryKey: ['api', 'users', 'retrieve', config.params.id]");
+    expect(result).toContain("queryFn: async () => {");
+    expect(result).toContain("new Fetcher('https://api.example.com')");
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
+    expect(result).toContain("/users/${config.params.id}");
+  });
+
+  test("generates useQuery hook for GET request with queries", () => {
+    const config: RouteConfigType = {
+      name: "api.users.list",
+      path: "/users",
+      method: "GET",
+      controller: MockController,
+      description: "List users",
+      isSocket: false,
+      queries: type({
+        limit: "number",
+        offset: "number",
+      }),
+      response: type({
+        users: "unknown[]",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("import { Fetcher } from '@ooneex/fetcher';");
+    expect(result).toContain('queries?: ListRouteConfigType["queries"]');
+    expect(result).toContain("queryKey: ['api', 'users', 'list', config.queries]");
+    expect(result).toContain("new URLSearchParams(config.queries as Record<string, string>).toString()");
+  });
+
+  test("generates useMutation hook for POST request", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create user",
+      isSocket: false,
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+      response: type({
+        id: "string",
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("import { useMutation } from '@tanstack/react-query';");
+    expect(result).toContain("import { Fetcher } from '@ooneex/fetcher';");
+    expect(result).toContain("export const useApiUsersCreate = () => {");
+    expect(result).toContain("const mutation = useMutation({");
+    expect(result).toContain("mutationFn: async (config: {");
+    expect(result).toContain('payload: CreateRouteConfigType["payload"]');
+    expect(result).toContain("fetcher.post");
+    expect(result).toContain("config.payload");
+    expect(result).toContain("return mutation;");
+  });
+
+  test("generates useMutation hook for DELETE request with params", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      response: type({
+        success: "boolean",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("import { useMutation } from '@tanstack/react-query';");
+    expect(result).toContain("import { Fetcher } from '@ooneex/fetcher';");
+    expect(result).toContain("export const useApiUsersDelete = () => {");
+    expect(result).toContain("mutationFn: async (config: {");
+    expect(result).toContain('params: DeleteRouteConfigType["params"]');
+    expect(result).toContain("fetcher.delete");
+  });
+
+  test("generates useMutation hook for PUT request with payload", () => {
+    const config: RouteConfigType = {
+      name: "api.users.update",
+      path: "/users/:id",
+      method: "PUT",
+      controller: MockController,
+      description: "Update user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      payload: type({
+        name: "string",
+        email: "string",
+      }),
+      response: type({
+        id: "string",
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("fetcher.put");
+    expect(result).toContain('payload: UpdateRouteConfigType["payload"]');
+    expect(result).toContain("config.payload");
+  });
+
+  test("generates useMutation hook for PATCH request", () => {
+    const config: RouteConfigType = {
+      name: "api.users.update",
+      path: "/users/:id",
+      method: "PATCH",
+      controller: MockController,
+      description: "Patch user",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+      payload: type({
+        name: "string",
+      }),
+      response: type({
+        id: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("fetcher.patch");
+    expect(result).toContain("config.payload");
+  });
+
+  test("handles route with no params, payload, or queries", () => {
+    const config: RouteConfigType = {
+      name: "api.health.check",
+      path: "/health",
+      method: "GET",
+      controller: MockController,
+      description: "Health check",
+      isSocket: false,
+      response: type({
+        status: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("export const useApiHealthCheck = () => {");
+    expect(result).toContain("queryKey: ['api', 'health', 'check']");
+  });
+
+  test("generates correct type definitions", () => {
+    const config: RouteConfigType = {
+      name: "api.posts.create",
+      path: "/posts",
+      method: "POST",
+      controller: MockController,
+      description: "Create post",
+      isSocket: false,
+      payload: type({
+        title: "string",
+        content: "string",
+      }),
+      response: type({
+        id: "string",
+        title: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("export type CreateRouteConfigType = {");
+    expect(result).toContain("response:");
+    expect(result).toContain("payload:");
+  });
+
+  test("handles HEAD request as query", () => {
+    const config: RouteConfigType = {
+      name: "api.resource.check",
+      path: "/resource/:id",
+      method: "HEAD",
+      controller: MockController,
+      description: "Check resource",
+      isSocket: false,
+      params: {
+        id: type("string"),
+      },
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("import { useQuery } from '@tanstack/react-query';");
+    expect(result).toContain("fetcher.head");
+  });
+
+  test("handles OPTIONS request as query", () => {
+    const config: RouteConfigType = {
+      name: "api.resource.list",
+      path: "/resource",
+      method: "OPTIONS",
+      controller: MockController,
+      description: "Resource options",
+      isSocket: false,
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("import { useQuery } from '@tanstack/react-query';");
+    expect(result).toContain("fetcher.options");
+  });
+
+  test("uses baseURL parameter correctly", () => {
+    const config: RouteConfigType = {
+      name: "api.test.run",
+      path: "/test",
+      method: "GET",
+      controller: MockController,
+      description: "Test",
+      isSocket: false,
+    };
+
+    const resultWithBase = routeConfigToUseQueryString(config, "https://example.com");
+    const resultWithoutBase = routeConfigToUseQueryString(config);
+
+    expect(resultWithBase).toContain("new Fetcher('https://example.com')");
+    expect(resultWithoutBase).toContain("new Fetcher('')");
+  });
+
+  test("includes error handling in fetch", () => {
+    const config: RouteConfigType = {
+      name: "api.test.execute",
+      path: "/test",
+      method: "GET",
+      controller: MockController,
+      description: "Test",
+      isSocket: false,
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("new Fetcher");
+    expect(result).toContain("fetcher.get");
   });
 });

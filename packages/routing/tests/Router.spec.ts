@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { ContextType, IController } from "@ooneex/controller";
 import type { IResponse } from "@ooneex/http-response";
-import { Router } from "../src/Router";
-import { RouterException } from "../src/RouterException";
-import type { RouteConfigType } from "../src/types";
+import { Router } from "@/Router";
+import { RouterException } from "@/RouterException";
+import type { RouteConfigType } from "@/types";
 
 class MockController implements IController {
   public async index(context: ContextType): Promise<IResponse> {

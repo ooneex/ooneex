@@ -257,6 +257,7 @@ export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, un
     path: config.path,
     method: config.method,
     description: config.description,
+    controller: config.controller.name,
     isSocket: config.isSocket,
     parameters: extractParameterNames(config.path),
   };
@@ -267,28 +268,63 @@ export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, un
     const paramsSchema: Record<string, unknown> = {
       type: "object",
       properties: {},
-      required: [] as string[],
     };
 
     for (const [key, assert] of Object.entries(config.params)) {
       const schema = assertToJsonSchema(assert);
+      // Remove $schema from the schema object
+      delete schema.$schema;
+      // Add required field to each property
+      schema.required = true;
       (paramsSchema.properties as Record<string, unknown>)[key] = schema;
-      (paramsSchema.required as string[]).push(key);
     }
 
     schemas.params = paramsSchema;
   }
 
   if (config.queries) {
-    schemas.queries = assertToJsonSchema(config.queries);
+    const schema = assertToJsonSchema(config.queries);
+    delete schema.$schema;
+    if (schema.type === "object" && schema.properties) {
+      const requiredFields = (schema.required as string[]) || [];
+      const properties = schema.properties as Record<string, unknown>;
+      for (const key of Object.keys(properties)) {
+        const propSchema = properties[key] as Record<string, unknown>;
+        propSchema.required = requiredFields.includes(key);
+      }
+      delete schema.required;
+    }
+    schemas.queries = schema;
   }
 
   if (config.payload) {
-    schemas.payload = assertToJsonSchema(config.payload);
+    const schema = assertToJsonSchema(config.payload);
+    delete schema.$schema;
+    if (schema.type === "object" && schema.properties) {
+      const requiredFields = (schema.required as string[]) || [];
+      const properties = schema.properties as Record<string, unknown>;
+      for (const key of Object.keys(properties)) {
+        const propSchema = properties[key] as Record<string, unknown>;
+        propSchema.required = requiredFields.includes(key);
+      }
+      delete schema.required;
+    }
+    schemas.payload = schema;
   }
 
   if (config.response) {
-    schemas.response = assertToJsonSchema(config.response);
+    const schema = assertToJsonSchema(config.response);
+    delete schema.$schema;
+    if (schema.type === "object" && schema.properties) {
+      const requiredFields = (schema.required as string[]) || [];
+      const properties = schema.properties as Record<string, unknown>;
+      for (const key of Object.keys(properties)) {
+        const propSchema = properties[key] as Record<string, unknown>;
+        propSchema.required = requiredFields.includes(key);
+      }
+      delete schema.required;
+    }
+    schemas.response = schema;
   }
 
   if (Object.keys(schemas).length > 0) {

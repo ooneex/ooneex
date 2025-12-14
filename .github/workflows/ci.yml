@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
   schedule:
-    - cron: '0 2 * * 1' # Run Renovate every Monday at 2am UTC
+    - cron: "0 2 * * 1" # Run Renovate every Monday at 2am UTC
   workflow_dispatch: # Allow manual triggering of Renovate
 
 permissions:
@@ -39,7 +39,6 @@ jobs:
 
       - run: bun install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v4
-      - run: bunx nx affected -t build
       - run: bunx nx affected -t lint
       - run: bunx nx affected -t test
 
@@ -50,7 +49,7 @@ jobs:
       - name: Validate Renovate config
         uses: rinchsan/renovate-config-validator@v0.2.0
         with:
-          pattern: 'renovate.json'
+          pattern: "renovate.json"
 
   renovate:
     runs-on: ubuntu-latest

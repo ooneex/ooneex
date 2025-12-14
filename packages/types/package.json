@@ -1,10 +1,13 @@
 {
   "name": "@ooneex/types",
   "description": "",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
   ],
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,7 +25,9 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --access public"
+    "publish:prod": "bun publish --tolerate-republish --access public",
+    "publish:pack": "bun pm pack --destination ./dist",
+    "publish:dry": "bun publish --dry-run"
   },
   "devDependencies": {
     "@ooneex/translation": "workspace:*"

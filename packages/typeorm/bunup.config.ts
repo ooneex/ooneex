@@ -36,5 +36,5 @@ export default defineConfig({
   dts: {
     minify: false,
   },
-  plugins: [copy(["README.md", "../../LICENSE", "package.json"])],
+  plugins: [copy(["../../LICENSE"]).to("../")],
 });

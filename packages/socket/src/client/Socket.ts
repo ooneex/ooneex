@@ -9,7 +9,7 @@ export class Socket<
   private ws: WebSocket;
   private messageHandler?: (response: ResponseDataType<Response>) => void;
   private openHandler?: (event: Event) => void;
-  private errorHandler?: (event: Event) => void;
+  private errorHandler?: (event: Event, response?: ResponseDataType<Response>) => void;
   private closeHandler?: (event: CloseEvent) => void;
   private queuedMessages: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
 
@@ -74,7 +74,19 @@ export class Socket<
       if (this.messageHandler) {
         const data = JSON.parse(event.data) as ResponseDataType<Response>;
 
-        this.messageHandler(data);
+        if (data.done) {
+          this.ws.close();
+        }
+
+        if (data.success) {
+          this.messageHandler(data);
+
+          return;
+        }
+
+        if (this.errorHandler) {
+          this.errorHandler(event, data);
+        }
       }
     };
 

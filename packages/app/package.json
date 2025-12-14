@@ -36,10 +36,13 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/mailer": "workspace:*",
     "@ooneex/permission": "workspace:*",
+    "@ooneex/routing": "workspace:*",
     "@ooneex/logger": "workspace:*"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:*",
+    "@ooneex/role": "workspace:*",
+    "@ooneex/validation": "workspace:*"
   },
   "peerDependencies": {}
 }

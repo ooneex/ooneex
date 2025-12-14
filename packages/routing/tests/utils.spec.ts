@@ -229,7 +229,7 @@ describe("routeConfigToTypeString", () => {
 
     const result = routeConfigToTypeString(config);
 
-    expect(result).toBe("{\n  ;\n}");
+    expect(result).toBe("never");
   });
 
   test("returns properly formatted multi-line type string", () => {

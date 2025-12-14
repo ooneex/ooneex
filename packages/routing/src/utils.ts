@@ -1,3 +1,4 @@
+import { toPascalCase } from "@ooneex/utils";
 import type { RouteConfigType, ValidRoutePath } from "./types";
 
 // Type guards and validation helpers
@@ -115,6 +116,10 @@ const jsonSchemaToTypeString = (schema: unknown): string => {
 export const routeConfigToTypeString = (
   config: Pick<RouteConfigType, "params" | "queries" | "payload" | "response">,
 ): string => {
+  if (!config.response && !config.params && !config.payload && !config.queries) {
+    return "never";
+  }
+
   const typeProperties: string[] = [];
 
   if (config.response) {
@@ -357,17 +362,6 @@ export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, un
 };
 
 /**
- * Convert route name to PascalCase
- * Example: "api.users.delete" -> "ApiUsersDelete"
- */
-const routeNameToPascalCase = (name: string): string => {
-  return name
-    .split(".")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join("");
-};
-
-/**
  * Get the action part from route name
  * Example: "api.users.delete" -> "delete"
  */
@@ -388,7 +382,7 @@ const buildPathWithParams = (path: string, useConfigPrefix = true): string => {
 export const routeConfigToFetcherString = (config: RouteConfigType): string => {
   const action = getRouteAction(config.name);
   const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
-  const className = `${routeNameToPascalCase(config.name)}Fetcher`;
+  const className = `${toPascalCase(config.name)}Fetcher`;
   const method = config.method.toLowerCase();
 
   // Generate type definition
@@ -453,7 +447,7 @@ import { Fetcher } from "@ooneex/fetcher";`;
 export const routeConfigToSocketString = (config: RouteConfigType): string => {
   const action = getRouteAction(config.name);
   const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
-  const className = `${routeNameToPascalCase(config.name)}Socket`;
+  const className = `${toPascalCase(config.name)}Socket`;
 
   // Generate type definition
   const typeString = routeConfigToTypeString(config);
@@ -504,7 +498,7 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
       // TODO: Handle socket close event
     });
 
-    socket.onError((event) => {
+    socket.onError((event, response) => {
       // TODO: Handle socket error event
     });
 
@@ -518,57 +512,10 @@ import { type ISocket, Socket } from "@ooneex/socket/client"`;
   return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };
 
-/**
- * Convert RouteConfigType to TanStack Query hook string
- *
- * @param config - Route configuration object
- * @param baseURL - Base URL for API calls
- * @returns React hook code for TanStack Query
- *
- * @example
- * ```ts
- * // For a GET request
- * const config = {
- *   name: "api.users.retrieve",
- *   path: "/users/:id",
- *   method: "GET",
- *   params: { id: Assert("string") },
- *   queries: { include: Assert("string") },
- *   response: Assert({ name: "string", email: "string" }),
- * };
- *
- * const hookString = routeConfigToUseQueryString(config);
- * // Returns:
- * // export const useApiUsersRetrieve = (config: {...}) => {
- * //   return useQuery({
- * //     queryKey: ['api', 'users', 'retrieve', config.params.id, config.queries],
- * //     queryFn: async () => { ... },
- * //   });
- * // };
- *
- * // For a DELETE request
- * const config = {
- *   name: "api.users.delete",
- *   path: "/users/:id",
- *   method: "DELETE",
- *   params: { id: Assert("string") },
- *   response: Assert({ success: "boolean" }),
- * };
- *
- * const hookString = routeConfigToUseQueryString(config);
- * // Returns:
- * // export const useApiUsersDelete = () => {
- * //   const mutation = useMutation({
- * //     mutationFn: async (config: {...}) => { ... },
- * //   });
- * //   return mutation;
- * // };
- * ```
- */
 export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = ""): string => {
   const action = getRouteAction(config.name);
   const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
-  const hookName = `use${routeNameToPascalCase(config.name)}`;
+  const hookName = `use${toPascalCase(config.name)}`;
   const method = config.method.toUpperCase();
 
   // Generate type definition

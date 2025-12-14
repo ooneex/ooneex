@@ -37,6 +37,7 @@
     "@ooneex/mailer": "workspace:*",
     "@ooneex/permission": "workspace:*",
     "@ooneex/routing": "workspace:*",
+    "@ooneex/utils": "workspace:*",
     "@ooneex/logger": "workspace:*"
   },
   "devDependencies": {

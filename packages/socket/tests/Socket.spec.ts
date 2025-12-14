@@ -177,7 +177,6 @@ describe("Socket", () => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       const testData: RequestDataType = {
-        params: { id: "123" },
         payload: { message: "test" },
         queries: { filter: "active" },
       };

@@ -1,9 +1,13 @@
 import type { ResponseDataType } from "@ooneex/http-response";
 import type { ISocket, RequestDataType } from "./types";
 
-export class Socket implements ISocket {
+export class Socket<
+  SendData extends RequestDataType = RequestDataType,
+  Response extends Record<string, unknown> = Record<string, unknown>,
+> implements ISocket<SendData, Response>
+{
   private ws: WebSocket;
-  private messageHandler?: <T extends Record<string, unknown>>(event: ResponseDataType<T>) => void;
+  private messageHandler?: (response: ResponseDataType<Response>) => void;
   private openHandler?: (event: Event) => void;
   private errorHandler?: (event: Event) => void;
   private closeHandler?: (event: CloseEvent) => void;
@@ -19,7 +23,7 @@ export class Socket implements ISocket {
     this.ws.close(code, reason);
   }
 
-  public send<Data extends RequestDataType = RequestDataType>(data: Data): void {
+  public send(data: SendData): void {
     const text = JSON.stringify(data);
     this.sendRaw(text);
   }
@@ -32,7 +36,7 @@ export class Socket implements ISocket {
     }
   }
 
-  public onMessage(handler: <T extends Record<string, unknown>>(event: ResponseDataType<T>) => void): void {
+  public onMessage(handler: (response: ResponseDataType<Response>) => void): void {
     this.messageHandler = handler;
   }
 
@@ -68,7 +72,7 @@ export class Socket implements ISocket {
   private setupEventHandlers(): void {
     this.ws.onmessage = (event: MessageEvent) => {
       if (this.messageHandler) {
-        const data = JSON.parse(event.data) as ResponseDataType<Record<string, unknown>>;
+        const data = JSON.parse(event.data) as ResponseDataType<Response>;
 
         this.messageHandler(data);
       }

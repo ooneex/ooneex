@@ -22,7 +22,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun run build && bun publish --access public"
+    "publish": "bun publish --access public"
   },
   "dependencies": {
     "@ooneex/http-header": "workspace:*"

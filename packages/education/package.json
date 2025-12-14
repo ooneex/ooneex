@@ -24,7 +24,7 @@
     "build": "bunup",
     "test": "bun test",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun run build && bun publish --access public"
+    "publish": "bun publish --access public"
   },
   "dependencies": {},
   "devDependencies": {},

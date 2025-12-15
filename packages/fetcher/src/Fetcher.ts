@@ -8,7 +8,7 @@ export class Fetcher implements IFetcher {
   private abortController: AbortController;
   public readonly header: Header = new Header();
 
-  constructor(private baseURL: string) {
+  constructor(private baseURL?: string) {
     this.abortController = new AbortController();
   }
 
@@ -56,7 +56,8 @@ export class Fetcher implements IFetcher {
   }
 
   public clone(): Fetcher {
-    return new Fetcher(this.baseURL);
+    const cloned = new Fetcher(this.baseURL);
+    return cloned;
   }
 
   public async get<T extends Record<string, unknown> = Record<string, unknown>>(
@@ -144,6 +145,10 @@ export class Fetcher implements IFetcher {
 
   private buildURL(url: string): string {
     if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+
+    if (!this.baseURL) {
       return url;
     }
 

@@ -83,6 +83,12 @@ describe("Fetcher", () => {
       expect(newFetcher.header).toBeDefined();
     });
 
+    test("should create Fetcher without base URL", () => {
+      const newFetcher = new Fetcher();
+      expect(newFetcher).toBeInstanceOf(Fetcher);
+      expect(newFetcher.header).toBeDefined();
+    });
+
     test("should initialize with empty headers", () => {
       const newFetcher = new Fetcher(baseURL);
       expect(newFetcher.header.native).toEqual(new Headers());
@@ -178,6 +184,15 @@ describe("Fetcher", () => {
       expect(cloned).toBeInstanceOf(Fetcher);
       expect(cloned).not.toBe(fetcher);
       expect(cloned.header).not.toBe(fetcher.header);
+    });
+
+    test("should create new Fetcher instance without base URL", () => {
+      const fetcherWithoutBase = new Fetcher();
+      const cloned = fetcherWithoutBase.clone();
+
+      expect(cloned).toBeInstanceOf(Fetcher);
+      expect(cloned).not.toBe(fetcherWithoutBase);
+      expect(cloned.header).not.toBe(fetcherWithoutBase.header);
     });
 
     test("should clone with independent headers", () => {
@@ -522,6 +537,27 @@ describe("Fetcher", () => {
       mockFetch.mockResolvedValue(new MockResponse({}, 200));
       await fetcher.get("http://other-api.com/users");
       expect(mockFetch).toHaveBeenCalledWith("http://other-api.com/users", expect.any(Object));
+    });
+
+    test("should use path as-is when no base URL provided", async () => {
+      mockFetch.mockResolvedValue(new MockResponse({}, 200));
+      const fetcherWithoutBase = new Fetcher();
+      await fetcherWithoutBase.get("/users");
+      expect(mockFetch).toHaveBeenCalledWith("/users", expect.any(Object));
+    });
+
+    test("should use absolute URL when no base URL provided", async () => {
+      mockFetch.mockResolvedValue(new MockResponse({}, 200));
+      const fetcherWithoutBase = new Fetcher();
+      await fetcherWithoutBase.get("https://api.example.com/users");
+      expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users", expect.any(Object));
+    });
+
+    test("should use relative path as-is when no base URL provided", async () => {
+      mockFetch.mockResolvedValue(new MockResponse({}, 200));
+      const fetcherWithoutBase = new Fetcher();
+      await fetcherWithoutBase.get("users");
+      expect(mockFetch).toHaveBeenCalledWith("users", expect.any(Object));
     });
   });
 

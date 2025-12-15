@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, jest, test } from "bun:test";
 import type { ResponseDataType } from "@ooneex/http-response";
-import { Fetcher } from "../src/index";
+import { Fetcher } from "@/index";
 
 // Extended type for mock responses with additional computed properties
 type MockResponseData<T extends Record<string, unknown> = Record<string, unknown>> = ResponseDataType<T> & {

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { ERole, ROLE_HIERARCHY, Role } from "../src/index";
+import { ERole, ROLE_HIERARCHY, Role } from "@/index";
 
 describe("Role", () => {
   let role: Role;

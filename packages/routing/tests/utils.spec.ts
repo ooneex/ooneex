@@ -10,6 +10,7 @@ import {
   isValidRoutePath,
   routeConfigToFetcherString,
   routeConfigToJsonDoc,
+  routeConfigToSocketString,
   routeConfigToTypeString,
   routeConfigToUseQueryString,
 } from "@/utils";
@@ -1485,5 +1486,236 @@ describe("routeConfigToUseQueryString", () => {
 
     expect(result).toContain("new Fetcher");
     expect(result).toContain("fetcher.get");
+  });
+
+  test("uses 'never' type when config.response is not provided for GET request", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "GET",
+      controller: MockController,
+      description: "Get user by ID",
+      isSocket: false,
+      params: {
+        id: Assert("string"),
+      },
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("export const useApiUsersDelete = (config: {");
+    expect(result).toContain("return useQuery({");
+    expect(result).toContain("return await fetcher.get<never>");
+    expect(result).not.toContain('DeleteRouteConfigType["response"]');
+  });
+
+  test("uses 'never' type when config.response is not provided for POST request", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create a new user",
+      isSocket: false,
+      payload: Assert({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("export const useApiUsersCreate = () => {");
+    expect(result).toContain("const mutation = useMutation({");
+    expect(result).toContain("return await fetcher.post<never>");
+    expect(result).not.toContain('CreateRouteConfigType["response"]');
+  });
+
+  test("uses 'never' type when config.response is not provided for DELETE request", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user",
+      isSocket: false,
+      params: {
+        id: Assert("string"),
+      },
+    };
+
+    const result = routeConfigToUseQueryString(config);
+
+    expect(result).toContain("const mutation = useMutation({");
+    expect(result).toContain("return await fetcher.delete<never>");
+    expect(result).not.toContain('DeleteRouteConfigType["response"]');
+  });
+});
+
+describe("routeConfigToSocketString", () => {
+  test("generates socket class with params and response", () => {
+    const config: RouteConfigType = {
+      name: "api.chat.join",
+      path: "/chat/:roomId",
+      method: "GET",
+      controller: MockController,
+      description: "Connect to chat room",
+      isSocket: true,
+      params: {
+        roomId: Assert("string"),
+      },
+      response: Assert({
+        message: "string",
+        userId: "string",
+      }),
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain('import type { ResponseDataType } from "@ooneex/http-response";');
+    expect(result).toContain('import type { LocaleInfoType } from "@ooneex/translation";');
+    expect(result).toContain('import { type ISocket, Socket } from "@ooneex/socket/client"');
+    expect(result).toContain("export type JoinRouteConfigType");
+    expect(result).toContain("export class ApiChatJoinSocket");
+    expect(result).toContain('public join(params: JoinRouteConfigType["params"]): ISocket<');
+    expect(result).toContain('JoinRouteConfigType["response"]>');
+    expect(result).toContain("const socket = new Socket<");
+    expect(result).toContain('JoinRouteConfigType["response"]');
+  });
+
+  test("generates socket class with payload and queries", () => {
+    const config: RouteConfigType = {
+      name: "api.notifications.monitor",
+      path: "/notifications",
+      method: "GET",
+      controller: MockController,
+      description: "Stream notifications",
+      isSocket: true,
+      payload: Assert({
+        filter: "string",
+      }),
+      queries: Assert({
+        limit: "number",
+      }),
+      response: Assert({
+        notifications: "unknown[]",
+      }),
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain("export class ApiNotificationsMonitorSocket");
+    expect(result).toContain("public monitor(): ISocket<");
+    expect(result).toContain('payload: MonitorRouteConfigType["payload"]');
+    expect(result).toContain('queries: MonitorRouteConfigType["queries"]');
+    expect(result).toContain("language?: LocaleInfoType");
+    expect(result).toContain('MonitorRouteConfigType["response"]');
+  });
+
+  test("generates socket class without params", () => {
+    const config: RouteConfigType = {
+      name: "api.events.monitor",
+      path: "/events/live",
+      method: "GET",
+      controller: MockController,
+      description: "Live events monitor",
+      isSocket: true,
+      response: Assert({
+        event: "string",
+        data: "unknown",
+      }),
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain("export class ApiEventsMonitorSocket");
+    expect(result).toContain("public monitor(): ISocket<");
+    expect(result).not.toContain("params:");
+  });
+
+  test("uses 'never' type when config.response is not provided", () => {
+    const config: RouteConfigType = {
+      name: "api.logging.monitor",
+      path: "/logs/:appId",
+      method: "GET",
+      controller: MockController,
+      description: "Stream application logs",
+      isSocket: true,
+      params: {
+        appId: Assert("string"),
+      },
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain("export class ApiLoggingMonitorSocket");
+    expect(result).toContain("const socket = new Socket<");
+    expect(result).toContain(", never>(url);");
+    expect(result).not.toContain('MonitorRouteConfigType["response"]');
+  });
+
+  test("uses 'never' type when config.response is not provided with payload", () => {
+    const config: RouteConfigType = {
+      name: "api.metrics.monitor",
+      path: "/metrics",
+      method: "GET",
+      controller: MockController,
+      description: "Monitor metrics",
+      isSocket: true,
+      payload: Assert({
+        metricType: "string",
+      }),
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain("export class ApiMetricsMonitorSocket");
+    expect(result).toContain("const socket = new Socket<");
+    expect(result).toContain(", never>(url);");
+    expect(result).not.toContain('MonitorRouteConfigType["response"]');
+  });
+
+  test("includes socket event handlers", () => {
+    const config: RouteConfigType = {
+      name: "api.realtime.join",
+      path: "/realtime",
+      method: "GET",
+      controller: MockController,
+      description: "Realtime connection",
+      isSocket: true,
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain("socket.onMessage((response: ResponseDataType<never>) => {");
+    expect(result).toContain("// TODO: Handle socket message event");
+    expect(result).toContain("socket.onOpen((event: Event) => {");
+    expect(result).toContain("// TODO: Handle socket open event");
+    expect(result).toContain("socket.onClose((event: CloseEvent) => {");
+    expect(result).toContain("// TODO: Handle socket close event");
+    expect(result).toContain("socket.onError((event: Event, response?: ResponseDataType<never>) => {");
+    expect(result).toContain("// TODO: Handle socket error event");
+    expect(result).toContain("return socket;");
+  });
+
+  test("generates correct URL with parameters", () => {
+    const config: RouteConfigType = {
+      name: "api.rooms.join",
+      path: "/rooms/:roomId/users/:userId",
+      method: "GET",
+      controller: MockController,
+      description: "Join a room",
+      isSocket: true,
+      params: {
+        roomId: Assert("string"),
+        userId: Assert("string"),
+      },
+    };
+
+    const result = routeConfigToSocketString(config);
+
+    expect(result).toContain('public join(params: JoinRouteConfigType["params"]): ISocket<');
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
+    expect(result).toContain("/rooms/${params.roomId}/users/${params.userId}");
   });
 });

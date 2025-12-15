@@ -480,27 +480,30 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
 
   const sendDataType = sendDataTypeProps.length > 0 ? `{ ${sendDataTypeProps.join("; ")} }` : "Record<string, unknown>";
 
+  // Determine response type
+  const responseType = config.response ? `${typeName}["response"]` : "never";
+
   // Generate class
   const classDefinition = `export class ${className} {
   constructor(private baseURL: string) {}
 
-  public ${action}(${configType}): ISocket {
+  public ${action}(${configType}): ISocket<${sendDataType}, ${responseType}> {
     const url = ${urlExpression};
-    const socket = new Socket<${sendDataType}, ${typeName}["response"]>(url);
+    const socket = new Socket<${sendDataType}, ${responseType}>(url);
 
-    socket.onMessage((response) => {
+    socket.onMessage((response: ResponseDataType<${responseType}>) => {
       // TODO: Handle socket message event
     });
 
-    socket.onOpen((event) => {
+    socket.onOpen((event: Event) => {
       // TODO: Handle socket open event
     });
 
-    socket.onClose((event) => {
+    socket.onClose((event: CloseEvent) => {
       // TODO: Handle socket close event
     });
 
-    socket.onError((event, response) => {
+    socket.onError((event: Event, response?: ResponseDataType<${responseType}>) => {
       // TODO: Handle socket error event
     });
 
@@ -508,8 +511,9 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
   }
 }`;
 
-  const imports = `import type { LocaleInfoType } from "@ooneex/translation";
-import { type ISocket, Socket } from "@ooneex/socket/client"`;
+  const imports = `import type { ResponseDataType } from "@ooneex/http-response";
+import { type ISocket, Socket } from "@ooneex/socket/client";
+import type { LocaleInfoType } from "@ooneex/translation";`;
 
   return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };
@@ -531,6 +535,9 @@ export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = "
   const hasParams = config.params && Object.keys(config.params).length > 0;
   const hasPayload = config.payload !== undefined;
   const hasQueries = config.queries !== undefined;
+
+  // Determine response type
+  const responseType = config.response ? `${typeName}["response"]` : "never";
 
   if (isQuery) {
     // Generate useQuery hook
@@ -578,7 +585,7 @@ export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = "
     const fetchCall = `const fetcher = new Fetcher('${baseURL}');
       const url = ${urlExpression};
 
-      return await fetcher.${fetcherMethod}<${typeName}["response"]>(url);`;
+      return await fetcher.${fetcherMethod}<${responseType}>(url);`;
 
     const hookDefinition = `export const ${hookName} = (${configParam}) => {
   return useQuery({
@@ -631,9 +638,9 @@ import { Fetcher } from '@ooneex/fetcher';`;
       `;
 
   if (hasFetchBody) {
-    fetchCall += `return await fetcher.${fetcherMethod}<${typeName}["response"]>(url, config.payload);`;
+    fetchCall += `return await fetcher.${fetcherMethod}<${responseType}>(url, config.payload);`;
   } else {
-    fetchCall += `return await fetcher.${fetcherMethod}<${typeName}["response"]>(url);`;
+    fetchCall += `return await fetcher.${fetcherMethod}<${responseType}>(url);`;
   }
 
   const hookDefinition = `export const ${hookName} = () => {

@@ -853,6 +853,6 @@ describe("generateRouteDoc", () => {
   });
 
   afterAll(async () => {
-    await Bun.spawn(["rm", "-rf", outputDir]).exited;
+    await Bun.spawn(["rm", "-rf", join(process.cwd(), "docs")]).exited;
   });
 });

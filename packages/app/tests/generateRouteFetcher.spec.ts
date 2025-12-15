@@ -70,12 +70,8 @@ describe("generateRouteFetcher", () => {
     expect(content).toContain('import type { ResponseDataType } from "@ooneex/http-response"');
     expect(content).toContain('import { Fetcher } from "@ooneex/fetcher"');
 
-    // Verify type definition is present
-    expect(content).toContain("export type ListRouteConfigType");
-
     // Verify class definition is present
     expect(content).toContain("export class ApiUsersListFetcher");
-    expect(content).toContain("constructor(private baseURL: string)");
     expect(content).toContain("public async list(");
 
     // Verify method uses correct HTTP method

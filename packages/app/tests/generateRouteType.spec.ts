@@ -340,6 +340,6 @@ describe("generateRouteType", () => {
   });
 
   afterAll(async () => {
-    await Bun.spawn(["rm", "-rf", outputDir]).exited;
+    await Bun.spawn(["rm", "-rf", join(process.cwd(), "src/types")]).exited;
   });
 });

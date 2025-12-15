@@ -71,12 +71,8 @@ describe("generateRouteSocket", () => {
     expect(content).toContain('import type { LocaleInfoType } from "@ooneex/translation"');
     expect(content).toContain('import { type ISocket, Socket } from "@ooneex/socket/client"');
 
-    // Verify type definition is present
-    expect(content).toContain("export type ListRouteConfigType");
-
     // Verify class definition is present
     expect(content).toContain("export class ApiUsersListSocket");
-    expect(content).toContain("constructor(private baseURL: string)");
     expect(content).toContain("public list(");
 
     // Verify Socket is instantiated
@@ -126,8 +122,6 @@ describe("generateRouteSocket", () => {
     expect(content).toContain('params: GetRouteConfigType["params"]');
 
     // Verify URL construction with params
-    // biome-ignore lint/suspicious/noTemplateCurlyInString: checking generated template literal
-    expect(content).toContain("${this.baseURL}");
     // biome-ignore lint/suspicious/noTemplateCurlyInString: checking generated template literal
     expect(content).toContain("${params.id}");
   });

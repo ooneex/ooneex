@@ -27,9 +27,7 @@
     "build": "bunup",
     "test": "bun test",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish:prod": "bun publish --tolerate-republish --access public",
-    "publish:pack": "bun pm pack --destination ./dist",
-    "publish:dry": "bun publish --dry-run"
+    "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
   "devDependencies": {},

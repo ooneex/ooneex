@@ -1,10 +1,10 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import type { IController } from "@ooneex/controller";
 import { HttpResponse } from "@ooneex/http-response";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type } from "arktype";
-import { generateRouteSocket } from "../src/generateRouteSocket";
+import { generateRouteSocket } from "@/generateRouteSocket";
 
 // Mock controller for testing
 class MockController implements IController {
@@ -614,5 +614,9 @@ describe("generateRouteSocket", () => {
     expect(content).toContain("${params.deptId}");
     // biome-ignore lint/suspicious/noTemplateCurlyInString: checking generated template literal
     expect(content).toContain("${params.empId}");
+  });
+
+  afterAll(async () => {
+    await Bun.spawn(["rm", "-rf", outputDir]).exited;
   });
 });

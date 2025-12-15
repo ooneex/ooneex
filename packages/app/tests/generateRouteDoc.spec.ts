@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { Environment } from "@ooneex/app-env";
 import type { IController } from "@ooneex/controller";
@@ -6,7 +6,7 @@ import { HttpResponse } from "@ooneex/http-response";
 import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type } from "arktype";
-import { generateRouteDoc } from "../src/generateRouteDoc";
+import { generateRouteDoc } from "@/generateRouteDoc";
 
 // Mock controller for testing
 class MockController implements IController {
@@ -850,5 +850,9 @@ describe("generateRouteDoc", () => {
     expect(parsedDoc.name).toBe("api.users.delete");
     expect(parsedDoc.description).toBe("Delete user (admin only)");
     expect(parsedDoc.parameters).toEqual(["id"]);
+  });
+
+  afterAll(async () => {
+    await Bun.spawn(["rm", "-rf", outputDir]).exited;
   });
 });

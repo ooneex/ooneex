@@ -1,10 +1,10 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import type { IController } from "@ooneex/controller";
 import { HttpResponse } from "@ooneex/http-response";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type } from "arktype";
-import { generateRouteType } from "../src/generateRouteType";
+import { generateRouteType } from "@/generateRouteType";
 
 // Mock controller for testing
 class MockController implements IController {
@@ -26,7 +26,7 @@ class UserController implements IController {
 }
 
 describe("generateRouteType", () => {
-  const outputDir = join(process.cwd(), "types/routes");
+  const outputDir = join(process.cwd(), "src/types/routes");
 
   test("generates route type file with minimal config", async () => {
     const config: RouteConfigType = {
@@ -337,5 +337,9 @@ describe("generateRouteType", () => {
 
     // Verify semicolons are present
     expect(content).toContain(";");
+  });
+
+  afterAll(async () => {
+    await Bun.spawn(["rm", "-rf", outputDir]).exited;
   });
 });

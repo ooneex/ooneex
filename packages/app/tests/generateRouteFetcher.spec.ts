@@ -1,10 +1,10 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import type { IController } from "@ooneex/controller";
 import { HttpResponse } from "@ooneex/http-response";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type } from "arktype";
-import { generateRouteFetcher } from "../src/generateRouteFetcher";
+import { generateRouteFetcher } from "@/generateRouteFetcher";
 
 // Mock controller for testing
 class MockController implements IController {
@@ -500,5 +500,9 @@ describe("generateRouteFetcher", () => {
     // Verify class is generated correctly
     expect(content).toContain("export class ApiUsersIndexFetcher");
     expect(content).toContain("public async index(");
+  });
+
+  afterAll(async () => {
+    await Bun.spawn(["rm", "-rf", outputDir]).exited;
   });
 });

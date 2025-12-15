@@ -150,3 +150,4 @@ packages/pnpm-lock.yaml
 .github/instructions/nx.instructions.md
 packages/app/docs
 packages/app/types/routes
+packages/app/src/fetchers

@@ -3,7 +3,7 @@ import type { LocaleInfoType } from "@ooneex/translation";
 
 export type RequestDataType = {
   payload?: Record<string, unknown>;
-  queries?: Record<string, string | number>;
+  queries?: Record<string, boolean | number | bigint | string>;
   language?: LocaleInfoType;
 };
 
@@ -16,5 +16,5 @@ export interface ISocket<
   onMessage: (handler: (response: ResponseDataType<Response>) => void) => void;
   onOpen: (handler: (event: Event) => void) => void;
   onClose: (handler: (event: CloseEvent) => void) => void;
-  onError: (handler: (event: Event) => void) => void;
+  onError: (handler: (event: Event, response?: ResponseDataType<Response>) => void) => void;
 }

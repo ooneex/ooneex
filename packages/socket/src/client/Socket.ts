@@ -48,7 +48,7 @@ export class Socket<
     this.closeHandler = handler;
   }
 
-  public onError(handler: (event: Event) => void): void {
+  public onError(handler: (event: Event, response?: ResponseDataType<Response>) => void): void {
     this.errorHandler = handler;
   }
 

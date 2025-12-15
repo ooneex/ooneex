@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { Environment } from "@ooneex/app-env";
 import type { ResponseDataType } from "@ooneex/http-response";
-import { Socket } from "../src/client/Socket";
-import type { RequestDataType } from "../src/client/types";
+import { Socket } from "@/client/Socket";
+import type { RequestDataType } from "@/client/types";
 
 // Type-safe interface for testing private members
 interface SocketPrivate {

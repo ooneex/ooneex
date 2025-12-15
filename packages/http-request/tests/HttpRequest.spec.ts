@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { HttpMethodType } from "@ooneex/types";
-import { HttpRequest } from "../src/HttpRequest";
+import { HttpRequest } from "@/HttpRequest";
 
 describe("HttpRequest", () => {
   let mockRequest: Request;

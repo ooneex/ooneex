@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, mock, test } from "bun:test";
 import type { LocaleType } from "@ooneex/translation";
-import { HttpRequest } from "../src/HttpRequest";
+import { HttpRequest } from "@/HttpRequest";
 
 // Mock the accept-language-parser to test language parsing edge cases
 const mockParser = {

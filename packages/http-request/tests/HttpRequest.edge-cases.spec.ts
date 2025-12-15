@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { LocaleType } from "@ooneex/translation";
-import { HttpRequest } from "../src/HttpRequest";
+import { HttpRequest } from "@/HttpRequest";
 
 interface NestedPayload {
   user: {

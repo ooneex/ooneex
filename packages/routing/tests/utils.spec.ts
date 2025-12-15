@@ -845,7 +845,7 @@ describe("routeConfigToFetcherString", () => {
     expect(result).toContain("constructor(private baseURL: string)");
     expect(result).toContain("public async delete(");
     expect(result).toContain('params: DeleteRouteConfigType["params"]');
-    expect(result).toContain('Promise<ResponseDataType<DeleteRouteConfigType["response"]>>');
+    expect(result).toContain("Promise<ResponseDataType<never>>");
     expect(result).toContain("const fetcher = new Fetcher(this.baseURL)");
     expect(result).toContain("return await fetcher.delete");
     // biome-ignore lint/suspicious/noTemplateCurlyInString: trust me
@@ -1157,8 +1157,51 @@ describe("routeConfigToFetcherString", () => {
     const result = routeConfigToFetcherString(config);
 
     const lines = result.split("\n");
-    expect(lines[0]).toBe('import type { ResponseDataType } from "@ooneex/http-response";');
-    expect(lines[1]).toBe('import { Fetcher } from "@ooneex/fetcher";');
+    expect(lines[0]).toBe('import { Fetcher } from "@ooneex/fetcher";');
+    expect(lines[1]).toBe('import type { ResponseDataType } from "@ooneex/http-response";');
+  });
+
+  test("uses 'never' type when config.response is not provided", () => {
+    const config: RouteConfigType = {
+      name: "api.users.delete",
+      path: "/users/:id",
+      method: "DELETE",
+      controller: MockController,
+      description: "Delete a user by ID",
+      isSocket: false,
+      params: {
+        id: Assert("string"),
+      },
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiUsersDeleteFetcher");
+    expect(result).toContain("Promise<ResponseDataType<never>>");
+    expect(result).toContain("return await fetcher.delete<never>");
+    expect(result).not.toContain('DeleteRouteConfigType["response"]');
+  });
+
+  test("uses 'never' type for POST without response", () => {
+    const config: RouteConfigType = {
+      name: "api.users.create",
+      path: "/users",
+      method: "POST",
+      controller: MockController,
+      description: "Create a new user",
+      isSocket: false,
+      payload: Assert({
+        name: "string",
+        email: "string",
+      }),
+    };
+
+    const result = routeConfigToFetcherString(config);
+
+    expect(result).toContain("export class ApiUsersCreateFetcher");
+    expect(result).toContain("Promise<ResponseDataType<never>>");
+    expect(result).toContain("return await fetcher.post<never>");
+    expect(result).not.toContain('CreateRouteConfigType["response"]');
   });
 });
 

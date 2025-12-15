@@ -395,6 +395,7 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
   const hasParams = config.params && Object.keys(config.params).length > 0;
   const hasPayload = config.payload !== undefined;
   const hasQueries = config.queries !== undefined;
+  const responseType = config.response ? `${typeName}["response"]` : "never";
 
   if (hasParams) {
     configProps.push(`params: ${typeName}["params"]`);
@@ -422,24 +423,25 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
   let methodCall = "";
 
   if (methodsWithPayload.includes(method) && hasPayload) {
-    methodCall = `return await fetcher.${method}<${typeName}["response"]>(\n      ${urlExpression},\n      config.payload,\n    );`;
+    methodCall = `return await fetcher.${method}<${responseType}>(\n      ${urlExpression},\n      config.payload,\n    );`;
   } else {
-    methodCall = `return await fetcher.${method}<${typeName}["response"]>(\n      ${urlExpression},\n    );`;
+    methodCall = `return await fetcher.${method}<${responseType}>(\n      ${urlExpression},\n    );`;
   }
 
   // Generate class
   const classDefinition = `export class ${className} {
   constructor(private baseURL: string) {}
 
-  public async ${action}(${configType}): Promise<ResponseDataType<${typeName}["response"]>> {
+  public async ${action}(${configType}): Promise<ResponseDataType<${responseType}>> {
+
     const fetcher = new Fetcher(this.baseURL);
 
     ${methodCall}
   }
 }`;
 
-  const imports = `import type { ResponseDataType } from "@ooneex/http-response";
-import { Fetcher } from "@ooneex/fetcher";`;
+  const imports = `import { Fetcher } from "@ooneex/fetcher";
+import type { ResponseDataType } from "@ooneex/http-response";`;
 
   return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };

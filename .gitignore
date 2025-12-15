@@ -151,3 +151,4 @@ packages/pnpm-lock.yaml
 packages/app/docs
 packages/app/src/types
 packages/app/src/fetchers
+packages/app/src/hooks

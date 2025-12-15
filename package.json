@@ -10,9 +10,7 @@
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "fmt": "bunx biome check --write",
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
-    "publish:prod": "bunx nx affected -t publish:prod --output-style=stream --verbose",
-    "publish:pack": "bunx nx run-many -t publish:pack --output-style=stream --verbose",
-    "publish:dry": "bunx nx run-many -t publish:dry --output-style=stream --verbose",
+    "publish": "bunx nx run-many -t publish --output-style=stream --verbose",
     "commit": "bunx commit",
     "prepare": "husky"
   },
@@ -21,6 +19,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@tanstack/react-query": "^5.90.12",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {

@@ -379,6 +379,14 @@ const buildPathWithParams = (path: string, useConfigPrefix = true): string => {
   return path.replace(/:(\w+)/g, (_match, param) => `\${${prefix}.${param}}`);
 };
 
+/**
+ * Helper function to convert queries object to URLSearchParams string
+ * Generates code that constructs URLSearchParams from a queries object
+ */
+const buildQueryString = (queriesSource: string): string => {
+  return `Object.entries(${queriesSource} || {}).reduce((params, [key, value]) => { params.append(key, String(value)); return params; }, new URLSearchParams()).toString()`;
+};
+
 export const routeConfigToFetcherString = (config: RouteConfigType): string => {
   const action = getRouteAction(config.name);
   const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
@@ -387,8 +395,8 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
 
   // Generate type definition
   const typeString = routeConfigToTypeString(config);
-
-  const typeDefinition = `export type ${typeName} = ${typeString}`;
+  const isNeverType = typeString === "never";
+  const typeDefinition = isNeverType ? "" : `export type ${typeName} = ${typeString}`;
 
   // Build config parameter type
   const configProps: string[] = [];
@@ -415,7 +423,7 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
 
   // Add query string if queries exist
   if (hasQueries) {
-    urlExpression = `\`${urlPath}?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\``;
+    urlExpression = `\`${urlPath}?\${${buildQueryString("config.queries")}}\``;
   }
 
   // Build method call based on HTTP method
@@ -430,11 +438,9 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
 
   // Generate class
   const classDefinition = `export class ${className} {
-  constructor(private baseURL: string) {}
-
   public async ${action}(${configType}): Promise<ResponseDataType<${responseType}>> {
 
-    const fetcher = new Fetcher(this.baseURL);
+    const fetcher = new Fetcher();
 
     ${methodCall}
   }
@@ -443,7 +449,7 @@ export const routeConfigToFetcherString = (config: RouteConfigType): string => {
   const imports = `import { Fetcher } from "@ooneex/fetcher";
 import type { ResponseDataType } from "@ooneex/http-response";`;
 
-  return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
+  return isNeverType ? `${imports}\n\n${classDefinition}` : `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };
 
 export const routeConfigToSocketString = (config: RouteConfigType): string => {
@@ -453,8 +459,8 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
 
   // Generate type definition
   const typeString = routeConfigToTypeString(config);
-
-  const typeDefinition = `export type ${typeName} = ${typeString}`;
+  const isNeverType = typeString === "never";
+  const typeDefinition = isNeverType ? "" : `export type ${typeName} = ${typeString}`;
 
   // Build config parameter type
   const hasParams = config.params && Object.keys(config.params).length > 0;
@@ -466,7 +472,7 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
 
   // Build URL with parameters
   const urlPath = buildPathWithParams(config.path, false);
-  const urlExpression = `\`\${this.baseURL}${urlPath}\``;
+  const urlExpression = `\`${urlPath}\``;
 
   // Build SendData type for Socket
   const sendDataTypeProps: string[] = [];
@@ -485,8 +491,6 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
 
   // Generate class
   const classDefinition = `export class ${className} {
-  constructor(private baseURL: string) {}
-
   public ${action}(${configType}): ISocket<${sendDataType}, ${responseType}> {
     const url = ${urlExpression};
     const socket = new Socket<${sendDataType}, ${responseType}>(url);
@@ -515,10 +519,10 @@ export const routeConfigToSocketString = (config: RouteConfigType): string => {
 import { type ISocket, Socket } from "@ooneex/socket/client";
 import type { LocaleInfoType } from "@ooneex/translation";`;
 
-  return `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
+  return isNeverType ? `${imports}\n\n${classDefinition}` : `${imports}\n\n${typeDefinition}\n\n${classDefinition}`;
 };
 
-export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = ""): string => {
+export const routeConfigToHookString = (config: RouteConfigType): string => {
   const action = getRouteAction(config.name);
   const typeName = `${action.charAt(0).toUpperCase() + action.slice(1)}RouteConfigType`;
   const hookName = `use${toPascalCase(config.name)}`;
@@ -526,7 +530,8 @@ export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = "
 
   // Generate type definition
   const typeString = routeConfigToTypeString(config);
-  const typeDefinition = `export type ${typeName} = ${typeString}`;
+  const isNeverType = typeString === "never";
+  const typeDefinition = isNeverType ? "" : `export type ${typeName} = ${typeString}`;
 
   // Determine if this is a query or mutation based on HTTP method
   const queryMethods = ["GET", "HEAD", "OPTIONS"];
@@ -577,12 +582,12 @@ export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = "
 
     // Add query string if queries exist
     if (hasQueries) {
-      urlExpression = `\`${urlPath}?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\``;
+      urlExpression = `\`${urlPath}?\${${buildQueryString("config.queries")}}\``;
     }
 
     // Build fetcher call
     const fetcherMethod = method.toLowerCase();
-    const fetchCall = `const fetcher = new Fetcher('${baseURL}');
+    const fetchCall = `const fetcher = new Fetcher();
       const url = ${urlExpression};
 
       return await fetcher.${fetcherMethod}<${responseType}>(url);`;
@@ -599,7 +604,7 @@ export const routeConfigToUseQueryString = (config: RouteConfigType, baseURL = "
     const imports = `import { useQuery } from '@tanstack/react-query';
 import { Fetcher } from '@ooneex/fetcher';`;
 
-    return `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
+    return isNeverType ? `${imports}\n\n${hookDefinition}` : `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
   }
 
   // Generate useMutation hook
@@ -624,7 +629,7 @@ import { Fetcher } from '@ooneex/fetcher';`;
 
   // Add query string if queries exist
   if (hasQueries) {
-    urlExpression = `\`${urlPath}\${config.queries ? \`?\${new URLSearchParams(config.queries as Record<string, string>).toString()}\` : ''}\``;
+    urlExpression = `\`${urlPath}\${config.queries ? \`?\${${buildQueryString("config.queries")}}\` : ''}\``;
   }
 
   // Build fetcher call
@@ -632,7 +637,7 @@ import { Fetcher } from '@ooneex/fetcher';`;
   const hasFetchBody = methodsWithPayload.includes(method) && hasPayload;
   const fetcherMethod = method.toLowerCase();
 
-  let fetchCall = `const fetcher = new Fetcher('${baseURL}');
+  let fetchCall = `const fetcher = new Fetcher();
       const url = ${urlExpression};
 
       `;
@@ -656,5 +661,5 @@ import { Fetcher } from '@ooneex/fetcher';`;
   const imports = `import { useMutation } from '@tanstack/react-query';
 import { Fetcher } from '@ooneex/fetcher';`;
 
-  return `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
+  return isNeverType ? `${imports}\n\n${hookDefinition}` : `${imports}\n\n${typeDefinition}\n\n${hookDefinition}`;
 };

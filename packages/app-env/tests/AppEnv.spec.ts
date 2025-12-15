@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { AppEnv } from "../src/AppEnv";
-import { AppEnvException } from "../src/AppEnvException";
-import type { EnvType } from "../src/types";
-import { Environment } from "../src/types";
+import { AppEnv } from "@/AppEnv";
+import { AppEnvException } from "@/AppEnvException";
+import type { EnvType } from "@/types";
+import { Environment } from "@/types";
 
 describe("AppEnv", () => {
   describe("Constructor", () => {

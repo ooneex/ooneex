@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { HttpStatus } from "@ooneex/http-status";
-import { CronException } from "../src/CronException";
+import { CronException } from "@/CronException";
 
 describe("CronException", () => {
   describe("Name", () => {

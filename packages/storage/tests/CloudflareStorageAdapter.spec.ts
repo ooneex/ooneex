@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { CloudflareStorageAdapter } from "../src/CloudflareStorageAdapter";
-import { StorageException } from "../src/StorageException";
+import { CloudflareStorageAdapter } from "@/CloudflareStorageAdapter";
+import { StorageException } from "@/StorageException";
 
 // Mock environment variables
 const mockEnv = {

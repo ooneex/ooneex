@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { CURRENCIES } from "../src/constants";
+import { CURRENCIES } from "@/constants";
 
 describe("CURRENCIES", () => {
   it("should be defined and not empty", () => {

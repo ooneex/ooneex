@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { CURRENCIES } from "../src/constants";
-import type { CurrencyCodeType, CurrencyIconType, CurrencyNameType, CurrencySymbolType } from "../src/types";
+import { CURRENCIES } from "@/constants";
+import type { CurrencyCodeType, CurrencyIconType, CurrencyNameType, CurrencySymbolType } from "@/types";
 
 describe("Constants and Types Integration", () => {
   describe("Type compatibility", () => {

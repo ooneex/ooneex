@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { CURRENCIES } from "../src/constants";
-import type { CurrencyCodeType } from "../src/types";
+import { CURRENCIES } from "@/constants";
+import type { CurrencyCodeType } from "@/types";
 
 describe("Currency Utilities", () => {
   // Helper functions that could be used with the currencies

@@ -2,11 +2,11 @@ import { join } from "node:path";
 import type { RouteAction, RouteNameSegment, RouteNamespace, RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
 import { toPascalCase } from "@ooneex/utils";
-import { askRouteMethod } from "@/prompts/askRouteMethod";
-import { askRoutePath } from "@/prompts/askRoutePath";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
+import { askRouteMethod } from "../prompts/askRouteMethod";
 import { askRouteNamespace } from "../prompts/askRouteNamespace";
+import { askRoutePath } from "../prompts/askRoutePath";
 import template from "../templates/controller.txt";
 import type { ICommand } from "../types";
 

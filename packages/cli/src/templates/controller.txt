@@ -1,0 +1,34 @@
+import { Environment } from "@ooneex/app-env";
+import type { ContextType } from "@ooneex/controller";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
+
+@Route.{{ROUTE_METHOD}}("{{ROUTE_PATH}}", {
+  name: "{{ROUTE_NAME}}",
+  description: "",
+  params: {
+    // id: Assert("string"),
+  },
+  payload: Assert({
+
+  }),
+  queries: Assert({
+
+  }),
+  response: Assert({
+
+  }),
+  roles: [ERole.USER],
+  env: [Environment.LOCAL],
+})
+export class {{NAME}}Controller {
+  public async index(context: ContextType<{{TYPE_NAME}}RouteType>) {
+    // const { id } = context.params;
+
+    return context.response.json({
+
+    });
+  }
+}

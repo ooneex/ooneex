@@ -58,12 +58,14 @@
         "@ooneex/routing": "workspace:*",
         "@ooneex/storage": "workspace:*",
         "@ooneex/utils": "workspace:*",
-        "@tanstack/react-query": "^5.90.12",
       },
       "devDependencies": {
         "@ooneex/role": "workspace:*",
         "@ooneex/types": "workspace:*",
         "@ooneex/validation": "workspace:*",
+      },
+      "peerDependencies": {
+        "@tanstack/react-query": "^5.90.12",
       },
     },
     "packages/app-env": {
@@ -116,6 +118,7 @@
         "@ooneex/http-status": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/routing": "workspace:*",
+        "@ooneex/typeorm": "workspace:*",
         "@ooneex/types": "workspace:*",
         "@ooneex/utils": "workspace:*",
         "@ooneex/validation": "workspace:*",

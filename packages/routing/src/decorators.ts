@@ -11,7 +11,7 @@ type TypedRouteConfig<T extends string> = Omit<
   params?: ExtractParameters<T> extends never ? never : Record<ExtractParameters<T>, AssertType>;
 };
 
-type InferredRouteDecorator = (target: new (...args: unknown[]) => unknown) => void;
+type InferredRouteDecorator = (target: ControllerClassType) => void;
 
 type RouteDecoratorFunction = <T extends string>(
   path: RoutePathType<T>,
@@ -20,13 +20,13 @@ type RouteDecoratorFunction = <T extends string>(
 
 const createRouteDecorator = (method: HttpMethodType) => {
   return <T extends string>(path: RoutePathType<T>, config: TypedRouteConfig<T>): InferredRouteDecorator => {
-    return (target: new (...args: unknown[]) => unknown): void => {
+    return (target: ControllerClassType): void => {
       const route: RouteConfigType = {
         ...config,
         path,
         method,
         isSocket: false,
-        controller: target as ControllerClassType,
+        controller: target,
       };
 
       router.addRoute(route);
@@ -36,13 +36,13 @@ const createRouteDecorator = (method: HttpMethodType) => {
 
 const createSocketDecorator = () => {
   return <T extends string>(path: RoutePathType<T>, config: TypedRouteConfig<T>): InferredRouteDecorator => {
-    return (target: new (...args: unknown[]) => unknown): void => {
+    return (target: ControllerClassType): void => {
       const route: RouteConfigType = {
         ...config,
         path,
         method: "GET",
         isSocket: true,
-        controller: target as ControllerClassType,
+        controller: target,
       };
 
       router.addRoute(route);

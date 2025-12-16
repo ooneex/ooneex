@@ -41,13 +41,14 @@
     "@ooneex/permission": "workspace:*",
     "@ooneex/routing": "workspace:*",
     "@ooneex/utils": "workspace:*",
-    "@ooneex/logger": "workspace:*",
-    "@tanstack/react-query": "^5.90.12"
+    "@ooneex/logger": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*",
     "@ooneex/role": "workspace:*",
     "@ooneex/validation": "workspace:*"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.90.12"
+  }
 }

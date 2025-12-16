@@ -1,9 +1,8 @@
-import { Environment } from "@ooneex/app-env";
 import type { ContextType } from "@ooneex/controller";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
-import { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
+import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
 
 @Route.{{ROUTE_METHOD}}("{{ROUTE_PATH}}", {
   name: "{{ROUTE_NAME}}",
@@ -21,7 +20,6 @@ import { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
 
   }),
   roles: [ERole.USER],
-  env: [Environment.LOCAL],
 })
 export class {{NAME}}Controller {
   public async index(context: ContextType<{{TYPE_NAME}}RouteType>) {

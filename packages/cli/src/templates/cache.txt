@@ -1,0 +1,80 @@
+import { decorator } from "@ooneex/container";
+import { CacheException } from "@ooneex/cache";
+import type { ICache } from "@ooneex/cache";
+
+@decorator.cache()
+export class {{NAME}}CacheAdapter implements ICache {
+  // Basic operations
+  public async get<T = unknown>(key: string): Promise<T | undefined> {
+    // Implement get logic
+    throw new CacheException(`Failed to get key "${key}": Not implemented`);
+  }
+
+  public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
+    // Implement set logic
+    throw new CacheException(`Failed to set key "${key}": Not implemented`);
+  }
+
+  public async delete(key: string): Promise<boolean> {
+    // Implement delete logic
+    throw new CacheException(`Failed to delete key "${key}": Not implemented`);
+  }
+
+  public async has(key: string): Promise<boolean> {
+    // Implement has logic
+    throw new CacheException(`Failed to check if key "${key}" exists: Not implemented`);
+  }
+
+  // Bulk operations
+  public async mget<T = unknown>(keys: string[]): Promise<(T | undefined)[]> {
+    if (keys.length === 0) {
+      return [];
+    }
+
+    // Implement mget logic
+    throw new CacheException("Failed to get multiple keys: Not implemented");
+  }
+
+  public async mset<T = unknown>(entries: { key: string; value: T; ttl?: number }[]): Promise<void> {
+    if (entries.length === 0) {
+      return;
+    }
+
+    // Implement mset logic
+    throw new CacheException("Failed to set multiple keys: Not implemented");
+  }
+
+  // TTL / metadata
+  public async ttl(key: string): Promise<number | null> {
+    // Implement ttl logic
+    // Return -1 if key not found, null if no TTL, or positive number for remaining seconds
+    throw new CacheException(`Failed to get TTL for key "${key}": Not implemented`);
+  }
+
+  public async expire(key: string, ttl: number): Promise<boolean> {
+    // Implement expire logic
+    throw new CacheException(`Failed to set TTL for key "${key}": Not implemented`);
+  }
+
+  // Counters (atomic operations)
+  public async incr(key: string, delta = 1): Promise<number> {
+    // Implement incr logic
+    throw new CacheException(`Failed to increment key "${key}" by ${delta}: Not implemented`);
+  }
+
+  public async decr(key: string, delta = 1): Promise<number> {
+    // Implement decr logic
+    throw new CacheException(`Failed to decrement key "${key}" by ${delta}: Not implemented`);
+  }
+
+  // Maintenance
+  public async keys(pattern = "*"): Promise<string[]> {
+    // Implement keys logic
+    throw new CacheException(`Failed to get keys with pattern "${pattern}": Not implemented`);
+  }
+
+  public async flush(): Promise<void> {
+    // Implement flush logic
+    throw new CacheException("Failed to flush database: Not implemented");
+  }
+}

@@ -1,10 +1,12 @@
+import { decorator } from "@ooneex/container";
 import { AbilityBuilder, createMongoAbility, type MongoAbility, type MongoQuery } from "@casl/ability";
+import { PermissionException } from "@ooneex/permission";
+import type { IPermission, PermissionActionType, Subjects } from "@ooneex/permission";
 import { ERole } from "@ooneex/role";
 import type { IUser } from "@ooneex/user";
-import { PermissionException } from "./PermissionException";
-import type { IPermission, PermissionActionType, Subjects } from "./types";
 
-export class Permission<S extends string = string> implements IPermission<S> {
+@decorator.permission()
+export class {{NAME}}Permission<S extends string = string> implements IPermission<S> {
   private ability: AbilityBuilder<MongoAbility>;
   private builtAbility: MongoAbility | null = null;
 
@@ -56,34 +58,22 @@ export class Permission<S extends string = string> implements IPermission<S> {
 
     const { roles } = user;
 
-    // Check for highest privilege roles first
-    if (roles.includes(ERole.SYSTEM) || roles.includes(ERole.SUPER_ADMIN) || roles.includes(ERole.ADMIN)) {
-      this.allow("manage", "all");
-      return this;
-    }
+    // Example: Grant full access to admins
+    // if (roles.includes(ERole.ADMIN)) {
+    //   this.allow("manage", "all");
+    //   return this;
+    // }
 
-    // Apply permissions for each role
-    for (const role of roles) {
-      if (role === ERole.USER || role === ERole.MEMBER) {
-        this.allow(["read", "update"], ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.SUBSCRIBER) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.TRIAL_USER) {
-        this.allow("read", ["User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.SUSPENDED) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.GUEST) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { public: true });
-      }
-    }
+    // Example: Grant specific permissions based on roles
+    // for (const role of roles) {
+    //   if (role === ERole.USER) {
+    //     this.allow(["read", "update"], "YourEntity", { userId: user.id });
+    //   }
+    //
+    //   if (role === ERole.GUEST) {
+    //     this.allow("read", "YourEntity", { public: true });
+    //   }
+    // }
 
     return this;
   }

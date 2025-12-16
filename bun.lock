@@ -336,6 +336,11 @@
     "packages/middleware": {
       "name": "@ooneex/middleware",
       "version": "0.0.1",
+      "devDependencies": {
+        "@ooneex/controller": "workspace:*",
+        "@ooneex/http-response": "workspace:*",
+        "@ooneex/socket": "workspace:*",
+      },
     },
     "packages/migrations": {
       "name": "@ooneex/migrations",

@@ -4,7 +4,7 @@ import type { CronClassType } from "@ooneex/cron";
 import type { DatabaseClassType } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
-import type { MiddlewareClassType } from "@ooneex/middleware";
+import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { RepositoryClassType } from "@ooneex/repository";
 import type { ServiceClassType } from "@ooneex/service";
@@ -63,7 +63,7 @@ export const decorator = {
     };
   },
   middleware: (scope: EContainerScope = EContainerScope.Singleton) => {
-    return (target: MiddlewareClassType): void => {
+    return (target: MiddlewareClassType | SocketMiddlewareClassType): void => {
       if (!target.name.endsWith("Middleware")) {
         throw new ContainerException(`Class name "${target.name}" must end with "Middleware"`);
       }

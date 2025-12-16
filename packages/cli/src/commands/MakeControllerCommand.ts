@@ -20,7 +20,7 @@ type CommandOptionsType = {
 };
 
 @command()
-export class MakeControllerCommand<T extends CommandOptionsType> implements ICommand<T> {
+export class MakeControllerCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:controller";
   }

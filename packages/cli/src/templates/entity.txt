@@ -1,0 +1,10 @@
+import { BaseEntity } from "@ooneex/typeorm";
+import { Column, Entity } from "typeorm";
+
+@Entity({
+  name: "{{TABLE_NAME}}",
+})
+export class {{NAME}}Entity extends BaseEntity {
+  @Column({ name: "name", type: "varchar", length: 100 })
+  name: string;
+}

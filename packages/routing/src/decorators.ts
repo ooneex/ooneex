@@ -60,34 +60,3 @@ export const Route = {
   head: createRouteDecorator("HEAD") as RouteDecoratorFunction,
   socket: createSocketDecorator() as RouteDecoratorFunction,
 };
-
-// @Route.delete("/users/:id/emails/:emailId/state/:state", {
-//   name: "api.users.delete",
-//   description: "Delete a user by ID",
-//   params: {
-//     state: Assert("string"),
-//     id: Assert("string"),
-//     emailId: Assert("string"),
-//   },
-//   payload: Assert({
-//     name: "string",
-//   }),
-//   queries: Assert({
-//     limit: "number",
-//   }),
-//   response: Assert({
-//     success: "boolean",
-//     message: "string",
-//   }),
-//   env: [Environment.LOCAL],
-// })
-// export class DeleteUserController {
-//   public async index(context: ContextType<TypedRouteConfigType>) {
-//     const { id } = context.params;
-//
-//     return context.response.json({
-//       success: true,
-//       message: `User with ID ${id} has been deleted`,
-//     });
-//   }
-// }

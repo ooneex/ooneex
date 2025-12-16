@@ -25,8 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public",
-    "dev": "bun run src/dev.ts"
+    "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
     "@ooneex/exception": "workspace:*",

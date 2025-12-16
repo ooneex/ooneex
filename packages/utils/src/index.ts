@@ -12,4 +12,5 @@ export { splitToWords } from "./splitToWords";
 export { toCamelCase } from "./toCamelCase";
 export { toKebabCase } from "./toKebabCase";
 export { toPascalCase } from "./toPascalCase";
+export { toSnakeCase } from "./toSnakeCase";
 export { trim } from "./trim";

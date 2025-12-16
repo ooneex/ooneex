@@ -41,7 +41,8 @@
     "@ooneex/permission": "workspace:*",
     "@ooneex/routing": "workspace:*",
     "@ooneex/utils": "workspace:*",
-    "@ooneex/logger": "workspace:*"
+    "@ooneex/logger": "workspace:*",
+    "@tanstack/react-query": "^5.90.12"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*",

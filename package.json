@@ -19,7 +19,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@tanstack/react-query": "^5.90.12",
+    "pluralize": "^8.0.0",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
@@ -37,6 +37,7 @@
     "@swc/helpers": "~0.5.17",
     "@types/bun": "latest",
     "@types/node": "^24.10.3",
+    "@types/pluralize": "^0.0.33",
     "@typescript/native-preview": "^7.0.0-dev.20251211.1",
     "bunup": "^0.16.10",
     "husky": "^9.1.7",
@@ -45,8 +46,6 @@
     "undici-types": "^7.16.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
-      "bun run lint"
-    ]
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
   }
 }

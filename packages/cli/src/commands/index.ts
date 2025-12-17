@@ -4,6 +4,8 @@ export { MakeControllerCommand } from "./MakeControllerCommand";
 export { MakeCrudCommand } from "./MakeCrudCommand";
 export { MakeDatabaseCommand } from "./MakeDatabaseCommand";
 export { MakeEntityCommand } from "./MakeEntityCommand";
+export { MakeLoggerCommand } from "./MakeLoggerCommand";
+export { MakeMailerCommand } from "./MakeMailerCommand";
 export { MakeMiddlewareCommand } from "./MakeMiddlewareCommand";
 export { MakePermissionCommand } from "./MakePermissionCommand";
 export { MakeRepositoryCommand } from "./MakeRepositoryCommand";

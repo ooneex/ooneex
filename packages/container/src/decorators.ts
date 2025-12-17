@@ -16,8 +16,8 @@ import { EContainerScope } from "./types";
 export const decorator = {
   analytics: (scope: EContainerScope = EContainerScope.Singleton) => {
     return (target: AnalyticsClassType): void => {
-      if (!target.name.endsWith("Analytics") && !target.name.endsWith("AnalyticsAdapter")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Analytics" or "AnalyticsAdapter"`);
+      if (!target.name.endsWith("Analytics")) {
+        throw new ContainerException(`Class name "${target.name}" must end with "Analytics"`);
       }
       container.add(target, scope);
     };
@@ -56,8 +56,8 @@ export const decorator = {
   },
   mailer: (scope: EContainerScope = EContainerScope.Singleton) => {
     return (target: MailerClassType): void => {
-      if (!target.name.endsWith("Mailer") && !target.name.endsWith("MailerAdapter")) {
-        throw new ContainerException(`Class name "${target.name}" must end with "Mailer" or "MailerAdapter"`);
+      if (!target.name.endsWith("Mailer")) {
+        throw new ContainerException(`Class name "${target.name}" must end with "Mailer"`);
       }
       container.add(target, scope);
     };

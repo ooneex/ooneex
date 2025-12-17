@@ -117,12 +117,16 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/mailer": "workspace:*",
         "@ooneex/routing": "workspace:*",
+        "@ooneex/service": "workspace:*",
         "@ooneex/typeorm": "workspace:*",
         "@ooneex/types": "workspace:*",
         "@ooneex/utils": "workspace:*",
         "@ooneex/validation": "workspace:*",
         "enquirer": "^2.4.1",
+        "react": "^19.2.3",
+        "react-dom": "^19.2.3",
       },
     },
     "packages/color": {
@@ -331,6 +335,9 @@
         "nodemailer": "^7.0.10",
         "react-dom": "^19.0.0",
         "resend": "^6.4.2",
+      },
+      "devDependencies": {
+        "@ooneex/translation": "workspace:*",
       },
     },
     "packages/middleware": {

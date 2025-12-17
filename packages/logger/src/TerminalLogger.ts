@@ -90,6 +90,8 @@ export class TerminalLogger implements ILogger {
     }
   }
 
+  public async init(): Promise<void> {}
+
   public error(message: string | IException, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {
       this.writeToConsole({

@@ -1,0 +1,24 @@
+import { inject } from "@ooneex/container";
+import type { IMailer } from "@ooneex/mailer";
+import { type {{NAME}}MailerPropsType, {{NAME}}MailerTemplate } from "./{{NAME}}MailerTemplate";
+
+export class {{NAME}}Mailer implements IMailer {
+  constructor(
+    @inject("mailer")
+    private readonly mailer: IMailer,
+  ) {}
+
+  public async send(config: {
+    to: string[];
+    subject: string;
+    from?: { name: string; address: string };
+    data?: {{NAME}}MailerPropsType;
+  }): Promise<void> {
+    const { data, ...rest } = config;
+
+    await this.mailer.send({
+      ...rest,
+      content: {{NAME}}MailerTemplate(data),
+    });
+  }
+}

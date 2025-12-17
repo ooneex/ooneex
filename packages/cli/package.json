@@ -28,17 +28,20 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/container": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/mailer": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/logger": "workspace:*",
+    "@ooneex/routing": "workspace:*",
     "@ooneex/service": "workspace:*",
     "@ooneex/typeorm": "workspace:*",
-    "@ooneex/utils": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/logger": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/routing": "workspace:*",
-    "@ooneex/validation": "workspace:*",
     "@ooneex/types": "workspace:*",
-    "enquirer": "^2.4.1"
+    "@ooneex/utils": "workspace:*",
+    "@ooneex/validation": "workspace:*",
+    "enquirer": "^2.4.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {},
   "peerDependencies": {}

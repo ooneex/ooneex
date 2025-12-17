@@ -35,7 +35,7 @@ export interface IRedisDatabaseAdapter {
 }
 
 export interface ITypeormDatabaseAdapter {
-  open: <Entity extends ObjectLiteral>(entity: EntityTarget<Entity>) => Promise<Repository<Entity>>;
+  open: <Entity extends ObjectLiteral>(entity: EntityTarget<Entity>, database?: string) => Promise<Repository<Entity>>;
   close: () => Promise<void>;
   drop: () => Promise<void>;
 }

@@ -2,7 +2,7 @@ import { PostHog } from "posthog-node";
 import { AnalyticsException } from "./AnalyticsException";
 import type { IAnalytics, PostHogAdapterCaptureType } from "./types";
 
-export class PostHogAdapter implements IAnalytics {
+export class PostHogAdapter<T extends PostHogAdapterCaptureType = PostHogAdapterCaptureType> implements IAnalytics<T> {
   private client: PostHog | null = null;
 
   constructor(options?: { apiKey?: string; host?: string }) {
@@ -21,7 +21,7 @@ export class PostHogAdapter implements IAnalytics {
     }
   }
 
-  public capture<T extends PostHogAdapterCaptureType>(options: T): void {
+  public capture(options: T): void {
     this.client?.capture({
       distinctId: options.id,
       event: options.event,

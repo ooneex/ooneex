@@ -1,0 +1,11 @@
+import type { IAnalytics } from "@ooneex/analytics";
+import { decorator } from "@ooneex/container";
+
+type CaptureOptionsType = Record<string, unknown>;
+
+@decorator.analytics()
+export class {{NAME}}Analytics<T extends CaptureOptionsType = CaptureOptionsType> implements IAnalytics<T> {
+  public capture(options: T): void {
+    // console.log("Analytics captured:", options);
+  }
+}

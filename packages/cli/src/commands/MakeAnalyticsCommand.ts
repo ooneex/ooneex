@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
-import template from "../templates/cache.txt";
+import template from "../templates/analytics.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
@@ -10,28 +10,28 @@ type CommandOptionsType = {
 };
 
 @command()
-export class MakeCacheCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
+export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
-    return "make:cache";
+    return "make:analytics";
   }
 
   public getDescription(): string {
-    return "Generate a new cache class";
+    return "Generate a new analytics class";
   }
 
   public async run(options: T): Promise<void> {
     let { name } = options;
 
     if (!name) {
-      name = await askName({ message: "Enter cache name" });
+      name = await askName({ message: "Enter analytics name" });
     }
 
-    name = toPascalCase(name).replace(/Cache$/, "");
+    name = toPascalCase(name).replace(/Analytics$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const cacheDir = join(process.cwd(), "src", "cache");
-    const filePath = join(cacheDir, `${name}Cache.ts`);
+    const analyticsDir = join(process.cwd(), "src", "analytics");
+    const filePath = join(analyticsDir, `${name}Analytics.ts`);
     await Bun.write(filePath, content);
   }
 }

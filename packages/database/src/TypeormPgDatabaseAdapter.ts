@@ -6,7 +6,7 @@ import type { ITypeormDatabaseAdapter } from "./types";
 export class TypeormPgDatabaseAdapter implements ITypeormDatabaseAdapter {
   private source: DataSource;
 
-  constructor(options: Omit<PostgresConnectionOptions, "type">) {
+  constructor(options: Omit<PostgresConnectionOptions, "type"> = {}) {
     const url = (options.url || Bun.env.DATABASE_URL || "").trim();
 
     if (!url) {

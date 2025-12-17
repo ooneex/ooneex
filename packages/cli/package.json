@@ -28,6 +28,7 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/service": "workspace:*",
     "@ooneex/typeorm": "workspace:*",
     "@ooneex/utils": "workspace:*",
     "@ooneex/container": "workspace:*",

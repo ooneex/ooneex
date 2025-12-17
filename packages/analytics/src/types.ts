@@ -1,8 +1,9 @@
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type AnalyticsClassType = new (...args: any[]) => IAnalytics;
 
-export interface IAnalytics {
-  capture: (options: PostHogAdapterCaptureType) => void;
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export interface IAnalytics<T = any> {
+  capture: (options: T) => void;
 }
 
 export type PostHogAdapterCaptureType = {

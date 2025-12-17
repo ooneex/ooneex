@@ -1,0 +1,11 @@
+import { decorator } from "@ooneex/container";
+import type { IService } from "@ooneex/service";
+
+type ExecuteDataType = Record<string, unknown>;
+
+@decorator.service()
+export class {{NAME}}Service<T extends ExecuteDataType = ExecuteDataType> implements IService<T> {
+  public async execute(data?: T): Promise<void> {
+    // TODO: Implement service logic
+  }
+}

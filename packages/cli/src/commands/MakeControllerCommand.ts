@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { RouteAction, RouteNameSegment, RouteNamespace, RouteNameType } from "@ooneex/routing";
+import type { RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
@@ -39,29 +39,31 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     name = toPascalCase(name).replace(/Controller$/, "");
 
     const { route = {} } = options;
+    let content: string = template.replaceAll("{{NAME}}", name);
 
     if (!route.name) {
       const routeNamespace = await askRouteNamespace({ message: "Enter route namespace", initial: "api" });
       const routeResource = await askName({ message: "Enter resource name" });
       const routeAction = await askName({ message: "Enter route action" });
-      route.name = `${routeNamespace as RouteNamespace}.${routeResource as RouteNameSegment}.${routeAction as RouteAction}`;
+      // Construct route name as plain string to avoid excessive type complexity
+      const routeName = `${routeNamespace}.${routeResource}.${routeAction}`;
+      route.name = routeName as RouteNameType;
+
+      content = content
+        .replaceAll("{{ROUTE_NAME}}", routeName)
+        .replaceAll("{{TYPE_NAME}}", toPascalCase(routeName))
+        .replaceAll("{{TYPE_NAME_FILE}}", routeName);
     }
 
     if (!route.path) {
       route.path = (await askRoutePath({ message: "Enter route path", initial: "/" })) as `/${string}`;
+      content = content.replaceAll("{{ROUTE_PATH}}", route.path);
     }
 
     if (!route.method) {
       route.method = (await askRouteMethod({ message: "Enter route method" })) as HttpMethodType;
+      content = content.replaceAll("{{ROUTE_METHOD}}", route.method.toLowerCase());
     }
-
-    const content = template
-      .replace(/{{NAME}}/g, name)
-      .replace(/{{ROUTE_NAME}}/g, route.name)
-      .replace(/{{TYPE_NAME}}/g, toPascalCase(route.name))
-      .replace(/{{TYPE_NAME_FILE}}/g, route.name)
-      .replace(/{{ROUTE_PATH}}/g, route.path)
-      .replace(/{{ROUTE_METHOD}}/g, route.method.toLowerCase());
 
     const controllersDir = join(process.cwd(), "src", "controllers");
     const filePath = join(controllersDir, `${name}Controller.ts`);

@@ -1,0 +1,25 @@
+import { AbstractTypeormSqliteDatabase } from "@ooneex/database";
+import { DataSource } from "typeorm";
+
+export class {{NAME}}Database extends AbstractTypeormSqliteDatabase {
+  public getSource(database?: string): DataSource {
+    if (!database && this.source) {
+      return this.source;
+    }
+
+    this.source = new DataSource({
+      synchronize: false,
+      entities: [
+        // Add your entities here
+        // Example: UserEntity, PostEntity, etc.
+      ],
+      enableWAL: true,
+      busyErrorRetry: 2000,
+      busyTimeout: 30_000,
+      database: database || ":memory:",
+      type: "sqlite",
+    });
+
+    return this.source;
+  }
+}

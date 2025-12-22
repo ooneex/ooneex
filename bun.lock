@@ -208,6 +208,14 @@
       "name": "@ooneex/education",
       "version": "0.0.1",
     },
+    "packages/entity": {
+      "name": "@ooneex/entity",
+      "version": "0.0.1",
+      "devDependencies": {
+        "@ooneex/color": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/exception": {
       "name": "@ooneex/exception",
       "version": "0.0.1",
@@ -358,6 +366,14 @@
       },
       "devDependencies": {
         "@ooneex/exception": "workspace:*",
+      },
+    },
+    "packages/module": {
+      "name": "@ooneex/module",
+      "version": "0.0.1",
+      "devDependencies": {
+        "@ooneex/controller": "workspace:*",
+        "@ooneex/entity": "workspace:*",
       },
     },
     "packages/notification": {
@@ -933,6 +949,8 @@
 
     "@ooneex/education": ["@ooneex/education@workspace:packages/education"],
 
+    "@ooneex/entity": ["@ooneex/entity@workspace:packages/entity"],
+
     "@ooneex/exception": ["@ooneex/exception@workspace:packages/exception"],
 
     "@ooneex/fetcher": ["@ooneex/fetcher@workspace:packages/fetcher"],
@@ -964,6 +982,8 @@
     "@ooneex/middleware": ["@ooneex/middleware@workspace:packages/middleware"],
 
     "@ooneex/migrations": ["@ooneex/migrations@workspace:packages/migrations"],
+
+    "@ooneex/module": ["@ooneex/module@workspace:packages/module"],
 
     "@ooneex/notification": ["@ooneex/notification@workspace:packages/notification"],
 

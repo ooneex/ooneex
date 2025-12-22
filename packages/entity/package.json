@@ -1,0 +1,35 @@
+{
+  "name": "@ooneex/entity",
+  "description": "",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "bunup",
+    "lint": "tsgo --noEmit && bunx biome lint",
+    "publish": "bun publish --tolerate-republish --access public"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@ooneex/color": "workspace:*",
+    "@ooneex/types": "workspace:*"
+  },
+  "peerDependencies": {}
+}

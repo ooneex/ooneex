@@ -1,0 +1,33 @@
+{
+  "name": "{{NAME}}",
+  "description": "",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "bun test tests",
+    "build": "bunup",
+    "lint": "tsgo --noEmit && bunx biome lint",
+    "publish": "bun publish --tolerate-republish --access public",
+
+    "make:analytics": "bunx ooneex make:analytics",
+    "make:cache": "bunx ooneex make:cache",
+    "make:controller": "bunx ooneex make:controller",
+    "make:crud": "bunx ooneex make:crud",
+    "make:database": "bunx ooneex make:database",
+    "make:entity": "bunx ooneex make:entity",
+    "make:logger": "bunx ooneex make:logger",
+    "make:mailer": "bunx ooneex make:mailer",
+    "make:middleware": "bunx ooneex make:middleware",
+    "make:permission": "bunx ooneex make:permission",
+    "make:repository": "bunx ooneex make:repository",
+    "make:service": "bunx ooneex make:service",
+    "make:storage": "bunx ooneex make:storage"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {}
+}

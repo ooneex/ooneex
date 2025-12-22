@@ -1,0 +1,6 @@
+import type { ModuleType } from "@ooneex/module";
+
+export const {{NAME}}Module: ModuleType = {
+  controllers: [],
+  entities: [],
+};

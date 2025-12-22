@@ -1,0 +1,17 @@
+import { defineConfig } from "bunup";
+
+export default defineConfig({
+  target: "bun",
+  format: ["esm"],
+  drop: ["console", "debugger"],
+  packages: "external",
+  sourcemap: "external",
+  unused: {
+    level: "error",
+  },
+  exports: true,
+  minify: true,
+  dts: {
+    minify: false,
+  },
+});

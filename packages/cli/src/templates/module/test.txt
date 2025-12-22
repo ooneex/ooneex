@@ -1,0 +1,12 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}Module } from "@/{{NAME}}Module";
+
+describe("{{NAME}}Module", () => {
+  test("should have controllers array", () => {
+    expect(Array.isArray({{NAME}}Module.controllers)).toBe(true);
+  });
+
+  test("should have entities array", () => {
+    expect(Array.isArray({{NAME}}Module.entities)).toBe(true);
+  });
+});

@@ -7,6 +7,8 @@ export { MakeEntityCommand } from "./MakeEntityCommand";
 export { MakeLoggerCommand } from "./MakeLoggerCommand";
 export { MakeMailerCommand } from "./MakeMailerCommand";
 export { MakeMiddlewareCommand } from "./MakeMiddlewareCommand";
+export { MakeMigrationCommand } from "./MakeMigrationCommand";
+export { MakeModuleCommand } from "./MakeModuleCommand";
 export { MakePermissionCommand } from "./MakePermissionCommand";
 export { MakeRepositoryCommand } from "./MakeRepositoryCommand";
 export { MakeServiceCommand } from "./MakeServiceCommand";

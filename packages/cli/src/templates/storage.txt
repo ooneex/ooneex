@@ -1,6 +1,6 @@
-import type { S3Options } from "bun";
 import { decorator } from "@ooneex/container";
 import { AbstractStorage, StorageException } from "@ooneex/storage";
+import type { S3Options } from "bun";
 
 @decorator.storage()
 export class {{NAME}}StorageAdapter extends AbstractStorage {

@@ -27,7 +27,8 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {
-    "@ooneex/entity": "workspace:*",
-    "@ooneex/controller": "workspace:*"
+    "@ooneex/controller": "workspace:*",
+    "@ooneex/cron": "workspace:*",
+    "@ooneex/entity": "workspace:*"
   }
 }

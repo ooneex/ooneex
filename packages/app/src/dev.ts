@@ -1,9 +1,7 @@
 import { PostHogAdapter } from "@ooneex/analytics";
 import { AppEnv, type EnvType } from "@ooneex/app-env";
 import { RedisCacheAdapter } from "@ooneex/cache";
-import type { CronTimeType, ICron } from "@ooneex/cron";
 import { RedisDatabaseAdapter, TypeormPgDatabaseAdapter } from "@ooneex/database";
-import { Jwt } from "@ooneex/jwt";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
 import { NodeMailerAdapter, ResendMailerAdapter } from "@ooneex/mailer";
 import { Permission } from "@ooneex/permission";
@@ -18,34 +16,11 @@ const redis = new RedisDatabaseAdapter();
 
 const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") as EnvType);
 
-class DocParserCron implements ICron {
-  public getTime(): CronTimeType {
-    // Run every 30 minutes to parse documentation files
-    return "every 30 minutes";
-  }
-
-  public async start(): Promise<void> {}
-
-  public async stop(): Promise<void> {}
-
-  public async job(): Promise<void> {}
-
-  public async getTimeZone(): Promise<string | null> {
-    return null;
-  }
-
-  public isActive(): boolean {
-    return true;
-  }
-}
-
 new App({
   logger: [SqliteLogger, TerminalLogger],
   analytics: PostHogAdapter,
   cache: RedisCacheAdapter,
-  jwt: Jwt,
   storage: CloudflareStorageAdapter,
-  cronJobs: [DocParserCron],
   permission: Permission, // Create PermissionMiddleware to get current user and set permissions
   mailer: appEnv.isLocal ? NodeMailerAdapter : ResendMailerAdapter,
   database,

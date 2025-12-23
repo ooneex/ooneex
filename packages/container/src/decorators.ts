@@ -92,8 +92,6 @@ export const decorator = {
         throw new ContainerException(`Class name "${target.name}" must end with "Cron"`);
       }
       container.add(target, scope);
-
-      // Create own container
     };
   },
   permission: (scope: EContainerScope = EContainerScope.Singleton) => {

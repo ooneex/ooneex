@@ -10,14 +10,21 @@ export type LoggerClassType =
       options?: Bun.SQL.SQLiteOptions,
     ) => ILogger<LogsEntity>);
 
+export type LoggerOptionsType = {
+  showArrow?: boolean;
+  showTimestamp?: boolean;
+  showLevel?: boolean;
+  useSymbol?: boolean;
+};
+
 export interface ILogger<Data = Record<string, ScalarType>> {
   init: () => Promise<void> | void;
-  error: (message: string | IException, data?: Data) => Promise<void> | void;
-  warn: (message: string, data?: Data) => Promise<void> | void;
-  info: (message: string, data?: Data) => Promise<void> | void;
-  debug: (message: string, data?: Data) => Promise<void> | void;
-  log: (message: string, data?: Data) => Promise<void> | void;
-  success: (message: string, data?: Data) => Promise<void> | void;
+  error: (message: string | IException, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
+  warn: (message: string, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
+  info: (message: string, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
+  debug: (message: string, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
+  log: (message: string, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
+  success: (message: string, data?: Data, options?: LoggerOptionsType) => Promise<void> | void;
 }
 
 export enum ELogLevel {

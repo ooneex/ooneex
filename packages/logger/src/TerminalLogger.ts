@@ -1,6 +1,6 @@
 import type { ExceptionStackFrameType, IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
-import type { ILogger } from "./types";
+import type { ILogger, LoggerOptionsType } from "./types";
 
 interface WriteToConsoleConfig {
   level: string;
@@ -8,6 +8,10 @@ interface WriteToConsoleConfig {
   date?: Date;
   data?: Record<string, ScalarType>;
   stackTrace?: ExceptionStackFrameType[];
+  showArrow?: boolean;
+  showTimestamp?: boolean;
+  showLevel?: boolean;
+  useSymbol?: boolean;
 }
 
 export class TerminalLogger implements ILogger {
@@ -30,18 +34,43 @@ export class TerminalLogger implements ILogger {
     return colorMap[level.toUpperCase()] || "white";
   }
 
+  private getLevelSymbol(level: string): string {
+    const symbolMap: Record<string, string> = {
+      ERROR: "✖",
+      WARN: "⚠",
+      INFO: "ℹ",
+      DEBUG: "⚙",
+      LOG: "●",
+      SUCCESS: "✔",
+    };
+
+    return symbolMap[level.toUpperCase()] || "●";
+  }
+
   private writeToConsole(config: WriteToConsoleConfig): void {
-    const { level, message, date, data, stackTrace } = config;
-    const color = this.getLevelColor(level.endsWith("Exception") ? "ERROR" : level);
+    const {
+      level,
+      message,
+      date,
+      data,
+      stackTrace,
+      showArrow = true,
+      showTimestamp = true,
+      showLevel = true,
+      useSymbol = false,
+    } = config;
+    const normalizedLevel = level.endsWith("Exception") ? "ERROR" : level;
+    const color = this.getLevelColor(normalizedLevel);
 
     const now = date || new Date();
     const formattedTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
-    const timestamp = this.colorizeText(formattedTime, "#B2BEB5");
-    const arrow = this.colorizeText("->", color);
-    const colorizedLevel = this.colorizeText(`[${level}]`, color);
+    const timestamp = showTimestamp ? `${this.colorizeText(formattedTime, "#B2BEB5")} ` : "";
+    const arrow = showArrow ? `${this.colorizeText("->", color)} ` : "";
+    const levelDisplay = useSymbol ? this.getLevelSymbol(normalizedLevel) : `[${level}]`;
+    const colorizedLevel = showLevel ? `${this.colorizeText(levelDisplay, color)} ` : "";
     const colorizedMessage = this.colorizeText(message, color);
 
-    let logMessage = `${arrow} ${timestamp} ${colorizedLevel} ${colorizedMessage}`;
+    let logMessage = `${arrow}${timestamp}${colorizedLevel}${colorizedMessage}`;
 
     if (data && Object.keys(data).length > 0) {
       const dataEntries = Object.entries(data)
@@ -92,12 +121,16 @@ export class TerminalLogger implements ILogger {
 
   public async init(): Promise<void> {}
 
-  public error(message: string | IException, data?: Record<string, ScalarType>): void {
+  public error(message: string | IException, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     if (typeof message === "string") {
       this.writeToConsole({
         level: "ERROR",
         message,
         ...(data && { data }),
+        ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+        ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+        ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+        ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
       });
     } else {
       // Handle IException object
@@ -118,47 +151,71 @@ export class TerminalLogger implements ILogger {
         data: exceptionData,
         ...(stackJson && { stackTrace: stackJson }),
         date: message.date,
+        ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+        ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+        ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+        ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
       });
     }
   }
 
-  public warn(message: string, data?: Record<string, ScalarType>): void {
+  public warn(message: string, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     this.writeToConsole({
       level: "WARN",
       message,
       ...(data && { data }),
+      ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+      ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+      ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+      ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
     });
   }
 
-  public info(message: string, data?: Record<string, ScalarType>): void {
+  public info(message: string, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     this.writeToConsole({
       level: "INFO",
       message,
       ...(data && { data }),
+      ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+      ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+      ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+      ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
     });
   }
 
-  public debug(message: string, data?: Record<string, ScalarType>): void {
+  public debug(message: string, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     this.writeToConsole({
       level: "DEBUG",
       message,
       ...(data && { data }),
+      ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+      ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+      ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+      ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
     });
   }
 
-  public log(message: string, data?: Record<string, ScalarType>): void {
+  public log(message: string, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     this.writeToConsole({
       level: "LOG",
       message,
       ...(data && { data }),
+      ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+      ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+      ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+      ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
     });
   }
 
-  public success(message: string, data?: Record<string, ScalarType>): void {
+  public success(message: string, data?: Record<string, ScalarType>, options?: LoggerOptionsType): void {
     this.writeToConsole({
       level: "SUCCESS",
       message,
       ...(data && { data }),
+      ...(options?.showArrow !== undefined && { showArrow: options.showArrow }),
+      ...(options?.showTimestamp !== undefined && { showTimestamp: options.showTimestamp }),
+      ...(options?.showLevel !== undefined && { showLevel: options.showLevel }),
+      ...(options?.useSymbol !== undefined && { useSymbol: options.useSymbol }),
     });
   }
 }

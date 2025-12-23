@@ -2,13 +2,14 @@ import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
-import { toPascalCase } from "@ooneex/utils";
+import { toKebabCase, toPascalCase, trim } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
 import { askRouteMethod } from "../prompts/askRouteMethod";
 import { askRouteNamespace } from "../prompts/askRouteNamespace";
 import { askRoutePath } from "../prompts/askRoutePath";
 import template from "../templates/controller.txt";
+import routeTypeTemplate from "../templates/route.type.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
@@ -42,23 +43,30 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const { route = {} } = options;
     let content: string = template.replaceAll("{{NAME}}", name);
 
+    let routeTypeName = "";
+    let routeTypeFileName = "";
+
     if (!route.name) {
       const routeNamespace = await askRouteNamespace({ message: "Enter route namespace", initial: "api" });
       const routeResource = await askName({ message: "Enter resource name" });
       const routeAction = await askName({ message: "Enter route action" });
       // Construct route name as plain string to avoid excessive type complexity
-      const routeName = `${routeNamespace}.${routeResource}.${routeAction}`;
+      const routeName = `${routeNamespace}.${toKebabCase(routeResource)}.${routeAction}`;
       route.name = routeName as RouteNameType;
+
+      routeTypeName = toPascalCase(routeName);
+      routeTypeFileName = routeName;
 
       content = content
         .replaceAll("{{ROUTE_NAME}}", routeName)
-        .replaceAll("{{TYPE_NAME}}", toPascalCase(routeName))
-        .replaceAll("{{TYPE_NAME_FILE}}", routeName);
+        .replaceAll("{{TYPE_NAME}}", routeTypeName)
+        .replaceAll("{{TYPE_NAME_FILE}}", routeTypeFileName);
     }
 
     if (!route.path) {
       route.path = (await askRoutePath({ message: "Enter route path", initial: "/" })) as `/${string}`;
-      content = content.replaceAll("{{ROUTE_PATH}}", route.path);
+      const routePath = `/${toKebabCase(trim(route.path, "/"))}`;
+      content = content.replaceAll("{{ROUTE_PATH}}", routePath);
     }
 
     if (!route.method) {
@@ -71,9 +79,22 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const filePath = join(controllersDir, `${name}Controller.ts`);
     await Bun.write(filePath, content);
 
+    // Create route type file
+    const routeTypesLocalDir = join("src", "types", "routes");
+    const routeTypesDir = join(process.cwd(), routeTypesLocalDir);
+    const routeTypeFilePath = join(routeTypesDir, `${routeTypeFileName}.ts`);
+    const routeTypeContent = routeTypeTemplate.replaceAll("{{TYPE_NAME}}", routeTypeName);
+    await Bun.write(routeTypeFilePath, routeTypeContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(controllersLocalDir, name)}Controller.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(routeTypesLocalDir, routeTypeFileName)}.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

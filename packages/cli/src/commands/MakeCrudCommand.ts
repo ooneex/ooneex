@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameSegment, RouteNamespace } from "@ooneex/routing";
-import { toPascalCase } from "@ooneex/utils";
+import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import pluralize from "pluralize";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -10,6 +10,11 @@ import deleteTemplate from "../templates/crud/controller.delete.txt";
 import filterTemplate from "../templates/crud/controller.filter.txt";
 import getTemplate from "../templates/crud/controller.get.txt";
 import updateTemplate from "../templates/crud/controller.update.txt";
+import routeTypeCreateTemplate from "../templates/crud/route.type.create.txt";
+import routeTypeDeleteTemplate from "../templates/crud/route.type.delete.txt";
+import routeTypeFilterTemplate from "../templates/crud/route.type.filter.txt";
+import routeTypeGetTemplate from "../templates/crud/route.type.get.txt";
+import routeTypeUpdateTemplate from "../templates/crud/route.type.update.txt";
 import type { ICommand } from "../types";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeRepositoryCommand } from "./MakeRepositoryCommand";
@@ -25,6 +30,12 @@ type ControllerConfig = {
   routePath: string;
   routeMethod: string;
   routeDescription: string;
+};
+
+type RouteTypeConfig = {
+  template: string;
+  suffix: string;
+  routeName: string;
 };
 
 @command()
@@ -54,11 +65,62 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
     const repositoryCommand = new MakeRepositoryCommand();
     await repositoryCommand.run({ name });
 
+    await this.generateRouteTypes(name);
     await this.generateControllers(name);
   }
 
+  private async generateRouteTypes(name: string): Promise<void> {
+    const resourceName = toKebabCase(name);
+    const namespace = "api" as RouteNamespace;
+
+    const routeTypes: RouteTypeConfig[] = [
+      {
+        template: routeTypeCreateTemplate,
+        suffix: "Create",
+        routeName: `${namespace}.${resourceName as RouteNameSegment}.create`,
+      },
+      {
+        template: routeTypeGetTemplate,
+        suffix: "Get",
+        routeName: `${namespace}.${resourceName as RouteNameSegment}.get`,
+      },
+      {
+        template: routeTypeUpdateTemplate,
+        suffix: "Update",
+        routeName: `${namespace}.${resourceName as RouteNameSegment}.update`,
+      },
+      {
+        template: routeTypeDeleteTemplate,
+        suffix: "Delete",
+        routeName: `${namespace}.${resourceName as RouteNameSegment}.delete`,
+      },
+      {
+        template: routeTypeFilterTemplate,
+        suffix: "Filter",
+        routeName: `${namespace}.${resourceName as RouteNameSegment}.filter`,
+      },
+    ];
+
+    const routeTypesDir = join(process.cwd(), "src", "types", "routes");
+
+    for (const config of routeTypes) {
+      const content = config.template.replace(/{{TYPE_NAME}}/g, toPascalCase(config.routeName));
+
+      const routeTypeLocalDir = join("src", "types", "routes");
+      const filePath = join(routeTypesDir, `${config.routeName}.ts`);
+      await Bun.write(filePath, content);
+
+      const logger = new TerminalLogger();
+      logger.success(`${join(routeTypeLocalDir, config.routeName)}.ts created successfully`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
+    }
+  }
+
   private async generateControllers(name: string): Promise<void> {
-    const resourceName = name.toLowerCase();
+    const resourceName = toKebabCase(name);
     const namespace = "api" as RouteNamespace;
 
     const controllers: ControllerConfig[] = [

@@ -1,4 +1,4 @@
-import { BaseEntity } from "@ooneex/typeorm/src/entities/common";
+import { BaseEntity } from "@ooneex/typeorm/entities/common";
 import { Column, Entity } from "typeorm";
 
 @Entity({

@@ -1,0 +1,10 @@
+export type {{TYPE_NAME}}RouteType = {
+  params: {
+
+  },
+  response: {
+
+  },
+  queries: never,
+  payload: never,
+};

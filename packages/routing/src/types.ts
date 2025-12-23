@@ -590,7 +590,7 @@ export type RouteConfigType = {
   generate?: {
     doc?: boolean;
     fetcher?: boolean;
-    query?: boolean;
+    queryHook?: boolean;
   };
 };
 

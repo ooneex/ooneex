@@ -12,6 +12,10 @@ import { {{NAME}}Repository } from "../repositories/{{NAME}}Repository";
   payload: Assert({}),
   response: Assert({}),
   roles: [ERole.USER],
+  generate: {
+    doc: true,
+    queryHook: true,
+  },
 })
 export class {{CONTROLLER_NAME}}Controller {
   constructor(

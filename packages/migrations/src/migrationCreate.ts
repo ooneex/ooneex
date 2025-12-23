@@ -1,14 +1,12 @@
 import { join } from "node:path";
-import { TerminalLogger } from "@ooneex/logger";
 import { Glob } from "bun";
 import { generateMigrationVersion } from "./generateMigrationVersion";
 import content from "./migration.txt";
 
-export const migrationCreate = async (config?: { dir?: string }): Promise<void> => {
+export const migrationCreate = async (config?: { dir?: string }): Promise<string> => {
   const version = generateMigrationVersion();
   const name = `Migration${version}`;
   const migrationsDir = config?.dir || "migrations";
-  const logger = new TerminalLogger();
 
   await Bun.write(
     join(process.cwd(), migrationsDir, `${name}.ts`),
@@ -24,5 +22,5 @@ export const migrationCreate = async (config?: { dir?: string }): Promise<void> 
 
   await Bun.write(join(process.cwd(), migrationsDir, "migrations.ts"), `${imports.sort().join("\n")}\n`);
 
-  logger.success(`Migration ${name} created successfully\n`);
+  return join(migrationsDir, `${name}.ts`);
 };

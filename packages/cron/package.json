@@ -28,8 +28,10 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/country": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/http-status": "workspace:*",
+    "cron": "^4.4.0"
   },
   "devDependencies": {},
   "peerDependencies": {}

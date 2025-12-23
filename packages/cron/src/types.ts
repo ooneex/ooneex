@@ -1,3 +1,5 @@
+import type { TimeZoneType } from "@ooneex/country";
+
 export enum ECronPrefix {
   IN = "in",
   EVERY = "every",
@@ -20,11 +22,10 @@ export type CronTimeType = `${PrefixType} ${number} ${SuffixType}`;
 export type CronClassType = new (...args: any[]) => ICron;
 
 export interface ICron {
-  getTime: () => CronTimeType;
-  setTime?: (tim: CronTimeType) => ICron;
-  start: () => Promise<void>;
-  stop: () => Promise<void>;
-  job: () => Promise<void>;
-  getTimeZone: () => Promise<string | null>;
-  isActive: () => boolean;
+  getTime: () => Promise<CronTimeType> | CronTimeType;
+  start: () => Promise<void> | void;
+  stop: () => Promise<void> | void;
+  job: () => Promise<void> | void;
+  getTimeZone: () => TimeZoneType | null;
+  isActive: () => Promise<boolean> | boolean;
 }

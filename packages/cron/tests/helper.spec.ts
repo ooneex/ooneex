@@ -88,10 +88,16 @@ describe("convertToCrontab", () => {
     });
 
     describe("seconds", () => {
-      test("should throw error for seconds precision", () => {
-        expect(() => convertToCrontab("every 30 seconds")).toThrow(
-          "Crontab does not support seconds precision. Consider using minutes instead.",
-        );
+      test("should handle 'every 1 seconds'", () => {
+        expect(convertToCrontab("every 1 seconds")).toBe("* * * * * *");
+      });
+
+      test("should handle 'every 30 seconds'", () => {
+        expect(convertToCrontab("every 30 seconds")).toBe("*/30 * * * * *");
+      });
+
+      test("should handle 'every 5 seconds'", () => {
+        expect(convertToCrontab("every 5 seconds")).toBe("*/5 * * * * *");
       });
     });
   });

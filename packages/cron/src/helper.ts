@@ -10,7 +10,7 @@ export const convertToCrontab = (cronTime: CronTimeType): string => {
   const parts = cronTime.split(" ");
 
   if (parts.length !== 3) {
-    throw new Error(`Invalid CronTimeType format: ${cronTime}`);
+    throw new CronException(`Invalid CronTimeType format: ${cronTime}`);
   }
 
   const prefix = parts[0] as "in" | "every";
@@ -18,7 +18,7 @@ export const convertToCrontab = (cronTime: CronTimeType): string => {
   const suffix = parts[2] as SuffixType;
 
   if (Number.isNaN(value) || value <= 0) {
-    throw new Error(`Invalid number value in CronTimeType: ${parts[1]}`);
+    throw new CronException(`Invalid number value in CronTimeType: ${parts[1]}`);
   }
 
   // Handle "in" prefix (one-time execution)
@@ -64,7 +64,8 @@ export const convertToCrontab = (cronTime: CronTimeType): string => {
   if (prefix === "every") {
     switch (suffix) {
       case "seconds":
-        throw new Error("Crontab does not support seconds precision. Consider using minutes instead.");
+        if (value === 1) return "* * * * * *";
+        return `*/${value} * * * * *`;
 
       case "minutes":
         if (value === 1) return "* * * * *";

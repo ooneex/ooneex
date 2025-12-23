@@ -113,9 +113,9 @@ export class TerminalLogger implements ILogger {
 
     // Write to stderr for error levels, stdout for others
     if (level === "FATAL" || level === "ERROR") {
-      process.stderr.write(`${logMessage}\n`);
+      process.stderr.write(`${logMessage}`);
     } else {
-      process.stdout.write(`${logMessage}\n`);
+      process.stdout.write(`${logMessage}`);
     }
   }
 

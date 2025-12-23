@@ -1,8 +1,8 @@
-import { type SeedClassType, seed } from '@ooneex/seeds';
+import { type ISeed, type SeedClassType, seed } from "@ooneex/seeds";
 
 @seed()
 export class {{ name }} implements ISeed {
-  public async run<T>(data?: any[]): Promise<T> {
+  public async run<T>(data?: unknown[]): Promise<T> {
     // Your seed logic here
     // console.log('{{ name }}!');
 

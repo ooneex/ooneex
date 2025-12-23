@@ -22,29 +22,53 @@ export const seedRun = async (): Promise<void> => {
   const logger = new TerminalLogger();
 
   if (seeds.length === 0) {
-    logger.info("No seeds found\n");
+    logger.info("No seeds found\n", undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
     return;
   }
 
-  logger.info(`Running ${seeds.length} seed(s)...\n`);
+  logger.info(`Running ${seeds.length} seed(s)...\n`, undefined, {
+    showTimestamp: false,
+    showArrow: false,
+    useSymbol: true,
+  });
 
   for (const seed of seeds) {
     const seedName = seed.constructor.name;
 
     if (!seed.isActive()) {
-      logger.warn(`Seed ${seedName} is inactive\n`);
+      logger.warn(`Seed ${seedName} is inactive\n`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
       continue;
     }
 
     try {
       await run(seed);
-      logger.success(`Seed ${seedName} completed\n`);
+      logger.success(`Seed ${seedName} completed\n`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
     } catch (error) {
-      logger.error(`Seed ${seedName} failed\n`);
+      logger.error(`Seed ${seedName} failed\n`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
       logger.error(error as IException);
       process.exit(1);
     }
   }
 
-  logger.success("\nAll seeds completed successfully\n");
+  logger.success("\nAll seeds completed successfully\n", undefined, {
+    showTimestamp: false,
+    showArrow: false,
+    useSymbol: true,
+  });
 };

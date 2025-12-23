@@ -60,7 +60,11 @@ describe("seedRun", () => {
     const logger = LOGGER_INSTANCES[0];
     expect(logger).toBeDefined();
     if (!logger) throw new Error("expected TerminalLogger instance");
-    expect(logger.info).toHaveBeenCalledWith("No seeds found\n");
+    expect(logger.info).toHaveBeenCalledWith("No seeds found\n", undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   });
 
   test("should run dependencies before running the seed", async () => {
@@ -137,7 +141,11 @@ describe("seedRun", () => {
     const logger = LOGGER_INSTANCES[0];
     expect(logger).toBeDefined();
     if (!logger) throw new Error("expected TerminalLogger instance");
-    expect(logger.warn).toHaveBeenCalledWith(`Seed ${seedInstance.constructor.name} is inactive\n`);
+    expect(logger.warn).toHaveBeenCalledWith(`Seed ${seedInstance.constructor.name} is inactive\n`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   });
 
   test("should log error and call process.exit(1) on failure", async () => {
@@ -158,12 +166,16 @@ describe("seedRun", () => {
 
     container.get = mock(() => seedInstance) as unknown as typeof container.get;
 
-    await expect(seedRun()).rejects.toThrow("process.exit called");
+    expect(seedRun()).rejects.toThrow("process.exit called");
 
     const logger = LOGGER_INSTANCES[0];
     expect(logger).toBeDefined();
     if (!logger) throw new Error("expected TerminalLogger instance");
-    expect(logger.error).toHaveBeenCalledWith(`Seed ${seedInstance.constructor.name} failed\n`);
+    expect(logger.error).toHaveBeenCalledWith(`Seed ${seedInstance.constructor.name} failed\n`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 });

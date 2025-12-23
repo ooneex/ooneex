@@ -1,29 +1,13 @@
 import { join } from "node:path";
-import { parseArgs } from "node:util";
-import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { Glob } from "bun";
 import content from "./seed.txt";
 
-export const seedCreate = async (config: { dir?: string }): Promise<void> => {
-  const { values } = parseArgs({
-    args: Bun.argv,
-    options: { name: { type: "string" } },
-    strict: true,
-    allowPositionals: true,
-  });
+export const seedCreate = async (config: { name: string; dir?: string }): Promise<string> => {
+  const name = `${toPascalCase(config.name)}Seed`;
+  const seedsDir = config.dir || "seeds";
 
-  const logger = new TerminalLogger();
-
-  if (!values.name) {
-    logger.error("Name is required\n");
-    process.exit(1);
-  }
-
-  const name = `${toPascalCase(values.name)}Seed`;
-  const seedsDir = config?.dir || "seeds";
-
-  await Bun.write(join(seedsDir, `${name}.ts`), content.replaceAll("{{ name }}", name));
+  await Bun.write(join(process.cwd(), seedsDir, `${name}.ts`), content.replaceAll("{{ name }}", name));
 
   const imports: string[] = [];
   const glob = new Glob("**/*Seed.ts");
@@ -32,7 +16,7 @@ export const seedCreate = async (config: { dir?: string }): Promise<void> => {
     imports.push(`export { ${name} } from './${name}';`);
   }
 
-  await Bun.write(join(seedsDir, "index.ts"), `${imports.sort().join("\n")}\n`);
+  await Bun.write(join(process.cwd(), seedsDir, "seeds.ts"), `${imports.sort().join("\n")}\n`);
 
-  logger.success(`Seed ${name} created successfully\n`);
+  return join(seedsDir, `${name}.ts`);
 };

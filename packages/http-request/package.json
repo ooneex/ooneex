@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@ooneex/translation": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:*",
+    "@types/accept-language-parser": "^1.5.8"
   }
 }

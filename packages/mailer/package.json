@@ -31,11 +31,11 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "nodemailer": "^7.0.10",
-    "react-dom": "^19.0.0",
     "resend": "^6.4.2"
   },
   "devDependencies": {
-    "@ooneex/translation": "workspace:*"
+    "@ooneex/translation": "workspace:*",
+    "@types/nodemailer": "^7.0.4"
   },
   "peerDependencies": {}
 }

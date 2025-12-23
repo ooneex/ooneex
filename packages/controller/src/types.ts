@@ -15,7 +15,7 @@ import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import type { IUser } from "@ooneex/user";
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me
-export type ControllerClassType = new (...args: any[]) => IController;
+export type ControllerClassType = new (...args: any[]) => IController<any>;
 
 export interface IController<T extends ContextConfigType = ContextConfigType> {
   index: (context: ContextType<T>) => Promise<IResponse<T["response"]>> | IResponse<T["response"]>;

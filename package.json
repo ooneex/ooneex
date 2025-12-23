@@ -20,6 +20,8 @@
   ],
   "dependencies": {
     "pluralize": "^8.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "reflect-metadata": "^0.2.2"
   },
   "peerDependencies": {
@@ -38,6 +40,8 @@
     "@types/bun": "latest",
     "@types/node": "^24.10.3",
     "@types/pluralize": "^0.0.33",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "@typescript/native-preview": "^7.0.0-dev.20251211.1",
     "bunup": "^0.16.10",
     "husky": "^9.1.7",

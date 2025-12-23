@@ -38,7 +38,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@vvo/tzdb": "^6.198.0"
+  },
   "devDependencies": {},
   "peerDependencies": {}
 }

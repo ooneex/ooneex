@@ -1,4 +1,6 @@
+import type { TimeZone } from "@vvo/tzdb";
 import type { COUNTRIES } from "./en";
 
 export type CountryType = (typeof COUNTRIES)[number]["code"];
 export type CountryNameType = (typeof COUNTRIES)[number]["name"];
+export type TimeZoneType = TimeZone["name"];

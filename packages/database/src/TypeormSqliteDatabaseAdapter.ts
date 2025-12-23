@@ -4,7 +4,7 @@ import { AbstractTypeormSqliteDatabase } from "./AbstractTypeormSqliteDatabase";
 import { DatabaseException } from "./DatabaseException";
 
 export class TypeormSqliteDatabaseAdapter extends AbstractTypeormSqliteDatabase {
-  constructor(private readonly options?: Omit<SqliteConnectionOptions, "type">) {
+  constructor(private readonly options: Omit<SqliteConnectionOptions, "type"> | undefined = undefined) {
     super();
   }
 

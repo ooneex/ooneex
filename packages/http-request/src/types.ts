@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: trust me */
 import type { Header, IUserAgent } from "@ooneex/http-header";
 import type { IRequestFile } from "@ooneex/http-request-file";
 import type { LocaleInfoType } from "@ooneex/translation";

@@ -10,112 +10,112 @@
     "package.json"
   ],
   "exports": {
-    "./src/entities/gamification/mcq": {
+    "./entities/gamification/mcq": {
       "import": {
-        "types": "./dist/src/entities/gamification/mcq/index.d.ts",
-        "default": "./dist/src/entities/gamification/mcq/index.js"
+        "types": "./dist/entities/gamification/mcq/index.d.ts",
+        "default": "./dist/entities/gamification/mcq/index.js"
       }
     },
-    "./src/repositories/book": {
+    "./repositories/book": {
       "import": {
-        "types": "./dist/src/repositories/book/index.d.ts",
-        "default": "./dist/src/repositories/book/index.js"
+        "types": "./dist/repositories/book/index.d.ts",
+        "default": "./dist/repositories/book/index.js"
       }
     },
-    "./src/repositories/common": {
+    "./repositories/common": {
       "import": {
-        "types": "./dist/src/repositories/common/index.d.ts",
-        "default": "./dist/src/repositories/common/index.js"
+        "types": "./dist/repositories/common/index.d.ts",
+        "default": "./dist/repositories/common/index.js"
       }
     },
-    "./src/repositories/image": {
+    "./repositories/image": {
       "import": {
-        "types": "./dist/src/repositories/image/index.d.ts",
-        "default": "./dist/src/repositories/image/index.js"
+        "types": "./dist/repositories/image/index.d.ts",
+        "default": "./dist/repositories/image/index.js"
       }
     },
-    "./src/repositories/payment": {
+    "./repositories/payment": {
       "import": {
-        "types": "./dist/src/repositories/payment/index.d.ts",
-        "default": "./dist/src/repositories/payment/index.js"
+        "types": "./dist/repositories/payment/index.d.ts",
+        "default": "./dist/repositories/payment/index.js"
       }
     },
-    "./src/repositories/video": {
+    "./repositories/video": {
       "import": {
-        "types": "./dist/src/repositories/video/index.d.ts",
-        "default": "./dist/src/repositories/video/index.js"
+        "types": "./dist/repositories/video/index.d.ts",
+        "default": "./dist/repositories/video/index.js"
       }
     },
-    "./src/repositories/user": {
+    "./repositories/user": {
       "import": {
-        "types": "./dist/src/repositories/user/index.d.ts",
-        "default": "./dist/src/repositories/user/index.js"
+        "types": "./dist/repositories/user/index.d.ts",
+        "default": "./dist/repositories/user/index.js"
       }
     },
-    "./src/repositories/gamification": {
+    "./repositories/gamification": {
       "import": {
-        "types": "./dist/src/repositories/gamification/index.d.ts",
-        "default": "./dist/src/repositories/gamification/index.js"
+        "types": "./dist/repositories/gamification/index.d.ts",
+        "default": "./dist/repositories/gamification/index.js"
       }
     },
-    "./src/repositories/gamification/flashcard": {
+    "./repositories/gamification/flashcard": {
       "import": {
-        "types": "./dist/src/repositories/gamification/flashcard/index.d.ts",
-        "default": "./dist/src/repositories/gamification/flashcard/index.js"
+        "types": "./dist/repositories/gamification/flashcard/index.d.ts",
+        "default": "./dist/repositories/gamification/flashcard/index.js"
       }
     },
-    "./src/repositories/gamification/mcq": {
+    "./repositories/gamification/mcq": {
       "import": {
-        "types": "./dist/src/repositories/gamification/mcq/index.d.ts",
-        "default": "./dist/src/repositories/gamification/mcq/index.js"
+        "types": "./dist/repositories/gamification/mcq/index.d.ts",
+        "default": "./dist/repositories/gamification/mcq/index.js"
       }
     },
-    "./src/entities/book": {
+    "./entities/book": {
       "import": {
-        "types": "./dist/src/entities/book/index.d.ts",
-        "default": "./dist/src/entities/book/index.js"
+        "types": "./dist/entities/book/index.d.ts",
+        "default": "./dist/entities/book/index.js"
       }
     },
-    "./src/entities/common": {
+    "./entities/common": {
       "import": {
-        "types": "./dist/src/entities/common/index.d.ts",
-        "default": "./dist/src/entities/common/index.js"
+        "types": "./dist/entities/common/index.d.ts",
+        "default": "./dist/entities/common/index.js"
       }
     },
-    "./src/entities/image": {
+    "./entities/image": {
       "import": {
-        "types": "./dist/src/entities/image/index.d.ts",
-        "default": "./dist/src/entities/image/index.js"
+        "types": "./dist/entities/image/index.d.ts",
+        "default": "./dist/entities/image/index.js"
       }
     },
-    "./src/entities/payment": {
+    "./entities/payment": {
       "import": {
-        "types": "./dist/src/entities/payment/index.d.ts",
-        "default": "./dist/src/entities/payment/index.js"
+        "types": "./dist/entities/payment/index.d.ts",
+        "default": "./dist/entities/payment/index.js"
       }
     },
-    "./src/entities/video": {
+    "./entities/video": {
       "import": {
-        "types": "./dist/src/entities/video/index.d.ts",
-        "default": "./dist/src/entities/video/index.js"
+        "types": "./dist/entities/video/index.d.ts",
+        "default": "./dist/entities/video/index.js"
       }
     },
-    "./src/entities/user": {
+    "./entities/user": {
       "import": {
-        "types": "./dist/src/entities/user/index.d.ts",
-        "default": "./dist/src/entities/user/index.js"
+        "types": "./dist/entities/user/index.d.ts",
+        "default": "./dist/entities/user/index.js"
       }
     },
-    "./src/entities/gamification": {
+    "./entities/gamification": {
       "import": {
-        "types": "./dist/src/entities/gamification/index.d.ts",
-        "default": "./dist/src/entities/gamification/index.js"
+        "types": "./dist/entities/gamification/index.d.ts",
+        "default": "./dist/entities/gamification/index.js"
       }
     },
-    "./src/entities/gamification/flashcard": {
+    "./entities/gamification/flashcard": {
       "import": {
-        "types": "./dist/src/entities/gamification/flashcard/index.d.ts",
-        "default": "./dist/src/entities/gamification/flashcard/index.js"
+        "types": "./dist/entities/gamification/flashcard/index.d.ts",
+        "default": "./dist/entities/gamification/flashcard/index.js"
       }
     },
     "./package.json": "./package.json"

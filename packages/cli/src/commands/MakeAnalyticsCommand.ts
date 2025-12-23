@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const analyticsDir = join(process.cwd(), "src", "analytics");
+    const analyticsLocalDir = join("src", "analytics");
+    const analyticsDir = join(process.cwd(), analyticsLocalDir);
     const filePath = join(analyticsDir, `${name}Analytics.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(analyticsLocalDir, name)}Analytics.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

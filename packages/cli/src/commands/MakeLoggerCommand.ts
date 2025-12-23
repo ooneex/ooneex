@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const loggerDir = join(process.cwd(), "src", "loggers");
+    const loggerLocalDir = join("src", "loggers");
+    const loggerDir = join(process.cwd(), loggerLocalDir);
     const filePath = join(loggerDir, `${name}Logger.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(loggerLocalDir, name)}Logger.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

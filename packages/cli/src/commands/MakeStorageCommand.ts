@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase, toSnakeCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
     const nameUpper = toSnakeCase(name).toUpperCase();
     const content = template.replace(/{{NAME}}/g, name).replace(/{{NAME_UPPER}}/g, nameUpper);
 
-    const storageDir = join(process.cwd(), "src", "storage");
+    const storageLocalDir = join("src", "storage");
+    const storageDir = join(process.cwd(), storageLocalDir);
     const filePath = join(storageDir, `${name}Storage.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(storageLocalDir, name)}Storage.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

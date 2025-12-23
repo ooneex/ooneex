@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameSegment, RouteNamespace } from "@ooneex/routing";
 import { toPascalCase } from "@ooneex/utils";
 import pluralize from "pluralize";
@@ -116,8 +117,16 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
         .replace(/{{ROUTE_METHOD}}/g, config.routeMethod)
         .replace(/{{ROUTE_DESCRIPTION}}/g, config.routeDescription);
 
+      const controllerLocalDir = join("src", "controllers");
       const filePath = join(controllersDir, `${name}${config.suffix}Controller.ts`);
       await Bun.write(filePath, content);
+
+      const logger = new TerminalLogger();
+      logger.success(`${join(controllerLocalDir, name)}${config.suffix}Controller.ts created successfully`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
     }
   }
 }

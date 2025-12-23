@@ -11,11 +11,10 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public",
-
     "make:analytics": "bunx ooneex make:analytics",
     "make:cache": "bunx ooneex make:cache",
     "make:controller": "bunx ooneex make:controller",
+    "make:cron": "bunx ooneex make:cron",
     "make:crud": "bunx ooneex make:crud",
     "make:database": "bunx ooneex make:database",
     "make:entity": "bunx ooneex make:entity",
@@ -25,7 +24,11 @@
     "make:permission": "bunx ooneex make:permission",
     "make:repository": "bunx ooneex make:repository",
     "make:service": "bunx ooneex make:service",
-    "make:storage": "bunx ooneex make:storage"
+    "make:storage": "bunx ooneex make:storage",
+    "make:migration": "bunx ooneex make:migration",
+    "make:seed": "bunx ooneex make:seed",
+    "migration:up": "bun ./bin/migration/up.ts",
+    "seed:run": "bun ./bin/seed/run.ts"
   },
   "dependencies": {},
   "devDependencies": {},

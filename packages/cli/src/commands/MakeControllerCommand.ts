@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
 import { toPascalCase } from "@ooneex/utils";
@@ -65,8 +66,17 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
       content = content.replaceAll("{{ROUTE_METHOD}}", route.method.toLowerCase());
     }
 
-    const controllersDir = join(process.cwd(), "src", "controllers");
+    const controllersLocalDir = join("src", "controllers");
+    const controllersDir = join(process.cwd(), controllersLocalDir);
     const filePath = join(controllersDir, `${name}Controller.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(controllersLocalDir, name)}Controller.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

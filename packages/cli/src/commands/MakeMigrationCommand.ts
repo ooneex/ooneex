@@ -1,3 +1,4 @@
+import { TerminalLogger } from "@ooneex/logger";
 import { migrationCreate } from "@ooneex/migrations";
 import { command } from "../decorator";
 import type { ICommand } from "../types";
@@ -18,5 +19,13 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
 
   public async run(): Promise<void> {
     await migrationCreate({ dir: "src/migrations" });
+
+    const logger = new TerminalLogger();
+
+    logger.success("Migration file created successfully", undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

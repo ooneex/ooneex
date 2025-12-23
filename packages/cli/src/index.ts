@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import { parseArgs } from "node:util";
 import type { IException } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";

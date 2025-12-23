@@ -1,10 +1,13 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
 import bunupTemplate from "../templates/module/bunup.config.txt";
+import migrationUpTemplate from "../templates/module/migration.up.txt";
 import moduleTemplate from "../templates/module/module.txt";
 import packageTemplate from "../templates/module/package.txt";
+import seedRunTemplate from "../templates/module/seed.run.txt";
 import testTemplate from "../templates/module/test.txt";
 import tsconfigTemplate from "../templates/module/tsconfig.txt";
 import type { ICommand } from "../types";
@@ -34,6 +37,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const kebabName = toKebabCase(pascalName);
 
     const moduleDir = join(process.cwd(), "modules", kebabName);
+    const binDir = join(moduleDir, "bin");
     const srcDir = join(moduleDir, "src");
     const testsDir = join(moduleDir, "tests");
 
@@ -42,11 +46,21 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const testContent = testTemplate.replace(/{{NAME}}/g, pascalName);
 
     await Bun.write(join(moduleDir, "bunup.config.ts"), bunupTemplate);
+    await Bun.write(join(binDir, "migration", "up.ts"), migrationUpTemplate);
+    await Bun.write(join(binDir, "seed", "run.ts"), seedRunTemplate);
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
-    await Bun.write(join(srcDir, "migrations", ".gitkeep"), "");
-    await Bun.write(join(srcDir, "seeds", ".gitkeep"), "");
+    await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");
+    await Bun.write(join(srcDir, "seeds", "seeds.ts"), "");
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(testsDir, `${pascalName}Module.spec.ts`), testContent);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`modules/${kebabName} created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

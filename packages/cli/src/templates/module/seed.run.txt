@@ -1,0 +1,6 @@
+#!/usr/bin/env bun
+
+import { seedRun } from "@ooneex/seeds";
+import "@/seeds/seeds";
+
+await seedRun();

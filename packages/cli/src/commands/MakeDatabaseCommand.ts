@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -32,8 +33,17 @@ export class MakeDatabaseCommand<T extends CommandOptionsType = CommandOptionsTy
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const databaseDir = join(process.cwd(), "src", "databases");
+    const databaseLocalDir = join("src", "databases");
+    const databaseDir = join(process.cwd(), databaseLocalDir);
     const filePath = join(databaseDir, `${name}Database.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(databaseLocalDir, name)}Database.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

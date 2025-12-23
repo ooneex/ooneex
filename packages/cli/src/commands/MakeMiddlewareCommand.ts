@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const middlewareDir = join(process.cwd(), "src", "middlewares");
+    const middlewareLocalDir = join("src", "middlewares");
+    const middlewareDir = join(process.cwd(), middlewareLocalDir);
     const filePath = join(middlewareDir, `${name}Middleware.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(middlewareLocalDir, name)}Middleware.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

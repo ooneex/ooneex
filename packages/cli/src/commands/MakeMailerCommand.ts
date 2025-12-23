@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -32,11 +33,26 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     const mailerContent = mailerTemplate.replace(/{{NAME}}/g, name);
     const templateContent = mailerTemplateTemplate.replace(/{{NAME}}/g, name);
 
-    const mailerDir = join(process.cwd(), "src", "mailers");
+    const mailerLocalDir = join("src", "mailers");
+    const mailerDir = join(process.cwd(), mailerLocalDir);
     const mailerFilePath = join(mailerDir, `${name}Mailer.ts`);
     const templateFilePath = join(mailerDir, `${name}MailerTemplate.tsx`);
 
     await Bun.write(mailerFilePath, mailerContent);
     await Bun.write(templateFilePath, templateContent);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(mailerLocalDir, name)}Mailer.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(mailerLocalDir, name)}MailerTemplate.tsx created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

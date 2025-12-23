@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const serviceDir = join(process.cwd(), "src", "services");
+    const serviceLocalDir = join("src", "services");
+    const serviceDir = join(process.cwd(), serviceLocalDir);
     const filePath = join(serviceDir, `${name}Service.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(serviceLocalDir, name)}Service.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

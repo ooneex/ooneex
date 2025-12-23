@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -30,8 +31,17 @@ export class MakePermissionCommand<T extends CommandOptionsType = CommandOptions
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const permissionDir = join(process.cwd(), "src", "permissions");
+    const permissionLocalDir = join("src", "permissions");
+    const permissionDir = join(process.cwd(), permissionLocalDir);
     const filePath = join(permissionDir, `${name}Permission.ts`);
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(permissionLocalDir, name)}Permission.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

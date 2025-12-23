@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { command } from "../decorator";
 import { askName } from "../prompts/askName";
@@ -31,9 +32,18 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const repositoriesDir = join(process.cwd(), "src", "repositories");
+    const repositoriesLocalDir = join("src", "repositories");
+    const repositoriesDir = join(process.cwd(), repositoriesLocalDir);
     const filePath = join(repositoriesDir, `${name}Repository.ts`);
 
     await Bun.write(filePath, content);
+
+    const logger = new TerminalLogger();
+
+    logger.success(`${join(repositoriesLocalDir, name)}Repository.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
   }
 }

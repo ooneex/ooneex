@@ -23,6 +23,7 @@ const Configuration: UserConfig = {
         "book",
         "cache",
         "category",
+        "cli",
         "color",
         "container",
         "controller",

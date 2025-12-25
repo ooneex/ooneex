@@ -27,19 +27,7 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "devDependencies": {
-    "@ooneex/analytics": "workspace:*",
-    "@ooneex/cache": "workspace:*",
-    "@ooneex/cron": "workspace:*",
-    "@ooneex/database": "workspace:*",
-    "@ooneex/logger": "workspace:*",
-    "@ooneex/mailer": "workspace:*",
-    "@ooneex/middleware": "workspace:*",
-    "@ooneex/permission": "workspace:*",
-    "@ooneex/repository": "workspace:*",
-    "@ooneex/service": "workspace:*",
-    "@ooneex/storage": "workspace:*"
-  },
+  "devDependencies": {},
   "peerDependencies": {},
   "dependencies": {
     "@ooneex/exception": "workspace:*",

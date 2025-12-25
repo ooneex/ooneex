@@ -15,6 +15,7 @@ const Configuration: UserConfig = {
       "always",
       [
         "common",
+        "ai",
         "analytics",
         "app",
         "app-env",

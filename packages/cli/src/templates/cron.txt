@@ -1,7 +1,6 @@
-import { decorator } from "@ooneex/container";
 import type { TimeZoneType } from "@ooneex/country";
 import type { CronTimeType } from "@ooneex/cron";
-import { CronAdapter } from "@ooneex/cron";
+import { CronAdapter, decorator } from "@ooneex/cron";
 
 @decorator.cron()
 export class {{NAME}}Cron extends CronAdapter {

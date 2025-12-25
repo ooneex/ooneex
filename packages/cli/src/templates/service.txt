@@ -1,4 +1,4 @@
-import { decorator } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
 import type { IService } from "@ooneex/service";
 
 type ExecuteDataType = Record<string, unknown>;

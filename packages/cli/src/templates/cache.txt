@@ -1,5 +1,4 @@
-import { decorator } from "@ooneex/container";
-import { CacheException } from "@ooneex/cache";
+import { CacheException, decorator } from "@ooneex/cache";
 import type { ICache } from "@ooneex/cache";
 
 @decorator.cache()

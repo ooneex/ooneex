@@ -1,5 +1,5 @@
+import { decorator } from "@ooneex/analytics";
 import type { IAnalytics } from "@ooneex/analytics";
-import { decorator } from "@ooneex/container";
 
 type CaptureOptionsType = Record<string, unknown>;
 

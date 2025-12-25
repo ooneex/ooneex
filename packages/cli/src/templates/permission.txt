@@ -1,6 +1,5 @@
-import { decorator } from "@ooneex/container";
 import { AbilityBuilder, createMongoAbility, type MongoAbility, type MongoQuery } from "@casl/ability";
-import { PermissionException } from "@ooneex/permission";
+import { decorator, PermissionException } from "@ooneex/permission";
 import type { IPermission, PermissionActionType, Subjects } from "@ooneex/permission";
 import { ERole } from "@ooneex/role";
 import type { IUser } from "@ooneex/user";

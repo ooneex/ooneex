@@ -139,6 +139,9 @@ export class VideoEntity extends BaseEntity implements IVideo {
   @Column({ name: "context_id", type: "varchar", length: 25, nullable: true })
   contextId?: string;
 
+  @Column({ name: "is_youtube", type: "boolean", default: false })
+  isYoutube: boolean;
+
   @ManyToMany(() => TagEntity, { eager: false, cascade: ["insert", "update"] })
   @JoinTable({
     name: "videos_tags",

@@ -1,5 +1,6 @@
 export * from "./AiException";
 export * from "./AnthropicAi";
+export * from "./decorators";
 export * from "./GeminiAi";
 export * from "./OllamaAi";
 export * from "./OpenAi";

@@ -53,3 +53,79 @@ export interface IImage extends IBase {
   context?: string;
   contextId?: string;
 }
+
+export interface IImageShared extends IBase {
+  image?: IImage;
+  imageId?: string;
+  sharedWith?: string;
+  sharedById?: string;
+  permission?: string;
+  expiresAt?: string;
+}
+
+export interface IImageLiked extends IBase {
+  image?: IImage;
+  imageId?: string;
+  likedBy?: string;
+  likedById?: string;
+}
+
+export interface IImageComment extends IBase {
+  image?: IImage;
+  imageId?: string;
+  comment: string;
+  commentedBy?: string;
+  commentedById?: string;
+  parentCommentId?: string;
+}
+
+export interface IImageDisliked extends IBase {
+  image?: IImage;
+  imageId?: string;
+  dislikedBy?: string;
+  dislikedById?: string;
+}
+
+export interface IImageSaved extends IBase {
+  image?: IImage;
+  imageId?: string;
+  savedBy?: string;
+  savedById?: string;
+}
+
+export interface IImageReport extends IBase {
+  image?: IImage;
+  imageId?: string;
+  reason: string;
+  description?: string;
+  reportedBy?: string;
+  reportedById?: string;
+  status?: IStatus;
+}
+
+export interface IImageDownloaded extends IBase {
+  image?: IImage;
+  imageId?: string;
+  downloadedBy?: string;
+  downloadedById?: string;
+}
+
+export interface IImageViewed extends IBase {
+  image?: IImage;
+  imageId?: string;
+  viewedBy?: string;
+  viewedById?: string;
+}
+
+export interface IImageStat extends IBase {
+  image?: IImage;
+  imageId?: string;
+  likesCount?: number;
+  dislikesCount?: number;
+  commentsCount?: number;
+  sharesCount?: number;
+  savesCount?: number;
+  downloadsCount?: number;
+  viewsCount?: number;
+  reportsCount?: number;
+}

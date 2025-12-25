@@ -1,3 +1,4 @@
+export * from "./decorators";
 export { LogsDatabase } from "./LogsDatabase";
 export { LogsEntity } from "./LogsEntity";
 export { LogsRepository } from "./LogsRepository";

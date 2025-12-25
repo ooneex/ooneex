@@ -28,6 +28,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@ooneex/status": "workspace:*",
     "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
   },

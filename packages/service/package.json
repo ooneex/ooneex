@@ -22,11 +22,14 @@
   },
   "license": "MIT",
   "scripts": {
+    "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ooneex/container": "workspace:*"
+  },
   "devDependencies": {},
   "peerDependencies": {}
 }

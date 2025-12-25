@@ -27,6 +27,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
+  "dependencies": {
+    "@ooneex/container": "workspace:*"
+  },
   "devDependencies": {
     "@ooneex/socket": "workspace:*",
     "@ooneex/controller": "workspace:*",

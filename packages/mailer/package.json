@@ -28,6 +28,7 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "nodemailer": "^7.0.10",

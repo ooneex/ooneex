@@ -1,3 +1,4 @@
+export * from "./decorators";
 export { MailerException } from "./MailerException";
 export { MailerLayout } from "./MailerLayout";
 export { NodeMailerAdapter } from "./NodeMailerAdapter";

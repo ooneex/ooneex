@@ -10,6 +10,30 @@
     "package.json"
   ],
   "exports": {
+    "./repositories/gamification": {
+      "import": {
+        "types": "./dist/repositories/gamification/index.d.ts",
+        "default": "./dist/repositories/gamification/index.js"
+      }
+    },
+    "./repositories/gamification/flashcard": {
+      "import": {
+        "types": "./dist/repositories/gamification/flashcard/index.d.ts",
+        "default": "./dist/repositories/gamification/flashcard/index.js"
+      }
+    },
+    "./repositories/gamification/mcq": {
+      "import": {
+        "types": "./dist/repositories/gamification/mcq/index.d.ts",
+        "default": "./dist/repositories/gamification/mcq/index.js"
+      }
+    },
+    "./entities/gamification/flashcard": {
+      "import": {
+        "types": "./dist/entities/gamification/flashcard/index.d.ts",
+        "default": "./dist/entities/gamification/flashcard/index.js"
+      }
+    },
     "./entities/gamification/mcq": {
       "import": {
         "types": "./dist/entities/gamification/mcq/index.d.ts",
@@ -52,24 +76,6 @@
         "default": "./dist/repositories/user/index.js"
       }
     },
-    "./repositories/gamification": {
-      "import": {
-        "types": "./dist/repositories/gamification/index.d.ts",
-        "default": "./dist/repositories/gamification/index.js"
-      }
-    },
-    "./repositories/gamification/flashcard": {
-      "import": {
-        "types": "./dist/repositories/gamification/flashcard/index.d.ts",
-        "default": "./dist/repositories/gamification/flashcard/index.js"
-      }
-    },
-    "./repositories/gamification/mcq": {
-      "import": {
-        "types": "./dist/repositories/gamification/mcq/index.d.ts",
-        "default": "./dist/repositories/gamification/mcq/index.js"
-      }
-    },
     "./entities/book": {
       "import": {
         "types": "./dist/entities/book/index.d.ts",
@@ -80,6 +86,12 @@
       "import": {
         "types": "./dist/entities/common/index.d.ts",
         "default": "./dist/entities/common/index.js"
+      }
+    },
+    "./entities/folder": {
+      "import": {
+        "types": "./dist/entities/folder/index.d.ts",
+        "default": "./dist/entities/folder/index.js"
       }
     },
     "./entities/image": {
@@ -112,12 +124,6 @@
         "default": "./dist/entities/gamification/index.js"
       }
     },
-    "./entities/gamification/flashcard": {
-      "import": {
-        "types": "./dist/entities/gamification/flashcard/index.d.ts",
-        "default": "./dist/entities/gamification/flashcard/index.js"
-      }
-    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -127,6 +133,7 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/repository": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/gamification": "workspace:*",
     "@ooneex/image": "workspace:*",

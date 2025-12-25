@@ -1,10 +1,12 @@
 import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike, LessThan } from "typeorm";
 import { SessionEntity } from "../../entities/user/SessionEntity";
 
+@decorator.repository()
 export class SessionRepository {
   constructor(
     @inject("database")

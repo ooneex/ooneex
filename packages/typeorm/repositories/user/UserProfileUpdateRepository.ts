@@ -1,11 +1,13 @@
 import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import { EProfileUpdateStatus } from "@ooneex/user";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike } from "typeorm";
 import { UserProfileUpdateEntity } from "../../entities/user/UserProfileUpdateEntity";
 
+@decorator.repository()
 export class UserProfileUpdateRepository {
   constructor(
     @inject("database")

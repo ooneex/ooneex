@@ -1,9 +1,11 @@
 import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { VideoProgressEntity } from "../../entities/video/VideoProgressEntity";
 
+@decorator.repository()
 export class VideoProgressRepository {
   constructor(
     @inject("database")

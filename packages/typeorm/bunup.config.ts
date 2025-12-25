@@ -5,6 +5,7 @@ export default defineConfig({
   entry: [
     "entities/book/index.ts",
     "entities/common/index.ts",
+    "entities/folder/index.ts",
     "entities/image/index.ts",
     "entities/payment/index.ts",
     "entities/video/index.ts",

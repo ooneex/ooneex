@@ -1,5 +1,10 @@
 export { AccountEntity } from "./AccountEntity";
 export { SessionEntity } from "./SessionEntity";
+export { UserBlockedEntity } from "./UserBlockedEntity";
 export { UserEntity } from "./UserEntity";
+export { UserFollowedEntity } from "./UserFollowedEntity";
 export { UserProfileUpdateEntity } from "./UserProfileUpdateEntity";
+export { UserReportEntity } from "./UserReportEntity";
+export { UserStatEntity } from "./UserStatEntity";
+export { UserViewedEntity } from "./UserViewedEntity";
 export { VerificationEntity } from "./VerificationEntity";

@@ -1,10 +1,12 @@
 import { inject } from "@ooneex/container";
 import type { ITypeormDatabaseAdapter } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike } from "typeorm";
 import { FlashcardPresetEntity } from "../../../entities/gamification/flashcard/FlashcardPresetEntity";
 
+@decorator.repository()
 export class FlashcardPresetRepository {
   constructor(
     @inject("database")

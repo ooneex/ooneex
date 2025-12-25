@@ -171,6 +171,7 @@ export interface IVideo extends IBase {
   status?: IStatus;
   context?: string;
   contextId?: string;
+  isYoutube: boolean;
 }
 
 export interface IPlaylist extends IBase {

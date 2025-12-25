@@ -40,6 +40,7 @@
       "name": "@ooneex/ai",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@ooneex/translation": "workspace:*",
@@ -55,6 +56,7 @@
       "name": "@ooneex/analytics",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "posthog-node": "^5.11.0",
@@ -111,6 +113,7 @@
       "name": "@ooneex/cache",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
       },
@@ -145,19 +148,6 @@
         "@ooneex/http-status": "workspace:*",
         "inversify": "^7.10.4",
       },
-      "devDependencies": {
-        "@ooneex/analytics": "workspace:*",
-        "@ooneex/cache": "workspace:*",
-        "@ooneex/cron": "workspace:*",
-        "@ooneex/database": "workspace:*",
-        "@ooneex/logger": "workspace:*",
-        "@ooneex/mailer": "workspace:*",
-        "@ooneex/middleware": "workspace:*",
-        "@ooneex/permission": "workspace:*",
-        "@ooneex/repository": "workspace:*",
-        "@ooneex/service": "workspace:*",
-        "@ooneex/storage": "workspace:*",
-      },
     },
     "packages/controller": {
       "name": "@ooneex/controller",
@@ -191,6 +181,7 @@
       "name": "@ooneex/cron",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/country": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -205,6 +196,7 @@
       "name": "@ooneex/database",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "typeorm": "^0.3.27",
@@ -332,6 +324,7 @@
       "name": "@ooneex/logger",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
         "@ooneex/utils": "workspace:*",
       },
@@ -345,6 +338,7 @@
       "name": "@ooneex/mailer",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "nodemailer": "^7.0.10",
@@ -358,6 +352,9 @@
     "packages/middleware": {
       "name": "@ooneex/middleware",
       "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+      },
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
         "@ooneex/http-response": "workspace:*",
@@ -404,6 +401,7 @@
       "version": "0.0.1",
       "dependencies": {
         "@casl/ability": "^6.7.3",
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@ooneex/role": "workspace:*",
@@ -423,6 +421,12 @@
     "packages/repository": {
       "name": "@ooneex/repository",
       "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/role": {
       "name": "@ooneex/role",
@@ -460,6 +464,9 @@
     "packages/service": {
       "name": "@ooneex/service",
       "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+      },
     },
     "packages/socket": {
       "name": "@ooneex/socket",
@@ -497,6 +504,7 @@
       "name": "@ooneex/storage",
       "version": "0.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
       },

@@ -1,4 +1,5 @@
 import { toPascalCase } from "@ooneex/utils";
+import { jsonSchemaToTypeString } from "@ooneex/validation";
 import type { RouteConfigType, ValidRoutePath } from "./types";
 
 // Type guards and validation helpers
@@ -25,64 +26,6 @@ export const isValidRoutePath = (path: string): path is ValidRoutePath => {
 export const extractParameterNames = (path: string): string[] => {
   const matches = path.match(/:([^/]+)/g);
   return matches ? matches.map((match) => match.slice(1)) : [];
-};
-
-/**
- * Convert a JSON Schema type to TypeScript type string
- */
-const jsonSchemaToTypeString = (schema: unknown): string => {
-  if (!schema || typeof schema !== "object") return "unknown";
-
-  const schemaObj = schema as Record<string, unknown>;
-
-  // Handle type property
-  if (schemaObj.type) {
-    switch (schemaObj.type) {
-      case "string":
-        return "string";
-      case "number":
-      case "integer":
-        return "number";
-      case "boolean":
-        return "boolean";
-      case "null":
-        return "null";
-      case "array":
-        if (schemaObj.items) {
-          return `${jsonSchemaToTypeString(schemaObj.items)}[]`;
-        }
-        return "unknown[]";
-      case "object":
-        if (schemaObj.properties && typeof schemaObj.properties === "object") {
-          const props: string[] = [];
-          const required = Array.isArray(schemaObj.required) ? schemaObj.required : [];
-
-          for (const [key, value] of Object.entries(schemaObj.properties)) {
-            const isRequired = required.includes(key);
-            const propType = jsonSchemaToTypeString(value);
-            props.push(`${key}${isRequired ? "" : "?"}: ${propType}`);
-          }
-
-          return `{ ${props.join("; ")} }`;
-        }
-        return "Record<string, unknown>";
-    }
-  }
-
-  // Handle anyOf/oneOf (union types)
-  if (schemaObj.anyOf || schemaObj.oneOf) {
-    const schemas = schemaObj.anyOf || schemaObj.oneOf;
-    if (Array.isArray(schemas)) {
-      return schemas.map((s: unknown) => jsonSchemaToTypeString(s)).join(" | ");
-    }
-  }
-
-  // Handle allOf (intersection types)
-  if (schemaObj.allOf && Array.isArray(schemaObj.allOf)) {
-    return schemaObj.allOf.map((s: unknown) => jsonSchemaToTypeString(s)).join(" & ");
-  }
-
-  return "unknown";
 };
 
 /**

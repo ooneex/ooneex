@@ -33,6 +33,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(container.add).toHaveBeenCalledTimes(1);
@@ -48,6 +51,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(() => migration()(TestMigration as MigrationClassType)).toThrow(ContainerException);
@@ -59,6 +65,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -75,6 +84,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(container.add).toHaveBeenCalledWith(MigrationDefaultScope, EContainerScope.Singleton);
@@ -88,6 +100,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(container.add).toHaveBeenCalledWith(MigrationCustomScope, EContainerScope.Transient);
@@ -100,6 +115,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -116,6 +134,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     @migration()
@@ -124,6 +145,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "002";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -140,6 +164,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     migration()(Migration as MigrationClassType);
@@ -154,6 +181,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "20231201";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -170,6 +200,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     migration()(Migration_Create_Users_Table as MigrationClassType);
@@ -185,6 +218,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(() => migration()(migrationTest as MigrationClassType)).toThrow(ContainerException);
@@ -196,6 +232,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -222,6 +261,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(callOrder).toEqual(["container.add", "MIGRATIONS_CONTAINER.push"]);
@@ -240,6 +282,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     const result = decorator(MigrationReturnTest as MigrationClassType);
@@ -252,6 +297,7 @@ describe("migration decorator", () => {
       abstract up(): Promise<void>;
       abstract down(): Promise<void>;
       abstract getVersion(): string;
+      abstract getDependencies(): MigrationClassType[];
     }
 
     @migration()
@@ -260,6 +306,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -278,6 +327,9 @@ describe("migration decorator", () => {
       getVersion(): string {
         return this.version;
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     expect(container.add).toHaveBeenCalledTimes(1);
@@ -292,6 +344,9 @@ describe("migration decorator", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
 
       public publicMethod(): string {

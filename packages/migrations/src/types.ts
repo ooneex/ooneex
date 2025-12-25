@@ -7,4 +7,5 @@ export interface IMigration {
   up: (tx: TransactionSQL, sql: SQL) => Promise<void>;
   down: (tx: TransactionSQL, sql: SQL) => Promise<void>;
   getVersion: () => string;
+  getDependencies: () => Promise<MigrationClassType[]> | MigrationClassType[];
 }

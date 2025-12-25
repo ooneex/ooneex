@@ -1,8 +1,22 @@
+import { container } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
 import { SQL } from "bun";
 import { createMigrationTable } from "./createMigrationTable";
 import { getMigrations } from "./getMigrations";
+import type { IMigration } from "./types";
+
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+const run = async (migration: IMigration, tx: any, sql: SQL): Promise<void> => {
+  const dependencies = await migration.getDependencies();
+
+  for (const dependency of dependencies) {
+    const dep = container.get(dependency);
+    await run(dep, tx, sql);
+  }
+
+  await migration.up(tx, sql);
+};
 
 export const migrationUp = async (config?: { databaseUrl?: string; tableName?: string }): Promise<void> => {
   const tableName = config?.tableName || "migrations";
@@ -40,7 +54,7 @@ export const migrationUp = async (config?: { databaseUrl?: string; tableName?: s
 
     try {
       await sql.begin(async (tx) => {
-        await migration.up(tx, sql);
+        await run(migration, tx, sql);
         await tx`INSERT INTO ${sql(tableName)} (id) VALUES (${id})`;
         logger.success(`Migration ${migrationName} completed\n`);
       });

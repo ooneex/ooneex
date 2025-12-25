@@ -36,6 +36,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     const instance = new Migration001();
@@ -58,6 +61,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration002 implements IMigration {
@@ -65,6 +71,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "002";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -93,6 +102,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "003";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration001 implements IMigration {
@@ -101,6 +113,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration002 implements IMigration {
@@ -108,6 +123,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "002";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -142,6 +160,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "10";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration2 implements IMigration {
@@ -150,6 +171,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "2";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration100 implements IMigration {
@@ -157,6 +181,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "100";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -191,6 +218,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "20250101000000000";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration20241231235959999 implements IMigration {
@@ -199,6 +229,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "20241231235959999";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration20250630120000000 implements IMigration {
@@ -206,6 +239,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "20250630120000000";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -239,6 +275,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration002 implements IMigration {
@@ -246,6 +285,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "002";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -274,6 +316,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     const instance = new Migration001();
@@ -297,6 +342,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     const singletonInstance = new Migration001();
@@ -318,6 +366,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration001B implements IMigration {
@@ -325,6 +376,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -355,6 +409,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "001";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     const instance = new Migration001();
@@ -373,6 +430,9 @@ describe("getMigrations", () => {
       getVersion(): string {
         return "003";
       }
+      getDependencies(): MigrationClassType[] {
+        return [];
+      }
     }
 
     class Migration001 implements IMigration {
@@ -380,6 +440,9 @@ describe("getMigrations", () => {
       async down(): Promise<void> {}
       getVersion(): string {
         return "001";
+      }
+      getDependencies(): MigrationClassType[] {
+        return [];
       }
     }
 
@@ -412,6 +475,9 @@ describe("getMigrations", () => {
         async down(): Promise<void> {}
         getVersion(): string {
           return version;
+        }
+        getDependencies(): MigrationClassType[] {
+          return [];
         }
       }
 

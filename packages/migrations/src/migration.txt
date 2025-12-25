@@ -1,4 +1,4 @@
-import { type IMigration, migration } from '@ooneex/migrations';
+import { type IMigration, type MigrationClassType, migration } from '@ooneex/migrations';
 import type { TransactionSQL } from 'bun';
 
 @migration()
@@ -13,5 +13,9 @@ export class {{ name }} implements IMigration {
 
   public getVersion(): string {
     return '{{ version }}';
+  }
+
+  public getDependencies(): MigrationClassType[] {
+    return [];
   }
 }

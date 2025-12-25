@@ -184,3 +184,44 @@ export interface IUserProfileUpdate extends IBase {
   // Reference to verification if update requires it
   verification?: IVerification;
 }
+
+export interface IUserFollowed extends IBase {
+  user?: IUser;
+  userId?: string;
+  followedBy?: string;
+  followedById?: string;
+}
+
+export interface IUserBlocked extends IBase {
+  user?: IUser;
+  userId?: string;
+  blockedBy?: string;
+  blockedById?: string;
+  reason?: string;
+}
+
+export interface IUserReport extends IBase {
+  user?: IUser;
+  userId?: string;
+  reason: string;
+  description?: string;
+  reportedBy?: string;
+  reportedById?: string;
+}
+
+export interface IUserViewed extends IBase {
+  user?: IUser;
+  userId?: string;
+  viewedBy?: string;
+  viewedById?: string;
+}
+
+export interface IUserStat extends IBase {
+  user?: IUser;
+  userId?: string;
+  followersCount?: number;
+  followingCount?: number;
+  blockedCount?: number;
+  viewsCount?: number;
+  reportsCount?: number;
+}

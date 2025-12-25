@@ -1,5 +1,10 @@
 export { AccountRepository } from "./AccountRepository";
 export { SessionRepository } from "./SessionRepository";
+export { UserBlockedRepository } from "./UserBlockedRepository";
+export { UserFollowedRepository } from "./UserFollowedRepository";
 export { UserProfileUpdateRepository } from "./UserProfileUpdateRepository";
+export { UserReportRepository } from "./UserReportRepository";
 export { UserRepository } from "./UserRepository";
+export { UserStatRepository } from "./UserStatRepository";
+export { UserViewedRepository } from "./UserViewedRepository";
 export { VerificationRepository } from "./VerificationRepository";

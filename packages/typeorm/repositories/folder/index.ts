@@ -1,0 +1,9 @@
+export { FolderCommentRepository } from "./FolderCommentRepository";
+export { FolderDislikedRepository } from "./FolderDislikedRepository";
+export { FolderDownloadedRepository } from "./FolderDownloadedRepository";
+export { FolderLikedRepository } from "./FolderLikedRepository";
+export { FolderReportRepository } from "./FolderReportRepository";
+export { FolderSavedRepository } from "./FolderSavedRepository";
+export { FolderSharedRepository } from "./FolderSharedRepository";
+export { FolderStatRepository } from "./FolderStatRepository";
+export { FolderViewedRepository } from "./FolderViewedRepository";

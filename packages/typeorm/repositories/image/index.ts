@@ -1,1 +1,10 @@
+export { ImageCommentRepository } from "./ImageCommentRepository";
+export { ImageDislikedRepository } from "./ImageDislikedRepository";
+export { ImageDownloadedRepository } from "./ImageDownloadedRepository";
+export { ImageLikedRepository } from "./ImageLikedRepository";
+export { ImageReportRepository } from "./ImageReportRepository";
 export { ImageRepository } from "./ImageRepository";
+export { ImageSavedRepository } from "./ImageSavedRepository";
+export { ImageSharedRepository } from "./ImageSharedRepository";
+export { ImageStatRepository } from "./ImageStatRepository";
+export { ImageViewedRepository } from "./ImageViewedRepository";

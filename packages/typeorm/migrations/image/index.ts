@@ -1,0 +1,10 @@
+export { Migration20251225181613479 } from "./Migration20251225181613479";
+export { Migration20251225181613481 } from "./Migration20251225181613481";
+export { Migration20251225181613484 } from "./Migration20251225181613484";
+export { Migration20251225181613486 } from "./Migration20251225181613486";
+export { Migration20251225181613488 } from "./Migration20251225181613488";
+export { Migration20251225181613490 } from "./Migration20251225181613490";
+export { Migration20251225181613493 } from "./Migration20251225181613493";
+export { Migration20251225181613495 } from "./Migration20251225181613495";
+export { Migration20251225181613497 } from "./Migration20251225181613497";
+export { Migration20251225181613499 } from "./Migration20251225181613499";

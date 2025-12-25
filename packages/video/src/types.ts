@@ -190,3 +190,79 @@ export interface IVideoProgress extends IBase {
   completed?: boolean;
   lastWatched?: string;
 }
+
+export interface IVideoShared extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  sharedWith?: string;
+  sharedById?: string;
+  permission?: string;
+  expiresAt?: string;
+}
+
+export interface IVideoLiked extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  likedBy?: string;
+  likedById?: string;
+}
+
+export interface IVideoComment extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  comment: string;
+  commentedBy?: string;
+  commentedById?: string;
+  parentCommentId?: string;
+}
+
+export interface IVideoDisliked extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  dislikedBy?: string;
+  dislikedById?: string;
+}
+
+export interface IVideoSaved extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  savedBy?: string;
+  savedById?: string;
+}
+
+export interface IVideoReport extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  reason: string;
+  description?: string;
+  reportedBy?: string;
+  reportedById?: string;
+  status?: IStatus;
+}
+
+export interface IVideoDownloaded extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  downloadedBy?: string;
+  downloadedById?: string;
+}
+
+export interface IVideoViewed extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  viewedBy?: string;
+  viewedById?: string;
+}
+
+export interface IVideoStat extends IBase {
+  video?: IVideo;
+  videoId?: string;
+  likesCount?: number;
+  dislikesCount?: number;
+  commentsCount?: number;
+  sharesCount?: number;
+  savesCount?: number;
+  downloadsCount?: number;
+  viewsCount?: number;
+  reportsCount?: number;
+}

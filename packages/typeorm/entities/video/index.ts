@@ -1,3 +1,12 @@
+export { VideoCommentEntity } from "./VideoCommentEntity";
+export { VideoDislikedEntity } from "./VideoDislikedEntity";
+export { VideoDownloadedEntity } from "./VideoDownloadedEntity";
 export { VideoEntity } from "./VideoEntity";
+export { VideoLikedEntity } from "./VideoLikedEntity";
 export { VideoPlaylistEntity } from "./VideoPlaylistEntity";
 export { VideoProgressEntity } from "./VideoProgressEntity";
+export { VideoReportEntity } from "./VideoReportEntity";
+export { VideoSavedEntity } from "./VideoSavedEntity";
+export { VideoSharedEntity } from "./VideoSharedEntity";
+export { VideoStatEntity } from "./VideoStatEntity";
+export { VideoViewedEntity } from "./VideoViewedEntity";

@@ -36,7 +36,6 @@
     "@ooneex/analytics": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/mailer": "workspace:*",
-    "@ooneex/permission": "workspace:*",
     "@ooneex/routing": "workspace:*",
     "@ooneex/utils": "workspace:*",
     "@ooneex/logger": "workspace:*"

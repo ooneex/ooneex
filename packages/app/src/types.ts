@@ -4,14 +4,12 @@ import type { CacheClassType } from "@ooneex/cache";
 import type { IDatabase, IRedisDatabaseAdapter, ITypeormDatabaseAdapter } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
-import type { PermissionClassType } from "@ooneex/permission";
 import type { StorageClassType } from "@ooneex/storage";
 
 export type AppConfigType = {
-  logger: LoggerClassType[];
+  loggers: LoggerClassType[];
   analytics?: AnalyticsClassType;
   cache?: CacheClassType;
-  permission?: PermissionClassType;
   storage?: StorageClassType;
   mailer?: MailerClassType;
   redis?: IRedisDatabaseAdapter;

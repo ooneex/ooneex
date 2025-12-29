@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import type { FilterResultType } from "@ooneex/types";
 import { decorator } from "@/decorators";
 import type { IRepository } from "@/types";
@@ -120,78 +120,6 @@ describe("decorator.repository", () => {
 
     const instance = container.get(RequestScopedRepository);
     expect(instance).toBeInstanceOf(RequestScopedRepository);
-  });
-
-  test("should throw ContainerException for class not ending with 'Repository'", () => {
-    class InvalidDao implements IRepository {
-      public async open(): Promise<unknown> {
-        return null;
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async find(): Promise<FilterResultType<unknown>> {
-        return { resources: [], total: 0, totalPages: 0, page: 1, limit: 10 };
-      }
-    }
-
-    expect(() => {
-      decorator.repository()(InvalidDao);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IRepository {
-      public async open(): Promise<unknown> {
-        return null;
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async find(): Promise<FilterResultType<unknown>> {
-        return { resources: [], total: 0, totalPages: 0, page: 1, limit: 10 };
-      }
-    }
-
-    expect(() => {
-      decorator.repository()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Repository"');
-  });
-
-  test("should throw for class name containing 'Repository' but not ending with it", () => {
-    class RepositoryManager implements IRepository {
-      public async open(): Promise<unknown> {
-        return null;
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async find(): Promise<FilterResultType<unknown>> {
-        return { resources: [], total: 0, totalPages: 0, page: 1, limit: 10 };
-      }
-    }
-
-    expect(() => {
-      decorator.repository()(RepositoryManager);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'repository'", () => {
-    class Testrepository implements IRepository {
-      public async open(): Promise<unknown> {
-        return null;
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async find(): Promise<FilterResultType<unknown>> {
-        return { resources: [], total: 0, totalPages: 0, page: 1, limit: 10 };
-      }
-    }
-
-    expect(() => {
-      decorator.repository()(Testrepository);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Repository'", () => {

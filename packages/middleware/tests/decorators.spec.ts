@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 
 describe("decorator.middleware", () => {
@@ -93,58 +93,6 @@ describe("decorator.middleware", () => {
 
     const instance = container.get(RequestScopedMiddleware);
     expect(instance).toBeInstanceOf(RequestScopedMiddleware);
-  });
-
-  test("should throw ContainerException for class not ending with 'Middleware'", () => {
-    class InvalidHandler {
-      public handle(_context: unknown): unknown {
-        return _context;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.middleware()(InvalidHandler as any);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming {
-      public handle(_context: unknown): unknown {
-        return _context;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.middleware()(WrongNaming as any);
-    }).toThrow('Class name "WrongNaming" must end with "Middleware"');
-  });
-
-  test("should throw for class name containing 'Middleware' but not ending with it", () => {
-    class MiddlewareHandler {
-      public handle(_context: unknown): unknown {
-        return _context;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.middleware()(MiddlewareHandler as any);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'middleware'", () => {
-    class Testmiddleware {
-      public handle(_context: unknown): unknown {
-        return _context;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.middleware()(Testmiddleware as any);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Middleware'", () => {

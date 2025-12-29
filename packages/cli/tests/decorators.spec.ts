@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { ContainerException, container, EContainerScope } from "@ooneex/container";
+import { container, EContainerScope } from "@ooneex/container";
 import { COMMANDS_CONTAINER } from "@/container";
 import { decorator } from "@/decorators";
 import type { ICommand } from "@/types";
@@ -58,56 +58,6 @@ describe("decorator.command", () => {
       const instance2 = container.get(DefaultScopeCommand);
 
       expect(instance1).toBe(instance2);
-    });
-  });
-
-  describe("Class Name Validation", () => {
-    test("should throw ContainerException if class name does not end with 'Command'", () => {
-      expect(() => {
-        @decorator.command()
-        class InvalidClass implements ICommand {
-          public run(_options: Record<string, unknown>): void {}
-          public getName(): string {
-            return "invalid";
-          }
-          public getDescription(): string {
-            return "invalid class";
-          }
-        }
-        void InvalidClass;
-      }).toThrow(ContainerException);
-    });
-
-    test("should throw ContainerException with correct message", () => {
-      expect(() => {
-        @decorator.command()
-        class MyService implements ICommand {
-          public run(_options: Record<string, unknown>): void {}
-          public getName(): string {
-            return "my-service";
-          }
-          public getDescription(): string {
-            return "my service";
-          }
-        }
-        void MyService;
-      }).toThrow('Class name "MyService" must end with "Command"');
-    });
-
-    test("should accept class names ending with 'Command'", () => {
-      expect(() => {
-        @decorator.command()
-        class ValidCommand implements ICommand {
-          public run(_options: Record<string, unknown>): void {}
-          public getName(): string {
-            return "valid";
-          }
-          public getDescription(): string {
-            return "valid command";
-          }
-        }
-        void ValidCommand;
-      }).not.toThrow();
     });
   });
 

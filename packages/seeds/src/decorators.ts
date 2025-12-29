@@ -2,12 +2,14 @@ import { ContainerException, container, EContainerScope } from "@ooneex/containe
 import { SEEDS_CONTAINER } from "./container";
 import type { SeedClassType } from "./types";
 
-export const seed = (scope: EContainerScope = EContainerScope.Singleton) => {
-  return (target: SeedClassType): void => {
-    if (!target.name.endsWith("Seed")) {
-      throw new ContainerException(`Class name "${target.name}" must end with "Seed"`);
-    }
-    container.add(target, scope);
-    SEEDS_CONTAINER.push(target);
-  };
+export const decorator = {
+  seed: (scope: EContainerScope = EContainerScope.Singleton) => {
+    return (target: SeedClassType): void => {
+      if (!target.name.endsWith("Seed")) {
+        throw new ContainerException(`Class name "${target.name}" must end with "Seed"`);
+      }
+      container.add(target, scope);
+      SEEDS_CONTAINER.push(target);
+    };
+  },
 };

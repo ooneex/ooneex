@@ -1,4 +1,4 @@
-export { seed } from "./decorators";
+export { decorator } from "./decorators";
 export { getSeeds } from "./getSeeds";
 export { seedCreate } from "./seedCreate";
 export { seedRun } from "./seedRun";

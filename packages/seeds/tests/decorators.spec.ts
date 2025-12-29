@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { ContainerException, container, EContainerScope } from "@ooneex/container";
 import { SEEDS_CONTAINER } from "@/container";
-import { seed } from "@/decorators";
+import { decorator } from "@/decorators";
 import type { ISeed, SeedClassType } from "@/types";
 
 describe("seed decorator", () => {
@@ -19,7 +19,7 @@ describe("seed decorator", () => {
   });
 
   test("should register Seed class in container and SEEDS_CONTAINER (default scope Singleton)", () => {
-    @seed()
+    @decorator.seed()
     class UserSeed implements ISeed {
       run<T = unknown>(_data?: unknown[]): T | Promise<T> {
         return Promise.resolve(undefined as unknown as T);
@@ -39,7 +39,7 @@ describe("seed decorator", () => {
   });
 
   test("should accept custom scope parameter", () => {
-    @seed(EContainerScope.Transient)
+    @decorator.seed(EContainerScope.Transient)
     class AnotherSeed implements ISeed {
       run<T = unknown>(_data?: unknown[]): T | Promise<T> {
         return Promise.resolve(undefined as unknown as T);
@@ -68,8 +68,8 @@ describe("seed decorator", () => {
       }
     }
 
-    expect(() => seed()(InvalidName as unknown as SeedClassType)).toThrow(ContainerException);
-    expect(() => seed()(InvalidName as unknown as SeedClassType)).toThrow(
+    expect(() => decorator.seed()(InvalidName as unknown as SeedClassType)).toThrow(ContainerException);
+    expect(() => decorator.seed()(InvalidName as unknown as SeedClassType)).toThrow(
       'Class name "InvalidName" must end with "Seed"',
     );
   });

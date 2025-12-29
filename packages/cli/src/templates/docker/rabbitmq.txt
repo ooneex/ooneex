@@ -1,0 +1,22 @@
+services:
+  # RabbitMQ - Message broker for async processing
+  # Docs: https://www.rabbitmq.com/docs
+  # AMQP: amqp://ooneex:ooneex@localhost:5672/ooneex
+  # Management UI: http://localhost:15672 (ooneex/ooneex)
+  rabbitmq:
+    image: rabbitmq:4.2-management-alpine
+    hostname: rabbitmq
+    container_name: rabbitmq
+    restart: "on-failure"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq:rw
+    environment:
+      - RABBITMQ_DEFAULT_USER=ooneex
+      - RABBITMQ_DEFAULT_PASS=ooneex
+      - RABBITMQ_DEFAULT_VHOST=ooneex
+
+volumes:
+  rabbitmq_data:

@@ -5,6 +5,7 @@ export { MakeControllerCommand } from "./MakeControllerCommand";
 export { MakeCronCommand } from "./MakeCronCommand";
 export { MakeCrudCommand } from "./MakeCrudCommand";
 export { MakeDatabaseCommand } from "./MakeDatabaseCommand";
+export { MakeDockerCommand } from "./MakeDockerCommand";
 export { MakeEntityCommand } from "./MakeEntityCommand";
 export { MakeLoggerCommand } from "./MakeLoggerCommand";
 export { MakeMailerCommand } from "./MakeMailerCommand";

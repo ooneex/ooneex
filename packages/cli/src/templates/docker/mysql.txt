@@ -1,0 +1,20 @@
+services:
+  # MySQL - Alternative relational database
+  # Docs: https://dev.mysql.com/doc/
+  # Connection: mysql://ooneex:ooneex@localhost:3306/ooneex
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: "on-failure"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_db:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=ooneex
+      - MYSQL_DATABASE=ooneex
+      - MYSQL_USER=ooneex
+      - MYSQL_PASSWORD=ooneex
+
+volumes:
+  mysql_db:

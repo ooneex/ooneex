@@ -11,6 +11,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
+    "docker": "docker compose up -d",
     "make:ai": "bunx ooneex make:ai",
     "make:analytics": "bunx ooneex make:analytics",
     "make:cache": "bunx ooneex make:cache",

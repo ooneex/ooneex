@@ -1,0 +1,21 @@
+services:
+  # PostgreSQL - Primary relational database
+  # Docs: https://www.postgresql.org/docs/
+  # Connection: postgresql://ooneex:ooneex@localhost:5432/ooneex
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    restart: "on-failure"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data:rw
+    environment:
+      - POSTGRES_ROOT_PASSWORD=ooneex
+      - POSTGRES_DATABASE=ooneex
+      - POSTGRES_USER=ooneex
+      - POSTGRES_PASSWORD=ooneex
+      - PGDATA=/var/lib/postgresql/data/pgdata
+
+volumes:
+  postgres_db:

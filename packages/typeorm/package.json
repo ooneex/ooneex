@@ -124,6 +124,42 @@
         "default": "./dist/entities/gamification/index.js"
       }
     },
+    "./entities/country": {
+      "import": {
+        "types": "./dist/entities/country/index.d.ts",
+        "default": "./dist/entities/country/index.js"
+      }
+    },
+    "./repositories/country": {
+      "import": {
+        "types": "./dist/repositories/country/index.d.ts",
+        "default": "./dist/repositories/country/index.js"
+      }
+    },
+    "./entities/currency": {
+      "import": {
+        "types": "./dist/entities/currency/index.d.ts",
+        "default": "./dist/entities/currency/index.js"
+      }
+    },
+    "./repositories/currency": {
+      "import": {
+        "types": "./dist/repositories/currency/index.d.ts",
+        "default": "./dist/repositories/currency/index.js"
+      }
+    },
+    "./entities/medecine": {
+      "import": {
+        "types": "./dist/entities/medecine/index.d.ts",
+        "default": "./dist/entities/medecine/index.js"
+      }
+    },
+    "./repositories/medecine": {
+      "import": {
+        "types": "./dist/repositories/medecine/index.d.ts",
+        "default": "./dist/repositories/medecine/index.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
@@ -147,8 +183,10 @@
     "@ooneex/book": "workspace:*",
     "@ooneex/category": "workspace:*",
     "@ooneex/color": "workspace:*",
+    "@ooneex/country": "workspace:*",
     "@ooneex/currencies": "workspace:*",
     "@ooneex/database": "workspace:*",
+    "@ooneex/education": "workspace:*",
     "@ooneex/folder": "workspace:*",
     "@ooneex/role": "workspace:*",
     "@ooneex/tag": "workspace:*",

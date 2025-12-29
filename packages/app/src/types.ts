@@ -15,4 +15,5 @@ export type AppConfigType = {
   redis?: IRedisDatabaseAdapter;
   database?: IDatabase | ITypeormDatabaseAdapter;
   env: IAppEnv;
+  // TODO: Add cronJobs
 };

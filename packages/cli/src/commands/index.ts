@@ -1,3 +1,4 @@
+export { MakeAiCommand } from "./MakeAiCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";
 export { MakeCacheCommand } from "./MakeCacheCommand";
 export { MakeControllerCommand } from "./MakeControllerCommand";

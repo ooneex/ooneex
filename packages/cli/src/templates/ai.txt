@@ -1,0 +1,18 @@
+import { decorator, type IAiChat, OpenAi, type OpenAiConfigType } from "@ooneex/ai";
+import { inject } from "@ooneex/container";
+
+@decorator.ai()
+export class {{NAME}}Ai implements IAiChat<OpenAiConfigType> {
+  constructor(@inject(OpenAi) private readonly ai: OpenAi) {}
+
+  public async run<T>(prompt?: string, config?: Omit<OpenAiConfigType, "prompt">): Promise<T> {
+    return this.ai.run<T>(prompt || "My prompt", config);
+  }
+
+  public async *runStream(
+    prompt?: string,
+    config?: Omit<OpenAiConfigType, "prompt" | "output">,
+  ): AsyncGenerator<string, void, unknown> {
+    yield* this.ai.runStream(prompt || "My prompt", config);
+  }
+}

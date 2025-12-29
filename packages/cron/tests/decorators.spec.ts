@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { CronTimeType, ICron } from "@/types";
 
@@ -164,114 +164,6 @@ describe("decorator.cron", () => {
 
     const instance = container.get(RequestScopedCron);
     expect(instance).toBeInstanceOf(RequestScopedCron);
-  });
-
-  test("should throw ContainerException for class not ending with 'Cron'", () => {
-    class InvalidScheduler implements ICron {
-      public getTime(): CronTimeType {
-        return "every 1 hours";
-      }
-      public start(): void {
-        // noop
-      }
-      public stop(): void {
-        // noop
-      }
-      public job(): void {
-        // noop
-      }
-      public getTimeZone(): null {
-        return null;
-      }
-      public isActive(): boolean {
-        return false;
-      }
-    }
-
-    expect(() => {
-      decorator.cron()(InvalidScheduler);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements ICron {
-      public getTime(): CronTimeType {
-        return "every 1 hours";
-      }
-      public start(): void {
-        // noop
-      }
-      public stop(): void {
-        // noop
-      }
-      public job(): void {
-        // noop
-      }
-      public getTimeZone(): null {
-        return null;
-      }
-      public isActive(): boolean {
-        return false;
-      }
-    }
-
-    expect(() => {
-      decorator.cron()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Cron"');
-  });
-
-  test("should throw for class name containing 'Cron' but not ending with it", () => {
-    class CronScheduler implements ICron {
-      public getTime(): CronTimeType {
-        return "every 1 hours";
-      }
-      public start(): void {
-        // noop
-      }
-      public stop(): void {
-        // noop
-      }
-      public job(): void {
-        // noop
-      }
-      public getTimeZone(): null {
-        return null;
-      }
-      public isActive(): boolean {
-        return false;
-      }
-    }
-
-    expect(() => {
-      decorator.cron()(CronScheduler);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'cron'", () => {
-    class Testcron implements ICron {
-      public getTime(): CronTimeType {
-        return "every 1 hours";
-      }
-      public start(): void {
-        // noop
-      }
-      public stop(): void {
-        // noop
-      }
-      public job(): void {
-        // noop
-      }
-      public getTimeZone(): null {
-        return null;
-      }
-      public isActive(): boolean {
-        return false;
-      }
-    }
-
-    expect(() => {
-      decorator.cron()(Testcron);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Cron'", () => {

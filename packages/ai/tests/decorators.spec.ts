@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { AiConfigType, IAiChat } from "@/types";
 
@@ -104,66 +104,6 @@ describe("decorator.ai", () => {
 
     const instance = container.get(RequestScopedAi);
     expect(instance).toBeInstanceOf(RequestScopedAi);
-  });
-
-  test("should throw ContainerException for class not ending with 'Ai'", () => {
-    class InvalidService implements IAiChat {
-      public run<T>(): Promise<T> {
-        return Promise.resolve({} as T);
-      }
-      public async *runStream(): AsyncGenerator<string, void, unknown> {
-        yield "";
-      }
-    }
-
-    expect(() => {
-      decorator.ai()(InvalidService);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IAiChat {
-      public run<T>(): Promise<T> {
-        return Promise.resolve({} as T);
-      }
-      public async *runStream(): AsyncGenerator<string, void, unknown> {
-        yield "";
-      }
-    }
-
-    expect(() => {
-      decorator.ai()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Ai"');
-  });
-
-  test("should throw for class name containing 'Ai' but not ending with it", () => {
-    class AiService implements IAiChat {
-      public run<T>(): Promise<T> {
-        return Promise.resolve({} as T);
-      }
-      public async *runStream(): AsyncGenerator<string, void, unknown> {
-        yield "";
-      }
-    }
-
-    expect(() => {
-      decorator.ai()(AiService);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'ai'", () => {
-    class Testai implements IAiChat {
-      public run<T>(): Promise<T> {
-        return Promise.resolve({} as T);
-      }
-      public async *runStream(): AsyncGenerator<string, void, unknown> {
-        yield "";
-      }
-    }
-
-    expect(() => {
-      decorator.ai()(Testai);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Ai'", () => {

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { ContainerException, container, EContainerScope } from "@ooneex/container";
 import { MIGRATIONS_CONTAINER } from "@/container";
-import { migration } from "@/decorators";
+import { decorator } from "@/decorators";
 import type { IMigration, MigrationClassType } from "@/types";
 
 describe("migration decorator", () => {
@@ -26,7 +26,7 @@ describe("migration decorator", () => {
   });
 
   test("should accept a class with name starting with 'Migration'", () => {
-    @migration()
+    @decorator.migration()
     class MigrationTest implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -56,7 +56,7 @@ describe("migration decorator", () => {
       }
     }
 
-    expect(() => migration()(TestMigration as MigrationClassType)).toThrow(ContainerException);
+    expect(() => decorator.migration()(TestMigration as MigrationClassType)).toThrow(ContainerException);
   });
 
   test("should throw ContainerException with correct error message", () => {
@@ -71,13 +71,13 @@ describe("migration decorator", () => {
       }
     }
 
-    expect(() => migration()(InvalidClassName as MigrationClassType)).toThrow(
+    expect(() => decorator.migration()(InvalidClassName as MigrationClassType)).toThrow(
       'Class name "InvalidClassName" must start with "Migration"',
     );
   });
 
   test("should use Singleton scope by default", () => {
-    @migration()
+    @decorator.migration()
     class MigrationDefaultScope implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -93,7 +93,7 @@ describe("migration decorator", () => {
   });
 
   test("should accept custom scope parameter", () => {
-    @migration(EContainerScope.Transient)
+    @decorator.migration(EContainerScope.Transient)
     class MigrationCustomScope implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -109,7 +109,7 @@ describe("migration decorator", () => {
   });
 
   test("should accept Request scope", () => {
-    @migration(EContainerScope.Request)
+    @decorator.migration(EContainerScope.Request)
     class MigrationRequestScope implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -127,7 +127,7 @@ describe("migration decorator", () => {
   });
 
   test("should handle multiple migrations", () => {
-    @migration()
+    @decorator.migration()
     class MigrationFirst implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -139,7 +139,7 @@ describe("migration decorator", () => {
       }
     }
 
-    @migration()
+    @decorator.migration()
     class MigrationSecond implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -169,7 +169,7 @@ describe("migration decorator", () => {
       }
     }
 
-    migration()(Migration as MigrationClassType);
+    decorator.migration()(Migration as MigrationClassType);
 
     expect(container.add).toHaveBeenCalledTimes(1);
     expect(MIGRATIONS_CONTAINER).toHaveLength(1);
@@ -187,7 +187,7 @@ describe("migration decorator", () => {
       }
     }
 
-    migration()(Migration20231201 as MigrationClassType);
+    decorator.migration()(Migration20231201 as MigrationClassType);
 
     expect(container.add).toHaveBeenCalledTimes(1);
     expect(MIGRATIONS_CONTAINER).toHaveLength(1);
@@ -205,7 +205,7 @@ describe("migration decorator", () => {
       }
     }
 
-    migration()(Migration_Create_Users_Table as MigrationClassType);
+    decorator.migration()(Migration_Create_Users_Table as MigrationClassType);
 
     expect(container.add).toHaveBeenCalledTimes(1);
     expect(MIGRATIONS_CONTAINER).toHaveLength(1);
@@ -223,7 +223,7 @@ describe("migration decorator", () => {
       }
     }
 
-    expect(() => migration()(migrationTest as MigrationClassType)).toThrow(ContainerException);
+    expect(() => decorator.migration()(migrationTest as MigrationClassType)).toThrow(ContainerException);
   });
 
   test("should reject class with 'Migration' in the middle", () => {
@@ -238,7 +238,7 @@ describe("migration decorator", () => {
       }
     }
 
-    expect(() => migration()(TestMigrationClass as MigrationClassType)).toThrow(ContainerException);
+    expect(() => decorator.migration()(TestMigrationClass as MigrationClassType)).toThrow(ContainerException);
   });
 
   test("should add migration to container before adding to migrations array", () => {
@@ -254,7 +254,7 @@ describe("migration decorator", () => {
       return originalPush.call(MIGRATIONS_CONTAINER, ...args);
     }) as typeof MIGRATIONS_CONTAINER.push;
 
-    @migration()
+    @decorator.migration()
     class MigrationOrder implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -274,7 +274,7 @@ describe("migration decorator", () => {
   });
 
   test("should return void", () => {
-    const decorator = migration();
+    const migrationDecorator = decorator.migration();
 
     class MigrationReturnTest implements IMigration {
       async up(): Promise<void> {}
@@ -287,7 +287,7 @@ describe("migration decorator", () => {
       }
     }
 
-    const result = decorator(MigrationReturnTest as MigrationClassType);
+    const result = migrationDecorator(MigrationReturnTest as MigrationClassType);
 
     expect(result).toBeUndefined();
   });
@@ -300,7 +300,7 @@ describe("migration decorator", () => {
       abstract getDependencies(): MigrationClassType[];
     }
 
-    @migration()
+    @decorator.migration()
     class MigrationExtended extends BaseMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}
@@ -318,7 +318,7 @@ describe("migration decorator", () => {
   });
 
   test("should work with class that has constructor parameters", () => {
-    @migration()
+    @decorator.migration()
     class MigrationWithConstructor implements IMigration {
       constructor(private readonly version: string) {}
 
@@ -338,7 +338,7 @@ describe("migration decorator", () => {
   });
 
   test("should work with class that has additional methods", () => {
-    @migration()
+    @decorator.migration()
     class MigrationWithExtraMethods implements IMigration {
       async up(): Promise<void> {}
       async down(): Promise<void> {}

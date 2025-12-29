@@ -1,7 +1,7 @@
-import { type IMigration, type MigrationClassType, migration } from '@ooneex/migrations';
+import { decorator, type IMigration, type MigrationClassType } from '@ooneex/migrations';
 import type { TransactionSQL } from 'bun';
 
-@migration()
+@decorator.migration()
 export class {{ name }} implements IMigration {
   public async up(tx: TransactionSQL): Promise<void> {
     // await tx`...`;

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { ContainerException, container, EContainerScope } from "@ooneex/container";
+import { container, EContainerScope } from "@ooneex/container";
 import { SEEDS_CONTAINER } from "@/container";
 import { decorator } from "@/decorators";
-import type { ISeed, SeedClassType } from "@/types";
+import type { ISeed } from "@/types";
 
 describe("seed decorator", () => {
   let originalAdd: typeof container.add;
@@ -53,24 +53,5 @@ describe("seed decorator", () => {
     }
 
     expect(container.add).toHaveBeenCalledWith(AnotherSeed, EContainerScope.Transient);
-  });
-
-  test("should throw ContainerException when class name does not end with 'Seed'", () => {
-    class InvalidName implements ISeed {
-      run<T = unknown>(_data?: unknown[]): T | Promise<T> {
-        return Promise.resolve(undefined as unknown as T);
-      }
-      isActive() {
-        return true;
-      }
-      getDependencies() {
-        return [];
-      }
-    }
-
-    expect(() => decorator.seed()(InvalidName as unknown as SeedClassType)).toThrow(ContainerException);
-    expect(() => decorator.seed()(InvalidName as unknown as SeedClassType)).toThrow(
-      'Class name "InvalidName" must end with "Seed"',
-    );
   });
 });

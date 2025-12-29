@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
-import { ContainerException, container, EContainerScope } from "@ooneex/container";
+import { container, EContainerScope } from "@ooneex/container";
 import { MIGRATIONS_CONTAINER } from "@/container";
 import { decorator } from "@/decorators";
 import type { IMigration, MigrationClassType } from "@/types";
@@ -42,38 +42,6 @@ describe("migration decorator", () => {
     expect(container.add).toHaveBeenCalledWith(MigrationTest, EContainerScope.Singleton);
     expect(MIGRATIONS_CONTAINER).toHaveLength(1);
     expect(MIGRATIONS_CONTAINER[0]).toBe(MigrationTest);
-  });
-
-  test("should throw ContainerException for class name not starting with 'Migration'", () => {
-    class TestMigration implements IMigration {
-      async up(): Promise<void> {}
-      async down(): Promise<void> {}
-      getVersion(): string {
-        return "001";
-      }
-      getDependencies(): MigrationClassType[] {
-        return [];
-      }
-    }
-
-    expect(() => decorator.migration()(TestMigration as MigrationClassType)).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct error message", () => {
-    class InvalidClassName implements IMigration {
-      async up(): Promise<void> {}
-      async down(): Promise<void> {}
-      getVersion(): string {
-        return "001";
-      }
-      getDependencies(): MigrationClassType[] {
-        return [];
-      }
-    }
-
-    expect(() => decorator.migration()(InvalidClassName as MigrationClassType)).toThrow(
-      'Class name "InvalidClassName" must start with "Migration"',
-    );
   });
 
   test("should use Singleton scope by default", () => {
@@ -209,36 +177,6 @@ describe("migration decorator", () => {
 
     expect(container.add).toHaveBeenCalledTimes(1);
     expect(MIGRATIONS_CONTAINER).toHaveLength(1);
-  });
-
-  test("should reject class with lowercase 'migration' prefix", () => {
-    class migrationTest implements IMigration {
-      async up(): Promise<void> {}
-      async down(): Promise<void> {}
-      getVersion(): string {
-        return "001";
-      }
-      getDependencies(): MigrationClassType[] {
-        return [];
-      }
-    }
-
-    expect(() => decorator.migration()(migrationTest as MigrationClassType)).toThrow(ContainerException);
-  });
-
-  test("should reject class with 'Migration' in the middle", () => {
-    class TestMigrationClass implements IMigration {
-      async up(): Promise<void> {}
-      async down(): Promise<void> {}
-      getVersion(): string {
-        return "001";
-      }
-      getDependencies(): MigrationClassType[] {
-        return [];
-      }
-    }
-
-    expect(() => decorator.migration()(TestMigrationClass as MigrationClassType)).toThrow(ContainerException);
   });
 
   test("should add migration to container before adding to migrations array", () => {

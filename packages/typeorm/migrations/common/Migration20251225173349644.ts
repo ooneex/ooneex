@@ -7,19 +7,23 @@ export class Migration20251225173349644 implements IMigration {
     await tx`
       CREATE TABLE IF NOT EXISTS stats (
         id VARCHAR(25) PRIMARY KEY,
-        comment_count INT DEFAULT 0 NOT NULL,
-        like_count INT DEFAULT 0 NOT NULL,
-        share_count INT DEFAULT 0 NOT NULL,
-        view_count INT DEFAULT 0 NOT NULL,
-        download_count INT DEFAULT 0 NOT NULL,
-        bookmark_count INT DEFAULT 0 NOT NULL,
-        repost_count INT DEFAULT 0 NOT NULL,
-        impression_count INT DEFAULT 0 NOT NULL,
-        click_count INT DEFAULT 0 NOT NULL,
+        comments_count INT DEFAULT 0 NOT NULL,
+        likes_count INT DEFAULT 0 NOT NULL,
+        dislikes_count INT DEFAULT 0 NOT NULL,
+        shares_count INT DEFAULT 0 NOT NULL,
+        views_count INT DEFAULT 0 NOT NULL,
+        downloads_count INT DEFAULT 0 NOT NULL,
+        saves_count INT DEFAULT 0 NOT NULL,
+        bookmarks_count INT DEFAULT 0 NOT NULL,
+        reposts_count INT DEFAULT 0 NOT NULL,
+        impressions_count INT DEFAULT 0 NOT NULL,
+        clicks_count INT DEFAULT 0 NOT NULL,
         engagement_rate DECIMAL(5, 4) DEFAULT 0 NOT NULL,
         reach INT DEFAULT 0 NOT NULL,
-        follower_count INT DEFAULT 0 NOT NULL,
+        followers_count INT DEFAULT 0 NOT NULL,
         following_count INT DEFAULT 0 NOT NULL,
+        blocked_count INT DEFAULT 0 NOT NULL,
+        reports_count INT DEFAULT 0 NOT NULL,
         is_locked BOOLEAN DEFAULT false,
         locked_at TIMESTAMPTZ,
         is_blocked BOOLEAN DEFAULT false,
@@ -46,19 +50,19 @@ export class Migration20251225173349644 implements IMigration {
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_stats_view_count ON stats(view_count DESC)
+      CREATE INDEX IF NOT EXISTS idx_stats_views_count ON stats(views_count DESC)
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_stats_like_count ON stats(like_count DESC)
+      CREATE INDEX IF NOT EXISTS idx_stats_likes_count ON stats(likes_count DESC)
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_stats_popular ON stats(is_public, view_count DESC, like_count DESC) WHERE deleted_at IS NULL
+      CREATE INDEX IF NOT EXISTS idx_stats_popular ON stats(is_public, views_count DESC, likes_count DESC) WHERE deleted_at IS NULL
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_stats_follower_count ON stats(follower_count DESC)
+      CREATE INDEX IF NOT EXISTS idx_stats_followers_count ON stats(followers_count DESC)
     `;
 
     await tx`

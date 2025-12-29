@@ -5,76 +5,92 @@ import { BaseEntity } from "./BaseEntity";
 @Entity("stats")
 export class StatEntity extends BaseEntity implements IStat {
   @Column({
-    name: "comment_count",
+    name: "comments_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  commentCount = 0;
+  commentsCount = 0;
 
   @Column({
-    name: "like_count",
+    name: "likes_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  likeCount = 0;
+  likesCount = 0;
 
   @Column({
-    name: "share_count",
+    name: "dislikes_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  shareCount = 0;
+  dislikesCount = 0;
 
   @Column({
-    name: "view_count",
+    name: "shares_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  viewCount = 0;
+  sharesCount = 0;
 
   @Column({
-    name: "download_count",
+    name: "views_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  downloadCount = 0;
+  viewsCount = 0;
 
   @Column({
-    name: "bookmark_count",
+    name: "downloads_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  bookmarkCount = 0;
+  downloadsCount = 0;
 
   @Column({
-    name: "repost_count",
+    name: "saves_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  repostCount = 0;
+  savesCount = 0;
 
   @Column({
-    name: "impression_count",
+    name: "bookmarks_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  impressionCount = 0;
+  bookmarksCount = 0;
 
   @Column({
-    name: "click_count",
+    name: "reposts_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  clickCount = 0;
+  repostsCount = 0;
+
+  @Column({
+    name: "impressions_count",
+    type: "int",
+    default: 0,
+    nullable: false,
+  })
+  impressionsCount = 0;
+
+  @Column({
+    name: "clicks_count",
+    type: "int",
+    default: 0,
+    nullable: false,
+  })
+  clicksCount = 0;
 
   @Column({
     name: "engagement_rate",
@@ -95,12 +111,12 @@ export class StatEntity extends BaseEntity implements IStat {
   reach = 0;
 
   @Column({
-    name: "follower_count",
+    name: "followers_count",
     type: "int",
     default: 0,
     nullable: false,
   })
-  followerCount = 0;
+  followersCount = 0;
 
   @Column({
     name: "following_count",
@@ -109,4 +125,20 @@ export class StatEntity extends BaseEntity implements IStat {
     nullable: false,
   })
   followingCount = 0;
+
+  @Column({
+    name: "blocked_count",
+    type: "int",
+    default: 0,
+    nullable: false,
+  })
+  blockedCount = 0;
+
+  @Column({
+    name: "reports_count",
+    type: "int",
+    default: 0,
+    nullable: false,
+  })
+  reportsCount = 0;
 }

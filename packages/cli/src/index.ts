@@ -36,6 +36,10 @@ if (!command) {
 try {
   await command.run(values);
 } catch (error) {
-  logger.error(error as IException);
+  logger.error(error as IException, undefined, {
+    showArrow: false,
+    showTimestamp: false,
+    showLevel: false,
+  });
   process.exit(1);
 }

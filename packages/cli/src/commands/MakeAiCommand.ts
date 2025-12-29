@@ -24,7 +24,7 @@ export class MakeAiCommand<T extends CommandOptionsType = CommandOptionsType> im
     let { name } = options;
 
     if (!name) {
-      name = await askName({ message: "Enter AI name" });
+      name = await askName({ message: "Enter name" });
     }
 
     name = toPascalCase(name).replace(/Ai$/, "");

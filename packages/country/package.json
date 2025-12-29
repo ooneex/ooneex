@@ -41,6 +41,8 @@
   "dependencies": {
     "@vvo/tzdb": "^6.198.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {}
 }

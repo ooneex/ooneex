@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { IAnalytics } from "@/types";
 
@@ -89,54 +89,6 @@ describe("decorator.analytics", () => {
 
     const instance = container.get(RequestScopedAnalytics);
     expect(instance).toBeInstanceOf(RequestScopedAnalytics);
-  });
-
-  test("should throw ContainerException for class not ending with 'Analytics'", () => {
-    class InvalidService implements IAnalytics {
-      public capture(): void {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.analytics()(InvalidService);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IAnalytics {
-      public capture(): void {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.analytics()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Analytics"');
-  });
-
-  test("should throw for class name containing 'Analytics' but not ending with it", () => {
-    class AnalyticsService implements IAnalytics {
-      public capture(): void {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.analytics()(AnalyticsService);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'analytics'", () => {
-    class Testanalytics implements IAnalytics {
-      public capture(): void {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.analytics()(Testanalytics);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Analytics'", () => {

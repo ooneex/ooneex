@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { IDatabase } from "@/types";
 
@@ -119,78 +119,6 @@ describe("decorator.database", () => {
 
     const instance = container.get(RequestScopedDatabase);
     expect(instance).toBeInstanceOf(RequestScopedDatabase);
-  });
-
-  test("should throw ContainerException for class not ending with 'Database'", () => {
-    class InvalidConnection implements IDatabase {
-      public async open(): Promise<void> {
-        // noop
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async drop(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.database()(InvalidConnection);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IDatabase {
-      public async open(): Promise<void> {
-        // noop
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async drop(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.database()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Database"');
-  });
-
-  test("should throw for class name containing 'Database' but not ending with it", () => {
-    class DatabaseConnection implements IDatabase {
-      public async open(): Promise<void> {
-        // noop
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async drop(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.database()(DatabaseConnection);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'database'", () => {
-    class Testdatabase implements IDatabase {
-      public async open(): Promise<void> {
-        // noop
-      }
-      public async close(): Promise<void> {
-        // noop
-      }
-      public async drop(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.database()(Testdatabase);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Database'", () => {

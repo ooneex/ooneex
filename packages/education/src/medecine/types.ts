@@ -1,3 +1,4 @@
+import type { IBase } from "@ooneex/types";
 import type { DISCIPLINES_EN } from "./discipline";
 import type { FIELDS_EN } from "./fields";
 import type { YEARS_EN } from "./years";
@@ -24,3 +25,23 @@ export type MedecineYearType = {
   number: number;
   color: string;
 };
+
+export interface IMedecineDiscipline extends IBase {
+  code: string;
+  name: string;
+  description?: string;
+}
+
+export interface IMedecineField extends IBase {
+  code: string;
+  name: string;
+  color?: string;
+  description?: string;
+}
+
+export interface IMedecineYear extends IBase {
+  code: string;
+  name: string;
+  number: number;
+  color?: string;
+}

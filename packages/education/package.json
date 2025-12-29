@@ -29,7 +29,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "devDependencies": {},
   "peerDependencies": {}
 }

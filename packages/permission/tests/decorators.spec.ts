@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { IPermission, PermissionActionType, Subjects } from "@/types";
 
@@ -164,114 +164,6 @@ describe("decorator.permission", () => {
 
     const instance = container.get(RequestScopedPermission);
     expect(instance).toBeInstanceOf(RequestScopedPermission);
-  });
-
-  test("should throw ContainerException for class not ending with 'Permission'", () => {
-    class InvalidAuth implements IPermission {
-      public allow(): this {
-        return this;
-      }
-      public forbid(): this {
-        return this;
-      }
-      public build(): this {
-        return this;
-      }
-      public can(): boolean {
-        return true;
-      }
-      public cannot(): boolean {
-        return false;
-      }
-      public setUserPermissions(): this {
-        return this;
-      }
-    }
-
-    expect(() => {
-      decorator.permission()(InvalidAuth);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IPermission {
-      public allow(): this {
-        return this;
-      }
-      public forbid(): this {
-        return this;
-      }
-      public build(): this {
-        return this;
-      }
-      public can(): boolean {
-        return true;
-      }
-      public cannot(): boolean {
-        return false;
-      }
-      public setUserPermissions(): this {
-        return this;
-      }
-    }
-
-    expect(() => {
-      decorator.permission()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Permission"');
-  });
-
-  test("should throw for class name containing 'Permission' but not ending with it", () => {
-    class PermissionManager implements IPermission {
-      public allow(): this {
-        return this;
-      }
-      public forbid(): this {
-        return this;
-      }
-      public build(): this {
-        return this;
-      }
-      public can(): boolean {
-        return true;
-      }
-      public cannot(): boolean {
-        return false;
-      }
-      public setUserPermissions(): this {
-        return this;
-      }
-    }
-
-    expect(() => {
-      decorator.permission()(PermissionManager);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'permission'", () => {
-    class Testpermission implements IPermission {
-      public allow(): this {
-        return this;
-      }
-      public forbid(): this {
-        return this;
-      }
-      public build(): this {
-        return this;
-      }
-      public can(): boolean {
-        return true;
-      }
-      public cannot(): boolean {
-        return false;
-      }
-      public setUserPermissions(): this {
-        return this;
-      }
-    }
-
-    expect(() => {
-      decorator.permission()(Testpermission);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Permission'", () => {

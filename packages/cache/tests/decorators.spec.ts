@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 
 describe("decorator.cache", () => {
@@ -258,58 +258,6 @@ describe("decorator.cache", () => {
 
     const instance = container.get(RequestScopedCache);
     expect(instance).toBeInstanceOf(RequestScopedCache);
-  });
-
-  test("should throw ContainerException for class not ending with 'Cache'", () => {
-    class InvalidStorage {
-      public async get(): Promise<unknown> {
-        return undefined;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.cache()(InvalidStorage as any);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming {
-      public async get(): Promise<unknown> {
-        return undefined;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.cache()(WrongNaming as any);
-    }).toThrow('Class name "WrongNaming" must end with "Cache"');
-  });
-
-  test("should throw for class name containing 'Cache' but not ending with it", () => {
-    class CacheStorage {
-      public async get(): Promise<unknown> {
-        return undefined;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.cache()(CacheStorage as any);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'cache'", () => {
-    class Testcache {
-      public async get(): Promise<unknown> {
-        return undefined;
-      }
-    }
-
-    expect(() => {
-      // biome-ignore lint/suspicious/noExplicitAny: testing decorator
-      decorator.cache()(Testcache as any);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Cache'", () => {

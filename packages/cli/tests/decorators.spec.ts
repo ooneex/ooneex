@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { container, EContainerScope } from "@ooneex/container";
+import { ContainerException, container, EContainerScope } from "@ooneex/container";
 import { COMMANDS_CONTAINER } from "@/container";
-import { command } from "@/decorator";
+import { decorator } from "@/decorators";
 import type { ICommand } from "@/types";
 
-describe("command decorator", () => {
+describe("decorator.command", () => {
   let initialCommandsLength: number;
 
   beforeEach(() => {
@@ -21,19 +21,19 @@ describe("command decorator", () => {
 
   describe("Basic Functionality", () => {
     test("should be defined", () => {
-      expect(command).toBeDefined();
-      expect(typeof command).toBe("function");
+      expect(decorator.command).toBeDefined();
+      expect(typeof decorator.command).toBe("function");
     });
 
     test("should return a decorator function", () => {
-      const decorator = command();
-      expect(typeof decorator).toBe("function");
+      const commandDecorator = decorator.command();
+      expect(typeof commandDecorator).toBe("function");
     });
 
     test("should accept EContainerScope parameter", () => {
-      const singletonDecorator = command(EContainerScope.Singleton);
-      const transientDecorator = command(EContainerScope.Transient);
-      const requestDecorator = command(EContainerScope.Request);
+      const singletonDecorator = decorator.command(EContainerScope.Singleton);
+      const transientDecorator = decorator.command(EContainerScope.Transient);
+      const requestDecorator = decorator.command(EContainerScope.Request);
 
       expect(typeof singletonDecorator).toBe("function");
       expect(typeof transientDecorator).toBe("function");
@@ -41,7 +41,7 @@ describe("command decorator", () => {
     });
 
     test("should use Singleton scope by default", () => {
-      @command()
+      @decorator.command()
       class DefaultScopeCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -61,9 +61,59 @@ describe("command decorator", () => {
     });
   });
 
+  describe("Class Name Validation", () => {
+    test("should throw ContainerException if class name does not end with 'Command'", () => {
+      expect(() => {
+        @decorator.command()
+        class InvalidClass implements ICommand {
+          public run(_options: Record<string, unknown>): void {}
+          public getName(): string {
+            return "invalid";
+          }
+          public getDescription(): string {
+            return "invalid class";
+          }
+        }
+        void InvalidClass;
+      }).toThrow(ContainerException);
+    });
+
+    test("should throw ContainerException with correct message", () => {
+      expect(() => {
+        @decorator.command()
+        class MyService implements ICommand {
+          public run(_options: Record<string, unknown>): void {}
+          public getName(): string {
+            return "my-service";
+          }
+          public getDescription(): string {
+            return "my service";
+          }
+        }
+        void MyService;
+      }).toThrow('Class name "MyService" must end with "Command"');
+    });
+
+    test("should accept class names ending with 'Command'", () => {
+      expect(() => {
+        @decorator.command()
+        class ValidCommand implements ICommand {
+          public run(_options: Record<string, unknown>): void {}
+          public getName(): string {
+            return "valid";
+          }
+          public getDescription(): string {
+            return "valid command";
+          }
+        }
+        void ValidCommand;
+      }).not.toThrow();
+    });
+  });
+
   describe("Container Integration", () => {
     test("should add command to container", () => {
-      @command()
+      @decorator.command()
       class ContainerCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -78,7 +128,7 @@ describe("command decorator", () => {
     });
 
     test("should add command to container with Singleton scope", () => {
-      @command(EContainerScope.Singleton)
+      @decorator.command(EContainerScope.Singleton)
       class SingletonCommand implements ICommand {
         public static instanceCount = 0;
         public readonly instanceId: number;
@@ -105,7 +155,7 @@ describe("command decorator", () => {
     });
 
     test("should add command to container with Transient scope", () => {
-      @command(EContainerScope.Transient)
+      @decorator.command(EContainerScope.Transient)
       class TransientCommand implements ICommand {
         public static instanceCount = 0;
         public readonly instanceId: number;
@@ -132,7 +182,7 @@ describe("command decorator", () => {
     });
 
     test("should add command to container with Request scope", () => {
-      @command(EContainerScope.Request)
+      @decorator.command(EContainerScope.Request)
       class RequestCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -151,7 +201,7 @@ describe("command decorator", () => {
 
   describe("COMMANDS_CONTAINER Integration", () => {
     test("should add command to COMMANDS_CONTAINER", () => {
-      @command()
+      @decorator.command()
       class RegistryCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -166,7 +216,7 @@ describe("command decorator", () => {
     });
 
     test("should add multiple commands to COMMANDS_CONTAINER", () => {
-      @command()
+      @decorator.command()
       class FirstCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -177,7 +227,7 @@ describe("command decorator", () => {
         }
       }
 
-      @command()
+      @decorator.command()
       class SecondCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -195,7 +245,7 @@ describe("command decorator", () => {
     test("should maintain order of commands in COMMANDS_CONTAINER", () => {
       const startLength = COMMANDS_CONTAINER.length;
 
-      @command()
+      @decorator.command()
       class OrderFirstCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -206,7 +256,7 @@ describe("command decorator", () => {
         }
       }
 
-      @command()
+      @decorator.command()
       class OrderSecondCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -227,7 +277,7 @@ describe("command decorator", () => {
 
   describe("Command Class Features", () => {
     test("should work with commands without dependencies", () => {
-      @command()
+      @decorator.command()
       class NoDependencyCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
 
@@ -246,7 +296,7 @@ describe("command decorator", () => {
     });
 
     test("should work with commands that have async run method", () => {
-      @command()
+      @decorator.command()
       class AsyncRunCommand implements ICommand {
         public async run(): Promise<void> {
           await Promise.resolve();
@@ -298,7 +348,7 @@ describe("command decorator", () => {
     });
 
     test("should work with commands that have static properties", () => {
-      @command()
+      @decorator.command()
       class StaticPropsCommand implements ICommand {
         public static readonly version = "1.0.0";
         public static readonly author = "Test Author";
@@ -322,7 +372,7 @@ describe("command decorator", () => {
     });
 
     test("should work with commands that have private methods", () => {
-      @command()
+      @decorator.command()
       class PrivateMethodsCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {
           this.privateHelper();
@@ -348,7 +398,7 @@ describe("command decorator", () => {
 
   describe("Multiple Decorations", () => {
     test("should handle multiple commands with different scopes", () => {
-      @command(EContainerScope.Singleton)
+      @decorator.command(EContainerScope.Singleton)
       class SingletonMultiCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -359,7 +409,7 @@ describe("command decorator", () => {
         }
       }
 
-      @command(EContainerScope.Transient)
+      @decorator.command(EContainerScope.Transient)
       class TransientMultiCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -377,8 +427,8 @@ describe("command decorator", () => {
     });
 
     test("should handle commands with same name but different classes", () => {
-      @command()
-      class CommandA implements ICommand {
+      @decorator.command()
+      class SameNameACommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
           return "same-name";
@@ -388,8 +438,8 @@ describe("command decorator", () => {
         }
       }
 
-      @command()
-      class CommandB implements ICommand {
+      @decorator.command()
+      class SameNameBCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
           return "same-name";
@@ -399,21 +449,21 @@ describe("command decorator", () => {
         }
       }
 
-      expect(COMMANDS_CONTAINER).toContain(CommandA);
-      expect(COMMANDS_CONTAINER).toContain(CommandB);
+      expect(COMMANDS_CONTAINER).toContain(SameNameACommand);
+      expect(COMMANDS_CONTAINER).toContain(SameNameBCommand);
 
-      const instanceA = container.get(CommandA);
-      const instanceB = container.get(CommandB);
+      const instanceA = container.get(SameNameACommand);
+      const instanceB = container.get(SameNameBCommand);
 
-      expect(instanceA).toBeInstanceOf(CommandA);
-      expect(instanceB).toBeInstanceOf(CommandB);
+      expect(instanceA).toBeInstanceOf(SameNameACommand);
+      expect(instanceB).toBeInstanceOf(SameNameBCommand);
       expect(instanceA).not.toBe(instanceB);
     });
   });
 
   describe("Edge Cases", () => {
     test("should handle command with empty methods", () => {
-      @command()
+      @decorator.command()
       class EmptyCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -430,7 +480,7 @@ describe("command decorator", () => {
     });
 
     test("should handle command with complex getName logic", () => {
-      @command()
+      @decorator.command()
       class ComplexNameCommand implements ICommand {
         private readonly prefix = "complex";
         private readonly suffix = "command";
@@ -451,7 +501,7 @@ describe("command decorator", () => {
     });
 
     test("should handle command with getters and setters", () => {
-      @command()
+      @decorator.command()
       class GetterSetterCommand implements ICommand {
         private _config = "default";
 
@@ -484,7 +534,7 @@ describe("command decorator", () => {
     test("should handle command with long description", () => {
       const longDescription = "A".repeat(1000);
 
-      @command()
+      @decorator.command()
       class LongDescCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -501,7 +551,7 @@ describe("command decorator", () => {
     });
 
     test("should handle command with special characters in name", () => {
-      @command()
+      @decorator.command()
       class SpecialCharsCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -517,7 +567,7 @@ describe("command decorator", () => {
     });
 
     test("should handle command with unicode in description", () => {
-      @command()
+      @decorator.command()
       class UnicodeCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -535,7 +585,7 @@ describe("command decorator", () => {
 
   describe("Decorator Behavior", () => {
     test("should return the decorated class unchanged", () => {
-      @command()
+      @decorator.command()
       class ReturnedCommand implements ICommand {
         public static testProperty = "test";
 
@@ -566,7 +616,7 @@ describe("command decorator", () => {
         }
       }
 
-      @command()
+      @decorator.command()
       class InheritedCommand extends BaseCommand {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -589,7 +639,7 @@ describe("command decorator", () => {
         validate: () => boolean;
       }
 
-      @command()
+      @decorator.command()
       class MultiInterfaceCommand implements ICommand, ILoggable, IValidatable {
         public run(_options: Record<string, unknown>): void {}
         public getName(): string {
@@ -648,7 +698,7 @@ describe("command decorator", () => {
     });
 
     test("should handle test command scenario", () => {
-      @command(EContainerScope.Transient)
+      @decorator.command(EContainerScope.Transient)
       class TestCommand implements ICommand {
         public async run(): Promise<void> {
           await Promise.resolve();
@@ -670,7 +720,7 @@ describe("command decorator", () => {
     });
 
     test("should handle deploy command without dependencies", () => {
-      @command()
+      @decorator.command()
       class DeployCommand implements ICommand {
         public run(_options: Record<string, unknown>): void {}
 

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import template from "../templates/service.txt";
 import type { ICommand } from "../types";
@@ -10,7 +10,7 @@ type CommandOptionsType = {
   name?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:service";

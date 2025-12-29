@@ -3,7 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameSegment, RouteNamespace } from "@ooneex/routing";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import pluralize from "pluralize";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import createTemplate from "../templates/crud/controller.create.txt";
 import deleteTemplate from "../templates/crud/controller.delete.txt";
@@ -38,7 +38,7 @@ type RouteTypeConfig = {
   routeName: string;
 };
 
-@command()
+@decorator.command()
 export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:crud";

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import bunupTemplate from "../templates/module/bunup.config.txt";
 import migrationUpTemplate from "../templates/module/migration.up.txt";
@@ -16,7 +16,7 @@ type CommandOptionsType = {
   name?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:module";

@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import mailerTemplate from "../templates/mailer/mailer.txt";
 import mailerTemplateTemplate from "../templates/mailer/mailer-template.txt";
@@ -11,7 +11,7 @@ type CommandOptionsType = {
   name?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:mailer";

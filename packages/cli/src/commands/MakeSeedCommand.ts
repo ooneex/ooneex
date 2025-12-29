@@ -1,6 +1,6 @@
 import { TerminalLogger } from "@ooneex/logger";
 import { seedCreate } from "@ooneex/seeds";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import type { ICommand } from "../types";
 
@@ -9,7 +9,7 @@ type CommandOptionsType = {
   dir?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:seed";

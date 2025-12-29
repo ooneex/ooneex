@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase, toSnakeCase } from "@ooneex/utils";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import template from "../templates/storage.txt";
 import type { ICommand } from "../types";
@@ -10,7 +10,7 @@ type CommandOptionsType = {
   name?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:storage";

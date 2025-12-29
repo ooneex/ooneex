@@ -3,7 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import type { RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
 import { toKebabCase, toPascalCase, trim } from "@ooneex/utils";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import { askRouteMethod } from "../prompts/askRouteMethod";
 import { askRouteNamespace } from "../prompts/askRouteNamespace";
@@ -21,7 +21,7 @@ type CommandOptionsType = {
   };
 };
 
-@command()
+@decorator.command()
 export class MakeControllerCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:controller";

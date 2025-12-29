@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase, toSnakeCase } from "@ooneex/utils";
 import pluralize from "pluralize";
-import { command } from "../decorator";
+import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import template from "../templates/entity.txt";
 import type { ICommand } from "../types";
@@ -12,7 +12,7 @@ type CommandOptionsType = {
   tableName?: string;
 };
 
-@command()
+@decorator.command()
 export class MakeEntityCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
   public getName(): string {
     return "make:entity";

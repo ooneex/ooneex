@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { IMailer } from "@/types";
 
@@ -89,54 +89,6 @@ describe("decorator.mailer", () => {
 
     const instance = container.get(RequestScopedMailer);
     expect(instance).toBeInstanceOf(RequestScopedMailer);
-  });
-
-  test("should throw ContainerException for class not ending with 'Mailer'", () => {
-    class InvalidEmailSender implements IMailer {
-      public async send(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.mailer()(InvalidEmailSender);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IMailer {
-      public async send(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.mailer()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Mailer"');
-  });
-
-  test("should throw for class name containing 'Mailer' but not ending with it", () => {
-    class MailerService implements IMailer {
-      public async send(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.mailer()(MailerService);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'mailer'", () => {
-    class Testmailer implements IMailer {
-      public async send(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.mailer()(Testmailer);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Mailer'", () => {

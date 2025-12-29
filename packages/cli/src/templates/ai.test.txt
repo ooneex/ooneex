@@ -1,0 +1,18 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}Ai } from "@/ai/{{NAME}}Ai";
+
+describe("{{NAME}}Ai", () => {
+  test("should have class name ending with 'Ai'", () => {
+    expect({{NAME}}Ai.name.endsWith("Ai")).toBe(true);
+  });
+
+  test("should have 'run' method", () => {
+    expect({{NAME}}Ai.prototype.run).toBeDefined();
+    expect(typeof {{NAME}}Ai.prototype.run).toBe("function");
+  });
+
+  test("should have 'runStream' method", () => {
+    expect({{NAME}}Ai.prototype.runStream).toBeDefined();
+    expect(typeof {{NAME}}Ai.prototype.runStream).toBe("function");
+  });
+});

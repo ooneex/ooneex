@@ -2,7 +2,7 @@ import { CacheException, decorator } from "@ooneex/cache";
 import type { ICache } from "@ooneex/cache";
 
 @decorator.cache()
-export class {{NAME}}CacheAdapter implements ICache {
+export class {{NAME}}Cache implements ICache {
   // Basic operations
   public async get<T = unknown>(key: string): Promise<T | undefined> {
     // Implement get logic

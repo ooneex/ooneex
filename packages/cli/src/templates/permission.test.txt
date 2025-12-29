@@ -1,0 +1,38 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}Permission } from "@/permissions/{{NAME}}Permission";
+
+describe("{{NAME}}Permission", () => {
+  test("should have class name ending with 'Permission'", () => {
+    expect({{NAME}}Permission.name.endsWith("Permission")).toBe(true);
+  });
+
+  test("should have 'allow' method", () => {
+    expect({{NAME}}Permission.prototype.allow).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.allow).toBe("function");
+  });
+
+  test("should have 'forbid' method", () => {
+    expect({{NAME}}Permission.prototype.forbid).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.forbid).toBe("function");
+  });
+
+  test("should have 'build' method", () => {
+    expect({{NAME}}Permission.prototype.build).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.build).toBe("function");
+  });
+
+  test("should have 'can' method", () => {
+    expect({{NAME}}Permission.prototype.can).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.can).toBe("function");
+  });
+
+  test("should have 'cannot' method", () => {
+    expect({{NAME}}Permission.prototype.cannot).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.cannot).toBe("function");
+  });
+
+  test("should have 'setUserPermissions' method", () => {
+    expect({{NAME}}Permission.prototype.setUserPermissions).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.setUserPermissions).toBe("function");
+  });
+});

@@ -4,6 +4,7 @@ import { toPascalCase, toSnakeCase } from "@ooneex/utils";
 import pluralize from "pluralize";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import testTemplate from "../templates/entity.test.txt";
 import template from "../templates/entity.txt";
 import type { ICommand } from "../types";
 
@@ -42,9 +43,22 @@ export class MakeEntityCommand<T extends CommandOptionsType = CommandOptionsType
     const filePath = join(entitiesDir, `${name}Entity.ts`);
     await Bun.write(filePath, content);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "entities");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Entity.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(entitiesLocalDir, name)}Entity.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Entity.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

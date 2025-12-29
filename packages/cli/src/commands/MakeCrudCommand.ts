@@ -5,10 +5,15 @@ import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import pluralize from "pluralize";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import createTestTemplate from "../templates/crud/controller.create.test.txt";
 import createTemplate from "../templates/crud/controller.create.txt";
+import deleteTestTemplate from "../templates/crud/controller.delete.test.txt";
 import deleteTemplate from "../templates/crud/controller.delete.txt";
+import filterTestTemplate from "../templates/crud/controller.filter.test.txt";
 import filterTemplate from "../templates/crud/controller.filter.txt";
+import getTestTemplate from "../templates/crud/controller.get.test.txt";
 import getTemplate from "../templates/crud/controller.get.txt";
+import updateTestTemplate from "../templates/crud/controller.update.test.txt";
 import updateTemplate from "../templates/crud/controller.update.txt";
 import routeTypeCreateTemplate from "../templates/crud/route.type.create.txt";
 import routeTypeDeleteTemplate from "../templates/crud/route.type.delete.txt";
@@ -25,6 +30,7 @@ type CommandOptionsType = {
 
 type ControllerConfig = {
   template: string;
+  testTemplate: string;
   suffix: string;
   routeName: string;
   routePath: string;
@@ -126,6 +132,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
     const controllers: ControllerConfig[] = [
       {
         template: createTemplate,
+        testTemplate: createTestTemplate,
         suffix: "Create",
         routeName: `${namespace}.${resourceName as RouteNameSegment}.create`,
         routePath: `/${pluralize(resourceName)}`,
@@ -134,6 +141,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
       },
       {
         template: getTemplate,
+        testTemplate: getTestTemplate,
         suffix: "Get",
         routeName: `${namespace}.${resourceName as RouteNameSegment}.get`,
         routePath: `/${pluralize(resourceName)}/:id`,
@@ -142,6 +150,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
       },
       {
         template: updateTemplate,
+        testTemplate: updateTestTemplate,
         suffix: "Update",
         routeName: `${namespace}.${resourceName as RouteNameSegment}.update`,
         routePath: `/${pluralize(resourceName)}/:id`,
@@ -150,6 +159,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
       },
       {
         template: deleteTemplate,
+        testTemplate: deleteTestTemplate,
         suffix: "Delete",
         routeName: `${namespace}.${resourceName as RouteNameSegment}.delete`,
         routePath: `/${pluralize(resourceName)}/:id`,
@@ -158,6 +168,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
       },
       {
         template: filterTemplate,
+        testTemplate: filterTestTemplate,
         suffix: "Filter",
         routeName: `${namespace}.${resourceName as RouteNameSegment}.filter`,
         routePath: `/${pluralize(resourceName)}`,
@@ -167,6 +178,8 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
     ];
 
     const controllersDir = join(process.cwd(), "src", "controllers");
+    const testsLocalDir = join("tests", "controllers");
+    const testsDir = join(process.cwd(), testsLocalDir);
 
     for (const config of controllers) {
       const content = config.template
@@ -183,8 +196,19 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
       const filePath = join(controllersDir, `${name}${config.suffix}Controller.ts`);
       await Bun.write(filePath, content);
 
+      // Generate test file
+      const testContent = config.testTemplate.replace(/{{CONTROLLER_NAME}}/g, `${name}${config.suffix}`);
+      const testFilePath = join(testsDir, `${name}${config.suffix}Controller.spec.ts`);
+      await Bun.write(testFilePath, testContent);
+
       const logger = new TerminalLogger();
       logger.success(`${join(controllerLocalDir, name)}${config.suffix}Controller.ts created successfully`, undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
+
+      logger.success(`${join(testsLocalDir, name)}${config.suffix}Controller.spec.ts created successfully`, undefined, {
         showTimestamp: false,
         showArrow: false,
         useSymbol: true,

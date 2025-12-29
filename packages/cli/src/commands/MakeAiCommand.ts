@@ -3,6 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import testTemplate from "../templates/ai.test.txt";
 import template from "../templates/ai.txt";
 import type { ICommand } from "../types";
 
@@ -36,9 +37,22 @@ export class MakeAiCommand<T extends CommandOptionsType = CommandOptionsType> im
     const filePath = join(aiDir, `${name}Ai.ts`);
     await Bun.write(filePath, content);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "ai");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Ai.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(aiLocalDir, name)}Ai.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Ai.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

@@ -8,6 +8,7 @@ import { askName } from "../prompts/askName";
 import { askRouteMethod } from "../prompts/askRouteMethod";
 import { askRouteNamespace } from "../prompts/askRouteNamespace";
 import { askRoutePath } from "../prompts/askRoutePath";
+import testTemplate from "../templates/controller.test.txt";
 import template from "../templates/controller.txt";
 import routeTypeTemplate from "../templates/route.type.txt";
 import type { ICommand } from "../types";
@@ -86,6 +87,13 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const routeTypeContent = routeTypeTemplate.replaceAll("{{TYPE_NAME}}", routeTypeName);
     await Bun.write(routeTypeFilePath, routeTypeContent);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "controllers");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Controller.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(controllersLocalDir, name)}Controller.ts created successfully`, undefined, {
@@ -95,6 +103,12 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     });
 
     logger.success(`${join(routeTypesLocalDir, routeTypeFileName)}.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Controller.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

@@ -3,6 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import testTemplate from "../templates/analytics.test.txt";
 import template from "../templates/analytics.txt";
 import type { ICommand } from "../types";
 
@@ -36,9 +37,22 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
     const filePath = join(analyticsDir, `${name}Analytics.ts`);
     await Bun.write(filePath, content);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "analytics");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Analytics.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(analyticsLocalDir, name)}Analytics.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Analytics.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

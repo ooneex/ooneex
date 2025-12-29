@@ -1,0 +1,68 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}CacheAdapter } from "@/cache/{{NAME}}CacheAdapter";
+
+describe("{{NAME}}CacheAdapter", () => {
+  test("should have class name ending with 'CacheAdapter'", () => {
+    expect({{NAME}}CacheAdapter.name.endsWith("CacheAdapter")).toBe(true);
+  });
+
+  test("should have 'get' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.get).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.get).toBe("function");
+  });
+
+  test("should have 'set' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.set).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.set).toBe("function");
+  });
+
+  test("should have 'delete' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.delete).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.delete).toBe("function");
+  });
+
+  test("should have 'has' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.has).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.has).toBe("function");
+  });
+
+  test("should have 'mget' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.mget).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.mget).toBe("function");
+  });
+
+  test("should have 'mset' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.mset).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.mset).toBe("function");
+  });
+
+  test("should have 'ttl' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.ttl).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.ttl).toBe("function");
+  });
+
+  test("should have 'expire' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.expire).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.expire).toBe("function");
+  });
+
+  test("should have 'incr' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.incr).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.incr).toBe("function");
+  });
+
+  test("should have 'decr' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.decr).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.decr).toBe("function");
+  });
+
+  test("should have 'keys' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.keys).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.keys).toBe("function");
+  });
+
+  test("should have 'flush' method", () => {
+    expect({{NAME}}CacheAdapter.prototype.flush).toBeDefined();
+    expect(typeof {{NAME}}CacheAdapter.prototype.flush).toBe("function");
+  });
+});

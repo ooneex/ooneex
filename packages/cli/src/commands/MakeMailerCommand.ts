@@ -3,7 +3,9 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import mailerTestTemplate from "../templates/mailer/mailer.test.txt";
 import mailerTemplate from "../templates/mailer/mailer.txt";
+import mailerTemplateTestTemplate from "../templates/mailer/mailer-template.test.txt";
 import mailerTemplateTemplate from "../templates/mailer/mailer-template.txt";
 import type { ICommand } from "../types";
 
@@ -41,6 +43,16 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     await Bun.write(mailerFilePath, mailerContent);
     await Bun.write(templateFilePath, templateContent);
 
+    // Generate test files
+    const mailerTestContent = mailerTestTemplate.replace(/{{NAME}}/g, name);
+    const templateTestContent = mailerTemplateTestTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "mailers");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const mailerTestFilePath = join(testsDir, `${name}Mailer.spec.ts`);
+    const templateTestFilePath = join(testsDir, `${name}MailerTemplate.spec.ts`);
+    await Bun.write(mailerTestFilePath, mailerTestContent);
+    await Bun.write(templateTestFilePath, templateTestContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(mailerLocalDir, name)}Mailer.ts created successfully`, undefined, {
@@ -50,6 +62,18 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     });
 
     logger.success(`${join(mailerLocalDir, name)}MailerTemplate.tsx created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Mailer.spec.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}MailerTemplate.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

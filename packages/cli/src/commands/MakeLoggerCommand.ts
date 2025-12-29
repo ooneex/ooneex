@@ -3,6 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import testTemplate from "../templates/logger.test.txt";
 import template from "../templates/logger.txt";
 import type { ICommand } from "../types";
 
@@ -36,9 +37,22 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
     const filePath = join(loggerDir, `${name}Logger.ts`);
     await Bun.write(filePath, content);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "loggers");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Logger.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(loggerLocalDir, name)}Logger.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Logger.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

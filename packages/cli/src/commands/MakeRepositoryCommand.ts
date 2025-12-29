@@ -3,6 +3,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import testTemplate from "../templates/repository.test.txt";
 import template from "../templates/repository.txt";
 import type { ICommand } from "../types";
 
@@ -38,9 +39,22 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
 
     await Bun.write(filePath, content);
 
+    // Generate test file
+    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testsLocalDir = join("tests", "repositories");
+    const testsDir = join(process.cwd(), testsLocalDir);
+    const testFilePath = join(testsDir, `${name}Repository.spec.ts`);
+    await Bun.write(testFilePath, testContent);
+
     const logger = new TerminalLogger();
 
     logger.success(`${join(repositoriesLocalDir, name)}Repository.ts created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(testsLocalDir, name)}Repository.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

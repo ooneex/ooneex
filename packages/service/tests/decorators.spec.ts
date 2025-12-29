@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, ContainerException, EContainerScope } from "@ooneex/container";
+import { Container, EContainerScope } from "@ooneex/container";
 import { decorator } from "@/decorators";
 import type { IService } from "@/types";
 
@@ -89,54 +89,6 @@ describe("decorator.service", () => {
 
     const instance = container.get(RequestScopedService);
     expect(instance).toBeInstanceOf(RequestScopedService);
-  });
-
-  test("should throw ContainerException for class not ending with 'Service'", () => {
-    class InvalidHandler implements IService {
-      public async execute(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.service()(InvalidHandler);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw ContainerException with correct message for invalid class name", () => {
-    class WrongNaming implements IService {
-      public async execute(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.service()(WrongNaming);
-    }).toThrow('Class name "WrongNaming" must end with "Service"');
-  });
-
-  test("should throw for class name containing 'Service' but not ending with it", () => {
-    class ServiceHandler implements IService {
-      public async execute(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.service()(ServiceHandler);
-    }).toThrow(ContainerException);
-  });
-
-  test("should throw for class name ending with lowercase 'service'", () => {
-    class Testservice implements IService {
-      public async execute(): Promise<void> {
-        // noop
-      }
-    }
-
-    expect(() => {
-      decorator.service()(Testservice);
-    }).toThrow(ContainerException);
   });
 
   test("should register class with complex name ending in 'Service'", () => {

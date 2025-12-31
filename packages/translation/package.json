@@ -25,11 +25,14 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "publish": "bun publish --tolerate-republish --access public",
+    "wuchale": "bunx wuchale"
   },
   "dependencies": {
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/http-status": "workspace:*",
+    "@wuchale/jsx": "^0.10.0",
+    "wuchale": "^0.19.0"
   },
   "devDependencies": {}
 }

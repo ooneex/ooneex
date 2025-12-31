@@ -42,8 +42,20 @@ export class MakeTranslationCommand<T extends CommandOptionsType = CommandOption
     const useLocalePath = join(useLocaleDir, "useLocale.ts");
     await Bun.write(useLocalePath, useLocaleTemplate);
 
-    await $`bun add @ooneex/translation`.quiet();
-    await $`bunx wuchale`.quiet();
+    // Update package.json with locale scripts
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonFile = Bun.file(packageJsonPath);
+    if (await packageJsonFile.exists()) {
+      const packageJson = await packageJsonFile.json();
+      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts["locales:clean"] = "wuchale --clean";
+      packageJson.scripts["locales:watch"] = "wuchale --watch";
+      packageJson.scripts["locales:generate"] = "wuchale";
+      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    }
+
+    await $`bun add @ooneex/translation @wuchale/jsx wuchale`.quiet();
+    await $`bun run locales:generate`.quiet();
 
     const logger = new TerminalLogger();
 
@@ -57,6 +69,24 @@ export class MakeTranslationCommand<T extends CommandOptionsType = CommandOption
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
+    });
+
+    logger.info("Run 'bun run locales:generate' to generate translation files", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
+    });
+
+    logger.info("Run 'bun run locales:watch' to watch for changes", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
+    });
+
+    logger.info("Run 'bun run locales:clean' to clean translation files", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
     });
   }
 }

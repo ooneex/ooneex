@@ -135,10 +135,26 @@ export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType
       await Bun.write(composePath, templateContent);
     }
 
+    // Update package.json with docker script
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonFile = Bun.file(packageJsonPath);
+    if (await packageJsonFile.exists()) {
+      const packageJson = await packageJsonFile.json();
+      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts.docker = "docker compose up -d";
+      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    }
+
     logger.success(`Service "${name}" added to docker-compose.yml`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
+    });
+
+    logger.info("Run 'bun run docker' to start docker containers", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
     });
   }
 }

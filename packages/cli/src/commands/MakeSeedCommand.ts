@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { seedCreate } from "@ooneex/seeds";
 import { decorator } from "../decorators";
@@ -28,12 +29,28 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     const filePath = await seedCreate({ name, dir: "src/seeds" });
 
+    // Update package.json with seed script
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonFile = Bun.file(packageJsonPath);
+    if (await packageJsonFile.exists()) {
+      const packageJson = await packageJsonFile.json();
+      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts["seed:run"] = "bun ./bin/seed/run.ts";
+      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    }
+
     const logger = new TerminalLogger();
 
     logger.success(`${filePath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
+    });
+
+    logger.info("Run 'bun run seed:run' to execute seeds", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
     });
   }
 }

@@ -1,16 +1,9 @@
 {
   "name": "@ooneex/cli",
-  "description": "",
   "version": "0.0.1",
-  "type": "module",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "package.json",
-    "bin"
-  ],
   "module": "./dist/index.js",
+  "devDependencies": {},
+  "peerDependencies": {},
   "exports": {
     ".": {
       "import": "./dist/index.js"
@@ -20,6 +13,14 @@
   "bin": {
     "ooneex": "./dist/index.js"
   },
+  "description": "",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json",
+    "bin"
+  ],
   "license": "MIT",
   "scripts": {
     "test": "bun test tests",
@@ -27,9 +28,5 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {
-    "enquirer": "^2.4.1"
-  },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "type": "module"
 }

@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { migrationCreate } from "@ooneex/migrations";
 import { decorator } from "../decorators";
@@ -20,12 +21,28 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
   public async run(): Promise<void> {
     await migrationCreate({ dir: "src/migrations" });
 
+    // Update package.json with migration script
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonFile = Bun.file(packageJsonPath);
+    if (await packageJsonFile.exists()) {
+      const packageJson = await packageJsonFile.json();
+      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts["migration:up"] = "bun ./bin/migration/up.ts";
+      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    }
+
     const logger = new TerminalLogger();
 
     logger.success("Migration file created successfully", undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
+    });
+
+    logger.info("Run 'bun run migration:up' to execute migrations", undefined, {
+      showTimestamp: false,
+      showArrow: true,
+      showLevel: false,
     });
   }
 }

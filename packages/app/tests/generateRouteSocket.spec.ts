@@ -42,7 +42,7 @@ class UserController implements IController {
 }
 
 describe("generateRouteSocket", () => {
-  const outputDir = join(process.cwd(), "src/fetchers");
+  const outputDir = join(process.cwd(), "src", "fetchers", "routes");
 
   test("generates socket file with minimal config", async () => {
     const config: RouteConfigType = {

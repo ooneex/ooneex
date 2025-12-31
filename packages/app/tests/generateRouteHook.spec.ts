@@ -26,7 +26,7 @@ class UserController implements IController {
 }
 
 describe("generateRouteHook", () => {
-  const outputDir = join(process.cwd(), "src/hooks");
+  const outputDir = join(process.cwd(), "src", "hooks", "routes");
 
   test("generates hook file with minimal config", async () => {
     const config: RouteConfigType = {
@@ -467,7 +467,7 @@ describe("generateRouteHook", () => {
     await generateRouteHook(config);
 
     const fileName = "useApiDirectoryTest.ts";
-    const expectedPath = join(process.cwd(), "src/hooks", fileName);
+    const expectedPath = join(process.cwd(), "src", "hooks", "routes", fileName);
 
     // Verify file exists in correct location
     const file = Bun.file(expectedPath);

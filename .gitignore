@@ -152,3 +152,4 @@ packages/app/docs
 packages/app/src/types
 packages/app/src/fetchers
 packages/app/src/hooks
+packages/translation/src/locales/.wuchale

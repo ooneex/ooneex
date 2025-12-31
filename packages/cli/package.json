@@ -27,7 +27,9 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "enquirer": "^2.4.1"
+  },
   "devDependencies": {},
   "peerDependencies": {}
 }

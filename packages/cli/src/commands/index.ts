@@ -17,3 +17,4 @@ export { MakeRepositoryCommand } from "./MakeRepositoryCommand";
 export { MakeSeedCommand } from "./MakeSeedCommand";
 export { MakeServiceCommand } from "./MakeServiceCommand";
 export { MakeStorageCommand } from "./MakeStorageCommand";
+export { MakeTranslationCommand } from "./MakeTranslationCommand";

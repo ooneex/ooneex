@@ -1,0 +1,37 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import "@/locales/main.loader.js";
+import { loadLocale } from "wuchale/load-utils";
+import type { LocaleType } from "@ooneex/translation";
+
+export const useLocale = (initialLocale: LocaleType = "en") => {
+  const [locale, setLocaleState] = useState<LocaleType>(initialLocale);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const loadIdRef = useRef(0);
+
+  useEffect(() => {
+    const currentLoadId = ++loadIdRef.current;
+
+    setLoading(true);
+    setError(null);
+
+    loadLocale(locale)
+      .then(() => {
+        if (currentLoadId === loadIdRef.current) {
+          setLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (currentLoadId === loadIdRef.current) {
+          setError(err instanceof Error ? err : new Error(String(err)));
+          setLoading(false);
+        }
+      });
+  }, [locale]);
+
+  const setLocale = useCallback((newLocale: LocaleType) => {
+    setLocaleState(newLocale);
+  }, []);
+
+  return { locale, setLocale, loading, error };
+};

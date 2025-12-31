@@ -4,7 +4,7 @@ import { routeConfigToHookString } from "@ooneex/routing";
 import { toPascalCase } from "@ooneex/utils";
 
 export const generateRouteHook = async (config: RouteConfigType): Promise<void> => {
-  const outputDir = "src/hooks";
+  const outputDir = join("src", "hooks", "routes");
   const hookString = routeConfigToHookString(config);
   const fileName = `use${toPascalCase(config.name)}.ts`;
   const filePath = join(process.cwd(), outputDir, fileName);

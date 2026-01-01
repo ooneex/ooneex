@@ -4,6 +4,7 @@ import type { LocaleType } from "@ooneex/translation";
 import { $ } from "bun";
 import { decorator } from "../decorators";
 import { askLocales } from "../prompts/askLocales";
+import mainLoaderTemplate from "../templates/translation/main.loader.txt";
 import useLocaleTemplate from "../templates/translation/useLocale.txt";
 import wuchaleConfigTemplate from "../templates/translation/wuchale.config.txt";
 import type { ICommand } from "../types";
@@ -54,12 +55,24 @@ export class MakeTranslationCommand<T extends CommandOptionsType = CommandOption
       await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 
-    await $`bun add @ooneex/translation @wuchale/jsx wuchale`.quiet();
-    await $`bun run locales:generate`.quiet();
+    await $`bun add @ooneex/translation @wuchale/jsx wuchale`;
+    await $`bun run locales:generate`;
+
+    // Generate main.loader.js
+    const mainLoaderLocalDir = join("src", "locales");
+    const mainLoaderDir = join(process.cwd(), mainLoaderLocalDir);
+    const mainLoaderPath = join(mainLoaderDir, "main.loader.js");
+    await Bun.write(mainLoaderPath, mainLoaderTemplate);
 
     const logger = new TerminalLogger();
 
     logger.success("wuchale.config.js created successfully", undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${join(mainLoaderLocalDir, "main.loader")}.js created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

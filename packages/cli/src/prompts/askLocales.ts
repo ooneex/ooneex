@@ -9,8 +9,10 @@ export const askLocales = async (config: { message: string; initial?: string }) 
     initial: config.initial,
     choices: locales.map((locale) => locale),
     validate: (value) => {
-      if (!locales.includes(value as LocaleType)) {
-        return "Locale is invalid";
+      for (const locale of value) {
+        if (!locales.includes(locale as LocaleType)) {
+          return `Locale "${locale}" is invalid`;
+        }
       }
 
       return true;

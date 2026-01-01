@@ -26,7 +26,10 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "publish": "bun publish --tolerate-republish --access public",
+    "locales:clean": "wuchale --clean",
+    "locales:watch": "wuchale --watch",
+    "locales:generate": "wuchale"
   },
   "type": "module"
 }

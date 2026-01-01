@@ -420,6 +420,10 @@
         "@ooneex/user": "workspace:*",
       },
     },
+    "packages/pub-sub": {
+      "name": "@ooneex/pub-sub",
+      "version": "0.0.1",
+    },
     "packages/queue": {
       "name": "@ooneex/queue",
       "version": "0.0.1",
@@ -1089,6 +1093,8 @@
     "@ooneex/payment": ["@ooneex/payment@workspace:packages/payment"],
 
     "@ooneex/permission": ["@ooneex/permission@workspace:packages/permission"],
+
+    "@ooneex/pub-sub": ["@ooneex/pub-sub@workspace:packages/pub-sub"],
 
     "@ooneex/queue": ["@ooneex/queue@workspace:packages/queue"],
 

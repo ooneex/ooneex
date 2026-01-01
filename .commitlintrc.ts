@@ -53,6 +53,7 @@ const Configuration: UserConfig = {
         "model",
         "payment",
         "permission",
+        "pub-sub",
         "queue",
         "rate-limit",
         "repository",

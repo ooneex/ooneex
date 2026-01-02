@@ -88,18 +88,18 @@ export type Subjects = `${EPermissionSubject}`;
 export type PermissionClassType = new (...args: any[]) => IPermission;
 
 export interface IPermission<S extends string = string> {
-  allow(
+  allow: (
     action: PermissionActionType | PermissionActionType[],
     subject: (Subjects | S) | (Subjects | S)[],
     conditions?: MongoQuery<Record<string, unknown>>,
-  ): this;
-  forbid(
+  ) => IPermission<S>;
+  forbid: (
     action: PermissionActionType | PermissionActionType[],
     subject: (Subjects | S) | (Subjects | S)[],
     conditions?: MongoQuery<Record<string, unknown>>,
-  ): this;
-  build(): this;
-  can(action: PermissionActionType, subject: Subjects | S, field?: string): boolean;
-  cannot(action: PermissionActionType, subject: Subjects | S, field?: string): boolean;
-  setUserPermissions(user: IUser | null): this;
+  ) => IPermission<S>;
+  build: () => IPermission<S>;
+  can: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
+  cannot: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
+  setUserPermissions: (user: IUser | null) => IPermission<S>;
 }

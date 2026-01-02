@@ -1,3 +1,3 @@
-export * from "./ReadonlyUrl";
+export { ReadonlyUrl } from "./ReadonlyUrl";
 export * from "./types";
-export * from "./Url";
+export { Url } from "./Url";

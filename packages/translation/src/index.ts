@@ -1,3 +1,3 @@
-export * from "./locales";
-export * from "./TranslationException";
+export { locales } from "./locales";
+export { TranslationException } from "./TranslationException";
 export * from "./types";

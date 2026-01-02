@@ -1,4 +1,4 @@
-export { inject } from "inversify";
-export * from "./Container";
-export * from "./ContainerException";
+export { inject, injectable } from "inversify";
+export { Container, container } from "./Container";
+export { ContainerException } from "./ContainerException";
 export * from "./types";

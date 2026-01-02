@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { Container, EContainerScope } from "@ooneex/container";
-import { decorator } from "@/decorators";
-import type { IDatabase } from "@/types";
+import { decorator } from "../src/decorators";
+import type { IDatabase } from "../src/types";
 
 describe("decorator.database", () => {
   let container: Container;

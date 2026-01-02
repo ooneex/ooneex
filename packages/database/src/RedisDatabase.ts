@@ -1,8 +1,8 @@
 import { RedisClient } from "bun";
 import { DatabaseException } from "./DatabaseException";
-import type { IRedisDatabaseAdapter, RedisConnectionOptionsType } from "./types";
+import type { IRedisDatabase, RedisConnectionOptionsType } from "./types";
 
-export class RedisDatabaseAdapter implements IRedisDatabaseAdapter {
+export class RedisDatabase implements IRedisDatabase {
   private client: RedisClient;
   private connectionUrl: string;
 

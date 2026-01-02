@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import type { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions.js";
-import { DatabaseException, TypeormSqliteDatabaseAdapter } from "@/index";
+import { DatabaseException, TypeormSqliteDatabase } from "@/index";
 
-type ITypeormSqliteDatabaseAdapterOptions = Omit<SqliteConnectionOptions, "type">;
+type ITypeormSqliteDatabaseOptions = Omit<SqliteConnectionOptions, "type">;
 
 mock.module("typeorm", () => ({
   DataSource: class MockDataSource {
@@ -46,9 +46,9 @@ class TestEntity {
   name!: string;
 }
 
-describe("TypeormSqliteDatabaseAdapter", () => {
+describe("TypeormSqliteDatabase", () => {
   let originalEnv: Record<string, string | undefined>;
-  let adapter: TypeormSqliteDatabaseAdapter;
+  let adapter: TypeormSqliteDatabase;
 
   beforeEach(() => {
     // Store original environment variables
@@ -72,10 +72,10 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormSqliteDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormSqliteDatabase);
     });
 
     test("should create adapter with memory database", () => {
@@ -84,34 +84,34 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormSqliteDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormSqliteDatabase);
     });
 
     test("should create adapter using SQLITE_DATABASE_PATH environment variable", () => {
       process.env.SQLITE_DATABASE_PATH = "/tmp/env-test.db";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
+      const options = {} as ITypeormSqliteDatabaseOptions;
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormSqliteDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormSqliteDatabase);
     });
 
     test("should create adapter without database path", () => {
       process.env.SQLITE_DATABASE_PATH = "";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
+      const options = {} as ITypeormSqliteDatabaseOptions;
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormSqliteDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormSqliteDatabase);
     });
 
     test("should create adapter with empty database string", () => {
@@ -120,10 +120,10 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormSqliteDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormSqliteDatabase);
     });
 
     test("should handle relative database paths", () => {
@@ -132,7 +132,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
     });
 
@@ -142,7 +142,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormSqliteDatabaseAdapter(options);
+        adapter = new TypeormSqliteDatabase(options);
       }).not.toThrow();
     });
   });
@@ -152,7 +152,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -166,7 +166,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source1 = adapter.getSource();
       const source2 = adapter.getSource();
@@ -175,8 +175,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
 
     test("should throw DatabaseException when no database path is provided", () => {
       process.env.SQLITE_DATABASE_PATH = "";
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(() => {
         adapter.getSource();
@@ -187,7 +187,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       try {
         adapter.getSource();
@@ -203,8 +203,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
 
     test("should throw DatabaseException when SQLITE_DATABASE_PATH is undefined", () => {
       delete process.env.SQLITE_DATABASE_PATH;
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(() => {
         adapter.getSource();
@@ -216,8 +216,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         synchronize: true,
         entities: [TestEntity],
-      } as unknown as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      } as unknown as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       try {
         adapter.getSource();
@@ -237,7 +237,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/options.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource("/tmp/parameter.db");
       expect(source).toBeDefined();
@@ -247,7 +247,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -255,8 +255,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
 
     test("should use SQLITE_DATABASE_PATH when no database in options or parameter", () => {
       process.env.SQLITE_DATABASE_PATH = "/tmp/env-test.db";
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -267,7 +267,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/options-test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource("/tmp/parameter-test.db");
       expect(source).toBeDefined();
@@ -277,7 +277,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source1 = adapter.getSource();
       const source2 = adapter.getSource("/tmp/another.db");
@@ -292,7 +292,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
     });
 
     test("should initialize DataSource and return repository when not initialized", async () => {
@@ -343,7 +343,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
     });
 
     test("should destroy DataSource when initialized", async () => {
@@ -371,7 +371,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
     });
 
     test("should drop database when DataSource is initialized", async () => {
@@ -394,7 +394,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
     });
 
     test("should return EntityManager from DataSource", () => {
@@ -416,7 +416,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/lifecycle-test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       // Open connection and get repository
       const repository = await adapter.open(TestEntity);
@@ -437,7 +437,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/drop-test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       // Open connection
       await adapter.open(TestEntity);
@@ -457,7 +457,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         logging: true,
       };
 
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const repository = await adapter.open(TestEntity);
       expect(repository).toBeDefined();
@@ -469,7 +469,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: ":memory:",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -479,7 +479,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test with spaces.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -489,7 +489,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test-db_v1.0.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -499,7 +499,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/state-test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source.isInitialized).toBe(false);
@@ -520,7 +520,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(typeof adapter.getSource).toBe("function");
       expect(typeof adapter.open).toBe("function");
@@ -532,7 +532,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const openResult = adapter.open(TestEntity);
       expect(openResult).toBeInstanceOf(Promise);
@@ -552,7 +552,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(typeof adapter.getEntityManager).toBe("function");
     });
@@ -562,8 +562,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
     test("should provide meaningful error message when database path is missing", () => {
       process.env.SQLITE_DATABASE_PATH = "";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       try {
         adapter.getSource();
@@ -585,8 +585,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         synchronize: true,
         entities: [TestEntity],
         enableWAL: false,
-      } as unknown as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      } as unknown as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       try {
         adapter.getSource();
@@ -605,8 +605,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
     test("should handle missing SQLITE_DATABASE_PATH gracefully", () => {
       delete process.env.SQLITE_DATABASE_PATH;
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(() => {
         adapter.getSource();
@@ -616,8 +616,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
     test("should handle empty string SQLITE_DATABASE_PATH", () => {
       process.env.SQLITE_DATABASE_PATH = "";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       expect(() => {
         adapter.getSource();
@@ -627,8 +627,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
     test("should use SQLITE_DATABASE_PATH when options.database is not provided", () => {
       process.env.SQLITE_DATABASE_PATH = "/tmp/env-db.db";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -637,8 +637,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
     test("should handle whitespace in environment variable", () => {
       process.env.SQLITE_DATABASE_PATH = "  /tmp/env-db.db  ";
 
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -650,7 +650,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -666,7 +666,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         busyTimeout: 15_000,
       };
 
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
       const source = adapter.getSource();
       expect(source).toBeDefined();
     });
@@ -682,7 +682,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         },
       };
 
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
       const source = adapter.getSource();
       expect(source).toBeDefined();
     });
@@ -693,7 +693,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "file:///tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -703,7 +703,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "C:\\Users\\test\\database.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -713,7 +713,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "../databases/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -723,7 +723,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/.hidden-db.sqlite",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -733,7 +733,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/var/lib/app/data/databases/main.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -745,7 +745,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: ":memory:",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -756,7 +756,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
         database: ":memory:",
         entities: [TestEntity],
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const repository = await adapter.open(TestEntity);
       expect(repository).toBeDefined();
@@ -772,8 +772,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options1 = { database: ":memory:" };
       const options2 = { database: ":memory:" };
 
-      const adapter1 = new TypeormSqliteDatabaseAdapter(options1);
-      const adapter2 = new TypeormSqliteDatabaseAdapter(options2);
+      const adapter1 = new TypeormSqliteDatabase(options1);
+      const adapter2 = new TypeormSqliteDatabase(options2);
 
       const source1 = adapter1.getSource();
       const source2 = adapter2.getSource();
@@ -788,7 +788,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/default.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource("/tmp/override.db");
       expect(source).toBeDefined();
@@ -798,7 +798,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -806,8 +806,8 @@ describe("TypeormSqliteDatabaseAdapter", () => {
 
     test("should fall back to environment variable when no parameter or options", () => {
       process.env.SQLITE_DATABASE_PATH = "/tmp/env.db";
-      const options = {} as ITypeormSqliteDatabaseAdapterOptions;
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      const options = {} as ITypeormSqliteDatabaseOptions;
+      adapter = new TypeormSqliteDatabase(options);
 
       const source = adapter.getSource();
       expect(source).toBeDefined();
@@ -817,7 +817,7 @@ describe("TypeormSqliteDatabaseAdapter", () => {
       const options = {
         database: "/tmp/test.db",
       };
-      adapter = new TypeormSqliteDatabaseAdapter(options);
+      adapter = new TypeormSqliteDatabase(options);
 
       const source1 = adapter.getSource();
       const source2 = adapter.getSource();

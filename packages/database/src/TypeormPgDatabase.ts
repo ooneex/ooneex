@@ -1,9 +1,9 @@
 import { DataSource, type EntityManager, type EntityTarget, type ObjectLiteral, type Repository } from "typeorm";
 import type { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions.js";
 import { DatabaseException } from "./DatabaseException";
-import type { ITypeormDatabaseAdapter } from "./types";
+import type { ITypeormDatabase } from "./types";
 
-export class TypeormPgDatabaseAdapter implements ITypeormDatabaseAdapter {
+export class TypeormPgDatabase implements ITypeormDatabase {
   private source: DataSource;
 
   constructor(options: Omit<PostgresConnectionOptions, "type"> = {}) {

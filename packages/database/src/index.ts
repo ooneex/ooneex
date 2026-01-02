@@ -1,7 +1,7 @@
 export { AbstractTypeormSqliteDatabase } from "./AbstractTypeormSqliteDatabase";
 export { DatabaseException } from "./DatabaseException";
 export * from "./decorators";
-export { RedisDatabaseAdapter } from "./RedisDatabaseAdapter";
-export { TypeormPgDatabaseAdapter } from "./TypeormPgDatabaseAdapter";
-export { TypeormSqliteDatabaseAdapter } from "./TypeormSqliteDatabaseAdapter";
+export { RedisDatabase } from "./RedisDatabase";
+export { TypeormPgDatabase } from "./TypeormPgDatabase";
+export { TypeormSqliteDatabase } from "./TypeormSqliteDatabase";
 export * from "./types";

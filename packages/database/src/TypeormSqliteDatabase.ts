@@ -3,7 +3,7 @@ import type { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnec
 import { AbstractTypeormSqliteDatabase } from "./AbstractTypeormSqliteDatabase";
 import { DatabaseException } from "./DatabaseException";
 
-export class TypeormSqliteDatabaseAdapter extends AbstractTypeormSqliteDatabase {
+export class TypeormSqliteDatabase extends AbstractTypeormSqliteDatabase {
   constructor(private readonly options: Omit<SqliteConnectionOptions, "type"> | undefined = undefined) {
     super();
   }

@@ -2,7 +2,7 @@ import type { RedisClient } from "bun";
 import type { EntityTarget, ObjectLiteral, Repository } from "typeorm";
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me
-export type DatabaseClassType = new (...args: any[]) => IDatabase | IRedisDatabaseAdapter | ITypeormDatabaseAdapter;
+export type DatabaseClassType = new (...args: any[]) => IDatabase | IRedisDatabase | ITypeormDatabase;
 
 export type RedisConnectionOptionsType = {
   url?: string;
@@ -28,13 +28,13 @@ export interface IDatabase {
   drop: () => Promise<void>;
 }
 
-export interface IRedisDatabaseAdapter {
+export interface IRedisDatabase {
   open: () => Promise<RedisClient>;
   close: () => Promise<void>;
   drop: () => Promise<void>;
 }
 
-export interface ITypeormDatabaseAdapter {
+export interface ITypeormDatabase {
   open: <Entity extends ObjectLiteral>(entity: EntityTarget<Entity>, database?: string) => Promise<Repository<Entity>>;
   close: () => Promise<void>;
   drop: () => Promise<void>;

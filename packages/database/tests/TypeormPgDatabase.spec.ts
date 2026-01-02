@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { DatabaseException, TypeormPgDatabaseAdapter } from "@/index";
+import { DatabaseException, TypeormPgDatabase } from "@/index";
 
 mock.module("typeorm", () => ({
   DataSource: class MockDataSource {
@@ -43,9 +43,9 @@ class TestEntity {
   name!: string;
 }
 
-describe("TypeormPgDatabaseAdapter", () => {
+describe("TypeormPgDatabase", () => {
   let originalEnv: Record<string, string | undefined>;
-  let adapter: TypeormPgDatabaseAdapter;
+  let adapter: TypeormPgDatabase;
 
   beforeEach(() => {
     // Store original environment variables
@@ -74,10 +74,10 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormPgDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormPgDatabase);
     });
 
     test("should create adapter using DATABASE_URL environment variable", () => {
@@ -92,10 +92,10 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormPgDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormPgDatabase);
     });
 
     test("should prioritize options URL over environment variable", () => {
@@ -111,10 +111,10 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormPgDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormPgDatabase);
     });
 
     test("should throw DatabaseException when no URL is provided", () => {
@@ -129,7 +129,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       }).toThrow(DatabaseException);
     });
 
@@ -144,11 +144,11 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       }).toThrow(DatabaseException);
 
       try {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
@@ -172,7 +172,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       }).toThrow(DatabaseException);
     });
 
@@ -185,7 +185,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       try {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
         expect(true).toBe(false); // Should not reach here
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
@@ -206,7 +206,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
   });
@@ -216,7 +216,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
     });
 
     test("should return DataSource instance", () => {
@@ -240,7 +240,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
     });
 
     test("should initialize DataSource and return repository when not initialized", async () => {
@@ -286,7 +286,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
     });
 
     test("should destroy DataSource when initialized", async () => {
@@ -314,7 +314,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
     });
 
     test("should drop database when DataSource is initialized", async () => {
@@ -337,7 +337,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
     });
 
     test("should return EntityManager from DataSource", () => {
@@ -359,7 +359,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       // Open connection and get repository
       const repository = await adapter.open(TestEntity);
@@ -380,7 +380,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       await adapter.open(TestEntity);
 
@@ -400,7 +400,7 @@ describe("TypeormPgDatabaseAdapter", () => {
         logging: true,
       };
 
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       const repository = await adapter.open(TestEntity);
       expect(repository).toBeDefined();
@@ -414,7 +414,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -423,7 +423,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = { url: longUrl };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -431,7 +431,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       const source = adapter.getSource();
 
@@ -453,7 +453,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       // Check that all required methods exist
       expect(typeof adapter.open).toBe("function");
@@ -465,7 +465,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       // Test open method returns Promise<Repository>
       const openResult = adapter.open(TestEntity);
@@ -488,7 +488,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };
-      adapter = new TypeormPgDatabaseAdapter(options);
+      adapter = new TypeormPgDatabase(options);
 
       // Additional methods not in interface
       expect(typeof adapter.getSource).toBe("function");
@@ -502,7 +502,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       const options = {};
 
       try {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
         expect(true).toBe(false); // Should not reach here
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
@@ -527,7 +527,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       try {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
         expect(true).toBe(false); // Should not reach here
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
@@ -550,7 +550,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       }).toThrow(DatabaseException);
     });
 
@@ -560,7 +560,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -573,7 +573,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        new TypeormPgDatabaseAdapter(options);
+        new TypeormPgDatabase(options);
       }).toThrow(DatabaseException);
     });
 
@@ -586,7 +586,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
   });
@@ -598,7 +598,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
 
       const source = adapter.getSource();
@@ -617,10 +617,10 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
 
-      expect(adapter).toBeInstanceOf(TypeormPgDatabaseAdapter);
+      expect(adapter).toBeInstanceOf(TypeormPgDatabase);
     });
 
     test("should handle complex connection options", () => {
@@ -639,7 +639,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
   });
@@ -651,7 +651,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -661,7 +661,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -671,7 +671,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
 
@@ -681,7 +681,7 @@ describe("TypeormPgDatabaseAdapter", () => {
       };
 
       expect(() => {
-        adapter = new TypeormPgDatabaseAdapter(options);
+        adapter = new TypeormPgDatabase(options);
       }).not.toThrow();
     });
   });

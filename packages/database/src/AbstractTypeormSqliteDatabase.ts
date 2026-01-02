@@ -1,7 +1,7 @@
 import type { DataSource, EntityManager, EntityTarget, ObjectLiteral, Repository } from "typeorm";
-import type { ITypeormDatabaseAdapter } from "./types";
+import type { ITypeormDatabase } from "./types";
 
-export abstract class AbstractTypeormSqliteDatabase implements ITypeormDatabaseAdapter {
+export abstract class AbstractTypeormSqliteDatabase implements ITypeormDatabase {
   protected source: DataSource;
   public abstract getSource(database?: string): DataSource;
 

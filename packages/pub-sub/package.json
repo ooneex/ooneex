@@ -10,9 +10,13 @@
     "package.json"
   ],
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -22,7 +26,13 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@ooneex/container": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "peerDependencies": {}
 }

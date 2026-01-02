@@ -423,6 +423,14 @@
     "packages/pub-sub": {
       "name": "@ooneex/pub-sub",
       "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/container": "workspace:*",
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
     },
     "packages/queue": {
       "name": "@ooneex/queue",

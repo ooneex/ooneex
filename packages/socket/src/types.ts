@@ -1,7 +1,7 @@
 import type { IAnalytics } from "@ooneex/analytics";
 import type { IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
-import type { IDatabase, IRedisDatabaseAdapter } from "@ooneex/database";
+import type { IDatabase, IRedisDatabase } from "@ooneex/database";
 import type { Header } from "@ooneex/http-header";
 import type { RequestConfigType } from "@ooneex/http-request";
 import type { IRequestFile } from "@ooneex/http-request-file";
@@ -33,7 +33,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   permission?: IPermission;
   storage?: IStorage;
   database?: IDatabase;
-  redis?: IRedisDatabaseAdapter;
+  redis?: IRedisDatabase;
   mailer?: IMailer;
   app: {
     url: IAppEnv;

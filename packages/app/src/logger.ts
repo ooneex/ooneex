@@ -44,4 +44,12 @@ export const logger = (loggers: LoggerClassType[], container: IContainer) => ({
       }
     });
   },
+  success: (message: string, data?: Record<string, ScalarType> & LogsEntity) => {
+    loggers.forEach((logger) => {
+      const log = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(logger);
+      if (log) {
+        log.success(message, data);
+      }
+    });
+  },
 });

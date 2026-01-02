@@ -1,4 +1,6 @@
 import { container, EContainerScope } from "@ooneex/container";
+import type { ILogger, LogsEntity } from "@ooneex/logger";
+import type { ScalarType } from "@ooneex/types";
 import { logger as loggerFunc } from "./logger";
 import type { AppConfigType } from "./types";
 
@@ -8,6 +10,8 @@ export class App {
 
     loggers.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
+      const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
+      logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
 

@@ -1,4 +1,4 @@
 export { App } from "./App";
-export * from "./generateRouteDoc";
-export * from "./generateRouteType";
+export { generateRouteDoc } from "./generateRouteDoc";
+export { generateRouteType } from "./generateRouteType";
 export * from "./types";

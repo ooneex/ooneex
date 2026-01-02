@@ -1,13 +1,13 @@
-import { PostHogAdapter } from "@ooneex/analytics";
+import { PostHogAnalytics } from "@ooneex/analytics";
 import { AppEnv, type EnvType } from "@ooneex/app-env";
-import { RedisCacheAdapter } from "@ooneex/cache";
-import { TypeormPgDatabaseAdapter } from "@ooneex/database";
+import { RedisCache } from "@ooneex/cache";
+import { TypeormPgDatabase } from "@ooneex/database";
 import { SqliteLogger, TerminalLogger } from "@ooneex/logger";
 import { NodeMailerAdapter, ResendMailerAdapter } from "@ooneex/mailer";
-import { CloudflareStorageAdapter } from "@ooneex/storage";
+import { CloudflareStorage } from "@ooneex/storage";
 import { App } from "./App";
 
-const database = new TypeormPgDatabaseAdapter({
+const database = new TypeormPgDatabase({
   entities: [],
 });
 
@@ -15,9 +15,9 @@ const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") 
 
 new App({
   loggers: [SqliteLogger, TerminalLogger],
-  analytics: PostHogAdapter,
-  cache: RedisCacheAdapter,
-  storage: CloudflareStorageAdapter,
+  analytics: PostHogAnalytics,
+  cache: RedisCache,
+  storage: CloudflareStorage,
   mailer: appEnv.isLocal ? NodeMailerAdapter : ResendMailerAdapter,
   database,
   env: appEnv,

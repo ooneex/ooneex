@@ -1,2 +1,2 @@
-export * from "./HttpResponse";
+export { HttpResponse } from "./HttpResponse";
 export * from "./types";

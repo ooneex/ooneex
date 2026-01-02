@@ -1,5 +1,5 @@
-export * from "./CacheException";
-export * from "./decorators";
-export * from "./FilesystemCache";
-export * from "./RedisCacheAdapter";
+export { CacheException } from "./CacheException";
+export { decorator } from "./decorators";
+export { FilesystemCache } from "./FilesystemCache";
+export { RedisCache } from "./RedisCache";
 export * from "./types";

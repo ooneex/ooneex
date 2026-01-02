@@ -3,7 +3,7 @@ import { copy } from "bunup/plugins";
 
 export default defineConfig({
   entry: ["src/index.ts"],
-  target: "browser",
+  target: "bun",
   format: ["esm"],
   drop: ["console", "debugger"],
   packages: "external",

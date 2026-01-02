@@ -1,6 +1,6 @@
-export * from "./BadRequestException";
-export * from "./Exception";
-export * from "./MethodNotAllowedException";
-export * from "./NotFoundException";
+export { BadRequestException } from "./BadRequestException";
+export { Exception } from "./Exception";
+export { MethodNotAllowedException } from "./MethodNotAllowedException";
+export { NotFoundException } from "./NotFoundException";
 export * from "./types";
-export * from "./UnauthorizedException";
+export { UnauthorizedException } from "./UnauthorizedException";

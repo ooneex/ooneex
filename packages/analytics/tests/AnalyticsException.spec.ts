@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
-import { AnalyticsException } from "@/index";
+import { AnalyticsException } from "@/AnalyticsException";
 
 describe("AnalyticsException", () => {
   test("should have correct exception name", () => {

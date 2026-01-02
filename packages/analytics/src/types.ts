@@ -6,7 +6,7 @@ export interface IAnalytics<T = any> {
   capture: (options: T) => void;
 }
 
-export type PostHogAdapterCaptureType = {
+export type PostHogCaptureOptionsType = {
   id: string;
   event: string;
   properties?: Record<string, unknown>;

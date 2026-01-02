@@ -1,8 +1,10 @@
 import { PostHog } from "posthog-node";
 import { AnalyticsException } from "./AnalyticsException";
-import type { IAnalytics, PostHogAdapterCaptureType } from "./types";
+import type { IAnalytics, PostHogCaptureOptionsType } from "./types";
 
-export class PostHogAdapter<T extends PostHogAdapterCaptureType = PostHogAdapterCaptureType> implements IAnalytics<T> {
+export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptionsType>
+  implements IAnalytics<T>
+{
   private client: PostHog | null = null;
 
   constructor(options?: { apiKey?: string; host?: string }) {

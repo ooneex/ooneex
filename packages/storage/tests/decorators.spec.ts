@@ -10,7 +10,7 @@ describe("decorator.storage", () => {
     container = new Container();
   });
 
-  test("should register class ending with 'Storage' successfully", () => {
+  test("should register class successfully", () => {
     class TestStorage implements IStorage {
       public setBucket(): IStorage {
         return this;
@@ -226,46 +226,7 @@ describe("decorator.storage", () => {
     expect(instance).toBeInstanceOf(RequestScopedStorage);
   });
 
-  test("should register class with complex name ending in 'Storage'", () => {
-    class CloudflareR2BucketStorage implements IStorage {
-      public setBucket(): IStorage {
-        return this;
-      }
-      public async list(): Promise<string[]> {
-        return [];
-      }
-      public async clearBucket(): Promise<this> {
-        return this;
-      }
-      public async exists(): Promise<boolean> {
-        return false;
-      }
-      public async delete(): Promise<void> {
-        // noop
-      }
-      public async putFile(): Promise<number> {
-        return 0;
-      }
-      public async put(): Promise<number> {
-        return 0;
-      }
-      public async getAsJson<T = unknown>(): Promise<T> {
-        return {} as T;
-      }
-      public async getAsArrayBuffer(): Promise<ArrayBuffer> {
-        return new ArrayBuffer(0);
-      }
-      public getAsStream(): ReadableStream {
-        return new ReadableStream();
-      }
-    }
-
-    expect(() => {
-      decorator.storage()(CloudflareR2BucketStorage);
-    }).not.toThrow();
-  });
-
-  test("should allow retrieving registered Storage class from container", () => {
+  test("should allow retrieving registered storage class from container", () => {
     class RetrievableStorage implements IStorage {
       public readonly name = "retrievable";
 

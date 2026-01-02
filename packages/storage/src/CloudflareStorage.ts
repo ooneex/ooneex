@@ -2,7 +2,7 @@ import type { S3Options } from "bun";
 import { AbstractStorage } from "./AbstractStorage";
 import { StorageException } from "./StorageException";
 
-export class CloudflareStorageAdapter extends AbstractStorage {
+export class CloudflareStorage extends AbstractStorage {
   protected bucket: string;
   private readonly accessKey: string;
   private readonly secretKey: string;

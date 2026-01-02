@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { Exception } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
-import { StorageException } from "@/index";
+
+const { StorageException } = await import("@/StorageException");
 
 describe("StorageException", () => {
   test("should have correct exception name", () => {
@@ -23,7 +24,7 @@ describe("StorageException", () => {
 
   test("should create StorageException with message and data", () => {
     const message = "File upload failed";
-    const data = { bucket: "uploads", key: "file.txt" };
+    const data = { filename: "document.pdf", size: 1024 };
     const exception = new StorageException(message, data);
 
     expect(exception.message).toBe(message);
@@ -43,7 +44,7 @@ describe("StorageException", () => {
 
   test("should inherit all properties from Exception", () => {
     const message = "Storage error";
-    const data = { provider: "s3" };
+    const data = { bucket: "uploads", path: "/images" };
     const exception = new StorageException(message, data);
 
     expect(exception.date).toBeInstanceOf(Date);

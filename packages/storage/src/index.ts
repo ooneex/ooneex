@@ -1,7 +1,7 @@
-export * from "./AbstractStorage";
-export * from "./BunnyStorageAdapter";
-export * from "./CloudflareStorageAdapter";
-export * from "./decorators";
-export * from "./FilesystemStorage";
-export * from "./StorageException";
+export { AbstractStorage } from "./AbstractStorage";
+export { BunnyStorage } from "./BunnyStorage";
+export { CloudflareStorage } from "./CloudflareStorage";
+export { decorator } from "./decorators";
+export { FilesystemStorage } from "./FilesystemStorage";
+export { StorageException } from "./StorageException";
 export * from "./types";

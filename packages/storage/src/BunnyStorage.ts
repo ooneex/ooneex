@@ -22,7 +22,7 @@ interface BunnyFileInfo {
   ReplicatedZones: string | null;
 }
 
-export class BunnyStorageAdapter implements IStorage {
+export class BunnyStorage implements IStorage {
   private bucket = "";
   private readonly accessKey: string;
   private readonly storageZone: string;

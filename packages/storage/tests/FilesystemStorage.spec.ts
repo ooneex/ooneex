@@ -1,506 +1,524 @@
-import { afterAll, afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
-import { mkdir } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
 import { join } from "node:path";
-import { FilesystemStorage, StorageException } from "@/index";
+import { $ } from "bun";
 
-// Mock environment variables
-const mockEnv = {
-  FILESYSTEM_STORAGE_PATH: join(tmpdir(), "ooneex-test-storage"),
-};
+// Mock the decorators module before importing FilesystemStorage
+mock.module("@/decorators", () => ({
+  decorator: {
+    storage: () => () => {
+      // noop
+    },
+  },
+}));
 
-describe("FilesystemStorageAdapter", () => {
-  let originalEnv: Record<string, string | undefined> = {};
-  let testDir: string;
-  const customDirsToCleanup: Set<string> = new Set();
-  const tempFilesToCleanup: Set<string> = new Set();
+// Import after mocking
+const { FilesystemStorage } = await import("@/FilesystemStorage");
+const { StorageException } = await import("@/StorageException");
 
-  beforeEach(async () => {
-    // Store original environment variables
-    originalEnv = {
-      FILESYSTEM_STORAGE_PATH: Bun.env.FILESYSTEM_STORAGE_PATH,
-    };
+async function exists(path: string): Promise<boolean> {
+  const result = await $`test -e ${path}`.quiet().nothrow();
+  return result.exitCode === 0;
+}
 
-    // Set mock environment variables
-    Object.assign(Bun.env, mockEnv);
+async function rmrf(path: string): Promise<void> {
+  await $`rm -rf ${path}`.quiet();
+}
 
-    testDir = join(tmpdir(), "ooneex-test-storage");
-    // Clean up test directory if it exists
-    if (existsSync(testDir)) {
-      await Bun.$`rm -rf ${testDir}`;
-    }
+describe("FilesystemStorage", () => {
+  const testBasePath = "/tmp/filesystem-storage-test";
+  const originalEnv = { ...Bun.env };
+
+  beforeAll(async () => {
+    await rmrf(testBasePath);
+  });
+
+  beforeEach(() => {
+    Bun.env.FILESYSTEM_STORAGE_PATH = testBasePath;
   });
 
   afterEach(async () => {
-    // Restore original environment variables
-    Object.assign(Bun.env, originalEnv);
-
-    // Clean up test directory
-    if (existsSync(testDir)) {
-      await Bun.$`rm -rf ${testDir}`;
-    }
+    Bun.env.FILESYSTEM_STORAGE_PATH = originalEnv.FILESYSTEM_STORAGE_PATH;
+    await rmrf(testBasePath);
   });
 
   afterAll(async () => {
-    // Clean up all custom directories created during tests
-    for (const dir of customDirsToCleanup) {
-      if (existsSync(dir)) {
-        await Bun.$`rm -rf ${dir}`;
-      }
-    }
-
-    // Clean up all temporary files created during tests
-    for (const file of tempFilesToCleanup) {
-      if (existsSync(file)) {
-        await Bun.$`rm -f ${file}`;
-      }
-    }
-
-    // Final cleanup of main test directory
-    if (existsSync(testDir)) {
-      await Bun.$`rm -rf ${testDir}`;
-    }
+    await rmrf(testBasePath);
   });
 
-  describe("Constructor", () => {
-    describe("With Options", () => {
-      test("should create instance with custom base path", () => {
-        const customPath = join(tmpdir(), `ooneex-custom-storage-${Date.now()}`);
-        customDirsToCleanup.add(customPath);
-        const adapter = new FilesystemStorage({ storagePath: customPath });
-
-        expect(adapter).toBeInstanceOf(FilesystemStorage);
-        const adapterOptions = adapter.getOptions();
-        expect(adapterOptions).toMatchObject({
-          accessKeyId: "filesystem",
-          secretAccessKey: "filesystem",
-          endpoint: customPath,
-          region: "local",
-        });
-        expect(adapterOptions.bucket).toBeUndefined();
-        expect(existsSync(customPath)).toBe(true);
-      });
-
-      test("should throw error when basePath is not provided in options", () => {
-        // Temporarily unset the environment variable for this test
-        const originalEnvVar = Bun.env.FILESYSTEM_STORAGE_PATH;
-        delete Bun.env.FILESYSTEM_STORAGE_PATH;
-
-        expect(() => new FilesystemStorage({})).toThrow(StorageException);
-        expect(() => new FilesystemStorage({})).toThrow(
-          "Base path is required. Please provide a base path either through the constructor options or set the FILESYSTEM_STORAGE_PATH environment variable.",
-        );
-
-        // Restore the environment variable
-        if (originalEnvVar !== undefined) {
-          Bun.env.FILESYSTEM_STORAGE_PATH = originalEnvVar;
-        }
-      });
+  describe("constructor", () => {
+    test("should create instance with environment variable", () => {
+      const storage = new FilesystemStorage();
+      expect(storage).toBeInstanceOf(FilesystemStorage);
     });
 
-    describe("With Environment Variables", () => {
-      test("should create instance using environment variables", () => {
-        const adapter = new FilesystemStorage();
+    test("should create instance with constructor options", async () => {
+      const customPath = "/tmp/custom-storage-path";
+      const storage = new FilesystemStorage({ storagePath: customPath });
+      expect(storage).toBeInstanceOf(FilesystemStorage);
 
-        expect(adapter).toBeInstanceOf(FilesystemStorage);
-        expect(adapter.getOptions().endpoint).toBe(join(tmpdir(), "ooneex-test-storage"));
-        expect(existsSync(join(tmpdir(), "ooneex-test-storage"))).toBe(true);
-      });
-
-      test("should throw error when no basePath is provided and no env var is set", () => {
-        delete Bun.env.FILESYSTEM_STORAGE_PATH;
-
-        expect(() => new FilesystemStorage()).toThrow(StorageException);
-        expect(() => new FilesystemStorage()).toThrow(
-          "Base path is required. Please provide a base path either through the constructor options or set the FILESYSTEM_STORAGE_PATH environment variable.",
-        );
-      });
+      // Cleanup
+      await rmrf(customPath);
     });
 
-    describe("Directory Creation", () => {
-      test("should create base directory if it doesn't exist", () => {
-        const customPath = join(tmpdir(), `ooneex-non-existent-dir-${Date.now()}`);
-        customDirsToCleanup.add(customPath);
-        expect(existsSync(customPath)).toBe(false);
+    test("should throw StorageException when base path is missing", () => {
+      delete Bun.env.FILESYSTEM_STORAGE_PATH;
 
-        const adapter = new FilesystemStorage({ storagePath: customPath });
-        void adapter; // Used for side effects (directory creation)
+      expect(() => new FilesystemStorage()).toThrow(StorageException);
+      expect(() => new FilesystemStorage()).toThrow("Base path is required");
+    });
 
-        expect(existsSync(customPath)).toBe(true);
-      });
+    test("should create base directory if it does not exist", async () => {
+      const newPath = "/tmp/new-storage-path-test";
+      await rmrf(newPath);
 
-      test("should handle existing base directory gracefully", async () => {
-        const customPath = join(tmpdir(), `ooneex-existing-dir-${Date.now()}`);
-        customDirsToCleanup.add(customPath);
-        await mkdir(customPath, { recursive: true });
+      new FilesystemStorage({ storagePath: newPath });
 
-        const adapter = new FilesystemStorage({ storagePath: customPath });
+      expect(await exists(newPath)).toBe(true);
 
-        expect(adapter).toBeInstanceOf(FilesystemStorage);
-        expect(existsSync(customPath)).toBe(true);
-      });
+      // Cleanup
+      await rmrf(newPath);
+    });
+
+    test("should prefer constructor options over environment variables", async () => {
+      const customPath = "/tmp/constructor-priority-test";
+      const storage = new FilesystemStorage({ storagePath: customPath });
+      const options = storage.getOptions();
+
+      expect(options.endpoint).toBe(customPath);
+
+      // Cleanup
+      await rmrf(customPath);
     });
   });
 
   describe("getOptions", () => {
-    test("should return correct filesystem options structure", () => {
-      const testStoragePath = join(tmpdir(), "ooneex-test-storage-options");
-      customDirsToCleanup.add(testStoragePath);
-      const adapter = new FilesystemStorage({
-        storagePath: testStoragePath,
-      });
+    test("should return S3Options with filesystem-specific values", () => {
+      const storage = new FilesystemStorage();
+      const options = storage.getOptions();
 
-      const options = adapter.getOptions();
-
-      expect(options).toMatchObject({
-        accessKeyId: "filesystem",
-        secretAccessKey: "filesystem",
-        endpoint: testStoragePath,
-        region: "local",
-      });
-      expect(options.bucket).toBeUndefined();
+      expect(options.accessKeyId).toBe("filesystem");
+      expect(options.secretAccessKey).toBe("filesystem");
+      expect(options.endpoint).toBe(testBasePath);
+      expect(options.region).toBe("local");
     });
 
-    test("should include bucket property after setBucket", () => {
-      const testStoragePath = join(tmpdir(), "ooneex-test-storage-bucket");
-      customDirsToCleanup.add(testStoragePath);
-      const adapter = new FilesystemStorage({
-        storagePath: testStoragePath,
-      });
-
-      adapter.setBucket("test-bucket");
-      const options = adapter.getOptions();
+    test("should return correct bucket after setBucket is called", () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("test-bucket");
+      const options = storage.getOptions();
 
       expect(options.bucket).toBe("test-bucket");
     });
   });
 
   describe("setBucket", () => {
-    test("should set bucket and create directory", () => {
-      const adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
-      const result = adapter.setBucket("test-bucket");
+    test("should set bucket and return this for chaining", () => {
+      const storage = new FilesystemStorage();
+      const result = storage.setBucket("my-bucket");
 
-      expect(result).toBe(adapter); // Method chaining
-      expect(existsSync(join(join(tmpdir(), "ooneex-test-storage"), "test-bucket"))).toBe(true);
+      expect(result).toBe(storage);
     });
 
-    test("should handle existing bucket directory gracefully", async () => {
-      const adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
-      const bucketPath = join(join(tmpdir(), "ooneex-test-storage"), "existing-bucket");
+    test("should create bucket directory if it does not exist", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("new-bucket");
 
-      await mkdir(bucketPath, { recursive: true });
-      expect(existsSync(bucketPath)).toBe(true);
-
-      const result = adapter.setBucket("existing-bucket");
-
-      expect(result).toBe(adapter);
-      expect(existsSync(bucketPath)).toBe(true);
+      const bucketPath = join(testBasePath, "new-bucket");
+      expect(await exists(bucketPath)).toBe(true);
     });
 
-    test("should throw error if bucket name is required for operations", async () => {
-      const adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
+    test("should allow changing bucket", () => {
+      const storage = new FilesystemStorage();
 
-      expect(adapter.list()).rejects.toThrow(StorageException);
-      expect(adapter.exists("test-key")).rejects.toThrow(StorageException);
+      storage.setBucket("first-bucket");
+      expect(storage.getOptions().bucket).toBe("first-bucket");
+
+      storage.setBucket("second-bucket");
+      expect(storage.getOptions().bucket).toBe("second-bucket");
     });
   });
 
-  describe("File Operations", () => {
-    let adapter: FilesystemStorage;
+  describe("list", () => {
+    test("should return empty array for empty bucket", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("empty-bucket");
 
-    beforeEach(() => {
-      adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
-      adapter.setBucket("test-bucket");
+      const files = await storage.list();
+
+      expect(files).toEqual([]);
     });
 
-    describe("put and get operations", () => {
-      test("should store and retrieve string content", async () => {
-        const content = "Hello, World!";
-        const key = "test-file.txt";
+    test("should return list of file names", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("list-bucket");
 
-        const bytesWritten = await adapter.put(key, content);
-        expect(bytesWritten).toBe(content.length);
+      await storage.put("file1.txt", "content1");
+      await storage.put("file2.txt", "content2");
 
-        const retrieved = await adapter.getAsArrayBuffer(key);
-        const retrievedText = new TextDecoder().decode(retrieved);
-        expect(retrievedText).toBe(content);
-      });
+      const files = await storage.list();
 
-      test("should store and retrieve JSON content", async () => {
-        const content = { message: "Hello", count: 42 };
-        const key = "test-data.json";
-
-        await adapter.put(key, JSON.stringify(content));
-        const retrieved = await adapter.getAsJson(key);
-
-        expect(retrieved).toEqual(content);
-      });
-
-      test("should store and retrieve ArrayBuffer content", async () => {
-        const content = new TextEncoder().encode("Binary data");
-        const key = "binary-file.bin";
-
-        const bytesWritten = await adapter.put(key, content.buffer);
-        expect(bytesWritten).toBe(content.buffer.byteLength);
-
-        const retrieved = await adapter.getAsArrayBuffer(key);
-        const retrievedArray = new Uint8Array(retrieved);
-
-        expect(retrievedArray).toEqual(content);
-      });
-
-      test("should store and retrieve Blob content", async () => {
-        const content = new Blob(["Blob content"], { type: "text/plain" });
-        const key = "blob-file.txt";
-
-        const bytesWritten = await adapter.put(key, content);
-        expect(bytesWritten).toBe(content.size);
-
-        const retrieved = await adapter.getAsArrayBuffer(key);
-        const retrievedText = new TextDecoder().decode(retrieved);
-        expect(retrievedText).toBe("Blob content");
-      });
-
-      test("should handle nested directory structures", async () => {
-        const content = "Nested file content";
-        const key = "nested/deep/directory/file.txt";
-
-        await adapter.put(key, content);
-        expect(await adapter.exists(key)).toBe(true);
-
-        const retrieved = await adapter.getAsArrayBuffer(key);
-        const retrievedText = new TextDecoder().decode(retrieved);
-        expect(retrievedText).toBe(content);
-      });
+      expect(files).toContain("file1.txt");
+      expect(files).toContain("file2.txt");
+      expect(files).toHaveLength(2);
     });
 
-    describe("putFile", () => {
-      test("should store file from local path", async () => {
-        // Create a test file
-        const testFilePath = join(tmpdir(), "ooneex-temp-test-file.txt");
-        tempFilesToCleanup.add(testFilePath);
-        const content = "File content from disk";
-        await Bun.write(testFilePath, content);
+    test("should list files in subdirectories with relative paths", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("nested-bucket");
 
-        const key = "uploaded-file.txt";
-        const bytesWritten = await adapter.putFile(key, testFilePath);
+      await storage.put("root.txt", "root content");
+      await storage.put("subdir/nested.txt", "nested content");
+      await storage.put("subdir/deep/deeper.txt", "deeper content");
 
-        expect(bytesWritten).toBe(content.length);
-        expect(await adapter.exists(key)).toBe(true);
+      const files = await storage.list();
 
-        const retrieved = await adapter.getAsArrayBuffer(key);
-        const retrievedText = new TextDecoder().decode(retrieved);
-        expect(retrievedText).toBe(content);
-      });
+      expect(files).toContain("root.txt");
+      expect(files).toContain("subdir/nested.txt");
+      expect(files).toContain("subdir/deep/deeper.txt");
+      expect(files).toHaveLength(3);
     });
 
-    describe("exists", () => {
-      test("should return true for existing files", async () => {
-        const key = "existing-file.txt";
-        await adapter.put(key, "Content");
+    test("should throw StorageException when bucket is not set", async () => {
+      const storage = new FilesystemStorage();
 
-        expect(await adapter.exists(key)).toBe(true);
-      });
-
-      test("should return false for non-existing files", async () => {
-        expect(await adapter.exists("non-existing-file.txt")).toBe(false);
-      });
-    });
-
-    describe("delete", () => {
-      test("should delete existing files", async () => {
-        const key = "file-to-delete.txt";
-        await adapter.put(key, "Content");
-        expect(await adapter.exists(key)).toBe(true);
-
-        await adapter.delete(key);
-        expect(await adapter.exists(key)).toBe(false);
-      });
-
-      test("should handle deleting non-existing files gracefully", async () => {
-        expect(adapter.delete("non-existing-file.txt")).resolves.toBeUndefined();
-      });
-
-      test("should clean up empty parent directories", async () => {
-        const key = "deep/nested/directory/file.txt";
-        await adapter.put(key, "Content");
-
-        const bucketPath = join(join(tmpdir(), "ooneex-test-storage"), "test-bucket");
-        const deepDir = join(bucketPath, "deep", "nested", "directory");
-        expect(existsSync(deepDir)).toBe(true);
-
-        await adapter.delete(key);
-
-        // Parent directories should be cleaned up if empty
-        expect(existsSync(deepDir)).toBe(false);
-        expect(existsSync(join(bucketPath, "deep", "nested"))).toBe(false);
-        expect(existsSync(join(bucketPath, "deep"))).toBe(false);
-      });
-    });
-
-    describe("list", () => {
-      test("should list all files in bucket", async () => {
-        await adapter.put("file1.txt", "Content 1");
-        await adapter.put("file2.txt", "Content 2");
-        await adapter.put("nested/file3.txt", "Content 3");
-
-        const files = await adapter.list();
-        files.sort(); // Sort for predictable testing
-
-        expect(files).toEqual(["file1.txt", "file2.txt", "nested/file3.txt"]);
-      });
-
-      test("should return empty array for empty bucket", async () => {
-        const files = await adapter.list();
-        expect(files).toEqual([]);
-      });
-
-      test("should return empty array for non-existing bucket", async () => {
-        const newAdapter = new FilesystemStorage({
-          storagePath: join(tmpdir(), "ooneex-test-storage"),
-        });
-        newAdapter.setBucket("non-existing-bucket");
-
-        const files = await newAdapter.list();
-        expect(files).toEqual([]);
-      });
-    });
-
-    describe("clearBucket", () => {
-      test("should remove all files from bucket", async () => {
-        await adapter.put("file1.txt", "Content 1");
-        await adapter.put("file2.txt", "Content 2");
-        await adapter.put("nested/file3.txt", "Content 3");
-
-        let files = await adapter.list();
-        expect(files.length).toBe(3);
-
-        const result = await adapter.clearBucket();
-        expect(result).toBe(adapter); // Method chaining
-
-        files = await adapter.list();
-        expect(files).toEqual([]);
-      });
-
-      test("should handle clearing empty bucket gracefully", async () => {
-        const result = await adapter.clearBucket();
-        expect(result).toBe(adapter);
-
-        const files = await adapter.list();
-        expect(files).toEqual([]);
-      });
-
-      test("should handle clearing non-existing bucket gracefully", async () => {
-        const newAdapter = new FilesystemStorage({
-          storagePath: join(tmpdir(), "ooneex-test-storage"),
-        });
-        newAdapter.setBucket("non-existing-bucket");
-
-        const result = await newAdapter.clearBucket();
-        expect(result).toBe(newAdapter);
-      });
-    });
-
-    describe("getAsStream", () => {
-      test("should return readable stream for existing file", async () => {
-        const content = "Stream content";
-        const key = "stream-file.txt";
-
-        await adapter.put(key, content);
-        const stream = adapter.getAsStream(key);
-
-        expect(stream).toBeInstanceOf(ReadableStream);
-
-        // Read from stream
-        const reader = stream.getReader();
-        const chunks: Uint8Array[] = [];
-
-        let done = false;
-        while (!done) {
-          const result = await reader.read();
-          done = result.done;
-          if (result.value) {
-            chunks.push(result.value);
-          }
-        }
-
-        const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
-        const combined = new Uint8Array(totalLength);
-        let offset = 0;
-        for (const chunk of chunks) {
-          combined.set(chunk, offset);
-          offset += chunk.length;
-        }
-
-        const streamContent = new TextDecoder().decode(combined);
-        expect(streamContent).toBe(content);
-      });
-
-      test("should throw error for non-existing file", () => {
-        expect(() => adapter.getAsStream("non-existing-file.txt")).toThrow(StorageException);
-      });
+      expect(storage.list()).rejects.toThrow(StorageException);
+      expect(storage.list()).rejects.toThrow("Bucket name is required");
     });
   });
 
-  describe("Error Handling", () => {
-    let adapter: FilesystemStorage;
+  describe("exists", () => {
+    test("should return true when file exists", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("exists-bucket");
+      await storage.put("existing.txt", "content");
 
-    beforeEach(() => {
-      adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
-      adapter.setBucket("test-bucket");
+      const exists = await storage.exists("existing.txt");
+
+      expect(exists).toBe(true);
     });
 
-    test("should throw StorageException for getAsJson on non-existing file", async () => {
-      expect(adapter.getAsJson("non-existing.json")).rejects.toThrow(StorageException);
+    test("should return false when file does not exist", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("exists-bucket");
+
+      const exists = await storage.exists("non-existent.txt");
+
+      expect(exists).toBe(false);
     });
 
-    test("should throw StorageException for getAsArrayBuffer on non-existing file", async () => {
-      expect(adapter.getAsArrayBuffer("non-existing.bin")).rejects.toThrow(StorageException);
-    });
+    test("should work with files in subdirectories", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("exists-nested-bucket");
+      await storage.put("subdir/file.txt", "content");
 
-    test("should throw StorageException for invalid JSON file", async () => {
-      await adapter.put("invalid.json", "{ invalid json }");
-      expect(adapter.getAsJson("invalid.json")).rejects.toThrow(StorageException);
+      expect(await storage.exists("subdir/file.txt")).toBe(true);
+      expect(await storage.exists("subdir/missing.txt")).toBe(false);
     });
   });
 
-  describe("Integration with AbstractStorage", () => {
-    test("should extend AbstractStorage", () => {
-      const adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
+  describe("put", () => {
+    test("should write string content and return bytes written", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
 
-      expect(adapter).toHaveProperty("setBucket");
-      expect(adapter).toHaveProperty("list");
-      expect(adapter).toHaveProperty("clearBucket");
-      expect(adapter).toHaveProperty("exists");
-      expect(adapter).toHaveProperty("delete");
-      expect(adapter).toHaveProperty("put");
-      expect(adapter).toHaveProperty("putFile");
-      expect(adapter).toHaveProperty("getAsJson");
-      expect(adapter).toHaveProperty("getAsArrayBuffer");
-      expect(adapter).toHaveProperty("getAsStream");
+      const content = "Hello, World!";
+      const bytesWritten = await storage.put("string.txt", content);
+
+      expect(bytesWritten).toBe(content.length);
+      expect(await storage.exists("string.txt")).toBe(true);
     });
 
-    test("should support method chaining with setBucket", () => {
-      const adapter = new FilesystemStorage({
-        storagePath: join(tmpdir(), "ooneex-test-storage"),
-      });
-      const result = adapter.setBucket("chaining-test");
+    test("should write ArrayBuffer content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
 
-      expect(result).toBe(adapter);
-      expect(result).toBeInstanceOf(FilesystemStorage);
+      const buffer = new ArrayBuffer(8);
+      const bytesWritten = await storage.put("arraybuffer.bin", buffer);
+
+      expect(bytesWritten).toBe(8);
+    });
+
+    test("should write SharedArrayBuffer content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      const sharedBuffer = new SharedArrayBuffer(16);
+      const bytesWritten = await storage.put("sharedarraybuffer.bin", sharedBuffer);
+
+      expect(bytesWritten).toBe(16);
+    });
+
+    test("should write Blob content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      const blob = new Blob(["Hello Blob"], { type: "text/plain" });
+      const bytesWritten = await storage.put("blob.txt", blob);
+
+      expect(bytesWritten).toBe(10);
+    });
+
+    test("should write Request content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      const request = new Request("https://example.com", {
+        body: "Request body",
+        method: "POST",
+      });
+      const bytesWritten = await storage.put("request.txt", request);
+
+      expect(bytesWritten).toBe(12);
+    });
+
+    test("should write Response content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      const response = new Response("Response body");
+      const bytesWritten = await storage.put("response.txt", response);
+
+      expect(bytesWritten).toBe(13);
+    });
+
+    test("should create nested directories automatically", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      await storage.put("deep/nested/path/file.txt", "content");
+
+      expect(await storage.exists("deep/nested/path/file.txt")).toBe(true);
+    });
+
+    test("should overwrite existing file", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("put-bucket");
+
+      await storage.put("overwrite.txt", "original");
+      await storage.put("overwrite.txt", "updated");
+
+      const buffer = await storage.getAsArrayBuffer("overwrite.txt");
+      const text = new TextDecoder().decode(buffer);
+
+      expect(text).toBe("updated");
+    });
+  });
+
+  describe("putFile", () => {
+    test("should upload file from local path", async () => {
+      const localPath = "/tmp/local-test-file.txt";
+      await Bun.write(localPath, "Local file content");
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putfile-bucket");
+
+      const bytesWritten = await storage.putFile("remote.txt", localPath);
+
+      expect(bytesWritten).toBe(18);
+      expect(await storage.exists("remote.txt")).toBe(true);
+
+      // Cleanup
+      await Bun.file(localPath).delete();
+    });
+  });
+
+  describe("delete", () => {
+    test("should delete existing file", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("delete-bucket");
+      await storage.put("to-delete.txt", "content");
+
+      expect(await storage.exists("to-delete.txt")).toBe(true);
+
+      await storage.delete("to-delete.txt");
+
+      expect(await storage.exists("to-delete.txt")).toBe(false);
+    });
+
+    test("should not throw when deleting non-existent file", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("delete-bucket");
+
+      expect(storage.delete("non-existent.txt")).resolves.toBeUndefined();
+    });
+
+    test("should clean up empty parent directories", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("delete-cleanup-bucket");
+
+      await storage.put("a/b/c/file.txt", "content");
+      await storage.delete("a/b/c/file.txt");
+
+      const bucketPath = join(testBasePath, "delete-cleanup-bucket");
+      expect(await exists(join(bucketPath, "a/b/c"))).toBe(false);
+      expect(await exists(join(bucketPath, "a/b"))).toBe(false);
+      expect(await exists(join(bucketPath, "a"))).toBe(false);
+    });
+
+    test("should not delete parent directories if they contain other files", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("delete-partial-bucket");
+
+      await storage.put("dir/file1.txt", "content1");
+      await storage.put("dir/file2.txt", "content2");
+
+      await storage.delete("dir/file1.txt");
+
+      expect(await storage.exists("dir/file2.txt")).toBe(true);
+      const bucketPath = join(testBasePath, "delete-partial-bucket");
+      expect(await exists(join(bucketPath, "dir"))).toBe(true);
+    });
+  });
+
+  describe("clearBucket", () => {
+    test("should delete all files in bucket", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("clear-bucket");
+
+      await storage.put("file1.txt", "content1");
+      await storage.put("file2.txt", "content2");
+      await storage.put("subdir/file3.txt", "content3");
+
+      const result = await storage.clearBucket();
+
+      expect(result).toBe(storage);
+
+      const files = await storage.list();
+      expect(files).toHaveLength(0);
+    });
+
+    test("should return this for empty bucket", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("empty-clear-bucket");
+
+      const result = await storage.clearBucket();
+
+      expect(result).toBe(storage);
+    });
+
+    test("should recreate bucket directory after clearing", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("recreate-bucket");
+
+      await storage.put("file.txt", "content");
+      await storage.clearBucket();
+
+      const bucketPath = join(testBasePath, "recreate-bucket");
+      expect(await exists(bucketPath)).toBe(true);
+    });
+  });
+
+  describe("getAsJson", () => {
+    test("should return parsed JSON content", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("json-bucket");
+
+      const data = { name: "Test", value: 42, nested: { key: "value" } };
+      await storage.put("data.json", JSON.stringify(data));
+
+      const result = await storage.getAsJson<typeof data>("data.json");
+
+      expect(result).toEqual(data);
+    });
+
+    test("should throw StorageException when file does not exist", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("json-bucket");
+
+      expect(storage.getAsJson("missing.json")).rejects.toThrow(StorageException);
+      expect(storage.getAsJson("missing.json")).rejects.toThrow("does not exist");
+    });
+
+    test("should throw StorageException for invalid JSON", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("json-bucket");
+
+      await storage.put("invalid.json", "not valid json");
+
+      expect(storage.getAsJson("invalid.json")).rejects.toThrow(StorageException);
+    });
+  });
+
+  describe("getAsArrayBuffer", () => {
+    test("should return file content as ArrayBuffer", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("arraybuffer-bucket");
+
+      const content = new Uint8Array([1, 2, 3, 4, 5]);
+      await storage.put("binary.bin", content.buffer as ArrayBuffer);
+
+      const buffer = await storage.getAsArrayBuffer("binary.bin");
+
+      expect(buffer).toBeInstanceOf(ArrayBuffer);
+      expect(new Uint8Array(buffer)).toEqual(content);
+    });
+
+    test("should throw StorageException when file does not exist", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("arraybuffer-bucket");
+
+      expect(storage.getAsArrayBuffer("missing.bin")).rejects.toThrow(StorageException);
+      expect(storage.getAsArrayBuffer("missing.bin")).rejects.toThrow("does not exist");
+    });
+  });
+
+  describe("getAsStream", () => {
+    test("should return a ReadableStream", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("stream-bucket");
+
+      await storage.put("stream.txt", "stream content");
+
+      const stream = storage.getAsStream("stream.txt");
+
+      expect(stream).toBeInstanceOf(ReadableStream);
+    });
+
+    test("should stream file content correctly", async () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("stream-bucket");
+
+      const content = "This is streamed content";
+      await storage.put("readable.txt", content);
+
+      const stream = storage.getAsStream("readable.txt");
+      const reader = stream.getReader();
+
+      const chunks: Uint8Array[] = [];
+      let result = await reader.read();
+      while (!result.done) {
+        chunks.push(result.value);
+        result = await reader.read();
+      }
+
+      const decoder = new TextDecoder();
+      const readContent = chunks.map((chunk) => decoder.decode(chunk)).join("");
+      expect(readContent).toBe(content);
+    });
+
+    test("should throw StorageException when file does not exist", () => {
+      const storage = new FilesystemStorage();
+      storage.setBucket("stream-bucket");
+
+      expect(() => storage.getAsStream("missing.txt")).toThrow(StorageException);
+      expect(() => storage.getAsStream("missing.txt")).toThrow("does not exist");
+    });
+  });
+
+  describe("IStorage interface compliance", () => {
+    test("should implement all IStorage methods", () => {
+      const storage = new FilesystemStorage();
+
+      expect(typeof storage.setBucket).toBe("function");
+      expect(typeof storage.list).toBe("function");
+      expect(typeof storage.clearBucket).toBe("function");
+      expect(typeof storage.exists).toBe("function");
+      expect(typeof storage.delete).toBe("function");
+      expect(typeof storage.putFile).toBe("function");
+      expect(typeof storage.put).toBe("function");
+      expect(typeof storage.getAsJson).toBe("function");
+      expect(typeof storage.getAsArrayBuffer).toBe("function");
+      expect(typeof storage.getAsStream).toBe("function");
     });
   });
 });

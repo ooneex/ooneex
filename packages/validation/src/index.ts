@@ -1,5 +1,4 @@
 export * from "arktype";
-export * from "./constraints";
 export * from "./types";
-export * from "./utils";
+export { Assert, jsonSchemaToTypeString } from "./utils";
 export { Validation } from "./Validation";

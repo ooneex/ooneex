@@ -1,5 +1,5 @@
 import { inject } from "@ooneex/container";
-import type { ITypeormDatabaseAdapter } from "@ooneex/database";
+import type { ITypeormDatabase } from "@ooneex/database";
 import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
@@ -9,7 +9,7 @@ import { VideoDownloadedEntity } from "../../entities/video/VideoDownloadedEntit
 export class VideoDownloadedRepository {
   constructor(
     @inject("database")
-    private readonly database: ITypeormDatabaseAdapter,
+    private readonly database: ITypeormDatabase,
   ) {}
 
   public async open(): Promise<Repository<VideoDownloadedEntity>> {

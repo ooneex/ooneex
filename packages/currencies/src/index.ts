@@ -1,2 +1,2 @@
-export * from "./constants";
+export { CURRENCIES } from "./constants";
 export * from "./types";

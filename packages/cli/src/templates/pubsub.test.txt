@@ -1,0 +1,38 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}PubSub } from "@/pubsub/{{NAME}}PubSub";
+
+describe("{{NAME}}PubSub", () => {
+  test("should have class name ending with 'PubSub'", () => {
+    expect({{NAME}}PubSub.name.endsWith("PubSub")).toBe(true);
+  });
+
+  test("should have 'getChannel' method", () => {
+    expect({{NAME}}PubSub.prototype.getChannel).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.getChannel).toBe("function");
+  });
+
+  test("should have 'handler' method", () => {
+    expect({{NAME}}PubSub.prototype.handler).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.handler).toBe("function");
+  });
+
+  test("should have 'publish' method", () => {
+    expect({{NAME}}PubSub.prototype.publish).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.publish).toBe("function");
+  });
+
+  test("should have 'subscribe' method", () => {
+    expect({{NAME}}PubSub.prototype.subscribe).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.subscribe).toBe("function");
+  });
+
+  test("should have 'unsubscribe' method", () => {
+    expect({{NAME}}PubSub.prototype.unsubscribe).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.unsubscribe).toBe("function");
+  });
+
+  test("should have 'unsubscribeAll' method", () => {
+    expect({{NAME}}PubSub.prototype.unsubscribeAll).toBeDefined();
+    expect(typeof {{NAME}}PubSub.prototype.unsubscribeAll).toBe("function");
+  });
+});

@@ -1,0 +1,22 @@
+import { inject } from "@ooneex/container";
+import type { ScalarType } from "@ooneex/types";
+import { decorator, PubSub, RedisPubSub } from "@ooneex/pub-sub";
+
+@decorator.pubSub()
+export class {{NAME}}PubSub<Data extends Record<string, ScalarType> = Record<string, ScalarType>> extends PubSub<Data> {
+  constructor(
+    @inject(RedisPubSub)
+    client: RedisPubSub<Data>,
+  ) {
+    super(client);
+  }
+
+  public getChannel(): string {
+    return "{{CHANNEL}}";
+  }
+
+  public async handler(context: { data: Data; channel: string }): Promise<void> {
+    console.log(context);
+    // TODO: Implement handler logic here
+  }
+}

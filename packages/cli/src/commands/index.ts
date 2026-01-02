@@ -13,6 +13,7 @@ export { MakeMiddlewareCommand } from "./MakeMiddlewareCommand";
 export { MakeMigrationCommand } from "./MakeMigrationCommand";
 export { MakeModuleCommand } from "./MakeModuleCommand";
 export { MakePermissionCommand } from "./MakePermissionCommand";
+export { MakePubSubCommand } from "./MakePubSubCommand";
 export { MakeRepositoryCommand } from "./MakeRepositoryCommand";
 export { MakeSeedCommand } from "./MakeSeedCommand";
 export { MakeServiceCommand } from "./MakeServiceCommand";

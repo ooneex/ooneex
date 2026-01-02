@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "@/locales/main.loader.js";
-import { loadLocale } from "wuchale/load-utils";
 import type { LocaleType } from "@ooneex/translation";
+import { loadLocale } from "wuchale/load-utils";
 
 export const useLocale = (initialLocale: LocaleType = "en") => {
   const [locale, setLocaleState] = useState<LocaleType>(initialLocale);

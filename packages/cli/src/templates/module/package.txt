@@ -25,6 +25,7 @@
     "make:middleware": "bunx ooneex make:middleware",
     "make:migration": "bunx ooneex make:migration",
     "make:permission": "bunx ooneex make:permission",
+    "make:pubsub": "bunx ooneex make:pubsub",
     "make:repository": "bunx ooneex make:repository",
     "make:seed": "bunx ooneex make:seed",
     "make:service": "bunx ooneex make:service",

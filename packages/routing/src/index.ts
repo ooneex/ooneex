@@ -1,4 +1,4 @@
-export * from "./decorators";
+export { Route } from "./decorators";
 export { Router } from "./Router";
 export { RouterException } from "./RouterException";
 export * from "./types";

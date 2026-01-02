@@ -588,6 +588,7 @@ export type RouteConfigType = {
   host?: string[];
   roles?: ERole[];
   permission?: PermissionClassType;
+  cache?: boolean;
   isSocket: boolean;
   generate?: {
     doc?: boolean;

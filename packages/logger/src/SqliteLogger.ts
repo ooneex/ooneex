@@ -1,5 +1,4 @@
 import type { IException } from "@ooneex/exception";
-
 import { LogsDatabase } from "./LogsDatabase";
 import { LogsEntity } from "./LogsEntity";
 import { LogsRepository } from "./LogsRepository";

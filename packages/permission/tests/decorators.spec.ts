@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, test } from "bun:test";
+import type { MongoQuery } from "@casl/ability";
 import { Container, EContainerScope } from "@ooneex/container";
+import type { IUser } from "@ooneex/user";
 import { decorator } from "@/decorators";
-import type { IPermission, PermissionActionType, Subjects } from "@/types";
+import type { IPermission, PermissionActionType } from "@/types";
 
 describe("decorator.permission", () => {
   let container: Container;
@@ -225,31 +227,31 @@ describe("decorator.permission", () => {
   });
 
   test("should work with Permission class that has custom subjects", () => {
-    type CustomSubjects = "Article" | "Comment";
-
-    class CustomSubjectPermission implements IPermission<CustomSubjects> {
+    class CustomSubjectPermission implements IPermission {
       public allow(
         _action: PermissionActionType | PermissionActionType[],
-        _subject: (Subjects | CustomSubjects) | (Subjects | CustomSubjects)[],
-      ): this {
+        _subject: string | string[],
+        _conditions?: MongoQuery<Record<string, unknown>>,
+      ): IPermission {
         return this;
       }
       public forbid(
         _action: PermissionActionType | PermissionActionType[],
-        _subject: (Subjects | CustomSubjects) | (Subjects | CustomSubjects)[],
-      ): this {
+        _subject: string | string[],
+        _conditions?: MongoQuery<Record<string, unknown>>,
+      ): IPermission {
         return this;
       }
-      public build(): this {
+      public build(): IPermission {
         return this;
       }
-      public can(_action: PermissionActionType, _subject: Subjects | CustomSubjects): boolean {
+      public can(_action: PermissionActionType, _subject: string, _field?: string): boolean {
         return true;
       }
-      public cannot(_action: PermissionActionType, _subject: Subjects | CustomSubjects): boolean {
+      public cannot(_action: PermissionActionType, _subject: string, _field?: string): boolean {
         return false;
       }
-      public setUserPermissions(): this {
+      public setUserPermissions(_user: IUser | null): IPermission {
         return this;
       }
     }
@@ -266,7 +268,11 @@ describe("decorator.permission", () => {
     class FullPermission implements IPermission {
       private permissions: Map<string, boolean> = new Map();
 
-      public allow(action: PermissionActionType | PermissionActionType[], subject: Subjects | Subjects[]): this {
+      public allow(
+        action: PermissionActionType | PermissionActionType[],
+        subject: string | string[],
+        _conditions?: MongoQuery<Record<string, unknown>>,
+      ): IPermission {
         const actions = Array.isArray(action) ? action : [action];
         const subjects = Array.isArray(subject) ? subject : [subject];
         for (const a of actions) {
@@ -277,7 +283,11 @@ describe("decorator.permission", () => {
         return this;
       }
 
-      public forbid(action: PermissionActionType | PermissionActionType[], subject: Subjects | Subjects[]): this {
+      public forbid(
+        action: PermissionActionType | PermissionActionType[],
+        subject: string | string[],
+        _conditions?: MongoQuery<Record<string, unknown>>,
+      ): IPermission {
         const actions = Array.isArray(action) ? action : [action];
         const subjects = Array.isArray(subject) ? subject : [subject];
         for (const a of actions) {
@@ -288,19 +298,19 @@ describe("decorator.permission", () => {
         return this;
       }
 
-      public build(): this {
+      public build(): IPermission {
         return this;
       }
 
-      public can(action: PermissionActionType, subject: Subjects): boolean {
+      public can(action: PermissionActionType, subject: string, _field?: string): boolean {
         return this.permissions.get(`${action}:${subject}`) ?? false;
       }
 
-      public cannot(action: PermissionActionType, subject: Subjects): boolean {
+      public cannot(action: PermissionActionType, subject: string, _field?: string): boolean {
         return !this.can(action, subject);
       }
 
-      public setUserPermissions(): this {
+      public setUserPermissions(_user: IUser | null): IPermission {
         return this;
       }
     }

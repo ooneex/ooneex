@@ -449,7 +449,7 @@ describe("TypeormPgDatabase", () => {
   });
 
   describe("Interface compliance", () => {
-    test("should implement ITypeormDatabaseAdapter interface", () => {
+    test("should implement ITypeormDatabase interface", () => {
       const options = {
         url: "postgresql://user:password@localhost:5432/testdb",
       };

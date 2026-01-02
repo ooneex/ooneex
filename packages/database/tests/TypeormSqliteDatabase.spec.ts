@@ -516,7 +516,7 @@ describe("TypeormSqliteDatabase", () => {
   });
 
   describe("Interface compliance", () => {
-    test("should implement ITypeormDatabaseAdapter interface", () => {
+    test("should implement ITypeormDatabase interface", () => {
       const options = {
         database: "/tmp/test.db",
       };

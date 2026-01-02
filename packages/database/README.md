@@ -329,10 +329,10 @@ interface IDatabase {
 }
 ```
 
-#### `ITypeormDatabaseAdapter`
+#### `ITypeormDatabase`
 
 ```typescript
-interface ITypeormDatabaseAdapter {
+interface ITypeormDatabase {
   open(entity: any): Promise<any>;
   close(): Promise<void>;
   drop(): Promise<void>;

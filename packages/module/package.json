@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@ooneex/controller": "workspace:*",
-    "@ooneex/cron": "workspace:*",
     "@ooneex/entity": "workspace:*"
   }
 }

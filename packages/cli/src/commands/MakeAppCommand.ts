@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase } from "@ooneex/utils";
+import { $ } from "bun";
 import { decorator } from "../decorators";
 import { askDestination } from "../prompts/askDestination";
 import { askName } from "../prompts/askName";
@@ -66,6 +67,45 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     });
 
     await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);
+
+    // Install dependencies
+    const dependencies = [
+      "@ooneex/analytics",
+      "@ooneex/app",
+      "@ooneex/app-env",
+      "@ooneex/cache",
+      "@ooneex/database",
+      "@ooneex/logger",
+      "@ooneex/mailer",
+      "@ooneex/module",
+      "@ooneex/rate-limit",
+      "@ooneex/storage",
+      "reflect-metadata",
+    ];
+
+    const devDependencies = [
+      "@ooneex/cli",
+      "@biomejs/biome",
+      "@commitlint/cli",
+      "@commitlint/config-conventional",
+      "@commitlint/prompt-cli",
+      "@nx/js",
+      "@nx/workspace",
+      "@swc-node/register",
+      "@swc/core",
+      "@swc/helpers",
+      "@types/bun",
+      "@types/node",
+      "@typescript/native-preview",
+      "bunup",
+      "husky",
+      "lint-staged",
+      "nx",
+      "typescript",
+      "undici-types",
+    ];
+
+    await $`cd ${destination} && bun add ${dependencies} && bun add ${devDependencies} -D`;
 
     const logger = new TerminalLogger();
 

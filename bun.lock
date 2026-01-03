@@ -252,6 +252,17 @@
         "@ooneex/types": "workspace:*",
       },
     },
+    "packages/fs": {
+      "name": "@ooneex/fs",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
+      },
+    },
     "packages/gamification": {
       "name": "@ooneex/gamification",
       "version": "0.0.1",
@@ -629,6 +640,17 @@
         "@ooneex/category": "workspace:*",
         "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
+        "@ooneex/types": "workspace:*",
+      },
+    },
+    "packages/youtube": {
+      "name": "@ooneex/youtube",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "ytdlp-nodejs": "^2.3.5",
+      },
+      "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
@@ -1072,6 +1094,8 @@
 
     "@ooneex/folder": ["@ooneex/folder@workspace:packages/folder"],
 
+    "@ooneex/fs": ["@ooneex/fs@workspace:packages/fs"],
+
     "@ooneex/gamification": ["@ooneex/gamification@workspace:packages/gamification"],
 
     "@ooneex/http-header": ["@ooneex/http-header@workspace:packages/http-header"],
@@ -1145,6 +1169,8 @@
     "@ooneex/validation": ["@ooneex/validation@workspace:packages/validation"],
 
     "@ooneex/video": ["@ooneex/video@workspace:packages/video"],
+
+    "@ooneex/youtube": ["@ooneex/youtube@workspace:packages/youtube"],
 
     "@oxc-minify/binding-android-arm64": ["@oxc-minify/binding-android-arm64@0.93.0", "", { "os": "android", "cpu": "arm64" }, "sha512-N3j/JoK4hXwQbnyOJoEltM8MEkddWV3XtfYimO6jsMjr5R6QdauKaSVeQHO/lSezB7SFkrMPqr6X7tBfghHiXA=="],
 
@@ -2169,6 +2195,8 @@
     "yocto-queue": ["yocto-queue@1.2.1", "", {}, "sha512-AyeEbWOu/TAXdxlV9wmGcR0+yh2j3vYPGOECcIj2S7MkrLyC7ne+oye2BKTItt0ii2PHk4cDy+95+LshzbXnGg=="],
 
     "yoctocolors-cjs": ["yoctocolors-cjs@2.1.3", "", {}, "sha512-U/PBtDf35ff0D8X8D0jfdzHYEPFxAI7jJlxZXwCSez5M3190m+QobIfh+sWDWSHMCWWJN2AWamkegn6vr6YBTw=="],
+
+    "ytdlp-nodejs": ["ytdlp-nodejs@2.3.5", "", { "bin": { "ytdlp-nodejs": "dist/cli.js" } }, "sha512-7V08DRv8C1K0HxJFvRoaoLYFS/reJ9VJBlaMVhEvdi2IsYK/9Hae1Mah65Y+bhk3RAmx7G9eTfpOhkj3bp0Zbw=="],
 
     "zlye": ["zlye@0.4.4", "", { "dependencies": { "picocolors": "^1.1.1" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-fwpeC841X3ElOLYRMKXbwX29pitNrsm6nRNvEhDMrRXDl3BhR2i03Bkr0GNrpyYgZJuEzUsBylXAYzgGPXXOCQ=="],
 

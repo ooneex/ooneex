@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { CronAdapter } from "@/CronAdapter";
+import { Cron } from "@/Cron";
 import type { CronTimeType, ICron } from "@/types";
 
-class TestCronAdapter extends CronAdapter {
+class TestCronAdapter extends Cron {
   public jobCallCount = 0;
   private time: CronTimeType;
   private readonly timeZone: string | null;

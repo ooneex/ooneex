@@ -4,7 +4,7 @@ import { CronException } from "./CronException";
 import { convertToCrontab } from "./helper";
 import type { CronTimeType, ICron } from "./types";
 
-export abstract class CronAdapter implements ICron {
+export abstract class Cron implements ICron {
   private cronJob: CronJob | null = null;
 
   public abstract getTime(): CronTimeType;

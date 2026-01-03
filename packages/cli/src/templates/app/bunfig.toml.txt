@@ -1,0 +1,25 @@
+[test]
+coverage = true
+
+[workspace]
+packages = ["modules/*"]
+
+[install]
+hoistPattern = [
+  "@biomejs/biome",
+  "@nx/js",
+  "@swc-node/register",
+  "@swc/core",
+  "@swc/helpers",
+  "@types/bun",
+  "husky",
+  "nx",
+  "typescript",
+  "@typescript/native-preview",
+  "undici-types",
+]
+external = false
+buildDependencies = [
+  "@swc/core",
+  "nx",
+]

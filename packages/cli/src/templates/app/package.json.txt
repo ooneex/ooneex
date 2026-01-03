@@ -1,0 +1,46 @@
+{
+  "name": "{{NAME}}",
+  "module": "index.ts",
+  "private": true,
+  "scripts": {
+    "graph": "bunx nx graph",
+    "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
+    "graph:affected": "bunx nx graph --affected",
+    "build": "bunx nx run-many -t build --output-style=stream --verbose",
+    "test": "bunx nx run-many -t test --output-style=stream --verbose",
+    "fmt": "bunx biome check --write",
+    "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
+    "commit": "bunx commit",
+    "prepare": "husky"
+  },
+  "type": "module",
+  "workspaces": [
+    "modules/*",
+  ],
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.7",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@commitlint/prompt-cli": "^20.2.0",
+    "@nx/js": "^22.2.0",
+    "@nx/workspace": "^22.2.0",
+    "@swc-node/register": "^1.11.1",
+    "@swc/core": "^1.15.3",
+    "@swc/helpers": "~0.5.17",
+    "@types/bun": "latest",
+    "@types/node": "^24.10.3",
+    "bunup": "^0.16.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "nx": "22.0.2",
+    "undici-types": "^7.16.0",
+    "@typescript/native-preview": "^7.0.0-dev.20251211.1",
+    "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
+  }
+}

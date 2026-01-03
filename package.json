@@ -1,32 +1,12 @@
 {
   "name": "ooneex",
   "module": "index.ts",
-  "private": true,
-  "scripts": {
-    "graph": "bunx nx graph",
-    "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
-    "graph:affected": "bunx nx graph --affected",
-    "build": "bunx nx run-many -t build --output-style=stream --verbose",
-    "test": "bunx nx run-many -t test --output-style=stream --verbose",
-    "fmt": "bunx biome check --write",
-    "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
-    "publish": "bunx nx run-many -t publish --output-style=stream --verbose",
-    "commit": "bunx commit",
-    "prepare": "husky"
-  },
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "enquirer": "^2.4.1",
     "pluralize": "^8.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "reflect-metadata": "^0.2.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.7",
@@ -48,9 +28,27 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "nx": "22.0.2",
+    "typescript": "^5.9.3",
     "undici-types": "^7.16.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
-  }
+  },
+  "private": true,
+  "scripts": {
+    "graph": "bunx nx graph",
+    "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
+    "graph:affected": "bunx nx graph --affected",
+    "build": "bunx nx run-many -t build --output-style=stream --verbose",
+    "test": "bunx nx run-many -t test --output-style=stream --verbose",
+    "fmt": "bunx biome check --write",
+    "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
+    "publish": "bunx nx run-many -t publish --output-style=stream --verbose",
+    "commit": "bunx commit",
+    "prepare": "husky"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ]
 }

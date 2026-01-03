@@ -31,10 +31,8 @@
         "husky": "^9.1.7",
         "lint-staged": "^16.2.7",
         "nx": "22.0.2",
-        "undici-types": "^7.16.0",
-      },
-      "peerDependencies": {
         "typescript": "^5.9.3",
+        "undici-types": "^7.16.0",
       },
     },
     "packages/ai": {

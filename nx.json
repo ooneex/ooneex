@@ -16,12 +16,6 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "publish:pack": {
-      "dependsOn": ["^build"]
-    },
-    "publish:dry": {
-      "dependsOn": ["^build"]
-    },
     "publish": {
       "dependsOn": ["^publish"]
     },

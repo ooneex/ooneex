@@ -1,4 +1,5 @@
 import { container, EContainerScope } from "@ooneex/container";
+import type { ICron } from "@ooneex/cron";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { ScalarType } from "@ooneex/types";
 import { logger as loggerFunc } from "./logger";
@@ -6,7 +7,7 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, analytics, cache, storage, database, env, mailer } = this.config;
+    const { loggers, cronJobs, analytics, cache, storage, database, env, mailer } = this.config;
 
     loggers.forEach((log) => {
       container.add(log, EContainerScope.Singleton);
@@ -14,6 +15,12 @@ export class App {
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
+
+    cronJobs?.forEach((cronJob) => {
+      container.add(cronJob, EContainerScope.Singleton);
+      const cron = container.get<ICron>(cronJob);
+      cron.start();
+    });
 
     if (env) {
       container.addConstant("app.env", env);

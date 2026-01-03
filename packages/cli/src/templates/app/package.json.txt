@@ -15,7 +15,7 @@
   },
   "type": "module",
   "workspaces": [
-    "modules/*",
+    "modules/*"
   ],
   "dependencies": {
     "reflect-metadata": "^0.2.2"

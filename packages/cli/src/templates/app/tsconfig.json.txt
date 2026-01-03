@@ -24,5 +24,6 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "exactOptionalPropertyTypes": true
-  }
+  },
+  "exclude": ["node_modules", ".github", ".husky", ".nx", ".zed", ".vscode"]
 }

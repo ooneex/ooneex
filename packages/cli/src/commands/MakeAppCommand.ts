@@ -8,6 +8,7 @@ import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
 import gitignoreTemplate from "../templates/app/.gitignore.txt";
 import biomeTemplate from "../templates/app/biome.jsonc.txt";
 import bunfigTemplate from "../templates/app/bunfig.toml.txt";
+import indexTemplate from "../templates/app/index.ts.txt";
 import nxTemplate from "../templates/app/nx.json.txt";
 import packageTemplate from "../templates/app/package.json.txt";
 import tsconfigTemplate from "../templates/app/tsconfig.json.txt";
@@ -36,11 +37,11 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       name = await askName({ message: "Enter application name" });
     }
 
-    if (!destination) {
-      destination = await askDestination({ message: "Enter destination path" });
-    }
-
     const kebabName = toKebabCase(name);
+
+    if (!destination) {
+      destination = await askDestination({ message: "Enter destination path", initial: kebabName });
+    }
 
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
 
@@ -54,7 +55,17 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
 
     // Create app module
     const makeModuleCommand = new MakeModuleCommand();
-    await makeModuleCommand.run({ name: "app", cwd: destination, silent: true });
+    await makeModuleCommand.run({
+      name: "app",
+      cwd: destination,
+      silent: true,
+      skipBin: true,
+      skipMigrations: true,
+      skipSeeds: true,
+      bunupPackages: "bundle",
+    });
+
+    await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);
 
     const logger = new TerminalLogger();
 

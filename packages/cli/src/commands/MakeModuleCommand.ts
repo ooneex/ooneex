@@ -17,6 +17,10 @@ type CommandOptionsType = {
   name?: string;
   cwd?: string;
   silent?: boolean;
+  skipBin?: boolean;
+  skipMigrations?: boolean;
+  skipSeeds?: boolean;
+  bunupPackages?: "external" | "bundle";
 };
 
 @decorator.command()
@@ -30,7 +34,14 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    const { cwd = process.cwd(), silent = false } = options;
+    const {
+      cwd = process.cwd(),
+      silent = false,
+      skipBin = false,
+      skipMigrations = false,
+      skipSeeds = false,
+      bunupPackages = "external",
+    } = options;
     let { name } = options;
 
     if (!name) {
@@ -50,13 +61,20 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
     const testContent = testTemplate.replace(/{{NAME}}/g, pascalName);
 
-    await Bun.write(join(moduleDir, "bunup.config.ts"), bunupTemplate);
-    await Bun.write(join(binDir, "migration", "up.ts"), migrationUpTemplate);
-    await Bun.write(join(binDir, "seed", "run.ts"), seedRunTemplate);
+    const bunupContent = bunupTemplate.replace('packages: "external"', `packages: "${bunupPackages}"`);
+    await Bun.write(join(moduleDir, "bunup.config.ts"), bunupContent);
+    if (!skipBin) {
+      await Bun.write(join(binDir, "migration", "up.ts"), migrationUpTemplate);
+      await Bun.write(join(binDir, "seed", "run.ts"), seedRunTemplate);
+    }
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
     await Bun.write(join(srcDir, "index.ts"), indexContent);
-    await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");
-    await Bun.write(join(srcDir, "seeds", "seeds.ts"), "");
+    if (!skipMigrations) {
+      await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");
+    }
+    if (!skipSeeds) {
+      await Bun.write(join(srcDir, "seeds", "seeds.ts"), "");
+    }
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(testsDir, `${pascalName}Module.spec.ts`), testContent);

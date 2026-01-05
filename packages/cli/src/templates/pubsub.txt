@@ -3,7 +3,7 @@ import type { ScalarType } from "@ooneex/types";
 import { decorator, PubSub, RedisPubSub } from "@ooneex/pub-sub";
 
 @decorator.pubSub()
-export class {{NAME}}PubSub<Data extends Record<string, ScalarType> = Record<string, ScalarType>> extends PubSub<Data> {
+export class {{NAME}}Event<Data extends Record<string, ScalarType> = Record<string, ScalarType>> extends PubSub<Data> {
   constructor(
     @inject(RedisPubSub)
     client: RedisPubSub<Data>,
@@ -15,7 +15,7 @@ export class {{NAME}}PubSub<Data extends Record<string, ScalarType> = Record<str
     return "{{CHANNEL}}";
   }
 
-  public async handler(context: { data: Data; channel: string }): Promise<void> {
+  public async handler(context: { data: Data; channel: string; key?: string }): Promise<void> {
     console.log(context);
     // TODO: Implement handler logic here
   }

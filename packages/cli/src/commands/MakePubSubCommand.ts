@@ -19,7 +19,7 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public getDescription(): string {
-    return "Generate a new PubSub class";
+    return "Generate a new PubSub event class";
   }
 
   public async run(options: T): Promise<void> {
@@ -37,27 +37,27 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
 
     const content = template.replace(/{{NAME}}/g, name).replace(/{{CHANNEL}}/g, channel);
 
-    const pubSubLocalDir = join("src", "pubsub");
+    const pubSubLocalDir = join("src", "events");
     const pubSubDir = join(process.cwd(), pubSubLocalDir);
-    const filePath = join(pubSubDir, `${name}PubSub.ts`);
+    const filePath = join(pubSubDir, `${name}Event.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "pubsub");
+    const testsLocalDir = join("tests", "events");
     const testsDir = join(process.cwd(), testsLocalDir);
-    const testFilePath = join(testsDir, `${name}PubSub.spec.ts`);
+    const testFilePath = join(testsDir, `${name}Event.spec.ts`);
     await Bun.write(testFilePath, testContent);
 
     const logger = new TerminalLogger();
 
-    logger.success(`${join(pubSubLocalDir, name)}PubSub.ts created successfully`, undefined, {
+    logger.success(`${join(pubSubLocalDir, name)}Event.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
     });
 
-    logger.success(`${join(testsLocalDir, name)}PubSub.spec.ts created successfully`, undefined, {
+    logger.success(`${join(testsLocalDir, name)}Event.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

@@ -3,6 +3,7 @@ import type { ScalarType } from "@ooneex/types";
 export type PubSubMessageHandlerType<Data extends Record<string, ScalarType> = Record<string, ScalarType>> = (context: {
   data: Data;
   channel: string;
+  key?: string;
 }) => Promise<void> | void;
 
 export type RedisPubSubOptionsType = {
@@ -17,7 +18,7 @@ export type RedisPubSubOptionsType = {
 };
 
 export interface IPubSubClient<Data extends Record<string, ScalarType> = Record<string, ScalarType>> {
-  publish: (config: { channel: string; data: Data }) => Promise<void>;
+  publish: (config: { channel: string; data: Data; key?: string }) => Promise<void>;
   subscribe: (channel: string, handler: PubSubMessageHandlerType<Data>) => Promise<void>;
   unsubscribe: (channel: string) => Promise<void>;
   unsubscribeAll: () => Promise<void>;
@@ -25,8 +26,8 @@ export interface IPubSubClient<Data extends Record<string, ScalarType> = Record<
 
 export interface IPubSub<Data extends Record<string, ScalarType> = Record<string, ScalarType>> {
   getChannel: () => Promise<string> | string;
-  handler: (context: { data: Data; channel: string }) => Promise<void> | void;
-  publish: (data: Data) => Promise<void> | void;
+  handler: (context: { data: Data; channel: string; key?: string }) => Promise<void> | void;
+  publish: (data: Data, key?: string) => Promise<void> | void;
   subscribe: () => Promise<void> | void;
   unsubscribe: () => Promise<void> | void;
   unsubscribeAll: () => Promise<void> | void;

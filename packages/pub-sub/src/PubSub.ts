@@ -7,12 +7,13 @@ export abstract class PubSub<Data extends Record<string, ScalarType> = Record<st
   constructor(protected readonly client: IPubSubClient<Data>) {}
 
   public abstract getChannel(): string | Promise<string>;
-  public abstract handler(context: { data: Data; channel: string }): Promise<void> | void;
+  public abstract handler(context: { data: Data; channel: string; key?: string }): Promise<void> | void;
 
-  public async publish(data: Data): Promise<void> {
+  public async publish(data: Data, key?: string): Promise<void> {
     await this.client.publish({
       channel: await this.getChannel(),
       data,
+      ...(key !== undefined && { key }),
     });
   }
 

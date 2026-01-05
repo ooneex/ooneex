@@ -49,7 +49,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
     }
   }
 
-  public async publish(config: { channel: string; data: Data }): Promise<void> {
+  public async publish(config: { channel: string; data: Data; key?: string }): Promise<void> {
     try {
       await this.connect();
       const message = JSON.stringify(config.data);

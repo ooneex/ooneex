@@ -38,11 +38,12 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -62,11 +63,12 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -90,11 +92,12 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -117,11 +120,12 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -147,11 +151,12 @@ describe("HttpResponse", () => {
 
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: {},
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -178,11 +183,12 @@ describe("HttpResponse", () => {
 
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: true,
         isForbidden: false,
         isNotFound: false,
@@ -220,11 +226,12 @@ describe("HttpResponse", () => {
 
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: {},
         debug: false,
+        done: false,
         isClientError: true,
         isForbidden: false,
         isNotFound: false,
@@ -251,11 +258,12 @@ describe("HttpResponse", () => {
 
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: true,
         isForbidden: false,
         isNotFound: false,
@@ -328,11 +336,12 @@ describe("HttpResponse", () => {
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -371,11 +380,12 @@ describe("HttpResponse", () => {
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: true,
         isForbidden: false,
         isNotFound: false,
@@ -407,11 +417,12 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -486,11 +497,12 @@ describe("HttpResponse", () => {
       const data = await webResponse.json();
       expect(data).toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: { success: true },
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -516,11 +528,12 @@ describe("HttpResponse", () => {
       const data = await webResponse.json();
       expect(data).toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: { message: "switched" },
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -553,11 +566,12 @@ describe("HttpResponse", () => {
       const webResponse = userResponse.get();
       expect(webResponse.json()).resolves.toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: userData,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,
@@ -627,11 +641,12 @@ describe("HttpResponse", () => {
       const data = await webResponse.json();
       expect(data).toEqual({
         app: {
-          env: "",
+          env: "production",
           url: "",
         },
         data: emptyData,
         debug: false,
+        done: false,
         isClientError: false,
         isForbidden: false,
         isNotFound: false,

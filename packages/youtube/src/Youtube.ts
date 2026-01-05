@@ -3,6 +3,7 @@ import type {
   IYoutube,
   YoutubeFormatKeyWordType,
   YoutubeFormatOptionsType,
+  YoutubeOptionsType,
   YoutubePlaylistInfoType,
   YoutubeVideoInfoType,
 } from "./types";
@@ -48,13 +49,42 @@ export class Youtube implements IYoutube {
   /**
    * Creates a new YouTube client instance.
    *
+   * @param options - Optional configuration for binary paths
+   * @throws {YoutubeException} If required binary paths are not configured
+   *
    * @example
    * ```typescript
    * const youtube = new Youtube();
    * ```
+   *
+   * @example With Custom Paths
+   * ```typescript
+   * const youtube = new Youtube({
+   *   binaryPath: "/custom/path/to/yt-dlp",
+   *   ffmpegPath: "/custom/path/to/ffmpeg",
+   * });
+   * ```
    */
-  constructor() {
-    this.ytdlp = new YtDlp();
+  constructor(options: YoutubeOptionsType = {}) {
+    const binaryPath = options.binaryPath || Bun.env.YOUTUBE_YTDLP_PATH;
+    const ffmpegPath = options.ffmpegPath || Bun.env.YOUTUBE_FFMPEG_PATH;
+
+    if (!binaryPath) {
+      throw new YoutubeException(
+        "yt-dlp binary path is required. Please provide it through the constructor options or set the YOUTUBE_YTDLP_PATH environment variable.",
+      );
+    }
+
+    if (!ffmpegPath) {
+      throw new YoutubeException(
+        "ffmpeg binary path is required. Please provide it through the constructor options or set the YOUTUBE_FFMPEG_PATH environment variable.",
+      );
+    }
+
+    this.ytdlp = new YtDlp({
+      binaryPath,
+      ffmpegPath,
+    });
   }
 
   /**

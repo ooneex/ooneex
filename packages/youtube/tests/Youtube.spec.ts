@@ -17,11 +17,16 @@ mock.module("ytdlp-nodejs", () => ({
   },
 }));
 
+const mockOptions = {
+  binaryPath: "/mock/path/to/yt-dlp",
+  ffmpegPath: "/mock/path/to/ffmpeg",
+};
+
 describe("Youtube", () => {
   let youtube: Youtube;
 
   beforeEach(() => {
-    youtube = new Youtube();
+    youtube = new Youtube(mockOptions);
     mockGetInfoAsync.mockClear();
     mockDownloadAsync.mockClear();
     mockGetFileAsync.mockClear();
@@ -32,7 +37,7 @@ describe("Youtube", () => {
 
   describe("instance creation", () => {
     test("should create Youtube instance", () => {
-      const instance = new Youtube();
+      const instance = new Youtube(mockOptions);
       expect(instance).toBeInstanceOf(Youtube);
     });
 

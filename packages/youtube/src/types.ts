@@ -170,6 +170,32 @@ export type YoutubeVideoQualityType =
 export type YoutubeAudioQualityType = "highest" | "lowest";
 
 /**
+ * Configuration options for the YouTube client.
+ *
+ * @example
+ * ```typescript
+ * const options: YoutubeOptionsType = {
+ *   binaryPath: "/usr/local/bin/yt-dlp",
+ *   ffmpegPath: "/usr/local/bin/ffmpeg",
+ * };
+ * const youtube = new Youtube(options);
+ * ```
+ */
+export type YoutubeOptionsType = {
+  /**
+   * Path to the yt-dlp binary.
+   * Falls back to YOUTUBE_YTDLP_PATH environment variable if not provided.
+   */
+  binaryPath?: string;
+
+  /**
+   * Path to the ffmpeg binary.
+   * Falls back to YOUTUBE_FFMPEG_PATH environment variable if not provided.
+   */
+  ffmpegPath?: string;
+};
+
+/**
  * Interface defining the YouTube client API.
  * Provides methods for fetching video info, downloading, and managing media.
  *

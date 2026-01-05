@@ -288,7 +288,7 @@ export interface IFile {
  * import { Directory, type IDirectory } from "@ooneex/fs";
  *
  * function cleanupDir(dir: IDirectory): Promise<void> {
- *   return dir.delete({ recursive: true });
+ *   return dir.rm({ recursive: true });
  * }
  *
  * const dir = new Directory("/tmp/cache");
@@ -354,10 +354,10 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * await dir.create({ recursive: true });
+   * await dir.mkdir({ recursive: true });
    * ```
    */
-  create: (options?: DirectoryCreateOptionsType) => Promise<void>;
+  mkdir: (options?: DirectoryCreateOptionsType) => Promise<void>;
 
   /**
    * Deletes the directory from disk.
@@ -367,10 +367,10 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * await dir.delete({ recursive: true, force: true });
+   * await dir.rm({ recursive: true, force: true });
    * ```
    */
-  delete: (options?: DirectoryDeleteOptionsType) => Promise<void>;
+  rm: (options?: DirectoryDeleteOptionsType) => Promise<void>;
 
   /**
    * Lists the contents of the directory.
@@ -380,10 +380,10 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * const files = await dir.list(); // ["file1.txt", "subdir"]
+   * const files = await dir.ls(); // ["file1.txt", "subdir"]
    * ```
    */
-  list: (options?: DirectoryListOptionsType) => Promise<string[]>;
+  ls: (options?: DirectoryListOptionsType) => Promise<string[]>;
 
   /**
    * Lists the contents of the directory with type information.
@@ -393,11 +393,11 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * const entries = await dir.listWithTypes();
+   * const entries = await dir.lsWithTypes();
    * entries.filter(e => e.isFile());
    * ```
    */
-  listWithTypes: (options?: DirectoryListOptionsType) => Promise<Dirent[]>;
+  lsWithTypes: (options?: DirectoryListOptionsType) => Promise<Dirent[]>;
 
   /**
    * Copies the directory to a destination path.
@@ -408,10 +408,10 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * await dir.copy("/path/to/backup");
+   * await dir.cp("/path/to/backup");
    * ```
    */
-  copy: (destination: string, options?: DirectoryCopyOptionsType) => Promise<void>;
+  cp: (destination: string, options?: DirectoryCopyOptionsType) => Promise<void>;
 
   /**
    * Moves (renames) the directory to a new location.
@@ -421,10 +421,10 @@ export interface IDirectory {
    *
    * @example
    * ```typescript
-   * await dir.move("/path/to/newname");
+   * await dir.mv("/path/to/newname");
    * ```
    */
-  move: (destination: string) => Promise<void>;
+  mv: (destination: string) => Promise<void>;
 
   /**
    * Returns the directory statistics.
@@ -463,7 +463,7 @@ export interface IDirectory {
    * @example
    * ```typescript
    * if (await dir.isEmpty()) {
-   *   await dir.delete();
+   *   await dir.rm();
    * }
    * ```
    */
@@ -481,6 +481,68 @@ export interface IDirectory {
    * ```
    */
   getSize: () => Promise<number>;
+
+  /**
+   * Gets a list of files (not directories) in the directory.
+   *
+   * @param options - Optional configuration for getting files
+   * @returns A promise that resolves to an array of File instances
+   *
+   * @example
+   * ```typescript
+   * // Get immediate files
+   * const files = await dir.getFiles();
+   *
+   * // Get all files recursively
+   * const allFiles = await dir.getFiles({ recursive: true });
+   *
+   * // Get only TypeScript files
+   * const tsFiles = await dir.getFiles({ pattern: /\.ts$/ });
+   * ```
+   */
+  getFiles: (options?: DirectoryGetFilesOptionsType) => Promise<IFile[]>;
+
+  /**
+   * Gets a list of subdirectories (not files) in the directory.
+   *
+   * @param options - Optional configuration for getting directories
+   * @returns A promise that resolves to an array of Directory instances
+   *
+   * @example
+   * ```typescript
+   * // Get immediate subdirectories
+   * const dirs = await dir.getDirectories();
+   *
+   * // Get all subdirectories recursively
+   * const allDirs = await dir.getDirectories({ recursive: true });
+   *
+   * // Get only directories starting with "test"
+   * const testDirs = await dir.getDirectories({ pattern: /^test/ });
+   * ```
+   */
+  getDirectories: (options?: DirectoryGetDirectoriesOptionsType) => Promise<IDirectory[]>;
+
+  /**
+   * Changes to a subdirectory and returns a new Directory instance.
+   *
+   * @param paths - The relative path segments to the subdirectory
+   * @returns A new Directory instance pointing to the subdirectory
+   *
+   * @example
+   * ```typescript
+   * const dir = new Directory("/path/to/project");
+   *
+   * // Navigate to subdirectory
+   * const srcDir = dir.cd("src");
+   *
+   * // Navigate multiple levels with multiple args
+   * const componentsDir = dir.cd("src", "components", "ui");
+   *
+   * // Navigate to parent
+   * const parentDir = dir.cd("..");
+   * ```
+   */
+  cd: (...paths: string[]) => IDirectory;
 }
 
 /**
@@ -664,7 +726,7 @@ export type DirectoryDeleteOptionsType = {
  *
  * @example
  * ```typescript
- * const files = await dir.list({ recursive: true });
+ * const files = await dir.ls({ recursive: true });
  * ```
  */
 export type DirectoryListOptionsType = {
@@ -676,10 +738,86 @@ export type DirectoryListOptionsType = {
    * @example
    * ```typescript
    * // List all files in directory tree
-   * const allFiles = await dir.list({ recursive: true });
+   * const allFiles = await dir.ls({ recursive: true });
    * ```
    */
   recursive?: boolean;
+};
+
+/**
+ * Options for getting files from a directory.
+ *
+ * @example
+ * ```typescript
+ * const tsFiles = await dir.getFiles({ recursive: true, pattern: /\.ts$/ });
+ * ```
+ */
+export type DirectoryGetFilesOptionsType = {
+  /**
+   * Whether to get files recursively from subdirectories.
+   *
+   * @default false
+   *
+   * @example
+   * ```typescript
+   * // Get all files in directory tree
+   * const allFiles = await dir.getFiles({ recursive: true });
+   * ```
+   */
+  recursive?: boolean;
+
+  /**
+   * Regular expression pattern to filter files by name.
+   * Only files matching the pattern will be returned.
+   *
+   * @example
+   * ```typescript
+   * // Get only TypeScript files
+   * const tsFiles = await dir.getFiles({ pattern: /\.ts$/ });
+   *
+   * // Get files starting with "test"
+   * const testFiles = await dir.getFiles({ pattern: /^test/ });
+   * ```
+   */
+  pattern?: RegExp;
+};
+
+/**
+ * Options for getting subdirectories from a directory.
+ *
+ * @example
+ * ```typescript
+ * const srcDirs = await dir.getDirectories({ recursive: true, pattern: /^src/ });
+ * ```
+ */
+export type DirectoryGetDirectoriesOptionsType = {
+  /**
+   * Whether to get directories recursively from subdirectories.
+   *
+   * @default false
+   *
+   * @example
+   * ```typescript
+   * // Get all directories in directory tree
+   * const allDirs = await dir.getDirectories({ recursive: true });
+   * ```
+   */
+  recursive?: boolean;
+
+  /**
+   * Regular expression pattern to filter directories by name.
+   * Only directories matching the pattern will be returned.
+   *
+   * @example
+   * ```typescript
+   * // Get only directories starting with "test"
+   * const testDirs = await dir.getDirectories({ pattern: /^test/ });
+   *
+   * // Get directories ending with "-config"
+   * const configDirs = await dir.getDirectories({ pattern: /-config$/ });
+   * ```
+   */
+  pattern?: RegExp;
 };
 
 /**

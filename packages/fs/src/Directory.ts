@@ -3,15 +3,19 @@ import { watch } from "node:fs";
 import { cp, mkdir, readdir, rename, rm } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { DirectoryException } from "./DirectoryException";
+import { File } from "./File";
 import type {
   DirectoryCopyOptionsType,
   DirectoryCreateOptionsType,
   DirectoryDeleteOptionsType,
+  DirectoryGetDirectoriesOptionsType,
+  DirectoryGetFilesOptionsType,
   DirectoryListOptionsType,
   DirectoryWatchCallbackType,
   DirectoryWatcherType,
   DirectoryWatchOptionsType,
   IDirectory,
+  IFile,
 } from "./types";
 
 /**
@@ -24,14 +28,14 @@ import type {
  * const dir = new Directory("/path/to/directory");
  *
  * // Create directory
- * await dir.create();
+ * await dir.mkdir();
  *
  * // List contents
- * const files = await dir.list();
+ * const files = await dir.ls();
  *
  * // Check if empty
  * if (await dir.isEmpty()) {
- *   await dir.delete();
+ *   await dir.rm();
  * }
  * ```
  */
@@ -111,7 +115,7 @@ export class Directory implements IDirectory {
    * if (await dir.exists()) {
    *   console.log("Directory exists!");
    * } else {
-   *   await dir.create();
+   *   await dir.mkdir();
    * }
    * ```
    */
@@ -137,16 +141,16 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/new/nested/directory");
    *
    * // Create with all parent directories (default behavior)
-   * await dir.create();
+   * await dir.mkdir();
    *
    * // Create with specific permissions
-   * await dir.create({ mode: 0o700 });
+   * await dir.mkdir({ mode: 0o700 });
    *
    * // Create without recursive (fails if parent doesn't exist)
-   * await dir.create({ recursive: false });
+   * await dir.mkdir({ recursive: false });
    * ```
    */
-  public async create(options?: DirectoryCreateOptionsType): Promise<void> {
+  public async mkdir(options?: DirectoryCreateOptionsType): Promise<void> {
     try {
       await mkdir(this.path, {
         recursive: options?.recursive ?? true,
@@ -173,16 +177,16 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/directory");
    *
    * // Delete directory and all contents
-   * await dir.delete();
+   * await dir.rm();
    *
    * // Delete only if empty
-   * await dir.delete({ recursive: false });
+   * await dir.rm({ recursive: false });
    *
    * // Delete without throwing if doesn't exist
-   * await dir.delete({ force: true });
+   * await dir.rm({ force: true });
    * ```
    */
-  public async delete(options?: DirectoryDeleteOptionsType): Promise<void> {
+  public async rm(options?: DirectoryDeleteOptionsType): Promise<void> {
     try {
       await rm(this.path, {
         recursive: options?.recursive ?? true,
@@ -209,15 +213,15 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/directory");
    *
    * // List immediate contents
-   * const files = await dir.list();
+   * const files = await dir.ls();
    * console.log(files); // ["file1.txt", "file2.txt", "subdir"]
    *
    * // List all contents recursively
-   * const allFiles = await dir.list({ recursive: true });
+   * const allFiles = await dir.ls({ recursive: true });
    * console.log(allFiles); // ["file1.txt", "file2.txt", "subdir", "subdir/nested.txt"]
    * ```
    */
-  public async list(options?: DirectoryListOptionsType): Promise<string[]> {
+  public async ls(options?: DirectoryListOptionsType): Promise<string[]> {
     try {
       const entries = await readdir(this.path, {
         recursive: options?.recursive ?? false,
@@ -242,7 +246,7 @@ export class Directory implements IDirectory {
    * @example
    * ```typescript
    * const dir = new Directory("/path/to/directory");
-   * const entries = await dir.listWithTypes();
+   * const entries = await dir.lsWithTypes();
    *
    * for (const entry of entries) {
    *   if (entry.isFile()) {
@@ -255,7 +259,7 @@ export class Directory implements IDirectory {
    * }
    * ```
    */
-  public async listWithTypes(options?: DirectoryListOptionsType): Promise<Dirent[]> {
+  public async lsWithTypes(options?: DirectoryListOptionsType): Promise<Dirent[]> {
     try {
       return await readdir(this.path, {
         withFileTypes: true,
@@ -283,16 +287,16 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/source");
    *
    * // Copy directory and all contents
-   * await dir.copy("/path/to/destination");
+   * await dir.cp("/path/to/destination");
    *
    * // Copy with overwrite
-   * await dir.copy("/path/to/destination", { overwrite: true });
+   * await dir.cp("/path/to/destination", { overwrite: true });
    *
    * // Copy only the directory structure (no files)
-   * await dir.copy("/path/to/destination", { recursive: false });
+   * await dir.cp("/path/to/destination", { recursive: false });
    * ```
    */
-  public async copy(destination: string, options?: DirectoryCopyOptionsType): Promise<void> {
+  public async cp(destination: string, options?: DirectoryCopyOptionsType): Promise<void> {
     try {
       await cp(this.path, destination, {
         recursive: options?.recursive ?? true,
@@ -318,13 +322,13 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/oldname");
    *
    * // Rename directory
-   * await dir.move("/path/to/newname");
+   * await dir.mv("/path/to/newname");
    *
    * // Move to different location
-   * await dir.move("/different/path/dirname");
+   * await dir.mv("/different/path/dirname");
    * ```
    */
-  public async move(destination: string): Promise<void> {
+  public async mv(destination: string): Promise<void> {
     try {
       await rename(this.path, destination);
     } catch (error) {
@@ -413,7 +417,7 @@ export class Directory implements IDirectory {
    *
    * if (await dir.isEmpty()) {
    *   console.log("Directory is empty");
-   *   await dir.delete();
+   *   await dir.rm();
    * } else {
    *   console.log("Directory has contents");
    * }
@@ -456,6 +460,156 @@ export class Directory implements IDirectory {
         error: error instanceof Error ? error.message : String(error),
       });
     }
+  }
+
+  /**
+   * Gets a list of files (not directories) in the directory.
+   *
+   * @param options - Optional configuration for getting files
+   * @param options.recursive - Get files recursively from subdirectories (default: false)
+   * @param options.pattern - Regular expression to filter files by name
+   * @returns A promise that resolves to an array of File instances
+   * @throws {DirectoryException} If the files cannot be listed
+   *
+   * @example
+   * ```typescript
+   * const dir = new Directory("/path/to/directory");
+   *
+   * // Get immediate files only
+   * const files = await dir.getFiles();
+   * for (const file of files) {
+   *   console.log(file.getName());
+   * }
+   *
+   * // Get all files recursively
+   * const allFiles = await dir.getFiles({ recursive: true });
+   *
+   * // Get only TypeScript files
+   * const tsFiles = await dir.getFiles({ pattern: /\.ts$/ });
+   *
+   * // Get TypeScript files recursively
+   * const allTsFiles = await dir.getFiles({ recursive: true, pattern: /\.tsx?$/ });
+   * ```
+   */
+  public async getFiles(options?: DirectoryGetFilesOptionsType): Promise<IFile[]> {
+    try {
+      const entries = await readdir(this.path, {
+        withFileTypes: true,
+        recursive: options?.recursive ?? false,
+      });
+
+      let filePaths = entries
+        .filter((entry) => entry.isFile())
+        .map((entry) => {
+          if (entry.parentPath && entry.parentPath !== this.path) {
+            const relativePath = entry.parentPath.slice(this.path.length + 1);
+            return join(relativePath, entry.name);
+          }
+          return entry.name;
+        });
+
+      if (options?.pattern) {
+        const pattern = options.pattern;
+        filePaths = filePaths.filter((filePath) => pattern.test(filePath));
+      }
+
+      return filePaths.map((filePath) => new File(join(this.path, filePath)));
+    } catch (error) {
+      throw new DirectoryException(`Failed to get files from directory: ${this.path}`, {
+        path: this.path,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Gets a list of subdirectories (not files) in the directory.
+   *
+   * @param options - Optional configuration for getting directories
+   * @param options.recursive - Get directories recursively from subdirectories (default: false)
+   * @param options.pattern - Regular expression to filter directories by name
+   * @returns A promise that resolves to an array of Directory instances
+   * @throws {DirectoryException} If the directories cannot be listed
+   *
+   * @example
+   * ```typescript
+   * const dir = new Directory("/path/to/directory");
+   *
+   * // Get immediate subdirectories only
+   * const dirs = await dir.getDirectories();
+   * for (const subdir of dirs) {
+   *   console.log(subdir.getName());
+   * }
+   *
+   * // Get all subdirectories recursively
+   * const allDirs = await dir.getDirectories({ recursive: true });
+   *
+   * // Get only directories starting with "test"
+   * const testDirs = await dir.getDirectories({ pattern: /^test/ });
+   *
+   * // Get directories recursively matching pattern
+   * const srcDirs = await dir.getDirectories({ recursive: true, pattern: /^src/ });
+   * ```
+   */
+  public async getDirectories(options?: DirectoryGetDirectoriesOptionsType): Promise<IDirectory[]> {
+    try {
+      const entries = await readdir(this.path, {
+        withFileTypes: true,
+        recursive: options?.recursive ?? false,
+      });
+
+      let dirPaths = entries
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => {
+          if (entry.parentPath && entry.parentPath !== this.path) {
+            const relativePath = entry.parentPath.slice(this.path.length + 1);
+            return join(relativePath, entry.name);
+          }
+          return entry.name;
+        });
+
+      if (options?.pattern) {
+        const pattern = options.pattern;
+        dirPaths = dirPaths.filter((dirPath) => pattern.test(dirPath));
+      }
+
+      return dirPaths.map((dirPath) => new Directory(join(this.path, dirPath)));
+    } catch (error) {
+      throw new DirectoryException(`Failed to get directories from directory: ${this.path}`, {
+        path: this.path,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Changes to a subdirectory and returns a new Directory instance.
+   *
+   * @param paths - The relative path segments to the subdirectory
+   * @returns A new Directory instance pointing to the subdirectory
+   *
+   * @example
+   * ```typescript
+   * const dir = new Directory("/path/to/project");
+   *
+   * // Navigate to subdirectory
+   * const srcDir = dir.cd("src");
+   * console.log(srcDir.getPath()); // "/path/to/project/src"
+   *
+   * // Navigate multiple levels with multiple args
+   * const componentsDir = dir.cd("src", "components", "ui");
+   * console.log(componentsDir.getPath()); // "/path/to/project/src/components/ui"
+   *
+   * // Navigate to parent
+   * const parentDir = dir.cd("..");
+   * console.log(parentDir.getPath()); // "/path/to"
+   *
+   * // Chain navigation
+   * const deepDir = dir.cd("src").cd("components").cd("ui");
+   * ```
+   */
+  public cd(...paths: string[]): IDirectory {
+    return new Directory(join(this.path, ...paths));
   }
 
   private async calculateSize(dirPath: string): Promise<number> {

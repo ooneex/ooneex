@@ -383,11 +383,58 @@ describe("File", () => {
   });
 
   describe("download", () => {
+    let server: ReturnType<typeof Bun.serve>;
+    let baseUrl: string;
+
+    beforeEach(() => {
+      server = Bun.serve({
+        port: 0,
+        fetch(req) {
+          const url = new URL(req.url);
+
+          if (url.pathname === "/text") {
+            return new Response("User-agent: *\nDisallow: /private/", {
+              headers: { "Content-Type": "text/plain" },
+            });
+          }
+
+          if (url.pathname === "/json") {
+            return new Response(JSON.stringify({ slideshow: { title: "Test Slideshow" } }), {
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+
+          if (url.pathname === "/image") {
+            // PNG magic bytes followed by minimal valid PNG data
+            const pngBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+            return new Response(pngBytes, {
+              headers: { "Content-Type": "image/png" },
+            });
+          }
+
+          if (url.pathname === "/status/404") {
+            return new Response("Not Found", { status: 404 });
+          }
+
+          if (url.pathname === "/status/500") {
+            return new Response("Internal Server Error", { status: 500 });
+          }
+
+          return new Response("Not Found", { status: 404 });
+        },
+      });
+      baseUrl = `http://localhost:${server.port}`;
+    });
+
+    afterEach(() => {
+      server.stop();
+    });
+
     test("should download file from URL string", async () => {
       const downloadFile = `${TEST_DIR}/downloaded.txt`;
       const file = new File(downloadFile);
 
-      const bytesWritten = await file.download("https://httpbin.org/robots.txt");
+      const bytesWritten = await file.download(`${baseUrl}/text`);
 
       expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
@@ -399,7 +446,7 @@ describe("File", () => {
       const downloadFile = `${TEST_DIR}/downloaded-url.txt`;
       const file = new File(downloadFile);
 
-      const bytesWritten = await file.download(new URL("https://httpbin.org/robots.txt"));
+      const bytesWritten = await file.download(new URL(`${baseUrl}/text`));
 
       expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
@@ -409,19 +456,19 @@ describe("File", () => {
       const downloadFile = `${TEST_DIR}/downloaded.json`;
       const file = new File(downloadFile);
 
-      await file.download("https://httpbin.org/json");
+      await file.download(`${baseUrl}/json`);
 
       expect(await file.exists()).toBe(true);
       const data = await file.json<{ slideshow: { title: string } }>();
       expect(data.slideshow).toBeDefined();
-      expect(data.slideshow.title).toBeDefined();
+      expect(data.slideshow.title).toBe("Test Slideshow");
     });
 
     test("should download binary file", async () => {
       const downloadFile = `${TEST_DIR}/downloaded.png`;
       const file = new File(downloadFile);
 
-      const bytesWritten = await file.download("https://httpbin.org/image/png");
+      const bytesWritten = await file.download(`${baseUrl}/image`);
 
       expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
@@ -437,14 +484,14 @@ describe("File", () => {
       const downloadFile = `${TEST_DIR}/failed.txt`;
       const file = new File(downloadFile);
 
-      expect(file.download("https://httpbin.org/status/404")).rejects.toThrow(FileException);
+      expect(file.download(`${baseUrl}/status/404`)).rejects.toThrow(FileException);
     });
 
     test("should throw FileException for server error", async () => {
       const downloadFile = `${TEST_DIR}/failed.txt`;
       const file = new File(downloadFile);
 
-      expect(file.download("https://httpbin.org/status/500")).rejects.toThrow(FileException);
+      expect(file.download(`${baseUrl}/status/500`)).rejects.toThrow(FileException);
     });
 
     test("should throw FileException for invalid URL", async () => {
@@ -461,7 +508,7 @@ describe("File", () => {
       await Bun.write(downloadFile, "Original content");
 
       const file = new File(downloadFile);
-      await file.download("https://httpbin.org/robots.txt");
+      await file.download(`${baseUrl}/text`);
 
       const content = await file.text();
       expect(content).not.toBe("Original content");

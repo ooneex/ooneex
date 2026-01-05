@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { Directory, DirectoryException } from "@/index";
+import { Directory, DirectoryException, File } from "@/index";
 
 const TEST_DIR = "/tmp/ooneex-dir-test";
 const SUB_DIR = `${TEST_DIR}/subdir`;
@@ -75,35 +75,35 @@ describe("Directory", () => {
     });
   });
 
-  describe("create", () => {
+  describe("mkdir", () => {
     test("should create a new directory", async () => {
       const newDir = `${TEST_DIR}/newdir`;
       const dir = new Directory(newDir);
-      await dir.create();
+      await dir.mkdir();
       expect(await dir.exists()).toBe(true);
     });
 
     test("should create nested directories with recursive option", async () => {
       const dir = new Directory(NESTED_DIR);
-      await dir.create({ recursive: true });
+      await dir.mkdir({ recursive: true });
       expect(await dir.exists()).toBe(true);
     });
 
     test("should not throw if directory already exists with recursive", async () => {
       const dir = new Directory(TEST_DIR);
-      await dir.create({ recursive: true });
+      await dir.mkdir({ recursive: true });
       expect(await dir.exists()).toBe(true);
     });
   });
 
-  describe("delete", () => {
+  describe("rm", () => {
     test("should delete an empty directory", async () => {
       const emptyDir = `${TEST_DIR}/empty`;
       const dir = new Directory(emptyDir);
-      await dir.create();
+      await dir.mkdir();
       expect(await dir.exists()).toBe(true);
 
-      await dir.delete();
+      await dir.rm();
       expect(await dir.exists()).toBe(false);
     });
 
@@ -111,21 +111,21 @@ describe("Directory", () => {
       const dir = new Directory(SUB_DIR);
       expect(await dir.exists()).toBe(true);
 
-      await dir.delete({ recursive: true });
+      await dir.rm({ recursive: true });
       expect(await dir.exists()).toBe(false);
     });
 
     test("should not throw with force option for non-existent directory", async () => {
       const dir = new Directory(`${TEST_DIR}/nonexistent`);
-      await dir.delete({ force: true });
+      await dir.rm({ force: true });
       expect(await dir.exists()).toBe(false);
     });
   });
 
-  describe("list", () => {
+  describe("ls", () => {
     test("should list directory contents", async () => {
       const dir = new Directory(TEST_DIR);
-      const contents = await dir.list();
+      const contents = await dir.ls();
       expect(contents).toContain("file1.txt");
       expect(contents).toContain("file2.txt");
       expect(contents).toContain("subdir");
@@ -133,20 +133,20 @@ describe("Directory", () => {
 
     test("should list contents recursively", async () => {
       const dir = new Directory(TEST_DIR);
-      const contents = await dir.list({ recursive: true });
+      const contents = await dir.ls({ recursive: true });
       expect(contents.length).toBeGreaterThan(3);
     });
 
     test("should throw for non-existent directory", async () => {
       const dir = new Directory(`${TEST_DIR}/nonexistent`);
-      expect(dir.list()).rejects.toThrow(DirectoryException);
+      expect(dir.ls()).rejects.toThrow(DirectoryException);
     });
   });
 
-  describe("listWithTypes", () => {
+  describe("lsWithTypes", () => {
     test("should list directory contents with type information", async () => {
       const dir = new Directory(TEST_DIR);
-      const entries = await dir.listWithTypes();
+      const entries = await dir.lsWithTypes();
 
       const fileEntry = entries.find((e) => e.name === "file1.txt");
       const dirEntry = entries.find((e) => e.name === "subdir");
@@ -157,22 +157,22 @@ describe("Directory", () => {
 
     test("should list contents recursively with types", async () => {
       const dir = new Directory(TEST_DIR);
-      const entries = await dir.listWithTypes({ recursive: true });
+      const entries = await dir.lsWithTypes({ recursive: true });
       expect(entries.length).toBeGreaterThan(3);
     });
   });
 
-  describe("copy", () => {
+  describe("cp", () => {
     test("should copy directory to destination", async () => {
       const sourceDir = new Directory(SUB_DIR);
       const destPath = `${TEST_DIR}/copied`;
 
-      await sourceDir.copy(destPath);
+      await sourceDir.cp(destPath);
 
       const destDir = new Directory(destPath);
       expect(await destDir.exists()).toBe(true);
 
-      const contents = await destDir.list();
+      const contents = await destDir.ls();
       expect(contents).toContain("nested.txt");
     });
 
@@ -180,19 +180,19 @@ describe("Directory", () => {
       const sourceDir = new Directory(TEST_DIR);
       const destPath = "/tmp/ooneex-dir-test-copy";
 
-      await sourceDir.copy(destPath, { recursive: true });
+      await sourceDir.cp(destPath, { recursive: true });
 
       const destDir = new Directory(destPath);
       expect(await destDir.exists()).toBe(true);
 
-      const contents = await destDir.list();
+      const contents = await destDir.ls();
       expect(contents).toContain("subdir");
 
-      await destDir.delete({ recursive: true });
+      await destDir.rm({ recursive: true });
     });
   });
 
-  describe("move", () => {
+  describe("mv", () => {
     test("should move directory to new location", async () => {
       const moveDir = `${TEST_DIR}/tomove`;
       const destPath = `${TEST_DIR}/moved`;
@@ -202,7 +202,7 @@ describe("Directory", () => {
       await Bun.write(`${moveDir}/file.txt`, "content");
 
       const dir = new Directory(moveDir);
-      await dir.move(destPath);
+      await dir.mv(destPath);
 
       expect(await dir.exists()).toBe(false);
 
@@ -257,7 +257,7 @@ describe("Directory", () => {
     test("should return true for empty directory", async () => {
       const emptyDir = `${TEST_DIR}/empty`;
       const dir = new Directory(emptyDir);
-      await dir.create();
+      await dir.mkdir();
 
       expect(await dir.isEmpty()).toBe(true);
     });
@@ -279,7 +279,7 @@ describe("Directory", () => {
     test("should return 0 for empty directory", async () => {
       const emptyDir = `${TEST_DIR}/empty`;
       const dir = new Directory(emptyDir);
-      await dir.create();
+      await dir.mkdir();
 
       const size = await dir.getSize();
       expect(size).toBe(0);
@@ -293,6 +293,226 @@ describe("Directory", () => {
       const subSize = await subDir.getSize();
 
       expect(totalSize).toBeGreaterThan(subSize);
+    });
+  });
+
+  describe("getFiles", () => {
+    test("should return only files, not directories", async () => {
+      const dir = new Directory(TEST_DIR);
+      const files = await dir.getFiles();
+
+      expect(files.every((f) => f instanceof File)).toBe(true);
+      const names = files.map((f) => f.getName());
+      expect(names).toContain("file1.txt");
+      expect(names).toContain("file2.txt");
+      expect(names).not.toContain("subdir");
+    });
+
+    test("should return files recursively when option is set", async () => {
+      const dir = new Directory(TEST_DIR);
+      const files = await dir.getFiles({ recursive: true });
+
+      expect(files.every((f) => f instanceof File)).toBe(true);
+      const names = files.map((f) => f.getName());
+      expect(names).toContain("file1.txt");
+      expect(names).toContain("file2.txt");
+      expect(names).toContain("nested.txt");
+    });
+
+    test("should filter files by pattern", async () => {
+      await Bun.write(`${TEST_DIR}/script.ts`, "typescript");
+      await Bun.write(`${TEST_DIR}/style.css`, "css");
+
+      const dir = new Directory(TEST_DIR);
+      const txtFiles = await dir.getFiles({ pattern: /\.txt$/ });
+
+      const names = txtFiles.map((f) => f.getName());
+      expect(names).toContain("file1.txt");
+      expect(names).toContain("file2.txt");
+      expect(names).not.toContain("script.ts");
+      expect(names).not.toContain("style.css");
+    });
+
+    test("should filter files recursively by pattern", async () => {
+      await Bun.write(`${SUB_DIR}/code.ts`, "typescript");
+
+      const dir = new Directory(TEST_DIR);
+      const tsFiles = await dir.getFiles({ recursive: true, pattern: /\.ts$/ });
+
+      expect(tsFiles.length).toBe(1);
+      expect(tsFiles[0]?.getName()).toBe("code.ts");
+    });
+
+    test("should return empty array for empty directory", async () => {
+      const emptyDir = `${TEST_DIR}/empty`;
+      const dir = new Directory(emptyDir);
+      await dir.mkdir();
+
+      const files = await dir.getFiles();
+      expect(files).toEqual([]);
+    });
+
+    test("should throw for non-existent directory", async () => {
+      const dir = new Directory(`${TEST_DIR}/nonexistent`);
+      expect(dir.getFiles()).rejects.toThrow(DirectoryException);
+    });
+
+    test("should return empty array when pattern matches nothing", async () => {
+      const dir = new Directory(TEST_DIR);
+      const files = await dir.getFiles({ pattern: /\.xyz$/ });
+
+      expect(files).toEqual([]);
+    });
+
+    test("should return files with correct absolute paths", async () => {
+      const dir = new Directory(TEST_DIR);
+      const files = await dir.getFiles();
+
+      for (const file of files) {
+        expect(file.getPath().startsWith(TEST_DIR)).toBe(true);
+        expect(await file.exists()).toBe(true);
+      }
+    });
+  });
+
+  describe("getDirectories", () => {
+    test("should return only directories, not files", async () => {
+      const dir = new Directory(TEST_DIR);
+      const dirs = await dir.getDirectories();
+
+      expect(dirs.every((d) => d instanceof Directory)).toBe(true);
+      const names = dirs.map((d) => d.getName());
+      expect(names).toContain("subdir");
+      expect(names).not.toContain("file1.txt");
+      expect(names).not.toContain("file2.txt");
+    });
+
+    test("should return directories recursively when option is set", async () => {
+      const { mkdir } = await import("node:fs/promises");
+      await mkdir(`${SUB_DIR}/deeper`, { recursive: true });
+
+      const dir = new Directory(TEST_DIR);
+      const dirs = await dir.getDirectories({ recursive: true });
+
+      expect(dirs.every((d) => d instanceof Directory)).toBe(true);
+      const names = dirs.map((d) => d.getName());
+      expect(names).toContain("subdir");
+      expect(names).toContain("deeper");
+    });
+
+    test("should filter directories by pattern", async () => {
+      const { mkdir } = await import("node:fs/promises");
+      await mkdir(`${TEST_DIR}/test-dir`, { recursive: true });
+      await mkdir(`${TEST_DIR}/other-dir`, { recursive: true });
+
+      const dir = new Directory(TEST_DIR);
+      const testDirs = await dir.getDirectories({ pattern: /^test/ });
+
+      const names = testDirs.map((d) => d.getName());
+      expect(names).toContain("test-dir");
+      expect(names).not.toContain("other-dir");
+      expect(names).not.toContain("subdir");
+    });
+
+    test("should filter directories recursively by pattern", async () => {
+      const { mkdir } = await import("node:fs/promises");
+      await mkdir(`${SUB_DIR}/test-nested`, { recursive: true });
+      await mkdir(`${SUB_DIR}/other-nested`, { recursive: true });
+
+      const dir = new Directory(TEST_DIR);
+      const testDirs = await dir.getDirectories({ recursive: true, pattern: /test-nested$/ });
+
+      expect(testDirs.length).toBe(1);
+      expect(testDirs[0]?.getName()).toBe("test-nested");
+    });
+
+    test("should return empty array for directory with no subdirectories", async () => {
+      const dir = new Directory(SUB_DIR);
+      const dirs = await dir.getDirectories();
+
+      expect(dirs).toEqual([]);
+    });
+
+    test("should throw for non-existent directory", async () => {
+      const dir = new Directory(`${TEST_DIR}/nonexistent`);
+      expect(dir.getDirectories()).rejects.toThrow(DirectoryException);
+    });
+
+    test("should return empty array when pattern matches nothing", async () => {
+      const dir = new Directory(TEST_DIR);
+      const dirs = await dir.getDirectories({ pattern: /^xyz/ });
+
+      expect(dirs).toEqual([]);
+    });
+
+    test("should return directories with correct absolute paths", async () => {
+      const dir = new Directory(TEST_DIR);
+      const dirs = await dir.getDirectories();
+
+      for (const subdir of dirs) {
+        expect(subdir.getPath().startsWith(TEST_DIR)).toBe(true);
+        expect(await subdir.exists()).toBe(true);
+      }
+    });
+  });
+
+  describe("cd", () => {
+    test("should return a new Directory instance for subdirectory", () => {
+      const dir = new Directory(TEST_DIR);
+      const subdir = dir.cd("subdir");
+
+      expect(subdir).toBeInstanceOf(Directory);
+      expect(subdir.getPath()).toBe(`${TEST_DIR}/subdir`);
+    });
+
+    test("should navigate to nested subdirectory with single path", () => {
+      const dir = new Directory(TEST_DIR);
+      const nested = dir.cd("subdir/nested");
+
+      expect(nested.getPath()).toBe(`${TEST_DIR}/subdir/nested`);
+    });
+
+    test("should navigate to nested subdirectory with multiple args", () => {
+      const dir = new Directory(TEST_DIR);
+      const nested = dir.cd("level1", "level2", "level3");
+
+      expect(nested.getPath()).toBe(`${TEST_DIR}/level1/level2/level3`);
+    });
+
+    test("should navigate to parent directory", () => {
+      const dir = new Directory(SUB_DIR);
+      const parent = dir.cd("..");
+
+      expect(parent.getPath()).toBe(TEST_DIR);
+    });
+
+    test("should support chained navigation", () => {
+      const dir = new Directory(TEST_DIR);
+      const deep = dir.cd("level1").cd("level2").cd("level3");
+
+      expect(deep.getPath()).toBe(`${TEST_DIR}/level1/level2/level3`);
+    });
+
+    test("should work with existing subdirectory", async () => {
+      const dir = new Directory(TEST_DIR);
+      const subdir = dir.cd("subdir");
+
+      expect(await subdir.exists()).toBe(true);
+    });
+
+    test("should work with non-existent path (lazy evaluation)", async () => {
+      const dir = new Directory(TEST_DIR);
+      const nonexistent = dir.cd("does-not-exist");
+
+      expect(nonexistent.getPath()).toBe(`${TEST_DIR}/does-not-exist`);
+      expect(await nonexistent.exists()).toBe(false);
+    });
+
+    test("should handle mixed args with parent navigation", () => {
+      const dir = new Directory(TEST_DIR);
+      const result = dir.cd("level1", "level2", "..", "other");
+
+      expect(result.getPath()).toBe(`${TEST_DIR}/level1/other`);
     });
   });
 });

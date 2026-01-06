@@ -228,6 +228,51 @@ export interface PDFUpdateMetadataOptionsType {
 }
 
 /**
+ * Options for extracting images from PDF pages
+ */
+export interface PDFGetImagesOptionsType {
+  /**
+   * Output directory to save the images
+   */
+  outputDir: string;
+  /**
+   * Prefix for the output file names (default: "image")
+   */
+  prefix?: string;
+  /**
+   * Page number to extract images from (1-indexed). If not provided, extracts from all pages
+   */
+  pageNumber?: number;
+}
+
+/**
+ * Extracted image saved to disk
+ */
+export interface PDFExtractedImageType {
+  /**
+   * Page number the image was extracted from (1-indexed)
+   */
+  page: number;
+  /**
+   * Full path to the saved image file
+   */
+  path: string;
+  /**
+   * Width of the image in pixels
+   */
+  width: number;
+  /**
+   * Height of the image in pixels
+   */
+  height: number;
+}
+
+/**
+ * Result of extracting images from PDF pages
+ */
+export type PDFGetImagesResultType = PDFExtractedImageType[];
+
+/**
  * Interface for PDF class
  */
 export interface IPDF {
@@ -289,4 +334,18 @@ export interface IPDF {
    * @returns Result with remaining page count and PDF buffer
    */
   removePages(pages: (number | [number, number])[]): Promise<PDFRemovePagesResultType>;
+
+  /**
+   * Get the text content of a specific page
+   * @param pageNumber - Page number (1-indexed)
+   * @returns Extracted text content from the page
+   */
+  getPageContent(pageNumber: number): Promise<string>;
+
+  /**
+   * Extract images from PDF pages and save to disk
+   * @param options - Options including output directory, optional prefix, and optional page number
+   * @returns Result containing total pages and array of extracted images with file paths
+   */
+  getImages(options: PDFGetImagesOptionsType): Promise<PDFGetImagesResultType>;
 }

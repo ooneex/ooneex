@@ -5,6 +5,9 @@ import type {
   PDFAddPageResultType,
   PDFCreateOptionsType,
   PDFCreateResultType,
+  PDFExtractedImageType,
+  PDFGetImagesOptionsType,
+  PDFGetImagesResultType,
   PDFMetadataResultType,
   PDFOptionsType,
   PDFPageImageResultType,
@@ -26,6 +29,8 @@ describe("PDF", () => {
       expect(typeof pdfInstance.getMetadata).toBe("function");
       expect(typeof pdfInstance.updateMetadata).toBe("function");
       expect(typeof pdfInstance.getPageCount).toBe("function");
+      expect(typeof pdfInstance.getPageContent).toBe("function");
+      expect(typeof pdfInstance.getImages).toBe("function");
       expect(typeof pdfInstance.toImages).toBe("function");
       expect(typeof pdfInstance.getPageImage).toBe("function");
       expect(typeof pdfInstance.split).toBe("function");
@@ -169,6 +174,49 @@ describe("PDF", () => {
       };
       expect(result.remainingPages).toBe(3);
     });
+
+    test("should export PDFGetImagesOptionsType", () => {
+      const options: PDFGetImagesOptionsType = {
+        outputDir: "/tmp/images",
+        prefix: "img",
+        pageNumber: 1,
+      };
+      expect(options.outputDir).toBe("/tmp/images");
+      expect(options.prefix).toBe("img");
+      expect(options.pageNumber).toBe(1);
+    });
+
+    test("should export PDFGetImagesOptionsType without optional fields", () => {
+      const options: PDFGetImagesOptionsType = {
+        outputDir: "/tmp/images",
+      };
+      expect(options.outputDir).toBe("/tmp/images");
+      expect(options.prefix).toBeUndefined();
+      expect(options.pageNumber).toBeUndefined();
+    });
+
+    test("should export PDFExtractedImageType", () => {
+      const image: PDFExtractedImageType = {
+        page: 1,
+        path: "/tmp/images/image-1-1.png",
+        width: 800,
+        height: 600,
+      };
+      expect(image.page).toBe(1);
+      expect(image.path).toBe("/tmp/images/image-1-1.png");
+      expect(image.width).toBe(800);
+      expect(image.height).toBe(600);
+    });
+
+    test("should export PDFGetImagesResultType", () => {
+      const result: PDFGetImagesResultType = [
+        { page: 1, path: "/tmp/images/image-1-1.png", width: 800, height: 600 },
+        { page: 2, path: "/tmp/images/image-2-1.png", width: 1024, height: 768 },
+      ];
+      expect(result).toHaveLength(2);
+      expect(result[0]?.page).toBe(1);
+      expect(result[1]?.page).toBe(2);
+    });
   });
 
   describe("Constructor", () => {
@@ -237,6 +285,114 @@ describe("PDF", () => {
         expect(error).toBeInstanceOf(PDFException);
         expect((error as PDFException).message).toBe("Page number must be a positive integer");
         expect((error as PDFException).data).toEqual({ pageNumber: 1.5 });
+      }
+    });
+  });
+
+  describe("getPageContent validation", () => {
+    test("should throw PDFException for page number less than 1", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getPageContent(0);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 0 });
+      }
+    });
+
+    test("should throw PDFException for negative page number", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getPageContent(-1);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: -1 });
+      }
+    });
+
+    test("should throw PDFException for non-integer page number", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getPageContent(1.5);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 1.5 });
+      }
+    });
+
+    test("should throw PDFException when file does not exist", async () => {
+      const pdf = new PDF("nonexistent.pdf");
+
+      try {
+        await pdf.getPageContent(1);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Failed to get page content");
+      }
+    });
+  });
+
+  describe("getImages validation", () => {
+    const testOptions: PDFGetImagesOptionsType = { outputDir: "/tmp/pdf-test" };
+
+    test("should throw PDFException for page number less than 1", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getImages({ ...testOptions, pageNumber: 0 });
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 0 });
+      }
+    });
+
+    test("should throw PDFException for negative page number", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getImages({ ...testOptions, pageNumber: -1 });
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: -1 });
+      }
+    });
+
+    test("should throw PDFException for non-integer page number", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.getImages({ ...testOptions, pageNumber: 1.5 });
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 1.5 });
+      }
+    });
+
+    test("should throw PDFException when file does not exist", async () => {
+      const pdf = new PDF("nonexistent.pdf");
+
+      try {
+        await pdf.getImages(testOptions);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Failed to extract images from PDF");
       }
     });
   });

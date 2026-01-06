@@ -43,6 +43,7 @@ const Configuration: UserConfig = {
         "http-request",
         "http-request-file",
         "http-response",
+        "html",
         "http-status",
         "image",
         "jwt",

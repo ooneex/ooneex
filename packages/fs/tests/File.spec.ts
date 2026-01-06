@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { afterAll, afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { rm } from "node:fs/promises";
 import { File, FileException } from "@/index";
 
-const TEST_DIR = "/tmp/ooneex-fs-test";
+const TEST_DIR = ".temp/ooneex-fs-test";
 const TEST_FILE = `${TEST_DIR}/test.txt`;
 const TEST_JSON_FILE = `${TEST_DIR}/test.json`;
 
@@ -12,8 +13,7 @@ describe("File", () => {
     await Bun.write(TEST_JSON_FILE, JSON.stringify({ name: "test", value: 42 }));
   });
 
-  afterEach(async () => {
-    const { rm } = await import("node:fs/promises");
+  afterAll(async () => {
     await rm(TEST_DIR, { recursive: true, force: true });
   });
 

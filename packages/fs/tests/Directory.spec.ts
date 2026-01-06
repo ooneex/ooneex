@@ -1,13 +1,14 @@
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { afterAll, beforeEach, describe, expect, test } from "bun:test";
+import { mkdir, rm } from "node:fs/promises";
 import { Directory, DirectoryException, File } from "@/index";
 
-const TEST_DIR = "/tmp/ooneex-dir-test";
+const TEST_DIR = ".temp/ooneex-fs-test";
 const SUB_DIR = `${TEST_DIR}/subdir`;
 const NESTED_DIR = `${TEST_DIR}/level1/level2/level3`;
 
 describe("Directory", () => {
   beforeEach(async () => {
-    const { mkdir } = await import("node:fs/promises");
+    await rm(TEST_DIR, { recursive: true, force: true });
     await mkdir(TEST_DIR, { recursive: true });
     await mkdir(SUB_DIR, { recursive: true });
     await Bun.write(`${TEST_DIR}/file1.txt`, "content1");
@@ -15,8 +16,7 @@ describe("Directory", () => {
     await Bun.write(`${SUB_DIR}/nested.txt`, "nested content");
   });
 
-  afterEach(async () => {
-    const { rm } = await import("node:fs/promises");
+  afterAll(async () => {
     await rm(TEST_DIR, { recursive: true, force: true });
   });
 
@@ -37,7 +37,7 @@ describe("Directory", () => {
   describe("getName", () => {
     test("should return the directory name", () => {
       const dir = new Directory(TEST_DIR);
-      expect(dir.getName()).toBe("ooneex-dir-test");
+      expect(dir.getName()).toBe("ooneex-fs-test");
     });
 
     test("should return name for nested directory", () => {
@@ -54,7 +54,7 @@ describe("Directory", () => {
 
     test("should return parent for root test directory", () => {
       const dir = new Directory(TEST_DIR);
-      expect(dir.getParent()).toBe("/tmp");
+      expect(dir.getParent()).toBe(".temp");
     });
   });
 
@@ -178,7 +178,7 @@ describe("Directory", () => {
 
     test("should copy directory recursively", async () => {
       const sourceDir = new Directory(TEST_DIR);
-      const destPath = "/tmp/ooneex-dir-test-copy";
+      const destPath = ".temp/ooneex-fs-test-copy";
 
       await sourceDir.cp(destPath, { recursive: true });
 

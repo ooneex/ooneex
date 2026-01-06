@@ -1,4 +1,4 @@
-import { basename, dirname, extname } from "node:path";
+import { basename, dirname, extname, join } from "node:path";
 import type { BunFile } from "bun";
 import { Directory } from "./Directory";
 import { FileException } from "./FileException";
@@ -55,7 +55,10 @@ export class File implements IFile {
    * ```
    */
   constructor(path: string | URL, options?: FileOptionsType) {
-    this.path = path instanceof URL ? path.pathname : path;
+    const pathStr = path instanceof URL ? path.pathname : path;
+    const isAbsolute = pathStr.startsWith("/");
+    const normalized = join(...pathStr.split(/[/\\]/));
+    this.path = isAbsolute ? `/${normalized}` : normalized;
     this.options = options;
   }
 

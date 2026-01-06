@@ -55,7 +55,9 @@ export class Directory implements IDirectory {
    * ```
    */
   constructor(path: string) {
-    this.path = path;
+    const isAbsolute = path.startsWith("/");
+    const normalized = join(...path.split(/[/\\]/));
+    this.path = isAbsolute ? `/${normalized}` : normalized;
   }
 
   /**

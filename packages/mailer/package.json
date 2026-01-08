@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/mailer",
-  "description": "",
+  "description": "Email sending service with support for Nodemailer SMTP and Resend API for transactional emails",
   "version": "0.0.1",
   "type": "module",
   "files": [

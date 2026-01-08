@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/seeds",
-  "description": "",
+  "description": "Database seeding utilities for populating initial and test data with logging support",
   "version": "0.0.1",
   "type": "module",
   "files": [

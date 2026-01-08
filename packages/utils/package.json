@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/utils",
-  "description": "",
+  "description": "Common utility functions including unique ID generation with nanoid and helper methods",
   "version": "0.0.8",
   "type": "module",
   "files": [

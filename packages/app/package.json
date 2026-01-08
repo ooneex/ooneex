@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/app",
-  "description": "",
+  "description": "Core application framework for building modern web applications with Bun, providing routing, middleware, caching, logging, and more",
   "version": "0.0.1",
   "type": "module",
   "files": [

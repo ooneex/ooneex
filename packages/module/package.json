@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/module",
-  "description": "",
+  "description": "Module system for organizing application features by grouping controllers, entities, and related components",
   "version": "0.0.1",
   "type": "module",
   "files": [

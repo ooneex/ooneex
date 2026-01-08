@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/gamification",
-  "description": "",
+  "description": "Gamification utilities for interactive learning experiences including multiple choice questions (MCQ) and flashcard systems",
   "version": "0.0.1",
   "type": "module",
   "files": [

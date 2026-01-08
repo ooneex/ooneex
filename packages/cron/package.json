@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cron",
-  "description": "",
+  "description": "Scheduled task runner and cron job management with timezone support for Ooneex applications",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/entity",
-  "description": "",
+  "description": "Base entity classes and decorators for defining database models and data structures",
   "version": "0.0.1",
   "type": "module",
   "files": [

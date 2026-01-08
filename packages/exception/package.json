@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/exception",
-  "description": "",
+  "description": "Type-safe exception handling with HTTP status code integration for structured error management",
   "version": "0.0.1",
   "type": "module",
   "files": [

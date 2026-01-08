@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/status",
-  "description": "",
+  "description": "Status type definitions and utilities for content lifecycle management with color-coded visual indicators",
   "version": "0.0.1",
   "type": "module",
   "files": [

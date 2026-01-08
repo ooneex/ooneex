@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/http-request-file",
-  "description": "",
+  "description": "File upload handling for HTTP requests with MIME type detection and validation utilities",
   "version": "0.0.1",
   "type": "module",
   "files": [

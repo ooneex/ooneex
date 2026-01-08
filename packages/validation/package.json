@@ -33,10 +33,10 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "devDependencies": {},
-  "peerDependencies": {},
   "dependencies": {
+    "@ooneex/app-env": "workspace:*",
     "@ooneex/currencies": "workspace:*",
+    "@ooneex/translation": "workspace:*",
     "arktype": "^2.1.27"
   }
 }

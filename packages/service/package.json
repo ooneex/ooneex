@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/service",
-  "description": "",
+  "description": "Service layer decorator and base classes for business logic encapsulation with dependency injection support",
   "version": "0.0.1",
   "type": "module",
   "files": [

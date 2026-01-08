@@ -31,6 +31,5 @@
   "devDependencies": {
     "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

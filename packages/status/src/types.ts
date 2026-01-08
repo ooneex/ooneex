@@ -66,7 +66,7 @@ export type StatusType = `${EStatus}`;
 
 export interface IStatus extends IBase {
   status: StatusType;
-  color?: IColor;
-  description?: string;
-  reason?: string;
+  color?: IColor | undefined;
+  description?: string | undefined;
+  reason?: string | undefined;
 }

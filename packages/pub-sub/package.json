@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/pub-sub",
   "description": "Publish-subscribe messaging pattern implementation for event-driven communication between application components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",

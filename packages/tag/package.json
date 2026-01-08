@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/tag",
-  "description": "",
+  "description": "Tag type definitions and utilities for content labeling with color-coded visual identification",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/currencies",
-  "description": "",
+  "description": "Currency codes, symbols, and metadata with TypeScript type definitions for international currency handling",
   "version": "0.0.1",
   "type": "module",
   "files": [

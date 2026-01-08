@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/education",
-  "description": "",
+  "description": "Educational domain types and utilities including medical education support",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/database",
   "description": "Database connection and management utilities with TypeORM integration for Ooneex applications",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",

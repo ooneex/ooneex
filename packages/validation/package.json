@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/validation",
-  "description": "",
+  "description": "Type-safe validation framework powered by ArkType with built-in constraints and JSON schema support",
   "version": "0.0.1",
   "type": "module",
   "files": [

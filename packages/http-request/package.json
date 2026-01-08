@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/http-request",
   "description": "HTTP request handling with URL parsing, language detection, headers, and file upload support",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

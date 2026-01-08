@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/migrations",
   "description": "Database migration runner framework with logging and container integration",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

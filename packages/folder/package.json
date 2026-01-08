@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/folder",
-  "description": "",
+  "description": "Type definitions and utilities for folder/directory structures with status and color support",
   "version": "0.0.1",
   "type": "module",
   "files": [

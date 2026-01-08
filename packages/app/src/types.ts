@@ -5,6 +5,7 @@ import type { CronClassType } from "@ooneex/cron";
 import type { IDatabase, ITypeormDatabase } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
+import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
 import type { ModuleType } from "@ooneex/module";
 import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
@@ -20,4 +21,10 @@ export type AppConfigType = {
   cronJobs?: CronClassType[];
   database?: IDatabase | ITypeormDatabase;
   env: IAppEnv;
+  directories: {
+    cwd: string;
+    static?: string;
+  };
+  spa?: Bun.HTMLBundle;
+  middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
 };

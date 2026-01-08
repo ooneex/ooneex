@@ -27,4 +27,7 @@ new App({
   rateLimiter: RedisRateLimiter,
   database,
   env: appEnv,
+  directories: {
+    cwd: process.cwd(),
+  },
 });

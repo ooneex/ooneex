@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/notification",
-  "description": "",
+  "description": "Multi-channel notification system for sending alerts via email, SMS, push notifications, and in-app messages",
   "version": "0.0.1",
   "type": "module",
   "files": [

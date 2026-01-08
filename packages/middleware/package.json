@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/middleware",
-  "description": "",
+  "description": "Middleware framework with decorators for request/response pipeline processing in HTTP and WebSocket contexts",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/rate-limit",
-  "description": "",
+  "description": "Rate limiting middleware for API request throttling and abuse prevention",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/permission",
-  "description": "",
+  "description": "Ability-based access control using CASL for fine-grained permission management",
   "version": "0.0.1",
   "type": "module",
   "files": [

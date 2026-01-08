@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/book",
-  "description": "",
+  "description": "Book entity types and interfaces for managing digital book content with categories, tags, and status tracking",
   "version": "0.0.1",
   "type": "module",
   "files": [

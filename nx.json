@@ -33,7 +33,7 @@
     "projects": ["packages/*"],
     "projectsRelationship": "independent",
     "git": {
-      "commitMessage": "chore(release): {projectName}-v{version}"
+      "commitMessage": "chore(release): Release {projectName}-v{version}"
     },
     "version": {
       "conventionalCommits": true,

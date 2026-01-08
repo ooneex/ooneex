@@ -79,6 +79,7 @@ const Configuration: UserConfig = {
         "validation",
         "video",
         "youtube",
+        "release",
       ],
     ],
     "scope-case": [RuleConfigSeverity.Error, "always", "lower-case"],

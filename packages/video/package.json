@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/video",
-  "description": "",
+  "description": "Video entity types and interfaces for managing video content with categories, tags, and status tracking",
   "version": "0.0.1",
   "type": "module",
   "files": [

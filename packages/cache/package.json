@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/cache",
   "description": "A flexible caching library with support for filesystem and Redis backends, featuring decorators for easy service integration",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",

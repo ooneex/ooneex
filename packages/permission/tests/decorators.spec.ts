@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import type { MongoQuery } from "@casl/ability";
 import { Container, EContainerScope } from "@ooneex/container";
 import type { IUser } from "@ooneex/user";
 import { decorator } from "@/decorators";
@@ -32,6 +31,9 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
+      }
     }
 
     expect(() => {
@@ -58,6 +60,9 @@ describe("decorator.permission", () => {
       }
       public setUserPermissions(): this {
         return this;
+      }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
       }
     }
 
@@ -88,6 +93,9 @@ describe("decorator.permission", () => {
       }
       public setUserPermissions(): this {
         return this;
+      }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
       }
     }
 
@@ -127,6 +135,9 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
+      }
     }
 
     decorator.permission(EContainerScope.Transient)(TransientPermission);
@@ -158,6 +169,9 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
+      }
     }
 
     expect(() => {
@@ -188,6 +202,9 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
+      }
     }
 
     expect(() => {
@@ -217,6 +234,9 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
+      }
     }
 
     decorator.permission()(RetrievablePermission);
@@ -228,21 +248,13 @@ describe("decorator.permission", () => {
 
   test("should work with Permission class that has custom subjects", () => {
     class CustomSubjectPermission implements IPermission {
-      public allow(
-        _action: PermissionActionType | PermissionActionType[],
-        _subject: string | string[],
-        _conditions?: MongoQuery<Record<string, unknown>>,
-      ): IPermission {
+      public allow(): this {
         return this;
       }
-      public forbid(
-        _action: PermissionActionType | PermissionActionType[],
-        _subject: string | string[],
-        _conditions?: MongoQuery<Record<string, unknown>>,
-      ): IPermission {
+      public forbid(): this {
         return this;
       }
-      public build(): IPermission {
+      public build(): this {
         return this;
       }
       public can(_action: PermissionActionType, _subject: string, _field?: string): boolean {
@@ -251,8 +263,11 @@ describe("decorator.permission", () => {
       public cannot(_action: PermissionActionType, _subject: string, _field?: string): boolean {
         return false;
       }
-      public setUserPermissions(_user: IUser | null): IPermission {
+      public setUserPermissions(_user: IUser | null): this {
         return this;
+      }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
       }
     }
 
@@ -266,52 +281,32 @@ describe("decorator.permission", () => {
 
   test("should work with Permission class that implements full interface", () => {
     class FullPermission implements IPermission {
-      private permissions: Map<string, boolean> = new Map();
-
-      public allow(
-        action: PermissionActionType | PermissionActionType[],
-        subject: string | string[],
-        _conditions?: MongoQuery<Record<string, unknown>>,
-      ): IPermission {
-        const actions = Array.isArray(action) ? action : [action];
-        const subjects = Array.isArray(subject) ? subject : [subject];
-        for (const a of actions) {
-          for (const s of subjects) {
-            this.permissions.set(`${a}:${s}`, true);
-          }
-        }
+      public allow(): this {
         return this;
       }
 
-      public forbid(
-        action: PermissionActionType | PermissionActionType[],
-        subject: string | string[],
-        _conditions?: MongoQuery<Record<string, unknown>>,
-      ): IPermission {
-        const actions = Array.isArray(action) ? action : [action];
-        const subjects = Array.isArray(subject) ? subject : [subject];
-        for (const a of actions) {
-          for (const s of subjects) {
-            this.permissions.set(`${a}:${s}`, false);
-          }
-        }
+      public forbid(): this {
         return this;
       }
 
-      public build(): IPermission {
+      public build(): this {
         return this;
       }
 
-      public can(action: PermissionActionType, subject: string, _field?: string): boolean {
-        return this.permissions.get(`${action}:${subject}`) ?? false;
+      public can(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+        return true;
       }
 
-      public cannot(action: PermissionActionType, subject: string, _field?: string): boolean {
-        return !this.can(action, subject);
+      public cannot(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+        return false;
       }
 
-      public setUserPermissions(_user: IUser | null): IPermission {
+      public setUserPermissions(_user: IUser | null): this {
         return this;
+      }
+
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
       }
     }
 
@@ -342,6 +337,9 @@ describe("decorator.permission", () => {
       }
       public setUserPermissions(): this {
         return this;
+      }
+      public check(): Promise<boolean> {
+        return Promise.resolve(true);
       }
     }
 

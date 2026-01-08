@@ -1,34 +1,23 @@
-import { AbilityBuilder, createMongoAbility, type MongoAbility, type MongoQuery } from "@casl/ability";
-import { ERole } from "@ooneex/role";
+import { AbilityBuilder, createMongoAbility, type MongoAbility } from "@casl/ability";
 import type { IUser } from "@ooneex/user";
 import { PermissionException } from "./PermissionException";
 import type { IPermission, PermissionActionType, Subjects } from "./types";
 
-export class Permission<S extends string = string> implements IPermission<S> {
-  private ability: AbilityBuilder<MongoAbility>;
+export abstract class Permission<S extends string = string> implements IPermission<S> {
+  protected ability: AbilityBuilder<MongoAbility>;
   private builtAbility: MongoAbility | null = null;
 
   constructor() {
     this.ability = new AbilityBuilder(createMongoAbility);
   }
 
-  public allow(
-    action: PermissionActionType | PermissionActionType[],
-    subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: MongoQuery<Record<string, unknown>>,
-  ): this {
-    this.ability.can(action as string, subject, conditions);
-    return this;
-  }
+  public abstract allow(): this;
 
-  public forbid(
-    action: PermissionActionType | PermissionActionType[],
-    subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: MongoQuery<Record<string, unknown>>,
-  ): this {
-    this.ability.cannot(action as string, subject, conditions);
-    return this;
-  }
+  public abstract forbid(): this;
+
+  public abstract setUserPermissions(user: IUser | null): this;
+
+  public abstract check(): Promise<boolean>;
 
   public build(): this {
     this.builtAbility = this.ability.build();
@@ -47,44 +36,5 @@ export class Permission<S extends string = string> implements IPermission<S> {
       throw new PermissionException("Permission must be built before checking abilities");
     }
     return this.builtAbility.cannot(action as string, subject as string, field);
-  }
-
-  public setUserPermissions(user: IUser | null): this {
-    if (!user) {
-      return this;
-    }
-
-    const { roles } = user;
-
-    // Check for highest privilege roles first
-    if (roles.includes(ERole.SYSTEM) || roles.includes(ERole.SUPER_ADMIN) || roles.includes(ERole.ADMIN)) {
-      this.allow("manage", "all");
-      return this;
-    }
-
-    // Apply permissions for each role
-    for (const role of roles) {
-      if (role === ERole.USER || role === ERole.MEMBER) {
-        this.allow(["read", "update"], ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.SUBSCRIBER) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.TRIAL_USER) {
-        this.allow("read", ["User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.SUSPENDED) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { id: user.id });
-      }
-
-      if (role === ERole.GUEST) {
-        this.allow("read", ["UserEntity", "AuthUserEntity", "User", "AuthUser"], { public: true });
-      }
-    }
-
-    return this;
   }
 }

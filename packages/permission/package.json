@@ -31,11 +31,9 @@
     "@casl/ability": "^6.7.3",
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/role": "workspace:*"
+    "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/user": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

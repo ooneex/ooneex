@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/fs",
-  "description": "File system utilities for Bun runtime",
+  "description": "File system utilities for reading, writing, and manipulating files and directories with async support and error handling",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/http-response",
-  "description": "",
+  "description": "HTTP response builder with status codes, headers, cookies, and content formatting support",
   "version": "0.0.1",
   "type": "module",
   "files": [

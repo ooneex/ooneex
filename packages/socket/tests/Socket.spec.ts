@@ -268,9 +268,7 @@ describe("Socket", () => {
         isNotFound: false,
         isUnauthorized: false,
         isForbidden: false,
-        debug: false,
         app: {
-          url: "http://localhost:3000",
           env: Environment.DEVELOPMENT,
         },
       };
@@ -417,9 +415,7 @@ describe("Socket", () => {
           isNotFound: false,
           isUnauthorized: false,
           isForbidden: false,
-          debug: false,
           app: {
-            url: "http://localhost:3000",
             env: Environment.DEVELOPMENT,
           },
         });

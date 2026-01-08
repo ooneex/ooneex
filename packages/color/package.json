@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/color",
-  "description": "",
+  "description": "Color types and utilities for consistent theming and styling across Ooneex applications",
   "version": "0.0.1",
   "type": "module",
   "files": [

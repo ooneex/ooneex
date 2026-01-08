@@ -1,0 +1,108 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+const { MakeLoggerCommand } = await import("@/commands/MakeLoggerCommand");
+
+describe("MakeLoggerCommand", () => {
+  let command: InstanceType<typeof MakeLoggerCommand>;
+  let testDir: string;
+  let originalCwd: string;
+
+  beforeEach(() => {
+    command = new MakeLoggerCommand();
+    originalCwd = process.cwd();
+    testDir = join(originalCwd, ".temp", `logger-${Date.now()}`);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    if (existsSync(testDir)) {
+      rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  describe("Command Metadata", () => {
+    test("should return correct command name", () => {
+      expect(command.getName()).toBe("make:logger");
+    });
+
+    test("should return correct description", () => {
+      expect(command.getDescription()).toBe("Generate a new logger class");
+    });
+  });
+
+  describe("run()", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, "src", "loggers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "loggers", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate logger file with correct name", async () => {
+      await command.run({ name: "File" });
+
+      const filePath = join(testDir, "src", "loggers", "FileLogger.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("FileLogger");
+    });
+
+    test("should generate test file for logger", async () => {
+      await command.run({ name: "File" });
+
+      const testFilePath = join(testDir, "tests", "loggers", "FileLogger.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).toContain("FileLogger");
+    });
+
+    test("should normalize name with toPascalCase", async () => {
+      await command.run({ name: "cloud-watch" });
+
+      const filePath = join(testDir, "src", "loggers", "CloudWatchLogger.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should remove Logger suffix if provided", async () => {
+      await command.run({ name: "FileLogger" });
+
+      const filePath = join(testDir, "src", "loggers", "FileLogger.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).not.toContain("FileLoggerLogger");
+    });
+
+    test("should handle lowercase input", async () => {
+      await command.run({ name: "console" });
+
+      const filePath = join(testDir, "src", "loggers", "ConsoleLogger.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should handle snake_case input", async () => {
+      await command.run({ name: "json_file" });
+
+      const filePath = join(testDir, "src", "loggers", "JsonFileLogger.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should replace template placeholders correctly", async () => {
+      await command.run({ name: "Sentry" });
+
+      const filePath = join(testDir, "src", "loggers", "SentryLogger.ts");
+      const content = await Bun.file(filePath).text();
+
+      expect(content).not.toContain("{{NAME}}");
+      expect(content).toContain("Sentry");
+    });
+  });
+});

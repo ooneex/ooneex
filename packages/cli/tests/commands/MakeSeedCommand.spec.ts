@@ -1,0 +1,77 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+const { MakeSeedCommand } = await import("@/commands/MakeSeedCommand");
+
+describe("MakeSeedCommand", () => {
+  let command: InstanceType<typeof MakeSeedCommand>;
+  let testDir: string;
+  let originalCwd: string;
+
+  beforeEach(() => {
+    command = new MakeSeedCommand();
+    originalCwd = process.cwd();
+    testDir = join(originalCwd, ".temp", `seed-${Date.now()}`);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    if (existsSync(testDir)) {
+      rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  describe("Command Metadata", () => {
+    test("should return correct command name", () => {
+      expect(command.getName()).toBe("make:seed");
+    });
+
+    test("should return correct description", () => {
+      expect(command.getDescription()).toBe("Generate a new seed file");
+    });
+  });
+
+  describe("run()", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, "src", "seeds", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test", scripts: {} }, null, 2));
+      process.chdir(testDir);
+    });
+
+    test("should update package.json with seed:run script", async () => {
+      await command.run({ name: "User" });
+
+      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
+    });
+
+    test("should preserve existing scripts in package.json", async () => {
+      await Bun.write(
+        join(testDir, "package.json"),
+        JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
+      );
+
+      await command.run({ name: "User" });
+
+      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      expect(packageJson.scripts.build).toBe("bun build");
+      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
+    });
+
+    test("should create scripts object if it does not exist", async () => {
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+
+      await command.run({ name: "User" });
+
+      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      expect(packageJson.scripts).toBeDefined();
+      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
+    });
+  });
+});

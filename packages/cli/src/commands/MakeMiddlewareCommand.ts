@@ -2,13 +2,16 @@ import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
+import { askConfirm } from "../prompts/askConfirm";
 import { askName } from "../prompts/askName";
+import socketTemplate from "../templates/middleware.socket.txt";
 import testTemplate from "../templates/middleware.test.txt";
 import template from "../templates/middleware.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  isSocket?: boolean;
 };
 
 @decorator.command()
@@ -22,15 +25,20 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, isSocket } = options;
 
     if (!name) {
       name = await askName({ message: "Enter middleware name" });
     }
 
+    if (isSocket === undefined) {
+      isSocket = await askConfirm({ message: "Is this a socket middleware?" });
+    }
+
     name = toPascalCase(name).replace(/Middleware$/, "");
 
-    const content = template.replace(/{{NAME}}/g, name);
+    const selectedTemplate = isSocket ? socketTemplate : template;
+    const content = selectedTemplate.replace(/{{NAME}}/g, name);
 
     const middlewareLocalDir = join("src", "middlewares");
     const middlewareDir = join(process.cwd(), middlewareLocalDir);

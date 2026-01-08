@@ -1,0 +1,118 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+const { MakeStorageCommand } = await import("@/commands/MakeStorageCommand");
+
+describe("MakeStorageCommand", () => {
+  let command: InstanceType<typeof MakeStorageCommand>;
+  let testDir: string;
+  let originalCwd: string;
+
+  beforeEach(() => {
+    command = new MakeStorageCommand();
+    originalCwd = process.cwd();
+    testDir = join(originalCwd, ".temp", `storage-${Date.now()}`);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    if (existsSync(testDir)) {
+      rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  describe("Command Metadata", () => {
+    test("should return correct command name", () => {
+      expect(command.getName()).toBe("make:storage");
+    });
+
+    test("should return correct description", () => {
+      expect(command.getDescription()).toBe("Generate a new storage class");
+    });
+  });
+
+  describe("run()", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, "src", "storage", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "storage", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate storage file with correct name", async () => {
+      await command.run({ name: "S3" });
+
+      const filePath = join(testDir, "src", "storage", "S3Storage.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("S3Storage");
+    });
+
+    test("should generate test file for storage", async () => {
+      await command.run({ name: "S3" });
+
+      const testFilePath = join(testDir, "tests", "storage", "S3Storage.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).toContain("S3Storage");
+    });
+
+    test("should normalize name with toPascalCase", async () => {
+      await command.run({ name: "google-cloud" });
+
+      const filePath = join(testDir, "src", "storage", "GoogleCloudStorage.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should remove Storage suffix if provided", async () => {
+      await command.run({ name: "S3Storage" });
+
+      const filePath = join(testDir, "src", "storage", "S3Storage.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).not.toContain("S3StorageStorage");
+    });
+
+    test("should handle lowercase input", async () => {
+      await command.run({ name: "local" });
+
+      const filePath = join(testDir, "src", "storage", "LocalStorage.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should handle snake_case input", async () => {
+      await command.run({ name: "azure_blob" });
+
+      const filePath = join(testDir, "src", "storage", "AzureBlobStorage.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should replace template placeholders correctly", async () => {
+      await command.run({ name: "Minio" });
+
+      const filePath = join(testDir, "src", "storage", "MinioStorage.ts");
+      const content = await Bun.file(filePath).text();
+
+      expect(content).not.toContain("{{NAME}}");
+      expect(content).not.toContain("{{NAME_UPPER}}");
+      expect(content).toContain("Minio");
+    });
+
+    test("should include uppercase name variant in content", async () => {
+      await command.run({ name: "DigitalOcean" });
+
+      const filePath = join(testDir, "src", "storage", "DigitalOceanStorage.ts");
+      const content = await Bun.file(filePath).text();
+
+      expect(content).toContain("DIGITAL_OCEAN");
+    });
+  });
+});

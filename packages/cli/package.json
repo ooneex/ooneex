@@ -2,8 +2,6 @@
   "name": "@ooneex/cli",
   "version": "0.0.1",
   "module": "./dist/index.js",
-  "devDependencies": {},
-  "peerDependencies": {},
   "exports": {
     ".": {
       "import": "./dist/index.js"
@@ -11,15 +9,45 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "ooneex": "./dist/index.js"
+    "ooneex": "./dist/index.js",
+    "@ooneex/cli": "./dist/index.js"
   },
-  "description": "",
+  "description": "CLI tool for scaffolding Ooneex applications, modules, controllers, services, and more",
+  "keywords": [
+    "ooneex",
+    "cli",
+    "scaffolding",
+    "code-generator",
+    "bun",
+    "typescript",
+    "ai",
+    "analytics",
+    "app",
+    "cache",
+    "controller",
+    "cron",
+    "crud",
+    "database",
+    "docker",
+    "entity",
+    "logger",
+    "mailer",
+    "middleware",
+    "migration",
+    "module",
+    "permission",
+    "pubsub",
+    "repository",
+    "seed",
+    "service",
+    "storage",
+    "translation"
+  ],
   "files": [
     "dist",
     "LICENSE",
     "README.md",
-    "package.json",
-    "bin"
+    "package.json"
   ],
   "license": "MIT",
   "scripts": {

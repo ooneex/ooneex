@@ -17,10 +17,6 @@
   "workspaces": [
     "modules/*"
   ],
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
   }

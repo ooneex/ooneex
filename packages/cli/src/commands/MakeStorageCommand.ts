@@ -18,14 +18,14 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
   }
 
   public getDescription(): string {
-    return "Generate a new storage adapter class";
+    return "Generate a new storage class";
   }
 
   public async run(options: T): Promise<void> {
     let { name } = options;
 
     if (!name) {
-      name = await askName({ message: "Enter storage adapter name" });
+      name = await askName({ message: "Enter storage name" });
     }
 
     name = toPascalCase(name).replace(/Storage$/, "");
@@ -34,25 +34,25 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
 
     const storageLocalDir = join("src", "storage");
     const storageDir = join(process.cwd(), storageLocalDir);
-    const filePath = join(storageDir, `${name}StorageAdapter.ts`);
+    const filePath = join(storageDir, `${name}Storage.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
     const testsLocalDir = join("tests", "storage");
     const testsDir = join(process.cwd(), testsLocalDir);
-    const testFilePath = join(testsDir, `${name}StorageAdapter.spec.ts`);
+    const testFilePath = join(testsDir, `${name}Storage.spec.ts`);
     await Bun.write(testFilePath, testContent);
 
     const logger = new TerminalLogger();
 
-    logger.success(`${join(storageLocalDir, name)}StorageAdapter.ts created successfully`, undefined, {
+    logger.success(`${join(storageLocalDir, name)}Storage.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
     });
 
-    logger.success(`${join(testsLocalDir, name)}StorageAdapter.spec.ts created successfully`, undefined, {
+    logger.success(`${join(testsLocalDir, name)}Storage.spec.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

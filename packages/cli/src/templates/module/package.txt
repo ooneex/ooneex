@@ -30,8 +30,5 @@
     "make:seed": "bunx ooneex make:seed",
     "make:service": "bunx ooneex make:service",
     "make:storage": "bunx ooneex make:storage"
-  },
-  "dependencies": {},
-  "devDependencies": {},
-  "peerDependencies": {}
+  }
 }

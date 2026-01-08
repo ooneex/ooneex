@@ -1,10 +1,10 @@
-import type { ContextType } from "@ooneex/controller";
+import type { ContextType } from "@ooneex/socket";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
 import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
 
-@Route.{{ROUTE_METHOD}}("{{ROUTE_PATH}}", {
+@Route.socket("{{ROUTE_PATH}}", {
   name: "{{ROUTE_NAME}}",
   description: "",
   params: {
@@ -21,7 +21,7 @@ import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}"
   }),
   roles: [ERole.USER],
   generate: {
-    queryHook: true,
+    fetcher: true,
   },
 })
 export class {{NAME}}Controller {

@@ -1,53 +1,21 @@
-import { AbilityBuilder, createMongoAbility, type MongoAbility, type MongoQuery } from "@casl/ability";
-import { decorator, PermissionException } from "@ooneex/permission";
-import type { IPermission, PermissionActionType, Subjects } from "@ooneex/permission";
-import { ERole } from "@ooneex/role";
+import { decorator, Permission } from "@ooneex/permission";
 import type { IUser } from "@ooneex/user";
 
 @decorator.permission()
-export class {{NAME}}Permission<S extends string = string> implements IPermission<S> {
-  private ability: AbilityBuilder<MongoAbility>;
-  private builtAbility: MongoAbility | null = null;
+export class {{NAME}}Permission extends Permission {
+  public allow(): this {
+    // Example: Add permissions using this.ability.can()
+    // this.ability.can("read", "YourEntity");
+    // this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
 
-  constructor() {
-    this.ability = new AbilityBuilder(createMongoAbility);
-  }
-
-  public allow(
-    action: PermissionActionType | PermissionActionType[],
-    subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: MongoQuery<Record<string, unknown>>,
-  ): this {
-    this.ability.can(action as string, subject, conditions);
     return this;
   }
 
-  public forbid(
-    action: PermissionActionType | PermissionActionType[],
-    subject: (Subjects | S) | (Subjects | S)[],
-    conditions?: MongoQuery<Record<string, unknown>>,
-  ): this {
-    this.ability.cannot(action as string, subject, conditions);
+  public forbid(): this {
+    // Example: Add restrictions using this.ability.cannot()
+    // this.ability.cannot("delete", "YourEntity");
+
     return this;
-  }
-
-  public build(): this {
-    this.builtAbility = this.ability.build();
-    return this;
-  }
-
-  public can(action: PermissionActionType, subject: Subjects | S, field?: string): boolean {
-    if (!this.builtAbility) {
-      throw new PermissionException("Permission must be built before checking abilities");
-    }
-    return this.builtAbility.can(action as string, subject as string, field);
-  }
-
-  public cannot(action: PermissionActionType, subject: Subjects | S, field?: string): boolean {
-    if (!this.builtAbility) {
-      throw new PermissionException("Permission must be built before checking abilities");
-    }
-    return this.builtAbility.cannot(action as string, subject as string, field);
   }
 
   public setUserPermissions(user: IUser | null): this {
@@ -55,25 +23,31 @@ export class {{NAME}}Permission<S extends string = string> implements IPermissio
       return this;
     }
 
-    const { roles } = user;
-
     // Example: Grant full access to admins
+    // const { roles } = user;
     // if (roles.includes(ERole.ADMIN)) {
-    //   this.allow("manage", "all");
+    //   this.ability.can("manage", "all");
     //   return this;
     // }
 
     // Example: Grant specific permissions based on roles
     // for (const role of roles) {
     //   if (role === ERole.USER) {
-    //     this.allow(["read", "update"], "YourEntity", { userId: user.id });
+    //     this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
     //   }
     //
     //   if (role === ERole.GUEST) {
-    //     this.allow("read", "YourEntity", { public: true });
+    //     this.ability.can("read", "YourEntity", { public: true });
     //   }
     // }
 
     return this;
+  }
+
+  public async check(): Promise<boolean> {
+    // Example: Check if a specific permission is granted
+    // return this.can("read", "YourEntity");
+
+    return true;
   }
 }

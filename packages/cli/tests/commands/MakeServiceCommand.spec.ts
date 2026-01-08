@@ -1,0 +1,108 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+const { MakeServiceCommand } = await import("@/commands/MakeServiceCommand");
+
+describe("MakeServiceCommand", () => {
+  let command: InstanceType<typeof MakeServiceCommand>;
+  let testDir: string;
+  let originalCwd: string;
+
+  beforeEach(() => {
+    command = new MakeServiceCommand();
+    originalCwd = process.cwd();
+    testDir = join(originalCwd, ".temp", `service-${Date.now()}`);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    if (existsSync(testDir)) {
+      rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  describe("Command Metadata", () => {
+    test("should return correct command name", () => {
+      expect(command.getName()).toBe("make:service");
+    });
+
+    test("should return correct description", () => {
+      expect(command.getDescription()).toBe("Generate a new service class");
+    });
+  });
+
+  describe("run()", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, "src", "services", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "services", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate service file with correct name", async () => {
+      await command.run({ name: "User" });
+
+      const filePath = join(testDir, "src", "services", "UserService.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("UserService");
+    });
+
+    test("should generate test file for service", async () => {
+      await command.run({ name: "User" });
+
+      const testFilePath = join(testDir, "tests", "services", "UserService.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).toContain("UserService");
+    });
+
+    test("should normalize name with toPascalCase", async () => {
+      await command.run({ name: "user-profile" });
+
+      const filePath = join(testDir, "src", "services", "UserProfileService.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should remove Service suffix if provided", async () => {
+      await command.run({ name: "UserService" });
+
+      const filePath = join(testDir, "src", "services", "UserService.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).not.toContain("UserServiceService");
+    });
+
+    test("should handle lowercase input", async () => {
+      await command.run({ name: "payment" });
+
+      const filePath = join(testDir, "src", "services", "PaymentService.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should handle snake_case input", async () => {
+      await command.run({ name: "order_processing" });
+
+      const filePath = join(testDir, "src", "services", "OrderProcessingService.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should replace template placeholders correctly", async () => {
+      await command.run({ name: "Auth" });
+
+      const filePath = join(testDir, "src", "services", "AuthService.ts");
+      const content = await Bun.file(filePath).text();
+
+      expect(content).not.toContain("{{NAME}}");
+      expect(content).toContain("Auth");
+    });
+  });
+});

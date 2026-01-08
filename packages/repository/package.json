@@ -32,6 +32,5 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

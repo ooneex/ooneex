@@ -32,6 +32,5 @@
     "@ooneex/http-status": "workspace:*",
     "jose": "^6.1.2"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {}
 }

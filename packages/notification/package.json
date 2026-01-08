@@ -27,6 +27,5 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {}
 }

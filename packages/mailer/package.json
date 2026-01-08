@@ -35,8 +35,6 @@
     "resend": "^6.4.2"
   },
   "devDependencies": {
-    "@ooneex/translation": "workspace:*",
     "@types/nodemailer": "^7.0.4"
-  },
-  "peerDependencies": {}
+  }
 }

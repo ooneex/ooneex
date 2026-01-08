@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "@ooneex/container": "workspace:*",
-    "@ooneex/country": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "cron": "^4.4.0"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {
+    "@ooneex/country": "workspace:*"
+  }
 }

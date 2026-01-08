@@ -33,6 +33,5 @@
     "@ooneex/http-status": "workspace:*",
     "typeorm": "^0.3.27"
   },
-  "peerDependencies": {},
   "devDependencies": {}
 }

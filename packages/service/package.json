@@ -30,6 +30,5 @@
   "dependencies": {
     "@ooneex/container": "workspace:*"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {}
 }

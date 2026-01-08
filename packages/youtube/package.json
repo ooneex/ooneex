@@ -29,10 +29,7 @@
   },
   "dependencies": {
     "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
     "ytdlp-nodejs": "^2.3.5"
-  },
-  "devDependencies": {
-    "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

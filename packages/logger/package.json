@@ -34,8 +34,6 @@
   },
   "devDependencies": {
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

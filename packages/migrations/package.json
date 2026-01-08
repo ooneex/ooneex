@@ -33,6 +33,5 @@
   },
   "devDependencies": {
     "@ooneex/exception": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

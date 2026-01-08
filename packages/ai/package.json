@@ -31,7 +31,6 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
-    "@ooneex/translation": "workspace:*",
     "@ooneex/validation": "workspace:*",
     "@tanstack/ai": "^0.2.0",
     "@tanstack/ai-anthropic": "^0.2.0",
@@ -39,6 +38,7 @@
     "@tanstack/ai-ollama": "^0.2.0",
     "@tanstack/ai-openai": "^0.2.0"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {
+    "@ooneex/translation": "workspace:*"
+  }
 }

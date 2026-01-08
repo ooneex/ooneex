@@ -31,9 +31,7 @@
     "@ooneex/container": "workspace:*"
   },
   "devDependencies": {
-    "@ooneex/socket": "workspace:*",
     "@ooneex/controller": "workspace:*",
-    "@ooneex/http-response": "workspace:*"
-  },
-  "peerDependencies": {}
+    "@ooneex/socket": "workspace:*"
+  }
 }

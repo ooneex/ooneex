@@ -33,6 +33,5 @@
     "@ooneex/image": "workspace:*",
     "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

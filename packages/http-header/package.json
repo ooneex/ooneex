@@ -33,6 +33,5 @@
   "devDependencies": {
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {}
+  }
 }

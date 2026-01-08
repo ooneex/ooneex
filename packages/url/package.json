@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/url",
-  "description": "",
+  "description": "URL parsing, manipulation, and query string utilities for web applications",
   "version": "0.0.1",
   "type": "module",
   "files": [

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/typeorm",
-  "description": "",
+  "description": "Pre-built TypeORM entities, migrations, and repositories for common domain models",
   "version": "0.0.1",
   "type": "module",
   "files": [

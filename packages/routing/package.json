@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/routing",
-  "description": "",
+  "description": "Flexible HTTP routing system with decorator-based route definitions, validation support, and permission handling",
   "version": "0.0.2",
   "type": "module",
   "files": [

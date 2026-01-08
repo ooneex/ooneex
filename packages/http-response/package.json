@@ -33,6 +33,5 @@
     "@ooneex/http-header": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {}
 }

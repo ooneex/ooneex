@@ -21,7 +21,8 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
     },
   ) => IResponse<DataType>;
   redirect: (url: string | URL, status?: StatusCodeType) => IResponse<DataType>;
-  get: () => Response;
+  get: (env?: Environment) => Response;
+  getData: () => DataType | null;
 }
 
 export type ResponseDataType<Data extends Record<string, unknown>> = {
@@ -35,9 +36,7 @@ export type ResponseDataType<Data extends Record<string, unknown>> = {
   isNotFound: boolean;
   isUnauthorized: boolean;
   isForbidden: boolean;
-  debug: boolean;
   app: {
-    url: string;
     env: Environment;
   };
 };

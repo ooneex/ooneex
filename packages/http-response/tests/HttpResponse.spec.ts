@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
+import { Environment } from "@ooneex/app-env";
 import { Header } from "@ooneex/http-header";
 import { HttpStatus } from "@ooneex/http-status";
 import { HttpResponse, type IResponse } from "@/index";
@@ -39,10 +40,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -64,10 +63,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -93,10 +90,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -121,10 +116,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -152,10 +145,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: {},
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -184,10 +175,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: true,
         isForbidden: false,
@@ -227,10 +216,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: {},
-        debug: false,
         done: false,
         isClientError: true,
         isForbidden: false,
@@ -259,10 +246,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: true,
         isForbidden: false,
@@ -337,10 +322,8 @@ describe("HttpResponse", () => {
       expect(responseData).toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -381,10 +364,8 @@ describe("HttpResponse", () => {
       expect(responseData).toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: true,
         isForbidden: false,
@@ -418,10 +399,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -498,10 +477,8 @@ describe("HttpResponse", () => {
       expect(data).toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: { success: true },
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -529,10 +506,8 @@ describe("HttpResponse", () => {
       expect(data).toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: { message: "switched" },
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -567,10 +542,8 @@ describe("HttpResponse", () => {
       expect(webResponse.json()).resolves.toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: userData,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -612,6 +585,7 @@ describe("HttpResponse", () => {
       expect(typeof response.notFound).toBe("function");
       expect(typeof response.redirect).toBe("function");
       expect(typeof response.get).toBe("function");
+      expect(typeof response.getData).toBe("function");
       expect(response.header).toBeDefined();
     });
   });
@@ -642,10 +616,8 @@ describe("HttpResponse", () => {
       expect(data).toEqual({
         app: {
           env: "production",
-          url: "",
         },
         data: emptyData,
-        debug: false,
         done: false,
         isClientError: false,
         isForbidden: false,
@@ -692,6 +664,100 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.headers.get("X-Custom-Tracking")).toBe("redirect-tracking");
       expect(webResponse.headers.get("Location")).toBe("https://example.com");
+    });
+  });
+
+  describe("getData method", () => {
+    test("should return null when no data is set", () => {
+      expect(response.getData()).toBeNull();
+    });
+
+    test("should return data after json is called", () => {
+      const data = { message: "test" };
+      response.json(data);
+
+      expect(response.getData()).toEqual(data);
+    });
+
+    test("should return data after exception is called with data", () => {
+      const data = { field: "email", code: "INVALID" };
+      response.exception("Validation error", { data });
+
+      expect(response.getData()).toEqual(data);
+    });
+
+    test("should return null after exception is called without data", () => {
+      response.exception("Error occurred");
+
+      expect(response.getData()).toBeNull();
+    });
+
+    test("should return data after notFound is called with data", () => {
+      const data = { resourceId: 123 };
+      response.notFound("Resource not found", { data });
+
+      expect(response.getData()).toEqual(data);
+    });
+
+    test("should return null after redirect is called", () => {
+      response.json({ message: "test" });
+      response.redirect("https://example.com");
+
+      expect(response.getData()).toBeNull();
+    });
+  });
+
+  describe("done property", () => {
+    test("should default to false", () => {
+      expect(response.done).toBe(false);
+    });
+
+    test("should be settable to true", () => {
+      response.done = true;
+      expect(response.done).toBe(true);
+    });
+
+    test("should be included in response data", async () => {
+      response.done = true;
+      response.json({ message: "test" });
+
+      const webResponse = response.get();
+      const data = await webResponse.json();
+      expect(data.done).toBe(true);
+    });
+  });
+
+  describe("get method with environment parameter", () => {
+    test("should use production environment by default", async () => {
+      response.json({ message: "test" });
+
+      const webResponse = response.get();
+      const data = await webResponse.json();
+      expect(data.app.env).toBe("production");
+    });
+
+    test("should use provided development environment", async () => {
+      response.json({ message: "test" });
+
+      const webResponse = response.get(Environment.DEVELOPMENT);
+      const data = await webResponse.json();
+      expect(data.app.env).toBe("development");
+    });
+
+    test("should use provided test environment", async () => {
+      response.json({ message: "test" });
+
+      const webResponse = response.get(Environment.TEST);
+      const data = await webResponse.json();
+      expect(data.app.env).toBe("test");
+    });
+
+    test("should use provided staging environment", async () => {
+      response.json({ message: "test" });
+
+      const webResponse = response.get(Environment.STAGING);
+      const data = await webResponse.json();
+      expect(data.app.env).toBe("staging");
     });
   });
 });

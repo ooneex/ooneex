@@ -70,7 +70,11 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
     return this;
   }
 
-  public get(): Response {
+  public getData(): Data | null {
+    return this.data;
+  }
+
+  public get(env?: Environment): Response {
     if (this.redirectUrl) {
       return new Response(null, {
         status: this.status,
@@ -91,10 +95,8 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
       isNotFound: false,
       isUnauthorized: false,
       isForbidden: false,
-      debug: false,
       app: {
-        url: "",
-        env: Environment.PRODUCTION,
+        env: env || Environment.PRODUCTION,
       },
     };
 

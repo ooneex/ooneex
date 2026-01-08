@@ -302,8 +302,8 @@ describe("Router", () => {
 
       const socketRoutes = router.getSocketRoutes();
       expect(socketRoutes.size).toBe(1);
-      expect(socketRoutes.get("/chat")).toHaveLength(1);
-      expect(socketRoutes.get("/chat")?.[0]?.isSocket).toBe(true);
+      expect(socketRoutes.get("/chat")).toBeDefined();
+      expect(socketRoutes.get("/chat")?.isSocket).toBe(true);
     });
   });
 

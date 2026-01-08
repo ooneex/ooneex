@@ -53,13 +53,13 @@ export class Router implements IRouter {
     return this.routes;
   }
 
-  public getSocketRoutes(): Map<string, RouteConfigType[]> {
-    const socketRoutes = new Map<string, RouteConfigType[]>();
+  public getSocketRoutes(): Map<string, RouteConfigType> {
+    const socketRoutes = new Map<string, RouteConfigType>();
 
     for (const [path, routes] of this.routes) {
-      const filteredRoutes = routes.filter((route): route is RouteConfigType => route.isSocket);
-      if (filteredRoutes.length > 0) {
-        socketRoutes.set(path, filteredRoutes);
+      const socketRoute = routes.find((route): route is RouteConfigType => route.isSocket);
+      if (socketRoute) {
+        socketRoutes.set(path, socketRoute);
       }
     }
 

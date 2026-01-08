@@ -28,17 +28,19 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
-    "@ooneex/utils": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/utils": "workspace:*",
+    "@ooneex/validation": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/app-env": "workspace:*",
     "@ooneex/controller": "workspace:*",
+    "@ooneex/http-response": "workspace:*",
+    "@ooneex/permission": "workspace:*",
     "@ooneex/role": "workspace:*",
-    "@ooneex/types": "workspace:*",
-    "@ooneex/validation": "workspace:*"
-  },
-  "peerDependencies": {}
+    "@ooneex/translation": "workspace:*",
+    "@ooneex/types": "workspace:*"
+  }
 }

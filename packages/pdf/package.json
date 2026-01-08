@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/pdf",
   "description": "PDF generation, manipulation, and image conversion utilities with support for creating, editing, and extracting content from PDF documents",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/socket",
-  "description": "",
+  "description": "WebSocket server and client implementation for real-time bidirectional communication",
   "version": "0.0.1",
   "type": "module",
   "files": [

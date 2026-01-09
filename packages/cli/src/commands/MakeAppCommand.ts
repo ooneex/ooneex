@@ -70,6 +70,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
 
     // Install dependencies
     const dependencies = [
+      "@ooneex/routing",
       "@ooneex/analytics",
       "@ooneex/app",
       "@ooneex/app-env",

@@ -1,30 +1,26 @@
 # @ooneex/analytics
 
-A comprehensive TypeScript/JavaScript analytics library with PostHog integration for tracking user events and behavior. This package provides a clean, type-safe interface for capturing analytics events with support for user properties, groups, and custom event data.
+An analytics and event tracking integration library for TypeScript applications. This package provides seamless integration with PostHog for user behavior insights, product analytics, and event tracking across your applications.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
+![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
+![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 ## Features
 
-✅ **PostHog Integration** - Seamless PostHog analytics integration
+✅ **PostHog Integration** - Native support for PostHog analytics platform
+
+✅ **Event Tracking** - Capture user events with custom properties
+
+✅ **User Identification** - Track events with distinct user IDs
+
+✅ **Group Analytics** - Support for group-based event tracking
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Environment Configuration** - Flexible API key and host configuration
-
-✅ **Event Tracking** - Track user events with custom properties and groups
-
-✅ **User Properties** - Attach custom properties to user events
-
-✅ **Group Analytics** - Support for group-based analytics tracking
-
-✅ **Error Handling** - Comprehensive error handling with custom exceptions
-
-✅ **Bun Runtime** - Optimized for Bun runtime environment
-
-✅ **Zero Config** - Works out of the box with environment variables
+✅ **Container Integration** - Works seamlessly with dependency injection
 
 ## Installation
 
@@ -33,35 +29,19 @@ A comprehensive TypeScript/JavaScript analytics library with PostHog integration
 bun add @ooneex/analytics
 ```
 
-## Setup
-
-### Environment Variables
-
-Set the following environment variables in your project:
-
+### pnpm
 ```bash
-# Required: Your PostHog API key
-ANALYTICS_POSTHOG_API_KEY=your_posthog_api_key_here
-
-# Optional: PostHog host (defaults to https://eu.i.posthog.com)
-ANALYTICS_POSTHOG_HOST=https://eu.i.posthog.com
+pnpm add @ooneex/analytics
 ```
 
-### Configuration Options
+### Yarn
+```bash
+yarn add @ooneex/analytics
+```
 
-You can also configure the analytics adapter programmatically:
-
-```typescript
-import { PostHogAdapter } from '@ooneex/analytics';
-
-// Using constructor options (overrides environment variables)
-const analytics = new PostHogAdapter({
-  apiKey: 'your_api_key',
-  host: 'https://your-posthog-instance.com'
-});
-
-// Using environment variables only
-const analytics = new PostHogAdapter();
+### npm
+```bash
+npm install @ooneex/analytics
 ```
 
 ## Usage
@@ -69,317 +49,252 @@ const analytics = new PostHogAdapter();
 ### Basic Event Tracking
 
 ```typescript
-import { PostHogAdapter } from '@ooneex/analytics';
+import { PostHogAnalytics } from '@ooneex/analytics';
 
-const analytics = new PostHogAdapter();
+const analytics = new PostHogAnalytics({
+  apiKey: 'your-posthog-api-key'
+});
 
 // Track a simple event
 analytics.capture({
-  id: 'user_123',
-  event: 'button_clicked',
-  properties: {
-    buttonId: 'signup-btn',
-    page: '/landing'
-  }
+  id: 'user-123',
+  event: 'button_clicked'
 });
 ```
 
-### Advanced Event Tracking with Groups
+### With Event Properties
 
 ```typescript
-import { PostHogAdapter } from '@ooneex/analytics';
+import { PostHogAnalytics } from '@ooneex/analytics';
 
-const analytics = new PostHogAdapter();
+const analytics = new PostHogAnalytics();
 
-// Track event with user properties and groups
 analytics.capture({
-  id: 'user_123',
-  event: 'feature_used',
-  properties: {
-    feature: 'advanced_search',
-    sessionDuration: 1200,
-    actionsCount: 15,
-    source: 'web_app'
-  },
-  groups: {
-    company: 'acme_corp',
-    plan: 'enterprise'
-  }
-});
-```
-
-### E-commerce Tracking
-
-```typescript
-// Track purchase events
-analytics.capture({
-  id: 'user_123',
+  id: 'user-123',
   event: 'purchase_completed',
   properties: {
-    orderId: 'order_456',
-    revenue: 99.99,
+    product_id: 'prod-456',
+    price: 99.99,
     currency: 'USD',
-    products: ['product_1', 'product_2'],
-    paymentMethod: 'credit_card',
-    discount: 10.00
-  },
-  groups: {
-    store: 'online',
-    region: 'us_west'
+    quantity: 1
   }
 });
 ```
 
-### User Signup Tracking
+### Group Analytics
 
 ```typescript
-// Track user registration
+import { PostHogAnalytics } from '@ooneex/analytics';
+
+const analytics = new PostHogAnalytics();
+
 analytics.capture({
-  id: 'user_123',
-  event: 'user_signup',
+  id: 'user-123',
+  event: 'project_created',
   properties: {
-    email: 'user@example.com',
-    source: 'google_ads',
-    plan: 'free',
-    referrer: 'https://example.com'
+    project_name: 'My Project'
   },
   groups: {
-    company: 'new_company'
+    company: 'company-789',
+    team: 'engineering'
   }
 });
 ```
 
-### Custom Implementation
+### Using Environment Variables
 
 ```typescript
-import { IAnalytics, PostHogAdapterCaptureType } from '@ooneex/analytics';
+import { PostHogAnalytics } from '@ooneex/analytics';
 
-class CustomAnalytics implements IAnalytics {
-  capture(options: PostHogAdapterCaptureType): void {
-    // Custom analytics implementation
-    console.log('Tracking event:', options.event, 'for user:', options.id);
+// API key and host are read from environment variables
+const analytics = new PostHogAnalytics();
 
-    // You can extend or modify the tracking logic here
+analytics.capture({
+  id: 'user-123',
+  event: 'page_viewed',
+  properties: {
+    page: '/dashboard'
   }
-}
+});
 ```
+
+**Environment Variables:**
+- `ANALYTICS_POSTHOG_API_KEY` - Your PostHog API key
+- `ANALYTICS_POSTHOG_HOST` - PostHog host URL (default: `https://eu.i.posthog.com`)
 
 ## API Reference
 
-### `PostHogAdapter` Class
+### Classes
 
-The main analytics adapter class that implements PostHog integration.
+#### `PostHogAnalytics`
 
-#### Constructor
+Main analytics class for PostHog integration.
 
+**Constructor:**
 ```typescript
-new PostHogAdapter(options?: { apiKey?: string; host?: string })
+new PostHogAnalytics(options?: { apiKey?: string; host?: string })
 ```
 
 **Parameters:**
-- `options.apiKey` - PostHog API key (optional, can use `ANALYTICS_POSTHOG_API_KEY` env var)
-- `options.host` - PostHog host URL (optional, defaults to `https://eu.i.posthog.com`)
+- `options.apiKey` - PostHog API key (optional if set via environment variable)
+- `options.host` - PostHog host URL (optional, defaults to EU region)
 
-**Throws:** `AnalyticsException` if no API key is provided
+**Methods:**
 
-**Example:**
-```typescript
-// Using environment variables
-const analytics = new PostHogAdapter();
+##### `capture(options: PostHogCaptureOptionsType): void`
 
-// Using constructor options
-const analytics = new PostHogAdapter({
-  apiKey: 'phc_your_key_here',
-  host: 'https://app.posthog.com'
-});
-```
-
-#### Methods
-
-##### `capture(options: PostHogAdapterCaptureType): void`
-
-Captures an analytics event with user properties and groups.
+Captures an analytics event.
 
 **Parameters:**
-- `options.id` - Unique user identifier (required)
-- `options.event` - Event name (required)
-- `options.properties` - Custom event properties (optional)
-- `options.groups` - Group associations (optional)
+- `options.id` - Unique identifier for the user (distinctId)
+- `options.event` - Name of the event to track
+- `options.properties` - Optional custom properties for the event
+- `options.groups` - Optional group identifiers for group analytics
 
 **Example:**
 ```typescript
 analytics.capture({
-  id: 'user_123',
-  event: 'page_viewed',
+  id: 'user-123',
+  event: 'signup_completed',
   properties: {
-    page: '/dashboard',
-    loadTime: 1.2,
-    userAgent: 'Chrome/91.0'
-  },
-  groups: {
-    company: 'acme_corp',
-    team: 'marketing'
+    plan: 'premium',
+    source: 'landing_page'
   }
 });
+```
+
+### Interfaces
+
+#### `IAnalytics`
+
+```typescript
+interface IAnalytics<T = any> {
+  capture: (options: T) => void;
+}
 ```
 
 ### Types
 
-#### `IAnalytics`
-
-Interface defining the analytics contract.
+#### `PostHogCaptureOptionsType`
 
 ```typescript
-interface IAnalytics {
-  capture: (options: PostHogAdapterCaptureType) => void;
-}
-```
-
-#### `PostHogAdapterCaptureType`
-
-Type definition for capture event data.
-
-```typescript
-type PostHogAdapterCaptureType = {
-  id: string;                              // User identifier
-  event: string;                           // Event name
-  properties?: Record<string, unknown>;    // Custom properties
-  groups?: Record<string, string | number>; // Group associations
+type PostHogCaptureOptionsType = {
+  id: string;
+  event: string;
+  properties?: Record<string, unknown>;
+  groups?: Record<string, string | number>;
 };
 ```
 
-### Error Handling
-
-#### `AnalyticsException`
-
-Custom exception class for analytics-related errors.
+#### `AnalyticsClassType`
 
 ```typescript
-import { AnalyticsException } from '@ooneex/analytics';
+type AnalyticsClassType = new (...args: any[]) => IAnalytics;
+```
 
-try {
-  const analytics = new PostHogAdapter(); // Missing API key
-} catch (error) {
-  if (error instanceof AnalyticsException) {
-    console.error('Analytics Error:', error.message);
-    // Handle analytics-specific error
+## Advanced Usage
+
+### Integration with Ooneex App
+
+```typescript
+import { App } from '@ooneex/app';
+import { PostHogAnalytics } from '@ooneex/analytics';
+
+const app = new App({
+  analytics: PostHogAnalytics,
+  // ... other config
+});
+```
+
+### Custom Analytics Implementation
+
+```typescript
+import { type IAnalytics, type PostHogCaptureOptionsType } from '@ooneex/analytics';
+
+class CustomAnalytics implements IAnalytics<PostHogCaptureOptionsType> {
+  public capture(options: PostHogCaptureOptionsType): void {
+    // Custom implementation
+    console.log(`Event: ${options.event}`, options.properties);
   }
 }
 ```
 
-**Common Error Scenarios:**
-- Missing PostHog API key
-- Invalid configuration options
-- Network connectivity issues
-
-## Environment Setup
-
-### Required Environment Variables
-
-```bash
-# PostHog API Key (required)
-ANALYTICS_POSTHOG_API_KEY=phc_your_api_key_here
-```
-
-### Optional Environment Variables
-
-```bash
-# PostHog Host (optional, defaults to EU instance)
-ANALYTICS_POSTHOG_HOST=https://app.posthog.com
-
-# For US instance
-ANALYTICS_POSTHOG_HOST=https://us.i.posthog.com
-
-# For self-hosted instance
-ANALYTICS_POSTHOG_HOST=https://your-posthog-instance.com
-```
-
-## Best Practices
-
-### Event Naming
-
-Use consistent, descriptive event names:
+### Integration with Dependency Injection
 
 ```typescript
-// ✅ Good
+import { container, EContainerScope } from '@ooneex/container';
+import { PostHogAnalytics, decorator } from '@ooneex/analytics';
+
+// Register analytics service
+container.add(PostHogAnalytics, EContainerScope.Singleton);
+container.addAlias('analytics', PostHogAnalytics);
+
+// Resolve from container
+const analytics = container.get<PostHogAnalytics>('analytics');
+
 analytics.capture({
-  id: 'user_123',
-  event: 'button_clicked',
-  properties: { button: 'signup' }
-});
-
-// ❌ Avoid
-analytics.capture({
-  id: 'user_123',
-  event: 'click',
-  properties: { what: 'something' }
-});
-```
-
-### Property Structure
-
-Keep properties flat and meaningful:
-
-```typescript
-// ✅ Good
-analytics.capture({
-  id: 'user_123',
-  event: 'purchase_completed',
-  properties: {
-    orderId: 'order_456',
-    revenue: 99.99,
-    currency: 'USD',
-    itemCount: 3
-  }
-});
-
-// ❌ Avoid deeply nested objects
-analytics.capture({
-  id: 'user_123',
-  event: 'purchase_completed',
-  properties: {
-    order: {
-      details: {
-        nested: {
-          data: 'value'
-        }
-      }
-    }
-  }
+  id: 'user-123',
+  event: 'app_started'
 });
 ```
 
 ### Error Handling
 
-Always handle potential configuration errors:
-
 ```typescript
-import { PostHogAdapter, AnalyticsException } from '@ooneex/analytics';
+import { PostHogAnalytics, AnalyticsException } from '@ooneex/analytics';
 
 try {
-  const analytics = new PostHogAdapter();
-
+  const analytics = new PostHogAnalytics();
   analytics.capture({
-    id: 'user_123',
-    event: 'app_started'
+    id: 'user-123',
+    event: 'test_event'
   });
 } catch (error) {
   if (error instanceof AnalyticsException) {
-    console.error('Analytics configuration error:', error.message);
-    // Fallback analytics or silent failure
+    console.error('Analytics Error:', error.message);
   }
 }
 ```
 
-## Runtime Support
-
-This package is optimized for **Bun runtime only**. It leverages Bun-specific features and environment variable access patterns.
-
-### Bun Environment
+### Tracking Page Views
 
 ```typescript
-// Automatic environment variable access
-const analytics = new PostHogAdapter(); // Uses Bun.env.ANALYTICS_POSTHOG_API_KEY
+import { PostHogAnalytics } from '@ooneex/analytics';
+
+const analytics = new PostHogAnalytics();
+
+function trackPageView(userId: string, path: string): void {
+  analytics.capture({
+    id: userId,
+    event: '$pageview',
+    properties: {
+      $current_url: path,
+      $host: 'example.com',
+      $pathname: path
+    }
+  });
+}
+
+trackPageView('user-123', '/dashboard');
+```
+
+### Tracking User Properties
+
+```typescript
+import { PostHogAnalytics } from '@ooneex/analytics';
+
+const analytics = new PostHogAnalytics();
+
+// Set user properties using $set
+analytics.capture({
+  id: 'user-123',
+  event: 'user_updated',
+  properties: {
+    email: 'user@example.com',
+    plan: 'enterprise',
+    signup_date: '2024-01-01'
+  }
+});
 ```
 
 ## License
@@ -403,17 +318,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Follow the existing code style
 - Update documentation for API changes
 - Ensure all tests pass before submitting PR
-- Test with Bun runtime environment
-
-### Running Tests
-
-```bash
-# Run all tests
-bun run test
-
-# Run tests in watch mode
-bun run test:watch
-```
 
 ---
 

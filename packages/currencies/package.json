@@ -29,5 +29,14 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "currencies",
+    "currency",
+    "finance",
+    "money",
+    "ooneex",
+    "typescript"
+  ]
 }

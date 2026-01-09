@@ -33,5 +33,14 @@
   },
   "devDependencies": {
     "@ooneex/exception": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "database",
+    "migrations",
+    "ooneex",
+    "schema",
+    "typescript",
+    "versioning"
+  ]
 }

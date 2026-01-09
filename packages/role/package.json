@@ -27,5 +27,14 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "authorization",
+    "bun",
+    "ooneex",
+    "rbac",
+    "role",
+    "roles",
+    "typescript"
+  ]
 }

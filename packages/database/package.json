@@ -33,5 +33,15 @@
     "@ooneex/http-status": "workspace:*",
     "typeorm": "^0.3.27"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "database",
+    "db",
+    "ooneex",
+    "query",
+    "sql",
+    "typeorm",
+    "typescript"
+  ]
 }

@@ -34,5 +34,14 @@
   "dependencies": {
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*"
-  }
+  },
+  "keywords": [
+    "api",
+    "bun",
+    "ooneex",
+    "rate-limit",
+    "rate-limiting",
+    "throttle",
+    "typescript"
+  ]
 }

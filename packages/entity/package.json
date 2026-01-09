@@ -26,5 +26,15 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "publish": "bun publish --tolerate-republish --access public",
     "test": "bun test tests"
-  }
+  },
+  "keywords": [
+    "bun",
+    "ddd",
+    "decorator",
+    "domain",
+    "entity",
+    "model",
+    "ooneex",
+    "typescript"
+  ]
 }

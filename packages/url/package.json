@@ -32,5 +32,15 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "ooneex",
+    "path",
+    "query-string",
+    "routing",
+    "typescript",
+    "uri",
+    "url"
+  ]
 }

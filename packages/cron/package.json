@@ -35,5 +35,15 @@
   },
   "devDependencies": {
     "@ooneex/country": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "cron",
+    "job",
+    "ooneex",
+    "scheduler",
+    "scheduling",
+    "task",
+    "typescript"
+  ]
 }

@@ -40,5 +40,18 @@
   },
   "devDependencies": {
     "@ooneex/translation": "workspace:*"
-  }
+  },
+  "keywords": [
+    "ai",
+    "anthropic",
+    "artificial-intelligence",
+    "bun",
+    "gemini",
+    "llm",
+    "machine-learning",
+    "ollama",
+    "ooneex",
+    "openai",
+    "typescript"
+  ]
 }

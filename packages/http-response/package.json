@@ -33,5 +33,16 @@
     "@ooneex/http-header": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "cookies",
+    "headers",
+    "http",
+    "http-response",
+    "ooneex",
+    "response",
+    "typescript",
+    "web"
+  ]
 }

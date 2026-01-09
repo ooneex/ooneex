@@ -31,5 +31,13 @@
   "devDependencies": {
     "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "lifecycle",
+    "ooneex",
+    "state",
+    "status",
+    "typescript"
+  ]
 }

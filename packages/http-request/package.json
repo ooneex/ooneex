@@ -37,5 +37,14 @@
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*",
     "@types/accept-language-parser": "^1.5.8"
-  }
+  },
+  "keywords": [
+    "bun",
+    "http",
+    "http-request",
+    "ooneex",
+    "request",
+    "typescript",
+    "web"
+  ]
 }

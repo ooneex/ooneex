@@ -31,5 +31,15 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "inversify": "^7.10.4"
-  }
+  },
+  "keywords": [
+    "bun",
+    "container",
+    "dependency-injection",
+    "di",
+    "inversify",
+    "ioc",
+    "ooneex",
+    "typescript"
+  ]
 }

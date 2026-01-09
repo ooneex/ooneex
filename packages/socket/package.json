@@ -38,5 +38,14 @@
     "@ooneex/http-request": "workspace:*",
     "@ooneex/http-response": "workspace:*",
     "@ooneex/translation": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "ooneex",
+    "realtime",
+    "socket",
+    "typescript",
+    "websocket",
+    "ws"
+  ]
 }

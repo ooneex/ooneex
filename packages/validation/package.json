@@ -38,5 +38,15 @@
     "@ooneex/currencies": "workspace:*",
     "@ooneex/translation": "workspace:*",
     "arktype": "^2.1.27"
-  }
+  },
+  "keywords": [
+    "arktype",
+    "bun",
+    "constraints",
+    "ooneex",
+    "schema",
+    "typescript",
+    "validation",
+    "validator"
+  ]
 }

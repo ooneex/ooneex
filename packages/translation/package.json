@@ -32,5 +32,14 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "i18n",
+    "l10n",
+    "localization",
+    "ooneex",
+    "translation",
+    "typescript"
+  ]
 }

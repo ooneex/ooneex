@@ -33,5 +33,15 @@
   "devDependencies": {
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "browser",
+    "bun",
+    "headers",
+    "http",
+    "http-header",
+    "ooneex",
+    "typescript",
+    "user-agent"
+  ]
 }

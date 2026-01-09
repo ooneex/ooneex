@@ -33,5 +33,15 @@
   "devDependencies": {
     "@ooneex/controller": "workspace:*",
     "@ooneex/socket": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "decorator",
+    "handler",
+    "http",
+    "middleware",
+    "ooneex",
+    "pipeline",
+    "typescript"
+  ]
 }

@@ -31,5 +31,15 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "courses",
+    "education",
+    "learning",
+    "medical",
+    "ooneex",
+    "training",
+    "typescript"
+  ]
 }

@@ -31,5 +31,14 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "config",
+    "configuration",
+    "env",
+    "environment",
+    "ooneex",
+    "typescript"
+  ]
 }

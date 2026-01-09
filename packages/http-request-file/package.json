@@ -31,5 +31,14 @@
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/utils": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "file-upload",
+    "form-data",
+    "http",
+    "multipart",
+    "ooneex",
+    "typescript"
+  ]
 }

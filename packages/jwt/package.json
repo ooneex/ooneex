@@ -32,5 +32,15 @@
     "@ooneex/http-status": "workspace:*",
     "jose": "^6.1.2"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "authentication",
+    "bun",
+    "jose",
+    "json-web-token",
+    "jwt",
+    "ooneex",
+    "token",
+    "typescript"
+  ]
 }

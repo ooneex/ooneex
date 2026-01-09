@@ -35,5 +35,14 @@
   "devDependencies": {
     "@ooneex/exception": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "debug",
+    "logger",
+    "logging",
+    "logs",
+    "ooneex",
+    "typescript"
+  ]
 }

@@ -32,5 +32,14 @@
     "@ooneex/status": "workspace:*",
     "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "media",
+    "ooneex",
+    "player",
+    "streaming",
+    "typescript",
+    "video"
+  ]
 }

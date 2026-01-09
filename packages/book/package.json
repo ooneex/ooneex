@@ -33,5 +33,13 @@
     "@ooneex/status": "workspace:*",
     "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "book",
+    "bun",
+    "ebook",
+    "ooneex",
+    "publishing",
+    "typescript"
+  ]
 }

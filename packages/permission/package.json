@@ -35,5 +35,15 @@
   },
   "devDependencies": {
     "@ooneex/user": "workspace:*"
-  }
+  },
+  "keywords": [
+    "authorization",
+    "bun",
+    "casl",
+    "ooneex",
+    "permission",
+    "permissions",
+    "rbac",
+    "typescript"
+  ]
 }

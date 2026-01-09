@@ -42,5 +42,15 @@
     "@ooneex/role": "workspace:*",
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "decorator",
+    "http",
+    "ooneex",
+    "router",
+    "routes",
+    "routing",
+    "typescript"
+  ]
 }

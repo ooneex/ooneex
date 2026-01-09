@@ -31,5 +31,16 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "ytdlp-nodejs": "^2.3.5"
-  }
+  },
+  "keywords": [
+    "api",
+    "bun",
+    "downloader",
+    "embed",
+    "ooneex",
+    "typescript",
+    "video",
+    "youtube",
+    "ytdlp"
+  ]
 }

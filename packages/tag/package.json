@@ -31,5 +31,14 @@
   "devDependencies": {
     "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "ooneex",
+    "tag",
+    "tagging",
+    "tags",
+    "taxonomy",
+    "typescript"
+  ]
 }

@@ -34,5 +34,14 @@
     "@ooneex/http-response": "workspace:*",
     "@ooneex/http-mimes": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "api-client",
+    "bun",
+    "fetch",
+    "fetcher",
+    "http-client",
+    "ooneex",
+    "typescript"
+  ]
 }

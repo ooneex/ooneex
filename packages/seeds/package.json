@@ -34,5 +34,14 @@
   },
   "devDependencies": {
     "@ooneex/exception": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "database",
+    "fixtures",
+    "ooneex",
+    "seeding",
+    "seeds",
+    "typescript"
+  ]
 }

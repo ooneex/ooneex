@@ -269,5 +269,17 @@
     "@ooneex/utils": "workspace:*",
     "@ooneex/video": "workspace:*",
     "typeorm": "^0.3.27"
-  }
+  },
+  "keywords": [
+    "bun",
+    "database",
+    "entities",
+    "migrations",
+    "ooneex",
+    "orm",
+    "repositories",
+    "sql",
+    "typeorm",
+    "typescript"
+  ]
 }

@@ -36,5 +36,16 @@
   },
   "devDependencies": {
     "@types/nodemailer": "^7.0.4"
-  }
+  },
+  "keywords": [
+    "bun",
+    "email",
+    "mail",
+    "mailer",
+    "nodemailer",
+    "ooneex",
+    "resend",
+    "smtp",
+    "typescript"
+  ]
 }

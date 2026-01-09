@@ -44,5 +44,16 @@
     "@ooneex/status": "workspace:*",
     "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "achievements",
+    "bun",
+    "flashcard",
+    "game",
+    "gamification",
+    "mcq",
+    "ooneex",
+    "rewards",
+    "typescript"
+  ]
 }

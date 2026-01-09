@@ -34,5 +34,14 @@
     "pdf-to-img": "^5.0.0",
     "sharp": "^0.33.5",
     "unpdf": "^0.12.1"
-  }
+  },
+  "keywords": [
+    "bun",
+    "document",
+    "generator",
+    "ooneex",
+    "pdf",
+    "pdf-lib",
+    "typescript"
+  ]
 }

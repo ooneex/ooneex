@@ -29,5 +29,15 @@
   "dependencies": {},
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "color",
+    "colors",
+    "css",
+    "ooneex",
+    "palette",
+    "theming",
+    "typescript"
+  ]
 }

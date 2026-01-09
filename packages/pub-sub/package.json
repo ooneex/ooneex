@@ -34,5 +34,14 @@
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "events",
+    "messaging",
+    "ooneex",
+    "pub-sub",
+    "pubsub",
+    "typescript"
+  ]
 }

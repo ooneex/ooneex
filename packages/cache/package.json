@@ -32,5 +32,15 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "cache",
+    "caching",
+    "memory",
+    "ooneex",
+    "redis",
+    "storage",
+    "typescript"
+  ]
 }

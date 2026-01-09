@@ -41,5 +41,15 @@
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*",
     "@ooneex/user": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "controller",
+    "decorator",
+    "http",
+    "mvc",
+    "ooneex",
+    "routing",
+    "typescript"
+  ]
 }

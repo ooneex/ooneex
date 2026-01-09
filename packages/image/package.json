@@ -31,5 +31,14 @@
     "@ooneex/status": "workspace:*",
     "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "graphics",
+    "image",
+    "images",
+    "ooneex",
+    "picture",
+    "typescript"
+  ]
 }

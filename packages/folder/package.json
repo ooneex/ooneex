@@ -31,5 +31,13 @@
     "@ooneex/status": "workspace:*",
     "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "directory",
+    "filesystem",
+    "folder",
+    "ooneex",
+    "typescript"
+  ]
 }

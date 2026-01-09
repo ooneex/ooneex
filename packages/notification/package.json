@@ -27,5 +27,15 @@
     "publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "alerts",
+    "bun",
+    "notification",
+    "notifications",
+    "ooneex",
+    "push",
+    "sms",
+    "typescript"
+  ]
 }

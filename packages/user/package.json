@@ -32,5 +32,15 @@
     "@ooneex/image": "workspace:*",
     "@ooneex/role": "workspace:*",
     "@ooneex/types": "workspace:*"
-  }
+  },
+  "keywords": [
+    "account",
+    "bun",
+    "identity",
+    "ooneex",
+    "profile",
+    "typescript",
+    "user",
+    "users"
+  ]
 }

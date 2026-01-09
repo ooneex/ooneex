@@ -29,5 +29,13 @@
   "devDependencies": {
     "@ooneex/controller": "workspace:*",
     "@ooneex/entity": "workspace:*"
-  }
+  },
+  "keywords": [
+    "bun",
+    "modular",
+    "module",
+    "ooneex",
+    "plugin",
+    "typescript"
+  ]
 }

@@ -30,5 +30,13 @@
   "dependencies": {
     "@ooneex/http-status": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "bun",
+    "error",
+    "error-handling",
+    "exception",
+    "ooneex",
+    "typescript"
+  ]
 }

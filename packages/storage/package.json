@@ -31,5 +31,15 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*"
-  }
+  },
+  "keywords": [
+    "blob",
+    "bun",
+    "cloud",
+    "file-storage",
+    "ooneex",
+    "s3",
+    "storage",
+    "typescript"
+  ]
 }

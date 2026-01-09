@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/country",
   "description": "Country data utilities with timezone support and multi-language localization (French, Romanian)",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "type": "module",
   "files": [
     "dist",

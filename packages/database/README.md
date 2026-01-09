@@ -1,30 +1,28 @@
 # @ooneex/database
 
-A comprehensive TypeScript/JavaScript database library designed for Bun runtime. This package provides a unified interface for database operations with support for SQLite, PostgreSQL, MySQL, and Redis, along with TypeORM adapters for advanced ORM functionality.
+A database connection and management library for TypeScript applications with TypeORM integration. This package provides unified interfaces for Redis, PostgreSQL, and SQLite databases with automatic connection handling, repository management, and seamless integration with the Ooneex framework.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
+![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
+![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 ## Features
 
-✅ **Multi-Database Support** - SQLite, PostgreSQL, MySQL, and Redis support
+✅ **Multiple Databases** - Support for PostgreSQL, SQLite, and Redis
 
-✅ **Bun Native** - Built specifically for Bun runtime with Bun.SQL
+✅ **TypeORM Integration** - Full TypeORM support for relational databases
 
-✅ **TypeORM Integration** - Dedicated adapters for PostgreSQL and SQLite
+✅ **Repository Pattern** - Easy access to TypeORM repositories
+
+✅ **Connection Management** - Automatic connection handling and reconnection
+
+✅ **Container Integration** - Works seamlessly with dependency injection
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Connection Management** - Robust connection opening, closing, and lifecycle management
-
-✅ **Database Operations** - Create, drop, and manage database instances
-
-✅ **Error Handling** - Comprehensive error handling with custom exceptions
-
-✅ **Environment Support** - Automatic environment variable detection
-
-✅ **Zero Configuration** - Works out of the box with sensible defaults
+✅ **Decorators** - Register database services with decorators
 
 ## Installation
 
@@ -33,289 +31,227 @@ A comprehensive TypeScript/JavaScript database library designed for Bun runtime.
 bun add @ooneex/database
 ```
 
+### pnpm
+```bash
+pnpm add @ooneex/database
+```
+
+### Yarn
+```bash
+yarn add @ooneex/database
+```
+
+### npm
+```bash
+npm install @ooneex/database
+```
+
 ## Usage
 
-### TypeORM PostgreSQL Adapter
+### PostgreSQL with TypeORM
 
 ```typescript
-import { TypeormPgDatabaseAdapter } from '@ooneex/database';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { TypeormPgDatabase } from '@ooneex/database';
+import { UserEntity } from './entities/UserEntity';
 
-@Entity()
-class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
-
-  @Column()
-  email: string;
-}
-
-const adapter = new TypeormPgDatabaseAdapter({
-  url: 'postgresql://user:pass@localhost:5432/mydb',
-  synchronize: true,
-  entities: [User]
+const database = new TypeormPgDatabase({
+  host: 'localhost',
+  port: 5432,
+  username: 'postgres',
+  password: 'password',
+  database: 'myapp'
 });
 
-// Open and get repository
-const userRepository = await adapter.open(User);
+// Get repository for an entity
+const userRepository = await database.open(UserEntity);
 
-// Create user
-const user = userRepository.create({
-  name: 'John Doe',
-  email: 'john@example.com'
-});
-await userRepository.save(user);
-
-// Find users
+// Use TypeORM repository methods
 const users = await userRepository.find();
+const user = await userRepository.findOneBy({ id: '123' });
 
-// Close connection
-await adapter.close();
+// Close connection when done
+await database.close();
 ```
 
-### TypeORM SQLite Adapter
+### SQLite with TypeORM
 
 ```typescript
-import { TypeormSqliteDatabaseAdapter } from '@ooneex/database';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { TypeormSqliteDatabase } from '@ooneex/database';
+import { ProductEntity } from './entities/ProductEntity';
 
-@Entity()
-class Product {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
-
-  @Column('decimal')
-  price: number;
-}
-
-const adapter = new TypeormSqliteDatabaseAdapter({
-  database: './products.db',
-  synchronize: true,
-  entities: [Product]
+const database = new TypeormSqliteDatabase({
+  database: './data/app.db'
 });
 
-// Open and get repository
-const productRepository = await adapter.open(Product);
+// Get repository
+const productRepository = await database.open(ProductEntity);
 
-// Create product
-const product = productRepository.create({
-  name: 'Laptop',
-  price: 999.99
+// Query products
+const products = await productRepository.find({
+  where: { category: 'electronics' },
+  take: 10
 });
-await productRepository.save(product);
 
-// Close connection
-await adapter.close();
+await database.close();
 ```
 
-### Error Handling
+### Redis Database
 
 ```typescript
-import { Database, DatabaseException } from '@ooneex/database';
+import { RedisDatabase } from '@ooneex/database';
 
-try {
-  const db = new Database('invalid://connection');
-  await db.open();
-} catch (error) {
-  if (error instanceof DatabaseException) {
-    console.error('Database error:', error.message);
-    console.error('Error data:', error.data);
-  }
-}
+const redis = new RedisDatabase({
+  url: 'redis://localhost:6379'
+});
+
+// Open connection and get client
+const client = await redis.open();
+
+// Use Redis commands
+await client.set('key', 'value');
+const value = await client.get('key');
+
+// Close connection
+await redis.close();
 ```
 
-### Environment Configuration
+### Using Environment Variables
 
-```bash
-# Set in your .env file
-DATABASE_URL=sqlite://./myapp.db
-# or
-DATABASE_URL=postgresql://user:password@localhost:5432/mydb
-# or
-DATABASE_URL=mysql://user:password@localhost:3306/mydb
+```typescript
+import { TypeormPgDatabase } from '@ooneex/database';
 
-# For SQLite adapter
-SQLITE_DATABASE_PATH=./myapp.db
+// Automatically uses environment variables
+const database = new TypeormPgDatabase();
 
-# For Redis adapter
-REDIS_URL=redis://localhost:6379
-# or
-VALKEY_URL=redis://localhost:6379
+// Environment variables:
+// DATABASE_HOST
+// DATABASE_PORT
+// DATABASE_USERNAME
+// DATABASE_PASSWORD
+// DATABASE_NAME
 ```
 
 ## API Reference
 
-### `Database` Class
+### Classes
 
-The main database class providing connection management and basic operations.
+#### `TypeormPgDatabase`
 
-#### Constructor
+PostgreSQL database adapter using TypeORM.
 
+**Constructor:**
 ```typescript
-constructor(connectionString?: string | URL, options?: Bun.SQL.Options)
+new TypeormPgDatabase(options?: PostgresConnectionOptions)
 ```
 
 **Parameters:**
-- `connectionString` - Database connection string or URL object
-- `options` - Bun.SQL connection options
+- `options.host` - Database host (default: `DATABASE_HOST` env var)
+- `options.port` - Database port (default: `DATABASE_PORT` env var)
+- `options.username` - Database username (default: `DATABASE_USERNAME` env var)
+- `options.password` - Database password (default: `DATABASE_PASSWORD` env var)
+- `options.database` - Database name (default: `DATABASE_NAME` env var)
+- `options.synchronize` - Auto-sync schema (default: false)
+- `options.logging` - Enable query logging (default: false)
 
-**Example:**
-```typescript
-const db = new Database('sqlite://./app.db', { timeout: 5000 });
-```
+**Methods:**
 
-#### Methods
+##### `open<Entity>(entity: EntityTarget<Entity>, database?: string): Promise<Repository<Entity>>`
 
-##### `getClient(): Bun.SQL`
-Returns the underlying Bun.SQL client instance.
-
-**Returns:** The Bun.SQL client
-
-**Example:**
-```typescript
-const client = db.getClient();
-const result = await client`SELECT * FROM users`;
-```
-
-##### `open(): Promise<void>`
-Opens the database connection.
-
-**Example:**
-```typescript
-await db.open();
-```
-
-##### `close(): Promise<void>`
-Closes the database connection.
-
-**Example:**
-```typescript
-await db.close();
-```
-
-##### `drop(): Promise<void>`
-Drops the database. **Caution: This is destructive and cannot be undone.**
-
-**Example:**
-```typescript
-await db.drop(); // Permanently deletes the database
-```
-
-### `TypeormPgDatabaseAdapter` Class
-
-TypeORM adapter for PostgreSQL databases.
-
-#### Constructor
-
-```typescript
-constructor(options: Omit<PostgresConnectionOptions, "type">)
-```
+Opens connection and returns a TypeORM repository for the specified entity.
 
 **Parameters:**
-- `options` - PostgreSQL connection options (without type field)
+- `entity` - TypeORM entity class
+- `database` - Optional database name override
 
-#### Methods
+**Returns:** TypeORM Repository instance
 
-##### `getSource(): DataSource`
-Returns the TypeORM DataSource instance.
-
-##### `open<Entity>(entity: EntityTarget<Entity>): Promise<Repository<Entity>>`
-Opens connection and returns repository for the specified entity.
+**Example:**
+```typescript
+const userRepo = await database.open(UserEntity);
+const users = await userRepo.find();
+```
 
 ##### `close(): Promise<void>`
+
 Closes the database connection.
 
 ##### `drop(): Promise<void>`
-Drops the database schema.
 
-##### `getEntityManager(): EntityManager`
-Returns the TypeORM EntityManager.
+Drops the database (use with caution!).
 
-### `TypeormSqliteDatabaseAdapter` Class
+---
 
-TypeORM adapter for SQLite databases.
+#### `TypeormSqliteDatabase`
 
-#### Constructor
+SQLite database adapter using TypeORM.
 
+**Constructor:**
 ```typescript
-constructor(options: Omit<SqliteConnectionOptions, "type">)
+new TypeormSqliteDatabase(options?: SqliteConnectionOptions)
 ```
 
 **Parameters:**
-- `options` - SQLite connection options (without type field)
+- `options.database` - Path to SQLite database file
 
-#### Methods
+**Methods:**
 
-Same methods as `TypeormPgDatabaseAdapter` but optimized for SQLite.
+Same interface as `TypeormPgDatabase`.
 
-### `RedisDatabaseAdapter` Class
+---
 
-Redis adapter using Bun's native Redis client.
+#### `AbstractTypeormSqliteDatabase`
 
-#### Constructor
+Abstract base class for creating custom SQLite database adapters.
 
+**Example:**
 ```typescript
-constructor(options: RedisConnectionOptions = {})
+class MyDatabase extends AbstractTypeormSqliteDatabase {
+  protected getEntities() {
+    return [UserEntity, ProductEntity];
+  }
+}
+```
+
+---
+
+#### `RedisDatabase`
+
+Redis database adapter using Bun's built-in Redis client.
+
+**Constructor:**
+```typescript
+new RedisDatabase(options?: RedisConnectionOptionsType)
 ```
 
 **Parameters:**
-- `options` - Redis connection configuration
+- `options.url` - Redis connection URL (default: `REDIS_URL` env var)
+- `options.connectionTimeout` - Connection timeout in ms (default: 10000)
+- `options.idleTimeout` - Idle timeout in ms (default: 30000)
+- `options.autoReconnect` - Enable auto reconnection (default: true)
+- `options.maxRetries` - Maximum retry attempts (default: 3)
+- `options.tls` - TLS configuration (optional)
 
-**Options:**
-- `url` - Redis connection URL (defaults to environment variables or localhost)
-- `connectionTimeout` - Connection timeout in milliseconds (default: 10000)
-- `idleTimeout` - Idle timeout in milliseconds (default: 0)
-- `autoReconnect` - Whether to automatically reconnect (default: true)
-- `maxRetries` - Maximum reconnection attempts (default: 10)
-- `enableOfflineQueue` - Queue commands when disconnected (default: true)
-- `enableAutoPipelining` - Automatically pipeline commands (default: true)
-- `tls` - TLS configuration (default: false)
+**Methods:**
 
-#### Methods
+##### `open(): Promise<RedisClient>`
 
-##### `getClient(): RedisClient`
-Returns the underlying Bun Redis client instance.
+Opens connection and returns the Redis client.
 
-##### `open(): Promise<void>`
-Opens the Redis connection.
+**Returns:** Bun RedisClient instance
+
+**Example:**
+```typescript
+const client = await redis.open();
+await client.set('session:123', JSON.stringify(sessionData));
+```
 
 ##### `close(): Promise<void>`
+
 Closes the Redis connection.
 
 ##### `drop(): Promise<void>`
-Flushes the current Redis database (FLUSHDB).
 
-##### `ping(): Promise<string>`
-Pings the Redis server.
-
-##### `info(section?: string): Promise<string>`
-Gets Redis server information.
-
-##### `isConnected(): boolean`
-Returns connection status.
-
-##### `getBufferedAmount(): number`
-Returns buffered data amount in bytes.
-
-### `DatabaseException` Class
-
-Custom exception class for database-related errors.
-
-#### Constructor
-
-```typescript
-constructor(message: string, data?: T)
-```
-
-**Parameters:**
-- `message` - Error message
-- `data` - Additional error data
+Flushes all data from Redis (use with caution!).
 
 ### Interfaces
 
@@ -323,9 +259,9 @@ constructor(message: string, data?: T)
 
 ```typescript
 interface IDatabase {
-  open(): Promise<void>;
-  close(): Promise<void>;
-  drop(): Promise<void>;
+  open: () => Promise<void>;
+  close: () => Promise<void>;
+  drop: () => Promise<void>;
 }
 ```
 
@@ -333,255 +269,230 @@ interface IDatabase {
 
 ```typescript
 interface ITypeormDatabase {
-  open(entity: any): Promise<any>;
-  close(): Promise<void>;
-  drop(): Promise<void>;
+  open: <Entity extends ObjectLiteral>(
+    entity: EntityTarget<Entity>,
+    database?: string
+  ) => Promise<Repository<Entity>>;
+  close: () => Promise<void>;
+  drop: () => Promise<void>;
 }
 ```
 
-## Supported Database URLs
+#### `IRedisDatabase`
 
-### SQLite
 ```typescript
-// File-based database
-'sqlite://./database.db'
-'sqlite:database.db'
-'./database.db'
-
-// In-memory database
-'sqlite://:memory:'
-':memory:'
+interface IRedisDatabase {
+  open: () => Promise<RedisClient>;
+  close: () => Promise<void>;
+  drop: () => Promise<void>;
+}
 ```
 
-### PostgreSQL
+### Types
+
+#### `DatabaseClassType`
+
 ```typescript
-'postgresql://user:password@localhost:5432/database'
-'postgres://user:password@localhost:5432/database'
+type DatabaseClassType = new (...args: any[]) => IDatabase | IRedisDatabase | ITypeormDatabase;
 ```
 
-### MySQL
+#### `RedisConnectionOptionsType`
+
 ```typescript
-'mysql://user:password@localhost:3306/database'
-'mysql2://user:password@localhost:3306/database'
+type RedisConnectionOptionsType = {
+  url?: string;
+  connectionTimeout?: number;
+  idleTimeout?: number;
+  autoReconnect?: boolean;
+  maxRetries?: number;
+  enableOfflineQueue?: boolean;
+  enableAutoPipelining?: boolean;
+  tls?: boolean | {
+    rejectUnauthorized?: boolean;
+    ca?: string;
+    cert?: string;
+    key?: string;
+  };
+};
 ```
 
-### Redis
-```typescript
-// Standard Redis URL
-'redis://localhost:6379'
+## Advanced Usage
 
-// With authentication
-'redis://username:password@localhost:6379'
-
-// With database number
-'redis://localhost:6379/0'
-
-// TLS connections
-'rediss://localhost:6379'
-'redis+tls://localhost:6379'
-
-// Unix socket connections
-'redis+unix:///path/to/socket'
-'redis+tls+unix:///path/to/socket'
-```
-
-## Best Practices
-
-### Connection Management
-- Always call `close()` when done with database operations
-- Use try-catch blocks for proper error handling
-- Consider connection pooling for high-traffic applications
-
-### Redis Adapter
+### Integration with Ooneex App
 
 ```typescript
-import { RedisDatabaseAdapter } from '@ooneex/database';
+import { App } from '@ooneex/app';
+import { TypeormPgDatabase } from '@ooneex/database';
 
-const adapter = new RedisDatabaseAdapter({
-  url: 'redis://localhost:6379',
-  connectionTimeout: 10000,
-  autoReconnect: true,
-  maxRetries: 10
+const database = new TypeormPgDatabase({
+  host: 'localhost',
+  port: 5432,
+  username: 'postgres',
+  password: 'password',
+  database: 'myapp'
 });
 
-// Open connection
-await adapter.open();
+const app = new App({
+  database,
+  // ... other config
+});
 
-// Get Redis client for operations
-const client = adapter.getClient();
+await app.run();
+```
 
-// Basic operations
-await client.set('user:1', 'Alice');
-const user = await client.get('user:1');
+### Using in Controllers
 
-// Hash operations
-await client.hmset('user:2', ['name', 'Bob', 'email', 'bob@example.com']);
-const userFields = await client.hmget('user:2', ['name', 'email']);
+```typescript
+import { Route } from '@ooneex/routing';
+import type { IController, ContextType } from '@ooneex/controller';
+import { UserEntity } from '../entities/UserEntity';
 
-// Set operations
-await client.sadd('tags', 'redis', 'database', 'cache');
-const tags = await client.smembers('tags');
+@Route.http({
+  name: 'api.users.list',
+  path: '/api/users',
+  method: 'GET',
+  description: 'List all users'
+})
+class UserListController implements IController {
+  public async index(context: ContextType): Promise<IResponse> {
+    const { database } = context;
+    
+    const userRepository = await database?.open(UserEntity);
+    const users = await userRepository?.find({
+      take: 100,
+      order: { createdAt: 'DESC' }
+    });
+    
+    return context.response.json({ users });
+  }
+}
+```
 
-// Utility methods
-const pingResult = await adapter.ping();
-const serverInfo = await adapter.info('server');
+### Container Integration with Decorators
 
-// Close connection
-await adapter.close();
+```typescript
+import { container, EContainerScope } from '@ooneex/container';
+import { TypeormPgDatabase, decorator } from '@ooneex/database';
+
+// Register with decorator
+@decorator.database()
+class AppDatabase extends TypeormPgDatabase {
+  constructor() {
+    super({
+      host: 'localhost',
+      port: 5432,
+      database: 'myapp'
+    });
+  }
+}
+
+// Resolve from container
+const database = container.get(AppDatabase);
 ```
 
 ### Error Handling
-- Catch `DatabaseException` specifically for database errors
-- Log error details for debugging
-- Implement retry logic for transient failures
-
-### Security
-- Never hardcode database credentials
-- Use environment variables for sensitive information
-- Validate input data before database operations
-
-### Performance
-- Use prepared statements when possible
-- Implement proper indexing strategies
-- Monitor query performance in production
-
-## TypeORM Integration
-
-This package provides specialized adapters for TypeORM, allowing you to leverage the full power of TypeORM while maintaining the simplicity of the Ooneex database interface.
-
-### PostgreSQL with TypeORM
 
 ```typescript
-import { TypeormPgDatabaseAdapter } from '@ooneex/database';
+import { TypeormPgDatabase, DatabaseException } from '@ooneex/database';
 
-const adapter = new TypeormPgDatabaseAdapter({
-  url: process.env.DATABASE_URL,
-  synchronize: false, // Set to true only in development
-  entities: [User, Product, Order],
-  migrations: ['./migrations/**/*.ts'],
-  extra: {
-    max: 20, // Maximum number of connections
-    idleTimeoutMillis: 30000
+try {
+  const database = new TypeormPgDatabase();
+  const userRepo = await database.open(UserEntity);
+  const users = await userRepo.find();
+} catch (error) {
+  if (error instanceof DatabaseException) {
+    console.error('Database Error:', error.message);
+    console.error('Status:', error.status);
   }
+}
+```
+
+### Transaction Support
+
+```typescript
+import { TypeormPgDatabase } from '@ooneex/database';
+import { UserEntity, OrderEntity } from './entities';
+
+const database = new TypeormPgDatabase();
+const userRepo = await database.open(UserEntity);
+
+// Access the entity manager for transactions
+const entityManager = userRepo.manager;
+
+await entityManager.transaction(async (transactionalManager) => {
+  const user = await transactionalManager.findOneBy(UserEntity, { id: '123' });
+  
+  const order = transactionalManager.create(OrderEntity, {
+    userId: user.id,
+    total: 99.99
+  });
+  
+  await transactionalManager.save(order);
+  
+  user.ordersCount += 1;
+  await transactionalManager.save(user);
 });
 ```
 
-### SQLite with TypeORM
+### Multiple Database Connections
 
 ```typescript
-import { TypeormSqliteDatabaseAdapter } from '@ooneex/database';
+import { TypeormPgDatabase, TypeormSqliteDatabase } from '@ooneex/database';
 
-const adapter = new TypeormSqliteDatabaseAdapter({
-  database: './myapp.db',
-  synchronize: true,
-  entities: [User, Product],
-  enableWAL: true, // Write-Ahead Logging for better performance
-  busyTimeout: 30000
-});
-```
-
-## Redis Integration
-
-This package provides a native Redis adapter built specifically for Bun's Redis client, offering high-performance Redis operations with full TypeScript support.
-
-### Basic Redis Usage
-
-```typescript
-import { RedisDatabaseAdapter } from '@ooneex/database';
-
-const adapter = new RedisDatabaseAdapter({
-  url: process.env.REDIS_URL,
-  connectionTimeout: 5000,
-  autoReconnect: true
+// Main PostgreSQL database
+const mainDb = new TypeormPgDatabase({
+  host: 'localhost',
+  database: 'main_app'
 });
 
-await adapter.open();
-const client = adapter.getClient();
-
-// String operations
-await client.set('key', 'value');
-const value = await client.get('key');
-
-// Numeric operations
-await client.incr('counter');
-await client.decr('counter');
-
-// Hash operations
-await client.hmset('user:1', ['name', 'Alice', 'email', 'alice@example.com']);
-const userData = await client.hmget('user:1', ['name', 'email']);
-
-// Set operations
-await client.sadd('tags', 'redis', 'cache');
-const allTags = await client.smembers('tags');
-
-await adapter.close();
-```
-
-### Redis Pub/Sub
-
-```typescript
-const publisher = new RedisDatabaseAdapter();
-const subscriber = new RedisDatabaseAdapter();
-
-await publisher.open();
-await subscriber.open();
-
-// Set up subscription
-const subClient = subscriber.getClient();
-await subClient.subscribe('notifications', (message, channel) => {
-  console.log(`Received: ${message} on ${channel}`);
+// Analytics SQLite database
+const analyticsDb = new TypeormSqliteDatabase({
+  database: './analytics.db'
 });
 
-// Publish message
-const pubClient = publisher.getClient();
-await pubClient.publish('notifications', 'Hello subscribers!');
+// Use both databases
+const userRepo = await mainDb.open(UserEntity);
+const analyticsRepo = await analyticsDb.open(AnalyticsEntity);
 ```
 
 ### Redis Caching Pattern
 
 ```typescript
-async function getUserWithCache(userId: number) {
-  const cacheKey = `user:${userId}`;
-  
-  // Try cache first
-  const cached = await client.get(cacheKey);
-  if (cached) {
-    return JSON.parse(cached);
-  }
-  
-  // Fetch from database
-  const user = await database.getUser(userId);
-  
-  // Cache with expiration
-  await client.set(cacheKey, JSON.stringify(user));
-  await client.expire(cacheKey, 3600); // 1 hour
-  
-  return user;
-}
-```
+import { RedisDatabase } from '@ooneex/database';
 
-### Redis Rate Limiting
+class CacheService {
+  private readonly redis: RedisDatabase;
+  private client: Bun.RedisClient | null = null;
 
-```typescript
-async function rateLimit(ip: string, limit: number = 100, windowSecs: number = 3600) {
-  const key = `ratelimit:${ip}`;
-  
-  const count = await client.incr(key);
-  
-  if (count === 1) {
-    await client.expire(key, windowSecs);
+  constructor() {
+    this.redis = new RedisDatabase();
   }
-  
-  return {
-    allowed: count <= limit,
-    remaining: Math.max(0, limit - count)
-  };
+
+  public async init(): Promise<void> {
+    this.client = await this.redis.open();
+  }
+
+  public async get<T>(key: string): Promise<T | null> {
+    const value = await this.client?.get(key);
+    return value ? JSON.parse(value) : null;
+  }
+
+  public async set<T>(key: string, value: T, ttl?: number): Promise<void> {
+    await this.client?.set(key, JSON.stringify(value));
+    if (ttl) {
+      await this.client?.expire(key, ttl);
+    }
+  }
+
+  public async delete(key: string): Promise<void> {
+    await this.client?.del(key);
+  }
 }
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 
@@ -600,7 +511,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Follow the existing code style
 - Update documentation for API changes
 - Ensure all tests pass before submitting PR
-- Test with different database types (SQLite, PostgreSQL, MySQL)
 
 ---
 

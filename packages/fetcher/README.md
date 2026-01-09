@@ -1,6 +1,6 @@
 # @ooneex/fetcher
 
-A powerful and flexible TypeScript/JavaScript HTTP client library built on top of the native Fetch API. This package provides a comprehensive set of methods for making HTTP requests with automatic JSON handling, header management, file uploads, and response status detection.
+A lightweight HTTP client wrapper for making fetch requests with typed headers and response handling. This package provides a fluent API for HTTP operations with built-in support for authentication tokens, content types, request cancellation, and file uploads.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,29 +11,21 @@ A powerful and flexible TypeScript/JavaScript HTTP client library built on top o
 
 ## Features
 
-✅ **Native Fetch Based** - Built on top of the modern Fetch API
+✅ **Simple API** - Intuitive methods for GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe Responses** - Generic response types with full TypeScript support
 
-✅ **HTTP Methods** - Support for GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+✅ **Authentication** - Built-in support for Bearer and Basic authentication tokens
 
-✅ **File Upload** - Built-in file and blob upload functionality
+✅ **File Uploads** - Easy file upload with automatic FormData handling
 
-✅ **Header Management** - Comprehensive header manipulation methods
+✅ **Request Cancellation** - Abort in-flight requests with AbortController integration
 
-✅ **Authentication** - Bearer token and basic authentication support
+✅ **Header Management** - Fluent API for managing request headers
 
-✅ **Request Aborting** - Built-in AbortController support
+✅ **Base URL Support** - Configure base URL for cleaner API calls
 
-✅ **Status Detection** - Automatic HTTP status code classification
-
-✅ **JSON Handling** - Automatic JSON serialization and deserialization
-
-✅ **Error Handling** - Comprehensive error handling and response parsing
-
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
-
-✅ **Zero Dependencies** - Minimal external dependencies
+✅ **Cloneable** - Create independent copies of configured fetcher instances
 
 ## Installation
 
@@ -59,64 +51,53 @@ npm install @ooneex/fetcher
 
 ## Usage
 
-### Basic Usage
+### Basic GET Request
 
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+const fetcher = new Fetcher('https://api.example.com');
 
-// GET request
-const response = await api.get('/users');
-console.log(response.data); // parsed JSON data
-console.log(response.isSuccessful); // true for 2xx status codes
+const response = await fetcher.get<{ users: User[] }>('/users');
 
-// POST request with JSON data
-const newUser = { name: 'John Doe', email: 'john@example.com' };
-const createResponse = await api.post('/users', newUser);
+if (response.success) {
+  console.log(response.data.users);
+} else {
+  console.error(response.message);
+}
 ```
 
-### Authentication
+### POST Request with Data
 
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+const fetcher = new Fetcher('https://api.example.com');
 
-// Bearer token authentication
-api.setBearerToken('your-jwt-token');
+const response = await fetcher.post<{ user: User }>('/users', {
+  name: 'John Doe',
+  email: 'john@example.com'
+});
 
-// Basic authentication
-api.setBasicToken('base64-encoded-credentials');
-
-// Make authenticated requests
-const response = await api.get('/protected-resource');
-
-// Clear authentication
-api.clearBearerToken();
-api.clearBasicToken();
+if (response.success) {
+  console.log('Created user:', response.data.user);
+}
 ```
 
-### Header Management
+### With Authentication
 
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+const fetcher = new Fetcher('https://api.example.com');
 
-// Set content type
-api.setContentType('application/json');
+// Set Bearer token
+fetcher.setBearerToken('your-jwt-token');
 
-// Set language
-api.setLang('en-US');
+const response = await fetcher.get<{ profile: Profile }>('/me');
 
-// Chain header methods
-api.setBearerToken('token')
-   .setContentType('application/json')
-   .setLang('fr-FR');
-
-// Access header object directly
-api.header.set('X-Custom-Header', 'custom-value');
+// Clear token when done
+fetcher.clearBearerToken();
 ```
 
 ### File Upload
@@ -124,431 +105,371 @@ api.header.set('X-Custom-Header', 'custom-value');
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+const fetcher = new Fetcher('https://api.example.com');
 
-// Upload a file
-const fileInput = document.querySelector('input[type="file"]');
-const file = fileInput.files[0];
+const file = document.querySelector('input[type="file"]').files[0];
 
-const uploadResponse = await api.upload('/upload', file, 'document');
+const response = await fetcher.upload<{ url: string }>(
+  '/upload',
+  file,
+  'avatar' // form field name
+);
 
-// Upload a blob
-const blob = new Blob(['Hello, World!'], { type: 'text/plain' });
-const blobResponse = await api.upload('/upload-text', blob, 'textFile');
+if (response.success) {
+  console.log('Uploaded to:', response.data.url);
+}
 ```
 
-### Request Aborting
+### Request Cancellation
 
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+const fetcher = new Fetcher('https://api.example.com');
 
 // Start a request
-const requestPromise = api.get('/slow-endpoint');
+const promise = fetcher.get('/slow-endpoint');
 
-// Abort the request
-api.abort();
+// Cancel it
+fetcher.abort();
 
+// Handle the cancellation
 try {
-  const response = await requestPromise;
+  await promise;
 } catch (error) {
-  console.log('Request was aborted');
+  if (error.name === 'AbortError') {
+    console.log('Request was cancelled');
+  }
 }
-```
-
-### Advanced Usage
-
-```typescript
-import { Fetcher } from '@ooneex/fetcher';
-
-const api = new Fetcher('https://api.example.com');
-
-// Configure headers and authentication
-api.setBearerToken('jwt-token')
-   .setContentType('application/json')
-   .setLang('en-US');
-
-// Make various HTTP requests
-const users = await api.get('/users');
-const user = await api.post('/users', { name: 'Jane Doe' });
-const updated = await api.put('/users/1', { name: 'Jane Smith' });
-const patched = await api.patch('/users/1', { email: 'jane@example.com' });
-await api.delete('/users/1');
-
-// Check response status
-if (user.isSuccessful) {
-  console.log('User created:', user.data);
-} else if (user.isClientError) {
-  console.log('Client error:', user.message);
-} else if (user.isServerError) {
-  console.log('Server error:', user.message);
-}
-
-// Clone fetcher for different configurations
-const authenticatedApi = api.clone().setBearerToken('different-token');
 ```
 
 ## API Reference
 
-### `Fetcher` Class
+### Classes
 
-The main class for making HTTP requests.
+#### `Fetcher`
 
-#### Constructor
+HTTP client class for making fetch requests.
 
-##### `new Fetcher(baseURL: string)`
-Creates a new Fetcher instance with the specified base URL.
+**Constructor:**
+```typescript
+new Fetcher(baseURL?: string)
+```
 
 **Parameters:**
-- `baseURL` - The base URL for all requests
+- `baseURL` - Optional base URL to prepend to all request paths
 
-**Example:**
-```typescript
-const api = new Fetcher('https://api.example.com');
-```
+**Properties:**
 
-#### Authentication Methods
+##### `header: Header`
 
-##### `setBearerToken(token: string): Fetcher`
-Sets the Authorization header with a Bearer token.
+Access to the underlying Header instance for advanced header manipulation.
 
-**Parameters:**
-- `token` - The Bearer token
+**Methods:**
 
-**Returns:** The Fetcher instance for method chaining
+##### `get<T>(path: string): Promise<ResponseDataType<T>>`
 
-**Example:**
-```typescript
-api.setBearerToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...');
-```
-
-##### `setBasicToken(token: string): Fetcher`
-Sets the Authorization header with Basic authentication.
-
-**Parameters:**
-- `token` - The base64-encoded credentials
-
-**Returns:** The Fetcher instance for method chaining
-
-**Example:**
-```typescript
-api.setBasicToken(btoa('username:password'));
-```
-
-##### `clearBearerToken(): Fetcher`
-Removes the Authorization header.
-
-**Returns:** The Fetcher instance for method chaining
-
-##### `clearBasicToken(): Fetcher`
-Removes the Authorization header.
-
-**Returns:** The Fetcher instance for method chaining
-
-#### Header Management Methods
-
-##### `setContentType(contentType: MimeType): Fetcher`
-Sets the Content-Type header.
-
-**Parameters:**
-- `contentType` - The MIME type for the content
-
-**Returns:** The Fetcher instance for method chaining
-
-**Example:**
-```typescript
-api.setContentType('application/json');
-api.setContentType('multipart/form-data');
-```
-
-##### `setLang(lang: string): Fetcher`
-Sets the Accept-Language header.
-
-**Parameters:**
-- `lang` - The language code
-
-**Returns:** The Fetcher instance for method chaining
-
-**Example:**
-```typescript
-api.setLang('en-US');
-api.setLang('fr-FR');
-```
-
-#### Request Control Methods
-
-##### `abort(): Fetcher`
-Aborts the current request and creates a new AbortController.
-
-**Returns:** The Fetcher instance for method chaining
-
-**Example:**
-```typescript
-api.abort(); // Cancels any ongoing requests
-```
-
-##### `clone(): Fetcher`
-Creates a new Fetcher instance with the same base URL.
-
-**Returns:** A new Fetcher instance
-
-**Example:**
-```typescript
-const newApi = api.clone();
-```
-
-#### HTTP Method Shortcuts
-
-##### `get<T = unknown>(path: string): Promise<FetcherResponseType<T>>`
 Performs a GET request.
 
 **Parameters:**
-- `path` - The endpoint path
+- `path` - Request path (appended to base URL if set)
 
-**Returns:** Promise resolving to a FetcherResponseType
+**Returns:** Promise resolving to typed response data
 
 **Example:**
 ```typescript
-const users = await api.get<User[]>('/users');
+const response = await fetcher.get<{ items: Item[] }>('/items');
 ```
 
-##### `post<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>`
-Performs a POST request.
+##### `post<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>`
+
+Performs a POST request with optional body data.
 
 **Parameters:**
-- `path` - The endpoint path
-- `data` - Optional request body data
+- `path` - Request path
+- `data` - Optional request body (automatically JSON-stringified for objects)
 
-**Returns:** Promise resolving to a FetcherResponseType
-
-**Example:**
-```typescript
-const newUser = await api.post<User>('/users', { name: 'John' });
-```
-
-##### `put<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>`
-Performs a PUT request.
-
-**Parameters:**
-- `path` - The endpoint path
-- `data` - Optional request body data
-
-**Returns:** Promise resolving to a FetcherResponseType
+**Returns:** Promise resolving to typed response data
 
 **Example:**
 ```typescript
-const updatedUser = await api.put<User>('/users/1', { name: 'Jane' });
+const response = await fetcher.post<{ id: string }>('/items', { name: 'New Item' });
 ```
 
-##### `patch<T = unknown>(path: string, data?: unknown): Promise<FetcherResponseType<T>>`
-Performs a PATCH request.
+##### `put<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>`
 
-**Parameters:**
-- `path` - The endpoint path
-- `data` - Optional request body data
+Performs a PUT request with optional body data.
 
-**Returns:** Promise resolving to a FetcherResponseType
+##### `patch<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>`
 
-**Example:**
-```typescript
-const patchedUser = await api.patch<User>('/users/1', { email: 'new@email.com' });
-```
+Performs a PATCH request with optional body data.
 
-##### `delete<T = unknown>(path: string): Promise<FetcherResponseType<T>>`
+##### `delete<T>(path: string): Promise<ResponseDataType<T>>`
+
 Performs a DELETE request.
 
-**Parameters:**
-- `path` - The endpoint path
+##### `head<T>(path: string): Promise<ResponseDataType<T>>`
 
-**Returns:** Promise resolving to a FetcherResponseType
-
-**Example:**
-```typescript
-await api.delete('/users/1');
-```
-
-##### `head<T = unknown>(path: string): Promise<FetcherResponseType<T>>`
 Performs a HEAD request.
 
-**Parameters:**
-- `path` - The endpoint path
+##### `options<T>(path: string): Promise<ResponseDataType<T>>`
 
-**Returns:** Promise resolving to a FetcherResponseType
-
-**Example:**
-```typescript
-const headers = await api.head('/users/1');
-```
-
-##### `options<T = unknown>(path: string): Promise<FetcherResponseType<T>>`
 Performs an OPTIONS request.
 
-**Parameters:**
-- `path` - The endpoint path
+##### `request<T>(method: HttpMethodType, path: string, data?: unknown): Promise<ResponseDataType<T>>`
 
-**Returns:** Promise resolving to a FetcherResponseType
-
-**Example:**
-```typescript
-const options = await api.options('/users');
-```
-
-##### `request<T = unknown>(method: HttpMethodType, path: string, data?: unknown): Promise<FetcherResponseType<T>>`
 Performs a custom HTTP request.
 
 **Parameters:**
-- `method` - The HTTP method
-- `path` - The endpoint path
-- `data` - Optional request body data
-
-**Returns:** Promise resolving to a FetcherResponseType
+- `method` - HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+- `path` - Request path
+- `data` - Optional request body
 
 **Example:**
 ```typescript
-const response = await api.request('PATCH', '/users/1', { status: 'active' });
+const response = await fetcher.request<{ result: string }>('POST', '/custom', { foo: 'bar' });
 ```
 
-##### `upload<T = unknown>(path: string, file: File | Blob, name?: string): Promise<FetcherResponseType<T>>`
-Uploads a file or blob.
+##### `upload<T>(path: string, file: File | Blob, name?: string): Promise<ResponseDataType<T>>`
+
+Uploads a file using multipart/form-data.
 
 **Parameters:**
-- `path` - The endpoint path
-- `file` - The file or blob to upload
-- `name` - Optional field name (defaults to "file")
+- `path` - Upload endpoint path
+- `file` - File or Blob to upload
+- `name` - Form field name (default: 'file')
 
-**Returns:** Promise resolving to a FetcherResponseType
-
-**Example:**
-```typescript
-const fileInput = document.querySelector('input[type="file"]');
-const file = fileInput.files[0];
-const response = await api.upload('/upload', file, 'document');
-```
-
-#### Properties
-
-##### `header: Header`
-Read-only access to the Header instance for direct header manipulation.
+**Returns:** Promise resolving to typed response data
 
 **Example:**
 ```typescript
-api.header.set('X-API-Key', 'your-api-key');
-const contentType = api.header.get('Content-Type');
+const response = await fetcher.upload<{ url: string }>('/upload', file, 'document');
 ```
 
-### Types
+##### `setBearerToken(token: string): this`
 
-#### `FetcherResponseType<T>`
-The response object returned by all HTTP methods.
+Sets the Authorization header with a Bearer token.
 
-**Properties:**
-- `data: T | null` - The parsed response data
-- `message: string | null` - Error message if parsing failed
-- `header: ReadonlyHeader` - Response headers
-- `isInformational: boolean` - True for 1xx status codes
-- `isSuccessful: boolean` - True for 2xx status codes
-- `isRedirect: boolean` - True for 3xx status codes
-- `isClientError: boolean` - True for 4xx status codes
-- `isServerError: boolean` - True for 5xx status codes
-- `isError: boolean` - True for 4xx or 5xx status codes
+**Parameters:**
+- `token` - JWT or other bearer token
 
-**Example:**
-```typescript
-const response = await api.get<User[]>('/users');
+**Returns:** The fetcher instance for chaining
 
-if (response.isSuccessful) {
-  console.log('Users:', response.data);
-} else if (response.isClientError) {
-  console.error('Client error:', response.message);
-} else if (response.isServerError) {
-  console.error('Server error:', response.message);
-}
-```
+##### `setBasicToken(token: string): this`
+
+Sets the Authorization header with Basic authentication.
+
+**Parameters:**
+- `token` - Base64-encoded credentials
+
+**Returns:** The fetcher instance for chaining
+
+##### `clearBearerToken(): this`
+
+Removes the Authorization header.
+
+**Returns:** The fetcher instance for chaining
+
+##### `clearBasicToken(): this`
+
+Removes the Authorization header.
+
+**Returns:** The fetcher instance for chaining
+
+##### `setContentType(contentType: MimeType): this`
+
+Sets the Content-Type header.
+
+**Parameters:**
+- `contentType` - MIME type string
+
+**Returns:** The fetcher instance for chaining
+
+##### `setLang(lang: string): this`
+
+Sets the Accept-Language or custom language header.
+
+**Parameters:**
+- `lang` - Language code (e.g., 'en', 'fr')
+
+**Returns:** The fetcher instance for chaining
+
+##### `abort(): this`
+
+Cancels any in-flight requests and resets the AbortController.
+
+**Returns:** The fetcher instance for chaining
+
+##### `clone(): Fetcher`
+
+Creates a new Fetcher instance with the same base URL.
+
+**Returns:** New Fetcher instance
+
+### Interfaces
 
 #### `IFetcher`
-Interface defining the Fetcher contract.
 
-**Example:**
 ```typescript
-import { IFetcher } from '@ooneex/fetcher';
-
-class CustomFetcher implements IFetcher {
-  // Implement all required methods
+interface IFetcher {
+  readonly header: Header;
+  
+  setBearerToken(token: string): IFetcher;
+  setBasicToken(token: string): IFetcher;
+  clearBearerToken(): IFetcher;
+  clearBasicToken(): IFetcher;
+  setContentType(contentType: MimeType): IFetcher;
+  setLang(lang: string): IFetcher;
+  abort(): IFetcher;
+  clone(): IFetcher;
+  
+  get<T>(path: string): Promise<ResponseDataType<T>>;
+  post<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>;
+  put<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>;
+  patch<T>(path: string, data?: unknown): Promise<ResponseDataType<T>>;
+  delete<T>(path: string): Promise<ResponseDataType<T>>;
+  head<T>(path: string): Promise<ResponseDataType<T>>;
+  options<T>(path: string): Promise<ResponseDataType<T>>;
+  request<T>(method: HttpMethodType, path: string, data?: unknown): Promise<ResponseDataType<T>>;
+  upload<T>(path: string, file: File | Blob, name?: string): Promise<ResponseDataType<T>>;
 }
 ```
 
-## Error Handling
+## Advanced Usage
 
-The fetcher automatically handles various error scenarios:
+### Creating API Client Classes
 
 ```typescript
 import { Fetcher } from '@ooneex/fetcher';
 
-const api = new Fetcher('https://api.example.com');
+class UserApi {
+  private fetcher: Fetcher;
 
-try {
-  const response = await api.get('/users');
-
-  if (response.isSuccessful) {
-    // Handle successful response
-    console.log('Data:', response.data);
-  } else if (response.isClientError) {
-    // Handle 4xx errors
-    console.error('Client error:', response.message);
-  } else if (response.isServerError) {
-    // Handle 5xx errors
-    console.error('Server error:', response.message);
+  constructor(baseUrl: string, token?: string) {
+    this.fetcher = new Fetcher(baseUrl);
+    if (token) {
+      this.fetcher.setBearerToken(token);
+    }
   }
-} catch (error) {
-  // Handle network errors or other exceptions
-  console.error('Request failed:', error);
+
+  public async getUsers() {
+    return this.fetcher.get<{ users: User[] }>('/users');
+  }
+
+  public async createUser(data: CreateUserDto) {
+    return this.fetcher.post<{ user: User }>('/users', data);
+  }
+
+  public async updateUser(id: string, data: UpdateUserDto) {
+    return this.fetcher.patch<{ user: User }>(`/users/${id}`, data);
+  }
+
+  public async deleteUser(id: string) {
+    return this.fetcher.delete<{ success: boolean }>(`/users/${id}`);
+  }
 }
 ```
 
-## Advanced Features
-
-### URL Building
-The fetcher automatically handles URL building:
+### Request Interceptors with Header Manipulation
 
 ```typescript
-const api = new Fetcher('https://api.example.com');
+import { Fetcher } from '@ooneex/fetcher';
 
-// These all work correctly
-await api.get('/users');           // -> https://api.example.com/users
-await api.get('users');            // -> https://api.example.com/users
-await api.get('https://other.com/api'); // -> https://other.com/api (absolute URL)
+const fetcher = new Fetcher('https://api.example.com');
 
-// Base URL with trailing slash
-const api2 = new Fetcher('https://api.example.com/');
-await api2.get('/users');          // -> https://api.example.com/users
+// Add custom headers
+fetcher.header.set('X-Request-ID', generateRequestId());
+fetcher.header.set('X-Client-Version', '1.0.0');
+
+const response = await fetcher.get('/endpoint');
 ```
 
-### Content Type Handling
-The fetcher automatically sets appropriate Content-Type headers:
+### Error Handling
 
 ```typescript
-const api = new Fetcher('https://api.example.com');
+import { Fetcher } from '@ooneex/fetcher';
 
-// Automatic JSON content type for objects
-await api.post('/users', { name: 'John' }); // Content-Type: application/json
+const fetcher = new Fetcher('https://api.example.com');
 
-// FormData handling
-const formData = new FormData();
-formData.append('name', 'John');
-await api.post('/users', formData); // Content-Type: multipart/form-data
+const response = await fetcher.get<{ data: string }>('/resource');
 
-// String data
-await api.post('/users', 'raw string data');
+if (response.success) {
+  // Handle successful response
+  console.log(response.data);
+} else if (response.isClientError) {
+  // Handle 4xx errors
+  console.error('Client error:', response.message);
+} else if (response.isServerError) {
+  // Handle 5xx errors
+  console.error('Server error:', response.message);
+} else if (response.isNotFound) {
+  // Handle 404
+  console.error('Resource not found');
+} else if (response.isUnauthorized) {
+  // Handle 401
+  console.error('Unauthorized - please login');
+}
+```
 
-// Blob/ArrayBuffer data
-const blob = new Blob(['data'], { type: 'text/plain' });
-await api.post('/upload', blob);
+### Chaining Configuration
+
+```typescript
+import { Fetcher } from '@ooneex/fetcher';
+
+const fetcher = new Fetcher('https://api.example.com')
+  .setBearerToken('your-token')
+  .setLang('en')
+  .setContentType('application/json');
+
+const response = await fetcher.post('/data', { key: 'value' });
+```
+
+### Cloning for Different Contexts
+
+```typescript
+import { Fetcher } from '@ooneex/fetcher';
+
+const baseFetcher = new Fetcher('https://api.example.com');
+
+// Create authenticated clone
+const authFetcher = baseFetcher.clone();
+authFetcher.setBearerToken('user-token');
+
+// Create admin clone
+const adminFetcher = baseFetcher.clone();
+adminFetcher.setBearerToken('admin-token');
+
+// Use independently
+await authFetcher.get('/user/profile');
+await adminFetcher.get('/admin/dashboard');
+```
+
+### Uploading Multiple Files
+
+```typescript
+import { Fetcher } from '@ooneex/fetcher';
+
+const fetcher = new Fetcher('https://api.example.com');
+
+async function uploadFiles(files: File[]) {
+  const results = [];
+  
+  for (const file of files) {
+    const response = await fetcher.upload<{ url: string }>(
+      '/upload',
+      file,
+      'file'
+    );
+    results.push(response);
+  }
+  
+  return results;
+}
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 

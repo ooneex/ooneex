@@ -1,8 +1,7 @@
 # @ooneex/exception
 
-A comprehensive TypeScript/JavaScript library for creating structured, HTTP status-aware exceptions. This package provides a robust foundation for error handling in web applications with built-in support for HTTP status codes, structured data, and stack trace parsing.
+A type-safe exception handling library with HTTP status code integration for structured error management. This package provides a base `Exception` class and specialized exception types for common HTTP error scenarios with rich metadata including timestamps, status codes, and structured stack traces.
 
-![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
 ![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
@@ -11,21 +10,19 @@ A comprehensive TypeScript/JavaScript library for creating structured, HTTP stat
 
 ## Features
 
-✅ **HTTP Status Integration** - Built-in support for HTTP status codes via @ooneex/http-status
+✅ **HTTP Status Integration** - Built-in support for all HTTP status codes
 
-✅ **Type-Safe** - Full TypeScript support with generic data types
+✅ **Structured Stack Traces** - Parse stack traces into JSON for logging and debugging
 
-✅ **Structured Data** - Attach custom data objects to exceptions
+✅ **Rich Metadata** - Include timestamps, custom data, and original errors
 
-✅ **Stack Trace Parsing** - Parse stack traces into structured JSON format
+✅ **Specialized Exceptions** - Pre-built exceptions for common HTTP errors
 
-✅ **Predefined Exceptions** - Common HTTP exceptions (400, 401, 404, 405)
+✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+✅ **Immutable Data** - Exception data is frozen after creation
 
-✅ **Immutable Data** - Exception data is automatically frozen
-
-✅ **Error Wrapping** - Wrap native Error objects with additional context
+✅ **Native Error Wrapping** - Wrap native JavaScript errors while preserving context
 
 ## Installation
 
@@ -51,290 +48,213 @@ npm install @ooneex/exception
 
 ## Usage
 
-### Basic Usage
+### Basic Exception
 
 ```typescript
 import { Exception } from '@ooneex/exception';
 
-// Simple exception with message
-const exception = new Exception('Something went wrong');
-
-console.log(exception.message); // "Something went wrong"
-console.log(exception.name); // "Exception"
-console.log(exception.date); // Date object
-
-// Exception with HTTP status and data
-const detailedException = new Exception('User not found', {
-  status: 404,
-  data: {
-    userId: 123,
-    searchCriteria: { email: 'user@example.com' }
-  }
-});
-
-console.log(detailedException.status); // 404
-console.log(detailedException.data); // { userId: 123, searchCriteria: {...} }
+throw new Exception('Something went wrong');
 ```
 
-### Using Predefined Exceptions
+### With HTTP Status Code
+
+```typescript
+import { Exception } from '@ooneex/exception';
+import { HttpStatus } from '@ooneex/http-status';
+
+throw new Exception('Resource not found', {
+  status: HttpStatus.Code.NotFound
+});
+```
+
+### With Custom Data
+
+```typescript
+import { Exception } from '@ooneex/exception';
+
+throw new Exception('Validation failed', {
+  status: 400,
+  data: {
+    field: 'email',
+    value: 'invalid-email',
+    constraint: 'Must be a valid email address'
+  }
+});
+```
+
+### Specialized Exceptions
 
 ```typescript
 import {
+  NotFoundException,
   BadRequestException,
   UnauthorizedException,
-  NotFoundException,
   MethodNotAllowedException
 } from '@ooneex/exception';
 
+// 404 Not Found
+throw new NotFoundException('User not found', {
+  data: { userId: '123' }
+});
+
 // 400 Bad Request
-throw new BadRequestException('Invalid input data', {
-  field: 'email',
-  value: 'invalid-email',
-  rule: 'Must be a valid email address'
+throw new BadRequestException('Invalid input', {
+  data: { errors: ['email is required', 'name is too short'] }
 });
 
 // 401 Unauthorized
-throw new UnauthorizedException('Token expired', {
-  token: 'eyJ...',
-  expiredAt: new Date()
-});
-
-// 404 Not Found
-throw new NotFoundException('Resource not found', {
-  resourceType: 'User',
-  id: 123
-});
+throw new UnauthorizedException('Invalid credentials');
 
 // 405 Method Not Allowed
-throw new MethodNotAllowedException('POST not allowed on this endpoint', {
-  method: 'POST',
-  allowedMethods: ['GET', 'PUT']
-});
+throw new MethodNotAllowedException('POST method not allowed on this endpoint');
 ```
 
-### Error Wrapping
+### Wrapping Native Errors
 
 ```typescript
 import { Exception } from '@ooneex/exception';
 
 try {
-  // Some operation that might fail
   JSON.parse('invalid json');
 } catch (error) {
-  // Wrap the native error with additional context
   throw new Exception(error as Error, {
-    status: 400,
-    data: {
-      operation: 'JSON parsing',
-      input: 'invalid json'
-    }
+    status: 500,
+    data: { context: 'Parsing configuration file' }
   });
 }
 ```
 
-### Stack Trace Parsing
+### Accessing Stack Trace as JSON
 
 ```typescript
 import { Exception } from '@ooneex/exception';
 
-const exception = new Exception('Parsing failed');
-const stackFrames = exception.stackToJson();
+try {
+  throw new Exception('Test error');
+} catch (error) {
+  if (error instanceof Exception) {
+    const stackFrames = error.stackToJson();
+    
+    stackFrames?.forEach((frame, index) => {
+      console.log(`${index + 1}. ${frame.functionName || '<anonymous>'}`);
+      console.log(`   at ${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
+    });
+  }
+}
+```
 
-console.log(stackFrames);
+## API Reference
+
+### Classes
+
+#### `Exception`
+
+Base exception class that extends the native `Error` with additional metadata.
+
+**Constructor:**
+```typescript
+new Exception(
+  message: string | Error,
+  options?: {
+    status?: StatusCodeType;
+    data?: Record<string, unknown>;
+  }
+)
+```
+
+**Parameters:**
+- `message` - Error message string or native Error object to wrap
+- `options.status` - HTTP status code (default: 500)
+- `options.data` - Additional contextual data
+
+**Properties:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `date` | `Date` | Timestamp when the exception was created |
+| `status` | `StatusCodeType` | HTTP status code |
+| `data` | `Readonly<Record<string, unknown>>` | Immutable custom data |
+| `native` | `Error \| undefined` | Original Error if wrapping a native error |
+| `message` | `string` | Error message |
+| `name` | `string` | Exception class name |
+| `stack` | `string \| undefined` | Stack trace string |
+
+**Methods:**
+
+##### `stackToJson(): ExceptionStackFrameType[] | null`
+
+Converts the stack trace into a structured JSON array.
+
+**Returns:** Array of stack frames or null if no stack trace is available
+
+**Example:**
+```typescript
+const exception = new Exception('Test error');
+const frames = exception.stackToJson();
+
+console.log(frames);
 // [
 //   {
-//     functionName: 'parseData',
+//     functionName: 'myFunction',
 //     fileName: '/path/to/file.ts',
 //     lineNumber: 42,
 //     columnNumber: 15,
-//     source: '    at parseData (/path/to/file.ts:42:15)'
+//     source: '    at myFunction (/path/to/file.ts:42:15)'
 //   },
 //   ...
 // ]
 ```
 
-### Generic Data Types
+#### `BadRequestException`
+
+Exception for 400 Bad Request errors.
 
 ```typescript
-import { Exception } from '@ooneex/exception';
-
-// Define custom data interface
-interface ValidationError {
-  field: string;
-  value: unknown;
-  rule: string;
-  message: string;
-}
-
-// Create typed exception
-const validationException = new Exception<ValidationError>('Validation failed', {
-  status: 400,
-  data: {
-    field: 'email',
-    value: 'not-an-email',
-    rule: 'email',
-    message: 'Must be a valid email address'
-  }
-});
-
-// TypeScript ensures type safety
-console.log(validationException.data?.field); // string
-console.log(validationException.data?.rule); // string
+new BadRequestException(message: string, options?: { data?: Record<string, unknown> })
 ```
 
-## API Reference
+#### `NotFoundException`
 
-### `Exception<T>` Class
-
-The main exception class providing structured error handling with optional HTTP status and custom data.
-
-#### Constructor
+Exception for 404 Not Found errors.
 
 ```typescript
-new Exception<T>(message: string | Error, options?: {
-  status?: StatusCodeType;
-  data?: T;
-})
+new NotFoundException(message: string, options?: { data?: Record<string, unknown> })
 ```
 
-**Parameters:**
-- `message` - Error message string or native Error object to wrap
-- `options.status` - HTTP status code (from @ooneex/http-status)
-- `options.data` - Custom data object (automatically frozen)
+#### `UnauthorizedException`
 
-#### Properties
-
-##### `date: Date` (readonly)
-Timestamp when the exception was created.
+Exception for 401 Unauthorized errors.
 
 ```typescript
-const exception = new Exception('Error occurred');
-console.log(exception.date); // 2024-01-15T10:30:00.000Z
+new UnauthorizedException(message: string, options?: { data?: Record<string, unknown> })
 ```
 
-##### `status?: StatusCodeType` (readonly)
-HTTP status code associated with the exception.
+#### `MethodNotAllowedException`
+
+Exception for 405 Method Not Allowed errors.
 
 ```typescript
-const exception = new Exception('Not found', { status: 404 });
-console.log(exception.status); // 404
+new MethodNotAllowedException(message: string, options?: { data?: Record<string, unknown> })
 ```
 
-##### `data?: T` (readonly)
-Custom data object associated with the exception. Automatically frozen to prevent mutations.
+### Types
+
+#### `IException`
 
 ```typescript
-const exception = new Exception('Error', {
-  data: { userId: 123, action: 'delete' }
-});
-console.log(exception.data); // { userId: 123, action: 'delete' }
-// exception.data.userId = 456; // TypeError: Cannot assign to read only property
-```
-
-##### `native?: Error` (readonly)
-Original native Error object when wrapping existing errors.
-
-```typescript
-const originalError = new Error('Original message');
-const exception = new Exception(originalError);
-console.log(exception.native); // Original Error object
-```
-
-##### `message: string`
-Error message (inherited from Error).
-
-##### `name: string`
-Exception name (inherited from Error).
-
-##### `stack?: string`
-Stack trace string (inherited from Error).
-
-#### Methods
-
-##### `stackToJson(): ExceptionStackFrameType[] | null`
-Parses the stack trace into a structured JSON format.
-
-**Returns:** Array of stack frame objects or `null` if no stack trace available.
-
-**Example:**
-```typescript
-const exception = new Exception('Error occurred');
-const frames = exception.stackToJson();
-
-if (frames) {
-  frames.forEach(frame => {
-    console.log(`Function: ${frame.functionName}`);
-    console.log(`File: ${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`);
-    console.log(`Source: ${frame.source}`);
-  });
+interface IException {
+  readonly date: Date;
+  readonly status: StatusCodeType;
+  readonly data: Readonly<Record<string, unknown>>;
+  readonly native?: Error;
+  readonly message: string;
+  readonly name: string;
+  readonly stack?: string;
+  stackToJson: () => ExceptionStackFrameType[] | null;
 }
 ```
-
-### Predefined Exception Classes
-
-#### `BadRequestException<T>`
-HTTP 400 Bad Request exception.
-
-```typescript
-new BadRequestException<T>(message: string, data?: T)
-```
-
-**Example:**
-```typescript
-throw new BadRequestException('Invalid request data', {
-  validationErrors: ['email is required', 'age must be a number']
-});
-```
-
-#### `UnauthorizedException<T>`
-HTTP 401 Unauthorized exception.
-
-```typescript
-new UnauthorizedException<T>(message: string, data?: T)
-```
-
-**Example:**
-```typescript
-throw new UnauthorizedException('Access token expired', {
-  tokenType: 'Bearer',
-  expiredAt: new Date()
-});
-```
-
-#### `NotFoundException<T>`
-HTTP 404 Not Found exception.
-
-```typescript
-new NotFoundException<T>(message: string, data?: T)
-```
-
-**Example:**
-```typescript
-throw new NotFoundException('User not found', {
-  userId: 123,
-  searchedBy: 'email'
-});
-```
-
-#### `MethodNotAllowedException<T>`
-HTTP 405 Method Not Allowed exception.
-
-```typescript
-new MethodNotAllowedException<T>(message: string, data?: T)
-```
-
-**Example:**
-```typescript
-throw new MethodNotAllowedException('DELETE method not allowed', {
-  requestedMethod: 'DELETE',
-  allowedMethods: ['GET', 'POST', 'PUT']
-});
-```
-
-### Types and Interfaces
 
 #### `ExceptionStackFrameType`
-Represents a single frame in a parsed stack trace.
 
 ```typescript
 type ExceptionStackFrameType = {
@@ -346,112 +266,103 @@ type ExceptionStackFrameType = {
 };
 ```
 
-#### `IException<T>`
-Interface defining the exception contract.
-
-```typescript
-interface IException<T = unknown> {
-  readonly date: Date;
-  readonly status?: StatusCodeType;
-  readonly data?: Readonly<Record<string, T>>;
-  readonly native?: Error;
-  readonly message: string;
-  readonly name: string;
-  readonly stack?: string;
-  stackToJson(): ExceptionStackFrameType[] | null;
-}
-```
-
 ## Advanced Usage
 
-### Custom Exception Classes
+### Creating Custom Exceptions
 
 ```typescript
 import { Exception } from '@ooneex/exception';
 import { HttpStatus } from '@ooneex/http-status';
 
-class PaymentException extends Exception {
-  constructor(message: string, data: Record<string, unknown> = {}) {
+class ValidationException extends Exception {
+  constructor(
+    message: string,
+    public readonly errors: string[]
+  ) {
     super(message, {
-      status: HttpStatus.Code.PaymentRequired, // 402
-      data
+      status: HttpStatus.Code.BadRequest,
+      data: { errors }
     });
+    this.name = 'ValidationException';
   }
 }
 
-// Usage
-throw new PaymentException('Insufficient funds', {
-  accountBalance: 50.00,
-  requiredAmount: 100.00,
-  currency: 'USD'
-});
+throw new ValidationException('Validation failed', [
+  'Email is required',
+  'Password must be at least 8 characters'
+]);
 ```
 
-### Error Serialization
+### Error Handling in Controllers
+
+```typescript
+import { Exception, NotFoundException, BadRequestException } from '@ooneex/exception';
+import type { IController, ContextType } from '@ooneex/controller';
+
+class UserController implements IController {
+  public async index(context: ContextType) {
+    try {
+      const user = await this.findUser(context.params.id);
+      return context.response.json({ user });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        return context.response.notFound(error.message, {
+          data: error.data
+        });
+      }
+      
+      if (error instanceof Exception) {
+        return context.response.exception(error.message, {
+          status: error.status,
+          data: error.data
+        });
+      }
+      
+      throw error;
+    }
+  }
+}
+```
+
+### Logging Exceptions
+
+```typescript
+import { Exception } from '@ooneex/exception';
+import { TerminalLogger } from '@ooneex/logger';
+
+const logger = new TerminalLogger();
+
+try {
+  // Some operation that might fail
+  throw new Exception('Database connection failed', {
+    status: 500,
+    data: { host: 'localhost', port: 5432 }
+  });
+} catch (error) {
+  if (error instanceof Exception) {
+    logger.error(error);
+  }
+}
+```
+
+### Serializing Exceptions for API Responses
 
 ```typescript
 import { Exception } from '@ooneex/exception';
 
-const exception = new Exception('Process failed', {
-  status: 500,
-  data: {
-    processId: 'proc-123',
-    step: 'validation',
-    retryCount: 3
-  }
-});
-
-// Serialize for logging or API responses
-const serialized = JSON.stringify({
-  message: exception.message,
-  name: exception.name,
-  status: exception.status,
-  data: exception.data,
-  date: exception.date,
-  stackFrames: exception.stackToJson()
-});
-
-console.log(serialized);
-```
-
-### Integration with Express.js
-
-```typescript
-import express from 'express';
-import { Exception, NotFoundException } from '@ooneex/exception';
-
-const app = express();
-
-app.get('/users/:id', (req, res, next) => {
-  const userId = req.params.id;
-
-  // Simulate user lookup
-  const user = findUser(userId);
-  if (!user) {
-    throw new NotFoundException('User not found', {
-      userId,
-      searchedBy: 'id'
-    });
-  }
-
-  res.json(user);
-});
-
-// Error handler
-app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  if (error instanceof Exception) {
-    res.status(error.status || 500).json({
-      error: {
-        message: error.message,
-        status: error.status,
-        data: error.data,
-        timestamp: error.date
-      }
-    });
-  } else {
-    next(error);
-  }
-});
+function serializeException(exception: Exception) {
+  return {
+    error: {
+      message: exception.message,
+      status: exception.status,
+      timestamp: exception.date.toISOString(),
+      data: exception.data,
+      stack: process.env.NODE_ENV !== 'production' 
+        ? exception.stackToJson() 
+        : undefined
+    }
+  };
+}
 ```
 
 ## License

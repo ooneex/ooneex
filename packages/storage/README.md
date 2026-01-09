@@ -1,34 +1,30 @@
 # @ooneex/storage
 
-A comprehensive TypeScript/JavaScript storage library providing unified interfaces for file storage operations. This package supports both local filesystem and Cloudflare R2 storage with a consistent API, making it easy to switch between storage backends or use multiple storage providers in your applications.
+A file and object storage abstraction layer for TypeScript applications with support for local filesystem, Cloudflare R2, and Bunny CDN. This package provides a unified interface for storing, retrieving, and managing files across different storage backends.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
+![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
+![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 ## Features
 
-✅ **Unified Storage Interface** - Single API for multiple storage providers
+✅ **Multiple Backends** - Support for filesystem, Cloudflare R2, and Bunny CDN
 
-✅ **Local Filesystem Storage** - Fast local file operations with automatic directory management
+✅ **Unified Interface** - Consistent API across all storage providers
 
-✅ **Cloudflare R2 Support** - Full integration with Cloudflare's S3-compatible object storage
+✅ **Bucket Management** - Organize files into buckets/directories
+
+✅ **Streaming Support** - Read files as streams for memory-efficient processing
+
+✅ **JSON Support** - Store and retrieve JSON data directly
+
+✅ **File Upload** - Upload files from local paths or binary data
+
+✅ **Container Integration** - Works seamlessly with dependency injection
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
-
-✅ **Bucket Management** - Create, clear, and manage storage buckets/directories
-
-✅ **Multiple Data Formats** - Support for strings, JSON, ArrayBuffers, Blobs, and streams
-
-✅ **File Operations** - Put, get, delete, exists, and list operations
-
-✅ **Stream Support** - Efficient streaming for large files
-
-✅ **Exception Handling** - Comprehensive error handling with custom exceptions
-
-✅ **Environment Configuration** - Support for environment variables and constructor options
-
-✅ **Zero External Dependencies** - Uses only Bun's built-in APIs
 
 ## Installation
 
@@ -56,58 +52,41 @@ npm install @ooneex/storage
 
 ### Filesystem Storage
 
-#### Basic Setup
-
 ```typescript
 import { FilesystemStorage } from '@ooneex/storage';
 
-// Using constructor options
 const storage = new FilesystemStorage({
-  storagePath: './my-storage'
+  basePath: './uploads'
 });
 
-// Or using environment variable FILESYSTEM_STORAGE_PATH
-const storage = new FilesystemStorage();
+// Set the bucket (directory)
+storage.setBucket('images');
 
-// Set bucket/directory
-storage.setBucket('my-bucket');
-```
+// Store a file
+await storage.putFile('photo.jpg', '/path/to/local/photo.jpg');
 
-#### File Operations
-
-```typescript
-import { FilesystemStorage } from '@ooneex/storage';
-
-const storage = new FilesystemStorage({ storagePath: './storage' })
-  .setBucket('documents');
-
-// Store string content
-await storage.put('hello.txt', 'Hello, World!');
-
-// Store JSON data
-await storage.put('config.json', JSON.stringify({ theme: 'dark', version: '1.0' }));
-
-// Store from local file
-await storage.putFile('backup.zip', '/path/to/local/file.zip');
+// Store content directly
+await storage.put('document.txt', 'Hello, World!');
 
 // Check if file exists
-const exists = await storage.exists('hello.txt'); // true
+const exists = await storage.exists('photo.jpg');
+console.log(exists); // true
 
-// Retrieve as string
-const content = await storage.getAsArrayBuffer('hello.txt');
-const text = new TextDecoder().decode(content);
+// Get file as JSON
+const data = await storage.getAsJson<{ name: string }>('config.json');
 
-// Retrieve as JSON
-const config = await storage.getAsJson<{ theme: string; version: string }>('config.json');
+// Get file as ArrayBuffer
+const buffer = await storage.getAsArrayBuffer('photo.jpg');
 
-// Get as stream for large files
-const stream = storage.getAsStream('backup.zip');
+// Get file as stream
+const stream = storage.getAsStream('video.mp4');
 
-// List all files
-const files = await storage.list(); // ['hello.txt', 'config.json', 'backup.zip']
+// List all files in bucket
+const files = await storage.list();
+console.log(files); // ['photo.jpg', 'document.txt', ...]
 
-// Delete file
-await storage.delete('hello.txt');
+// Delete a file
+await storage.delete('document.txt');
 
 // Clear entire bucket
 await storage.clearBucket();
@@ -115,444 +94,403 @@ await storage.clearBucket();
 
 ### Cloudflare R2 Storage
 
-#### Basic Setup
-
 ```typescript
-import { CloudflareStorageAdapter } from '@ooneex/storage';
+import { CloudflareStorage } from '@ooneex/storage';
 
-// Using constructor options
-const storage = new CloudflareStorageAdapter({
-  accessKey: 'your-access-key',
-  secretKey: 'your-secret-key',
-  endpoint: 'https://your-account.r2.cloudflarestorage.com',
-  region: 'EEUR' // EEUR, WEUR, APAC, NAM
+const storage = new CloudflareStorage({
+  accountId: 'your-account-id',
+  accessKeyId: 'your-access-key-id',
+  secretAccessKey: 'your-secret-access-key',
+  bucket: 'my-bucket'
 });
 
-// Or using environment variables:
-// STORAGE_CLOUDFLARE_ACCESS_KEY, STORAGE_CLOUDFLARE_SECRET_KEY, STORAGE_CLOUDFLARE_ENDPOINT, STORAGE_CLOUDFLARE_REGION
-const storage = new CloudflareStorageAdapter();
+// Upload a file
+await storage.put('uploads/image.png', imageBuffer);
 
-storage.setBucket('my-bucket');
+// Get file content
+const content = await storage.getAsArrayBuffer('uploads/image.png');
 ```
 
-#### Advanced Usage
+### Bunny CDN Storage
 
 ```typescript
-import { CloudflareStorageAdapter } from '@ooneex/storage';
+import { BunnyStorage } from '@ooneex/storage';
 
-const storage = new CloudflareStorageAdapter({
-  accessKey: process.env.STORAGE_CLOUDFLARE_ACCESS_KEY!,
-  secretKey: process.env.STORAGE_CLOUDFLARE_SECRET_KEY!,
-  endpoint: process.env.STORAGE_CLOUDFLARE_ENDPOINT!,
-  region: 'EEUR'
-}).setBucket('media-files');
+const storage = new BunnyStorage({
+  apiKey: 'your-bunny-api-key',
+  storageZone: 'your-storage-zone',
+  region: 'ny' // Optional: ny, la, sg, etc.
+});
 
-// Store different types of content
-await storage.put('image.png', new Blob([imageData], { type: 'image/png' }));
-await storage.put('data.json', JSON.stringify({ users: [], posts: [] }));
-await storage.put('binary-data', new ArrayBuffer(1024));
+storage.setBucket('assets');
 
-// Stream large files
-const largeFileStream = storage.getAsStream('large-video.mp4');
-const response = new Response(largeFileStream);
+// Upload file
+await storage.putFile('styles.css', './dist/styles.css');
+
+// List files
+const files = await storage.list();
 ```
 
-### Working with Different Data Types
+### Using Environment Variables
 
 ```typescript
-import { FilesystemStorage } from '@ooneex/storage';
+import { CloudflareStorage } from '@ooneex/storage';
 
-const storage = new FilesystemStorage({ storagePath: './data' })
-  .setBucket('examples');
+// Automatically uses environment variables
+const storage = new CloudflareStorage();
 
-// String content
-await storage.put('text.txt', 'Plain text content');
-
-// JSON objects
-const userData = { name: 'John', age: 30, active: true };
-await storage.put('user.json', JSON.stringify(userData));
-
-// Binary data (ArrayBuffer)
-const binaryData = new ArrayBuffer(256);
-await storage.put('binary.dat', binaryData);
-
-// Blobs
-const blob = new Blob(['CSV data,here'], { type: 'text/csv' });
-await storage.put('data.csv', blob);
-
-// Files from disk
-await storage.putFile('document.pdf', './local/document.pdf');
-
-// Retrieve data in different formats
-const textBuffer = await storage.getAsArrayBuffer('text.txt');
-const text = new TextDecoder().decode(textBuffer);
-
-const user = await storage.getAsJson<{ name: string; age: number; active: boolean }>('user.json');
-
-const csvStream = storage.getAsStream('data.csv');
-```
-
-### Error Handling
-
-```typescript
-import { FilesystemStorage, StorageException } from '@ooneex/storage';
-
-const storage = new FilesystemStorage({ storagePath: './storage' });
-
-try {
-  await storage.getAsJson('nonexistent.json');
-} catch (error) {
-  if (error instanceof StorageException) {
-    console.error('Storage error:', error.message);
-    console.error('Status:', error.getStatus()); // HTTP status code
-  }
-}
-```
-
-### Using Abstract Interface
-
-```typescript
-import { IStorage, FilesystemStorage, CloudflareStorageAdapter } from '@ooneex/storage';
-
-function createStorage(type: 'filesystem' | 'cloudflare'): IStorage {
-  switch (type) {
-    case 'filesystem':
-      return new FilesystemStorage({ storagePath: './storage' });
-    case 'cloudflare':
-      return new CloudflareStorageAdapter();
-    default:
-      throw new Error('Unknown storage type');
-  }
-}
-
-// Use the same interface regardless of storage type
-const storage = createStorage('filesystem');
-await storage.setBucket('shared-bucket');
-await storage.put('shared-file.txt', 'This works with any storage provider');
+// Environment variables:
+// STORAGE_CLOUDFLARE_ACCOUNT_ID
+// STORAGE_CLOUDFLARE_ACCESS_KEY_ID
+// STORAGE_CLOUDFLARE_SECRET_ACCESS_KEY
+// STORAGE_CLOUDFLARE_BUCKET
 ```
 
 ## API Reference
 
-### `IStorage` Interface
+### Classes
 
-The main interface that all storage adapters implement.
-
-```typescript
-interface IStorage {
-  setBucket(name: string): this;
-  list(): Promise<string[]>;
-  clearBucket(): Promise<this>;
-  exists(key: string): Promise<boolean>;
-  delete(key: string): Promise<void>;
-  putFile(key: string, localPath: string): Promise<number>;
-  put(key: string, content: string | ArrayBufferView | ArrayBuffer | SharedArrayBuffer | Request | Response | BunFile | S3File | Blob): Promise<number>;
-  getAsJson<T = unknown>(key: string): Promise<T>;
-  getAsArrayBuffer(key: string): Promise<ArrayBuffer>;
-  getAsStream(key: string): ReadableStream;
-}
-```
-
-### `FilesystemStorage` Class
+#### `FilesystemStorage`
 
 Local filesystem storage implementation.
 
-#### Constructor
-
+**Constructor:**
 ```typescript
-constructor(options?: {
-  storagePath?: string;
-})
+new FilesystemStorage(options?: { basePath?: string })
 ```
 
 **Parameters:**
-- `options.storagePath` - Base path for storage (optional, can use `FILESYSTEM_STORAGE_PATH` env var)
+- `options.basePath` - Base directory for storage (default: current working directory)
 
-**Example:**
+---
+
+#### `CloudflareStorage`
+
+Cloudflare R2 object storage implementation.
+
+**Constructor:**
 ```typescript
-const storage = new FilesystemStorage({
-  storagePath: '/var/app/storage'
-});
+new CloudflareStorage(options?: CloudflareStorageOptions)
 ```
 
-#### Methods
+**Parameters:**
+- `options.accountId` - Cloudflare account ID
+- `options.accessKeyId` - R2 access key ID
+- `options.secretAccessKey` - R2 secret access key
+- `options.bucket` - Default bucket name
 
-##### `setBucket(name: string): this`
-Sets the bucket (directory) name for operations.
+---
+
+#### `BunnyStorage`
+
+Bunny CDN storage implementation.
+
+**Constructor:**
+```typescript
+new BunnyStorage(options?: BunnyStorageOptions)
+```
 
 **Parameters:**
-- `name` - Bucket/directory name
+- `options.apiKey` - Bunny API key
+- `options.storageZone` - Storage zone name
+- `options.region` - Storage region (optional)
 
-**Returns:** `this` for method chaining
+---
+
+### Interface Methods
+
+All storage classes implement the `IStorage` interface:
+
+##### `setBucket(name: string): IStorage`
+
+Sets the current bucket/directory for operations.
+
+**Parameters:**
+- `name` - Bucket name
+
+**Returns:** The storage instance for chaining
 
 **Example:**
 ```typescript
-storage.setBucket('uploads');
+storage.setBucket('images').setBucket('thumbnails');
+```
+
+##### `list(): Promise<string[]>`
+
+Lists all files in the current bucket.
+
+**Returns:** Array of file keys/paths
+
+**Example:**
+```typescript
+const files = await storage.list();
+console.log(files); // ['file1.txt', 'file2.jpg', ...]
+```
+
+##### `exists(key: string): Promise<boolean>`
+
+Checks if a file exists.
+
+**Parameters:**
+- `key` - File key/path
+
+**Returns:** `true` if file exists
+
+**Example:**
+```typescript
+if (await storage.exists('config.json')) {
+  const config = await storage.getAsJson('config.json');
+}
 ```
 
 ##### `put(key: string, content: ContentType): Promise<number>`
+
 Stores content at the specified key.
 
 **Parameters:**
-- `key` - File key/path within the bucket
+- `key` - File key/path
 - `content` - Content to store (string, ArrayBuffer, Blob, etc.)
 
 **Returns:** Number of bytes written
 
 **Example:**
 ```typescript
-const bytesWritten = await storage.put('file.txt', 'Hello World');
+const bytes = await storage.put('data.json', JSON.stringify({ foo: 'bar' }));
 ```
 
 ##### `putFile(key: string, localPath: string): Promise<number>`
-Stores a local file at the specified key.
+
+Uploads a local file to storage.
 
 **Parameters:**
-- `key` - Destination key/path within the bucket
-- `localPath` - Local file system path
+- `key` - Destination key/path
+- `localPath` - Path to local file
 
 **Returns:** Number of bytes written
 
 **Example:**
 ```typescript
-await storage.putFile('backup.zip', './local-backup.zip');
+await storage.putFile('uploads/photo.jpg', '/tmp/photo.jpg');
 ```
 
-##### `get*` Methods
+##### `getAsJson<T>(key: string): Promise<T>`
 
-```typescript
-// Get as JSON with type safety
-getAsJson<T = unknown>(key: string): Promise<T>
+Retrieves and parses a file as JSON.
 
-// Get as ArrayBuffer
-getAsArrayBuffer(key: string): Promise<ArrayBuffer>
+**Parameters:**
+- `key` - File key/path
 
-// Get as ReadableStream
-getAsStream(key: string): ReadableStream
-```
-
-##### `exists(key: string): Promise<boolean>`
-Checks if a file exists at the specified key.
+**Returns:** Parsed JSON object
 
 **Example:**
 ```typescript
-const fileExists = await storage.exists('important.txt');
+interface Config {
+  apiUrl: string;
+  debug: boolean;
+}
+
+const config = await storage.getAsJson<Config>('config.json');
+```
+
+##### `getAsArrayBuffer(key: string): Promise<ArrayBuffer>`
+
+Retrieves a file as an ArrayBuffer.
+
+**Parameters:**
+- `key` - File key/path
+
+**Returns:** File content as ArrayBuffer
+
+##### `getAsStream(key: string): ReadableStream`
+
+Gets a file as a readable stream.
+
+**Parameters:**
+- `key` - File key/path
+
+**Returns:** ReadableStream for the file
+
+**Example:**
+```typescript
+const stream = storage.getAsStream('large-file.zip');
+
+// Pipe to response
+return new Response(stream);
 ```
 
 ##### `delete(key: string): Promise<void>`
-Deletes the file at the specified key.
+
+Deletes a file.
+
+**Parameters:**
+- `key` - File key/path
 
 **Example:**
 ```typescript
 await storage.delete('old-file.txt');
 ```
 
-##### `list(): Promise<string[]>`
-Lists all files in the current bucket.
-
-**Returns:** Array of file keys
-
-**Example:**
-```typescript
-const files = await storage.list();
-console.log('Files:', files); // ['file1.txt', 'folder/file2.json']
-```
-
 ##### `clearBucket(): Promise<this>`
+
 Removes all files from the current bucket.
 
-**Returns:** `this` for method chaining
+**Returns:** The storage instance for chaining
 
 **Example:**
 ```typescript
 await storage.clearBucket();
 ```
 
-### `CloudflareStorageAdapter` Class
+### Types
 
-Cloudflare R2 storage implementation.
-
-#### Constructor
+#### `IStorage`
 
 ```typescript
-constructor(options?: {
-  accessKey?: string;
-  secretKey?: string;
-  endpoint?: string;
-  region?: "EEUR" | "WEUR" | "APAC" | "NAM";
+interface IStorage {
+  setBucket(name: string): IStorage;
+  list(): Promise<string[]>;
+  clearBucket(): Promise<this>;
+  exists(key: string): Promise<boolean>;
+  delete(key: string): Promise<void>;
+  putFile(key: string, localPath: string): Promise<number>;
+  put(key: string, content: ContentType): Promise<number>;
+  getAsJson<T = unknown>(key: string): Promise<T>;
+  getAsArrayBuffer(key: string): Promise<ArrayBuffer>;
+  getAsStream(key: string): ReadableStream;
+}
+```
+
+#### `StorageClassType`
+
+```typescript
+type StorageClassType = new (...args: any[]) => IStorage;
+```
+
+## Advanced Usage
+
+### Integration with Ooneex App
+
+```typescript
+import { App } from '@ooneex/app';
+import { CloudflareStorage } from '@ooneex/storage';
+
+const app = new App({
+  storage: CloudflareStorage,
+  // ... other config
+});
+
+await app.run();
+```
+
+### Using in Controllers
+
+```typescript
+import { Route } from '@ooneex/routing';
+import type { IController, ContextType } from '@ooneex/controller';
+
+@Route.http({
+  name: 'api.files.upload',
+  path: '/api/files',
+  method: 'POST',
+  description: 'Upload a file'
 })
-```
-
-**Parameters:**
-- `options.accessKey` - Cloudflare R2 access key (or use `STORAGE_CLOUDFLARE_ACCESS_KEY` env var)
-- `options.secretKey` - Cloudflare R2 secret key (or use `STORAGE_CLOUDFLARE_SECRET_KEY` env var)
-- `options.endpoint` - Cloudflare R2 endpoint URL (or use `STORAGE_CLOUDFLARE_ENDPOINT` env var)
-- `options.region` - Cloudflare R2 region (or use `STORAGE_CLOUDFLARE_REGION` env var)
-
-**Example:**
-```typescript
-const storage = new CloudflareStorageAdapter({
-  accessKey: 'your-access-key',
-  secretKey: 'your-secret-key',
-  endpoint: 'https://account-id.r2.cloudflarestorage.com',
-  region: 'EEUR'
-});
-```
-
-The `CloudflareStorageAdapter` inherits all methods from `AbstractStorage` and implements the same interface as `FilesystemStorage`.
-
-### `StorageException` Class
-
-Custom exception class for storage-related errors.
-
-```typescript
-class StorageException extends Exception {
-  constructor(message: string, data?: T)
-}
-```
-
-**Example:**
-```typescript
-try {
-  await storage.getAsJson('missing.json');
-} catch (error) {
-  if (error instanceof StorageException) {
-    console.error('Storage operation failed:', error.message);
-  }
-}
-```
-
-### `AbstractStorage` Class
-
-Base class providing common functionality for storage adapters.
-
-```typescript
-abstract class AbstractStorage implements IStorage {
-  protected abstract bucket: string;
-  public abstract getOptions(): S3Options;
-
-  // All IStorage methods implemented
-}
-```
-
-## Environment Variables
-
-### Filesystem Storage
-
-- `FILESYSTEM_STORAGE_PATH` - Base path for filesystem storage
-
-### Cloudflare R2 Storage
-
-- `STORAGE_CLOUDFLARE_ACCESS_KEY` - R2 access key
-- `STORAGE_CLOUDFLARE_SECRET_KEY` - R2 secret key
-- `STORAGE_CLOUDFLARE_ENDPOINT` - R2 endpoint URL
-- `STORAGE_CLOUDFLARE_REGION` - R2 region (EEUR, WEUR, APAC, NAM)
-
-## Error Handling
-
-The library uses custom `StorageException` for all storage-related errors:
-
-```typescript
-import { StorageException } from '@ooneex/storage';
-
-try {
-  const storage = new FilesystemStorage(); // No path provided
-} catch (error) {
-  if (error instanceof StorageException) {
-    // Handle storage-specific errors
-    console.error('Storage setup failed:', error.message);
-  }
-}
-```
-
-Common error scenarios:
-- Missing configuration (paths, credentials)
-- File not found operations
-- Permission errors
-- Network errors (for cloud storage)
-- Invalid JSON parsing
-
-## Best Practices
-
-### 1. Use Environment Variables for Configuration
-
-```typescript
-// .env file
-FILESYSTEM_STORAGE_PATH=./storage
-STORAGE_CLOUDFLARE_ACCESS_KEY=your-access-key
-STORAGE_CLOUDFLARE_SECRET_KEY=your-secret-key
-STORAGE_CLOUDFLARE_ENDPOINT=https://your-account.r2.cloudflarestorage.com
-STORAGE_CLOUDFLARE_REGION=EEUR
-
-// Application code
-const storage = new FilesystemStorage(); // Uses env vars
-```
-
-### 2. Implement Proper Error Handling
-
-```typescript
-async function safeStorageOperation() {
-  try {
-    const result = await storage.getAsJson('config.json');
-    return result;
-  } catch (error) {
-    if (error instanceof StorageException) {
-      // Log error and provide fallback
-      console.warn('Failed to load config:', error.message);
-      return getDefaultConfig();
+class FileUploadController implements IController {
+  public async index(context: ContextType): Promise<IResponse> {
+    const { storage, files } = context;
+    const file = files['document'];
+    
+    if (!file) {
+      return context.response.exception('No file provided', { status: 400 });
     }
-    throw error; // Re-throw unexpected errors
+    
+    storage?.setBucket('documents');
+    const key = `${Date.now()}-${file.name}`;
+    await storage?.putFile(key, file.path);
+    
+    return context.response.json({
+      key,
+      size: file.size,
+      type: file.type
+    });
   }
 }
 ```
 
-### 3. Use Streams for Large Files
+### Container Integration with Decorators
 
 ```typescript
-// Good for large files
-const stream = storage.getAsStream('large-video.mp4');
-const response = new Response(stream, {
-  headers: { 'Content-Type': 'video/mp4' }
-});
+import { container, EContainerScope } from '@ooneex/container';
+import { CloudflareStorage, decorator } from '@ooneex/storage';
 
-// Avoid for large files - loads entire file into memory
-const buffer = await storage.getAsArrayBuffer('large-video.mp4');
-```
-
-### 4. Organize Files with Proper Keys
-
-```typescript
-// Good - organized structure
-await storage.put('users/profile/123.json', userData);
-await storage.put('uploads/images/2024/01/photo.jpg', imageData);
-await storage.put('logs/2024-01-15.log', logData);
-
-// Less organized
-await storage.put('user123.json', userData);
-await storage.put('photo.jpg', imageData);
-await storage.put('log.txt', logData);
-```
-
-### 5. Use Type Safety with JSON Operations
-
-```typescript
-interface UserProfile {
-  id: number;
-  name: string;
-  email: string;
-  preferences: {
-    theme: 'light' | 'dark';
-    notifications: boolean;
-  };
+// Register with decorator
+@decorator.storage()
+class MyStorageService extends CloudflareStorage {
+  constructor() {
+    super();
+    this.setBucket('my-app');
+  }
 }
 
-// Type-safe JSON operations
-const profile = await storage.getAsJson<UserProfile>('user/profile.json');
-console.log(profile.preferences.theme); // TypeScript knows this exists
+// Resolve from container
+const storage = container.get(MyStorageService);
+```
+
+### Error Handling
+
+```typescript
+import { CloudflareStorage, StorageException } from '@ooneex/storage';
+
+try {
+  const storage = new CloudflareStorage();
+  const content = await storage.getAsJson('missing-file.json');
+} catch (error) {
+  if (error instanceof StorageException) {
+    console.error('Storage Error:', error.message);
+    console.error('Status:', error.status);
+  }
+}
+```
+
+### Streaming Large Files
+
+```typescript
+import { FilesystemStorage } from '@ooneex/storage';
+
+const storage = new FilesystemStorage();
+storage.setBucket('videos');
+
+// Stream directly to HTTP response
+const stream = storage.getAsStream('large-video.mp4');
+
+return new Response(stream, {
+  headers: {
+    'Content-Type': 'video/mp4',
+    'Content-Disposition': 'attachment; filename="video.mp4"'
+  }
+});
+```
+
+### Organizing Files with Buckets
+
+```typescript
+import { CloudflareStorage } from '@ooneex/storage';
+
+const storage = new CloudflareStorage();
+
+// Organize by content type
+storage.setBucket('images/thumbnails');
+await storage.put('photo-1.jpg', thumbnailData);
+
+storage.setBucket('images/originals');
+await storage.put('photo-1.jpg', originalData);
+
+storage.setBucket('documents/invoices');
+await storage.put('invoice-2024-001.pdf', pdfData);
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 
@@ -571,20 +509,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - Follow the existing code style
 - Update documentation for API changes
 - Ensure all tests pass before submitting PR
-- Add TypeScript type definitions for new APIs
-
-### Running Tests
-
-```bash
-# Run all tests
-bun run test
-
-# Run tests in watch mode
-bun run test:watch
-
-# Run specific test file
-bun test tests/FilesystemStorage.spec.ts
-```
 
 ---
 

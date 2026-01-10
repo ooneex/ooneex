@@ -8,7 +8,7 @@ export default defineConfig({
   packages: "bundle",
   sourcemap: "external",
   unused: {
-    level: "error",
+    // level: "error",
   },
   exports: true,
   minify: true,

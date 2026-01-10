@@ -17,6 +17,41 @@
   "workspaces": [
     "modules/*"
   ],
+  "dependencies": {
+    "@ooneex/analytics": "^0.0.12",
+    "@ooneex/app": "^0.11.0",
+    "@ooneex/app-env": "^0.0.12",
+    "@ooneex/cache": "^0.0.13",
+    "@ooneex/database": "^0.0.12",
+    "@ooneex/logger": "^0.11.0",
+    "@ooneex/mailer": "^0.0.12",
+    "@ooneex/module": "^0.11.0",
+    "@ooneex/rate-limit": "^0.0.12",
+    "@ooneex/routing": "^0.11.0",
+    "@ooneex/storage": "^0.0.12",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.7",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@commitlint/prompt-cli": "^20.2.0",
+    "@nx/js": "^22.2.0",
+    "@nx/workspace": "^22.2.0",
+    "@ooneex/cli": "^0.7.0",
+    "@swc-node/register": "^1.11.1",
+    "@swc/core": "^1.15.3",
+    "@swc/helpers": "~0.5.17",
+    "@types/bun": "latest",
+    "@types/node": "^24.10.3",
+    "@typescript/native-preview": "^7.0.0-dev.20251211.1",
+    "bunup": "^0.16.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "nx": "22.0.2",
+    "typescript": "^5.9.3",
+    "undici-types": "^7.16.0"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
   }

@@ -6,6 +6,7 @@ packages = ["modules/*"]
 
 [install]
 hoistPattern = [
+  "@ooneex/*",
   "@biomejs/biome",
   "@nx/js",
   "@swc-node/register",

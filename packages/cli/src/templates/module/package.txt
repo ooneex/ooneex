@@ -10,25 +10,6 @@
   "scripts": {
     "test": "bun test tests",
     "build": "bunup",
-    "lint": "tsgo --noEmit && bunx biome lint",
-    "make:ai": "bunx ooneex make:ai",
-    "make:analytics": "bunx ooneex make:analytics",
-    "make:cache": "bunx ooneex make:cache",
-    "make:controller": "bunx ooneex make:controller",
-    "make:cron": "bunx ooneex make:cron",
-    "make:crud": "bunx ooneex make:crud",
-    "make:database": "bunx ooneex make:database",
-    "make:docker": "bunx ooneex make:docker",
-    "make:entity": "bunx ooneex make:entity",
-    "make:logger": "bunx ooneex make:logger",
-    "make:mailer": "bunx ooneex make:mailer",
-    "make:middleware": "bunx ooneex make:middleware",
-    "make:migration": "bunx ooneex make:migration",
-    "make:permission": "bunx ooneex make:permission",
-    "make:pubsub": "bunx ooneex make:pubsub",
-    "make:repository": "bunx ooneex make:repository",
-    "make:seed": "bunx ooneex make:seed",
-    "make:service": "bunx ooneex make:service",
-    "make:storage": "bunx ooneex make:storage"
+    "lint": "tsgo --noEmit && bunx biome lint"
   }
 }

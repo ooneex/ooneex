@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cli",
-  "version": "0.3.0",
+  "version": "0.11.0",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -35,10 +35,22 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public",
-    "locales:clean": "wuchale --clean",
-    "locales:watch": "wuchale --watch",
-    "locales:generate": "wuchale"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@ooneex/translation": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/validation": "workspace:*",
+    "@ooneex/seeds": "workspace:*",
+    "@ooneex/migrations": "workspace:*",
+    "@ooneex/container": "workspace:*",
+    "@ooneex/utils": "workspace:*",
+    "@ooneex/routing": "workspace:*",
+    "@ooneex/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  }
 }

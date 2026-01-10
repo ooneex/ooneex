@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/video",
   "description": "Video entity types and interfaces for managing video content with categories, tags, and status tracking",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
   "devDependencies": {

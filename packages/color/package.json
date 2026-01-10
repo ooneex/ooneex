@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/color",
   "description": "Color types and utilities for consistent theming and styling across Ooneex applications",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
   "devDependencies": {

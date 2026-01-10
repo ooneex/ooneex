@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/storage",
   "description": "File and object storage abstraction layer with support for local filesystem and cloud storage providers",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -25,7 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
     "@ooneex/container": "workspace:*",

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/gamification",
   "description": "Gamification utilities for interactive learning experiences including multiple choice questions (MCQ) and flashcard systems",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -36,7 +36,7 @@
   "scripts": {
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {},
   "devDependencies": {

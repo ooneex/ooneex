@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/translation",
   "description": "Internationalization (i18n) and localization utilities for multi-language support in Ooneex applications",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -25,7 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public",
+    "npm:publish": "bun publish --tolerate-republish --access public",
     "wuchale": "bunx wuchale"
   },
   "dependencies": {

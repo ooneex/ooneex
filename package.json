@@ -2,6 +2,7 @@
   "name": "ooneex",
   "module": "index.ts",
   "dependencies": {
+    "arktype": "^2.1.29",
     "enquirer": "^2.4.1",
     "pluralize": "^8.0.0",
     "react": "^19.2.3",
@@ -44,7 +45,7 @@
     "check": "bun run build && bun run lint && bun run test",
     "fmt": "bunx biome check --write",
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
-    "publish": "bunx nx run-many -t publish --output-style=stream --verbose",
+    "npm:publish": "bunx nx run-many -t npm:publish --output-style=stream --verbose",
     "release": "bunx nx release",
     "release:dry": "bunx nx release --dry-run",
     "commit": "bunx commit",

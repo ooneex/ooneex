@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/auth",
   "description": "Authentication utilities and strategies for securing Ooneex applications",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -21,7 +21,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {},
   "keywords": [

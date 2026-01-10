@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/logger",
   "description": "Structured logging service with console and database output support, container integration, and customizable log levels",
-  "version": "0.3.0",
+  "version": "0.11.0",
   "type": "module",
   "files": [
     "dist",
@@ -25,7 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
     "@ooneex/container": "workspace:*",

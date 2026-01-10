@@ -16,8 +16,8 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "publish": {
-      "dependsOn": ["^publish"]
+    "npm:publish": {
+      "dependsOn": ["^build"]
     },
     "nx-release-publish": {
       "dependsOn": ["build"],

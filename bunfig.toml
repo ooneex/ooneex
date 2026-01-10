@@ -10,6 +10,7 @@ packages = ["packages/*"]
 
 [install]
 hoistPattern = [
+  "@ooneex/*",
   "@biomejs/biome",
   "@nx/js",
   "@swc-node/register",
@@ -18,6 +19,7 @@ hoistPattern = [
   "@types/bun",
   "husky",
   "nx",
+  "arktype",
   "typescript",
   "undici-types",
 ]

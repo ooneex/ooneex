@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/app",
   "description": "Core application framework for building modern web applications with Bun, providing routing, middleware, caching, logging, and more",
-  "version": "0.3.0",
+  "version": "0.11.0",
   "type": "module",
   "files": [
     "dist",
@@ -25,7 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public",
+    "npm:publish": "bun publish --tolerate-republish --access public",
     "dev": "bun run src/dev.ts"
   },
   "dependencies": {
@@ -55,9 +55,6 @@
     "@ooneex/socket": "workspace:*",
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*"
-  },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5.90.12"
   },
   "keywords": [
     "application",

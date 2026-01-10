@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/controller",
   "description": "Base controller classes and decorators for handling HTTP requests and responses in Ooneex applications",
-  "version": "0.3.0",
+  "version": "0.11.0",
   "type": "module",
   "files": [
     "dist",
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {
     "@ooneex/analytics": "workspace:*",

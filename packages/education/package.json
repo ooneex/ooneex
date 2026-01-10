@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/education",
   "description": "Educational domain types and utilities including medical education support",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "type": "module",
   "files": [
     "dist",
@@ -27,7 +27,7 @@
     "build": "bunup",
     "test": "bun test",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"

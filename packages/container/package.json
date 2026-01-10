@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/container",
   "description": "Lightweight dependency injection container built on Inversify for managing services and their lifecycle",
-  "version": "0.0.5",
+  "version": "0.0.13",
   "type": "module",
   "files": [
     "dist",
@@ -25,7 +25,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
     "@ooneex/exception": "workspace:*",

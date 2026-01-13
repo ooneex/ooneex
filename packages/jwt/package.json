@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/jwt",
   "description": "JWT token generation and validation using the JOSE library for secure authentication",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

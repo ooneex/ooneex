@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/fs",
   "description": "File system utilities for reading, writing, and manipulating files and directories with async support and error handling",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

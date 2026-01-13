@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/payment",
   "description": "Payment and pricing types with currency support, product categorization, and image handling for e-commerce",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

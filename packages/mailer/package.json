@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/mailer",
   "description": "Email sending service with support for Nodemailer SMTP and Resend API for transactional emails",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",
@@ -28,6 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@ooneex/translation": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",

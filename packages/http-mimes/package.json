@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/http-mimes",
   "description": "Comprehensive MIME type definitions and constants for HTTP content type handling",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

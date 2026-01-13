@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/queue",
   "description": "Job queue management for background task processing and asynchronous workload execution",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

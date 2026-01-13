@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/react",
   "description": "React hooks, components, and utilities for building modern user interfaces with the Ooneex framework",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

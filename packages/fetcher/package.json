@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/fetcher",
   "description": "A lightweight HTTP client wrapper for making fetch requests with typed headers and response handling",
-  "version": "0.11.0",
+  "version": "0.15.0",
   "type": "module",
   "files": [
     "dist",

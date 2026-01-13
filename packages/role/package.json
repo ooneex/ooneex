@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/role",
   "description": "Role type definitions and utilities for user authorization and access control",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "type": "module",
   "files": [
     "dist",

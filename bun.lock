@@ -38,7 +38,7 @@
     },
     "packages/ai": {
       "name": "@ooneex/ai",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -56,7 +56,7 @@
     },
     "packages/analytics": {
       "name": "@ooneex/analytics",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -66,7 +66,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -98,7 +98,7 @@
     },
     "packages/app-env": {
       "name": "@ooneex/app-env",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -106,11 +106,11 @@
     },
     "packages/auth": {
       "name": "@ooneex/auth",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/book": {
       "name": "@ooneex/book",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/category": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -120,7 +120,7 @@
     },
     "packages/cache": {
       "name": "@ooneex/cache",
-      "version": "0.0.12",
+      "version": "0.0.14",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -129,7 +129,7 @@
     },
     "packages/category": {
       "name": "@ooneex/category",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -137,7 +137,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "@ooneex/cli": "./dist/index.js",
@@ -160,14 +160,14 @@
     },
     "packages/color": {
       "name": "@ooneex/color",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/container": {
       "name": "@ooneex/container",
-      "version": "0.0.12",
+      "version": "0.0.14",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -176,7 +176,7 @@
     },
     "packages/controller": {
       "name": "@ooneex/controller",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "devDependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -196,7 +196,7 @@
     },
     "packages/country": {
       "name": "@ooneex/country",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@vvo/tzdb": "^6.198.0",
       },
@@ -206,7 +206,7 @@
     },
     "packages/cron": {
       "name": "@ooneex/cron",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -219,14 +219,14 @@
     },
     "packages/currencies": {
       "name": "@ooneex/currencies",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/database": {
       "name": "@ooneex/database",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -236,25 +236,25 @@
     },
     "packages/education": {
       "name": "@ooneex/education",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/entity": {
       "name": "@ooneex/entity",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/exception": {
       "name": "@ooneex/exception",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/http-status": "workspace:*",
       },
     },
     "packages/fetcher": {
       "name": "@ooneex/fetcher",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/http-header": "workspace:*",
       },
@@ -266,7 +266,7 @@
     },
     "packages/folder": {
       "name": "@ooneex/folder",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -275,7 +275,7 @@
     },
     "packages/fs": {
       "name": "@ooneex/fs",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -283,7 +283,7 @@
     },
     "packages/gamification": {
       "name": "@ooneex/gamification",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/image": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -293,7 +293,7 @@
     },
     "packages/html": {
       "name": "@ooneex/html",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -302,7 +302,7 @@
     },
     "packages/http-header": {
       "name": "@ooneex/http-header",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "ua-parser-js": "^2.0.6",
       },
@@ -313,11 +313,11 @@
     },
     "packages/http-mimes": {
       "name": "@ooneex/http-mimes",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/http-request": {
       "name": "@ooneex/http-request",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/http-header": "workspace:*",
         "@ooneex/http-request-file": "workspace:*",
@@ -332,7 +332,7 @@
     },
     "packages/http-request-file": {
       "name": "@ooneex/http-request-file",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/http-mimes": "workspace:*",
         "@ooneex/utils": "workspace:*",
@@ -340,7 +340,7 @@
     },
     "packages/http-response": {
       "name": "@ooneex/http-response",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/http-header": "workspace:*",
@@ -349,11 +349,11 @@
     },
     "packages/http-status": {
       "name": "@ooneex/http-status",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/image": {
       "name": "@ooneex/image",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
@@ -362,7 +362,7 @@
     },
     "packages/jwt": {
       "name": "@ooneex/jwt",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -371,7 +371,7 @@
     },
     "packages/logger": {
       "name": "@ooneex/logger",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
@@ -379,16 +379,18 @@
       },
       "devDependencies": {
         "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/mailer": {
       "name": "@ooneex/mailer",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+        "@ooneex/translation": "workspace:*",
         "nodemailer": "^7.0.10",
         "resend": "^6.4.2",
       },
@@ -398,7 +400,7 @@
     },
     "packages/middleware": {
       "name": "@ooneex/middleware",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
@@ -409,7 +411,7 @@
     },
     "packages/migrations": {
       "name": "@ooneex/migrations",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -420,7 +422,7 @@
     },
     "packages/module": {
       "name": "@ooneex/module",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
         "@ooneex/entity": "workspace:*",
@@ -428,11 +430,11 @@
     },
     "packages/notification": {
       "name": "@ooneex/notification",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/payment": {
       "name": "@ooneex/payment",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/category": "workspace:*",
         "@ooneex/currencies": "workspace:*",
@@ -443,7 +445,7 @@
     },
     "packages/pdf": {
       "name": "@ooneex/pdf",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -455,7 +457,7 @@
     },
     "packages/permission": {
       "name": "@ooneex/permission",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@casl/ability": "^6.7.3",
         "@ooneex/container": "workspace:*",
@@ -468,7 +470,7 @@
     },
     "packages/pub-sub": {
       "name": "@ooneex/pub-sub",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -480,11 +482,11 @@
     },
     "packages/queue": {
       "name": "@ooneex/queue",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/rate-limit": {
       "name": "@ooneex/rate-limit",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -496,11 +498,11 @@
     },
     "packages/react": {
       "name": "@ooneex/react",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/repository": {
       "name": "@ooneex/repository",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
@@ -510,11 +512,11 @@
     },
     "packages/role": {
       "name": "@ooneex/role",
-      "version": "0.0.11",
+      "version": "0.0.13",
     },
     "packages/routing": {
       "name": "@ooneex/routing",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -534,7 +536,7 @@
     },
     "packages/seeds": {
       "name": "@ooneex/seeds",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -546,15 +548,16 @@
     },
     "packages/service": {
       "name": "@ooneex/service",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
     },
     "packages/socket": {
       "name": "@ooneex/socket",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "devDependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/controller": "workspace:*",
         "@ooneex/http-request": "workspace:*",
         "@ooneex/http-response": "workspace:*",
@@ -563,7 +566,7 @@
     },
     "packages/status": {
       "name": "@ooneex/status",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -571,7 +574,7 @@
     },
     "packages/storage": {
       "name": "@ooneex/storage",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -580,7 +583,7 @@
     },
     "packages/tag": {
       "name": "@ooneex/tag",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -588,7 +591,7 @@
     },
     "packages/translation": {
       "name": "@ooneex/translation",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -596,7 +599,7 @@
     },
     "packages/typeorm": {
       "name": "@ooneex/typeorm",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/book": "workspace:*",
         "@ooneex/category": "workspace:*",
@@ -624,14 +627,14 @@
     },
     "packages/types": {
       "name": "@ooneex/types",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/translation": "workspace:*",
       },
     },
     "packages/url": {
       "name": "@ooneex/url",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "dependencies": {
         "@ooneex/utils": "workspace:*",
       },
@@ -641,7 +644,7 @@
     },
     "packages/user": {
       "name": "@ooneex/user",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/image": "workspace:*",
         "@ooneex/role": "workspace:*",
@@ -657,16 +660,17 @@
     },
     "packages/validation": {
       "name": "@ooneex/validation",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/currencies": "workspace:*",
         "@ooneex/translation": "workspace:*",
+        "arktype": "^2.1.29",
       },
     },
     "packages/video": {
       "name": "@ooneex/video",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "devDependencies": {
         "@ooneex/category": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -676,7 +680,7 @@
     },
     "packages/youtube": {
       "name": "@ooneex/youtube",
-      "version": "0.0.11",
+      "version": "0.0.13",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -2175,6 +2179,22 @@
 
     "pdfjs-dist": ["pdfjs-dist@5.4.530", "", { "optionalDependencies": { "@napi-rs/canvas": "^0.1.84" } }, "sha512-r1hWsSIGGmyYUAHR26zSXkxYWLXLMd6AwqcaFYG9YUZ0GBf5GvcjJSeo512tabM4GYFhxhl5pMCmPr7Q72Rq2Q=="],
 
+    "pg": ["pg@8.16.3", "", { "dependencies": { "pg-connection-string": "^2.9.1", "pg-pool": "^3.10.1", "pg-protocol": "^1.10.3", "pg-types": "2.2.0", "pgpass": "1.0.5" }, "optionalDependencies": { "pg-cloudflare": "^1.2.7" }, "peerDependencies": { "pg-native": ">=3.0.1" }, "optionalPeers": ["pg-native"] }, "sha512-enxc1h0jA/aq5oSDMvqyW3q89ra6XIIDZgCX9vkMrnz5DFTw/Ny3Li2lFQ+pt3L6MCgm/5o2o8HW9hiJji+xvw=="],
+
+    "pg-cloudflare": ["pg-cloudflare@1.2.7", "", {}, "sha512-YgCtzMH0ptvZJslLM1ffsY4EuGaU0cx4XSdXLRFae8bPP4dS5xL1tNB3k2o/N64cHJpwU7dxKli/nZ2lUa5fLg=="],
+
+    "pg-connection-string": ["pg-connection-string@2.9.1", "", {}, "sha512-nkc6NpDcvPVpZXxrreI/FOtX3XemeLl8E0qFr6F2Lrm/I8WOnaWNhIPK2Z7OHpw7gh5XJThi6j6ppgNoaT1w4w=="],
+
+    "pg-int8": ["pg-int8@1.0.1", "", {}, "sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw=="],
+
+    "pg-pool": ["pg-pool@3.10.1", "", { "peerDependencies": { "pg": ">=8.0" } }, "sha512-Tu8jMlcX+9d8+QVzKIvM/uJtp07PKr82IUOYEphaWcoBhIYkoHpLXN3qO59nAI11ripznDsEzEv8nUxBVWajGg=="],
+
+    "pg-protocol": ["pg-protocol@1.10.3", "", {}, "sha512-6DIBgBQaTKDJyxnXaLiLR8wBpQQcGWuAESkRBX/t6OwA8YsqP+iVSiond2EDy6Y/dsGk8rh/jtax3js5NeV7JQ=="],
+
+    "pg-types": ["pg-types@2.2.0", "", { "dependencies": { "pg-int8": "1.0.1", "postgres-array": "~2.0.0", "postgres-bytea": "~1.0.0", "postgres-date": "~1.0.4", "postgres-interval": "^1.1.0" } }, "sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA=="],
+
+    "pgpass": ["pgpass@1.0.5", "", { "dependencies": { "split2": "^4.1.0" } }, "sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug=="],
+
     "picocolors": ["picocolors@1.1.1", "", {}, "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="],
 
     "picomatch": ["picomatch@4.0.2", "", {}, "sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg=="],
@@ -2186,6 +2206,14 @@
     "pluralize": ["pluralize@8.0.0", "", {}, "sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA=="],
 
     "possible-typed-array-names": ["possible-typed-array-names@1.1.0", "", {}, "sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg=="],
+
+    "postgres-array": ["postgres-array@2.0.0", "", {}, "sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA=="],
+
+    "postgres-bytea": ["postgres-bytea@1.0.1", "", {}, "sha512-5+5HqXnsZPE65IJZSMkZtURARZelel2oXUEO8rH83VS/hxH5vv1uHquPg5wZs8yMAfdv971IU+kcPUczi7NVBQ=="],
+
+    "postgres-date": ["postgres-date@1.0.7", "", {}, "sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q=="],
+
+    "postgres-interval": ["postgres-interval@1.2.0", "", { "dependencies": { "xtend": "^4.0.0" } }, "sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ=="],
 
     "posthog-node": ["posthog-node@5.20.0", "", { "dependencies": { "@posthog/core": "1.9.1" } }, "sha512-LkR5KfrvEQTnUtNKN97VxFB00KcYG1Iz8iKg8r0e/i7f1eQhg1WSZO+Jp1B4bvtHCmdpIE4HwYbvCCzFoCyjVg=="],
 
@@ -2396,6 +2424,8 @@
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 
     "ws": ["ws@8.19.0", "", { "peerDependencies": { "bufferutil": "^4.0.1", "utf-8-validate": ">=5.0.2" }, "optionalPeers": ["bufferutil", "utf-8-validate"] }, "sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg=="],
+
+    "xtend": ["xtend@4.0.2", "", {}, "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ=="],
 
     "y18n": ["y18n@5.0.8", "", {}, "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA=="],
 

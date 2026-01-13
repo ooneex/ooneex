@@ -51,9 +51,10 @@ describe("FilesystemStorage", () => {
       expect(storage).toBeInstanceOf(FilesystemStorage);
     });
 
-    test("should create instance with constructor options", async () => {
+    test("should create instance with custom path via environment variable", async () => {
       const customPath = "/tmp/custom-storage-path";
-      const storage = new FilesystemStorage({ storagePath: customPath });
+      Bun.env.FILESYSTEM_STORAGE_PATH = customPath;
+      const storage = new FilesystemStorage();
       expect(storage).toBeInstanceOf(FilesystemStorage);
 
       // Cleanup
@@ -71,7 +72,8 @@ describe("FilesystemStorage", () => {
       const newPath = "/tmp/new-storage-path-test";
       await rmrf(newPath);
 
-      new FilesystemStorage({ storagePath: newPath });
+      Bun.env.FILESYSTEM_STORAGE_PATH = newPath;
+      new FilesystemStorage();
 
       expect(await exists(newPath)).toBe(true);
 
@@ -79,15 +81,11 @@ describe("FilesystemStorage", () => {
       await rmrf(newPath);
     });
 
-    test("should prefer constructor options over environment variables", async () => {
-      const customPath = "/tmp/constructor-priority-test";
-      const storage = new FilesystemStorage({ storagePath: customPath });
+    test("should use environment variable for storage path", async () => {
+      const storage = new FilesystemStorage();
       const options = storage.getOptions();
 
-      expect(options.endpoint).toBe(customPath);
-
-      // Cleanup
-      await rmrf(customPath);
+      expect(options.endpoint).toBe(testBasePath);
     });
   });
 

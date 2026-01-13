@@ -37,12 +37,8 @@ describe("CloudflareStorage", () => {
     });
 
     test("should create instance with constructor options", () => {
-      const storage = new CloudflareStorage({
-        accessKey: "custom-access-key",
-        secretKey: "custom-secret-key",
-        endpoint: "https://custom.r2.cloudflarestorage.com",
-        region: "NAM",
-      });
+      // CloudflareStorage uses environment variables only
+      const storage = new CloudflareStorage();
       expect(storage).toBeInstanceOf(CloudflareStorage);
     });
 
@@ -85,19 +81,18 @@ describe("CloudflareStorage", () => {
       expect(options.region).toBe("APAC");
     });
 
-    test("should prefer constructor options over environment variables", () => {
-      const storage = new CloudflareStorage({
-        accessKey: "constructor-access-key",
-        secretKey: "constructor-secret-key",
-        endpoint: "https://constructor.r2.cloudflarestorage.com",
-        region: "WEUR",
-      });
+    test("should use environment variables for configuration", () => {
+      Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY = "env-access-key";
+      Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY = "env-secret-key";
+      Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "https://env.r2.cloudflarestorage.com";
+      Bun.env.STORAGE_CLOUDFLARE_REGION = "WEUR";
 
+      const storage = new CloudflareStorage();
       const options = storage.getOptions();
 
-      expect(options.accessKeyId).toBe("constructor-access-key");
-      expect(options.secretAccessKey).toBe("constructor-secret-key");
-      expect(options.endpoint).toBe("https://constructor.r2.cloudflarestorage.com");
+      expect(options.accessKeyId).toBe("env-access-key");
+      expect(options.secretAccessKey).toBe("env-secret-key");
+      expect(options.endpoint).toBe("https://env.r2.cloudflarestorage.com");
       expect(options.region).toBe("WEUR");
     });
   });
@@ -165,13 +160,9 @@ describe("CloudflareStorage", () => {
 
     for (const region of regions) {
       test(`should accept region ${region}`, () => {
-        const storage = new CloudflareStorage({
-          accessKey: "key",
-          secretKey: "secret",
-          endpoint: "https://example.r2.cloudflarestorage.com",
-          region,
-        });
+        Bun.env.STORAGE_CLOUDFLARE_REGION = region;
 
+        const storage = new CloudflareStorage();
         const options = storage.getOptions();
         expect(options.region).toBe(region);
       });

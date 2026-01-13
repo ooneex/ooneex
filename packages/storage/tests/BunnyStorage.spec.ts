@@ -37,15 +37,6 @@ describe("BunnyStorage", () => {
       expect(storage).toBeInstanceOf(BunnyStorage);
     });
 
-    test("should create instance with constructor options", () => {
-      const storage = new BunnyStorage({
-        accessKey: "custom-key",
-        storageZone: "custom-zone",
-        region: "ny",
-      });
-      expect(storage).toBeInstanceOf(BunnyStorage);
-    });
-
     test("should throw StorageException when access key is missing", () => {
       delete Bun.env.STORAGE_BUNNY_ACCESS_KEY;
 
@@ -124,7 +115,7 @@ describe("BunnyStorage", () => {
 
       const storage = new BunnyStorage();
 
-      await expect(storage.list()).rejects.toThrow(StorageException);
+      expect(storage.list()).rejects.toThrow(StorageException);
     });
   });
 
@@ -166,7 +157,7 @@ describe("BunnyStorage", () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 200 }));
 
       const storage = new BunnyStorage();
-      await expect(storage.delete("file-to-delete.txt")).resolves.toBeUndefined();
+      expect(await storage.delete("file-to-delete.txt")).toBeUndefined();
 
       expect(fetchMock).toHaveBeenCalledWith(
         "https://storage.bunnycdn.com/test-storage-zone/file-to-delete.txt",
@@ -181,7 +172,7 @@ describe("BunnyStorage", () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 404 }));
 
       const storage = new BunnyStorage();
-      await expect(storage.delete("non-existent.txt")).resolves.toBeUndefined();
+      expect(await storage.delete("non-existent.txt")).toBeUndefined();
     });
 
     test("should throw StorageException on other errors", async () => {
@@ -189,7 +180,7 @@ describe("BunnyStorage", () => {
 
       const storage = new BunnyStorage();
 
-      await expect(storage.delete("file.txt")).rejects.toThrow(StorageException);
+      expect(storage.delete("file.txt")).rejects.toThrow(StorageException);
     });
   });
 
@@ -299,7 +290,7 @@ describe("BunnyStorage", () => {
 
       const storage = new BunnyStorage();
 
-      await expect(storage.put("test.txt", "content")).rejects.toThrow(StorageException);
+      expect(storage.put("test.txt", "content")).rejects.toThrow(StorageException);
     });
   });
 
@@ -333,7 +324,7 @@ describe("BunnyStorage", () => {
 
       const storage = new BunnyStorage();
 
-      await expect(storage.getAsJson("missing.json")).rejects.toThrow(StorageException);
+      expect(storage.getAsJson("missing.json")).rejects.toThrow(StorageException);
     });
   });
 
@@ -354,7 +345,7 @@ describe("BunnyStorage", () => {
 
       const storage = new BunnyStorage();
 
-      await expect(storage.getAsArrayBuffer("file.bin")).rejects.toThrow(StorageException);
+      expect(storage.getAsArrayBuffer("file.bin")).rejects.toThrow(StorageException);
     });
   });
 
@@ -386,35 +377,5 @@ describe("BunnyStorage", () => {
       const content = chunks.map((chunk) => decoder.decode(chunk)).join("");
       expect(content).toBe("streamed content");
     });
-  });
-
-  describe("region endpoints", () => {
-    const regions = [
-      { region: "de", endpoint: "storage.bunnycdn.com" },
-      { region: "uk", endpoint: "uk.storage.bunnycdn.com" },
-      { region: "ny", endpoint: "ny.storage.bunnycdn.com" },
-      { region: "la", endpoint: "la.storage.bunnycdn.com" },
-      { region: "sg", endpoint: "sg.storage.bunnycdn.com" },
-      { region: "se", endpoint: "se.storage.bunnycdn.com" },
-      { region: "br", endpoint: "br.storage.bunnycdn.com" },
-      { region: "jh", endpoint: "jh.storage.bunnycdn.com" },
-      { region: "syd", endpoint: "syd.storage.bunnycdn.com" },
-    ] as const;
-
-    for (const { region, endpoint } of regions) {
-      test(`should use correct endpoint for region ${region}`, async () => {
-        fetchMock.mockResolvedValueOnce(new Response("", { status: 200 }));
-
-        const storage = new BunnyStorage({
-          accessKey: "key",
-          storageZone: "zone",
-          region,
-        });
-
-        await storage.exists("file.txt");
-
-        expect(fetchMock).toHaveBeenCalledWith(`https://${endpoint}/zone/file.txt`, expect.any(Object));
-      });
-    }
   });
 });

@@ -1,4 +1,5 @@
 import type { BunFile, S3File } from "bun";
+import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
 import type { IStorage } from "./types";
 
@@ -22,20 +23,17 @@ interface BunnyFileInfo {
   ReplicatedZones: string | null;
 }
 
+@decorator.storage()
 export class BunnyStorage implements IStorage {
   private bucket = "";
   private readonly accessKey: string;
   private readonly storageZone: string;
   private readonly region: BunnyRegion;
 
-  constructor(options?: {
-    accessKey?: string;
-    storageZone?: string;
-    region?: BunnyRegion;
-  }) {
-    const accessKey = options?.accessKey ?? Bun.env.STORAGE_BUNNY_ACCESS_KEY;
-    const storageZone = options?.storageZone ?? Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
-    const region = options?.region ?? (Bun.env.STORAGE_BUNNY_REGION as BunnyRegion | undefined);
+  constructor() {
+    const accessKey = Bun.env.STORAGE_BUNNY_ACCESS_KEY;
+    const storageZone = Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
+    const region = Bun.env.STORAGE_BUNNY_REGION as BunnyRegion | undefined;
 
     if (!accessKey) {
       throw new StorageException(

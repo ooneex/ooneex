@@ -3,18 +3,18 @@ import { mkdir, readdir, rmdir, stat } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
 import { AbstractStorage } from "./AbstractStorage";
+import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
 
+@decorator.storage()
 export class FilesystemStorage extends AbstractStorage {
   protected bucket: string;
   private readonly storagePath: string;
 
-  constructor(options?: {
-    storagePath?: string;
-  }) {
+  constructor() {
     super();
 
-    const basePath = options?.storagePath || Bun.env.FILESYSTEM_STORAGE_PATH;
+    const basePath = Bun.env.FILESYSTEM_STORAGE_PATH;
 
     if (!basePath) {
       throw new StorageException(

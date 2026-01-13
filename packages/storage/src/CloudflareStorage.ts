@@ -1,7 +1,9 @@
 import type { S3Options } from "bun";
 import { AbstractStorage } from "./AbstractStorage";
+import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
 
+@decorator.storage()
 export class CloudflareStorage extends AbstractStorage {
   protected bucket: string;
   private readonly accessKey: string;
@@ -9,17 +11,12 @@ export class CloudflareStorage extends AbstractStorage {
   private readonly endpoint: string;
   private readonly region: string;
 
-  constructor(options?: {
-    accessKey?: string;
-    secretKey?: string;
-    endpoint?: string;
-    region?: "EEUR" | "WEUR" | "APAC" | "NAM";
-  }) {
+  constructor() {
     super();
 
-    const accessKey = options?.accessKey || Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
-    const secretKey = options?.secretKey || Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
-    const endpoint = options?.endpoint || Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
+    const accessKey = Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
+    const secretKey = Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
+    const endpoint = Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
     if (!accessKey) {
       throw new StorageException(
@@ -40,7 +37,7 @@ export class CloudflareStorage extends AbstractStorage {
     this.accessKey = accessKey;
     this.secretKey = secretKey;
     this.endpoint = endpoint;
-    this.region = options?.region || Bun.env.STORAGE_CLOUDFLARE_REGION || "EEUR";
+    this.region = Bun.env.STORAGE_CLOUDFLARE_REGION || "EEUR";
   }
 
   public getOptions(): S3Options {

@@ -12,6 +12,8 @@ class MockLogger {
   error = mock(() => {});
   warn = mock(() => {});
   debug = mock(() => {});
+  log = mock(() => {});
+  success = mock(() => {});
 }
 
 class MockAnalytics {
@@ -31,6 +33,13 @@ class MockStorage {
 class MockMailer {
   send = mock(() => Promise.resolve());
 }
+
+// Register mock classes with the container before tests run
+container.add(MockLogger);
+container.add(MockAnalytics);
+container.add(MockCache);
+container.add(MockStorage);
+container.add(MockMailer);
 
 const createMockAppEnv = (overrides: Record<string, unknown> = {}) => ({
   env: Environment.DEVELOPMENT,
@@ -84,6 +93,9 @@ describe("App", () => {
         start = startMock;
         stop = mock(() => {});
       }
+
+      // Register TestCronJob with the container before using it
+      container.add(TestCronJob);
 
       const config = createMockConfig({
         cronJobs: [TestCronJob as unknown as AppConfigType["cronJobs"] extends (infer T)[] | undefined ? T : never],
@@ -168,10 +180,26 @@ describe("App", () => {
     test("processes multiple loggers", () => {
       class Logger1 {
         init = mock(() => {});
+        info = mock(() => {});
+        error = mock(() => {});
+        warn = mock(() => {});
+        debug = mock(() => {});
+        log = mock(() => {});
+        success = mock(() => {});
       }
       class Logger2 {
         init = mock(() => {});
+        info = mock(() => {});
+        error = mock(() => {});
+        warn = mock(() => {});
+        debug = mock(() => {});
+        log = mock(() => {});
+        success = mock(() => {});
       }
+
+      // Register loggers with the container before using them
+      container.add(Logger1);
+      container.add(Logger2);
 
       const config = createMockConfig({
         loggers: [Logger1 as unknown as AppConfigType["loggers"][0], Logger2 as unknown as AppConfigType["loggers"][0]],
@@ -193,6 +221,10 @@ describe("App", () => {
       class Cron2 {
         start = start2;
       }
+
+      // Register cron jobs with the container before using them
+      container.add(Cron1);
+      container.add(Cron2);
 
       const config = createMockConfig({
         cronJobs: [

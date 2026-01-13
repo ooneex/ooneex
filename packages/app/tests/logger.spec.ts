@@ -1,8 +1,19 @@
 import { describe, expect, test } from "bun:test";
 import type { IContainer } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
-import type { ILogger } from "@ooneex/logger";
 import { logger } from "@/logger";
+
+// Define ILogger interface locally to avoid importing from @ooneex/logger
+// which triggers SqliteLogger decorator registration
+interface ILogger<Data = Record<string, unknown>> {
+  init: () => Promise<void> | void;
+  error: (message: string | IException, data?: Data) => Promise<void> | void;
+  warn: (message: string, data?: Data) => Promise<void> | void;
+  info: (message: string, data?: Data) => Promise<void> | void;
+  debug: (message: string, data?: Data) => Promise<void> | void;
+  log: (message: string, data?: Data) => Promise<void> | void;
+  success: (message: string, data?: Data) => Promise<void> | void;
+}
 
 class MockLogger implements ILogger {
   public calls: { method: string; message: string; data?: unknown }[] = [];

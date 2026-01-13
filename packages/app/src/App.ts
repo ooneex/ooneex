@@ -1,5 +1,5 @@
 import type { IAppEnv } from "@ooneex/app-env";
-import { container, EContainerScope } from "@ooneex/container";
+import { container } from "@ooneex/container";
 import type { ICron } from "@ooneex/cron";
 import { Exception, type IException } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
@@ -20,14 +20,14 @@ export class App {
     const { loggers, cronJobs, analytics, cache, storage, database, env, mailer } = this.config;
 
     loggers.forEach((log) => {
-      container.add(log, EContainerScope.Singleton);
+      // container.add(log, EContainerScope.Singleton);
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
 
     cronJobs?.forEach((cronJob) => {
-      container.add(cronJob, EContainerScope.Singleton);
+      // container.add(cronJob, EContainerScope.Singleton);
       const cron = container.get<ICron>(cronJob);
       cron.start();
     });
@@ -37,22 +37,22 @@ export class App {
     }
 
     if (analytics) {
-      container.add(analytics, EContainerScope.Singleton);
+      // container.add(analytics, EContainerScope.Singleton);
       container.addAlias("analytics", analytics);
     }
 
     if (cache) {
-      container.add(cache, EContainerScope.Singleton);
+      // container.add(cache, EContainerScope.Singleton);
       container.addAlias("cache", cache);
     }
 
     if (storage) {
-      container.add(storage, EContainerScope.Singleton);
+      // container.add(storage, EContainerScope.Singleton);
       container.addAlias("storage", storage);
     }
 
     if (mailer) {
-      container.add(mailer, EContainerScope.Singleton);
+      // container.add(mailer, EContainerScope.Singleton);
       container.addAlias("mailer", mailer);
     }
 

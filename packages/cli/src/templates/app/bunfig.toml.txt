@@ -6,18 +6,28 @@ packages = ["modules/*"]
 
 [install]
 hoistPattern = [
+  "@app/*",
   "@ooneex/*",
   "@biomejs/biome",
   "@nx/js",
   "@swc-node/register",
   "@swc/core",
   "@swc/helpers",
-  "@types/bun",
   "husky",
   "nx",
   "typescript",
   "@typescript/native-preview",
   "undici-types",
+  "nuqs",
+  "nuqs/*",
+  "react",
+  "react-error-boundary",
+  "react-*",
+  "react-*/*",
+  "@tanstack/*",
+  "@types/*",
+  "pg",
+  "reflect-metadata",
 ]
 external = false
 buildDependencies = [

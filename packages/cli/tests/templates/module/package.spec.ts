@@ -23,10 +23,9 @@ describe("package.txt", () => {
     expect(content).toContain('"scripts"');
   });
 
-  test("should have make commands", async () => {
+  test("should have required scripts", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("make:controller");
-    expect(content).toContain("make:service");
-    expect(content).toContain("make:repository");
+    expect(content).toContain("migration:up");
+    expect(content).toContain("seed:run");
   });
 });

@@ -1,5 +1,5 @@
 {
-  "name": "{{NAME}}",
+  "name": "@app/{{NAME}}",
   "description": "",
   "version": "0.0.1",
   "type": "module",
@@ -10,6 +10,8 @@
   "scripts": {
     "test": "bun test tests",
     "build": "bunup",
-    "lint": "tsgo --noEmit && bunx biome lint"
+    "lint": "tsgo --noEmit && bunx biome lint",
+    "migration:up": "bun run ./bin/migration/up.ts",
+    "seed:run": "bun run ./bin/bin/run.ts"
   }
 }

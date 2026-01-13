@@ -9,8 +9,8 @@ export default defineConfig({
   unused: {
     level: "error",
   },
-  exports: false,
-  minify: false,
+  exports: true,
+  minify: true,
   dts: {
     minify: false,
   },

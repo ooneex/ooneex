@@ -7,9 +7,6 @@ export default defineConfig({
   drop: ["console", "debugger"],
   packages: "bundle",
   sourcemap: "external",
-  unused: {
-    // level: "error",
-  },
   exports: true,
   minify: true,
   dts: {

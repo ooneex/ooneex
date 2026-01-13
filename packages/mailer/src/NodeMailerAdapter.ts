@@ -1,8 +1,10 @@
 import nodemailer from "nodemailer";
 import { renderToString } from "react-dom/server";
+import { decorator } from "./decorators";
 import { MailerException } from "./MailerException";
 import type { IMailer } from "./types";
 
+@decorator.mailer()
 export class NodeMailerAdapter implements IMailer {
   private dsn: string;
   private from?: { name: string; address: string };

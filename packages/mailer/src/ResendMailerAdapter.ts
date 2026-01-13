@@ -1,8 +1,10 @@
 import { renderToString } from "react-dom/server";
 import { Resend } from "resend";
+import { decorator } from "./decorators";
 import { MailerException } from "./MailerException";
 import type { IMailer } from "./types";
 
+@decorator.mailer()
 export class ResendMailerAdapter implements IMailer {
   private apiKey: string;
   private from?: { name: string; address: string };

@@ -1,11 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(bun test:*)",
-      "Bash(cat:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git reset:*)"
-    ]
+    "allow": ["Bash(bun test:*)", "Bash(cat:*)", "Bash(git add:*)", "Bash(git commit:*)", "Bash(git reset:*)"]
   }
 }

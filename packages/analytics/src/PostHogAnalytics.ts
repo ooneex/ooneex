@@ -1,14 +1,16 @@
 import { PostHog } from "posthog-node";
 import { AnalyticsException } from "./AnalyticsException";
+import { decorator } from "./decorators";
 import type { IAnalytics, PostHogCaptureOptionsType } from "./types";
 
+@decorator.analytics()
 export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptionsType>
   implements IAnalytics<T>
 {
   private client: PostHog | null = null;
 
-  constructor(options?: { apiKey?: string; host?: string }) {
-    const apiKey = options?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY;
+  constructor() {
+    const apiKey = Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -16,11 +18,9 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
       );
     }
 
-    if (options?.apiKey) {
-      this.client = new PostHog(apiKey, {
-        host: options.host || Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
-      });
-    }
+    this.client = new PostHog(apiKey, {
+      host: Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
+    });
   }
 
   public capture(options: T): void {

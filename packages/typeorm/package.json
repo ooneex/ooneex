@@ -268,6 +268,7 @@
     "@ooneex/user": "workspace:*",
     "@ooneex/utils": "workspace:*",
     "@ooneex/video": "workspace:*",
+    "@ooneex/migrations": "workspace:*",
     "typeorm": "^0.3.27"
   },
   "keywords": [

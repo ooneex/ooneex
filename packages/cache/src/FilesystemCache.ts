@@ -1,4 +1,5 @@
 import { CacheException } from "./CacheException";
+import { decorator } from "./decorators";
 import type { FilesystemCacheOptionsType, ICache } from "./types";
 
 type CacheEntryType<T = unknown> = {
@@ -8,6 +9,7 @@ type CacheEntryType<T = unknown> = {
   originalKey: string;
 };
 
+@decorator.cache()
 export class FilesystemCache implements ICache {
   private cacheDir: string;
   private maxFileSize: number;

@@ -1,6 +1,8 @@
 import { CacheException } from "./CacheException";
+import { decorator } from "./decorators";
 import type { ICache, RedisCacheOptionsType } from "./types";
 
+@decorator.cache()
 export class RedisCache implements ICache {
   private client: Bun.RedisClient;
 

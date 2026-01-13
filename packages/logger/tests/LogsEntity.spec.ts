@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import type { ExceptionStackFrameType } from "@ooneex/exception";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
-import { type LevelType, LogsEntity } from "@/index";
+import { LogsEntity } from "@/LogsEntity";
+import type { LevelType } from "@/types";
 
 describe("LogsEntity", () => {
   describe("Constructor and Default Values", () => {

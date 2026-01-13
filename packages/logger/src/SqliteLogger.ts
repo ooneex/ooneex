@@ -1,15 +1,17 @@
 import type { IException } from "@ooneex/exception";
+import { decorator } from "./decorators";
 import { LogsDatabase } from "./LogsDatabase";
 import { LogsEntity } from "./LogsEntity";
 import { LogsRepository } from "./LogsRepository";
 import type { ILogger, LevelType } from "./types";
 
+@decorator.logger()
 export class SqliteLogger implements ILogger<LogsEntity> {
   private db: LogsDatabase;
   private repository: LogsRepository;
 
-  constructor(options?: Bun.SQL.SQLiteOptions) {
-    this.db = new LogsDatabase(options);
+  constructor() {
+    this.db = new LogsDatabase();
     this.repository = new LogsRepository(this.db);
   }
 

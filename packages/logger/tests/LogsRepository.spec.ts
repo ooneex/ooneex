@@ -2,8 +2,9 @@ import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import type { ExceptionStackFrameType } from "@ooneex/exception";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import { random } from "@ooneex/utils";
-import type { FindByCriteriaType } from "@/index";
-import { ELogLevel, LogsEntity, LogsRepository } from "@/index";
+import { LogsEntity } from "@/LogsEntity";
+import { LogsRepository } from "@/LogsRepository";
+import { ELogLevel, type FindByCriteriaType } from "@/types";
 
 // Mock types
 type MockSQLClient = (strings: TemplateStringsArray, ...values: unknown[]) => Promise<unknown[]>;

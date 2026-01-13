@@ -1,5 +1,6 @@
 import type { ExceptionStackFrameType, IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
+import { decorator } from "./decorators";
 import type { ILogger, LoggerOptionsType } from "./types";
 
 interface WriteToConsoleConfig {
@@ -14,6 +15,7 @@ interface WriteToConsoleConfig {
   useSymbol?: boolean;
 }
 
+@decorator.logger()
 export class TerminalLogger implements ILogger {
   private colorizeText(text: string, color: string): string {
     const ansiColor = Bun.color(color, "ansi");

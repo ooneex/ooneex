@@ -67,7 +67,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "0.15.2",
+      "version": "0.15.3",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -471,7 +471,7 @@
     },
     "packages/pub-sub": {
       "name": "@ooneex/pub-sub",
-      "version": "0.0.16",
+      "version": "0.0.17",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",

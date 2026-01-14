@@ -65,7 +65,10 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       bunupPackages: "bundle",
     });
 
+    await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
+    await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");
     await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);
+    await Bun.write(join(destination, "modules", "app", "var", ".gitkeep"), "");
 
     const logger = new TerminalLogger();
 

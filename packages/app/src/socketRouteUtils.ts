@@ -3,6 +3,7 @@ import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import type { IResponse } from "@ooneex/http-response";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
+import { LogsEntity } from "@ooneex/logger";
 import type { ISocketMiddleware, SocketMiddlewareClassType } from "@ooneex/middleware";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { ContextType } from "@ooneex/socket";
@@ -49,6 +50,53 @@ const sendException = (context: ContextType, message: string, status: StatusCode
   return context.channel.send(context.response);
 };
 
+const logSocketRequest = (context: ContextType, status: number, path: string): void => {
+  const logger = context.logger as {
+    success: (message: string, data?: LogsEntity) => void;
+    info: (message: string, data?: LogsEntity) => void;
+    warn: (message: string, data?: LogsEntity) => void;
+    error: (message: string, data?: LogsEntity) => void;
+  };
+
+  if (!logger) {
+    return;
+  }
+
+  const logData = new LogsEntity();
+  logData.date = new Date();
+  logData.status = status;
+  logData.method = "GET";
+  logData.path = path;
+  logData.params = context.params as Record<string, ScalarType>;
+  logData.payload = context.payload as Record<string, unknown>;
+  logData.queries = context.queries as Record<string, ScalarType>;
+
+  if (context.ip) logData.ip = context.ip;
+
+  const userAgent = context.header.get("User-Agent");
+  if (userAgent) logData.userAgent = userAgent;
+
+  const referer = context.header.getReferer();
+  if (referer) logData.referer = referer;
+
+  if (context.user?.id) logData.userId = context.user.id;
+  if (context.user?.email) logData.email = context.user.email;
+  if (context.user?.lastName) logData.lastName = context.user.lastName;
+  if (context.user?.firstName) logData.firstName = context.user.firstName;
+
+  const message = `WS ${path}`;
+
+  if (status >= 500) {
+    logger.error(message, logData);
+  } else if (status >= 400) {
+    logger.warn(message, logData);
+  } else if (status >= 300) {
+    logger.info(message, logData);
+  } else {
+    logger.success(message, logData);
+  }
+};
+
 export const socketRouteHandler = async (
   message: string,
   ws: ServerWebSocket<{ id: string }>,
@@ -90,12 +138,14 @@ export const socketRouteHandler = async (
   try {
     context = await runMiddlewares(context, middlewares);
   } catch (error: unknown) {
-    const status = error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError;
-    return sendException(context, (error as Error).message, status);
+    const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+    logSocketRequest(context, status, route.path);
+    return sendException(context, (error as Error).message, status as StatusCodeType);
   }
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
+    logSocketRequest(context, validationError.status, route.path);
     return sendException(context, validationError.message, validationError.status);
   }
 
@@ -103,15 +153,18 @@ export const socketRouteHandler = async (
   try {
     context.response = await controller.index(context);
   } catch (error: unknown) {
-    const status = error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError;
+    const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
     const message = error instanceof Error ? error.message : "An unknown error occurred";
-    return sendException(context, message, status);
+    logSocketRequest(context, status, route.path);
+    return sendException(context, message, status as StatusCodeType);
   }
 
   const responseValidationError = validateResponse(route, context.response.getData());
   if (responseValidationError) {
+    logSocketRequest(context, responseValidationError.status, route.path);
     return sendException(context, responseValidationError.message, responseValidationError.status);
   }
 
+  logSocketRequest(context, HttpStatus.Code.OK, route.path);
   return context.channel.send(context.response);
 };

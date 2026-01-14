@@ -5,9 +5,11 @@ import { Exception } from "@ooneex/exception";
 import { HttpRequest } from "@ooneex/http-request";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
+import { LogsEntity } from "@ooneex/logger";
 import type { IMiddleware, MiddlewareClassType } from "@ooneex/middleware";
 import { Role } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
+import type { ScalarType } from "@ooneex/types";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
 
@@ -218,6 +220,53 @@ const buildExceptionResponse = (
   return context.response.exception(message, { status }).get(env);
 };
 
+const logRequest = (context: ContextType, status: number, path: string): void => {
+  const logger = context.logger as {
+    success: (message: string, data?: LogsEntity) => void;
+    info: (message: string, data?: LogsEntity) => void;
+    warn: (message: string, data?: LogsEntity) => void;
+    error: (message: string, data?: LogsEntity) => void;
+  };
+
+  if (!logger) {
+    return;
+  }
+
+  const logData = new LogsEntity();
+  logData.date = new Date();
+  logData.status = status;
+  logData.method = context.method;
+  logData.path = path;
+  logData.params = context.params as Record<string, ScalarType>;
+  logData.payload = context.payload as Record<string, unknown>;
+  logData.queries = context.queries as Record<string, ScalarType>;
+
+  if (context.ip) logData.ip = context.ip;
+
+  const userAgent = context.header.get("User-Agent");
+  if (userAgent) logData.userAgent = userAgent;
+
+  const referer = context.header.getReferer();
+  if (referer) logData.referer = referer;
+
+  if (context.user?.id) logData.userId = context.user.id;
+  if (context.user?.email) logData.email = context.user.email;
+  if (context.user?.lastName) logData.lastName = context.user.lastName;
+  if (context.user?.firstName) logData.firstName = context.user.firstName;
+
+  const message = `${context.method} ${path}`;
+
+  if (status >= 500) {
+    logger.error(message, logData);
+  } else if (status >= 400) {
+    logger.warn(message, logData);
+  } else if (status >= 300) {
+    logger.info(message, logData);
+  } else {
+    logger.success(message, logData);
+  }
+};
+
 const executeController = async (
   controller: { index: (context: ContextType) => Promise<IResponse> | IResponse },
   context: ContextType,
@@ -241,6 +290,7 @@ export const httpRouteHandler = async (context: ContextType, route: RouteConfigT
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
+    logRequest(context, validationError.status, route.path);
     return buildExceptionResponse(context, validationError.message, validationError.status, currentEnv);
   }
 
@@ -248,15 +298,20 @@ export const httpRouteHandler = async (context: ContextType, route: RouteConfigT
 
   const [response, controllerError] = await executeController(controller, context);
   if (controllerError) {
+    logRequest(context, controllerError.status, route.path);
     return buildExceptionResponse(context, controllerError.message, controllerError.status, currentEnv);
   }
 
   const responseValidationError = validateResponse(route, response.getData());
   if (responseValidationError) {
+    logRequest(context, responseValidationError.status, route.path);
     return buildExceptionResponse(context, responseValidationError.message, responseValidationError.status, currentEnv);
   }
 
-  return response.get(currentEnv);
+  const httpResponse = response.get(currentEnv);
+  logRequest(context, httpResponse.status, route.path);
+
+  return httpResponse;
 };
 
 const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClassType[]): Promise<ContextType> => {
@@ -287,8 +342,9 @@ export const formatHttpRoutes = (
           context = await runMiddlewares(context, middlewares);
         } catch (error: unknown) {
           const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
-          const status = error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError;
-          return buildExceptionResponse(context, (error as Error).message, status, env);
+          const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+          logRequest(context, status, route.path);
+          return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
         }
 
         return httpRouteHandler(context, route);

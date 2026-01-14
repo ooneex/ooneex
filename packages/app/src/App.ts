@@ -20,14 +20,12 @@ export class App {
     const { loggers, cronJobs, analytics, cache, storage, database, env, mailer } = this.config;
 
     loggers.forEach((log) => {
-      // container.add(log, EContainerScope.Singleton);
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
 
     cronJobs?.forEach((cronJob) => {
-      // container.add(cronJob, EContainerScope.Singleton);
       const cron = container.get<ICron>(cronJob);
       cron.start();
     });
@@ -37,22 +35,18 @@ export class App {
     }
 
     if (analytics) {
-      // container.add(analytics, EContainerScope.Singleton);
       container.addAlias("analytics", analytics);
     }
 
     if (cache) {
-      // container.add(cache, EContainerScope.Singleton);
       container.addAlias("cache", cache);
     }
 
     if (storage) {
-      // container.add(storage, EContainerScope.Singleton);
       container.addAlias("storage", storage);
     }
 
     if (mailer) {
-      // container.add(mailer, EContainerScope.Singleton);
       container.addAlias("mailer", mailer);
     }
 
@@ -107,7 +101,7 @@ export class App {
     }
 
     const env = container.getConstant<IAppEnv>("app.env");
-    const hostname = Bun.env.HOST_NAME || "0.0.0.0";
+    let hostname = Bun.env.HOST_NAME || "0.0.0.0";
     const { directories } = this.config;
     const staticDir = directories.static;
 
@@ -150,7 +144,13 @@ export class App {
       },
     });
 
-    logger.info(`Server running at ${server.protocol}://${server.hostname}:${server.port}`);
+    hostname = server.hostname || "0.0.0.0";
+
+    if (hostname === "0.0.0.0") {
+      hostname = "localhost";
+    }
+
+    logger.info(`Server running at ${server.protocol}://${hostname}:${server.port}`);
 
     return this;
   }

@@ -16,10 +16,22 @@ class DefaultSocketController {
 }
 container.add(DefaultSocketController);
 
+const createMockHeader = () => ({
+  get: mock(() => null),
+  getReferer: mock(() => null),
+});
+
+const createMockLogger = () => ({
+  success: mock(() => {}),
+  info: mock(() => {}),
+  warn: mock(() => {}),
+  error: mock(() => {}),
+});
+
 const createMockSocketContext = (overrides: Record<string, unknown> = {}): ContextType => {
   const response = new HttpResponse();
   return {
-    logger: {} as ContextType["logger"],
+    logger: createMockLogger() as unknown as ContextType["logger"],
     analytics: {} as ContextType["analytics"],
     cache: {} as ContextType["cache"],
     storage: {} as ContextType["storage"],
@@ -34,7 +46,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
     payload: {},
     queries: {},
     method: "GET",
-    header: {} as ContextType["header"],
+    header: createMockHeader() as unknown as ContextType["header"],
     files: {},
     ip: "127.0.0.1",
     host: "localhost",

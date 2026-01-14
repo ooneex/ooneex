@@ -1,4 +1,5 @@
 import type { ScalarType } from "@ooneex/types";
+import type { ServerWebSocket } from "bun";
 
 export type PubSubMessageHandlerType<Data extends Record<string, ScalarType> = Record<string, ScalarType>> = (context: {
   data: Data;
@@ -27,10 +28,10 @@ export interface IPubSubClient<Data extends Record<string, ScalarType> = Record<
 export interface IPubSub<Data extends Record<string, ScalarType> = Record<string, ScalarType>> {
   getChannel: () => Promise<string> | string;
   handler: (context: { data: Data; channel: string; key?: string }) => Promise<void> | void;
-  publish: (data: Data, key?: string) => Promise<void> | void;
-  subscribe: () => Promise<void> | void;
-  unsubscribe: () => Promise<void> | void;
-  unsubscribeAll: () => Promise<void> | void;
+  publish: (data: Data, options?: { ws?: ServerWebSocket; key?: string }) => Promise<void> | void;
+  subscribe: (ws?: ServerWebSocket) => Promise<void> | void;
+  unsubscribe: (ws?: ServerWebSocket) => Promise<void> | void;
+  unsubscribeAll: (ws?: ServerWebSocket) => Promise<void> | void;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me

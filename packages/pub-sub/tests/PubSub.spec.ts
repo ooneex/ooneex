@@ -88,7 +88,6 @@ describe("PubSub", () => {
       expect(client.publish).toHaveBeenCalledWith({
         channel: "test-channel",
         data,
-        key: undefined,
       });
     });
 
@@ -97,7 +96,7 @@ describe("PubSub", () => {
       const pubsub = new TestPubSub(client);
       const data: TestData = { message: "with key", count: 1 };
 
-      await pubsub.publish(data, "my-key");
+      await pubsub.publish(data, { key: "my-key" });
 
       expect(client.publish).toHaveBeenCalledWith({
         channel: "test-channel",
@@ -116,7 +115,6 @@ describe("PubSub", () => {
       expect(client.publish).toHaveBeenCalledWith({
         channel: "async-channel",
         data,
-        key: undefined,
       });
     });
 
@@ -127,7 +125,7 @@ describe("PubSub", () => {
 
       const pubsub = new TestPubSub(client);
 
-      await expect(pubsub.publish({ message: "test", count: 0 })).rejects.toThrow("Publish failed");
+      expect(pubsub.publish({ message: "test", count: 0 })).rejects.toThrow("Publish failed");
     });
   });
 
@@ -158,7 +156,7 @@ describe("PubSub", () => {
 
       const pubsub = new TestPubSub(client);
 
-      await expect(pubsub.subscribe()).rejects.toThrow("Subscribe failed");
+      expect(pubsub.subscribe()).rejects.toThrow("Subscribe failed");
     });
 
     test("should bind handler to pubsub instance", async () => {
@@ -213,7 +211,7 @@ describe("PubSub", () => {
 
       const pubsub = new TestPubSub(client);
 
-      await expect(pubsub.unsubscribe()).rejects.toThrow("Unsubscribe failed");
+      expect(pubsub.unsubscribe()).rejects.toThrow("Unsubscribe failed");
     });
   });
 
@@ -234,7 +232,7 @@ describe("PubSub", () => {
 
       const pubsub = new TestPubSub(client);
 
-      await expect(pubsub.unsubscribeAll()).rejects.toThrow("Unsubscribe all failed");
+      expect(pubsub.unsubscribeAll()).rejects.toThrow("Unsubscribe all failed");
     });
   });
 

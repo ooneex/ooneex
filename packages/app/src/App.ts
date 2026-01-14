@@ -97,15 +97,16 @@ export class App {
   }
 
   public async run(): Promise<App> {
+    const logger = new TerminalLogger();
+
     try {
       await this.init();
     } catch (error: unknown) {
-      const logger = new TerminalLogger();
       logger.error(error as IException);
       process.exit(1);
     }
 
-    const env = container.get<IAppEnv>("app.env");
+    const env = container.getConstant<IAppEnv>("app.env");
     const hostname = Bun.env.HOST_NAME || "0.0.0.0";
     const { directories } = this.config;
     const staticDir = directories.static;
@@ -128,8 +129,10 @@ export class App {
       };
     }
 
+    const port = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
+
     const server = Bun.serve({
-      port: Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000,
+      port,
       hostname,
       development: env.isLocal,
       routes: {
@@ -146,6 +149,8 @@ export class App {
         },
       },
     });
+
+    logger.info(`Server running at ${server.protocol}://${server.hostname}:${server.port}`);
 
     return this;
   }

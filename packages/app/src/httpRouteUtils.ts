@@ -319,7 +319,7 @@ const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClass
 
   for (const MiddlewareClass of middlewares) {
     const middleware = container.get<IMiddleware>(MiddlewareClass);
-    currentContext = await middleware.handle(currentContext);
+    currentContext = await middleware.handler(currentContext);
   }
 
   return currentContext;

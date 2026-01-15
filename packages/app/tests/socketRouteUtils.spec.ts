@@ -173,7 +173,7 @@ describe("socketRouteUtils", () => {
       const mockServer = createMockServer();
 
       class ThrowingMiddleware {
-        handle(): Promise<ContextType> {
+        handler(): Promise<ContextType> {
           throw new Exception("Middleware error", { status: HttpStatus.Code.Unauthorized });
         }
       }
@@ -207,7 +207,7 @@ describe("socketRouteUtils", () => {
       const mockServer = createMockServer();
 
       class ErrorMiddleware {
-        handle(): Promise<ContextType> {
+        handler(): Promise<ContextType> {
           throw new Error("Unexpected middleware error");
         }
       }
@@ -506,14 +506,14 @@ describe("socketRouteUtils", () => {
       const context = createMockSocketContext();
 
       class FirstMiddleware {
-        async handle(ctx: ContextType): Promise<ContextType> {
+        async handler(ctx: ContextType): Promise<ContextType> {
           executionOrder.push("first");
           return ctx;
         }
       }
 
       class SecondMiddleware {
-        async handle(ctx: ContextType): Promise<ContextType> {
+        async handler(ctx: ContextType): Promise<ContextType> {
           executionOrder.push("second");
           return ctx;
         }

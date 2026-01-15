@@ -39,7 +39,7 @@ const runMiddlewares = async (context: ContextType, middlewares: SocketMiddlewar
 
   for (const MiddlewareClass of middlewares) {
     const middleware = container.get<ISocketMiddleware>(MiddlewareClass);
-    currentContext = await middleware.handle(currentContext);
+    currentContext = await middleware.handler(currentContext);
   }
 
   return currentContext;

@@ -7,9 +7,9 @@ export type MiddlewareClassType = new (...args: any[]) => IMiddleware;
 export type SocketMiddlewareClassType = new (...args: any[]) => ISocketMiddleware;
 
 export interface IMiddleware<T extends ContextConfigType = ContextConfigType> {
-  handle: (context: ContextType<T>) => Promise<ContextType<T>> | ContextType<T>;
+  handler: (context: ContextType<T>) => Promise<ContextType<T>> | ContextType<T>;
 }
 
 export interface ISocketMiddleware<T extends SocketContextConfigType = SocketContextConfigType> {
-  handle: (context: SocketContextType<T>) => Promise<SocketContextType<T>> | SocketContextType<T>;
+  handler: (context: SocketContextType<T>) => Promise<SocketContextType<T>> | SocketContextType<T>;
 }

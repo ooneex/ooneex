@@ -11,7 +11,7 @@ describe("decorator.middleware", () => {
 
   test("should register class ending with 'Middleware' successfully", () => {
     class TestMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -24,7 +24,7 @@ describe("decorator.middleware", () => {
 
   test("should register class with default singleton scope", () => {
     class SingletonMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -40,7 +40,7 @@ describe("decorator.middleware", () => {
 
   test("should register class with explicit singleton scope", () => {
     class ExplicitSingletonMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -64,7 +64,7 @@ describe("decorator.middleware", () => {
         this.instanceId = TransientMiddleware.instanceCount;
       }
 
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -81,7 +81,7 @@ describe("decorator.middleware", () => {
 
   test("should register class with request scope", () => {
     class RequestScopedMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -97,7 +97,7 @@ describe("decorator.middleware", () => {
 
   test("should register class with complex name ending in 'Middleware'", () => {
     class AuthenticationJwtBearerMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -112,7 +112,7 @@ describe("decorator.middleware", () => {
     class RetrievableMiddleware {
       public readonly name = "retrievable";
 
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -125,9 +125,9 @@ describe("decorator.middleware", () => {
     expect(instance.name).toBe("retrievable");
   });
 
-  test("should work with Middleware class that has async handle method", () => {
+  test("should work with Middleware class that has async handler method", () => {
     class AsyncMiddleware {
-      public async handle(_context: unknown): Promise<unknown> {
+      public async handler(_context: unknown): Promise<unknown> {
         return _context;
       }
     }
@@ -143,7 +143,7 @@ describe("decorator.middleware", () => {
 
   test("should work with SocketMiddleware class", () => {
     class SocketTestMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }
@@ -159,7 +159,7 @@ describe("decorator.middleware", () => {
 
   test("should work with async SocketMiddleware class", () => {
     class AsyncSocketMiddleware {
-      public async handle(_context: unknown): Promise<unknown> {
+      public async handler(_context: unknown): Promise<unknown> {
         return _context;
       }
     }
@@ -175,7 +175,7 @@ describe("decorator.middleware", () => {
 
   test("should return void from the decorator function", () => {
     class VoidReturnMiddleware {
-      public handle(_context: unknown): unknown {
+      public handler(_context: unknown): unknown {
         return _context;
       }
     }

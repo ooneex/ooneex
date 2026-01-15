@@ -16,8 +16,8 @@ describe("{{NAME}}Cron", () => {
     expect(typeof {{NAME}}Cron.prototype.getTimeZone).toBe("function");
   });
 
-  test("should have 'job' method", () => {
-    expect({{NAME}}Cron.prototype.job).toBeDefined();
-    expect(typeof {{NAME}}Cron.prototype.job).toBe("function");
+  test("should have 'handler' method", () => {
+    expect({{NAME}}Cron.prototype.handler).toBeDefined();
+    expect(typeof {{NAME}}Cron.prototype.handler).toBe("function");
   });
 });

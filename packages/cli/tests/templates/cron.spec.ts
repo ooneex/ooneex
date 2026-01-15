@@ -30,7 +30,7 @@ describe("cron.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("getTime");
     expect(content).toContain("getTimeZone");
-    expect(content).toContain("job");
+    expect(content).toContain("handler");
   });
 });
 
@@ -50,6 +50,6 @@ describe("cron.test.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("getTime");
     expect(content).toContain("getTimeZone");
-    expect(content).toContain("job");
+    expect(content).toContain("handler");
   });
 });

@@ -14,8 +14,8 @@ export class {{NAME}}Cron extends CronAdapter {
     return null;
   }
 
-  public async job(): Promise<void> {
-    // Implement your cron job logic here
-    // console.log("{{NAME}}Cron job executed");
+  public async handler(): Promise<void> {
+    // Implement your cron handler logic here
+    // console.log("{{NAME}}Cron handler executed");
   }
 }

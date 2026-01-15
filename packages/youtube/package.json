@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/youtube",
   "description": "A YouTube video downloader and utility library",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "type": "module",
   "files": [
     "dist",

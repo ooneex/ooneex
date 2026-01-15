@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/app-env",
   "description": "Application environment configuration and management utilities for Ooneex framework",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "type": "module",
   "files": [
     "dist",

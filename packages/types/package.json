@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/types",
   "description": "Shared TypeScript types, interfaces, and base definitions used across the Ooneex framework",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "type": "module",
   "files": [
     "dist",

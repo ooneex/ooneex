@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/category",
   "description": "TypeScript types and interfaces for content categorization with color support",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "type": "module",
   "files": [
     "dist",

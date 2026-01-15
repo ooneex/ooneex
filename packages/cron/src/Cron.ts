@@ -8,7 +8,7 @@ export abstract class Cron implements ICron {
   private cronJob: CronJob | null = null;
 
   public abstract getTime(): CronTimeType;
-  public abstract job(): Promise<void>;
+  public abstract handler(): Promise<void>;
   public abstract getTimeZone(): TimeZoneType | null;
 
   public async start(): Promise<void> {
@@ -32,7 +32,7 @@ export abstract class Cron implements ICron {
       } = {
         cronTime: cronExpression,
         onTick: async () => {
-          await this.job();
+          await this.handler();
         },
         start: true,
       };

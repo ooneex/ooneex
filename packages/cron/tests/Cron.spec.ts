@@ -21,7 +21,7 @@ class TestCronAdapter extends Cron {
     return this.timeZone;
   }
 
-  public override async job(): Promise<void> {
+  public override async handler(): Promise<void> {
     this.jobCallCount++;
   }
 }
@@ -84,7 +84,7 @@ describe("CronAdapter", () => {
       expect(typeof cronInstance.getTime).toBe("function");
       expect(typeof cronInstance.start).toBe("function");
       expect(typeof cronInstance.stop).toBe("function");
-      expect(typeof cronInstance.job).toBe("function");
+      expect(typeof cronInstance.handler).toBe("function");
       expect(typeof cronInstance.getTimeZone).toBe("function");
       expect(typeof cronInstance.isActive).toBe("function");
     });
@@ -182,11 +182,11 @@ describe("CronAdapter", () => {
     });
   });
 
-  describe("job", () => {
-    test("should execute the abstract job method implementation", async () => {
+  describe("handler", () => {
+    test("should execute the abstract handler method implementation", async () => {
       adapter = new TestCronAdapter({ time: "every 1 minutes" });
 
-      await adapter.job();
+      await adapter.handler();
 
       expect(adapter.jobCallCount).toBe(1);
     });
@@ -194,7 +194,7 @@ describe("CronAdapter", () => {
     test("should return a Promise", () => {
       adapter = new TestCronAdapter({ time: "every 1 minutes" });
 
-      const result = adapter.job();
+      const result = adapter.handler();
 
       expect(result).toBeInstanceOf(Promise);
     });
@@ -400,7 +400,7 @@ describe("CronAdapter", () => {
   });
 
   describe("Abstract Class", () => {
-    test("should require job method implementation in subclass", async () => {
+    test("should require handler method implementation in subclass", async () => {
       const customAdapter = new TestCronAdapter({
         time: "every 1 minutes",
       });
@@ -408,20 +408,20 @@ describe("CronAdapter", () => {
       await customAdapter.start();
 
       expect(customAdapter.isActive()).toBe(true);
-      expect(typeof customAdapter.job).toBe("function");
+      expect(typeof customAdapter.handler).toBe("function");
 
       await customAdapter.stop();
     });
 
-    test("should track job executions in custom implementation", async () => {
+    test("should track handler executions in custom implementation", async () => {
       adapter = new TestCronAdapter({ time: "every 1 minutes" });
 
       expect(adapter.jobCallCount).toBe(0);
 
-      await adapter.job();
+      await adapter.handler();
       expect(adapter.jobCallCount).toBe(1);
 
-      await adapter.job();
+      await adapter.handler();
       expect(adapter.jobCallCount).toBe(2);
     });
   });

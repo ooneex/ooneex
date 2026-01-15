@@ -21,7 +21,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -48,7 +48,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -78,7 +78,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -116,7 +116,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -147,7 +147,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -177,7 +177,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -206,7 +206,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {
@@ -235,7 +235,7 @@ describe("decorator.cron", () => {
       public async stop(): Promise<void> {
         // noop
       }
-      public async job(): Promise<void> {
+      public async handler(): Promise<void> {
         // noop
       }
       public getTimeZone(): null {
@@ -265,7 +265,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): "Europe/Paris" {
@@ -296,7 +296,7 @@ describe("decorator.cron", () => {
       public stop(): void {
         // noop
       }
-      public job(): void {
+      public handler(): void {
         // noop
       }
       public getTimeZone(): null {

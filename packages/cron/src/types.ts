@@ -25,7 +25,7 @@ export interface ICron {
   getTime: () => Promise<CronTimeType> | CronTimeType;
   start: () => Promise<void> | void;
   stop: () => Promise<void> | void;
-  job: () => Promise<void> | void;
+  handler: () => Promise<void> | void;
   getTimeZone: () => TimeZoneType | null;
   isActive: () => Promise<boolean> | boolean;
 }

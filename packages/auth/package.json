@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/auth",
   "description": "Authentication utilities and strategies for securing Ooneex applications",
-  "version": "0.0.17",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",
@@ -10,18 +10,25 @@
     "package.json"
   ],
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./package.json": "./package.json"
   },
   "license": "MIT",
   "scripts": {
-    "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
     "npm:publish": "bun publish --tolerate-republish --access public"
+  },
+  "dependencies": {
+    "@ooneex/user": "workspace:*",
+    "@ooneex/controller": "workspace:*"
   },
   "devDependencies": {},
   "keywords": [

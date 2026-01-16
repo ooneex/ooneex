@@ -37,6 +37,12 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
     storage: {} as ContextType["storage"],
     mailer: {} as ContextType["mailer"],
     database: {} as ContextType["database"],
+    route: {
+      name: "api.socket.test",
+      path: "/socket" as const,
+      method: "GET" as const,
+      description: "Test socket route",
+    },
     app: {
       env: { env: Environment.DEVELOPMENT } as ContextType["app"]["env"],
     },

@@ -38,8 +38,12 @@ export const validateConstraint = (constraint: AssertType | IAssert, value: unkn
   return null;
 };
 
-export const buildHttpContext = async (ctx: { req: BunRequest; server: Server<unknown> }): Promise<ContextType> => {
-  const { req, server } = ctx;
+export const buildHttpContext = async (ctx: {
+  req: BunRequest;
+  server: Server<unknown>;
+  route: RouteConfigType;
+}): Promise<ContextType> => {
+  const { req, server, route } = ctx;
 
   const address = server.requestIP(req);
   const ip = address?.address ?? "unknown";
@@ -73,6 +77,12 @@ export const buildHttpContext = async (ctx: { req: BunRequest; server: Server<un
     storage: container.get("storage"),
     mailer: container.get("mailer"),
     database: container.get("database"),
+    route: {
+      name: route.name,
+      path: route.path,
+      method: route.method,
+      description: route.description ?? "",
+    },
     app: {
       env: container.get("app.env"),
     },
@@ -336,7 +346,7 @@ export const formatHttpRoutes = (
 
     for (const route of routeConfigs) {
       methodHandlers[route.method] = async (req: BunRequest, server: Server<unknown>) => {
-        let context = await buildHttpContext({ req, server });
+        let context = await buildHttpContext({ req, server, route });
 
         try {
           context = await runMiddlewares(context, middlewares);

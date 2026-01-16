@@ -22,7 +22,7 @@ export const formatSocketRoutes = (socketRoutes: Map<string, RouteConfigType>): 
 
   for (const [path, route] of socketRoutes) {
     routes[path] = async (req: BunRequest, server: Server<unknown>) => {
-      const context = await buildHttpContext({ req, server });
+      const context = await buildHttpContext({ req, server, route });
       const id = random.nanoid(30);
       container.addConstant(id, { context, route });
       server.upgrade(req, { data: { id } });

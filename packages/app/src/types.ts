@@ -27,4 +27,5 @@ export type AppConfigType = {
   };
   spa?: Bun.HTMLBundle;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
+  generateRouteDoc?: boolean;
 };

@@ -31,6 +31,12 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   storage?: IStorage;
   database?: IDatabase;
   mailer?: IMailer;
+  route: {
+    name: string;
+    path: `/${string}`;
+    method: HttpMethodType;
+    description: string;
+  };
   app: {
     env: IAppEnv;
   };

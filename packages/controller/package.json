@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/controller",
   "description": "Base controller classes and decorators for handling HTTP requests and responses in Ooneex applications",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "type": "module",
   "files": [
     "dist",

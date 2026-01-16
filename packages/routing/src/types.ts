@@ -591,7 +591,6 @@ export type RouteConfigType = {
   cache?: boolean;
   isSocket: boolean;
   generate?: {
-    doc?: boolean;
     fetcher?: boolean;
     queryHook?: boolean;
   };

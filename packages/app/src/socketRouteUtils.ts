@@ -1,4 +1,5 @@
 import { Environment } from "@ooneex/app-env";
+import type { AuthMiddlewareClassType, IAuthMiddleware } from "@ooneex/auth";
 import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import type { IResponse } from "@ooneex/http-response";
@@ -97,12 +98,21 @@ const logSocketRequest = (context: ContextType, status: number, path: string): v
   }
 };
 
-export const socketRouteHandler = async (
-  message: string,
-  ws: ServerWebSocket<{ id: string }>,
-  server: Server<{ id: string }>,
-  middlewares: SocketMiddlewareClassType[] = [],
-): Promise<void> => {
+type SocketRouteHandlerOptions = {
+  message: string;
+  ws: ServerWebSocket<{ id: string }>;
+  server: Server<{ id: string }>;
+  middlewares?: SocketMiddlewareClassType[];
+  authMiddleware?: AuthMiddlewareClassType;
+};
+
+export const socketRouteHandler = async ({
+  message,
+  ws,
+  server,
+  middlewares = [],
+  authMiddleware,
+}: SocketRouteHandlerOptions): Promise<void> => {
   let { context, route } = container.getConstant<{ context: ContextType; route: RouteConfigType }>(ws.data.id);
   const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
 
@@ -141,6 +151,18 @@ export const socketRouteHandler = async (
     const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
     logSocketRequest(context, status, route.path);
     return sendException(context, (error as Error).message, status as StatusCodeType);
+  }
+
+  if (authMiddleware) {
+    try {
+      const authMiddlewareInstance = container.get<IAuthMiddleware>(authMiddleware);
+      const user = await authMiddlewareInstance.handler(context);
+      context.user = user;
+    } catch (error: unknown) {
+      const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+      logSocketRequest(context, status, route.path);
+      return sendException(context, (error as Error).message, status as StatusCodeType);
+    }
   }
 
   const validationError = await validateRouteAccess(context, route, currentEnv);

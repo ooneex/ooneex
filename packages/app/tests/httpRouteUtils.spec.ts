@@ -596,7 +596,7 @@ describe("httpRouteUtils", () => {
         controller: SuccessController,
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.OK);
       const body = await response.json();
@@ -617,7 +617,7 @@ describe("httpRouteUtils", () => {
         env: [Environment.PRODUCTION],
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.NotAcceptable);
     });
@@ -635,7 +635,7 @@ describe("httpRouteUtils", () => {
         controller: ThrowingController,
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.BadRequest);
       const body = await response.json();
@@ -655,7 +655,7 @@ describe("httpRouteUtils", () => {
         controller: ErrorController,
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.InternalServerError);
       const body = await response.json();
@@ -675,7 +675,7 @@ describe("httpRouteUtils", () => {
         controller: UnknownErrorController,
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.InternalServerError);
       const body = await response.json();
@@ -696,7 +696,7 @@ describe("httpRouteUtils", () => {
         response: type({ id: "number" }),
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.NotAcceptable);
       const body = await response.json();
@@ -718,7 +718,7 @@ describe("httpRouteUtils", () => {
         controller: TestEnvController,
       } as Partial<RouteConfigType>);
 
-      const response = await httpRouteHandler(context, route);
+      const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.OK);
     });

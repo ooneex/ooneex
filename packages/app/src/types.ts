@@ -1,5 +1,6 @@
 import type { AnalyticsClassType } from "@ooneex/analytics";
 import type { IAppEnv } from "@ooneex/app-env";
+import type { AuthMiddlewareClassType } from "@ooneex/auth";
 import type { CacheClassType } from "@ooneex/cache";
 import type { CronClassType } from "@ooneex/cron";
 import type { IDatabase, ITypeormDatabase } from "@ooneex/database";
@@ -28,4 +29,5 @@ export type AppConfigType = {
   spa?: Bun.HTMLBundle;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   generateRouteDoc?: boolean;
+  authMiddleware?: AuthMiddlewareClassType;
 };

@@ -158,11 +158,11 @@ describe("socketRouteUtils", () => {
         language: { locale: "en" },
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -191,12 +191,12 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-        [ThrowingMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType],
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+        middlewares: [ThrowingMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType],
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -225,12 +225,12 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-        [ErrorMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType],
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+        middlewares: [ErrorMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType],
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -255,11 +255,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -289,11 +289,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -323,11 +323,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -357,11 +357,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -395,11 +395,11 @@ describe("socketRouteUtils", () => {
         language: { locale: "fr", region: "FR" },
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(capturedContext).not.toBeNull();
       const ctx = capturedContext as unknown as ContextType;
@@ -437,11 +437,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(wsSendMock).toHaveBeenCalled();
     });
@@ -493,11 +493,11 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-      );
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
 
       expect(subscribeMock).toHaveBeenCalledWith(route.name);
       expect(isSubscribedMock).toHaveBeenCalledWith(route.name);
@@ -551,15 +551,15 @@ describe("socketRouteUtils", () => {
         language: {},
       });
 
-      await socketRouteHandler(
+      await socketRouteHandler({
         message,
-        mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
-        mockServer as unknown as import("bun").Server<{ id: string }>,
-        [
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+        middlewares: [
           FirstMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType,
           SecondMiddleware as unknown as import("@ooneex/middleware").SocketMiddlewareClassType,
         ],
-      );
+      });
 
       expect(executionOrder).toEqual(["first", "second", "controller"]);
     });

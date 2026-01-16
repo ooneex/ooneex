@@ -1,4 +1,5 @@
 import { Environment } from "@ooneex/app-env";
+import type { AuthMiddlewareClassType, IAuthMiddleware } from "@ooneex/auth";
 import { container } from "@ooneex/container";
 import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
@@ -295,7 +296,12 @@ const executeController = async (
   }
 };
 
-export const httpRouteHandler = async (context: ContextType, route: RouteConfigType): Promise<Response> => {
+type HttpRouteHandlerOptions = {
+  context: ContextType;
+  route: RouteConfigType;
+};
+
+export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptions): Promise<Response> => {
   const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
@@ -338,6 +344,7 @@ const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClass
 export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
+  authMiddleware?: AuthMiddlewareClassType,
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 
@@ -357,7 +364,20 @@ export const formatHttpRoutes = (
           return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
         }
 
-        return httpRouteHandler(context, route);
+        if (authMiddleware) {
+          try {
+            const authMiddlewareInstance = container.get<IAuthMiddleware>(authMiddleware);
+            const user = await authMiddlewareInstance.handler(context);
+            context.user = user;
+          } catch (error: unknown) {
+            const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
+            const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+            logRequest(context, status, route.path);
+            return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
+          }
+        }
+
+        return httpRouteHandler({ context, route });
       };
     }
 

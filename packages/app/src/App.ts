@@ -111,8 +111,10 @@ export class App {
 
     const { middlewares = [] } = this.config;
 
+    const { authMiddleware } = this.config;
+
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[]),
+      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], authMiddleware),
       ...formatSocketRoutes(router.getSocketRoutes()),
     };
 
@@ -140,7 +142,13 @@ export class App {
       websocket: {
         perMessageDeflate: true,
         async message(ws: ServerWebSocket<{ id: string }>, message: string) {
-          await socketRouteHandler(message, ws, server, middlewares as SocketMiddlewareClassType[]);
+          await socketRouteHandler({
+            message,
+            ws,
+            server,
+            middlewares: middlewares as SocketMiddlewareClassType[],
+            ...(authMiddleware && { authMiddleware }),
+          });
         },
         async close(ws: ServerWebSocket<{ id: string }>) {
           container.removeConstant(ws.data.id);

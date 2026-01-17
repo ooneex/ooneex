@@ -31,6 +31,7 @@ export type ProfileUpdateStatusType = `${EProfileUpdateStatus}`;
 export interface IUser extends IBase {
   email: string;
   roles: ERole[];
+  key?: string;
   name?: string;
   lastName?: string;
   firstName?: string;

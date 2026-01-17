@@ -10,6 +10,7 @@ export class Migration20251225182641298 implements IMigration {
         id VARCHAR(25) PRIMARY KEY,
         email VARCHAR(255) NOT NULL UNIQUE,
         roles TEXT NOT NULL,
+        key VARCHAR(255) UNIQUE,
         name VARCHAR(255),
         last_name VARCHAR(255),
         first_name VARCHAR(255),
@@ -49,6 +50,10 @@ export class Migration20251225182641298 implements IMigration {
 
     await tx`
       CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_users_key ON users(key)
     `;
 
     await tx`

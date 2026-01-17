@@ -15,6 +15,9 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ name: "roles", type: "simple-array" })
   roles: ERole[];
 
+  @Column({ name: "key", type: "varchar", length: 255, unique: true, nullable: true })
+  key?: string;
+
   @Column({ name: "name", type: "varchar", length: 255, nullable: true })
   name?: string;
 

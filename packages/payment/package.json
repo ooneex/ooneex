@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/payment",
   "description": "Payment and pricing types with currency support, product categorization, and image handling for e-commerce",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "type": "module",
   "files": [
     "dist",
@@ -26,7 +26,11 @@
     "lint": "tsgo --noEmit && bunx biome lint",
     "npm:publish": "bun publish --tolerate-republish --access public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "@polar-sh/sdk": "^0.30.0"
+  },
   "devDependencies": {
     "@ooneex/category": "workspace:*",
     "@ooneex/currencies": "workspace:*",

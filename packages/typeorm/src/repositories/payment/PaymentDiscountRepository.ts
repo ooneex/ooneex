@@ -4,17 +4,17 @@ import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
 import { ILike } from "typeorm";
-import { PaymentCouponEntity } from "../../entities/payment/PaymentCouponEntity";
+import { PaymentDiscountEntity } from "../../entities/payment/PaymentDiscountEntity";
 
 @decorator.repository()
-export class PaymentCouponRepository {
+export class PaymentDiscountRepository {
   constructor(
     @inject("database")
     private readonly database: ITypeormDatabase,
   ) {}
 
-  public async open(): Promise<Repository<PaymentCouponEntity>> {
-    return await this.database.open(PaymentCouponEntity);
+  public async open(): Promise<Repository<PaymentDiscountEntity>> {
+    return await this.database.open(PaymentDiscountEntity);
   }
 
   public async close(): Promise<void> {
@@ -22,8 +22,8 @@ export class PaymentCouponRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<PaymentCouponEntity> & { page?: number; limit?: number; q?: string },
-  ): Promise<FilterResultType<PaymentCouponEntity>> {
+    criteria: FindManyOptions<PaymentDiscountEntity> & { page?: number; limit?: number; q?: string },
+  ): Promise<FilterResultType<PaymentDiscountEntity>> {
     const repository = await this.open();
 
     const { page = 1, limit = 100, q, ...rest } = criteria;
@@ -35,7 +35,7 @@ export class PaymentCouponRepository {
       skip = (page - 1) * take;
     }
 
-    // Apply coupon search if q parameter is provided
+    // Apply discount search if q parameter is provided
     let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       const searchConditions = [{ code: ILike(`%${q}%`) }, { name: ILike(`%${q}%`) }, { description: ILike(`%${q}%`) }];
@@ -72,7 +72,7 @@ export class PaymentCouponRepository {
     };
   }
 
-  public async findOne(id: string): Promise<PaymentCouponEntity | null> {
+  public async findOne(id: string): Promise<PaymentDiscountEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -80,7 +80,7 @@ export class PaymentCouponRepository {
     });
   }
 
-  public async findOneBy(criteria: FindOptionsWhere<PaymentCouponEntity>): Promise<PaymentCouponEntity | null> {
+  public async findOneBy(criteria: FindOptionsWhere<PaymentDiscountEntity>): Promise<PaymentDiscountEntity | null> {
     const repository = await this.open();
 
     return await repository.findOne({
@@ -88,28 +88,28 @@ export class PaymentCouponRepository {
     });
   }
 
-  public async create(entity: PaymentCouponEntity, options?: SaveOptions): Promise<PaymentCouponEntity> {
+  public async create(entity: PaymentDiscountEntity, options?: SaveOptions): Promise<PaymentDiscountEntity> {
     const repository = await this.open();
 
     return await repository.save(entity, options);
   }
 
-  public async createMany(entities: PaymentCouponEntity[], options?: SaveOptions): Promise<PaymentCouponEntity[]> {
+  public async createMany(entities: PaymentDiscountEntity[], options?: SaveOptions): Promise<PaymentDiscountEntity[]> {
     const repository = await this.open();
 
     return await repository.save(entities, options);
   }
 
-  public async update(entity: PaymentCouponEntity, options?: SaveOptions): Promise<PaymentCouponEntity> {
+  public async update(entity: PaymentDiscountEntity, options?: SaveOptions): Promise<PaymentDiscountEntity> {
     return await this.create(entity, options);
   }
 
-  public async updateMany(entities: PaymentCouponEntity[], options?: SaveOptions): Promise<PaymentCouponEntity[]> {
+  public async updateMany(entities: PaymentDiscountEntity[], options?: SaveOptions): Promise<PaymentDiscountEntity[]> {
     return await this.createMany(entities, options);
   }
 
   public async delete(
-    criteria: FindOptionsWhere<PaymentCouponEntity> | FindOptionsWhere<PaymentCouponEntity>[],
+    criteria: FindOptionsWhere<PaymentDiscountEntity> | FindOptionsWhere<PaymentDiscountEntity>[],
   ): Promise<UpdateResult> {
     const repository = await this.open();
 
@@ -117,7 +117,7 @@ export class PaymentCouponRepository {
   }
 
   public async count(
-    criteria?: FindOptionsWhere<PaymentCouponEntity> | FindOptionsWhere<PaymentCouponEntity>[],
+    criteria?: FindOptionsWhere<PaymentDiscountEntity> | FindOptionsWhere<PaymentDiscountEntity>[],
   ): Promise<number> {
     const repository = await this.open();
 

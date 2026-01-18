@@ -10,12 +10,21 @@ export class Migration20251225182218188 implements IMigration {
     await tx`
       CREATE TABLE IF NOT EXISTS payment_products (
         id VARCHAR(25) PRIMARY KEY,
+        key VARCHAR(255) UNIQUE,
         name VARCHAR(255) NOT NULL,
         description TEXT,
-        currency VARCHAR(3) NOT NULL,
-        price DECIMAL(10, 2) NOT NULL,
+        currency VARCHAR(3),
+        price DECIMAL(10, 2),
         barcode VARCHAR(255),
         attributes JSONB,
+        is_recurring BOOLEAN,
+        is_archived BOOLEAN,
+        organization_id VARCHAR(25),
+        recurring_interval VARCHAR(20),
+        metadata JSONB,
+        prices JSONB,
+        benefits JSONB,
+        attached_custom_fields JSONB,
         is_locked BOOLEAN DEFAULT false,
         locked_at TIMESTAMPTZ,
         is_blocked BOOLEAN DEFAULT false,
@@ -60,6 +69,10 @@ export class Migration20251225182218188 implements IMigration {
     `;
 
     await tx`
+      CREATE INDEX IF NOT EXISTS idx_payment_products_key ON payment_products(key)
+    `;
+
+    await tx`
       CREATE INDEX IF NOT EXISTS idx_payment_products_name ON payment_products(name)
     `;
 
@@ -73,6 +86,22 @@ export class Migration20251225182218188 implements IMigration {
 
     await tx`
       CREATE INDEX IF NOT EXISTS idx_payment_products_barcode ON payment_products(barcode)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_payment_products_is_recurring ON payment_products(is_recurring)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_payment_products_is_archived ON payment_products(is_archived)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_payment_products_organization_id ON payment_products(organization_id)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_payment_products_recurring_interval ON payment_products(recurring_interval)
     `;
 
     await tx`

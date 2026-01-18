@@ -1,25 +1,25 @@
-import type { ICoupon, ICredit, IPlan, ISubscription } from "@ooneex/payment";
+import type { ICredit, IDiscount, IPlan, ISubscription } from "@ooneex/payment";
 import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { BaseEntity } from "../common/BaseEntity";
-import { PaymentCouponEntity } from "./PaymentCouponEntity";
 import { PaymentCreditEntity } from "./PaymentCreditEntity";
+import { PaymentDiscountEntity } from "./PaymentDiscountEntity";
 import { PaymentPlanEntity } from "./PaymentPlanEntity";
 
 @Entity({
   name: "payment_subscriptions",
 })
 export class PaymentSubscriptionEntity extends BaseEntity implements Omit<ISubscription, "isActive"> {
-  @ManyToMany(() => PaymentCouponEntity, {
+  @ManyToMany(() => PaymentDiscountEntity, {
     nullable: true,
     eager: false,
     cascade: ["insert", "update"],
   })
   @JoinTable({
-    name: "payment_subscriptions_coupons",
+    name: "payment_subscriptions_discounts",
     joinColumn: { name: "subscription_id", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "coupon_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "discount_id", referencedColumnName: "id" },
   })
-  coupons?: ICoupon[];
+  discounts?: IDiscount[];
 
   @ManyToMany(() => PaymentPlanEntity, {
     nullable: true,

@@ -1,8 +1,8 @@
 import { decorator, type IMigration, type MigrationClassType } from "@ooneex/migrations";
 import type { TransactionSQL } from "bun";
 import { Migration20251225182218190 } from "./Migration20251225182218190";
-import { Migration20251225182218192 } from "./Migration20251225182218192";
 import { Migration20251225182218195 } from "./Migration20251225182218195";
+import { Migration20260118214514066 } from "./Migration20260118214514066";
 
 @decorator.migration()
 export class Migration20251225182218197 implements IMigration {
@@ -28,12 +28,12 @@ export class Migration20251225182218197 implements IMigration {
     `;
 
     await tx`
-      CREATE TABLE IF NOT EXISTS payment_subscriptions_coupons (
+      CREATE TABLE IF NOT EXISTS payment_subscriptions_discounts (
         subscription_id VARCHAR(25) NOT NULL,
-        coupon_id VARCHAR(25) NOT NULL,
-        PRIMARY KEY (subscription_id, coupon_id),
-        CONSTRAINT fk_payment_subscriptions_coupons_subscription FOREIGN KEY (subscription_id) REFERENCES payment_subscriptions(id) ON DELETE CASCADE,
-        CONSTRAINT fk_payment_subscriptions_coupons_coupon FOREIGN KEY (coupon_id) REFERENCES payment_coupons(id) ON DELETE CASCADE
+        discount_id VARCHAR(25) NOT NULL,
+        PRIMARY KEY (subscription_id, discount_id),
+        CONSTRAINT fk_payment_subscriptions_discounts_subscription FOREIGN KEY (subscription_id) REFERENCES payment_subscriptions(id) ON DELETE CASCADE,
+        CONSTRAINT fk_payment_subscriptions_discounts_discount FOREIGN KEY (discount_id) REFERENCES payment_discounts(id) ON DELETE CASCADE
       )
     `;
 
@@ -98,11 +98,11 @@ export class Migration20251225182218197 implements IMigration {
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_payment_subscriptions_coupons_subscription_id ON payment_subscriptions_coupons(subscription_id)
+      CREATE INDEX IF NOT EXISTS idx_payment_subscriptions_discounts_subscription_id ON payment_subscriptions_discounts(subscription_id)
     `;
 
     await tx`
-      CREATE INDEX IF NOT EXISTS idx_payment_subscriptions_coupons_coupon_id ON payment_subscriptions_coupons(coupon_id)
+      CREATE INDEX IF NOT EXISTS idx_payment_subscriptions_discounts_discount_id ON payment_subscriptions_discounts(discount_id)
     `;
 
     await tx`
@@ -125,7 +125,7 @@ export class Migration20251225182218197 implements IMigration {
   public async down(tx: TransactionSQL): Promise<void> {
     await tx`DROP TABLE IF EXISTS payment_subscriptions_credits CASCADE`;
     await tx`DROP TABLE IF EXISTS payment_subscriptions_plans CASCADE`;
-    await tx`DROP TABLE IF EXISTS payment_subscriptions_coupons CASCADE`;
+    await tx`DROP TABLE IF EXISTS payment_subscriptions_discounts CASCADE`;
     await tx`DROP TABLE IF EXISTS payment_subscriptions CASCADE`;
   }
 
@@ -135,7 +135,7 @@ export class Migration20251225182218197 implements IMigration {
 
   public getDependencies(): MigrationClassType[] {
     return [
-      Migration20251225182218192, // Payment coupons table
+      Migration20260118214514066, // Payment discounts table
       Migration20251225182218190, // Payment plans table
       Migration20251225182218195, // Payment credits table
     ];

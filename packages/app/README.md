@@ -28,7 +28,7 @@ A core application framework for building modern web applications with Bun. This
 
 ✅ **Email Services** - Nodemailer and Resend integration for transactional emails
 
-✅ **Static Files** - Serve static assets with configurable directories
+✅ **Static Files** - Serve static assets
 
 ✅ **SPA Support** - Single-page application routing support
 
@@ -67,11 +67,7 @@ import { UserModule } from './modules/UserModule';
 const app = new App({
   modules: [UserModule],
   loggers: [TerminalLogger],
-  env: new AppEnv('development'),
-  directories: {
-    cwd: process.cwd(),
-    static: 'public'
-  }
+  env: new AppEnv('development')
 });
 
 await app.run();
@@ -102,11 +98,7 @@ const app = new App({
   mailer: ResendMailerAdapter,
   cronJobs: [CleanupCron],
   middlewares: [AuthMiddleware],
-  env: new AppEnv(process.env.APP_ENV as 'development'),
-  directories: {
-    cwd: process.cwd(),
-    static: 'public'
-  }
+  env: new AppEnv(process.env.APP_ENV as 'development')
 });
 
 await app.run();
@@ -238,10 +230,6 @@ type AppConfigType = {
   cronJobs?: CronClassType[];
   database?: IDatabase | ITypeormDatabase;
   env: IAppEnv;
-  directories: {
-    cwd: string;
-    static?: string;
-  };
   spa?: Bun.HTMLBundle;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
 };

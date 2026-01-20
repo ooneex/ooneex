@@ -8,7 +8,7 @@ import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/mid
 import { router } from "@ooneex/routing";
 import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
-import type { BunRequest, ServerWebSocket } from "bun";
+import type { ServerWebSocket } from "bun";
 import { generateRouteDoc } from "./generateRouteDoc";
 import { generateRouteFetcher } from "./generateRouteFetcher";
 import { generateRouteHook } from "./generateRouteHook";
@@ -16,7 +16,6 @@ import { generateRouteSocket } from "./generateRouteSocket";
 import { formatHttpRoutes } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
-import { staticHandler } from "./staticHandler";
 import type { AppConfigType } from "./types";
 
 export class App {
@@ -106,8 +105,6 @@ export class App {
 
     const env = container.getConstant<IAppEnv>("app.env");
     let hostname = Bun.env.HOST_NAME || "0.0.0.0";
-    const { directories } = this.config;
-    const staticDir = directories.static;
 
     const { middlewares = [] } = this.config;
 
@@ -118,17 +115,6 @@ export class App {
       ...formatSocketRoutes(router.getSocketRoutes()),
     };
 
-    if (staticDir) {
-      const trimmedStaticDir = staticDir.replace(/^\/+|\/+$/g, "");
-      routes[`/${trimmedStaticDir}/*`] = {
-        GET: (req: BunRequest) =>
-          staticHandler({
-            req,
-            cwd: directories.cwd,
-          }),
-      };
-    }
-
     const port = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
 
     const server = Bun.serve({
@@ -137,7 +123,7 @@ export class App {
       development: env.isLocal,
       routes: {
         ...routes,
-        "/*": this.config.spa || new Response("Not Found", { status: HttpStatus.Code.NotFound }),
+        "/*": new Response("Not Found", { status: HttpStatus.Code.NotFound }),
       },
       websocket: {
         perMessageDeflate: true,

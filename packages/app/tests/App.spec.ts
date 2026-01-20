@@ -56,9 +56,6 @@ const createMockConfig = (overrides: Record<string, unknown> = {}): AppConfigTyp
     modules: [],
     loggers: [MockLogger as unknown as AppConfigType["loggers"][0]],
     env: createMockAppEnv() as unknown as AppConfigType["env"],
-    directories: {
-      cwd: "/test/cwd",
-    },
   };
   return { ...base, ...overrides } as unknown as AppConfigType;
 };

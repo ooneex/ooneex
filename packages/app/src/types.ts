@@ -22,11 +22,6 @@ export type AppConfigType = {
   cronJobs?: CronClassType[];
   database?: IDatabase | ITypeormDatabase;
   env: IAppEnv;
-  directories: {
-    cwd: string;
-    static?: string;
-  };
-  spa?: Bun.HTMLBundle;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   generateRouteDoc?: boolean;
   authMiddleware?: AuthMiddlewareClassType;

@@ -1,4 +1,3 @@
-import { deserialize, serialize } from "bun:jsc";
 import { random } from "@ooneex/utils";
 import { sql } from "bun";
 import type { LogsDatabase } from "./LogsDatabase";
@@ -16,15 +15,15 @@ type RawLogRecordType = {
   firstName?: string;
   status?: number;
   exceptionName?: string;
-  stackTrace?: Buffer;
+  stackTrace?: string;
   ip?: string;
   method?: string;
   path?: string;
   userAgent?: string;
   referer?: string;
-  params?: Buffer;
-  payload?: Buffer;
-  queries?: Buffer;
+  params?: string;
+  payload?: string;
+  queries?: string;
 };
 
 export class LogsRepository {
@@ -37,10 +36,10 @@ export class LogsRepository {
       ...log,
       id: random.nanoid(15),
       date: log.date.toISOString(),
-      stackTrace: log.stackTrace ? serialize(log.stackTrace) : null,
-      params: log.params ? serialize(log.params) : null,
-      payload: log.payload ? serialize(log.payload) : null,
-      queries: log.queries ? serialize(log.queries) : null,
+      stackTrace: log.stackTrace ? JSON.stringify(log.stackTrace) : null,
+      params: log.params ? JSON.stringify(log.params) : null,
+      payload: log.payload ? JSON.stringify(log.payload) : null,
+      queries: log.queries ? JSON.stringify(log.queries) : null,
     };
 
     const [newLog] = await client`
@@ -70,10 +69,10 @@ export class LogsRepository {
     const result = {
       ...log,
       date: new Date(log.date),
-      stackTrace: log.stackTrace ? deserialize(log.stackTrace) : undefined,
-      params: log.params ? deserialize(log.params) : undefined,
-      payload: log.payload ? deserialize(log.payload) : undefined,
-      queries: log.queries ? deserialize(log.queries) : undefined,
+      stackTrace: log.stackTrace ? JSON.parse(log.stackTrace) : undefined,
+      params: log.params ? JSON.parse(log.params) : undefined,
+      payload: log.payload ? JSON.parse(log.payload) : undefined,
+      queries: log.queries ? JSON.parse(log.queries) : undefined,
     };
 
     await this.db.close();
@@ -141,10 +140,10 @@ export class LogsRepository {
       const transformedLogs = logs.map((log: RawLogRecordType) => ({
         ...log,
         date: new Date(log.date),
-        stackTrace: log.stackTrace ? deserialize(log.stackTrace) : undefined,
-        params: log.params ? deserialize(log.params) : undefined,
-        payload: log.payload ? deserialize(log.payload) : undefined,
-        queries: log.queries ? deserialize(log.queries) : undefined,
+        stackTrace: log.stackTrace ? JSON.parse(log.stackTrace) : undefined,
+        params: log.params ? JSON.parse(log.params) : undefined,
+        payload: log.payload ? JSON.parse(log.payload) : undefined,
+        queries: log.queries ? JSON.parse(log.queries) : undefined,
       })) as LogsEntity[];
 
       const total = countResult.total;
@@ -191,9 +190,9 @@ export class LogsRepository {
     const transformedLogs = logs.map((log: RawLogRecordType) => ({
       ...log,
       date: new Date(log.date),
-      params: log.params ? deserialize(log.params) : undefined,
-      payload: log.payload ? deserialize(log.payload) : undefined,
-      queries: log.queries ? deserialize(log.queries) : undefined,
+      params: log.params ? JSON.parse(log.params) : undefined,
+      payload: log.payload ? JSON.parse(log.payload) : undefined,
+      queries: log.queries ? JSON.parse(log.queries) : undefined,
     }));
 
     const total = countResult.total;

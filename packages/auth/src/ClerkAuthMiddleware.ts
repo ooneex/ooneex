@@ -1,4 +1,4 @@
-import { inject, injectable } from "@ooneex/container";
+import { inject } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import { HttpStatus } from "@ooneex/http-status";
 import { UserRepository } from "@ooneex/typeorm/repositories/user";
@@ -7,7 +7,6 @@ import { AuthException } from "./AuthException";
 import { ClerkAuth } from "./ClerkAuth";
 import type { IAuthMiddleware } from "./types";
 
-@injectable()
 export class ClerkAuthMiddleware implements IAuthMiddleware {
   constructor(
     @inject(ClerkAuth) private readonly clerkAuth: ClerkAuth,

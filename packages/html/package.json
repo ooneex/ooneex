@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/html",
   "description": "HTML parsing and DOM manipulation utilities powered by Cheerio",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "type": "module",
   "files": [
     "dist",

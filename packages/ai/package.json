@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/ai",
   "description": "Unified AI client library with support for OpenAI, Anthropic, Google Gemini, and Ollama providers",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "type": "module",
   "files": [
     "dist",

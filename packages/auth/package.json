@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/auth",
   "description": "Authentication utilities and strategies for securing Ooneex applications",
-  "version": "0.0.19",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

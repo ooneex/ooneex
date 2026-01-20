@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/analytics",
   "description": "Analytics and event tracking integration with PostHog for user behavior insights and product analytics",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",

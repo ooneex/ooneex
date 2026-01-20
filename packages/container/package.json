@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/container",
   "description": "Lightweight dependency injection container built on Inversify for managing services and their lifecycle",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",

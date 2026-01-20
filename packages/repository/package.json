@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/repository",
   "description": "Base repository classes and decorators for data access layer with dependency injection support",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "type": "module",
   "files": [
     "dist",

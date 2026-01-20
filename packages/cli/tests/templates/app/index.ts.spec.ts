@@ -21,4 +21,14 @@ describe("index.ts.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("new App");
   });
+
+  test("should not contain directories configuration", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain("directories");
+  });
+
+  test("should not import join from node:path", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain('import { join } from "node:path"');
+  });
 });

@@ -1,4 +1,3 @@
-import { join } from "node:path";
 import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
 import { AppEnv, type EnvType } from "@ooneex/app-env";
@@ -29,8 +28,4 @@ new App({
   rateLimiter: RedisRateLimiter,
   database,
   env: appEnv,
-  directories: {
-    cwd: join(import.meta.dir, ".."),
-    static: join(import.meta.dir, "..", "public")
-  },
 });

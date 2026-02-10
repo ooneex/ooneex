@@ -9,7 +9,6 @@ export class ClerkAuth {
 
   constructor() {
     const secretKey = Bun.env.CLERK_SECRET_KEY;
-    const publishableKey = Bun.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 
     if (!secretKey) {
       throw new AuthException("CLERK_SECRET_KEY environment variable is required");
@@ -18,7 +17,6 @@ export class ClerkAuth {
     this.secretKey = secretKey;
     this.client = createClerkClient({
       secretKey,
-      ...(publishableKey ? { publishableKey } : {}),
     });
   }
 

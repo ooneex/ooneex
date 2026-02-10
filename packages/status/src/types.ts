@@ -3,6 +3,7 @@ import type { IBase } from "@ooneex/types";
 
 export enum EStatus {
   // Initial states
+  NOT_STARTED = "notStarted",
   DRAFT = "draft",
   PENDING = "pending",
   SUBMITTED = "submitted",
@@ -12,6 +13,7 @@ export enum EStatus {
   REVIEWED = "reviewed",
 
   // Processing states
+  IN_PROGRESS = "inProgress",
   PROCESSING = "processing",
   PROCESSED = "processed",
   QUEUED = "queued",

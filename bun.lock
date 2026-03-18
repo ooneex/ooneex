@@ -39,7 +39,7 @@
     },
     "packages/ai": {
       "name": "@ooneex/ai",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -57,7 +57,7 @@
     },
     "packages/analytics": {
       "name": "@ooneex/analytics",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -67,7 +67,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "0.16.3",
+      "version": "0.17.1",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -100,7 +100,7 @@
     },
     "packages/app-env": {
       "name": "@ooneex/app-env",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -108,7 +108,7 @@
     },
     "packages/auth": {
       "name": "@ooneex/auth",
-      "version": "0.0.19",
+      "version": "0.1.0",
       "dependencies": {
         "@clerk/backend": "^1.24.1",
         "@ooneex/container": "workspace:*",
@@ -121,7 +121,7 @@
     },
     "packages/book": {
       "name": "@ooneex/book",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/category": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -131,7 +131,7 @@
     },
     "packages/cache": {
       "name": "@ooneex/cache",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -140,7 +140,7 @@
     },
     "packages/category": {
       "name": "@ooneex/category",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -148,7 +148,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "@ooneex/cli": "./dist/index.js",
@@ -171,14 +171,14 @@
     },
     "packages/color": {
       "name": "@ooneex/color",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/container": {
       "name": "@ooneex/container",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -187,7 +187,7 @@
     },
     "packages/controller": {
       "name": "@ooneex/controller",
-      "version": "0.16.1",
+      "version": "0.17.0",
       "devDependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -207,7 +207,7 @@
     },
     "packages/country": {
       "name": "@ooneex/country",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@vvo/tzdb": "^6.198.0",
       },
@@ -217,7 +217,7 @@
     },
     "packages/cron": {
       "name": "@ooneex/cron",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -230,14 +230,14 @@
     },
     "packages/currencies": {
       "name": "@ooneex/currencies",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/database": {
       "name": "@ooneex/database",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -247,25 +247,25 @@
     },
     "packages/education": {
       "name": "@ooneex/education",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/types": "workspace:*",
       },
     },
     "packages/entity": {
       "name": "@ooneex/entity",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/exception": {
       "name": "@ooneex/exception",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/http-status": "workspace:*",
       },
     },
     "packages/fetcher": {
       "name": "@ooneex/fetcher",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/http-header": "workspace:*",
       },
@@ -277,7 +277,7 @@
     },
     "packages/folder": {
       "name": "@ooneex/folder",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -286,7 +286,7 @@
     },
     "packages/fs": {
       "name": "@ooneex/fs",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -294,7 +294,7 @@
     },
     "packages/gamification": {
       "name": "@ooneex/gamification",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/image": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -304,7 +304,7 @@
     },
     "packages/html": {
       "name": "@ooneex/html",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -313,7 +313,7 @@
     },
     "packages/http-header": {
       "name": "@ooneex/http-header",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "ua-parser-js": "^2.0.6",
       },
@@ -324,11 +324,11 @@
     },
     "packages/http-mimes": {
       "name": "@ooneex/http-mimes",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/http-request": {
       "name": "@ooneex/http-request",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/http-header": "workspace:*",
         "@ooneex/http-request-file": "workspace:*",
@@ -343,7 +343,7 @@
     },
     "packages/http-request-file": {
       "name": "@ooneex/http-request-file",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/http-mimes": "workspace:*",
         "@ooneex/utils": "workspace:*",
@@ -351,7 +351,7 @@
     },
     "packages/http-response": {
       "name": "@ooneex/http-response",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/http-header": "workspace:*",
@@ -360,11 +360,11 @@
     },
     "packages/http-status": {
       "name": "@ooneex/http-status",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/image": {
       "name": "@ooneex/image",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/status": "workspace:*",
         "@ooneex/tag": "workspace:*",
@@ -373,7 +373,7 @@
     },
     "packages/jwt": {
       "name": "@ooneex/jwt",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -382,7 +382,7 @@
     },
     "packages/logger": {
       "name": "@ooneex/logger",
-      "version": "0.16.0",
+      "version": "0.17.1",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
@@ -396,13 +396,13 @@
     },
     "packages/mailer": {
       "name": "@ooneex/mailer",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@ooneex/translation": "workspace:*",
-        "nodemailer": "^7.0.10",
+        "nodemailer": "^8.0.0",
         "resend": "^6.4.2",
       },
       "devDependencies": {
@@ -411,7 +411,7 @@
     },
     "packages/middleware": {
       "name": "@ooneex/middleware",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
@@ -422,7 +422,7 @@
     },
     "packages/migrations": {
       "name": "@ooneex/migrations",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -433,7 +433,7 @@
     },
     "packages/module": {
       "name": "@ooneex/module",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
         "@ooneex/entity": "workspace:*",
@@ -441,11 +441,11 @@
     },
     "packages/notification": {
       "name": "@ooneex/notification",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/payment": {
       "name": "@ooneex/payment",
-      "version": "0.0.17",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -461,7 +461,7 @@
     },
     "packages/pdf": {
       "name": "@ooneex/pdf",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -473,7 +473,7 @@
     },
     "packages/permission": {
       "name": "@ooneex/permission",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@casl/ability": "^6.7.3",
         "@ooneex/container": "workspace:*",
@@ -486,7 +486,7 @@
     },
     "packages/pub-sub": {
       "name": "@ooneex/pub-sub",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -498,11 +498,11 @@
     },
     "packages/queue": {
       "name": "@ooneex/queue",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/rate-limit": {
       "name": "@ooneex/rate-limit",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -514,11 +514,11 @@
     },
     "packages/react": {
       "name": "@ooneex/react",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/repository": {
       "name": "@ooneex/repository",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
@@ -528,11 +528,11 @@
     },
     "packages/role": {
       "name": "@ooneex/role",
-      "version": "0.0.17",
+      "version": "0.0.18",
     },
     "packages/routing": {
       "name": "@ooneex/routing",
-      "version": "0.16.1",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -552,7 +552,7 @@
     },
     "packages/seeds": {
       "name": "@ooneex/seeds",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/logger": "workspace:*",
@@ -564,14 +564,14 @@
     },
     "packages/service": {
       "name": "@ooneex/service",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
     },
     "packages/socket": {
       "name": "@ooneex/socket",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "devDependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/controller": "workspace:*",
@@ -582,7 +582,7 @@
     },
     "packages/status": {
       "name": "@ooneex/status",
-      "version": "0.0.17",
+      "version": "0.0.19",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -590,7 +590,7 @@
     },
     "packages/storage": {
       "name": "@ooneex/storage",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -599,7 +599,7 @@
     },
     "packages/tag": {
       "name": "@ooneex/tag",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/color": "workspace:*",
         "@ooneex/types": "workspace:*",
@@ -607,7 +607,7 @@
     },
     "packages/translation": {
       "name": "@ooneex/translation",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -615,7 +615,7 @@
     },
     "packages/typeorm": {
       "name": "@ooneex/typeorm",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/book": "workspace:*",
         "@ooneex/category": "workspace:*",
@@ -644,14 +644,14 @@
     },
     "packages/types": {
       "name": "@ooneex/types",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/translation": "workspace:*",
       },
     },
     "packages/url": {
       "name": "@ooneex/url",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "dependencies": {
         "@ooneex/utils": "workspace:*",
       },
@@ -661,7 +661,7 @@
     },
     "packages/user": {
       "name": "@ooneex/user",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/image": "workspace:*",
         "@ooneex/role": "workspace:*",
@@ -677,7 +677,7 @@
     },
     "packages/validation": {
       "name": "@ooneex/validation",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/currencies": "workspace:*",
@@ -687,7 +687,7 @@
     },
     "packages/video": {
       "name": "@ooneex/video",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "devDependencies": {
         "@ooneex/category": "workspace:*",
         "@ooneex/status": "workspace:*",
@@ -697,7 +697,7 @@
     },
     "packages/youtube": {
       "name": "@ooneex/youtube",
-      "version": "0.0.17",
+      "version": "0.0.18",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -2150,7 +2150,7 @@
 
     "node-releases": ["node-releases@2.0.27", "", {}, "sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA=="],
 
-    "nodemailer": ["nodemailer@7.0.12", "", {}, "sha512-H+rnK5bX2Pi/6ms3sN4/jRQvYSMltV6vqup/0SFOrxYYY/qoNvhXPlYq3e+Pm9RFJRwrMGbMIwi81M4dxpomhA=="],
+    "nodemailer": ["nodemailer@8.0.3", "", {}, "sha512-JQNBqvK+bj3NMhUFR3wmCl3SYcOeMotDiwDBvIoCuQdF0PvlIY0BH+FJ2CG7u4cXKPChplE78oowlH/Otsc4ZQ=="],
 
     "nopt": ["nopt@5.0.0", "", { "dependencies": { "abbrev": "1" }, "bin": { "nopt": "bin/nopt.js" } }, "sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ=="],
 

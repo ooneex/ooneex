@@ -32,7 +32,7 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
-    "nodemailer": "^7.0.10",
+    "nodemailer": "^8.0.0",
     "resend": "^6.4.2"
   },
   "devDependencies": {

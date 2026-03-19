@@ -1,6 +1,5 @@
-import type { IImage } from "@ooneex/image";
 import type { ERole } from "@ooneex/role";
-import type { IBase } from "@ooneex/types";
+import type { LocaleType } from "@ooneex/translation";
 
 export enum EAccountType {
   OAUTH = "oauth",
@@ -28,15 +27,29 @@ export type AccountType = `${EAccountType}`;
 export type VerificationType = `${EVerificationType}`;
 export type ProfileUpdateStatusType = `${EProfileUpdateStatus}`;
 
+interface IBase {
+  id: string;
+  isLocked?: boolean;
+  lockedAt?: Date;
+  isBlocked?: boolean;
+  blockedAt?: Date;
+  blockReason?: string;
+  isPublic?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+  language?: LocaleType;
+}
+
 export interface IUser extends IBase {
   email: string;
   roles: ERole[];
-  key?: string;
+  externalId?: string;
   name?: string;
   lastName?: string;
   firstName?: string;
   username?: string;
-  avatar?: IImage;
+  avatar?: string;
   bio?: string;
   phone?: string;
   birthDate?: Date;
@@ -184,45 +197,4 @@ export interface IUserProfileUpdate extends IBase {
   user?: IUser;
   // Reference to verification if update requires it
   verification?: IVerification;
-}
-
-export interface IUserFollowed extends IBase {
-  user?: IUser;
-  userId?: string;
-  followedBy?: string;
-  followedById?: string;
-}
-
-export interface IUserBlocked extends IBase {
-  user?: IUser;
-  userId?: string;
-  blockedBy?: string;
-  blockedById?: string;
-  reason?: string;
-}
-
-export interface IUserReport extends IBase {
-  user?: IUser;
-  userId?: string;
-  reason: string;
-  description?: string;
-  reportedBy?: string;
-  reportedById?: string;
-}
-
-export interface IUserViewed extends IBase {
-  user?: IUser;
-  userId?: string;
-  viewedBy?: string;
-  viewedById?: string;
-}
-
-export interface IUserStat extends IBase {
-  user?: IUser;
-  userId?: string;
-  followersCount?: number;
-  followingCount?: number;
-  blockedCount?: number;
-  viewsCount?: number;
-  reportsCount?: number;
 }

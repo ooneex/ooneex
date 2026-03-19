@@ -7,8 +7,6 @@ import {
   type ISession,
   type IUser,
   type IUserProfileUpdate,
-  type IUserStat,
-  type IUserViewed,
   type IVerification,
 } from "../src/index";
 
@@ -106,34 +104,5 @@ describe("@ooneex/user - IUserProfileUpdate", () => {
 
     expect(update.changedFields).toContain("email");
     expect(update.status).toBe(EProfileUpdateStatus.PENDING);
-  });
-});
-
-describe("@ooneex/user - view and stat models", () => {
-  test("IUserViewed should store viewer relationship", () => {
-    const viewed: IUserViewed = {
-      id: "view-1",
-      userId: "user-1",
-      viewedById: "user-2",
-    };
-
-    expect(viewed.userId).toBe("user-1");
-    expect(viewed.viewedById).toBe("user-2");
-  });
-
-  test("IUserStat should track aggregate counters", () => {
-    const stat: IUserStat = {
-      id: "user-stat-1",
-      userId: "user-1",
-      followersCount: 10,
-      followingCount: 5,
-      blockedCount: 1,
-      viewsCount: 100,
-      reportsCount: 0,
-    };
-
-    expect(stat.followersCount).toBe(10);
-    expect(stat.followingCount).toBe(5);
-    expect(stat.viewsCount).toBe(100);
   });
 });

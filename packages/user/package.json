@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/user",
   "description": "User entity types and interfaces for user profiles, authentication data, and role-based identity management",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",
@@ -29,9 +29,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@ooneex/image": "workspace:*",
-    "@ooneex/role": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/translation": "workspace:*",
+    "@ooneex/role": "workspace:*"
   },
   "keywords": [
     "account",

@@ -1,5 +1,0 @@
-export { Migration20251225173348643 } from "./Migration20251225173348643";
-export { Migration20251225173349644 } from "./Migration20251225173349644";
-export { Migration20251225173350644 } from "./Migration20251225173350644";
-export { Migration20251225173351645 } from "./Migration20251225173351645";
-export { Migration20251225173352645 } from "./Migration20251225173352645";

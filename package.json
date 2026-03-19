@@ -26,7 +26,6 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@typescript/native-preview": "^7.0.0-dev.20251211.1",
-    "bun-types": "^1.3.11",
     "bunup": "^0.16.10",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
@@ -39,9 +38,6 @@
   },
   "private": true,
   "scripts": {
-    "graph": "bunx nx graph",
-    "dev": "bunx nx watch --all -- bunx nx run \\$NX_PROJECT_NAME:build",
-    "graph:affected": "bunx nx graph --affected",
     "build": "bunx nx run-many -t build --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "check": "bun run build && bun run lint && bun run test",

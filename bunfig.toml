@@ -1,6 +1,7 @@
 [test]
 coverage = true
-coveragePathIgnorePatterns = [
+coveragePathIgnorePatterns = []
+pathIgnorePatterns = [
   "packages/utils/src/sleep.ts",
   "packages/**/*.js",
 ]
@@ -21,7 +22,6 @@ hoistPattern = [
   "nx",
   "arktype",
   "typescript",
-  "bun-types",
   "undici-types",
 ]
 external = false

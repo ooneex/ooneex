@@ -132,12 +132,12 @@ Main analytics class for PostHog integration.
 
 **Constructor:**
 ```typescript
-new PostHogAnalytics(options?: { apiKey?: string; host?: string })
+new PostHogAnalytics(config?: PostHogConfigType)
 ```
 
 **Parameters:**
-- `options.apiKey` - PostHog API key (optional if set via environment variable)
-- `options.host` - PostHog host URL (optional, defaults to EU region)
+- `config.apiKey` - PostHog API key (optional if set via environment variable)
+- `config.host` - PostHog host URL (optional, defaults to EU region)
 
 **Methods:**
 
@@ -174,6 +174,15 @@ interface IAnalytics<T = any> {
 ```
 
 ### Types
+
+#### `PostHogConfigType`
+
+```typescript
+type PostHogConfigType = {
+  apiKey?: string;
+  host?: string;
+};
+```
 
 #### `PostHogCaptureOptionsType`
 

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { AnalyticsException } from "@/AnalyticsException";
-import type { IAnalytics, PostHogCaptureOptionsType } from "@/types";
+import type { IAnalytics, PostHogCaptureOptionsType, PostHogConfigType } from "@/types";
 
 // Create mock PostHog instance
 const mockPostHogInstance = {
@@ -22,8 +22,8 @@ mock.module("posthog-node", () => ({
 class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptionsType> implements IAnalytics<T> {
   private client: typeof mockPostHogInstance | null = null;
 
-  constructor(options?: { apiKey?: string; host?: string }) {
-    const apiKey = options?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY;
+  constructor(config?: PostHogConfigType) {
+    const apiKey = config?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY;
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -31,11 +31,9 @@ class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptio
       );
     }
 
-    if (options?.apiKey) {
-      this.client = MockPostHog(apiKey, {
-        host: options.host || Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
-      });
-    }
+    this.client = MockPostHog(apiKey, {
+      host: config?.host || Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
+    });
   }
 
   public capture(options: T): void {
@@ -174,12 +172,14 @@ describe("PostHogAnalytics", () => {
       });
     });
 
-    test("should not initialize PostHog client when API key comes from environment", () => {
+    test("should initialize PostHog client when API key comes from environment", () => {
       Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
 
       new PostHogAnalytics();
 
-      expect(MockPostHog).not.toHaveBeenCalled();
+      expect(MockPostHog).toHaveBeenCalledWith("env-api-key", {
+        host: "https://eu.i.posthog.com",
+      });
     });
   });
 
@@ -350,17 +350,22 @@ describe("PostHogAnalytics", () => {
       );
     });
 
-    test("should not throw error when client is null", () => {
-      // Create analytics without initializing client (using env API key)
+    test("should capture events when initialized with environment API key", () => {
       Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-key";
-      const analyticsWithNullClient = new PostHogAnalytics();
+      const analyticsWithEnvKey = new PostHogAnalytics();
 
       const captureData: PostHogCaptureOptionsType = {
-        id: "user-null-client",
-        event: "null_client_test",
+        id: "user-env-key",
+        event: "env_key_test",
       };
 
-      expect(() => analyticsWithNullClient.capture(captureData)).not.toThrow();
+      expect(() => analyticsWithEnvKey.capture(captureData)).not.toThrow();
+      expect(mockPostHogInstance.capture).toHaveBeenCalledWith(
+        expect.objectContaining({
+          distinctId: "user-env-key",
+          event: "env_key_test",
+        }),
+      );
     });
 
     test("should handle special characters in event names and properties", () => {

@@ -6,6 +6,11 @@ export interface IAnalytics<T = any> {
   capture: (options: T) => void;
 }
 
+export type PostHogConfigType = {
+  apiKey?: string;
+  host?: string;
+};
+
 export type PostHogCaptureOptionsType = {
   id: string;
   event: string;

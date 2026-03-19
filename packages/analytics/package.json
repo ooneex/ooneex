@@ -1,16 +1,13 @@
 {
   "name": "@ooneex/analytics",
-  "description": "Analytics and event tracking integration with PostHog for user behavior insights and product analytics",
-  "version": "0.0.19",
-  "type": "module",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "package.json"
-  ],
+  "version": "0.0.20",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@ooneex/container": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "posthog-node": "^5.11.0"
+  },
   "exports": {
     ".": {
       "import": {
@@ -20,19 +17,13 @@
     },
     "./package.json": "./package.json"
   },
-  "license": "MIT",
-  "scripts": {
-    "test": "bun test tests",
-    "build": "bunup",
-    "lint": "tsgo --noEmit && bunx biome lint",
-    "npm:publish": "bun publish --tolerate-republish --access public"
-  },
-  "dependencies": {
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "posthog-node": "^5.11.0"
-  },
+  "description": "Analytics and event tracking integration with PostHog for user behavior insights and product analytics",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
   "keywords": [
     "analytics",
     "bun",
@@ -42,5 +33,14 @@
     "statistics",
     "tracking",
     "typescript"
-  ]
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test tests",
+    "build": "bunup",
+    "lint": "tsgo --noEmit && bunx biome lint",
+    "npm:publish": "bun publish --tolerate-republish --access public"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

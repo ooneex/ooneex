@@ -81,7 +81,7 @@ Application layer packages:
 ### TypeScript Configuration
 
 The project uses strict TypeScript settings:
-- Decorators enabled (`experimentalDecorators`, `emitDecoratorMetadata`)
+- Decorators enabled (`emitDecoratorMetadata`)
 - Strict mode with additional checks (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
 - Module system: ESNext with bundler resolution
 - Target: ES2022

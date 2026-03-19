@@ -1,17 +1,14 @@
 import { inject } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import { HttpStatus } from "@ooneex/http-status";
-import { UserRepository } from "@ooneex/typeorm/repositories/user";
+import { ERole } from "@ooneex/role";
 import type { IUser } from "@ooneex/user";
 import { AuthException } from "./AuthException";
 import { ClerkAuth } from "./ClerkAuth";
 import type { IAuthMiddleware } from "./types";
 
 export class ClerkAuthMiddleware implements IAuthMiddleware {
-  constructor(
-    @inject(ClerkAuth) private readonly clerkAuth: ClerkAuth,
-    @inject(UserRepository) private readonly userRepository: UserRepository,
-  ) {}
+  constructor(@inject(ClerkAuth) private readonly clerkAuth: ClerkAuth) {}
 
   public async handler<T extends ContextConfigType>(context: ContextType<T>): Promise<IUser> {
     const token = context.header.getBearerToken();
@@ -30,13 +27,30 @@ export class ClerkAuthMiddleware implements IAuthMiddleware {
       });
     }
 
-    const user = await this.userRepository.findOneBy({ key: clerkUser.id });
+    const primaryEmail = clerkUser.emailAddresses.find((e) => e.id === clerkUser.primaryEmailAddressId);
 
-    if (!user) {
-      throw new AuthException("User not found", {
+    if (!primaryEmail) {
+      throw new AuthException("User has no primary email", {
         status: HttpStatus.Code.Unauthorized,
       });
     }
+
+    const user: IUser = {
+      id: clerkUser.privateMetadata?.externalId as string,
+      externalId: clerkUser.id,
+      email: primaryEmail.emailAddress,
+      roles: (clerkUser.privateMetadata?.roles as ERole[]) ?? [ERole.USER],
+    };
+
+    if (clerkUser.firstName) user.firstName = clerkUser.firstName;
+    if (clerkUser.lastName) user.lastName = clerkUser.lastName;
+    if (clerkUser.username) user.username = clerkUser.username;
+    if (clerkUser.phoneNumbers[0]?.phoneNumber) user.phone = clerkUser.phoneNumbers[0].phoneNumber;
+    if (clerkUser.lastActiveAt) user.lastActiveAt = new Date(clerkUser.lastActiveAt);
+    if (clerkUser.lastSignInAt) user.lastLoginAt = new Date(clerkUser.lastSignInAt);
+    if (clerkUser.imageUrl) user.avatar = clerkUser.imageUrl;
+    if (clerkUser.createdAt) user.createdAt = new Date(clerkUser.createdAt);
+    if (clerkUser.updatedAt) user.updatedAt = new Date(clerkUser.updatedAt);
 
     return user;
   }

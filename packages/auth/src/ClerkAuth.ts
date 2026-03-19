@@ -1,17 +1,20 @@
 import { createClerkClient, type Session, type User, verifyToken } from "@clerk/backend";
 import { injectable } from "@ooneex/container";
 import { AuthException } from "./AuthException";
+import type { ClerkAuthConfigType } from "./types";
 
 @injectable()
 export class ClerkAuth {
   private readonly client: ReturnType<typeof createClerkClient>;
   private readonly secretKey: string;
 
-  constructor() {
-    const secretKey = Bun.env.CLERK_SECRET_KEY;
+  constructor(config?: ClerkAuthConfigType) {
+    const secretKey = config?.secretKey || Bun.env.CLERK_SECRET_KEY;
 
     if (!secretKey) {
-      throw new AuthException("CLERK_SECRET_KEY environment variable is required");
+      throw new AuthException(
+        "Clerk secret key is required. Provide a secret key through config options or set the CLERK_SECRET_KEY environment variable.",
+      );
     }
 
     this.secretKey = secretKey;

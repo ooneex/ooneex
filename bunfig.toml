@@ -21,6 +21,7 @@ hoistPattern = [
   "nx",
   "arktype",
   "typescript",
+  "bun-types",
   "undici-types",
 ]
 external = false

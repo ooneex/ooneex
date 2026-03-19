@@ -20,7 +20,6 @@ describe("tsconfig.json.txt", () => {
 
   test("should enable decorators", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("experimentalDecorators");
     expect(content).toContain("emitDecoratorMetadata");
   });
 });

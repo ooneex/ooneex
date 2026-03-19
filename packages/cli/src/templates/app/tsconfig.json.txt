@@ -21,7 +21,6 @@
     "noPropertyAccessFromIndexSignature": false,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "strictNullChecks": true,
     "exactOptionalPropertyTypes": true
   },

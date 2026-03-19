@@ -7,7 +7,7 @@ import type { GeminiConfigType, GeminiModelType } from "./types";
 @decorator.ai()
 export class GeminiAi extends BaseAi<GeminiConfigType> {
   private getApiKey(config?: GeminiConfigType): string {
-    const apiKey = config?.apiKey || Bun.env.GEMINI_API_KEY || "";
+    const apiKey = config?.apiKey || Bun.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

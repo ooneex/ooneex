@@ -7,7 +7,7 @@ import type { AnthropicConfigType, AnthropicModelType } from "./types";
 @decorator.ai()
 export class AnthropicAi extends BaseAi<AnthropicConfigType> {
   private getApiKey(config?: AnthropicConfigType): string {
-    const apiKey = config?.apiKey || Bun.env.ANTHROPIC_API_KEY || "";
+    const apiKey = config?.apiKey || Bun.env.ANTHROPIC_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

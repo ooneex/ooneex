@@ -7,7 +7,7 @@ import type { OpenAiConfigType, OpenAiModelType } from "./types";
 @decorator.ai()
 export class OpenAi extends BaseAi<OpenAiConfigType> {
   private getApiKey(config?: OpenAiConfigType): string {
-    const apiKey = config?.apiKey || Bun.env.OPENAI_API_KEY || "";
+    const apiKey = config?.apiKey || Bun.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

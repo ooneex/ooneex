@@ -1,8 +1,8 @@
 import { AppEnvException } from "./AppEnvException";
-import type { EnvType, IAppEnv } from "./types";
+import type { EnvironmentNameType, IAppEnv } from "./types";
 
 export class AppEnv implements IAppEnv {
-  public readonly env: EnvType;
+  public readonly env: EnvironmentNameType;
   public readonly isLocal: boolean;
   public readonly isDevelopment: boolean;
   public readonly isStaging: boolean;
@@ -19,13 +19,12 @@ export class AppEnv implements IAppEnv {
   public readonly isHotfix: boolean;
   public readonly isProduction: boolean;
 
-  public constructor(env: EnvType) {
-    this.env = env;
-
-    if (!this.env) {
+  public constructor(env: EnvironmentNameType) {
+    if (!env) {
       throw new AppEnvException("APP_ENV is not set");
     }
 
+    this.env = env;
     this.isLocal = this.env === "local";
     this.isDevelopment = this.env === "development";
     this.isStaging = this.env === "staging";

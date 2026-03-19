@@ -1,4 +1,4 @@
-export type AppEnvClassType = new (env: EnvType) => IAppEnv;
+export type AppEnvClassType = new (env: EnvironmentNameType) => IAppEnv;
 
 export enum Environment {
   LOCAL = "local",
@@ -18,10 +18,10 @@ export enum Environment {
   PRODUCTION = "production",
 }
 
-export type EnvType = `${Environment}`;
+export type EnvironmentNameType = `${Environment}`;
 
 export interface IAppEnv {
-  readonly env: EnvType;
+  readonly env: EnvironmentNameType;
   readonly isLocal: boolean;
   readonly isDevelopment: boolean;
   readonly isStaging: boolean;

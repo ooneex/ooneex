@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { AppEnv } from "@/AppEnv";
 import { AppEnvException } from "@/AppEnvException";
-import type { EnvType } from "@/types";
+import type { EnvironmentNameType } from "@/types";
 import { Environment } from "@/types";
 
 describe("AppEnv", () => {
@@ -15,22 +15,22 @@ describe("AppEnv", () => {
     });
 
     test("should throw AppEnvException when env is null", () => {
-      expect(() => new AppEnv(null as unknown as EnvType)).toThrow(AppEnvException);
-      expect(() => new AppEnv(null as unknown as EnvType)).toThrow("APP_ENV is not set");
+      expect(() => new AppEnv(null as unknown as EnvironmentNameType)).toThrow(AppEnvException);
+      expect(() => new AppEnv(null as unknown as EnvironmentNameType)).toThrow("APP_ENV is not set");
     });
 
     test("should throw AppEnvException when env is undefined", () => {
-      expect(() => new AppEnv(undefined as unknown as EnvType)).toThrow(AppEnvException);
-      expect(() => new AppEnv(undefined as unknown as EnvType)).toThrow("APP_ENV is not set");
+      expect(() => new AppEnv(undefined as unknown as EnvironmentNameType)).toThrow(AppEnvException);
+      expect(() => new AppEnv(undefined as unknown as EnvironmentNameType)).toThrow("APP_ENV is not set");
     });
 
     test("should throw AppEnvException when env is empty string", () => {
-      expect(() => new AppEnv("" as EnvType)).toThrow(AppEnvException);
-      expect(() => new AppEnv("" as EnvType)).toThrow("APP_ENV is not set");
+      expect(() => new AppEnv("" as EnvironmentNameType)).toThrow(AppEnvException);
+      expect(() => new AppEnv("" as EnvironmentNameType)).toThrow("APP_ENV is not set");
     });
 
     test("should accept any string as environment type", () => {
-      const customEnv = "custom-environment" as EnvType;
+      const customEnv = "custom-environment" as EnvironmentNameType;
       const appEnv = new AppEnv(customEnv);
 
       expect(appEnv.env).toBe(customEnv);
@@ -528,15 +528,15 @@ describe("AppEnv", () => {
   describe("Edge Cases", () => {
     test("should handle case-sensitive environment names", () => {
       const appEnvLower = new AppEnv("production");
-      const appEnvUpper = new AppEnv("PRODUCTION" as EnvType);
+      const appEnvUpper = new AppEnv("PRODUCTION" as EnvironmentNameType);
 
       expect(appEnvLower.isProduction).toBe(true);
       expect(appEnvUpper.isProduction).toBe(false);
-      expect(appEnvUpper.env).toBe("PRODUCTION" as EnvType);
+      expect(appEnvUpper.env).toBe("PRODUCTION" as EnvironmentNameType);
     });
 
     test("should handle environment names with special characters", () => {
-      const specialEnv = "test-env-123" as EnvType;
+      const specialEnv = "test-env-123" as EnvironmentNameType;
       const appEnv = new AppEnv(specialEnv);
 
       expect(appEnv.env).toBe(specialEnv);
@@ -546,7 +546,7 @@ describe("AppEnv", () => {
 
     test("should handle very long environment names", () => {
       const longEnv =
-        "very-long-environment-name-that-exceeds-normal-length-expectations-for-testing-purposes" as EnvType;
+        "very-long-environment-name-that-exceeds-normal-length-expectations-for-testing-purposes" as EnvironmentNameType;
       const appEnv = new AppEnv(longEnv);
 
       expect(appEnv.env).toBe(longEnv);
@@ -556,7 +556,7 @@ describe("AppEnv", () => {
 
   describe("Type Safety", () => {
     test("should accept EnvType as constructor parameter", () => {
-      const validEnvTypes: EnvType[] = [
+      const validEnvTypes: EnvironmentNameType[] = [
         "local",
         "development",
         "staging",
@@ -616,7 +616,7 @@ describe("AppEnv", () => {
 
   describe("Environment Value Consistency", () => {
     test("should maintain consistency between env property and boolean flags", () => {
-      const environments: Array<{ env: EnvType; flag: keyof AppEnv }> = [
+      const environments: Array<{ env: EnvironmentNameType; flag: keyof AppEnv }> = [
         { env: "local", flag: "isLocal" },
         { env: "development", flag: "isDevelopment" },
         { env: "staging", flag: "isStaging" },

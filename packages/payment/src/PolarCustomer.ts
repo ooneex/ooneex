@@ -6,7 +6,9 @@ import type {
   CustomerAddressType,
   CustomerCreateType,
   CustomerListOptionsType,
+  CustomerListResponseType,
   CustomerListResultType,
+  CustomerResponseType,
   CustomerType,
   CustomerUpdateType,
 } from "./types";
@@ -41,7 +43,7 @@ export class PolarCustomer {
       metadata: data.metadata,
     });
 
-    return this.mapResponse(response as unknown as CustomerResponse);
+    return this.mapResponse(response as unknown as CustomerResponseType);
   }
 
   public async update(id: string, data: CustomerUpdateType): Promise<CustomerType> {
@@ -56,7 +58,7 @@ export class PolarCustomer {
       },
     });
 
-    return this.mapResponse(response as unknown as CustomerResponse);
+    return this.mapResponse(response as unknown as CustomerResponseType);
   }
 
   public async remove(id: string): Promise<void> {
@@ -66,7 +68,7 @@ export class PolarCustomer {
   public async get(id: string): Promise<CustomerType> {
     const response = await this.client.customers.get({ id });
 
-    return this.mapResponse(response as unknown as CustomerResponse);
+    return this.mapResponse(response as unknown as CustomerResponseType);
   }
 
   public async list(options?: CustomerListOptionsType): Promise<CustomerListResultType> {
@@ -78,7 +80,7 @@ export class PolarCustomer {
       limit: options?.limit ?? 10,
     });
 
-    const result = response as unknown as CustomerListResponse;
+    const result = response as unknown as CustomerListResponseType;
 
     return {
       items: result.result.items.map((item) => this.mapResponse(item)),
@@ -92,7 +94,7 @@ export class PolarCustomer {
   public async getByExternalId(externalId: string): Promise<CustomerType> {
     const response = await this.client.customers.getExternal({ externalId });
 
-    return this.mapResponse(response as unknown as CustomerResponse);
+    return this.mapResponse(response as unknown as CustomerResponseType);
   }
 
   public async updateByExternalId(externalId: string, data: CustomerUpdateType): Promise<CustomerType> {
@@ -107,7 +109,7 @@ export class PolarCustomer {
       },
     });
 
-    return this.mapResponse(response as unknown as CustomerResponse);
+    return this.mapResponse(response as unknown as CustomerResponseType);
   }
 
   public async removeByExternalId(externalId: string): Promise<void> {
@@ -125,7 +127,7 @@ export class PolarCustomer {
     };
   }
 
-  private mapResponse(response: CustomerResponse): CustomerType {
+  private mapResponse(response: CustomerResponseType): CustomerType {
     const customer: CustomerType = {
       id: response.id,
       email: response.email,
@@ -195,36 +197,3 @@ export class PolarCustomer {
     return customer;
   }
 }
-
-type CustomerResponse = {
-  id: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
-  deletedAt?: Date;
-  email: string;
-  emailVerified?: boolean;
-  name?: string;
-  externalId?: string;
-  avatarUrl?: string;
-  billingAddress?: {
-    line1?: string;
-    line2?: string;
-    city?: string;
-    state?: string;
-    postalCode?: string;
-    country?: string;
-  };
-  taxId?: string | [string, string];
-  organizationId?: string;
-  metadata?: Record<string, string | number | boolean>;
-};
-
-type CustomerListResponse = {
-  result: {
-    items: CustomerResponse[];
-    pagination: {
-      totalCount: number;
-      maxPage: number;
-    };
-  };
-};

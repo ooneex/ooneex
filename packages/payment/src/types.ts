@@ -445,3 +445,106 @@ export type AnalyticsLimitsType = {
   minDate: Date;
   intervals: AnalyticsIntervalsLimitsType;
 };
+
+export type CustomerSessionResponseType = {
+  id: string;
+  token: string;
+  customerPortalUrl: string;
+  createdAt?: Date;
+  expiresAt?: Date;
+  customerId?: string;
+};
+
+export type DiscountResponseType = {
+  id: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
+  name: string;
+  code?: string;
+  type: string;
+  basisPoints?: number;
+  amount?: number;
+  currency?: string;
+  duration: string;
+  durationInMonths?: number;
+  startsAt?: Date;
+  endsAt?: Date;
+  maxRedemptions?: number;
+  redemptionsCount: number;
+  organizationId?: string;
+  metadata: Record<string, string | number | boolean>;
+  products?: { id: string; name: string }[];
+};
+
+export type CheckoutResponseType = {
+  id: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
+  url?: string;
+  embedId?: string;
+  status: string;
+  clientSecret: string;
+  expiresAt?: Date;
+  successUrl?: string;
+  embedOrigin?: string;
+  amount?: number;
+  taxAmount?: number;
+  currency?: string;
+  subtotalAmount?: number;
+  totalAmount?: number;
+  productId?: string;
+  productPriceId?: string;
+  discountId?: string;
+  allowDiscountCodes?: boolean;
+  isDiscountApplicable?: boolean;
+  isPaymentRequired?: boolean;
+  customer?: {
+    id?: string;
+    email?: string;
+    name?: string;
+    externalId?: string;
+    billingAddress?: {
+      line1?: string;
+      line2?: string;
+      city?: string;
+      state?: string;
+      postalCode?: string;
+      country?: string;
+    };
+    taxId?: string;
+  };
+  metadata: Record<string, string | number | boolean>;
+};
+
+export type CustomerResponseType = {
+  id: string;
+  createdAt?: Date;
+  modifiedAt?: Date;
+  deletedAt?: Date;
+  email: string;
+  emailVerified?: boolean;
+  name?: string;
+  externalId?: string;
+  avatarUrl?: string;
+  billingAddress?: {
+    line1?: string;
+    line2?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  taxId?: string | [string, string];
+  organizationId?: string;
+  metadata?: Record<string, string | number | boolean>;
+};
+
+export type CustomerListResponseType = {
+  result: {
+    items: CustomerResponseType[];
+    pagination: {
+      totalCount: number;
+      maxPage: number;
+    };
+  };
+};

@@ -2,7 +2,7 @@ import { injectable } from "@ooneex/container";
 import type { CurrencyCodeType } from "@ooneex/currencies";
 import { Polar } from "@polar-sh/sdk";
 import { PaymentException } from "./PaymentException";
-import type { DiscountDurationType, DiscountType, IDiscount, IProduct } from "./types";
+import type { DiscountDurationType, DiscountResponseType, DiscountType, IDiscount, IProduct } from "./types";
 
 @injectable()
 export class PolarDiscount {
@@ -95,7 +95,7 @@ export class PolarDiscount {
       }
     }
 
-    return this.mapResponse(response as unknown as DiscountResponse);
+    return this.mapResponse(response as unknown as DiscountResponseType);
   }
 
   public async update(id: string, data: Partial<IDiscount>): Promise<IDiscount> {
@@ -112,7 +112,7 @@ export class PolarDiscount {
       },
     });
 
-    return this.mapResponse(response as unknown as DiscountResponse);
+    return this.mapResponse(response as unknown as DiscountResponseType);
   }
 
   public async remove(id: string): Promise<void> {
@@ -122,10 +122,10 @@ export class PolarDiscount {
   public async get(id: string): Promise<IDiscount> {
     const response = await this.client.discounts.get({ id });
 
-    return this.mapResponse(response as unknown as DiscountResponse);
+    return this.mapResponse(response as unknown as DiscountResponseType);
   }
 
-  private mapResponse(response: DiscountResponse): IDiscount {
+  private mapResponse(response: DiscountResponseType): IDiscount {
     const discount: IDiscount = {
       id: response.id,
       name: response.name,
@@ -185,24 +185,3 @@ export class PolarDiscount {
     return discount;
   }
 }
-
-type DiscountResponse = {
-  id: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
-  name: string;
-  code?: string;
-  type: string;
-  basisPoints?: number;
-  amount?: number;
-  currency?: string;
-  duration: string;
-  durationInMonths?: number;
-  startsAt?: Date;
-  endsAt?: Date;
-  maxRedemptions?: number;
-  redemptionsCount: number;
-  organizationId?: string;
-  metadata: Record<string, string | number | boolean>;
-  products?: { id: string; name: string }[];
-};

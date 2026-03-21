@@ -1,7 +1,7 @@
 import { injectable } from "@ooneex/container";
 import { Polar } from "@polar-sh/sdk";
 import { PaymentException } from "./PaymentException";
-import type { CustomerSessionCreateType, CustomerSessionType } from "./types";
+import type { CustomerSessionCreateType, CustomerSessionResponseType, CustomerSessionType } from "./types";
 
 @injectable()
 export class PolarCustomerPortal {
@@ -27,7 +27,7 @@ export class PolarCustomerPortal {
       customerId: data.customerId,
     });
 
-    return this.mapResponse(response as unknown as CustomerSessionResponse);
+    return this.mapResponse(response as unknown as CustomerSessionResponseType);
   }
 
   public getPortalUrl(organizationSlug: string): string {
@@ -36,7 +36,7 @@ export class PolarCustomerPortal {
     return `${baseUrl}/${organizationSlug}/portal`;
   }
 
-  private mapResponse(response: CustomerSessionResponse): CustomerSessionType {
+  private mapResponse(response: CustomerSessionResponseType): CustomerSessionType {
     const session: CustomerSessionType = {
       id: response.id,
       token: response.token,
@@ -58,12 +58,3 @@ export class PolarCustomerPortal {
     return session;
   }
 }
-
-type CustomerSessionResponse = {
-  id: string;
-  token: string;
-  customerPortalUrl: string;
-  createdAt?: Date;
-  expiresAt?: Date;
-  customerId?: string;
-};

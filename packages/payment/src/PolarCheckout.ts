@@ -6,6 +6,7 @@ import type {
   CheckoutAddressType,
   CheckoutCreateType,
   CheckoutCustomerType,
+  CheckoutResponseType,
   CheckoutStatusType,
   CheckoutType,
 } from "./types";
@@ -54,16 +55,16 @@ export class PolarCheckout {
       metadata: data.metadata,
     });
 
-    return this.mapResponse(response as unknown as CheckoutResponse);
+    return this.mapResponse(response as unknown as CheckoutResponseType);
   }
 
   public async get(id: string): Promise<CheckoutType> {
     const response = await this.client.checkouts.get({ id });
 
-    return this.mapResponse(response as unknown as CheckoutResponse);
+    return this.mapResponse(response as unknown as CheckoutResponseType);
   }
 
-  private mapResponse(response: CheckoutResponse): CheckoutType {
+  private mapResponse(response: CheckoutResponseType): CheckoutType {
     const checkout: CheckoutType = {
       id: response.id,
       status: response.status as CheckoutStatusType,
@@ -163,43 +164,3 @@ export class PolarCheckout {
     return checkout;
   }
 }
-
-type CheckoutResponse = {
-  id: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
-  url?: string;
-  embedId?: string;
-  status: string;
-  clientSecret: string;
-  expiresAt?: Date;
-  successUrl?: string;
-  embedOrigin?: string;
-  amount?: number;
-  taxAmount?: number;
-  currency?: string;
-  subtotalAmount?: number;
-  totalAmount?: number;
-  productId?: string;
-  productPriceId?: string;
-  discountId?: string;
-  allowDiscountCodes?: boolean;
-  isDiscountApplicable?: boolean;
-  isPaymentRequired?: boolean;
-  customer?: {
-    id?: string;
-    email?: string;
-    name?: string;
-    externalId?: string;
-    billingAddress?: {
-      line1?: string;
-      line2?: string;
-      city?: string;
-      state?: string;
-      postalCode?: string;
-      country?: string;
-    };
-    taxId?: string;
-  };
-  metadata: Record<string, string | number | boolean>;
-};

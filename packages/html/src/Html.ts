@@ -9,8 +9,8 @@ import type { HtmlHeadingType, HtmlImageType, HtmlLinkType, HtmlTaskType, HtmlVi
 export class Html implements IHtml {
   private $: CheerioAPI;
 
-  constructor() {
-    this.$ = cheerio.load("");
+  constructor(html?: string) {
+    this.$ = cheerio.load(html ?? "");
   }
 
   /**

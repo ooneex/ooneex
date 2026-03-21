@@ -1,7 +1,7 @@
 /**
  * Heading information extracted from HTML
  */
-export interface HtmlHeadingType {
+export type HtmlHeadingType = {
   /**
    * Heading level (1-6)
    */
@@ -14,12 +14,12 @@ export interface HtmlHeadingType {
    * Heading id attribute
    */
   id: string | null;
-}
+};
 
 /**
  * Link information extracted from HTML
  */
-export interface HtmlLinkType {
+export type HtmlLinkType = {
   /**
    * Link href URL
    */
@@ -40,12 +40,12 @@ export interface HtmlLinkType {
    * Link rel attribute
    */
   rel: string | null;
-}
+};
 
 /**
  * Image information extracted from HTML
  */
-export interface HtmlImageType {
+export type HtmlImageType = {
   /**
    * Image source URL
    */
@@ -66,12 +66,12 @@ export interface HtmlImageType {
    * Image height attribute
    */
   height: string | null;
-}
+};
 
 /**
  * Task information extracted from HTML (checkbox list items)
  */
-export interface HtmlTaskType {
+export type HtmlTaskType = {
   /**
    * Task text content
    */
@@ -80,12 +80,12 @@ export interface HtmlTaskType {
    * Whether the task is checked/completed
    */
   checked: boolean;
-}
+};
 
 /**
  * Video information extracted from HTML
  */
-export interface HtmlVideoType {
+export type HtmlVideoType = {
   /**
    * Video source URL
    */
@@ -122,7 +122,7 @@ export interface HtmlVideoType {
    * Video source elements
    */
   sources: { src: string; type: string | null }[];
-}
+};
 
 /**
  * Interface for HTML class

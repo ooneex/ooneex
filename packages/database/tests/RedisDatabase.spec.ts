@@ -58,7 +58,7 @@ describe("RedisDatabase", () => {
       expect(() => {
         new RedisDatabase();
       }).toThrow(
-        "No Redis connection URL provided. The 'url' option must be specified or set the following environment variable: DATABASE_REDIS_URL.",
+        "Redis connection URL is required. Please provide a connection URL either through the constructor options or set the DATABASE_REDIS_URL environment variable.",
       );
     });
 
@@ -70,10 +70,7 @@ describe("RedisDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.data).toEqual({
-          ...options,
-          connectionUrl: "",
-        });
+        expect(dbError.data).toEqual({});
       }
     });
 

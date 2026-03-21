@@ -195,9 +195,8 @@ describe("TypeormSqliteDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.message).toContain("No database path provided");
-        expect(dbError.data).toHaveProperty("database");
-        expect(dbError.data.database).toBe("");
+        expect(dbError.message).toContain("SQLite database path is required");
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -226,10 +225,9 @@ describe("TypeormSqliteDatabase", () => {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
         expect(dbError.message).toBe(
-          "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database. Alternatively, set the SQLITE_DATABASE_PATH environment variable.",
+          "SQLite database path is required. Please provide a database path either through the constructor options or set the SQLITE_DATABASE_PATH environment variable.",
         );
-        expect(dbError.data.synchronize).toBe(true);
-        expect(dbError.data.database).toBe("");
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -571,10 +569,9 @@ describe("TypeormSqliteDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.message).toContain("No database path provided");
-        expect(dbError.message).toContain(":memory:");
+        expect(dbError.message).toContain("SQLite database path is required");
         expect(dbError.message).toContain("SQLITE_DATABASE_PATH");
-        expect(dbError.data.database).toBe("");
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -594,9 +591,7 @@ describe("TypeormSqliteDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.data.synchronize).toBe(true);
-        expect(dbError.data.enableWAL).toBe(false);
-        expect(dbError.data.database).toBe("");
+        expect(dbError.data).toEqual({});
       }
     });
   });

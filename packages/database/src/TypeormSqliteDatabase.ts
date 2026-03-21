@@ -17,11 +17,7 @@ export class TypeormSqliteDatabase extends AbstractTypeormSqliteDatabase {
 
     if (!database) {
       throw new DatabaseException(
-        "No database path provided. The 'database' option must be specified with a valid file path or ':memory:' for in-memory database. Alternatively, set the SQLITE_DATABASE_PATH environment variable.",
-        {
-          ...(this.options || {}),
-          database,
-        },
+        "SQLite database path is required. Please provide a database path either through the constructor options or set the SQLITE_DATABASE_PATH environment variable.",
       );
     }
 

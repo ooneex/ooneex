@@ -11,11 +11,7 @@ export class TypeormPgDatabase implements ITypeormDatabase {
 
     if (!url) {
       throw new DatabaseException(
-        "No database URL provided. Please set DATABASE_URL environment variable or provide a url in the options.",
-        {
-          ...options,
-          url,
-        },
+        "Database URL is required. Please provide a URL either through the constructor options or set the DATABASE_URL environment variable.",
       );
     }
 

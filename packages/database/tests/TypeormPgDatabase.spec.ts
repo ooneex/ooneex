@@ -152,11 +152,8 @@ describe("TypeormPgDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.message).toContain("No database URL provided");
-        expect(dbError.data).toEqual({
-          ...options,
-          url: "",
-        });
+        expect(dbError.message).toContain("Database URL is required");
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -191,12 +188,9 @@ describe("TypeormPgDatabase", () => {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
         expect(dbError.message).toBe(
-          "No database URL provided. Please set DATABASE_URL environment variable or provide a url in the options.",
+          "Database URL is required. Please provide a URL either through the constructor options or set the DATABASE_URL environment variable.",
         );
-        expect(dbError.data).toEqual({
-          ...options,
-          url: "",
-        });
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -508,11 +502,9 @@ describe("TypeormPgDatabase", () => {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
         expect(dbError.message).toBe(
-          "No database URL provided. Please set DATABASE_URL environment variable or provide a url in the options.",
+          "Database URL is required. Please provide a URL either through the constructor options or set the DATABASE_URL environment variable.",
         );
-        expect(dbError.data).toEqual({
-          url: "",
-        });
+        expect(dbError.data).toEqual({});
       }
     });
 
@@ -532,10 +524,7 @@ describe("TypeormPgDatabase", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
-        expect(dbError.data).toEqual({
-          ...options,
-          url: "",
-        });
+        expect(dbError.data).toEqual({});
       }
     });
   });

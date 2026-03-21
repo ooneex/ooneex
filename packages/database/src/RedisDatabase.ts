@@ -11,11 +11,7 @@ export class RedisDatabase implements IRedisDatabase {
 
     if (!this.connectionUrl) {
       throw new DatabaseException(
-        "No Redis connection URL provided. The 'url' option must be specified or set the following environment variable: DATABASE_REDIS_URL.",
-        {
-          ...options,
-          connectionUrl: this.connectionUrl,
-        },
+        "Redis connection URL is required. Please provide a connection URL either through the constructor options or set the DATABASE_REDIS_URL environment variable.",
       );
     }
 

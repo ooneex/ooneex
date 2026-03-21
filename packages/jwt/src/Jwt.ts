@@ -1,13 +1,15 @@
+import { injectable } from "@ooneex/container";
 import type { JWTHeaderParameters } from "jose";
 import * as jose from "jose";
 import { JwtException } from "./JwtException";
 import type { IJwt, JwtDefaultPayloadType, JwtPayloadType } from "./types";
 
+@injectable()
 export class Jwt implements IJwt {
   private secret: Uint8Array<ArrayBuffer>;
 
   constructor(secret?: string) {
-    secret = secret || Bun.env.JWT_SECRET || "";
+    secret = secret || Bun.env.JWT_SECRET;
 
     if (!secret) {
       throw new JwtException(
@@ -17,6 +19,7 @@ export class Jwt implements IJwt {
 
     this.secret = new TextEncoder().encode(secret);
   }
+
   public async create<T extends Record<string, unknown> = Record<string, unknown>>(config?: {
     payload?: JwtDefaultPayloadType & JwtPayloadType<T>;
     header?: JWTHeaderParameters;

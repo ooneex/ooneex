@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/folder",
   "description": "Type definitions and utilities for folder/directory structures with status and color support",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",
@@ -29,7 +29,6 @@
   "dependencies": {},
   "devDependencies": {
     "@ooneex/status": "workspace:*",
-    "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "keywords": [

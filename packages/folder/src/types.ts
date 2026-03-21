@@ -1,10 +1,9 @@
-import type { IColor } from "@ooneex/color";
 import type { IStatus } from "@ooneex/status";
 import type { IBase } from "@ooneex/types";
 
 export interface IFolder extends IBase {
   name: string;
-  color?: IColor;
+  color?: string;
   description?: string;
   parent?: IFolder;
   children?: IFolder[];

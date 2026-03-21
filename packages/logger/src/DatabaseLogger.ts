@@ -6,7 +6,7 @@ import { LogsRepository } from "./LogsRepository";
 import type { ILogger, LevelType } from "./types";
 
 @decorator.logger()
-export class SqliteLogger implements ILogger<LogsEntity> {
+export class DatabaseLogger implements ILogger<LogsEntity> {
   private db: LogsDatabase;
   private repository: LogsRepository;
 

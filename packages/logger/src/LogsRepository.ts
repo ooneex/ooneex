@@ -33,13 +33,31 @@ export class LogsRepository {
     const client = this.db.getClient();
 
     const data = {
-      ...log,
       id: random.nanoid(15),
+      level: log.level,
+      message: log.message ?? null,
       date: log.date.toISOString(),
+      userId: log.userId ?? null,
+      email: log.email ?? null,
+      lastName: log.lastName ?? null,
+      firstName: log.firstName ?? null,
+      status: log.status ?? null,
+      exceptionName: log.exceptionName ?? null,
       stackTrace: log.stackTrace ? JSON.stringify(log.stackTrace) : null,
+      ip: log.ip ?? null,
+      method: log.method ?? null,
+      path: log.path ?? null,
+      userAgent: log.userAgent ?? null,
+      referer: log.referer ?? null,
       params: log.params ? JSON.stringify(log.params) : null,
       payload: log.payload ? JSON.stringify(log.payload) : null,
       queries: log.queries ? JSON.stringify(log.queries) : null,
+      protocol: null,
+      host: null,
+      port: null,
+      subdomain: null,
+      domain: null,
+      hostname: null,
     };
 
     const [newLog] = await client`
@@ -91,7 +109,7 @@ export class LogsRepository {
     }
 
     if (criteria.userId !== undefined) {
-      whereConditions.push(sql`userId = ${criteria.userId}`);
+      whereConditions.push(sql`"userId" = ${criteria.userId}`);
     }
 
     if (criteria.email !== undefined) {
@@ -99,11 +117,11 @@ export class LogsRepository {
     }
 
     if (criteria.lastName !== undefined) {
-      whereConditions.push(sql`lastName = ${criteria.lastName}`);
+      whereConditions.push(sql`"lastName" = ${criteria.lastName}`);
     }
 
     if (criteria.firstName !== undefined) {
-      whereConditions.push(sql`firstName = ${criteria.firstName}`);
+      whereConditions.push(sql`"firstName" = ${criteria.firstName}`);
     }
 
     if (criteria.status !== undefined) {
@@ -111,7 +129,7 @@ export class LogsRepository {
     }
 
     if (criteria.exceptionName !== undefined) {
-      whereConditions.push(sql`exceptionName = ${criteria.exceptionName}`);
+      whereConditions.push(sql`"exceptionName" = ${criteria.exceptionName}`);
     }
 
     if (criteria.method !== undefined) {
@@ -146,7 +164,7 @@ export class LogsRepository {
         queries: log.queries ? JSON.parse(log.queries) : undefined,
       })) as LogsEntity[];
 
-      const total = countResult.total;
+      const total = Number(countResult.total);
       const totalPages = Math.ceil(total / limit);
 
       const result = {
@@ -190,12 +208,13 @@ export class LogsRepository {
     const transformedLogs = logs.map((log: RawLogRecordType) => ({
       ...log,
       date: new Date(log.date),
+      stackTrace: log.stackTrace ? JSON.parse(log.stackTrace) : undefined,
       params: log.params ? JSON.parse(log.params) : undefined,
       payload: log.payload ? JSON.parse(log.payload) : undefined,
       queries: log.queries ? JSON.parse(log.queries) : undefined,
     }));
 
-    const total = countResult.total;
+    const total = Number(countResult.total);
     const totalPages = Math.ceil(total / limit);
 
     const result = {

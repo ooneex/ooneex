@@ -1,666 +1,368 @@
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { DatabaseException } from "@ooneex/database";
 import { LogsDatabase } from "@/LogsDatabase";
 
-describe("LogsDatabase", () => {
-  let originalEnv: Record<string, string | undefined>;
-  let database: LogsDatabase;
+// Mock Bun.SQL
+type MockSQLClient = ((strings: TemplateStringsArray, ...values: unknown[]) => Promise<unknown[]>) & {
+  close: () => Promise<void>;
+};
 
+let mockSQLInstance: MockSQLClient;
+let mockSQLConstructor: ReturnType<typeof mock>;
+let queriesExecuted: string[];
+
+describe("LogsDatabase", () => {
   beforeEach(() => {
-    // Store original environment variables
-    originalEnv = { ...Bun.env };
+    queriesExecuted = [];
+
+    mockSQLInstance = Object.assign(
+      (strings: TemplateStringsArray, ..._values: unknown[]) => {
+        const query = strings.join("?");
+        queriesExecuted.push(query);
+        return Promise.resolve([]);
+      },
+      {
+        close: mock(() => Promise.resolve()),
+      },
+    ) as MockSQLClient;
+
+    mockSQLConstructor = mock(() => mockSQLInstance);
+    // @ts-expect-error - mocking Bun.SQL constructor
+    globalThis.Bun.SQL = mockSQLConstructor;
   });
 
   afterEach(() => {
-    // Restore environment variables
-    Object.keys(Bun.env).forEach((key) => {
-      if (key.startsWith("LOGS_")) {
-        delete Bun.env[key];
-      }
-    });
-    Object.assign(Bun.env, originalEnv);
+    queriesExecuted = [];
   });
 
-  describe("Constructor", () => {
-    test("should create LogsDatabase with provided filename in options", () => {
-      const options = {
-        filename: "/tmp/test-logs.db",
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
+  describe("constructor", () => {
+    test("should accept a URL parameter", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(db).toBeInstanceOf(LogsDatabase);
     });
 
-    test("should create LogsDatabase using LOGS_DATABASE_PATH environment variable", () => {
-      Bun.env.LOGS_DATABASE_PATH = "/tmp/env-logs.db";
+    test("should use LOGS_DATABASE_URL environment variable as fallback", () => {
+      const originalUrl = Bun.env.LOGS_DATABASE_URL;
+      Bun.env.LOGS_DATABASE_URL = "postgresql://localhost:5432/env-logs";
 
-      expect(() => {
-        database = new LogsDatabase();
-      }).not.toThrow();
+      const db = new LogsDatabase();
+      expect(db).toBeInstanceOf(LogsDatabase);
 
-      expect(database).toBeInstanceOf(LogsDatabase);
+      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
 
-    test("should prioritize options filename over environment variable", () => {
-      Bun.env.LOGS_DATABASE_PATH = "/tmp/env-logs.db";
-      const options = {
-        filename: "/tmp/options-logs.db",
-      };
+    test("should throw DatabaseException when no URL is provided and env var is not set", () => {
+      const originalUrl = Bun.env.LOGS_DATABASE_URL;
+      Bun.env.LOGS_DATABASE_URL = "";
 
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
+      expect(() => new LogsDatabase()).toThrow(DatabaseException);
 
-      expect(database).toBeInstanceOf(LogsDatabase);
+      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
 
-    test("should throw DatabaseException when no filename is provided", () => {
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(DatabaseException);
+    test("should throw with descriptive message when no URL is available", () => {
+      const originalUrl = Bun.env.LOGS_DATABASE_URL;
+      Bun.env.LOGS_DATABASE_URL = "";
 
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(
-        "No database filename provided. Please set LOGS_DATABASE_PATH environment variable or provide a filename in the options.",
-      );
+      expect(() => new LogsDatabase()).toThrow(/No database URL provided/);
+
+      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
 
-    test("should throw DatabaseException when filename is empty string", () => {
-      const options = {
-        filename: "",
-      };
+    test("should prefer provided URL over environment variable", () => {
+      const originalUrl = Bun.env.LOGS_DATABASE_URL;
+      Bun.env.LOGS_DATABASE_URL = "postgresql://env-url";
 
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).toThrow(DatabaseException);
+      const db = new LogsDatabase("postgresql://provided-url");
+      db.getClient();
 
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).toThrow(
-        "No database filename provided. Please set LOGS_DATABASE_PATH environment variable or provide a filename in the options.",
-      );
-    });
+      expect(mockSQLConstructor).toHaveBeenCalledWith("postgresql://provided-url");
 
-    test("should throw DatabaseException when LOGS_DATABASE_PATH is empty", () => {
-      Bun.env.LOGS_DATABASE_PATH = "";
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(DatabaseException);
-    });
-
-    test("should set correct default SQLite options", () => {
-      const options = {
-        filename: ":memory:",
-      };
-
-      database = new LogsDatabase(options);
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should merge custom options with defaults", () => {
-      const options = {
-        filename: ":memory:",
-        readonly: true,
-        strict: false,
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should handle memory database", () => {
-      const options = {
-        filename: ":memory:",
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should handle relative paths", () => {
-      const options = {
-        filename: "./logs.db",
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should handle absolute paths", () => {
-      const options = {
-        filename: "/var/log/application.db",
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should override adapter to sqlite", () => {
-      const options = {
-        filename: ":memory:",
-        adapter: "postgresql" as "sqlite", // Should be overridden to 'sqlite'
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should set all default options correctly", () => {
-      const options = {
-        filename: ":memory:",
-      };
-
-      database = new LogsDatabase(options);
-
-      // Test that we can get a client without errors
-      expect(() => {
-        database.getClient();
-      }).not.toThrow();
+      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
   });
 
   describe("getClient", () => {
-    beforeEach(() => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should create a new Bun.SQL client", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const client = db.getClient();
+
+      expect(client as unknown).toBe(mockSQLInstance);
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(1);
     });
 
-    test("should return Bun.SQL instance", () => {
-      const client = database.getClient();
-
-      expect(client).toBeDefined();
-      expect(typeof client).toBe("function"); // Bun.SQL is a function with template literal support
-    });
-
-    test("should return the same client instance on multiple calls", () => {
-      const client1 = database.getClient();
-      const client2 = database.getClient();
+    test("should return the same client on subsequent calls (lazy initialization)", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const client1 = db.getClient();
+      const client2 = db.getClient();
 
       expect(client1).toBe(client2);
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(1);
     });
 
-    test("should create new client after close and getClient", async () => {
-      database.getClient(); // Initialize client
-      await database.close();
-
-      const client2 = database.getClient();
-      expect(client2).toBeDefined();
-      // After close, a new client should be created
-    });
-
-    test("should create client even with unusual paths", () => {
-      // Bun.SQL is quite permissive with paths, so this test verifies it works
-      database = new LogsDatabase({
-        filename: "/tmp/test.db",
+    test("should throw DatabaseException when Bun.SQL constructor fails", () => {
+      // @ts-expect-error - mocking Bun.SQL constructor to throw
+      globalThis.Bun.SQL = mock(() => {
+        throw new Error("Connection refused");
       });
 
-      expect(() => {
-        database.getClient();
-      }).not.toThrow();
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(() => db.getClient()).toThrow(DatabaseException);
+    });
+
+    test("should propagate error message from Bun.SQL failure", () => {
+      // @ts-expect-error - mocking Bun.SQL constructor to throw
+      globalThis.Bun.SQL = mock(() => {
+        throw new Error("Connection refused");
+      });
+
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(() => db.getClient()).toThrow("Connection refused");
     });
   });
 
   describe("open", () => {
-    beforeEach(() => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should call getClient to initialize the connection", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      await db.open();
+
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(1);
     });
 
-    test("should initialize client when called", async () => {
-      await database.open();
-
-      const client = database.getClient();
-      expect(client).toBeDefined();
-    });
-
-    test("should not throw when called multiple times", async () => {
-      await database.open();
-      await database.open();
-
-      const client = database.getClient();
-      expect(client).toBeDefined();
-    });
-
-    test("should work with different database options", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-        readonly: false,
-        create: true,
-      });
-
-      await database.open();
-      expect(database.getClient()).toBeDefined();
+    test("should resolve without error on success", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(db.open()).resolves.toBeUndefined();
     });
   });
 
   describe("createTable", () => {
-    test("should be callable without throwing for valid database", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should create the logs table if it does not exist", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.createTable();
 
-      // Note: Due to SQL syntax issue in the source code, we expect this to throw
-      // but we test that the method exists and is callable
-      expect(database.createTable).toBeInstanceOf(Function);
+      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS logs"));
+      expect(createTableQuery).toBeDefined();
+    });
 
-      try {
-        await database.createTable();
-      } catch (error) {
-        // We expect this to fail due to trailing comma in SQL, but that's a bug in the source
-        expect(error).toBeInstanceOf(DatabaseException);
-        expect((error as DatabaseException).message).toBe("Failed to open log database connection");
+    test("should create table with all required columns", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.createTable();
+
+      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS logs"));
+      expect(createTableQuery).toBeDefined();
+
+      const columns = [
+        "id TEXT PRIMARY KEY",
+        "level TEXT NOT NULL",
+        "message TEXT",
+        "date TIMESTAMPTZ NOT NULL",
+        '"userId" TEXT',
+        "email TEXT",
+        '"lastName" TEXT',
+        '"firstName" TEXT',
+        "status INTEGER",
+        '"exceptionName" TEXT',
+        '"stackTrace" TEXT',
+        "ip TEXT",
+        "method TEXT",
+        "path TEXT",
+        '"userAgent" TEXT',
+        "referer TEXT",
+        "params TEXT",
+        "payload TEXT",
+        "queries TEXT",
+        "protocol TEXT",
+        "host TEXT",
+        "port INTEGER",
+        "subdomain TEXT",
+        "domain TEXT",
+        "hostname TEXT",
+      ];
+
+      for (const column of columns) {
+        expect(createTableQuery).toContain(column);
       }
     });
 
-    test("should throw DatabaseException for invalid database path", async () => {
-      database = new LogsDatabase({
-        filename: "/invalid/readonly/path.db",
-        readonly: true,
-        create: false,
-      });
+    test("should create index on level column", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.createTable();
 
-      await expect(database.createTable()).rejects.toThrow(DatabaseException);
-      await expect(database.createTable()).rejects.toThrow("Failed to open log database connection");
+      const levelIndexQuery = queriesExecuted.find((q) => q.includes("idx_logs_level"));
+      expect(levelIndexQuery).toBeDefined();
+      expect(levelIndexQuery).toContain("CREATE INDEX IF NOT EXISTS");
+    });
+
+    test("should create index on userId column", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.createTable();
+
+      const userIdIndexQuery = queriesExecuted.find((q) => q.includes("idx_logs_user_id"));
+      expect(userIdIndexQuery).toBeDefined();
+      expect(userIdIndexQuery).toContain("CREATE INDEX IF NOT EXISTS");
+    });
+
+    test("should throw DatabaseException when table creation fails", async () => {
+      const failingClient = Object.assign(
+        (_strings: TemplateStringsArray, ..._values: unknown[]) => {
+          return Promise.reject(new Error("SQL error"));
+        },
+        { close: mock(() => Promise.resolve()) },
+      ) as MockSQLClient;
+
+      // @ts-expect-error - mocking Bun.SQL constructor
+      globalThis.Bun.SQL = mock(() => failingClient);
+
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+
+      expect(db.createTable()).rejects.toThrow(DatabaseException);
+      expect(db.createTable()).rejects.toThrow("Failed to create log tables");
     });
   });
 
   describe("dropTable", () => {
-    beforeEach(() => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should drop the logs table", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.dropTable();
+
+      const dropQuery = queriesExecuted.find((q) => q.includes("DROP TABLE IF EXISTS logs"));
+      expect(dropQuery).toBeDefined();
     });
 
-    test("should be callable", async () => {
-      expect(database.dropTable).toBeInstanceOf(Function);
+    test("should throw DatabaseException when drop fails", async () => {
+      const failingClient = Object.assign(
+        (_strings: TemplateStringsArray, ..._values: unknown[]) => {
+          return Promise.reject(new Error("Permission denied"));
+        },
+        { close: mock(() => Promise.resolve()) },
+      ) as MockSQLClient;
 
-      // The method should be callable, even if it may fail due to SQL issues
-      try {
-        await database.dropTable();
-        expect(true).toBe(true); // If it succeeds, great
-      } catch (error) {
-        // If it fails, we still verified it's callable
-        expect(error).toBeInstanceOf(DatabaseException);
-      }
-    });
+      // @ts-expect-error - mocking Bun.SQL constructor
+      globalThis.Bun.SQL = mock(() => failingClient);
 
-    test("should throw DatabaseException for invalid database", async () => {
-      database = new LogsDatabase({
-        filename: "/invalid/path.db",
-        readonly: true,
-      });
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
 
-      await expect(database.dropTable()).rejects.toThrow(DatabaseException);
-      await expect(database.dropTable()).rejects.toThrow("Failed to drop log tables");
+      expect(db.dropTable()).rejects.toThrow(DatabaseException);
+      expect(db.dropTable()).rejects.toThrow("Failed to drop log tables");
     });
   });
 
   describe("close", () => {
-    beforeEach(() => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-    });
+    test("should close the client connection", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.close();
 
-    test("should be callable", async () => {
-      database.getClient(); // Initialize client
-
-      await database.close();
-      // If no exception is thrown, the test passes
-      expect(true).toBe(true);
+      expect(mockSQLInstance.close).toHaveBeenCalledTimes(1);
     });
 
     test("should set client to undefined after closing", async () => {
-      database.getClient(); // Initialize client
-      await database.close();
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.close();
 
-      // Client should be recreated on next getClient call
-      const newClient = database.getClient();
-      expect(newClient).toBeDefined();
+      // After close, getClient should create a new instance
+      db.getClient();
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(2);
     });
 
-    test("should not throw when client is not initialized", async () => {
-      await database.close();
-      expect(true).toBe(true);
+    test("should not throw if client was never initialized", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(db.close()).resolves.toBeUndefined();
     });
 
-    test("should not throw when called multiple times", async () => {
-      database.getClient(); // Initialize client
-      await database.close();
-      await database.close();
-      expect(true).toBe(true);
+    test("should throw DatabaseException when close fails", async () => {
+      const failingCloseClient = Object.assign(
+        (_strings: TemplateStringsArray, ..._values: unknown[]) => Promise.resolve([]),
+        {
+          close: mock(() => Promise.reject(new Error("Close error"))),
+        },
+      ) as MockSQLClient;
+
+      // @ts-expect-error - mocking Bun.SQL constructor
+      globalThis.Bun.SQL = mock(() => failingCloseClient);
+
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+
+      expect(db.close()).rejects.toThrow(DatabaseException);
+      expect(db.close()).rejects.toThrow("Failed to close log database connection");
     });
   });
 
   describe("drop", () => {
-    beforeEach(() => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-    });
-
-    test("should exist and be callable", async () => {
-      const result = await database.drop();
-      expect(result).toBeUndefined();
-    });
-
-    test("should be a no-op method", async () => {
-      // The method is empty in the implementation
-      const result = await database.drop();
-      expect(result).toBeUndefined();
+    test("should resolve without error (no-op)", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(db.drop()).resolves.toBeUndefined();
     });
   });
 
-  describe("Interface compliance", () => {
-    test("should implement IDatabase interface", () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-
-      expect(database.open).toBeInstanceOf(Function);
-      expect(database.close).toBeInstanceOf(Function);
-      expect(database.drop).toBeInstanceOf(Function);
+  describe("IDatabase interface compliance", () => {
+    test("should implement open method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.open).toBe("function");
     });
 
-    test("should have correct method signatures", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-
-      const openResult = database.open();
-      expect(openResult).toBeInstanceOf(Promise);
-
-      const closeResult = database.close();
-      expect(closeResult).toBeInstanceOf(Promise);
-
-      const dropResult = database.drop();
-      expect(dropResult).toBeInstanceOf(Promise);
-
-      await openResult;
-      await closeResult;
-      await dropResult;
+    test("should implement close method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.close).toBe("function");
     });
 
-    test("should provide additional methods beyond interface", () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should implement drop method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.drop).toBe("function");
+    });
 
-      expect(database.getClient).toBeInstanceOf(Function);
-      expect(database.createTable).toBeInstanceOf(Function);
-      expect(database.dropTable).toBeInstanceOf(Function);
+    test("should implement getClient method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.getClient).toBe("function");
+    });
+
+    test("should implement createTable method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.createTable).toBe("function");
+    });
+
+    test("should implement dropTable method", () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      expect(typeof db.dropTable).toBe("function");
     });
   });
 
-  describe("Real-world usage scenarios", () => {
-    test("should handle basic database lifecycle", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+  describe("connection lifecycle", () => {
+    test("should support open, createTable, close cycle", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      await db.open();
+      await db.createTable();
+      await db.close();
 
-      await database.open();
-
-      const client = database.getClient();
-      expect(client).toBeDefined();
-
-      await database.close();
-      await database.drop();
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(1);
+      expect(mockSQLInstance.close).toHaveBeenCalledTimes(1);
     });
 
-    test("should handle reconnection after close", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
+    test("should support reopening after close", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      await db.open();
+      await db.close();
+      await db.open();
 
-      const client1 = database.getClient();
-      expect(client1).toBeDefined();
-
-      await database.close();
-
-      const client2 = database.getClient();
-      expect(client2).toBeDefined();
-    });
-  });
-
-  describe("Error handling and edge cases", () => {
-    test("should handle database paths with spaces", () => {
-      const options = {
-        filename: "/tmp/my logs database.db",
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
+      expect(mockSQLConstructor).toHaveBeenCalledTimes(2);
     });
 
-    test("should handle database paths with special characters", () => {
-      const options = {
-        filename: "/tmp/logs-db_test@2024.db",
-      };
+    test("should execute 3 SQL statements during createTable", async () => {
+      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      db.getClient();
+      await db.createTable();
 
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-    });
-
-    test("should handle options with all SQLite configuration", () => {
-      const options = {
-        filename: ":memory:",
-        readonly: false,
-        create: true,
-        readwrite: true,
-        strict: true,
-        safeIntegers: false,
-      };
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).not.toThrow();
-    });
-
-    test("should handle null and undefined options gracefully", () => {
-      Bun.env.LOGS_DATABASE_PATH = ":memory:";
-
-      expect(() => {
-        database = new LogsDatabase(undefined);
-      }).not.toThrow();
-
-      expect(() => {
-        database = new LogsDatabase({});
-      }).not.toThrow();
-    });
-  });
-
-  describe("Environment variable handling", () => {
-    test("should handle missing LOGS_DATABASE_PATH gracefully", () => {
-      delete Bun.env.LOGS_DATABASE_PATH;
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(DatabaseException);
-    });
-
-    test("should handle empty string LOGS_DATABASE_PATH", () => {
-      Bun.env.LOGS_DATABASE_PATH = "";
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(DatabaseException);
-    });
-
-    test("should use LOGS_DATABASE_PATH when options.filename is not provided", () => {
-      Bun.env.LOGS_DATABASE_PATH = ":memory:";
-
-      expect(() => {
-        database = new LogsDatabase({});
-      }).not.toThrow();
-    });
-
-    test("should handle whitespace in environment variable", () => {
-      Bun.env.LOGS_DATABASE_PATH = "  :memory:  ";
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).not.toThrow();
-    });
-
-    test("should handle environment variable with memory database", () => {
-      Bun.env.LOGS_DATABASE_PATH = ":memory:";
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).not.toThrow();
-    });
-  });
-
-  describe("Database configuration", () => {
-    test("should set correct default options", () => {
-      const options = {
-        filename: ":memory:",
-      };
-
-      database = new LogsDatabase(options);
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should override adapter to sqlite", () => {
-      const options = {
-        filename: ":memory:",
-        adapter: "postgresql" as "sqlite",
-      };
-
-      database = new LogsDatabase(options);
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should preserve custom SQLite options", () => {
-      const options = {
-        filename: ":memory:",
-        readonly: false,
-        create: true,
-        readwrite: true,
-        strict: true,
-        safeIntegers: false,
-      };
-
-      database = new LogsDatabase(options);
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-
-    test("should handle options merging correctly", () => {
-      const customOptions = {
-        filename: ":memory:",
-        readonly: true,
-        safeIntegers: true,
-        customProperty: "test",
-      } as Bun.SQL.SQLiteOptions & { customProperty: string };
-
-      database = new LogsDatabase(customOptions);
-      expect(database).toBeInstanceOf(LogsDatabase);
-    });
-  });
-
-  describe("Error messages", () => {
-    test("should provide meaningful error message when filename is missing", () => {
-      const expectedMessage =
-        "No database filename provided. Please set LOGS_DATABASE_PATH environment variable or provide a filename in the options.";
-
-      expect(() => {
-        database = new LogsDatabase();
-      }).toThrow(expectedMessage);
-    });
-
-    test("should provide meaningful error message when filename is empty", () => {
-      const options = { filename: "" };
-      const expectedMessage =
-        "No database filename provided. Please set LOGS_DATABASE_PATH environment variable or provide a filename in the options.";
-
-      expect(() => {
-        database = new LogsDatabase(options);
-      }).toThrow(expectedMessage);
-    });
-
-    test("should accept environment variable with whitespace", () => {
-      Bun.env.LOGS_DATABASE_PATH = "   :memory:   ";
-
-      // The constructor doesn't trim, so whitespace around a valid path should work
-      expect(() => {
-        database = new LogsDatabase();
-      }).not.toThrow();
-    });
-  });
-
-  describe("Method availability", () => {
-    test("should have all required methods", () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-
-      // IDatabase interface methods
-      expect(typeof database.open).toBe("function");
-      expect(typeof database.close).toBe("function");
-      expect(typeof database.drop).toBe("function");
-
-      // Additional methods
-      expect(typeof database.getClient).toBe("function");
-      expect(typeof database.createTable).toBe("function");
-      expect(typeof database.dropTable).toBe("function");
-    });
-
-    test("should have correct method return types", async () => {
-      database = new LogsDatabase({
-        filename: ":memory:",
-      });
-
-      // All async methods should return promises
-      expect(database.open()).toBeInstanceOf(Promise);
-      expect(database.close()).toBeInstanceOf(Promise);
-      expect(database.drop()).toBeInstanceOf(Promise);
-
-      // For methods that might throw, we need to handle the promises properly
-      const createTablePromise = database.createTable();
-      expect(createTablePromise).toBeInstanceOf(Promise);
-
-      const dropTablePromise = database.dropTable();
-      expect(dropTablePromise).toBeInstanceOf(Promise);
-
-      // getClient should return synchronously
-      expect(typeof database.getClient()).toBe("function");
-
-      // Clean up promises to avoid unhandled rejections
-      try {
-        await createTablePromise;
-      } catch {
-        // Expected to fail due to SQL syntax error
-      }
-
-      try {
-        await dropTablePromise;
-      } catch {
-        // Expected to fail due to SQL syntax error
-      }
+      // CREATE TABLE + 2 CREATE INDEX
+      expect(queriesExecuted.length).toBe(3);
     });
   });
 });

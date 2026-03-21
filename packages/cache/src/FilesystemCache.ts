@@ -1,6 +1,7 @@
+import { AbstractCache } from "./AbstractCache";
 import { CacheException } from "./CacheException";
 import { decorator } from "./decorators";
-import type { FilesystemCacheOptionsType, ICache } from "./types";
+import type { FilesystemCacheOptionsType } from "./types";
 
 type CacheEntryType<T = unknown> = {
   value: T;
@@ -10,16 +11,17 @@ type CacheEntryType<T = unknown> = {
 };
 
 @decorator.cache()
-export class FilesystemCache implements ICache {
+export class FilesystemCache extends AbstractCache {
   private cacheDir: string;
   private maxFileSize: number;
 
   constructor(options: FilesystemCacheOptionsType = {}) {
+    super();
     this.cacheDir = options.cacheDir || `${process.cwd()}/.cache`;
     this.maxFileSize = options.maxFileSize || 10 * 1024 * 1024; // 10MB default
   }
 
-  private async connect(): Promise<void> {
+  protected async connect(): Promise<void> {
     try {
       const { mkdir, stat } = await import("node:fs/promises");
       await mkdir(this.cacheDir, { recursive: true });
@@ -34,20 +36,15 @@ export class FilesystemCache implements ICache {
   }
 
   public async get<T = unknown>(key: string): Promise<T | undefined> {
-    try {
-      await this.connect();
+    return this.withConnection(`Failed to get key "${key}"`, async () => {
       const entry = await this.readCacheEntry<T>(key);
 
       return entry?.value;
-    } catch (error) {
-      throw new CacheException(`Failed to get key "${key}": ${error}`);
-    }
+    });
   }
 
   public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
-    try {
-      await this.connect();
-
+    return this.withConnection(`Failed to set key "${key}"`, async () => {
       const entry: CacheEntryType<T> = {
         value,
         createdAt: Date.now(),
@@ -56,15 +53,11 @@ export class FilesystemCache implements ICache {
       };
 
       await this.writeCacheEntry(key, entry);
-    } catch (error) {
-      throw new CacheException(`Failed to set key "${key}": ${error}`);
-    }
+    });
   }
 
   public async delete(key: string): Promise<boolean> {
-    try {
-      await this.connect();
-
+    return this.withConnection(`Failed to delete key "${key}"`, async () => {
       const file = Bun.file(this.getFilePath(key));
 
       if (!(await file.exists())) {
@@ -74,20 +67,15 @@ export class FilesystemCache implements ICache {
       await file.delete();
 
       return true;
-    } catch (error) {
-      throw new CacheException(`Failed to delete key "${key}": ${error}`);
-    }
+    });
   }
 
   public async has(key: string): Promise<boolean> {
-    try {
-      await this.connect();
+    return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
       const entry = await this.readCacheEntry(key);
 
       return entry !== undefined;
-    } catch (error) {
-      throw new CacheException(`Failed to check if key "${key}" exists: ${error}`);
-    }
+    });
   }
 
   private getFilePath(key: string): string {

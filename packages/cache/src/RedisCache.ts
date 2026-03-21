@@ -1,12 +1,14 @@
+import { AbstractCache } from "./AbstractCache";
 import { CacheException } from "./CacheException";
 import { decorator } from "./decorators";
-import type { ICache, RedisCacheOptionsType } from "./types";
+import type { RedisCacheOptionsType } from "./types";
 
 @decorator.cache()
-export class RedisCache implements ICache {
+export class RedisCache extends AbstractCache {
   private client: Bun.RedisClient;
 
   constructor(options: RedisCacheOptionsType = {}) {
+    super();
     const connectionString = options.connectionString || Bun.env.CACHE_REDIS_URL;
 
     if (!connectionString) {
@@ -31,15 +33,14 @@ export class RedisCache implements ICache {
     this.client = new Bun.RedisClient(connectionString, clientOptions);
   }
 
-  private async connect(): Promise<void> {
+  protected async connect(): Promise<void> {
     if (!this.client.connected) {
       await this.client.connect();
     }
   }
 
   public async get<T = unknown>(key: string): Promise<T | undefined> {
-    try {
-      await this.connect();
+    return this.withConnection(`Failed to get key "${key}"`, async () => {
       const value = await this.client.get(key);
 
       if (value === null) {
@@ -51,15 +52,11 @@ export class RedisCache implements ICache {
       } catch {
         return value as T;
       }
-    } catch (error) {
-      throw new CacheException(`Failed to get key "${key}": ${error}`);
-    }
+    });
   }
 
   public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
-    try {
-      await this.connect();
-
+    return this.withConnection(`Failed to set key "${key}"`, async () => {
       const normalizedValue = value === undefined ? null : value;
       const serializedValue = typeof normalizedValue === "string" ? normalizedValue : JSON.stringify(normalizedValue);
 
@@ -68,30 +65,22 @@ export class RedisCache implements ICache {
       if (ttl && ttl > 0) {
         await this.client.expire(key, ttl);
       }
-    } catch (error) {
-      throw new CacheException(`Failed to set key "${key}": ${error}`);
-    }
+    });
   }
 
   public async delete(key: string): Promise<boolean> {
-    try {
-      await this.connect();
+    return this.withConnection(`Failed to delete key "${key}"`, async () => {
       const result = await this.client.del(key);
 
       return result > 0;
-    } catch (error) {
-      throw new CacheException(`Failed to delete key "${key}": ${error}`);
-    }
+    });
   }
 
   public async has(key: string): Promise<boolean> {
-    try {
-      await this.connect();
+    return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
       const result = await this.client.exists(key);
 
       return result;
-    } catch (error) {
-      throw new CacheException(`Failed to check if key "${key}" exists: ${error}`);
-    }
+    });
   }
 }

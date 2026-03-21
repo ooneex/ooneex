@@ -10,7 +10,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
   private client: PostHog | null = null;
 
   constructor(config?: PostHogConfigType) {
-    const apiKey = config?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY;
+    const apiKey = config?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY?.trim();
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -19,7 +19,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
     }
 
     this.client = new PostHog(apiKey, {
-      host: config?.host || Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
+      host: config?.host || Bun.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
     });
   }
 

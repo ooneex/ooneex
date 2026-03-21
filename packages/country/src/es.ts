@@ -1,6 +1,6 @@
-export const COUNTRIES_RO = [
+export const COUNTRIES_ES = [
   {
-    name: "Afganistan",
+    name: "Afganistán",
     code: "AF",
   },
   {
@@ -8,7 +8,7 @@ export const COUNTRIES_RO = [
     code: "AL",
   },
   {
-    name: "Algeria",
+    name: "Argelia",
     code: "DZ",
   },
   {
@@ -16,11 +16,11 @@ export const COUNTRIES_RO = [
     code: "AO",
   },
   {
-    name: "Anguilla",
+    name: "Anguila",
     code: "AI",
   },
   {
-    name: "Antigua și Barbuda",
+    name: "Antigua y Barbuda",
     code: "AG",
   },
   {
@@ -44,7 +44,7 @@ export const COUNTRIES_RO = [
     code: "AT",
   },
   {
-    name: "Azerbaidjan",
+    name: "Azerbaiyán",
     code: "AZ",
   },
   {
@@ -52,11 +52,11 @@ export const COUNTRIES_RO = [
     code: "BS",
   },
   {
-    name: "Bahrain",
+    name: "Baréin",
     code: "BH",
   },
   {
-    name: "Bangladesh",
+    name: "Bangladés",
     code: "BD",
   },
   {
@@ -64,27 +64,27 @@ export const COUNTRIES_RO = [
     code: "BB",
   },
   {
-    name: "Belarus",
+    name: "Bielorrusia",
     code: "BY",
   },
   {
-    name: "Belgia",
+    name: "Bélgica",
     code: "BE",
   },
   {
-    name: "Belize",
+    name: "Belice",
     code: "BZ",
   },
   {
-    name: "Benin",
+    name: "Benín",
     code: "BJ",
   },
   {
-    name: "Bermude",
+    name: "Bermudas",
     code: "BM",
   },
   {
-    name: "Bhutan",
+    name: "Bután",
     code: "BT",
   },
   {
@@ -92,23 +92,23 @@ export const COUNTRIES_RO = [
     code: "BO",
   },
   {
-    name: "Bosnia și Herțegovina",
+    name: "Bosnia y Herzegovina",
     code: "BA",
   },
   {
-    name: "Botswana",
+    name: "Botsuana",
     code: "BW",
   },
   {
-    name: "Insula Bouvet",
+    name: "Isla Bouvet",
     code: "BV",
   },
   {
-    name: "Brazilia",
+    name: "Brasil",
     code: "BR",
   },
   {
-    name: "Brunei Darussalam",
+    name: "Brunéi",
     code: "BN",
   },
   {
@@ -124,31 +124,31 @@ export const COUNTRIES_RO = [
     code: "BI",
   },
   {
-    name: "Cambodgia",
+    name: "Camboya",
     code: "KH",
   },
   {
-    name: "Camerun",
+    name: "Camerún",
     code: "CM",
   },
   {
-    name: "Canada",
+    name: "Canadá",
     code: "CA",
   },
   {
-    name: "Capul Verde",
+    name: "Cabo Verde",
     code: "CV",
   },
   {
-    name: "Insulele Cayman",
+    name: "Islas Caimán",
     code: "KY",
   },
   {
-    name: "Republica Centrafricană",
+    name: "República Centroafricana",
     code: "CF",
   },
   {
-    name: "Ciad",
+    name: "Chad",
     code: "TD",
   },
   {
@@ -160,19 +160,19 @@ export const COUNTRIES_RO = [
     code: "CN",
   },
   {
-    name: "Insula Crăciunului",
+    name: "Isla de Navidad",
     code: "CX",
   },
   {
-    name: "Insulele Cocos (Keeling)",
+    name: "Islas Cocos",
     code: "CC",
   },
   {
-    name: "Columbia",
+    name: "Colombia",
     code: "CO",
   },
   {
-    name: "Comore",
+    name: "Comoras",
     code: "KM",
   },
   {
@@ -184,7 +184,7 @@ export const COUNTRIES_RO = [
     code: "CD",
   },
   {
-    name: "Insulele Cook",
+    name: "Islas Cook",
     code: "CK",
   },
   {
@@ -192,11 +192,11 @@ export const COUNTRIES_RO = [
     code: "CR",
   },
   {
-    name: "Coasta de Fildeș",
+    name: "Costa de Marfil",
     code: "CI",
   },
   {
-    name: "Croația",
+    name: "Croacia",
     code: "HR",
   },
   {
@@ -204,19 +204,19 @@ export const COUNTRIES_RO = [
     code: "CU",
   },
   {
-    name: "Cipru",
+    name: "Chipre",
     code: "CY",
   },
   {
-    name: "Republica Cehă",
+    name: "República Checa",
     code: "CZ",
   },
   {
-    name: "Danemarca",
+    name: "Dinamarca",
     code: "DK",
   },
   {
-    name: "Djibouti",
+    name: "Yibuti",
     code: "DJ",
   },
   {
@@ -224,7 +224,7 @@ export const COUNTRIES_RO = [
     code: "DM",
   },
   {
-    name: "Republica Dominicană",
+    name: "República Dominicana",
     code: "DO",
   },
   {
@@ -232,7 +232,7 @@ export const COUNTRIES_RO = [
     code: "EC",
   },
   {
-    name: "Egipt",
+    name: "Egipto",
     code: "EG",
   },
   {
@@ -240,7 +240,7 @@ export const COUNTRIES_RO = [
     code: "SV",
   },
   {
-    name: "Guineea Ecuatorială",
+    name: "Guinea Ecuatorial",
     code: "GQ",
   },
   {
@@ -252,35 +252,35 @@ export const COUNTRIES_RO = [
     code: "EE",
   },
   {
-    name: "Etiopia",
+    name: "Etiopía",
     code: "ET",
   },
   {
-    name: "Insulele Feroe",
+    name: "Islas Feroe",
     code: "FO",
   },
   {
-    name: "Fiji",
+    name: "Fiyi",
     code: "FJ",
   },
   {
-    name: "Finlanda",
+    name: "Finlandia",
     code: "FI",
   },
   {
-    name: "Franța",
+    name: "Francia",
     code: "FR",
   },
   {
-    name: "Guyana Franceză",
+    name: "Guayana Francesa",
     code: "GF",
   },
   {
-    name: "Polinezia Franceză",
+    name: "Polinesia Francesa",
     code: "PF",
   },
   {
-    name: "Gabon",
+    name: "Gabón",
     code: "GA",
   },
   {
@@ -292,7 +292,7 @@ export const COUNTRIES_RO = [
     code: "GE",
   },
   {
-    name: "Germania",
+    name: "Alemania",
     code: "DE",
   },
   {
@@ -308,15 +308,15 @@ export const COUNTRIES_RO = [
     code: "GR",
   },
   {
-    name: "Groenlanda",
+    name: "Groenlandia",
     code: "GL",
   },
   {
-    name: "Grenada",
+    name: "Granada",
     code: "GD",
   },
   {
-    name: "Guadelupa",
+    name: "Guadalupe",
     code: "GP",
   },
   {
@@ -332,11 +332,11 @@ export const COUNTRIES_RO = [
     code: "GG",
   },
   {
-    name: "Guineea",
+    name: "Guinea",
     code: "GN",
   },
   {
-    name: "Guineea-Bissau",
+    name: "Guinea-Bisáu",
     code: "GW",
   },
   {
@@ -344,7 +344,7 @@ export const COUNTRIES_RO = [
     code: "GY",
   },
   {
-    name: "Haiti",
+    name: "Haití",
     code: "HT",
   },
   {
@@ -356,11 +356,11 @@ export const COUNTRIES_RO = [
     code: "HK",
   },
   {
-    name: "Ungaria",
+    name: "Hungría",
     code: "HU",
   },
   {
-    name: "Islanda",
+    name: "Islandia",
     code: "IS",
   },
   {
@@ -368,11 +368,11 @@ export const COUNTRIES_RO = [
     code: "IN",
   },
   {
-    name: "Indonezia",
+    name: "Indonesia",
     code: "ID",
   },
   {
-    name: "Iran",
+    name: "Irán",
     code: "IR",
   },
   {
@@ -384,7 +384,7 @@ export const COUNTRIES_RO = [
     code: "IE",
   },
   {
-    name: "Insula Man",
+    name: "Isla de Man",
     code: "IM",
   },
   {
@@ -400,7 +400,7 @@ export const COUNTRIES_RO = [
     code: "JM",
   },
   {
-    name: "Japonia",
+    name: "Japón",
     code: "JP",
   },
   {
@@ -408,15 +408,15 @@ export const COUNTRIES_RO = [
     code: "JE",
   },
   {
-    name: "Iordania",
+    name: "Jordania",
     code: "JO",
   },
   {
-    name: "Kazahstan",
+    name: "Kazajistán",
     code: "KZ",
   },
   {
-    name: "Kenya",
+    name: "Kenia",
     code: "KE",
   },
   {
@@ -424,19 +424,19 @@ export const COUNTRIES_RO = [
     code: "KI",
   },
   {
-    name: "Coreea",
+    name: "Corea del Norte",
     code: "KP",
   },
   {
-    name: "Coreea",
+    name: "Corea del Sur",
     code: "KR",
   },
   {
-    name: "Kuweit",
+    name: "Kuwait",
     code: "KW",
   },
   {
-    name: "Kârgâzstan",
+    name: "Kirguistán",
     code: "KG",
   },
   {
@@ -444,11 +444,11 @@ export const COUNTRIES_RO = [
     code: "LV",
   },
   {
-    name: "Liban",
+    name: "Líbano",
     code: "LB",
   },
   {
-    name: "Lesotho",
+    name: "Lesoto",
     code: "LS",
   },
   {
@@ -456,7 +456,7 @@ export const COUNTRIES_RO = [
     code: "LR",
   },
   {
-    name: "Jamahiriya Arabă Libiană",
+    name: "Libia",
     code: "LY",
   },
   {
@@ -468,7 +468,7 @@ export const COUNTRIES_RO = [
     code: "LT",
   },
   {
-    name: "Luxemburg",
+    name: "Luxemburgo",
     code: "LU",
   },
   {
@@ -484,19 +484,19 @@ export const COUNTRIES_RO = [
     code: "MG",
   },
   {
-    name: "Malawi",
+    name: "Malaui",
     code: "MW",
   },
   {
-    name: "Malaysia",
+    name: "Malasia",
     code: "MY",
   },
   {
-    name: "Maldive",
+    name: "Maldivas",
     code: "MV",
   },
   {
-    name: "Mali",
+    name: "Malí",
     code: "ML",
   },
   {
@@ -504,7 +504,7 @@ export const COUNTRIES_RO = [
     code: "MT",
   },
   {
-    name: "Insulele Marshall",
+    name: "Islas Marshall",
     code: "MH",
   },
   {
@@ -516,7 +516,7 @@ export const COUNTRIES_RO = [
     code: "MR",
   },
   {
-    name: "Mauritius",
+    name: "Mauricio",
     code: "MU",
   },
   {
@@ -524,19 +524,19 @@ export const COUNTRIES_RO = [
     code: "YT",
   },
   {
-    name: "Mexic",
+    name: "México",
     code: "MX",
   },
   {
-    name: "Micronezia",
+    name: "Micronesia",
     code: "FM",
   },
   {
-    name: "Moldova",
+    name: "Moldavia",
     code: "MD",
   },
   {
-    name: "Monaco",
+    name: "Mónaco",
     code: "MC",
   },
   {
@@ -548,11 +548,11 @@ export const COUNTRIES_RO = [
     code: "MS",
   },
   {
-    name: "Maroc",
+    name: "Marruecos",
     code: "MA",
   },
   {
-    name: "Mozambic",
+    name: "Mozambique",
     code: "MZ",
   },
   {
@@ -572,19 +572,19 @@ export const COUNTRIES_RO = [
     code: "NP",
   },
   {
-    name: "Țările de Jos",
+    name: "Países Bajos",
     code: "NL",
   },
   {
-    name: "Antilele Olandeze",
+    name: "Antillas Neerlandesas",
     code: "AN",
   },
   {
-    name: "Noua Caledonie",
+    name: "Nueva Caledonia",
     code: "NC",
   },
   {
-    name: "Noua Zeelandă",
+    name: "Nueva Zelanda",
     code: "NZ",
   },
   {
@@ -592,7 +592,7 @@ export const COUNTRIES_RO = [
     code: "NI",
   },
   {
-    name: "Niger",
+    name: "Níger",
     code: "NE",
   },
   {
@@ -604,39 +604,39 @@ export const COUNTRIES_RO = [
     code: "NU",
   },
   {
-    name: "Insula Norfolk",
+    name: "Isla Norfolk",
     code: "NF",
   },
   {
-    name: "Insulele Mariane de Nord",
+    name: "Islas Marianas del Norte",
     code: "MP",
   },
   {
-    name: "Norvegia",
+    name: "Noruega",
     code: "NO",
   },
   {
-    name: "Oman",
+    name: "Omán",
     code: "OM",
   },
   {
-    name: "Pakistan",
+    name: "Pakistán",
     code: "PK",
   },
   {
-    name: "Palau",
+    name: "Palaos",
     code: "PW",
   },
   {
-    name: "Palestinian",
+    name: "Palestina",
     code: "PS",
   },
   {
-    name: "Panama",
+    name: "Panamá",
     code: "PA",
   },
   {
-    name: "Papua-Noua Guinee",
+    name: "Papúa Nueva Guinea",
     code: "PG",
   },
   {
@@ -644,15 +644,15 @@ export const COUNTRIES_RO = [
     code: "PY",
   },
   {
-    name: "Peruworld. kgm",
+    name: "Perú",
     code: "PE",
   },
   {
-    name: "Filipine",
+    name: "Filipinas",
     code: "PH",
   },
   {
-    name: "Pitcairn",
+    name: "Islas Pitcairn",
     code: "PN",
   },
   {
@@ -660,7 +660,7 @@ export const COUNTRIES_RO = [
     code: "PL",
   },
   {
-    name: "Portugalia",
+    name: "Portugal",
     code: "PT",
   },
   {
@@ -668,43 +668,43 @@ export const COUNTRIES_RO = [
     code: "PR",
   },
   {
-    name: "Qatar",
+    name: "Catar",
     code: "QA",
   },
   {
-    name: "Reuniune",
+    name: "Reunión",
     code: "RE",
   },
   {
-    name: "România",
+    name: "Rumanía",
     code: "RO",
   },
   {
-    name: "Federația Rusă",
+    name: "Federación Rusa",
     code: "RU",
   },
   {
-    name: "Rwanda",
+    name: "Ruanda",
     code: "RW",
   },
   {
-    name: "Sfânta Elena",
+    name: "Santa Elena",
     code: "SH",
   },
   {
-    name: "Saint Kitts și Nevis",
+    name: "San Cristóbal y Nieves",
     code: "KN",
   },
   {
-    name: "Sfânta Lucia",
+    name: "Santa Lucía",
     code: "LC",
   },
   {
-    name: "Saint Pierre și Miquelon",
+    name: "San Pedro y Miquelón",
     code: "PM",
   },
   {
-    name: "Saint Vincent și Grenadinele",
+    name: "San Vicente y las Granadinas",
     code: "VC",
   },
   {
@@ -716,11 +716,11 @@ export const COUNTRIES_RO = [
     code: "SM",
   },
   {
-    name: "Sao Tome și Principe",
+    name: "Santo Tomé y Príncipe",
     code: "ST",
   },
   {
-    name: "Arabia Saudită",
+    name: "Arabia Saudita",
     code: "SA",
   },
   {
@@ -732,7 +732,7 @@ export const COUNTRIES_RO = [
     code: "RS",
   },
   {
-    name: "Muntenegru",
+    name: "Montenegro",
     code: "ME",
   },
   {
@@ -740,23 +740,23 @@ export const COUNTRIES_RO = [
     code: "SC",
   },
   {
-    name: "Sierra Leone",
+    name: "Sierra Leona",
     code: "SL",
   },
   {
-    name: "Singapore",
+    name: "Singapur",
     code: "SG",
   },
   {
-    name: "Slovacia",
+    name: "Eslovaquia",
     code: "SK",
   },
   {
-    name: "Slovenia",
+    name: "Eslovenia",
     code: "SI",
   },
   {
-    name: "Insulele Solomon",
+    name: "Islas Salomón",
     code: "SB",
   },
   {
@@ -764,11 +764,11 @@ export const COUNTRIES_RO = [
     code: "SO",
   },
   {
-    name: "Africa de Sud",
+    name: "Sudáfrica",
     code: "ZA",
   },
   {
-    name: "Spania",
+    name: "España",
     code: "ES",
   },
   {
@@ -776,7 +776,7 @@ export const COUNTRIES_RO = [
     code: "LK",
   },
   {
-    name: "Sudan",
+    name: "Sudán",
     code: "SD",
   },
   {
@@ -784,31 +784,31 @@ export const COUNTRIES_RO = [
     code: "SR",
   },
   {
-    name: "Svalbard și Jan Mayen",
+    name: "Svalbard y Jan Mayen",
     code: "SJ",
   },
   {
-    name: "Swaziland",
+    name: "Suazilandia",
     code: "SZ",
   },
   {
-    name: "Suedia",
+    name: "Suecia",
     code: "SE",
   },
   {
-    name: "Elveția",
+    name: "Suiza",
     code: "CH",
   },
   {
-    name: "Republica Arabă Siriană",
+    name: "República Árabe Siria",
     code: "SY",
   },
   {
-    name: "Taiwan, provincia China",
+    name: "Taiwán",
     code: "TW",
   },
   {
-    name: "Tadjikistan",
+    name: "Tayikistán",
     code: "TJ",
   },
   {
@@ -816,11 +816,11 @@ export const COUNTRIES_RO = [
     code: "TZ",
   },
   {
-    name: "Thailanda",
+    name: "Tailandia",
     code: "TH",
   },
   {
-    name: "Timorul de Est",
+    name: "Timor Oriental",
     code: "TL",
   },
   {
@@ -836,19 +836,19 @@ export const COUNTRIES_RO = [
     code: "TO",
   },
   {
-    name: "Trinidad și Tobago",
+    name: "Trinidad y Tobago",
     code: "TT",
   },
   {
-    name: "Tunisia",
+    name: "Túnez",
     code: "TN",
   },
   {
-    name: "Turcia",
+    name: "Turquía",
     code: "TR",
   },
   {
-    name: "Turkmenistan",
+    name: "Turkmenistán",
     code: "TM",
   },
   {
@@ -860,19 +860,19 @@ export const COUNTRIES_RO = [
     code: "UG",
   },
   {
-    name: "Ucraina",
+    name: "Ucrania",
     code: "UA",
   },
   {
-    name: "Emiratele Arabe Unite",
+    name: "Emiratos Árabes Unidos",
     code: "AE",
   },
   {
-    name: "Regatul Unit",
+    name: "Reino Unido",
     code: "GB",
   },
   {
-    name: "Statele Unite",
+    name: "Estados Unidos",
     code: "US",
   },
   {
@@ -880,7 +880,7 @@ export const COUNTRIES_RO = [
     code: "UY",
   },
   {
-    name: "Uzbekistan",
+    name: "Uzbekistán",
     code: "UZ",
   },
   {
@@ -896,11 +896,11 @@ export const COUNTRIES_RO = [
     code: "VN",
   },
   {
-    name: "Wallis și Futuna",
+    name: "Wallis y Futuna",
     code: "WF",
   },
   {
-    name: "Sahara Occidentală",
+    name: "Sahara Occidental",
     code: "EH",
   },
   {
@@ -912,9 +912,7 @@ export const COUNTRIES_RO = [
     code: "ZM",
   },
   {
-    name: "Zimbabwe",
+    name: "Zimbabue",
     code: "ZW",
   },
 ] as const;
-
-export type CountryNameType = (typeof COUNTRIES_RO)[number]["name"];

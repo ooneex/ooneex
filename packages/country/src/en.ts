@@ -1,4 +1,4 @@
-export const COUNTRIES = [
+export const COUNTRIES_EN = [
   {
     name: "Afghanistan",
     code: "AF",

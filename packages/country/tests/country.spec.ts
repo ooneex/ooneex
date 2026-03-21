@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { COUNTRIES as EN_COUNTRIES } from "../src/en";
-import { COUNTRIES as FR_COUNTRIES } from "../src/fr";
-import { COUNTRIES as RO_COUNTRIES } from "../src/ro";
+import { COUNTRIES_EN as EN_COUNTRIES } from "../src/en";
+import { COUNTRIES_FR as FR_COUNTRIES } from "../src/fr";
+import { COUNTRIES_RO as RO_COUNTRIES } from "../src/ro";
 import type { CountryNameType, CountryType, ICountry } from "../src/types";
 
 describe("@ooneex/country - COUNTRIES datasets", () => {

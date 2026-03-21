@@ -1,4 +1,4 @@
-export const COUNTRIES = [
+export const COUNTRIES_FR = [
   {
     name: "Afghanistan",
     code: "AF",
@@ -917,4 +917,4 @@ export const COUNTRIES = [
   },
 ] as const;
 
-export type CountryNameType = (typeof COUNTRIES)[number]["name"];
+export type CountryNameType = (typeof COUNTRIES_FR)[number]["name"];

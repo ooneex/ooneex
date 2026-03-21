@@ -1,6 +1,4 @@
-import type { ICategory } from "@ooneex/category";
 import type { CurrencyCodeType } from "@ooneex/currencies";
-import type { IImage } from "@ooneex/image";
 import type { ITag } from "@ooneex/tag";
 import type { IBase, ScalarType } from "@ooneex/types";
 
@@ -11,6 +9,11 @@ export enum EPriceType {
 }
 
 export type PriceTypeType = `${EPriceType}`;
+
+export type ProductImageType = {
+  id: string;
+  url: string;
+};
 
 export type PriceType = {
   type: PriceTypeType;
@@ -139,11 +142,11 @@ export interface IProduct extends IBase {
   key?: string;
   name: string;
   description?: string;
-  categories?: ICategory[];
+  categories?: string[];
   currency?: CurrencyCodeType;
   price?: number;
   barcode?: string;
-  images?: IImage[];
+  images?: ProductImageType[];
   attributes?: Record<string, ScalarType>;
   tags?: ITag[];
   isRecurring?: boolean;

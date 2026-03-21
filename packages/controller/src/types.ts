@@ -1,7 +1,6 @@
 import type { IAnalytics } from "@ooneex/analytics";
 import type { IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
-import type { IDatabase } from "@ooneex/database";
 import type { Header } from "@ooneex/http-header";
 import type { IRequest, RequestConfigType } from "@ooneex/http-request";
 import type { IRequestFile } from "@ooneex/http-request-file";
@@ -29,7 +28,6 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   analytics?: IAnalytics;
   cache?: ICache;
   storage?: IStorage;
-  database?: IDatabase;
   mailer?: IMailer;
   route: {
     name: string;

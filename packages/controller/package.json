@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/controller",
   "description": "Base controller classes and decorators for handling HTTP requests and responses in Ooneex applications",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "type": "module",
   "files": [
     "dist",
@@ -30,7 +30,6 @@
     "@ooneex/analytics": "workspace:*",
     "@ooneex/app-env": "workspace:*",
     "@ooneex/cache": "workspace:*",
-    "@ooneex/database": "workspace:*",
     "@ooneex/http-header": "workspace:*",
     "@ooneex/http-request": "workspace:*",
     "@ooneex/http-request-file": "workspace:*",

@@ -1,16 +1,14 @@
 {
   "name": "@ooneex/mailer",
-  "description": "Email sending service with support for Nodemailer SMTP and Resend API for transactional emails",
-  "version": "0.0.18",
-  "type": "module",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "package.json"
-  ],
+  "version": "0.0.19",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@ooneex/container": "workspace:*",
+    "@ooneex/exception": "workspace:*",
+    "@ooneex/http-status": "workspace:*",
+    "@ooneex/translation": "workspace:*",
+    "resend": "^6.4.2"
+  },
   "exports": {
     ".": {
       "import": {
@@ -20,24 +18,13 @@
     },
     "./package.json": "./package.json"
   },
-  "license": "MIT",
-  "scripts": {
-    "test": "bun test tests",
-    "build": "bunup",
-    "lint": "tsgo --noEmit && bunx biome lint",
-    "npm:publish": "bun publish --tolerate-republish --access public"
-  },
-  "dependencies": {
-    "@ooneex/translation": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "nodemailer": "^7.0.10",
-    "resend": "^6.4.2"
-  },
-  "devDependencies": {
-    "@types/nodemailer": "^7.0.4"
-  },
+  "description": "Email sending service with support for Nodemailer SMTP and Resend API for transactional emails",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
   "keywords": [
     "bun",
     "email",
@@ -48,5 +35,14 @@
     "resend",
     "smtp",
     "typescript"
-  ]
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test tests",
+    "build": "bunup",
+    "lint": "tsgo --noEmit && bunx biome lint",
+    "npm:publish": "bun publish --tolerate-republish --access public"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

@@ -18,9 +18,7 @@ export class ResendMailerAdapter implements IMailer {
     };
 
     if (!this.apiKey) {
-      throw new MailerException(
-        "RESEND_API_KEY environment variable is not set or is empty. Please configure the mailer DSN connection string.",
-      );
+      throw new MailerException("Resend API key is required. Please set the RESEND_API_KEY environment variable.");
     }
   }
 
@@ -35,13 +33,13 @@ export class ResendMailerAdapter implements IMailer {
 
     if (!senderName) {
       throw new MailerException(
-        "MAILER_SENDER_NAME environment variable is not set or is empty. Please configure the mailer sender name.",
+        "Mailer sender name is required. Please provide a sender name either through the send options or set the MAILER_SENDER_NAME environment variable.",
       );
     }
 
     if (!senderAddress) {
       throw new MailerException(
-        "MAILER_SENDER_ADDRESS environment variable is not set or is empty. Please configure the mailer sender address.",
+        "Mailer sender address is required. Please provide a sender address either through the send options or set the MAILER_SENDER_ADDRESS environment variable.",
       );
     }
 

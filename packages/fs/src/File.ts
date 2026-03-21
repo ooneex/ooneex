@@ -592,26 +592,7 @@ export class File implements IFile {
     }
   }
 
-  /**
-   * Downloads a file from a URL and saves it to this file's path.
-   *
-   * @param url - The URL to download the file from
-   * @returns A promise that resolves to the number of bytes written
-   * @throws {FileException} If the download or write operation fails
-   *
-   * @example
-   * ```typescript
-   * const file = new File("/path/to/image.png");
-   *
-   * // Download from URL
-   * const bytes = await file.download("https://example.com/image.png");
-   * console.log(`Downloaded ${bytes} bytes`);
-   *
-   * // Download with URL object
-   * await file.download(new URL("https://example.com/data.json"));
-   * ```
-   */
-  public async download(url: string | URL): Promise<number> {
+  public static async download(url: string | URL, out: string): Promise<IFile> {
     try {
       const response = await fetch(url);
 
@@ -619,10 +600,12 @@ export class File implements IFile {
         throw new FileException(`HTTP error: ${response.status} ${response.statusText}`);
       }
 
-      return await Bun.write(this.path, response);
+      await Bun.write(out, response);
+
+      return new File(out);
     } catch (error) {
       throw new FileException(`Failed to download file from URL: ${url.toString()}`, {
-        path: this.path,
+        path: out,
         url: url.toString(),
         error: error instanceof Error ? error.message : String(error),
       });

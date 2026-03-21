@@ -432,11 +432,9 @@ describe("File", () => {
 
     test("should download file from URL string", async () => {
       const downloadFile = `${TEST_DIR}/downloaded.txt`;
-      const file = new File(downloadFile);
 
-      const bytesWritten = await file.download(`${baseUrl}/text`);
+      const file = await File.download(`${baseUrl}/text`, downloadFile);
 
-      expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
       const content = await file.text();
       expect(content).toContain("User-agent");
@@ -444,19 +442,16 @@ describe("File", () => {
 
     test("should download file from URL object", async () => {
       const downloadFile = `${TEST_DIR}/downloaded-url.txt`;
-      const file = new File(downloadFile);
 
-      const bytesWritten = await file.download(new URL(`${baseUrl}/text`));
+      const file = await File.download(new URL(`${baseUrl}/text`), downloadFile);
 
-      expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
     });
 
     test("should download JSON file", async () => {
       const downloadFile = `${TEST_DIR}/downloaded.json`;
-      const file = new File(downloadFile);
 
-      await file.download(`${baseUrl}/json`);
+      const file = await File.download(`${baseUrl}/json`, downloadFile);
 
       expect(await file.exists()).toBe(true);
       const data = await file.json<{ slideshow: { title: string } }>();
@@ -466,11 +461,9 @@ describe("File", () => {
 
     test("should download binary file", async () => {
       const downloadFile = `${TEST_DIR}/downloaded.png`;
-      const file = new File(downloadFile);
 
-      const bytesWritten = await file.download(`${baseUrl}/image`);
+      const file = await File.download(`${baseUrl}/image`, downloadFile);
 
-      expect(bytesWritten).toBeGreaterThan(0);
       expect(await file.exists()).toBe(true);
       const bytes = await file.bytes();
       // PNG magic number
@@ -482,33 +475,29 @@ describe("File", () => {
 
     test("should throw FileException for non-existent URL", async () => {
       const downloadFile = `${TEST_DIR}/failed.txt`;
-      const file = new File(downloadFile);
 
-      expect(file.download(`${baseUrl}/status/404`)).rejects.toThrow(FileException);
+      expect(File.download(`${baseUrl}/status/404`, downloadFile)).rejects.toThrow(FileException);
     });
 
     test("should throw FileException for server error", async () => {
       const downloadFile = `${TEST_DIR}/failed.txt`;
-      const file = new File(downloadFile);
 
-      expect(file.download(`${baseUrl}/status/500`)).rejects.toThrow(FileException);
+      expect(File.download(`${baseUrl}/status/500`, downloadFile)).rejects.toThrow(FileException);
     });
 
     test("should throw FileException for invalid URL", async () => {
       const downloadFile = `${TEST_DIR}/failed.txt`;
-      const file = new File(downloadFile);
 
-      expect(file.download("https://invalid-domain-that-does-not-exist-12345.com/file.txt")).rejects.toThrow(
-        FileException,
-      );
+      expect(
+        File.download("https://invalid-domain-that-does-not-exist-12345.com/file.txt", downloadFile),
+      ).rejects.toThrow(FileException);
     });
 
     test("should overwrite existing file", async () => {
       const downloadFile = `${TEST_DIR}/overwrite.txt`;
       await Bun.write(downloadFile, "Original content");
 
-      const file = new File(downloadFile);
-      await file.download(`${baseUrl}/text`);
+      const file = await File.download(`${baseUrl}/text`, downloadFile);
 
       const content = await file.text();
       expect(content).not.toBe("Original content");

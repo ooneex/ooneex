@@ -250,19 +250,6 @@ export interface IFile {
   delete: () => Promise<void>;
 
   /**
-   * Downloads a file from a URL and saves it to this file's path.
-   *
-   * @param url - The URL to download the file from
-   * @returns A promise that resolves to the number of bytes written
-   *
-   * @example
-   * ```typescript
-   * const bytes = await file.download("https://example.com/image.png");
-   * ```
-   */
-  download: (url: string | URL) => Promise<number>;
-
-  /**
    * Returns a FileSink for incremental writing.
    *
    * @param options - Optional configuration for the writer

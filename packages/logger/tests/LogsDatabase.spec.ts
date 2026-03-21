@@ -136,12 +136,12 @@ describe("LogsDatabase", () => {
   });
 
   describe("createTable", () => {
-    test("should create the logs table if it does not exist", async () => {
+    test("should create the app_logs table if it does not exist", async () => {
       const db = new LogsDatabase("postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 
-      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS logs"));
+      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS app_logs"));
       expect(createTableQuery).toBeDefined();
     });
 
@@ -150,7 +150,7 @@ describe("LogsDatabase", () => {
       db.getClient();
       await db.createTable();
 
-      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS logs"));
+      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS app_logs"));
       expect(createTableQuery).toBeDefined();
 
       const columns = [
@@ -191,7 +191,7 @@ describe("LogsDatabase", () => {
       db.getClient();
       await db.createTable();
 
-      const levelIndexQuery = queriesExecuted.find((q) => q.includes("idx_logs_level"));
+      const levelIndexQuery = queriesExecuted.find((q) => q.includes("idx_app_logs_level"));
       expect(levelIndexQuery).toBeDefined();
       expect(levelIndexQuery).toContain("CREATE INDEX IF NOT EXISTS");
     });
@@ -201,7 +201,7 @@ describe("LogsDatabase", () => {
       db.getClient();
       await db.createTable();
 
-      const userIdIndexQuery = queriesExecuted.find((q) => q.includes("idx_logs_user_id"));
+      const userIdIndexQuery = queriesExecuted.find((q) => q.includes("idx_app_logs_user_id"));
       expect(userIdIndexQuery).toBeDefined();
       expect(userIdIndexQuery).toContain("CREATE INDEX IF NOT EXISTS");
     });
@@ -226,12 +226,12 @@ describe("LogsDatabase", () => {
   });
 
   describe("dropTable", () => {
-    test("should drop the logs table", async () => {
+    test("should drop the app_logs table", async () => {
       const db = new LogsDatabase("postgresql://localhost:5432/logs");
       db.getClient();
       await db.dropTable();
 
-      const dropQuery = queriesExecuted.find((q) => q.includes("DROP TABLE IF EXISTS logs"));
+      const dropQuery = queriesExecuted.find((q) => q.includes("DROP TABLE IF EXISTS app_logs"));
       expect(dropQuery).toBeDefined();
     });
 

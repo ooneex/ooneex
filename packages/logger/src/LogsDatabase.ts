@@ -34,9 +34,9 @@ export class LogsDatabase implements IDatabase {
     const sql = this.getClient();
 
     try {
-      // Create logs table if it doesn't exist
+      // Create app_logs table if it doesn't exist
       await sql`
-        CREATE TABLE IF NOT EXISTS logs (
+        CREATE TABLE IF NOT EXISTS app_logs (
           id TEXT PRIMARY KEY,
           level TEXT NOT NULL,
           message TEXT,
@@ -66,8 +66,8 @@ export class LogsDatabase implements IDatabase {
       `;
 
       // Create indexes for better query performance
-      await sql`CREATE INDEX IF NOT EXISTS idx_logs_level ON logs(level)`;
-      await sql`CREATE INDEX IF NOT EXISTS idx_logs_user_id ON logs("userId")`;
+      await sql`CREATE INDEX IF NOT EXISTS idx_app_logs_level ON app_logs(level)`;
+      await sql`CREATE INDEX IF NOT EXISTS idx_app_logs_user_id ON app_logs("userId")`;
     } catch (_e) {
       throw new DatabaseException("Failed to create log tables");
     }
@@ -77,7 +77,7 @@ export class LogsDatabase implements IDatabase {
     const sql = this.getClient();
 
     try {
-      await sql`DROP TABLE IF EXISTS logs`;
+      await sql`DROP TABLE IF EXISTS app_logs`;
     } catch (_e) {
       throw new DatabaseException("Failed to drop log tables");
     }

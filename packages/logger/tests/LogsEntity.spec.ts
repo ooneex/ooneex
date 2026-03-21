@@ -768,7 +768,7 @@ describe("LogsEntity", () => {
       const maliciousPayload = {
         username: "admin'; DROP TABLE users; --",
         password: "' OR '1'='1",
-        injection: "1; DELETE FROM logs WHERE 1=1; --",
+        injection: "1; DELETE FROM app_logs WHERE 1=1; --",
       };
 
       entity.payload = maliciousPayload;

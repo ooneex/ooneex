@@ -38,7 +38,7 @@ describe("LogsRepository", () => {
       const query = strings.join("?");
 
       // Handle INSERT operations - simulate actual data transformation
-      if (query.includes("INSERT INTO logs")) {
+      if (query.includes("INSERT INTO app_logs")) {
         // Create a mock log record from the repository's expected data transformation
         const mockLog = {
           id: "generated-id-123",
@@ -66,7 +66,7 @@ describe("LogsRepository", () => {
       }
 
       // Handle SELECT by ID
-      if (query.includes("SELECT * FROM logs") && query.includes("WHERE id =")) {
+      if (query.includes("SELECT * FROM app_logs") && query.includes("WHERE id =")) {
         const id = values[0];
         const found = mockData.find((item) => item.id === id);
         return Promise.resolve(found ? [found] : []);
@@ -78,12 +78,12 @@ describe("LogsRepository", () => {
       }
 
       // Handle SELECT with ORDER BY (no WHERE clause)
-      if (query.includes("SELECT * FROM logs") && query.includes("ORDER BY date DESC") && !query.includes("WHERE")) {
+      if (query.includes("SELECT * FROM app_logs") && query.includes("ORDER BY date DESC") && !query.includes("WHERE")) {
         return Promise.resolve([...mockData]);
       }
 
       // Handle SELECT with WHERE clause
-      if (query.includes("SELECT * FROM logs") && query.includes("WHERE") && query.includes("ORDER BY")) {
+      if (query.includes("SELECT * FROM app_logs") && query.includes("WHERE") && query.includes("ORDER BY")) {
         // Return empty for filtered queries in basic tests
         return Promise.resolve([]);
       }
@@ -149,7 +149,7 @@ describe("LogsRepository", () => {
       // Override mock to capture the actual date
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "INFO",
@@ -192,7 +192,7 @@ describe("LogsRepository", () => {
       // Override mock to capture stackTrace
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "ERROR",
@@ -231,7 +231,7 @@ describe("LogsRepository", () => {
       // Override mock to capture params
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "DEBUG",
@@ -269,7 +269,7 @@ describe("LogsRepository", () => {
       // Override mock to capture payload
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "INFO",
@@ -307,7 +307,7 @@ describe("LogsRepository", () => {
       // Override mock to capture queries
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "LOG",
@@ -338,7 +338,7 @@ describe("LogsRepository", () => {
       // Override mock to return null values for optional fields
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "WARN",
@@ -398,7 +398,7 @@ describe("LogsRepository", () => {
       // Override mock to capture all fields
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "ERROR",
@@ -822,7 +822,7 @@ describe("LogsRepository", () => {
       // Override mock for this specific test
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "WARN",
@@ -979,7 +979,7 @@ describe("LogsRepository", () => {
       // Override mock for mixed data test
       mockClient = Object.assign((strings: TemplateStringsArray, ..._values: unknown[]) => {
         const query = strings.join("?");
-        if (query.includes("INSERT INTO logs")) {
+        if (query.includes("INSERT INTO app_logs")) {
           const mockLog = {
             id: "generated-id-123",
             level: "ERROR",

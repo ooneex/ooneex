@@ -77,7 +77,7 @@ describe("DatabaseLogger", () => {
       await logger.init();
 
       // Should have executed CREATE TABLE and CREATE INDEX queries
-      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS logs"));
+      const createTableQuery = queriesExecuted.find((q) => q.includes("CREATE TABLE IF NOT EXISTS app_logs"));
       expect(createTableQuery).toBeDefined();
     });
 

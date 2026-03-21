@@ -61,7 +61,7 @@ export class LogsRepository {
     };
 
     const [newLog] = await client`
-      INSERT INTO logs ${sql(data)}
+      INSERT INTO app_logs ${sql(data)}
       RETURNING *
     `;
 
@@ -74,7 +74,7 @@ export class LogsRepository {
     const client = this.db.getClient();
 
     const [log] = await client`
-      SELECT * FROM logs
+      SELECT * FROM app_logs
       WHERE id = ${id}
       LIMIT 1
     `;
@@ -147,9 +147,9 @@ export class LogsRepository {
 
     // If no criteria provided, get all records with pagination
     if (whereConditions.length === 0) {
-      const [countResult] = await client`SELECT COUNT(*) as total FROM logs`;
+      const [countResult] = await client`SELECT COUNT(*) as total FROM app_logs`;
       const logs = await client`
-        SELECT * FROM logs
+        SELECT * FROM app_logs
         ORDER BY date DESC
         LIMIT ${limit}
         OFFSET ${offset}
@@ -191,13 +191,13 @@ export class LogsRepository {
     // Get total count for pagination
     const [countResult] = await client`
       SELECT COUNT(*) as total
-      FROM logs
+      FROM app_logs
       WHERE ${whereClause}
     `;
 
     // Execute the query with proper SQL fragment composition and pagination
     const logs = await client`
-      SELECT * FROM logs
+      SELECT * FROM app_logs
       WHERE ${whereClause}
       ORDER BY date DESC
       LIMIT ${limit}

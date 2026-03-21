@@ -1,4 +1,3 @@
-import type { IColor } from "@ooneex/color";
 import type { IBase } from "@ooneex/types";
 
 export enum EStatus {
@@ -68,7 +67,7 @@ export type StatusType = `${EStatus}`;
 
 export interface IStatus extends IBase {
   status: StatusType;
-  color?: IColor | undefined;
-  description?: string | undefined;
-  reason?: string | undefined;
+  color?: string;
+  description?: string;
+  reason?: string;
 }

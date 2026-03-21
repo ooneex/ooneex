@@ -39,7 +39,6 @@ describe("@ooneex/status - IStatus", () => {
     const status: IStatus = {
       id: "2",
       status: EStatus.APPROVED,
-      // we don't depend on @ooneex/color runtime shape here
       color: { id: "c1" } as unknown as NonNullable<IStatus["color"]>,
       description: "Approved by moderator",
       reason: "All checks passed",

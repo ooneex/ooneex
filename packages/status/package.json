@@ -29,7 +29,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@ooneex/color": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "keywords": [

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/rate-limit",
   "description": "Rate limiting middleware for API request throttling and abuse prevention",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@ooneex/exception": "workspace:*",
+    "@ooneex/container": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
   "keywords": [

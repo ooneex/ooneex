@@ -1,6 +1,8 @@
+import { injectable } from "@ooneex/container";
 import { RateLimitException } from "./RateLimitException";
 import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } from "./types";
 
+@injectable()
 export class RedisRateLimiter implements IRateLimiter {
   private client: Bun.RedisClient;
 

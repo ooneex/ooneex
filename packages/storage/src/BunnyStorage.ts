@@ -3,9 +3,9 @@ import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
 import type { IStorage } from "./types";
 
-type BunnyRegion = "de" | "uk" | "ny" | "la" | "sg" | "se" | "br" | "jh" | "syd";
+type BunnyRegionType = "de" | "uk" | "ny" | "la" | "sg" | "se" | "br" | "jh" | "syd";
 
-interface BunnyFileInfo {
+type BunnyFileInfoType = {
   Guid: string;
   StorageZoneName: string;
   Path: string;
@@ -23,17 +23,30 @@ interface BunnyFileInfo {
   ReplicatedZones: string | null;
 }
 
+const REGION_ENDPOINTS: Record<BunnyRegionType, string> = {
+  de: "storage.bunnycdn.com",
+  uk: "uk.storage.bunnycdn.com",
+  ny: "ny.storage.bunnycdn.com",
+  la: "la.storage.bunnycdn.com",
+  sg: "sg.storage.bunnycdn.com",
+  se: "se.storage.bunnycdn.com",
+  br: "br.storage.bunnycdn.com",
+  jh: "jh.storage.bunnycdn.com",
+  syd: "syd.storage.bunnycdn.com",
+};
+
 @decorator.storage()
 export class BunnyStorage implements IStorage {
   private bucket = "";
   private readonly accessKey: string;
   private readonly storageZone: string;
-  private readonly region: BunnyRegion;
+  private readonly region: BunnyRegionType;
+  private readonly baseUrl: string;
 
   constructor() {
     const accessKey = Bun.env.STORAGE_BUNNY_ACCESS_KEY;
     const storageZone = Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
-    const region = Bun.env.STORAGE_BUNNY_REGION as BunnyRegion | undefined;
+    const region = Bun.env.STORAGE_BUNNY_REGION as BunnyRegionType | undefined;
 
     if (!accessKey) {
       throw new StorageException(
@@ -49,6 +62,7 @@ export class BunnyStorage implements IStorage {
     this.accessKey = accessKey;
     this.storageZone = storageZone;
     this.region = region ?? "de";
+    this.baseUrl = `https://${REGION_ENDPOINTS[this.region]}`;
   }
 
   public setBucket(name: string): this {
@@ -59,7 +73,7 @@ export class BunnyStorage implements IStorage {
 
   public async list(): Promise<string[]> {
     const path = this.bucket ? `${this.bucket}/` : "";
-    const url = `${this.getBaseUrl()}/${this.storageZone}/${path}`;
+    const url = `${this.baseUrl}/${this.storageZone}/${path}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -76,7 +90,7 @@ export class BunnyStorage implements IStorage {
       });
     }
 
-    const files: BunnyFileInfo[] = await response.json();
+    const files: BunnyFileInfoType[] = await response.json();
 
     return files.filter((file) => !file.IsDirectory).map((file) => file.ObjectName);
   }
@@ -84,9 +98,7 @@ export class BunnyStorage implements IStorage {
   public async clearBucket(): Promise<this> {
     const keys = await this.list();
 
-    for (const key of keys) {
-      await this.delete(key);
-    }
+    await Promise.all(keys.map((key) => this.delete(key)));
 
     return this;
   }
@@ -95,7 +107,7 @@ export class BunnyStorage implements IStorage {
     const url = this.buildFileUrl(key);
 
     const response = await fetch(url, {
-      method: "GET",
+      method: "HEAD",
       headers: {
         AccessKey: this.accessKey,
       },
@@ -150,11 +162,7 @@ export class BunnyStorage implements IStorage {
       body = new Blob([copiedArray]);
       contentLength = content.byteLength;
     } else if (ArrayBuffer.isView(content)) {
-      const arrayBuffer = content.buffer.slice(
-        content.byteOffset,
-        content.byteOffset + content.byteLength,
-      ) as ArrayBuffer;
-      body = new Blob([arrayBuffer]);
+      body = new Blob([new Uint8Array(content.buffer as ArrayBuffer, content.byteOffset, content.byteLength)]);
       contentLength = content.byteLength;
     } else if (content instanceof Blob) {
       body = content;
@@ -233,71 +241,38 @@ export class BunnyStorage implements IStorage {
 
   public getAsStream(key: string): ReadableStream {
     const url = this.buildFileUrl(key);
+    const accessKey = this.accessKey;
 
-    const stream = new ReadableStream({
-      start: async (controller) => {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            AccessKey: this.accessKey,
-          },
-        });
+    const { readable, writable } = new TransformStream();
 
-        if (!response.ok) {
-          controller.error(
-            new StorageException(`Failed to get file as stream: ${response.status} ${response.statusText}`, {
-              status: response.status,
-              key,
-            }),
-          );
-          return;
-        }
+    fetch(url, {
+      method: "GET",
+      headers: { AccessKey: accessKey },
+    }).then((response) => {
+      if (!response.ok) {
+        writable.abort(
+          new StorageException(`Failed to get file as stream: ${response.status} ${response.statusText}`, {
+            status: response.status,
+            key,
+          }),
+        );
+        return;
+      }
 
-        if (!response.body) {
-          controller.error(new StorageException("Response body is null", { key }));
-          return;
-        }
+      if (!response.body) {
+        writable.abort(new StorageException("Response body is null", { key }));
+        return;
+      }
 
-        const reader = response.body.getReader();
-
-        const pump = async (): Promise<void> => {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            controller.close();
-            return;
-          }
-
-          controller.enqueue(value);
-          await pump();
-        };
-
-        await pump();
-      },
+      response.body.pipeTo(writable);
     });
 
-    return stream;
-  }
-
-  private getBaseUrl(): string {
-    const regionEndpoints: Record<BunnyRegion, string> = {
-      de: "storage.bunnycdn.com",
-      uk: "uk.storage.bunnycdn.com",
-      ny: "ny.storage.bunnycdn.com",
-      la: "la.storage.bunnycdn.com",
-      sg: "sg.storage.bunnycdn.com",
-      se: "se.storage.bunnycdn.com",
-      br: "br.storage.bunnycdn.com",
-      jh: "jh.storage.bunnycdn.com",
-      syd: "syd.storage.bunnycdn.com",
-    };
-
-    return `https://${regionEndpoints[this.region]}`;
+    return readable;
   }
 
   private buildFileUrl(key: string): string {
     const path = this.bucket ? `${this.bucket}/${key}` : key;
 
-    return `${this.getBaseUrl()}/${this.storageZone}/${path}`;
+    return `${this.baseUrl}/${this.storageZone}/${path}`;
   }
 }

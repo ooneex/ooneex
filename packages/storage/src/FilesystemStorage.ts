@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from "node:fs";
-import { mkdir, readdir, rmdir, stat } from "node:fs/promises";
+import { mkdir, readdir, rm, rmdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
 import { AbstractStorage } from "./AbstractStorage";
@@ -92,13 +92,12 @@ export class FilesystemStorage extends AbstractStorage {
 
   private async listFilesRecursive(dir: string, baseDir: string): Promise<string[]> {
     const files: string[] = [];
-    const entries = await readdir(dir);
+    const entries = await readdir(dir, { withFileTypes: true });
 
     for (const entry of entries) {
-      const fullPath = join(dir, entry);
-      const stats = await stat(fullPath);
+      const fullPath = join(dir, entry.name);
 
-      if (stats.isDirectory()) {
+      if (entry.isDirectory()) {
         const subFiles = await this.listFilesRecursive(fullPath, baseDir);
         files.push(...subFiles);
       } else {
@@ -118,30 +117,13 @@ export class FilesystemStorage extends AbstractStorage {
     }
 
     try {
-      await this.removeDirectoryRecursive(bucketPath);
+      await rm(bucketPath, { recursive: true });
       await mkdir(bucketPath, { recursive: true });
     } catch (error) {
       throw new StorageException(`Failed to clear bucket: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     return this;
-  }
-
-  private async removeDirectoryRecursive(dir: string): Promise<void> {
-    const entries = await readdir(dir);
-
-    for (const entry of entries) {
-      const fullPath = join(dir, entry);
-      const stats = await stat(fullPath);
-
-      if (stats.isDirectory()) {
-        await this.removeDirectoryRecursive(fullPath);
-        await rmdir(fullPath);
-      } else {
-        const file = Bun.file(fullPath);
-        await file.delete();
-      }
-    }
   }
 
   public override async exists(key: string): Promise<boolean> {

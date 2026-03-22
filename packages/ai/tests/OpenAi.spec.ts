@@ -4,13 +4,31 @@ import { AiException, OpenAi } from "@/index";
 
 // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
 const mockChat = mock((): any => Promise.resolve("  Mocked response  "));
+// biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
+const mockGenerateSpeech = mock((): any =>
+  Promise.resolve({ id: "test-id", model: "tts-1", audio: "base64audio", format: "mp3" }),
+);
+// biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
+const mockGenerateTranscription = mock((): any =>
+  Promise.resolve({ id: "test-id", model: "whisper-1", text: "Transcribed text" }),
+);
+// biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
+const mockGenerateImage = mock((): any =>
+  Promise.resolve({ id: "test-id", model: "dall-e-3", images: [{ b64Json: "base64data" }] }),
+);
 
 mock.module("@tanstack/ai", () => ({
   chat: mockChat,
+  generateSpeech: mockGenerateSpeech,
+  generateTranscription: mockGenerateTranscription,
+  generateImage: mockGenerateImage,
 }));
 
 mock.module("@tanstack/ai-openai", () => ({
   createOpenaiChat: mock(() => ({ type: "openai-adapter" })),
+  createOpenaiSpeech: mock(() => ({ type: "openai-speech-adapter" })),
+  createOpenaiTranscription: mock(() => ({ type: "openai-transcription-adapter" })),
+  createOpenaiImage: mock(() => ({ type: "openai-image-adapter" })),
 }));
 
 // Helper function to get call arguments safely
@@ -32,6 +50,9 @@ describe("OpenAi", () => {
     Bun.env.OPENAI_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
+    mockGenerateSpeech.mockClear();
+    mockGenerateTranscription.mockClear();
+    mockGenerateImage.mockClear();
   });
 
   afterEach(() => {
@@ -380,6 +401,334 @@ describe("OpenAi", () => {
     });
   });
 
+  describe("extractTopics", () => {
+    test("should return array of topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Machine Learning, Neural Networks, Deep Learning"));
+
+      const result = await ai.extractTopics("AI article content");
+
+      expect(result).toEqual(["Machine Learning", "Neural Networks", "Deep Learning"]);
+    });
+
+    test("should trim whitespace from topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("  Topic1  ,  Topic2  "));
+
+      const result = await ai.extractTopics("Text content");
+
+      expect(result).toEqual(["Topic1", "Topic2"]);
+    });
+
+    test("should filter out empty topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Topic1, , Topic2"));
+
+      const result = await ai.extractTopics("Text content");
+
+      expect(result).toEqual(["Topic1", "Topic2"]);
+    });
+
+    test("should respect count option", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Topic1, Topic2, Topic3, Topic4, Topic5"));
+
+      const result = await ai.extractTopics("Text content", { count: 3 });
+
+      expect(result).toEqual(["Topic1", "Topic2", "Topic3"]);
+    });
+  });
+
+  describe("generateQuestion", () => {
+    test("should return parsed question result", async () => {
+      const mockResponse = JSON.stringify({
+        question: "What is TypeScript?",
+        choices: [
+          { text: "A typed superset of JavaScript", isCorrect: true, explanation: "Correct explanation" },
+          { text: "A database", isCorrect: false, explanation: "Wrong explanation" },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateQuestion("TypeScript");
+
+      expect(result.question).toBe("What is TypeScript?");
+      expect(result.choices).toHaveLength(2);
+      expect(result.choices[0]?.isCorrect).toBe(true);
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse =
+        '```json\n{"question":"Test?","choices":[{"text":"A","isCorrect":true,"explanation":"..."}]}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateQuestion("Test subject");
+
+      expect(result.question).toBe("Test?");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({
+        question: "Q?",
+        choices: [{ text: "A", isCorrect: true, explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateQuestion("Subject", { difficulty: 80 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("80/100");
+    });
+
+    test("should include similarQuestion in prompt when provided", async () => {
+      const mockResponse = JSON.stringify({
+        question: "Q?",
+        choices: [{ text: "A", isCorrect: true, explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateQuestion("Subject", { similarQuestion: "What is X?" });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("What is X?");
+    });
+  });
+
+  describe("generateFlashcard", () => {
+    test("should return parsed flashcard result", async () => {
+      const mockResponse = JSON.stringify({
+        front: "What is TypeScript?",
+        back: "A typed superset of JavaScript",
+        explanation: "TypeScript adds static typing to JavaScript.",
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateFlashcard("TypeScript");
+
+      expect(result.front).toBe("What is TypeScript?");
+      expect(result.back).toBe("A typed superset of JavaScript");
+      expect(result.explanation).toBe("TypeScript adds static typing to JavaScript.");
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse = '```json\n{"front":"Q","back":"A","explanation":"E"}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateFlashcard("Test subject");
+
+      expect(result.front).toBe("Q");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({ front: "Q", back: "A", explanation: "E" });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateFlashcard("Subject", { difficulty: 75 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("75/100");
+    });
+  });
+
+  describe("generateCaseQuestion", () => {
+    test("should return parsed case question result", async () => {
+      const mockResponse = JSON.stringify({
+        title: "Acute Appendicitis",
+        presentation: "A 25-year-old male presents with right lower quadrant pain.",
+        questions: [
+          { text: "What is the most likely diagnosis?", answer: "Appendicitis", explanation: "Classic presentation" },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateCaseQuestion("Appendicitis");
+
+      expect(result.title).toBe("Acute Appendicitis");
+      expect(result.presentation).toContain("25-year-old");
+      expect(result.questions).toHaveLength(1);
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse =
+        '```json\n{"title":"T","presentation":"P","questions":[{"text":"Q","answer":"A","explanation":"E"}]}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateCaseQuestion("Test");
+
+      expect(result.title).toBe("T");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({
+        title: "T",
+        presentation: "P",
+        questions: [{ text: "Q", answer: "A", explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateCaseQuestion("Subject", { difficulty: 90 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("90/100");
+    });
+
+    test("should include choiceCount in prompt when provided", async () => {
+      const mockResponse = JSON.stringify({
+        title: "T",
+        presentation: "P",
+        questions: [
+          {
+            text: "Q",
+            answer: "A",
+            explanation: "E",
+            choices: [{ text: "C", isCorrect: true, explanation: "E" }],
+          },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateCaseQuestion("Subject", { choiceCount: 4 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("exactly 4 choices");
+    });
+  });
+
+  describe("imageToMarkdown", () => {
+    test("should return trimmed markdown response", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("  # Heading\n\nSome content  "));
+
+      const result = await ai.imageToMarkdown({ type: "url", value: "https://example.com/image.png" });
+
+      expect(result).toBe("# Heading\n\nSome content");
+    });
+
+    test("should call chat with image content", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Markdown content"));
+
+      await ai.imageToMarkdown({ type: "data", value: "base64data" });
+
+      expect(mockChat).toHaveBeenCalledTimes(1);
+      const callArgs = getCallArgs();
+      expect(callArgs.stream).toBe(false);
+    });
+  });
+
+  describe("textToSpeech", () => {
+    test("should call generateSpeech and return result", async () => {
+      const result = await ai.textToSpeech("Hello world");
+
+      expect(mockGenerateSpeech).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ id: "test-id", model: "tts-1", audio: "base64audio", format: "mp3" });
+    });
+
+    test("should throw when API key is missing", async () => {
+      Bun.env.OPENAI_API_KEY = "";
+
+      expect(ai.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
+    });
+
+    test("should pass voice option", async () => {
+      await ai.textToSpeech("Hello", { voice: "alloy" });
+
+      expect(mockGenerateSpeech).toHaveBeenCalledTimes(1);
+      const callArgs = (mockGenerateSpeech.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.voice).toBe("alloy");
+    });
+
+    test("should pass format option", async () => {
+      await ai.textToSpeech("Hello", { format: "opus" });
+
+      expect(mockGenerateSpeech).toHaveBeenCalledTimes(1);
+      const callArgs = (mockGenerateSpeech.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.format).toBe("opus");
+    });
+
+    test("should pass speed option", async () => {
+      await ai.textToSpeech("Hello", { speed: 1.5 });
+
+      expect(mockGenerateSpeech).toHaveBeenCalledTimes(1);
+      const callArgs = (mockGenerateSpeech.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.speed).toBe(1.5);
+    });
+
+    test("should pass language as instructions", async () => {
+      await ai.textToSpeech("Hello", { language: "French" });
+
+      expect(mockGenerateSpeech).toHaveBeenCalledTimes(1);
+      const callArgs = (mockGenerateSpeech.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect((callArgs.modelOptions as Record<string, unknown>).instructions).toContain("French");
+    });
+  });
+
+  describe("speechToText", () => {
+    test("should call generateTranscription and return result", async () => {
+      const result = await ai.speechToText("audio-data");
+
+      expect(mockGenerateTranscription).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ id: "test-id", model: "whisper-1", text: "Transcribed text" });
+    });
+
+    test("should throw when API key is missing", async () => {
+      Bun.env.OPENAI_API_KEY = "";
+
+      expect(ai.speechToText("audio")).rejects.toBeInstanceOf(AiException);
+    });
+
+    test("should pass language option", async () => {
+      await ai.speechToText("audio", { language: "en" });
+
+      const callArgs = (mockGenerateTranscription.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.language).toBe("en");
+    });
+
+    test("should pass responseFormat option", async () => {
+      await ai.speechToText("audio", { responseFormat: "srt" });
+
+      const callArgs = (mockGenerateTranscription.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.responseFormat).toBe("srt");
+    });
+  });
+
+  describe("generateImage", () => {
+    test("should call generateImage and return result", async () => {
+      const result = await ai.generateImage("A cat");
+
+      expect(mockGenerateImage).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({ id: "test-id", model: "dall-e-3", images: [{ b64Json: "base64data" }] });
+    });
+
+    test("should throw when API key is missing", async () => {
+      Bun.env.OPENAI_API_KEY = "";
+
+      expect(ai.generateImage("A cat")).rejects.toBeInstanceOf(AiException);
+    });
+
+    test("should pass numberOfImages option", async () => {
+      await ai.generateImage("A cat", { numberOfImages: 2 });
+
+      const callArgs = (mockGenerateImage.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.numberOfImages).toBe(2);
+    });
+
+    test("should pass size option", async () => {
+      await ai.generateImage("A cat", { size: "1024x1024" });
+
+      const callArgs = (mockGenerateImage.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect(callArgs.size).toBe("1024x1024");
+    });
+
+    test("should pass quality in modelOptions", async () => {
+      await ai.generateImage("A cat", { quality: "hd" });
+
+      const callArgs = (mockGenerateImage.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect((callArgs.modelOptions as Record<string, unknown>).quality).toBe("hd");
+    });
+
+    test("should pass style in modelOptions", async () => {
+      await ai.generateImage("A cat", { style: "vivid" });
+
+      const callArgs = (mockGenerateImage.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
+      expect((callArgs.modelOptions as Record<string, unknown>).style).toBe("vivid");
+    });
+  });
+
   describe("run", () => {
     test("should return parsed JSON response", async () => {
       mockChat.mockImplementation(() => Promise.resolve('{"name": "John", "age": 30}'));
@@ -604,6 +953,14 @@ describe("OpenAi", () => {
       expect(typeof ai.generateTitle).toBe("function");
       expect(typeof ai.extractKeywords).toBe("function");
       expect(typeof ai.extractCategories).toBe("function");
+      expect(typeof ai.extractTopics).toBe("function");
+      expect(typeof ai.generateQuestion).toBe("function");
+      expect(typeof ai.generateFlashcard).toBe("function");
+      expect(typeof ai.generateCaseQuestion).toBe("function");
+      expect(typeof ai.imageToMarkdown).toBe("function");
+      expect(typeof ai.textToSpeech).toBe("function");
+      expect(typeof ai.speechToText).toBe("function");
+      expect(typeof ai.generateImage).toBe("function");
       expect(typeof ai.run).toBe("function");
       expect(typeof ai.runStream).toBe("function");
     });

@@ -369,6 +369,215 @@ describe("OllamaAi", () => {
     });
   });
 
+  describe("extractTopics", () => {
+    test("should return array of topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Machine Learning, Neural Networks, Deep Learning"));
+
+      const result = await ai.extractTopics("AI article content");
+
+      expect(result).toEqual(["Machine Learning", "Neural Networks", "Deep Learning"]);
+    });
+
+    test("should trim whitespace from topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("  Topic1  ,  Topic2  "));
+
+      const result = await ai.extractTopics("Text content");
+
+      expect(result).toEqual(["Topic1", "Topic2"]);
+    });
+
+    test("should filter out empty topics", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Topic1, , Topic2"));
+
+      const result = await ai.extractTopics("Text content");
+
+      expect(result).toEqual(["Topic1", "Topic2"]);
+    });
+
+    test("should respect count option", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Topic1, Topic2, Topic3, Topic4, Topic5"));
+
+      const result = await ai.extractTopics("Text content", { count: 3 });
+
+      expect(result).toEqual(["Topic1", "Topic2", "Topic3"]);
+    });
+  });
+
+  describe("generateQuestion", () => {
+    test("should return parsed question result", async () => {
+      const mockResponse = JSON.stringify({
+        question: "What is TypeScript?",
+        choices: [
+          { text: "A typed superset of JavaScript", isCorrect: true, explanation: "Correct explanation" },
+          { text: "A database", isCorrect: false, explanation: "Wrong explanation" },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateQuestion("TypeScript");
+
+      expect(result.question).toBe("What is TypeScript?");
+      expect(result.choices).toHaveLength(2);
+      expect(result.choices[0]?.isCorrect).toBe(true);
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse =
+        '```json\n{"question":"Test?","choices":[{"text":"A","isCorrect":true,"explanation":"..."}]}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateQuestion("Test subject");
+
+      expect(result.question).toBe("Test?");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({
+        question: "Q?",
+        choices: [{ text: "A", isCorrect: true, explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateQuestion("Subject", { difficulty: 80 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("80/100");
+    });
+
+    test("should include similarQuestion in prompt when provided", async () => {
+      const mockResponse = JSON.stringify({
+        question: "Q?",
+        choices: [{ text: "A", isCorrect: true, explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateQuestion("Subject", { similarQuestion: "What is X?" });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("What is X?");
+    });
+  });
+
+  describe("generateFlashcard", () => {
+    test("should return parsed flashcard result", async () => {
+      const mockResponse = JSON.stringify({
+        front: "What is TypeScript?",
+        back: "A typed superset of JavaScript",
+        explanation: "TypeScript adds static typing to JavaScript.",
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateFlashcard("TypeScript");
+
+      expect(result.front).toBe("What is TypeScript?");
+      expect(result.back).toBe("A typed superset of JavaScript");
+      expect(result.explanation).toBe("TypeScript adds static typing to JavaScript.");
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse = '```json\n{"front":"Q","back":"A","explanation":"E"}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateFlashcard("Test subject");
+
+      expect(result.front).toBe("Q");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({ front: "Q", back: "A", explanation: "E" });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateFlashcard("Subject", { difficulty: 75 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("75/100");
+    });
+  });
+
+  describe("generateCaseQuestion", () => {
+    test("should return parsed case question result", async () => {
+      const mockResponse = JSON.stringify({
+        title: "Acute Appendicitis",
+        presentation: "A 25-year-old male presents with right lower quadrant pain.",
+        questions: [
+          { text: "What is the most likely diagnosis?", answer: "Appendicitis", explanation: "Classic presentation" },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateCaseQuestion("Appendicitis");
+
+      expect(result.title).toBe("Acute Appendicitis");
+      expect(result.presentation).toContain("25-year-old");
+      expect(result.questions).toHaveLength(1);
+    });
+
+    test("should handle JSON wrapped in code blocks", async () => {
+      const mockResponse =
+        '```json\n{"title":"T","presentation":"P","questions":[{"text":"Q","answer":"A","explanation":"E"}]}\n```';
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      const result = await ai.generateCaseQuestion("Test");
+
+      expect(result.title).toBe("T");
+    });
+
+    test("should include difficulty in prompt", async () => {
+      const mockResponse = JSON.stringify({
+        title: "T",
+        presentation: "P",
+        questions: [{ text: "Q", answer: "A", explanation: "E" }],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateCaseQuestion("Subject", { difficulty: 90 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("90/100");
+    });
+
+    test("should include choiceCount in prompt when provided", async () => {
+      const mockResponse = JSON.stringify({
+        title: "T",
+        presentation: "P",
+        questions: [
+          {
+            text: "Q",
+            answer: "A",
+            explanation: "E",
+            choices: [{ text: "C", isCorrect: true, explanation: "E" }],
+          },
+        ],
+      });
+      mockChat.mockImplementation(() => Promise.resolve(mockResponse));
+
+      await ai.generateCaseQuestion("Subject", { choiceCount: 4 });
+
+      const callArgs = getCallArgs();
+      expect(callArgs.messages[0].content).toContain("exactly 4 choices");
+    });
+  });
+
+  describe("imageToMarkdown", () => {
+    test("should return trimmed markdown response", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("  # Heading\n\nSome content  "));
+
+      const result = await ai.imageToMarkdown({ type: "url", value: "https://example.com/image.png" });
+
+      expect(result).toBe("# Heading\n\nSome content");
+    });
+
+    test("should call chat with image content", async () => {
+      mockChat.mockImplementation(() => Promise.resolve("Markdown content"));
+
+      await ai.imageToMarkdown({ type: "data", value: "base64data" });
+
+      expect(mockChat).toHaveBeenCalledTimes(1);
+      const callArgs = getCallArgs();
+      expect(callArgs.stream).toBe(false);
+    });
+  });
+
   describe("run", () => {
     test("should return parsed JSON response", async () => {
       mockChat.mockImplementation(() => Promise.resolve('{"name": "John", "age": 30}'));
@@ -585,6 +794,11 @@ describe("OllamaAi", () => {
       expect(typeof ai.generateTitle).toBe("function");
       expect(typeof ai.extractKeywords).toBe("function");
       expect(typeof ai.extractCategories).toBe("function");
+      expect(typeof ai.extractTopics).toBe("function");
+      expect(typeof ai.generateQuestion).toBe("function");
+      expect(typeof ai.generateFlashcard).toBe("function");
+      expect(typeof ai.generateCaseQuestion).toBe("function");
+      expect(typeof ai.imageToMarkdown).toBe("function");
       expect(typeof ai.run).toBe("function");
       expect(typeof ai.runStream).toBe("function");
     });

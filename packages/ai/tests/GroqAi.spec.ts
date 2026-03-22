@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { type } from "arktype";
-import { AiException, AnthropicAi } from "@/index";
+import { AiException, GroqAi } from "@/index";
 
 // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
 const mockChat = mock((): any => Promise.resolve("  Mocked response  "));
@@ -9,9 +9,20 @@ mock.module("@tanstack/ai", () => ({
   chat: mockChat,
 }));
 
-mock.module("@tanstack/ai-anthropic", () => ({
-  createAnthropicChat: mock(() => ({ type: "anthropic-adapter" })),
+mock.module("@tanstack/ai-groq", () => ({
+  createGroqText: mock(() => ({ type: "groq-adapter" })),
 }));
+
+const mockFetch = mock(
+  // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
+  (): any =>
+    Promise.resolve({
+      ok: true,
+      headers: new Headers({ "x-request-id": "test-request-id" }),
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+      text: () => Promise.resolve(""),
+    }),
+);
 
 // Helper function to get call arguments safely
 // biome-ignore lint/suspicious/noExplicitAny: Test helper requires flexible typing
@@ -23,19 +34,31 @@ const getCallArgs = (): any => {
   return calls[0]?.[0];
 };
 
-describe("AnthropicAi", () => {
-  let ai: AnthropicAi;
-  const originalEnv = Bun.env.ANTHROPIC_API_KEY;
+describe("GroqAi", () => {
+  let ai: GroqAi;
+  const originalEnv = Bun.env.GROQ_API_KEY;
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
-    ai = new AnthropicAi();
-    Bun.env.ANTHROPIC_API_KEY = "test-api-key";
+    ai = new GroqAi();
+    Bun.env.GROQ_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
+    mockFetch.mockClear();
+    mockFetch.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ "x-request-id": "test-request-id" }),
+        arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+        text: () => Promise.resolve(""),
+      }),
+    );
+    globalThis.fetch = mockFetch as unknown as typeof fetch;
   });
 
   afterEach(() => {
-    Bun.env.ANTHROPIC_API_KEY = originalEnv;
+    Bun.env.GROQ_API_KEY = originalEnv;
+    globalThis.fetch = originalFetch;
   });
 
   describe("API Key handling", () => {
@@ -46,27 +69,27 @@ describe("AnthropicAi", () => {
     });
 
     test("should use API key from environment variable", async () => {
-      Bun.env.ANTHROPIC_API_KEY = "env-api-key";
+      Bun.env.GROQ_API_KEY = "env-api-key";
       await ai.makeShorter("test content");
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });
 
     test("should throw AiException when no API key is provided", async () => {
-      Bun.env.ANTHROPIC_API_KEY = "";
+      Bun.env.GROQ_API_KEY = "";
 
       expect(ai.makeShorter("test content")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should throw with descriptive message when API key is missing", async () => {
-      Bun.env.ANTHROPIC_API_KEY = "";
+      Bun.env.GROQ_API_KEY = "";
 
       try {
         await ai.makeShorter("test content");
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(AiException);
-        expect((error as AiException).message).toContain("Anthropic API key is required");
+        expect((error as AiException).message).toContain("Groq API key is required");
       }
     });
   });
@@ -589,6 +612,78 @@ describe("AnthropicAi", () => {
     });
   });
 
+  describe("textToSpeech", () => {
+    test("should call fetch with correct URL and return result", async () => {
+      const result = await ai.textToSpeech("Hello world");
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      const fetchArgs = mockFetch.mock.calls[0] as unknown[];
+      expect(fetchArgs[0]).toBe("https://api.groq.com/openai/v1/audio/speech");
+      expect(result.id).toBe("test-request-id");
+      expect(result.format).toBe("wav");
+    });
+
+    test("should throw when API key is missing", async () => {
+      Bun.env.GROQ_API_KEY = "";
+
+      expect(ai.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
+    });
+
+    test("should use default model and voice", async () => {
+      await ai.textToSpeech("Hello");
+
+      const fetchArgs = mockFetch.mock.calls[0] as unknown[];
+      const body = JSON.parse((fetchArgs[1] as { body: string }).body);
+      expect(body.model).toBe("canopylabs/orpheus-v1-english");
+      expect(body.voice).toBe("autumn");
+      expect(body.response_format).toBe("wav");
+    });
+
+    test("should pass custom options", async () => {
+      await ai.textToSpeech("Hello", { model: "canopylabs/orpheus-arabic-saudi", voice: "diana", format: "mp3" });
+
+      const fetchArgs = mockFetch.mock.calls[0] as unknown[];
+      const body = JSON.parse((fetchArgs[1] as { body: string }).body);
+      expect(body.model).toBe("canopylabs/orpheus-arabic-saudi");
+      expect(body.voice).toBe("diana");
+      expect(body.response_format).toBe("mp3");
+    });
+
+    test("should include sampleRate when provided", async () => {
+      await ai.textToSpeech("Hello", { sampleRate: 24000 });
+
+      const fetchArgs = mockFetch.mock.calls[0] as unknown[];
+      const body = JSON.parse((fetchArgs[1] as { body: string }).body);
+      expect(body.sample_rate).toBe(24000);
+    });
+
+    test("should throw AiException on failed response", async () => {
+      mockFetch.mockImplementation(() =>
+        Promise.resolve({
+          ok: false,
+          status: 401,
+          text: () => Promise.resolve("Unauthorized"),
+        }),
+      );
+
+      try {
+        await ai.textToSpeech("Hello");
+        expect.unreachable("Should have thrown");
+      } catch (error) {
+        expect(error).toBeInstanceOf(AiException);
+        expect((error as AiException).message).toContain("Groq TTS request failed (401)");
+      }
+    });
+
+    test("should use API key from options", async () => {
+      await ai.textToSpeech("Hello", { apiKey: "custom-key" });
+
+      const fetchArgs = mockFetch.mock.calls[0] as unknown[];
+      const headers = (fetchArgs[1] as Record<string, Record<string, string>>).headers;
+      expect(headers?.Authorization).toBe("Bearer custom-key");
+    });
+  });
+
   describe("run", () => {
     test("should return parsed JSON response", async () => {
       mockChat.mockImplementation(() => Promise.resolve('{"name": "John", "age": 30}'));
@@ -685,7 +780,7 @@ describe("AnthropicAi", () => {
     });
 
     test("should throw when API key is missing", async () => {
-      Bun.env.ANTHROPIC_API_KEY = "";
+      Bun.env.GROQ_API_KEY = "";
 
       const generator = ai.runStream("Test prompt");
 
@@ -782,17 +877,17 @@ describe("AnthropicAi", () => {
     });
 
     test("should use specified model from config", async () => {
-      await ai.makeShorter("Text", { model: "claude-3-5-haiku" });
+      await ai.makeShorter("Text", { model: "llama-3.3-70b-versatile" });
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("instance creation", () => {
-    test("should create AnthropicAi instance", () => {
-      const instance = new AnthropicAi();
+    test("should create GroqAi instance", () => {
+      const instance = new GroqAi();
 
-      expect(instance).toBeInstanceOf(AnthropicAi);
+      expect(instance).toBeInstanceOf(GroqAi);
     });
 
     test("should have all required methods", () => {
@@ -818,6 +913,7 @@ describe("AnthropicAi", () => {
       expect(typeof ai.generateFlashcard).toBe("function");
       expect(typeof ai.generateCaseQuestion).toBe("function");
       expect(typeof ai.imageToMarkdown).toBe("function");
+      expect(typeof ai.textToSpeech).toBe("function");
       expect(typeof ai.run).toBe("function");
       expect(typeof ai.runStream).toBe("function");
     });

@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/ai",
-  "description": "Unified AI client library with support for OpenAI, Anthropic, Google Gemini, and Ollama providers",
+  "description": "Unified AI client library with support for OpenAI, Anthropic, Google Gemini, Groq, and Ollama providers",
   "version": "0.0.19",
   "type": "module",
   "files": [
@@ -35,6 +35,7 @@
     "@tanstack/ai": "^0.2.0",
     "@tanstack/ai-anthropic": "^0.2.0",
     "@tanstack/ai-gemini": "^0.2.0",
+    "@tanstack/ai-groq": "^0.1.2",
     "@tanstack/ai-ollama": "^0.2.0",
     "@tanstack/ai-openai": "^0.2.0"
   },
@@ -47,6 +48,7 @@
     "artificial-intelligence",
     "bun",
     "gemini",
+    "groq",
     "llm",
     "machine-learning",
     "ollama",

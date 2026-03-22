@@ -2,21 +2,13 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import type { IUser } from "@ooneex/user";
 import { Permission, PermissionException } from "@/index";
 
-class TestPermission<S extends string = string> extends Permission<S> {
+class TestPermission<A extends string = string, S extends string = string> extends Permission<A, S> {
   public allow(): this {
-    return this;
-  }
-
-  public forbid(): this {
     return this;
   }
 
   public setUserPermissions(_user: IUser | null): this {
     return this;
-  }
-
-  public async check(): Promise<boolean> {
-    return true;
   }
 
   public addPermission(
@@ -52,7 +44,7 @@ describe("Permission", () => {
     });
 
     test("should create Permission with generic type", () => {
-      const customPermission = new TestPermission<"CustomResource">();
+      const customPermission = new TestPermission<string, "CustomResource">();
       expect(customPermission).toBeInstanceOf(Permission);
     });
   });
@@ -63,19 +55,9 @@ describe("Permission", () => {
       expect(result).toBe(permission);
     });
 
-    test("should have forbid method", () => {
-      const result = permission.forbid();
-      expect(result).toBe(permission);
-    });
-
     test("should have setUserPermissions method", () => {
       const result = permission.setUserPermissions(null);
       expect(result).toBe(permission);
-    });
-
-    test("should have check method", async () => {
-      const result = await permission.check();
-      expect(typeof result).toBe("boolean");
     });
   });
 
@@ -122,7 +104,7 @@ describe("Permission", () => {
     });
 
     test("should work with custom subject types", () => {
-      const customPermission = new TestPermission<"BlogPost">();
+      const customPermission = new TestPermission<string, "BlogPost">();
       customPermission.addPermission("read", "BlogPost").build();
 
       expect(customPermission.can("read", "BlogPost")).toBe(true);
@@ -216,7 +198,7 @@ describe("Permission", () => {
 
   describe("Generic Type Support", () => {
     test("should work with custom subject types", () => {
-      const blogPermission = new TestPermission<"BlogPost" | "Comment" | "Category">();
+      const blogPermission = new TestPermission<string, "BlogPost" | "Comment" | "Category">();
 
       blogPermission
         .addPermission("read", "BlogPost")
@@ -231,7 +213,7 @@ describe("Permission", () => {
     });
 
     test("should combine built-in and custom subject types", () => {
-      const mixedPermission = new TestPermission<"BlogPost" | "Article">();
+      const mixedPermission = new TestPermission<string, "BlogPost" | "Article">();
 
       mixedPermission
         .addPermission("read", ["User", "BlogPost", "Article"])

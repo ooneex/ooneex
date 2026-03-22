@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import { Container, EContainerScope } from "@ooneex/container";
 import type { IUser } from "@ooneex/user";
 import { decorator } from "@/decorators";
-import type { IPermission, PermissionActionType } from "@/types";
+import type { IPermission } from "@/types";
 
 describe("decorator.permission", () => {
   let container: Container;
@@ -257,10 +257,10 @@ describe("decorator.permission", () => {
       public build(): this {
         return this;
       }
-      public can(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+      public can(_action: string, _subject: string, _field?: string): boolean {
         return true;
       }
-      public cannot(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+      public cannot(_action: string, _subject: string, _field?: string): boolean {
         return false;
       }
       public setUserPermissions(_user: IUser | null): this {
@@ -293,11 +293,11 @@ describe("decorator.permission", () => {
         return this;
       }
 
-      public can(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+      public can(_action: string, _subject: string, _field?: string): boolean {
         return true;
       }
 
-      public cannot(_action: PermissionActionType, _subject: string, _field?: string): boolean {
+      public cannot(_action: string, _subject: string, _field?: string): boolean {
         return false;
       }
 

@@ -86,12 +86,10 @@ export type Subjects = `${EPermissionSubject}`;
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type PermissionClassType = new (...args: any[]) => IPermission;
 
-export interface IPermission<S extends string = string> {
-  allow: () => IPermission<S>;
-  forbid: () => IPermission<S>;
-  setUserPermissions: (user: IUser | null) => IPermission<S>;
-  check: () => Promise<boolean>;
-  build: () => IPermission<S>;
-  can: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
-  cannot: (action: PermissionActionType, subject: Subjects | S, field?: string) => boolean;
+export interface IPermission<A extends string = string, S extends string = string> {
+  allow: () => IPermission<A, S>;
+  setUserPermissions: (user: IUser | null) => IPermission<A, S>;
+  build: () => IPermission<A, S>;
+  can: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
+  cannot: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
 }

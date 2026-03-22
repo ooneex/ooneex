@@ -3,7 +3,7 @@ import type { IUser } from "@ooneex/user";
 import { PermissionException } from "./PermissionException";
 import type { IPermission, PermissionActionType, Subjects } from "./types";
 
-export abstract class Permission<S extends string = string> implements IPermission<S> {
+export abstract class Permission<A extends string = string, S extends string = string> implements IPermission<A, S> {
   protected ability: AbilityBuilder<MongoAbility>;
   private builtAbility: MongoAbility | null = null;
 
@@ -12,26 +12,21 @@ export abstract class Permission<S extends string = string> implements IPermissi
   }
 
   public abstract allow(): this;
-
-  public abstract forbid(): this;
-
   public abstract setUserPermissions(user: IUser | null): this;
-
-  public abstract check(): Promise<boolean>;
 
   public build(): this {
     this.builtAbility = this.ability.build();
     return this;
   }
 
-  public can(action: PermissionActionType, subject: Subjects | S, field?: string): boolean {
+  public can(action: PermissionActionType | A, subject: Subjects | S, field?: string): boolean {
     if (!this.builtAbility) {
       throw new PermissionException("Permission must be built before checking abilities");
     }
     return this.builtAbility.can(action as string, subject as string, field);
   }
 
-  public cannot(action: PermissionActionType, subject: Subjects | S, field?: string): boolean {
+  public cannot(action: PermissionActionType | A, subject: Subjects | S, field?: string): boolean {
     if (!this.builtAbility) {
       throw new PermissionException("Permission must be built before checking abilities");
     }

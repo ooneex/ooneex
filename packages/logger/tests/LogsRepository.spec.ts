@@ -78,7 +78,11 @@ describe("LogsRepository", () => {
       }
 
       // Handle SELECT with ORDER BY (no WHERE clause)
-      if (query.includes("SELECT * FROM app_logs") && query.includes("ORDER BY date DESC") && !query.includes("WHERE")) {
+      if (
+        query.includes("SELECT * FROM app_logs") &&
+        query.includes("ORDER BY date DESC") &&
+        !query.includes("WHERE")
+      ) {
         return Promise.resolve([...mockData]);
       }
 

@@ -28,6 +28,8 @@
   },
   "devDependencies": {
     "@ooneex/controller": "workspace:*",
+    "@ooneex/permission": "workspace:*",
+    "@ooneex/pub-sub": "workspace:*",
     "@ooneex/entity": "workspace:*"
   },
   "keywords": [

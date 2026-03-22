@@ -514,7 +514,7 @@
     },
     "packages/storage": {
       "name": "@ooneex/storage",
-      "version": "0.0.19",
+      "version": "0.0.20",
       "dependencies": {
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",

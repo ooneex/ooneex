@@ -2,7 +2,7 @@ import path from "node:path";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { pdf } from "pdf-to-img";
 import sharp from "sharp";
-import { extractImages, extractText, getDocumentProxy } from "unpdf";
+import { extractImages, getDocumentProxy } from "unpdf";
 import { PDFException } from "./PDFException";
 import type {
   IPDF,
@@ -297,8 +297,12 @@ export class PDF implements IPDF {
    */
   public async getPageCount(): Promise<number> {
     try {
-      const document = await pdf(this.source, this.options);
-      return document.length;
+      const sourceBytes = await Bun.file(this.source).arrayBuffer();
+      const pdfDoc = await PDFDocument.load(sourceBytes, {
+        ignoreEncryption: this.options.password !== undefined,
+        updateMetadata: false,
+      });
+      return pdfDoc.getPageCount();
     } catch (error) {
       throw new PDFException("Failed to get page count", {
         source: this.source,
@@ -318,11 +322,11 @@ export class PDF implements IPDF {
    *
    * // Get content from page 1
    * const content = await pdf.getPageContent(1);
-   * console.log(content);
+   * console.log(content); // "Lorem ipsum dolor sit amet..."
    *
    * // Get content from a specific page
    * const page3Content = await pdf.getPageContent(3);
-   * console.log(page3Content); // Text content of page 3
+   * console.log(page3Content); // Plain text content
    * ```
    */
   public async getPageContent(pageNumber: number): Promise<string> {
@@ -335,7 +339,6 @@ export class PDF implements IPDF {
     try {
       const sourceBytes = await Bun.file(this.source).arrayBuffer();
       const document = await getDocumentProxy(new Uint8Array(sourceBytes));
-
       const totalPages = document.numPages;
 
       if (pageNumber > totalPages) {
@@ -345,9 +348,14 @@ export class PDF implements IPDF {
         });
       }
 
-      const { text } = await extractText(document, { mergePages: false });
+      const page = await document.getPage(pageNumber);
+      const textContent = await page.getTextContent();
+      const text = textContent.items
+        .filter((item) => "str" in item)
+        .map((item) => ("hasEOL" in item && item.hasEOL ? `${item.str}\n` : item.str))
+        .join("");
 
-      return text[pageNumber - 1] ?? "";
+      return text.trim();
     } catch (error) {
       if (error instanceof PDFException) {
         throw error;
@@ -404,14 +412,13 @@ export class PDF implements IPDF {
         });
       }
 
-      const images: PDFExtractedImageType[] = [];
-      let imageIndex = 0;
-
       const processPage = async (page: number) => {
         const pageImages = await extractImages(document, page);
+        const results: PDFExtractedImageType[] = [];
+        let imageIndex = 0;
         for (const img of pageImages) {
           imageIndex++;
-          const fileName = `${prefix}-${page}-${imageIndex}.png`;
+          const fileName = `${prefix}-p${page}-${imageIndex}.png`;
           const filePath = path.join(normalizedOutputDir, fileName);
 
           // Convert raw image data to PNG using sharp
@@ -427,24 +434,22 @@ export class PDF implements IPDF {
 
           await Bun.write(filePath, pngBuffer);
 
-          images.push({
+          results.push({
             page,
             path: filePath,
             width: img.width,
             height: img.height,
           });
         }
+        return results;
       };
 
       if (pageNumber !== undefined) {
-        await processPage(pageNumber);
-      } else {
-        for (let page = 1; page <= totalPages; page++) {
-          await processPage(page);
-        }
+        return await processPage(pageNumber);
       }
 
-      return images;
+      const allResults = await Promise.all(Array.from({ length: totalPages }, (_, i) => processPage(i + 1)));
+      return allResults.flat();
     } catch (error) {
       if (error instanceof PDFException) {
         throw error;
@@ -463,9 +468,11 @@ export class PDF implements IPDF {
    * @param options - Options including output directory and optional prefix
    * @returns Array of page image results with page numbers and file paths
    */
-  public async toImages(options: PDFToImagesOptionsType): Promise<PDFPageImageResultType[]> {
+  public async pagesToImages(options: PDFToImagesOptionsType): Promise<PDFPageImageResultType[]> {
     const normalizedOutputDir = path.join(...options.outputDir.split(/[/\\]/));
     const prefix = options.prefix ?? "page";
+    const savedWorker = (globalThis as Record<string, unknown>).pdfjsWorker;
+    (globalThis as Record<string, unknown>).pdfjsWorker = undefined;
 
     try {
       const document = await pdf(this.source, this.options);
@@ -485,8 +492,11 @@ export class PDF implements IPDF {
         pageNumber++;
       }
 
+      (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
+
       return results;
     } catch (error) {
+      (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
       throw new PDFException("Failed to convert PDF to images", {
         source: this.source,
         outputDir: normalizedOutputDir,
@@ -501,7 +511,7 @@ export class PDF implements IPDF {
    * @param options - Options including output directory and optional prefix
    * @returns Page image result with page number and file path
    */
-  public async getPageImage(pageNumber: number, options: PDFToImagesOptionsType): Promise<PDFPageImageResultType> {
+  public async pageToImage(pageNumber: number, options: PDFToImagesOptionsType): Promise<PDFPageImageResultType> {
     if (pageNumber < 1 || !Number.isInteger(pageNumber)) {
       throw new PDFException("Page number must be a positive integer", {
         pageNumber,
@@ -510,6 +520,8 @@ export class PDF implements IPDF {
 
     const normalizedOutputDir = path.join(...options.outputDir.split(/[/\\]/));
     const prefix = options.prefix ?? "page";
+    const savedWorker = (globalThis as Record<string, unknown>).pdfjsWorker;
+    (globalThis as Record<string, unknown>).pdfjsWorker = undefined;
 
     try {
       const document = await pdf(this.source, this.options);
@@ -528,11 +540,14 @@ export class PDF implements IPDF {
 
       await Bun.write(filePath, Buffer.from(image));
 
+      (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
+
       return {
         page: pageNumber,
         path: filePath,
       };
     } catch (error) {
+      (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
       if (error instanceof PDFException) {
         throw error;
       }
@@ -570,11 +585,9 @@ export class PDF implements IPDF {
       }
 
       const ranges = this.normalizeRanges(options.ranges, totalPages);
-      const results: PDFSplitResultType[] = [];
 
-      for (const range of ranges) {
-        const { start, end } = range;
-
+      // Validate all ranges first
+      for (const { start, end } of ranges) {
         if (start < 1 || end > totalPages || start > end) {
           throw new PDFException("Invalid page range", {
             start,
@@ -582,27 +595,31 @@ export class PDF implements IPDF {
             totalPages,
           });
         }
-
-        const newPdf = await PDFDocument.create();
-        const pageIndices = Array.from({ length: end - start + 1 }, (_, i) => start - 1 + i);
-        const copiedPages = await newPdf.copyPages(sourcePdf, pageIndices);
-
-        for (const page of copiedPages) {
-          newPdf.addPage(page);
-        }
-
-        const pdfBytes = await newPdf.save();
-
-        const fileName = start === end ? `${prefix}-${start}.pdf` : `${prefix}-${start}-${end}.pdf`;
-        const filePath = path.join(normalizedOutputDir, fileName);
-
-        await Bun.write(filePath, pdfBytes);
-
-        results.push({
-          pages: { start, end },
-          path: filePath,
-        });
       }
+
+      const results = await Promise.all(
+        ranges.map(async ({ start, end }) => {
+          const newPdf = await PDFDocument.create();
+          const pageIndices = Array.from({ length: end - start + 1 }, (_, i) => start - 1 + i);
+          const copiedPages = await newPdf.copyPages(sourcePdf, pageIndices);
+
+          for (const page of copiedPages) {
+            newPdf.addPage(page);
+          }
+
+          const pdfBytes = await newPdf.save();
+
+          const fileName = start === end ? `${prefix}-${start}.pdf` : `${prefix}-${start}-${end}.pdf`;
+          const filePath = path.join(normalizedOutputDir, fileName);
+
+          await Bun.write(filePath, pdfBytes);
+
+          return {
+            pages: { start, end },
+            path: filePath,
+          };
+        }),
+      );
 
       return results;
     } catch (error) {

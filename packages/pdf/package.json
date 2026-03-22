@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/pdf",
   "description": "PDF generation, manipulation, and image conversion utilities with support for creating, editing, and extracting content from PDF documents",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist",
@@ -33,7 +33,7 @@
     "pdf-lib": "^1.17.1",
     "pdf-to-img": "^5.0.0",
     "sharp": "^0.33.5",
-    "unpdf": "^0.12.1"
+    "unpdf": "^1.4.0"
   },
   "keywords": [
     "bun",

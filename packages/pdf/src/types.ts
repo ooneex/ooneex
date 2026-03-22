@@ -312,14 +312,14 @@ export interface IPDF {
    * @param options - Options including output directory and optional prefix
    * @returns Array of page image results with page numbers and file paths
    */
-  toImages(options: PDFToImagesOptionsType): Promise<PDFPageImageResultType[]>;
+  pagesToImages(options: PDFToImagesOptionsType): Promise<PDFPageImageResultType[]>;
 
   /**
    * Convert a specific page to an image and save to disk
    * @param pageNumber - Page number (1-indexed)
    * @param options - Options including output directory and optional prefix
    */
-  getPageImage(pageNumber: number, options: PDFToImagesOptionsType): Promise<PDFPageImageResultType>;
+  pageToImage(pageNumber: number, options: PDFToImagesOptionsType): Promise<PDFPageImageResultType>;
 
   /**
    * Split the PDF into separate documents and save to disk

@@ -10,9 +10,6 @@ import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
 import type { ServerWebSocket } from "bun";
 import { generateRouteDoc } from "./generateRouteDoc";
-import { generateRouteFetcher } from "./generateRouteFetcher";
-import { generateRouteHook } from "./generateRouteHook";
-import { generateRouteSocket } from "./generateRouteSocket";
 import { formatHttpRoutes } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
@@ -152,48 +149,17 @@ export class App {
 
     const allRoutes = router.getRoutes();
     let routeDocCount = 0;
-    let routeFetcherCount = 0;
-    let routeSocketCount = 0;
-    let routeHookCount = 0;
-
     for (const routeConfigs of allRoutes.values()) {
       for (const routeConfig of routeConfigs) {
         if (this.config.generateRouteDoc) {
           await generateRouteDoc(routeConfig);
           routeDocCount++;
         }
-
-        if (routeConfig.generate?.fetcher) {
-          if (routeConfig.isSocket) {
-            await generateRouteSocket(routeConfig);
-            routeSocketCount++;
-          } else {
-            await generateRouteFetcher(routeConfig);
-            routeFetcherCount++;
-          }
-        }
-
-        if (routeConfig.generate?.queryHook) {
-          await generateRouteHook(routeConfig);
-          routeHookCount++;
-        }
       }
     }
 
     if (this.config.generateRouteDoc && routeDocCount > 0) {
       logger.info(`Generated ${routeDocCount} route doc${routeDocCount > 1 ? "s" : ""}`);
-    }
-
-    if (routeFetcherCount > 0) {
-      logger.info(`Generated ${routeFetcherCount} route fetcher${routeFetcherCount > 1 ? "s" : ""}`);
-    }
-
-    if (routeSocketCount > 0) {
-      logger.info(`Generated ${routeSocketCount} route socket${routeSocketCount > 1 ? "s" : ""}`);
-    }
-
-    if (routeHookCount > 0) {
-      logger.info(`Generated ${routeHookCount} route hook${routeHookCount > 1 ? "s" : ""}`);
     }
 
     return this;

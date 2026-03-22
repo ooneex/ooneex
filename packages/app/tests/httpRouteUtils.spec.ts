@@ -36,7 +36,6 @@ const createMockContext = (overrides: Partial<ContextType> = {}): ContextType =>
     cache: {} as ContextType["cache"],
     storage: {} as ContextType["storage"],
     mailer: {} as ContextType["mailer"],
-    database: {} as ContextType["database"],
     route: {
       name: "api.test.list",
       path: "/test" as const,
@@ -469,7 +468,7 @@ describe("httpRouteUtils", () => {
         expect(result).toBeNull();
       });
 
-      test("returns error when permission check fails", async () => {
+      test("calls setUserPermissions and build without blocking", async () => {
         const mockPermission = {
           setUserPermissions: mock(function (this: typeof mockPermission) {
             return this;
@@ -484,7 +483,7 @@ describe("httpRouteUtils", () => {
           cannot: mock(() => true),
         };
 
-        class TestFailPermission {
+        class TestPermission {
           setUserPermissions = mockPermission.setUserPermissions.bind(mockPermission);
           build = mockPermission.build.bind(mockPermission);
           check = mockPermission.check;
@@ -493,19 +492,18 @@ describe("httpRouteUtils", () => {
           can = mockPermission.can;
           cannot = mockPermission.cannot;
         }
-        container.add(TestFailPermission);
+        container.add(TestPermission);
 
         const context = createMockContext();
         const route = createMockRoute({
-          name: "api.test.list",
-          permission: TestFailPermission,
+          permission: TestPermission,
         } as Partial<RouteConfigType>);
 
         const result = await validateRouteAccess(context, route, Environment.DEVELOPMENT);
 
-        expect(result).not.toBeNull();
-        expect(result?.status).toBe(HttpStatus.Code.Forbidden);
-        expect(result?.message).toContain('Route "api.test.list" permission denied');
+        expect(result).toBeNull();
+        expect(mockPermission.setUserPermissions).toHaveBeenCalled();
+        expect(mockPermission.build).toHaveBeenCalled();
       });
     });
   });

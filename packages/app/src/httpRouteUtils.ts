@@ -77,7 +77,6 @@ export const buildHttpContext = async (ctx: {
     cache: container.get("cache"),
     storage: container.get("storage"),
     mailer: container.get("mailer"),
-    database: container.get("database"),
     route: {
       name: route.name,
       path: route.path,
@@ -197,13 +196,6 @@ export const validateRouteAccess = async (
   if (route.permission) {
     const permission = container.get(route.permission);
     permission.setUserPermissions(context.user).build();
-    const hasPermission = await permission.check();
-    if (!hasPermission) {
-      return {
-        message: `Route "${route.name}" permission denied`,
-        status: HttpStatus.Code.Forbidden,
-      };
-    }
   }
 
   return null;

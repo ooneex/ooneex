@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/app",
   "description": "Core application framework for building modern web applications with Bun, providing routing, middleware, caching, logging, and more",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "type": "module",
   "files": [
     "dist",
@@ -54,6 +54,7 @@
     "@ooneex/middleware": "workspace:*",
     "@ooneex/module": "workspace:*",
     "@ooneex/socket": "workspace:*",
+    "@ooneex/socket-client": "workspace:*",
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*"
   },

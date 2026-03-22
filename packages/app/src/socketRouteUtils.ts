@@ -8,7 +8,7 @@ import { LogsEntity } from "@ooneex/logger";
 import type { ISocketMiddleware, SocketMiddlewareClassType } from "@ooneex/middleware";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { ContextType } from "@ooneex/socket";
-import type { RequestDataType } from "@ooneex/socket/client";
+import type { RequestDataType } from "@ooneex/socket-client";
 import type { LocaleInfoType } from "@ooneex/translation";
 import type { ScalarType } from "@ooneex/types";
 import { random } from "@ooneex/utils";

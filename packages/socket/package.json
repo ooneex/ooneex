@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/socket",
-  "description": "WebSocket server and client implementation for real-time bidirectional communication",
-  "version": "0.17.0",
+  "description": "WebSocket server implementation for real-time bidirectional communication",
+  "version": "0.17.1",
   "type": "module",
   "files": [
     "dist",
@@ -18,27 +18,18 @@
         "default": "./dist/index.js"
       }
     },
-    "./client": {
-      "import": {
-        "types": "./dist/client/index.d.ts",
-        "default": "./dist/client/index.js"
-      }
-    },
     "./package.json": "./package.json"
   },
   "license": "MIT",
   "scripts": {
-    "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
     "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {
-    "@ooneex/app-env": "workspace:*",
     "@ooneex/controller": "workspace:*",
     "@ooneex/http-request": "workspace:*",
-    "@ooneex/http-response": "workspace:*",
-    "@ooneex/translation": "workspace:*"
+    "@ooneex/http-response": "workspace:*"
   },
   "keywords": [
     "bun",

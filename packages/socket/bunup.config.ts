@@ -2,7 +2,6 @@ import { defineConfig } from "bunup";
 import { copy } from "bunup/plugins";
 
 export default defineConfig({
-  entry: ["./src/index.ts", "./src/client/index.ts"],
   target: "bun",
   format: ["esm"],
   drop: ["console", "debugger"],

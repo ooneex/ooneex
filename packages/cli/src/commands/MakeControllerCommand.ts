@@ -1,13 +1,12 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
-import type { RouteNameType } from "@ooneex/routing";
 import type { HttpMethodType } from "@ooneex/types";
 import { toKebabCase, toPascalCase, trim } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
 import { askName } from "../prompts/askName";
 import { askRouteMethod } from "../prompts/askRouteMethod";
-import { askRouteNamespace } from "../prompts/askRouteNamespace";
+import { askRouteName } from "../prompts/askRouteName";
 import { askRoutePath } from "../prompts/askRoutePath";
 import socketTemplate from "../templates/controller.socket.txt";
 import testTemplate from "../templates/controller.test.txt";
@@ -19,7 +18,7 @@ type CommandOptionsType = {
   name?: string;
   isSocket?: boolean;
   route?: {
-    name?: RouteNameType;
+    name?: string;
     path?: `/${string}`;
     method?: HttpMethodType;
   };
@@ -56,12 +55,8 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     let routeTypeFileName = "";
 
     if (!route.name) {
-      const routeNamespace = await askRouteNamespace({ message: "Enter route namespace", initial: "api" });
-      const routeResource = await askName({ message: "Enter resource name" });
-      const routeAction = await askName({ message: "Enter route action" });
-      // Construct route name as plain string to avoid excessive type complexity
-      const routeName = `${routeNamespace}.${toKebabCase(routeResource)}.${routeAction}`;
-      route.name = routeName as RouteNameType;
+      const routeName = await askRouteName({ message: "Enter route name (e.g., api.user.create)" });
+      route.name = routeName;
 
       routeTypeName = toPascalCase(routeName);
       routeTypeFileName = routeName;

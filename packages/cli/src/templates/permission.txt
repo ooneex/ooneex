@@ -11,13 +11,6 @@ export class {{NAME}}Permission extends Permission {
     return this;
   }
 
-  public forbid(): this {
-    // Example: Add restrictions using this.ability.cannot()
-    // this.ability.cannot("delete", "YourEntity");
-
-    return this;
-  }
-
   public setUserPermissions(user: IUser | null): this {
     if (!user) {
       return this;
@@ -42,12 +35,5 @@ export class {{NAME}}Permission extends Permission {
     // }
 
     return this;
-  }
-
-  public async check(): Promise<boolean> {
-    // Example: Check if a specific permission is granted
-    // return this.can("read", "YourEntity");
-
-    return true;
   }
 }

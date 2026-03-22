@@ -29,9 +29,7 @@ describe("permission.txt", () => {
   test("should have permission methods", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("allow");
-    expect(content).toContain("forbid");
     expect(content).toContain("setUserPermissions");
-    expect(content).toContain("check");
   });
 });
 
@@ -50,8 +48,6 @@ describe("permission.test.txt", () => {
   test("should test permission methods", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("allow");
-    expect(content).toContain("forbid");
     expect(content).toContain("setUserPermissions");
-    expect(content).toContain("check");
   });
 });

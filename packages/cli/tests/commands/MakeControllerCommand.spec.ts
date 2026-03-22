@@ -6,7 +6,7 @@ import { join } from "node:path";
 const promptMock = mock(() =>
   Promise.resolve({
     name: "test",
-    namespace: "api",
+    routeName: "api.test.index",
     method: "GET",
     path: "/test",
     confirm: false,
@@ -87,9 +87,13 @@ describe("MakeControllerCommand", () => {
         isSocket: false,
       });
 
-      // Route type file is created based on prompt values
-      const routeTypesDir = join(testDir, "src", "types", "routes");
-      expect(existsSync(routeTypesDir)).toBe(true);
+      // Route type file is named after the routeName from the prompt
+      const routeTypeFilePath = join(testDir, "src", "types", "routes", "api.test.index.ts");
+      expect(existsSync(routeTypeFilePath)).toBe(true);
+
+      const content = await Bun.file(routeTypeFilePath).text();
+      expect(content).toContain("ApiTestIndex");
+      expect(content).not.toContain("{{TYPE_NAME}}");
     });
 
     test("should normalize name with toPascalCase", async () => {
@@ -115,7 +119,7 @@ describe("MakeControllerCommand", () => {
       expect(content).not.toContain("UserControllerController");
     });
 
-    test("should replace NAME placeholder in template", async () => {
+    test("should replace all placeholders in template", async () => {
       await command.run({
         name: "Product",
         isSocket: false,
@@ -124,7 +128,14 @@ describe("MakeControllerCommand", () => {
       const filePath = join(testDir, "src", "controllers", "ProductController.ts");
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("{{NAME}}");
+      expect(content).not.toContain("{{ROUTE_NAME}}");
+      expect(content).not.toContain("{{ROUTE_PATH}}");
+      expect(content).not.toContain("{{ROUTE_METHOD}}");
+      expect(content).not.toContain("{{TYPE_NAME}}");
+      expect(content).not.toContain("{{TYPE_NAME_FILE}}");
       expect(content).toContain("ProductController");
+      expect(content).toContain("api.test.index");
+      expect(content).toContain("/test");
     });
   });
 

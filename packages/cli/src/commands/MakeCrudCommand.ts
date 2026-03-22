@@ -1,6 +1,5 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
-import type { RouteNameSegment, RouteNamespace } from "@ooneex/routing";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import pluralize from "pluralize";
 import { decorator } from "../decorators";
@@ -77,33 +76,33 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
 
   private async generateRouteTypes(name: string): Promise<void> {
     const resourceName = toKebabCase(name);
-    const namespace = "api" as RouteNamespace;
+    const namespace = "api";
 
     const routeTypes: RouteTypeConfig[] = [
       {
         template: routeTypeCreateTemplate,
         suffix: "Create",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.create`,
+        routeName: `${namespace}.${resourceName}.create`,
       },
       {
         template: routeTypeGetTemplate,
         suffix: "Get",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.get`,
+        routeName: `${namespace}.${resourceName}.get`,
       },
       {
         template: routeTypeUpdateTemplate,
         suffix: "Update",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.update`,
+        routeName: `${namespace}.${resourceName}.update`,
       },
       {
         template: routeTypeDeleteTemplate,
         suffix: "Delete",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.delete`,
+        routeName: `${namespace}.${resourceName}.delete`,
       },
       {
         template: routeTypeFilterTemplate,
         suffix: "Filter",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.filter`,
+        routeName: `${namespace}.${resourceName}.filter`,
       },
     ];
 
@@ -127,14 +126,14 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
 
   private async generateControllers(name: string): Promise<void> {
     const resourceName = toKebabCase(name);
-    const namespace = "api" as RouteNamespace;
+    const namespace = "api";
 
     const controllers: ControllerConfig[] = [
       {
         template: createTemplate,
         testTemplate: createTestTemplate,
         suffix: "Create",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.create`,
+        routeName: `${namespace}.${resourceName}.create`,
         routePath: `/${pluralize(resourceName)}`,
         routeMethod: "post",
         routeDescription: `Create a new ${name}`,
@@ -143,7 +142,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
         template: getTemplate,
         testTemplate: getTestTemplate,
         suffix: "Get",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.get`,
+        routeName: `${namespace}.${resourceName}.get`,
         routePath: `/${pluralize(resourceName)}/:id`,
         routeMethod: "get",
         routeDescription: `Get a ${name} by ID`,
@@ -152,7 +151,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
         template: updateTemplate,
         testTemplate: updateTestTemplate,
         suffix: "Update",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.update`,
+        routeName: `${namespace}.${resourceName}.update`,
         routePath: `/${pluralize(resourceName)}/:id`,
         routeMethod: "put",
         routeDescription: `Update a ${name} by ID`,
@@ -161,7 +160,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
         template: deleteTemplate,
         testTemplate: deleteTestTemplate,
         suffix: "Delete",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.delete`,
+        routeName: `${namespace}.${resourceName}.delete`,
         routePath: `/${pluralize(resourceName)}/:id`,
         routeMethod: "delete",
         routeDescription: `Delete a ${name} by ID`,
@@ -170,7 +169,7 @@ export class MakeCrudCommand<T extends CommandOptionsType = CommandOptionsType> 
         template: filterTemplate,
         testTemplate: filterTestTemplate,
         suffix: "Filter",
-        routeName: `${namespace}.${resourceName as RouteNameSegment}.filter`,
+        routeName: `${namespace}.${resourceName}.filter`,
         routePath: `/${pluralize(resourceName)}`,
         routeMethod: "get",
         routeDescription: `Filter ${name} resources`,

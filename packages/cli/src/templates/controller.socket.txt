@@ -20,9 +20,6 @@ import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}"
 
   }),
   roles: [ERole.USER],
-  generate: {
-    fetcher: true,
-  },
 })
 export class {{NAME}}Controller {
   public async index(context: ContextType<{{TYPE_NAME}}RouteType>) {

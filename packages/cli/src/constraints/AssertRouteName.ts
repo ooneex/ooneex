@@ -1,8 +1,6 @@
-import { VALID_ACTIONS, VALID_NAMESPACES } from "@ooneex/routing";
 import { Assert, type AssertType, Validation, type ValidationResultType } from "@ooneex/validation";
 
 const ROUTE_NAME_REGEX = /^[a-zA-Z0-9]+\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
-const RESOURCE_SEGMENT_REGEX = /^[a-zA-Z0-9]+$/;
 
 export class AssertRouteName extends Validation {
   public getConstraint(): AssertType {
@@ -54,30 +52,6 @@ export class AssertRouteName extends Validation {
       return {
         isValid: false,
         message: this.getErrorMessage() || "Invalid route name format",
-      };
-    }
-
-    // Validate namespace
-    if (!VALID_NAMESPACES.includes(namespace as (typeof VALID_NAMESPACES)[number])) {
-      return {
-        isValid: false,
-        message: `Invalid namespace '${namespace}'. Must be one of: ${VALID_NAMESPACES.join(", ")}`,
-      };
-    }
-
-    // Validate resource segment (alphanumeric only)
-    if (!RESOURCE_SEGMENT_REGEX.test(resource)) {
-      return {
-        isValid: false,
-        message: `Invalid resource segment '${resource}'. Must contain only letters and numbers`,
-      };
-    }
-
-    // Validate action
-    if (!VALID_ACTIONS.includes(action as (typeof VALID_ACTIONS)[number])) {
-      return {
-        isValid: false,
-        message: `Invalid action '${action}'. Must be one of the predefined actions`,
       };
     }
 

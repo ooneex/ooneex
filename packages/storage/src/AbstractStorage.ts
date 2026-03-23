@@ -1,5 +1,7 @@
+import { readdir } from "node:fs/promises";
+import { basename, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
-import type { IStorage } from "./types";
+import type { GetFileOptionsType, IStorage, PutDirOptionsType } from "./types";
 
 export abstract class AbstractStorage implements IStorage {
   protected client: Bun.S3Client | null = null;
@@ -23,9 +25,7 @@ export abstract class AbstractStorage implements IStorage {
     const client = this.getClient();
     const keys = await this.list();
 
-    for (const key of keys) {
-      await client.delete(key);
-    }
+    await Promise.all(keys.map((key) => client.delete(key)));
 
     return this;
   }
@@ -48,6 +48,36 @@ export abstract class AbstractStorage implements IStorage {
     return await this.put(key, file);
   }
 
+  public async putDir(bucket: string, options: PutDirOptionsType): Promise<number> {
+    const { path, filter } = options;
+    const entries = await readdir(path, { withFileTypes: true });
+
+    const tasks: Promise<number>[] = [];
+
+    for (const entry of entries) {
+      const entryLocalPath = join(path, entry.name);
+      const entryKey = bucket ? `${bucket}/${entry.name}` : entry.name;
+
+      if (filter && !filter.test(entryLocalPath)) {
+        continue;
+      }
+
+      if (entry.isDirectory()) {
+        const subOptions: PutDirOptionsType = { path: entryLocalPath };
+        if (filter) {
+          subOptions.filter = filter;
+        }
+        tasks.push(this.putDir(entryKey, subOptions));
+      } else {
+        tasks.push(this.putFile(entryKey, entryLocalPath));
+      }
+    }
+
+    const results = await Promise.all(tasks);
+
+    return results.reduce((sum, bytes) => sum + bytes, 0);
+  }
+
   public async put(
     key: string,
     content: string | ArrayBuffer | SharedArrayBuffer | Request | Response | BunFile | S3File | Blob,
@@ -55,6 +85,14 @@ export abstract class AbstractStorage implements IStorage {
     const s3file: S3File = this.getS3File(key);
 
     return await s3file.write(content);
+  }
+
+  public async getFile(key: string, options: GetFileOptionsType): Promise<number> {
+    const arrayBuffer = await this.getAsArrayBuffer(key);
+    const filename = options.filename ?? basename(key);
+    const localPath = join(options.outputDir, filename);
+
+    return await Bun.write(localPath, arrayBuffer);
   }
 
   public async getAsJson<T>(key: string): Promise<T> {

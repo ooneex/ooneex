@@ -308,6 +308,60 @@ describe("BunnyStorage", () => {
     });
   });
 
+  describe("putDir", () => {
+    test("should upload all files from local directory", async () => {
+      const localDir = "/tmp/bunny-putdir-test";
+      await Bun.write(`${localDir}/file1.txt`, "content1");
+      await Bun.write(`${localDir}/file2.txt`, "content2");
+
+      fetchMock
+        .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }))
+        .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
+
+      const storage = new BunnyStorage();
+      const size = await storage.putDir("remote", { path: localDir });
+
+      expect(size).toBe(16);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+
+      await Bun.$`rm -rf ${localDir}`.quiet();
+    });
+
+    test("should upload nested directories recursively", async () => {
+      const localDir = "/tmp/bunny-putdir-nested";
+      await Bun.write(`${localDir}/root.txt`, "root");
+      await Bun.write(`${localDir}/sub/nested.txt`, "nested");
+
+      fetchMock
+        .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }))
+        .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
+
+      const storage = new BunnyStorage();
+      const size = await storage.putDir("dest", { path: localDir });
+
+      expect(size).toBe(10);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+
+      await Bun.$`rm -rf ${localDir}`.quiet();
+    });
+
+    test("should filter files with regexp", async () => {
+      const localDir = "/tmp/bunny-putdir-filter";
+      await Bun.write(`${localDir}/include.txt`, "yes");
+      await Bun.write(`${localDir}/exclude.log`, "no");
+
+      fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
+
+      const storage = new BunnyStorage();
+      const size = await storage.putDir("filtered", { path: localDir, filter: /\.txt$/ });
+
+      expect(size).toBe(3);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      await Bun.$`rm -rf ${localDir}`.quiet();
+    });
+  });
+
   describe("getAsJson", () => {
     test("should get file content as JSON", async () => {
       const mockData = { name: "Test", value: 42 };

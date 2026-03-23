@@ -1,10 +1,11 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { mkdir, readdir, rm, rmdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
 import { AbstractStorage } from "./AbstractStorage";
 import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
+import type { GetFileOptionsType } from "./types";
 
 @decorator.storage()
 export class FilesystemStorage extends AbstractStorage {
@@ -91,22 +92,21 @@ export class FilesystemStorage extends AbstractStorage {
   }
 
   private async listFilesRecursive(dir: string, baseDir: string): Promise<string[]> {
-    const files: string[] = [];
     const entries = await readdir(dir, { withFileTypes: true });
 
-    for (const entry of entries) {
-      const fullPath = join(dir, entry.name);
+    const results = await Promise.all(
+      entries.map(async (entry) => {
+        const fullPath = join(dir, entry.name);
 
-      if (entry.isDirectory()) {
-        const subFiles = await this.listFilesRecursive(fullPath, baseDir);
-        files.push(...subFiles);
-      } else {
-        const relativePath = fullPath.substring(baseDir.length + 1);
-        files.push(relativePath);
-      }
-    }
+        if (entry.isDirectory()) {
+          return this.listFilesRecursive(fullPath, baseDir);
+        }
 
-    return files;
+        return [fullPath.substring(baseDir.length + 1)];
+      }),
+    );
+
+    return results.flat();
   }
 
   public override async clearBucket(): Promise<this> {
@@ -216,6 +216,37 @@ export class FilesystemStorage extends AbstractStorage {
     } catch (error) {
       throw new StorageException(
         `Failed to write file ${key}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  public override async getFile(key: string, options: GetFileOptionsType): Promise<number> {
+    const filePath = this.getFilePath(key);
+    const file = Bun.file(filePath);
+
+    if (!(await file.exists())) {
+      throw new StorageException(`File ${key} does not exist`);
+    }
+
+    const filename = options.filename ?? basename(key);
+    const localPath = join(options.outputDir, filename);
+    const dir = dirname(localPath);
+
+    try {
+      if (!existsSync(dir)) {
+        await mkdir(dir, { recursive: true });
+      }
+    } catch (error) {
+      throw new StorageException(
+        `Failed to create directory ${dir}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+
+    try {
+      return await Bun.write(localPath, file);
+    } catch (error) {
+      throw new StorageException(
+        `Failed to save file ${key} to ${localPath}: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }

@@ -1,7 +1,9 @@
+import { readdir } from "node:fs/promises";
+import { basename, join } from "node:path";
 import type { BunFile, S3File } from "bun";
 import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
-import type { IStorage } from "./types";
+import type { GetFileOptionsType, IStorage, PutDirOptionsType } from "./types";
 
 type BunnyRegionType = "de" | "uk" | "ny" | "la" | "sg" | "se" | "br" | "jh" | "syd";
 
@@ -140,6 +142,36 @@ export class BunnyStorage implements IStorage {
     return await this.put(key, file);
   }
 
+  public async putDir(bucket: string, options: PutDirOptionsType): Promise<number> {
+    const { path, filter } = options;
+    const entries = await readdir(path, { withFileTypes: true });
+
+    const tasks: Promise<number>[] = [];
+
+    for (const entry of entries) {
+      const entryLocalPath = join(path, entry.name);
+      const entryKey = bucket ? `${bucket}/${entry.name}` : entry.name;
+
+      if (filter && !filter.test(entryLocalPath)) {
+        continue;
+      }
+
+      if (entry.isDirectory()) {
+        const subOptions: PutDirOptionsType = { path: entryLocalPath };
+        if (filter) {
+          subOptions.filter = filter;
+        }
+        tasks.push(this.putDir(entryKey, subOptions));
+      } else {
+        tasks.push(this.putFile(entryKey, entryLocalPath));
+      }
+    }
+
+    const results = await Promise.all(tasks);
+
+    return results.reduce((sum, bytes) => sum + bytes, 0);
+  }
+
   public async put(
     key: string,
     content: string | ArrayBufferView | ArrayBuffer | SharedArrayBuffer | Request | Response | BunFile | S3File | Blob,
@@ -197,6 +229,14 @@ export class BunnyStorage implements IStorage {
     }
 
     return contentLength;
+  }
+
+  public async getFile(key: string, options: GetFileOptionsType): Promise<number> {
+    const arrayBuffer = await this.getAsArrayBuffer(key);
+    const filename = options.filename ?? basename(key);
+    const localPath = join(options.outputDir, filename);
+
+    return await Bun.write(localPath, arrayBuffer);
   }
 
   public async getAsJson<T = unknown>(key: string): Promise<T> {

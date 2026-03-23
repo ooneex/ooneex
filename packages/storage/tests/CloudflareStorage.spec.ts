@@ -179,6 +179,7 @@ describe("CloudflareStorage", () => {
       expect(typeof storage.exists).toBe("function");
       expect(typeof storage.delete).toBe("function");
       expect(typeof storage.putFile).toBe("function");
+      expect(typeof storage.putDir).toBe("function");
       expect(typeof storage.put).toBe("function");
       expect(typeof storage.getAsJson).toBe("function");
       expect(typeof storage.getAsArrayBuffer).toBe("function");
@@ -204,6 +205,7 @@ describe("CloudflareStorage", () => {
       expect(storage.delete).toBeDefined();
       expect(storage.put).toBeDefined();
       expect(storage.putFile).toBeDefined();
+      expect(storage.putDir).toBeDefined();
       expect(storage.getAsJson).toBeDefined();
       expect(storage.getAsArrayBuffer).toBeDefined();
       expect(storage.getAsStream).toBeDefined();

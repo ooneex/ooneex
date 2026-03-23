@@ -278,8 +278,12 @@ describe("AbstractStorage", () => {
     test("should be callable with key and path", async () => {
       // We can't easily mock Bun.file, so we test the method signature exists
       expect(typeof storage.putFile).toBe("function");
+    });
+  });
 
-      // Restore if needed
+  describe("putDir", () => {
+    test("should be callable with bucket and options", () => {
+      expect(typeof storage.putDir).toBe("function");
     });
   });
 
@@ -407,6 +411,7 @@ describe("AbstractStorage", () => {
       expect(typeof storage.exists).toBe("function");
       expect(typeof storage.delete).toBe("function");
       expect(typeof storage.putFile).toBe("function");
+      expect(typeof storage.putDir).toBe("function");
       expect(typeof storage.put).toBe("function");
       expect(typeof storage.getAsJson).toBe("function");
       expect(typeof storage.getAsArrayBuffer).toBe("function");

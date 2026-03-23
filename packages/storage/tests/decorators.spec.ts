@@ -30,6 +30,12 @@ describe("decorator.storage", () => {
       public async putFile(): Promise<number> {
         return 0;
       }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
+        return 0;
+      }
       public async put(): Promise<number> {
         return 0;
       }
@@ -67,6 +73,12 @@ describe("decorator.storage", () => {
         // noop
       }
       public async putFile(): Promise<number> {
+        return 0;
+      }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
         return 0;
       }
       public async put(): Promise<number> {
@@ -109,6 +121,12 @@ describe("decorator.storage", () => {
         // noop
       }
       public async putFile(): Promise<number> {
+        return 0;
+      }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
         return 0;
       }
       public async put(): Promise<number> {
@@ -161,6 +179,12 @@ describe("decorator.storage", () => {
       public async putFile(): Promise<number> {
         return 0;
       }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
+        return 0;
+      }
       public async put(): Promise<number> {
         return 0;
       }
@@ -202,6 +226,12 @@ describe("decorator.storage", () => {
         // noop
       }
       public async putFile(): Promise<number> {
+        return 0;
+      }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
         return 0;
       }
       public async put(): Promise<number> {
@@ -248,6 +278,12 @@ describe("decorator.storage", () => {
       public async putFile(): Promise<number> {
         return 0;
       }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
+        return 0;
+      }
       public async put(): Promise<number> {
         return 0;
       }
@@ -287,6 +323,12 @@ describe("decorator.storage", () => {
         // noop
       }
       public async putFile(): Promise<number> {
+        return 0;
+      }
+      public async putDir(): Promise<number> {
+        return 0;
+      }
+      public async getFile(): Promise<number> {
         return 0;
       }
       public async put(): Promise<number> {

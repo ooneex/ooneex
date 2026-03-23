@@ -320,6 +320,95 @@ describe("FilesystemStorage", () => {
     });
   });
 
+  describe("putDir", () => {
+    test("should upload all files from local directory", async () => {
+      const localDir = "/tmp/putdir-test-source";
+      await Bun.write(join(localDir, "file1.txt"), "content1");
+      await Bun.write(join(localDir, "file2.txt"), "content2");
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putdir-bucket");
+
+      const bytesWritten = await storage.putDir("remote", { path: localDir });
+
+      expect(bytesWritten).toBe(16);
+      expect(await storage.exists("remote/file1.txt")).toBe(true);
+      expect(await storage.exists("remote/file2.txt")).toBe(true);
+
+      await rmrf(localDir);
+    });
+
+    test("should upload nested directories recursively", async () => {
+      const localDir = "/tmp/putdir-nested-test";
+      await Bun.write(join(localDir, "root.txt"), "root");
+      await Bun.write(join(localDir, "sub/nested.txt"), "nested");
+      await Bun.write(join(localDir, "sub/deep/file.txt"), "deep");
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putdir-nested-bucket");
+
+      const bytesWritten = await storage.putDir("dest", { path: localDir });
+
+      expect(bytesWritten).toBe(14);
+      expect(await storage.exists("dest/root.txt")).toBe(true);
+      expect(await storage.exists("dest/sub/nested.txt")).toBe(true);
+      expect(await storage.exists("dest/sub/deep/file.txt")).toBe(true);
+
+      await rmrf(localDir);
+    });
+
+    test("should filter files with regexp", async () => {
+      const localDir = "/tmp/putdir-filter-test";
+      await Bun.write(join(localDir, "include.txt"), "yes");
+      await Bun.write(join(localDir, "exclude.log"), "no");
+      await Bun.write(join(localDir, "also.txt"), "yes");
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putdir-filter-bucket");
+
+      const bytesWritten = await storage.putDir("filtered", { path: localDir, filter: /\.txt$/ });
+
+      expect(bytesWritten).toBe(6);
+      expect(await storage.exists("filtered/include.txt")).toBe(true);
+      expect(await storage.exists("filtered/also.txt")).toBe(true);
+      expect(await storage.exists("filtered/exclude.log")).toBe(false);
+
+      await rmrf(localDir);
+    });
+
+    test("should filter directories with regexp", async () => {
+      const localDir = "/tmp/putdir-filter-dir-test";
+      await Bun.write(join(localDir, "keep/file.txt"), "kept");
+      await Bun.write(join(localDir, "skip/file.txt"), "skipped");
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putdir-filter-dir-bucket");
+
+      const bytesWritten = await storage.putDir("out", { path: localDir, filter: /keep/ });
+
+      expect(bytesWritten).toBe(4);
+      expect(await storage.exists("out/keep/file.txt")).toBe(true);
+      expect(await storage.exists("out/skip/file.txt")).toBe(false);
+
+      await rmrf(localDir);
+    });
+
+    test("should return 0 for empty directory", async () => {
+      const localDir = "/tmp/putdir-empty-test";
+      const { mkdir } = await import("node:fs/promises");
+      await mkdir(localDir, { recursive: true });
+
+      const storage = new FilesystemStorage();
+      storage.setBucket("putdir-empty-bucket");
+
+      const bytesWritten = await storage.putDir("empty", { path: localDir });
+
+      expect(bytesWritten).toBe(0);
+
+      await rmrf(localDir);
+    });
+  });
+
   describe("delete", () => {
     test("should delete existing file", async () => {
       const storage = new FilesystemStorage();
@@ -513,6 +602,7 @@ describe("FilesystemStorage", () => {
       expect(typeof storage.exists).toBe("function");
       expect(typeof storage.delete).toBe("function");
       expect(typeof storage.putFile).toBe("function");
+      expect(typeof storage.putDir).toBe("function");
       expect(typeof storage.put).toBe("function");
       expect(typeof storage.getAsJson).toBe("function");
       expect(typeof storage.getAsArrayBuffer).toBe("function");

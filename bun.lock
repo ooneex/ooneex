@@ -388,7 +388,6 @@
       },
       "devDependencies": {
         "@ooneex/currencies": "workspace:*",
-        "@ooneex/tag": "workspace:*",
         "@ooneex/types": "workspace:*",
       },
     },
@@ -521,13 +520,6 @@
         "@ooneex/http-status": "workspace:*",
       },
     },
-    "packages/tag": {
-      "name": "@ooneex/tag",
-      "version": "0.0.18",
-      "devDependencies": {
-        "@ooneex/types": "workspace:*",
-      },
-    },
     "packages/translation": {
       "name": "@ooneex/translation",
       "version": "0.0.18",
@@ -563,14 +555,14 @@
     },
     "packages/utils": {
       "name": "@ooneex/utils",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "nanoid": "^5.1.6",
       },
     },
     "packages/validation": {
       "name": "@ooneex/validation",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/currencies": "workspace:*",
@@ -580,7 +572,7 @@
     },
     "packages/youtube": {
       "name": "@ooneex/youtube",
-      "version": "0.0.18",
+      "version": "0.0.19",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -1074,8 +1066,6 @@
     "@ooneex/socket-client": ["@ooneex/socket-client@workspace:packages/socket-client"],
 
     "@ooneex/storage": ["@ooneex/storage@workspace:packages/storage"],
-
-    "@ooneex/tag": ["@ooneex/tag@workspace:packages/tag"],
 
     "@ooneex/translation": ["@ooneex/translation@workspace:packages/translation"],
 

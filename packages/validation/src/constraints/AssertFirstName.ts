@@ -1,13 +1,6 @@
-import type { AssertType } from "../types";
-import { Assert } from "../utils";
-import { Validation } from "../Validation";
+import { Assert, createConstraint } from "../utils";
 
-export class AssertFirstName extends Validation {
-  public getConstraint(): AssertType {
-    return Assert("1 <= string <= 50 & /^[a-zA-Z\\s'-]+$/");
-  }
-
-  public getErrorMessage(): string | null {
-    return "First name must be between 1 and 50 characters and contain only letters, spaces, hyphens, and apostrophes";
-  }
-}
+export class AssertFirstName extends createConstraint(
+  () => Assert("1 <= string <= 50 & /^[a-zA-Z\\s'-]+$/"),
+  "First name must be between 1 and 50 characters and contain only letters, spaces, hyphens, and apostrophes",
+) {}

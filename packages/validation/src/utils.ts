@@ -1,8 +1,22 @@
 import * as A from "arktype";
 import type { TypeParser } from "arktype/internal/type.ts";
+import type { AssertType } from "./types";
+import { Validation } from "./Validation";
 
 // biome-ignore lint/complexity/noBannedTypes: trust me
 export const Assert: TypeParser<{}> = A.type;
+
+export function createConstraint(constraintFn: () => AssertType, errorMessage: string | null) {
+  return class extends Validation {
+    public getConstraint(): AssertType {
+      return constraintFn();
+    }
+
+    public getErrorMessage(): string | null {
+      return errorMessage;
+    }
+  };
+}
 
 /**
  * Convert a JSON Schema type to TypeScript type string

@@ -24,48 +24,27 @@ export class AssertUrl extends Validation {
 
     const url = data as string;
 
-    // Reject specific non-http/https protocols first
     if (url.match(/^(ftp|file|mailto|telnet|ssh|gopher):/i)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid URL format",
-      };
+      return this.invalidResult("Invalid URL format");
     }
 
-    // Reject malformed protocols
     if (url.includes("://") && !url.match(/^https?:\/\//i)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid URL format",
-      };
+      return this.invalidResult("Invalid URL format");
     }
 
-    // Check for whitespace at start or end
     if (url.trim() !== url) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid URL format",
-      };
+      return this.invalidResult("Invalid URL format");
     }
 
-    // Check for invalid domain patterns
     if (url.includes("..") || url.startsWith(".") || url.includes("/.") || url.endsWith(".")) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid URL format",
-      };
+      return this.invalidResult("Invalid URL format");
     }
 
     if (!URL_REGEX.test(url)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid URL format",
-      };
+      return this.invalidResult("Invalid URL format");
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 
   public validateStrict(data: unknown): ValidationResultType {
@@ -74,17 +53,13 @@ export class AssertUrl extends Validation {
       return basicValidation;
     }
 
-    const url = data as string;
-
-    if (!STRICT_URL_REGEX.test(url)) {
+    if (!STRICT_URL_REGEX.test(data as string)) {
       return {
         isValid: false,
         message: "URL must include protocol (http:// or https://) and follow strict URL format",
       };
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

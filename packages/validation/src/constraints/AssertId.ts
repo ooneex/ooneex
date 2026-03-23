@@ -20,17 +20,10 @@ export class AssertId extends Validation {
       return basicValidation;
     }
 
-    const id = data as string;
-
-    if (!ID_REGEX.test(id)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid ID format",
-      };
+    if (!ID_REGEX.test(data as string)) {
+      return this.invalidResult("Invalid ID format");
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

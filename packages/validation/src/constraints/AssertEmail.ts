@@ -1,13 +1,6 @@
-import type { AssertType } from "../types";
-import { Assert } from "../utils";
-import { Validation } from "../Validation";
+import { Assert, createConstraint } from "../utils";
 
-export class AssertEmail extends Validation {
-  public getConstraint(): AssertType {
-    return Assert("string.email");
-  }
-
-  public getErrorMessage(): string | null {
-    return "Must be a valid email address";
-  }
-}
+export class AssertEmail extends createConstraint(
+  () => Assert("string.email"),
+  "Must be a valid email address",
+) {}

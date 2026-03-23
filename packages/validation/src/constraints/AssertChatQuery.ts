@@ -27,20 +27,13 @@ export class AssertChatQuery extends Validation {
       return basicValidation;
     }
 
-    const query = data as string;
-
     for (const pattern of CHAT_QUERY_FORBIDDEN_PATTERNS) {
       pattern.lastIndex = 0;
-      if (pattern.test(query)) {
-        return {
-          isValid: false,
-          message: this.getErrorMessage() || "Invalid chat query",
-        };
+      if (pattern.test(data as string)) {
+        return this.invalidResult("Invalid chat query");
       }
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

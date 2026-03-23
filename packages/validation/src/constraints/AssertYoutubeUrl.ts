@@ -22,18 +22,10 @@ export class AssertYoutubeUrl extends Validation {
       return basicValidation;
     }
 
-    const url = data as string;
-    const isValidYouTubeUrl = YOUTUBE_URL_PATTERNS.some((pattern) => pattern.test(url));
-
-    if (!isValidYouTubeUrl) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid YouTube URL",
-      };
+    if (!YOUTUBE_URL_PATTERNS.some((pattern) => pattern.test(data as string))) {
+      return this.invalidResult("Invalid YouTube URL");
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

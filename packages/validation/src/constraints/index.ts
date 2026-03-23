@@ -2,6 +2,7 @@ export { AssertAppEnv } from "./AssertAppEnv";
 export { AssertChatQuery } from "./AssertChatQuery";
 export { AssertCountryCode } from "./AssertCountryCode";
 export { AssertCurrency } from "./AssertCurrency";
+export { AssertDescription } from "./AssertDescription";
 export { AssertEmail } from "./AssertEmail";
 export { AssertFirstName } from "./AssertFirstName";
 export { AssertHexaColor } from "./AssertHexaColor";

@@ -11,14 +11,20 @@ export abstract class Validation implements IAssert {
     const out = constraint(data);
 
     if (out instanceof type.errors) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || out.summary,
-      };
+      return this.invalidResult(out.summary);
     }
 
+    return this.validResult();
+  }
+
+  protected invalidResult(fallbackMessage?: string): ValidationResultType {
     return {
-      isValid: true,
+      isValid: false,
+      message: this.getErrorMessage() || fallbackMessage || "Validation failed",
     };
+  }
+
+  protected validResult(): ValidationResultType {
+    return { isValid: true };
   }
 }

@@ -226,6 +226,36 @@ describe("Validation", () => {
     });
   });
 
+  describe("invalidResult helper", () => {
+    test("should use custom error message over fallback", () => {
+      const validator = new TestValidation(Assert("string"));
+      validator.setErrorMessage("Custom error");
+      const result = validator.validate(123);
+
+      expect(result.isValid).toBe(false);
+      expect(result.message).toBe("Custom error");
+    });
+
+    test("should use fallback message when no custom error message", () => {
+      const validator = new TestValidation(Assert("string"));
+      const result = validator.validate(123);
+
+      expect(result.isValid).toBe(false);
+      expect(result.message).toBeDefined();
+      expect(result.message).toContain("must be a string");
+    });
+  });
+
+  describe("validResult helper", () => {
+    test("should return isValid true with no message", () => {
+      const validator = new TestValidation(Assert("string"));
+      const result = validator.validate("hello");
+
+      expect(result.isValid).toBe(true);
+      expect(result.message).toBeUndefined();
+    });
+  });
+
   describe("ValidationResultType", () => {
     test("should return correct structure for valid data", () => {
       const validator = new TestValidation(Assert("string"));

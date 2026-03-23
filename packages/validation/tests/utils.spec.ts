@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Assert, jsonSchemaToTypeString } from "@/utils";
+import { Assert, createConstraint, jsonSchemaToTypeString } from "@/utils";
 
 describe("Assert", () => {
   test("should create string type constraint", () => {
@@ -59,6 +59,57 @@ describe("Assert", () => {
 
     expect(constraint(42)).toBe(42);
     expect(constraint(3.14).toString()).toContain("integer");
+  });
+});
+
+describe("createConstraint", () => {
+  test("should create a class that extends Validation", () => {
+    const TestClass = createConstraint(() => Assert("string"), "Must be a string");
+    const instance = new TestClass();
+
+    expect(instance.getConstraint()).toBeDefined();
+    expect(instance.getErrorMessage()).toBe("Must be a string");
+  });
+
+  test("should validate data correctly with created constraint", () => {
+    const TestClass = createConstraint(() => Assert("string"), "Must be a string");
+    const instance = new TestClass();
+
+    const validResult = instance.validate("hello");
+    expect(validResult.isValid).toBe(true);
+
+    const invalidResult = instance.validate(123);
+    expect(invalidResult.isValid).toBe(false);
+    expect(invalidResult.message).toBe("Must be a string");
+  });
+
+  test("should support null error message", () => {
+    const TestClass = createConstraint(() => Assert("number"), null);
+    const instance = new TestClass();
+
+    const result = instance.validate("not a number");
+    expect(result.isValid).toBe(false);
+    expect(result.message).toContain("must be a number");
+  });
+
+  test("should support complex constraints", () => {
+    const TestClass = createConstraint(
+      () => Assert("1 <= string <= 10"),
+      "Must be 1-10 characters",
+    );
+    const instance = new TestClass();
+
+    expect(instance.validate("hello").isValid).toBe(true);
+    expect(instance.validate("").isValid).toBe(false);
+    expect(instance.validate("12345678901").isValid).toBe(false);
+  });
+
+  test("should allow extending the created class", () => {
+    class Extended extends createConstraint(() => Assert("string"), "Custom message") {}
+    const instance = new Extended();
+
+    expect(instance.validate("hello").isValid).toBe(true);
+    expect(instance.getErrorMessage()).toBe("Custom message");
   });
 });
 

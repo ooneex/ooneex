@@ -23,31 +23,19 @@ export class AssertName extends Validation {
 
     const name = data as string;
 
-    // Check for leading or trailing whitespace
     if (name.trim() !== name) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid name format",
-      };
+      return this.invalidResult("Invalid name format");
     }
 
     if (!NAME_REGEX.test(name)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid name format",
-      };
+      return this.invalidResult("Invalid name format");
     }
 
     // Check for valid period usage (only allowed when followed by space like "St. John")
     if (name.includes(".") && !name.match(/\.\s/)) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid name format",
-      };
+      return this.invalidResult("Invalid name format");
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

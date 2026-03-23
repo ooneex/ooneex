@@ -21,19 +21,10 @@ export class AssertHexaColor extends Validation {
     }
 
     const color = data as string;
-
-    const is3DigitHex = HEXA_COLOR_3_DIGIT_REGEX.test(color);
-    const is6DigitHex = HEXA_COLOR_6_DIGIT_REGEX.test(color);
-
-    if (!is3DigitHex && !is6DigitHex) {
-      return {
-        isValid: false,
-        message: this.getErrorMessage() || "Invalid hexadecimal color",
-      };
+    if (!HEXA_COLOR_3_DIGIT_REGEX.test(color) && !HEXA_COLOR_6_DIGIT_REGEX.test(color)) {
+      return this.invalidResult("Invalid hexadecimal color");
     }
 
-    return {
-      isValid: true,
-    };
+    return this.validResult();
   }
 }

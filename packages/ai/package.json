@@ -34,7 +34,7 @@
     "@ooneex/validation": "workspace:*",
     "@tanstack/ai": "^0.2.0",
     "@tanstack/ai-anthropic": "^0.2.0",
-    "@tanstack/ai-gemini": "^0.2.0",
+    "@tanstack/ai-gemini": "^0.8.0",
     "@tanstack/ai-groq": "^0.1.2",
     "@tanstack/ai-ollama": "^0.2.0",
     "@tanstack/ai-openai": "^0.2.0"

@@ -79,7 +79,7 @@ export class OpenAi extends BaseAi<OpenAiConfigType> {
     options?: OpenAiSpeechToTextOptionsType,
   ): Promise<TranscriptionResult> {
     const apiKey = this.getApiKey(options);
-    const model = options?.model ?? "whisper-1";
+    const model = options?.model ?? "gpt-4o-transcribe";
     const adapter = createOpenaiTranscription(model, apiKey);
 
     // biome-ignore lint/suspicious/noExplicitAny: exactOptionalPropertyTypes requires careful handling

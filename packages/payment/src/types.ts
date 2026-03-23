@@ -1,5 +1,4 @@
 import type { CurrencyCodeType } from "@ooneex/currencies";
-import type { ITag } from "@ooneex/tag";
 import type { IBase, ScalarType } from "@ooneex/types";
 
 export enum EPriceType {
@@ -148,7 +147,7 @@ export interface IProduct extends IBase {
   barcode?: string;
   images?: ProductImageType[];
   attributes?: Record<string, ScalarType>;
-  tags?: ITag[];
+  tags?: string[];
   isRecurring?: boolean;
   isArchived?: boolean;
   organizationId?: string;

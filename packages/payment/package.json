@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@ooneex/currencies": "workspace:*",
-    "@ooneex/tag": "workspace:*",
     "@ooneex/types": "workspace:*"
   },
   "keywords": [

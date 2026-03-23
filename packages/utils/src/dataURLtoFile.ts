@@ -1,5 +1,5 @@
-export const dataURLtoFile = (dataurl: string, filename: string): File => {
-  const arr = dataurl.split(",");
+export const dataURLtoFile = (dataUrl: string, filename: string): File => {
+  const arr = dataUrl.split(",");
   const mimeMatch = arr[0]?.match(/:(.*?);/);
   const mime = mimeMatch?.[1] || "";
   const bstr = atob(arr[1] as string);

@@ -434,7 +434,6 @@
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
-        "@ooneex/pdf": "workspace:*",
         "@ooneex/utils": "workspace:*",
         "@opendataloader/pdf": "^2.0.2",
       },

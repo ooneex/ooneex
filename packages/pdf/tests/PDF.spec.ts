@@ -493,7 +493,11 @@ describe("PDF", () => {
     test("should convert all pages to images", async () => {
       const outputDir = "tests/tmp/to-images";
       const pdf = new PDF("tests/file-sample.pdf");
-      const results = await pdf.pagesToImages({ outputDir });
+      const results = [];
+
+      for await (const result of pdf.pagesToImages({ outputDir })) {
+        results.push(result);
+      }
 
       expect(results).toHaveLength(4);
 
@@ -506,7 +510,11 @@ describe("PDF", () => {
     test("should use custom prefix", async () => {
       const outputDir = "tests/tmp/to-images-prefix";
       const pdf = new PDF("tests/file-sample.pdf");
-      const results = await pdf.pagesToImages({ outputDir, prefix: "slide" });
+      const results = [];
+
+      for await (const result of pdf.pagesToImages({ outputDir, prefix: "slide" })) {
+        results.push(result);
+      }
 
       expect(results).toHaveLength(4);
 
@@ -533,7 +541,9 @@ describe("PDF", () => {
       const pdf = new PDF("nonexistent.pdf");
 
       try {
-        await pdf.pagesToImages({ outputDir: "/tmp/pdf-test" });
+        for await (const _ of pdf.pagesToImages({ outputDir: "/tmp/pdf-test" })) {
+          // consume generator
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);
@@ -604,7 +614,9 @@ describe("PDF", () => {
       const pdf = new PDF("nonexistent.pdf");
 
       try {
-        await pdf.split({ outputDir: "/tmp/pdf-test" });
+        for await (const _ of pdf.split({ outputDir: "/tmp/pdf-test" })) {
+          // consume generator
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);

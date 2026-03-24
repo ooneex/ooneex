@@ -312,7 +312,7 @@ export interface IPDF {
    * @param options - Options including output directory and optional prefix
    * @returns Array of page image results with page numbers and file paths
    */
-  pagesToImages(options: PDFToImagesOptionsType): Promise<PDFPageImageResultType[]>;
+  pagesToImages(options: PDFToImagesOptionsType): AsyncGenerator<PDFPageImageResultType, void, unknown>;
 
   /**
    * Convert a specific page to an image and save to disk
@@ -326,7 +326,7 @@ export interface IPDF {
    * @param options - Split options with output directory, page ranges, and optional prefix
    * @returns Array of split PDF results with page ranges and file paths
    */
-  split(options: PDFSplitOptionsType): Promise<PDFSplitResultType[]>;
+  split(options: PDFSplitOptionsType): AsyncGenerator<PDFSplitResultType, void, unknown>;
 
   /**
    * Remove specified pages from the PDF

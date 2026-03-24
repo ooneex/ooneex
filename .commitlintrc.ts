@@ -58,6 +58,7 @@ const Configuration: UserConfig = {
         "permission",
         "pub-sub",
         "queue",
+        "rag",
         "rate-limit",
         "react",
         "repository",

@@ -465,12 +465,12 @@ export class Directory implements IDirectory {
   }
 
   /**
-   * Gets a list of files (not directories) in the directory.
+   * Gets files (not directories) in the directory as an async generator.
    *
    * @param options - Optional configuration for getting files
    * @param options.recursive - Get files recursively from subdirectories (default: false)
    * @param options.pattern - Regular expression to filter files by name
-   * @returns A promise that resolves to an array of File instances
+   * @returns An async generator that yields File instances
    * @throws {DirectoryException} If the files cannot be listed
    *
    * @example
@@ -478,44 +478,43 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/directory");
    *
    * // Get immediate files only
-   * const files = await dir.getFiles();
-   * for (const file of files) {
+   * for await (const file of dir.getFiles()) {
    *   console.log(file.getName());
    * }
    *
    * // Get all files recursively
-   * const allFiles = await dir.getFiles({ recursive: true });
+   * for await (const file of dir.getFiles({ recursive: true })) {
+   *   console.log(file.getName());
+   * }
    *
    * // Get only TypeScript files
-   * const tsFiles = await dir.getFiles({ pattern: /\.ts$/ });
-   *
-   * // Get TypeScript files recursively
-   * const allTsFiles = await dir.getFiles({ recursive: true, pattern: /\.tsx?$/ });
+   * for await (const file of dir.getFiles({ pattern: /\.ts$/ })) {
+   *   console.log(file.getName());
+   * }
    * ```
    */
-  public async getFiles(options?: DirectoryGetFilesOptionsType): Promise<IFile[]> {
+  public async *getFiles(options?: DirectoryGetFilesOptionsType): AsyncGenerator<IFile> {
     try {
       const entries = await readdir(this.path, {
         withFileTypes: true,
         recursive: options?.recursive ?? false,
       });
 
-      let filePaths = entries
-        .filter((entry) => entry.isFile())
-        .map((entry) => {
-          if (entry.parentPath && entry.parentPath !== this.path) {
-            const relativePath = entry.parentPath.slice(this.path.length + 1);
-            return join(relativePath, entry.name);
-          }
-          return entry.name;
-        });
+      for (const entry of entries) {
+        if (!entry.isFile()) continue;
 
-      if (options?.pattern) {
-        const pattern = options.pattern;
-        filePaths = filePaths.filter((filePath) => pattern.test(filePath));
+        let filePath: string;
+        if (entry.parentPath && entry.parentPath !== this.path) {
+          const relativePath = entry.parentPath.slice(this.path.length + 1);
+          filePath = join(relativePath, entry.name);
+        } else {
+          filePath = entry.name;
+        }
+
+        if (options?.pattern && !options.pattern.test(filePath)) continue;
+
+        yield new File(join(this.path, filePath));
       }
-
-      return filePaths.map((filePath) => new File(join(this.path, filePath)));
     } catch (error) {
       throw new DirectoryException(`Failed to get files from directory: ${this.path}`, {
         path: this.path,
@@ -525,12 +524,12 @@ export class Directory implements IDirectory {
   }
 
   /**
-   * Gets a list of subdirectories (not files) in the directory.
+   * Gets subdirectories (not files) in the directory as an async generator.
    *
    * @param options - Optional configuration for getting directories
    * @param options.recursive - Get directories recursively from subdirectories (default: false)
    * @param options.pattern - Regular expression to filter directories by name
-   * @returns A promise that resolves to an array of Directory instances
+   * @returns An async generator that yields Directory instances
    * @throws {DirectoryException} If the directories cannot be listed
    *
    * @example
@@ -538,44 +537,43 @@ export class Directory implements IDirectory {
    * const dir = new Directory("/path/to/directory");
    *
    * // Get immediate subdirectories only
-   * const dirs = await dir.getDirectories();
-   * for (const subdir of dirs) {
+   * for await (const subdir of dir.getDirectories()) {
    *   console.log(subdir.getName());
    * }
    *
    * // Get all subdirectories recursively
-   * const allDirs = await dir.getDirectories({ recursive: true });
+   * for await (const subdir of dir.getDirectories({ recursive: true })) {
+   *   console.log(subdir.getName());
+   * }
    *
    * // Get only directories starting with "test"
-   * const testDirs = await dir.getDirectories({ pattern: /^test/ });
-   *
-   * // Get directories recursively matching pattern
-   * const srcDirs = await dir.getDirectories({ recursive: true, pattern: /^src/ });
+   * for await (const subdir of dir.getDirectories({ pattern: /^test/ })) {
+   *   console.log(subdir.getName());
+   * }
    * ```
    */
-  public async getDirectories(options?: DirectoryGetDirectoriesOptionsType): Promise<IDirectory[]> {
+  public async *getDirectories(options?: DirectoryGetDirectoriesOptionsType): AsyncGenerator<IDirectory> {
     try {
       const entries = await readdir(this.path, {
         withFileTypes: true,
         recursive: options?.recursive ?? false,
       });
 
-      let dirPaths = entries
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => {
-          if (entry.parentPath && entry.parentPath !== this.path) {
-            const relativePath = entry.parentPath.slice(this.path.length + 1);
-            return join(relativePath, entry.name);
-          }
-          return entry.name;
-        });
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
 
-      if (options?.pattern) {
-        const pattern = options.pattern;
-        dirPaths = dirPaths.filter((dirPath) => pattern.test(dirPath));
+        let dirPath: string;
+        if (entry.parentPath && entry.parentPath !== this.path) {
+          const relativePath = entry.parentPath.slice(this.path.length + 1);
+          dirPath = join(relativePath, entry.name);
+        } else {
+          dirPath = entry.name;
+        }
+
+        if (options?.pattern && !options.pattern.test(dirPath)) continue;
+
+        yield new Directory(join(this.path, dirPath));
       }
-
-      return dirPaths.map((dirPath) => new Directory(join(this.path, dirPath)));
     } catch (error) {
       throw new DirectoryException(`Failed to get directories from directory: ${this.path}`, {
         path: this.path,

@@ -294,88 +294,75 @@ export class File implements IFile {
   }
 
   /**
-   * Returns a ReadableStream for incremental file reading.
+   * Returns an async generator for incremental file reading.
    *
-   * @returns A ReadableStream of Uint8Array chunks
+   * @returns An async generator that yields Uint8Array chunks
    *
    * @example
    * ```typescript
    * const file = new File("/path/to/large-file.txt");
-   * const stream = file.stream();
    *
-   * for await (const chunk of stream) {
+   * for await (const chunk of file.stream()) {
    *   console.log(`Received ${chunk.length} bytes`);
    * }
    * ```
    */
-  public stream(): ReadableStream<Uint8Array> {
-    return this.getBunFile().stream();
+  public async *stream(): AsyncGenerator<Uint8Array> {
+    const reader = this.getBunFile().stream().getReader();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        yield value;
+      }
+    } finally {
+      reader.releaseLock();
+    }
   }
 
   /**
-   * Returns a ReadableStream for incremental file reading as text.
+   * Returns an async generator for incremental file reading as text.
    *
-   * @returns A ReadableStream of string chunks
+   * @returns An async generator that yields string chunks
    *
    * @example
    * ```typescript
    * const file = new File("/path/to/large-file.txt");
-   * const stream = file.streamAsText();
    *
-   * for await (const chunk of stream) {
+   * for await (const chunk of file.streamAsText()) {
    *   console.log(`Received text: ${chunk}`);
    * }
    * ```
    */
-  public streamAsText(): ReadableStream<string> {
-    const byteStream = this.getBunFile().stream();
+  public async *streamAsText(): AsyncGenerator<string> {
     const decoder = new TextDecoder();
 
-    return new ReadableStream<string>({
-      async start(controller) {
-        const reader = byteStream.getReader();
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-              break;
-            }
-            controller.enqueue(decoder.decode(value, { stream: true }));
-          }
-          controller.close();
-        } catch (error) {
-          controller.error(error);
-        } finally {
-          reader.releaseLock();
-        }
-      },
-    });
+    for await (const chunk of this.stream()) {
+      yield decoder.decode(chunk, { stream: true });
+    }
   }
 
   /**
-   * Returns a ReadableStream for incremental JSON parsing from a JSON array file.
+   * Returns an async generator for incremental JSON parsing from a JSON array file.
    *
-   * Reads a file containing a JSON array and streams each parsed element individually.
+   * Reads a file containing a JSON array and yields each parsed element individually.
    * This is useful for processing large JSON array files without loading everything into memory.
    *
    * @typeParam T - The expected type of each JSON element
-   * @returns A ReadableStream of parsed JSON elements
+   * @returns An async generator that yields parsed JSON elements
    *
    * @example
    * ```typescript
    * // For a file containing: [{"id": 1}, {"id": 2}, {"id": 3}]
    * const file = new File("/path/to/data.json");
-   * const stream = file.streamAsJson<{ id: number }>();
    *
-   * for await (const item of stream) {
+   * for await (const item of file.streamAsJson<{ id: number }>()) {
    *   console.log(item.id); // 1, 2, 3
    * }
    * ```
    */
-  public streamAsJson<T = unknown>(): ReadableStream<T> {
-    const byteStream = this.getBunFile().stream();
-    const decoder = new TextDecoder();
+  public async *streamAsJson<T = unknown>(): AsyncGenerator<T> {
     let buffer = "";
     let depth = 0;
     let inString = false;
@@ -383,84 +370,65 @@ export class File implements IFile {
     let objectStart = -1;
     let arrayStarted = false;
 
-    return new ReadableStream<T>({
-      async start(controller) {
-        const reader = byteStream.getReader();
+    for await (const chunk of this.streamAsText()) {
+      buffer += chunk;
 
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-              break;
-            }
+      let i = 0;
+      while (i < buffer.length) {
+        const char = buffer[i];
 
-            buffer += decoder.decode(value, { stream: true });
-
-            let i = 0;
-            while (i < buffer.length) {
-              const char = buffer[i];
-
-              if (isEscape) {
-                isEscape = false;
-                i++;
-                continue;
-              }
-
-              if (char === "\\" && inString) {
-                isEscape = true;
-                i++;
-                continue;
-              }
-
-              if (char === '"') {
-                inString = !inString;
-                i++;
-                continue;
-              }
-
-              if (inString) {
-                i++;
-                continue;
-              }
-
-              if (char === "[" && !arrayStarted) {
-                arrayStarted = true;
-                i++;
-                continue;
-              }
-
-              if (char === "{" || char === "[") {
-                if (depth === 0) {
-                  objectStart = i;
-                }
-                depth++;
-              } else if (char === "}" || char === "]") {
-                depth--;
-                if (depth === 0 && objectStart !== -1) {
-                  const jsonStr = buffer.slice(objectStart, i + 1);
-                  try {
-                    const parsed = JSON.parse(jsonStr) as T;
-                    controller.enqueue(parsed);
-                  } catch {
-                    // Skip invalid JSON
-                  }
-                  buffer = buffer.slice(i + 1);
-                  i = -1;
-                  objectStart = -1;
-                }
-              }
-
-              i++;
-            }
-          }
-          controller.close();
-        } catch (error) {
-          controller.error(error);
-        } finally {
-          reader.releaseLock();
+        if (isEscape) {
+          isEscape = false;
+          i++;
+          continue;
         }
-      },
-    });
+
+        if (char === "\\" && inString) {
+          isEscape = true;
+          i++;
+          continue;
+        }
+
+        if (char === '"') {
+          inString = !inString;
+          i++;
+          continue;
+        }
+
+        if (inString) {
+          i++;
+          continue;
+        }
+
+        if (char === "[" && !arrayStarted) {
+          arrayStarted = true;
+          i++;
+          continue;
+        }
+
+        if (char === "{" || char === "[") {
+          if (depth === 0) {
+            objectStart = i;
+          }
+          depth++;
+        } else if (char === "}" || char === "]") {
+          depth--;
+          if (depth === 0 && objectStart !== -1) {
+            const jsonStr = buffer.slice(objectStart, i + 1);
+            try {
+              yield JSON.parse(jsonStr) as T;
+            } catch {
+              // Skip invalid JSON
+            }
+            buffer = buffer.slice(i + 1);
+            i = -1;
+            objectStart = -1;
+          }
+        }
+
+        i++;
+      }
+    }
   }
 
   /**

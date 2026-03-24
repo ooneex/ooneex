@@ -2,6 +2,14 @@ import { afterAll, beforeEach, describe, expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 import { Directory, DirectoryException, File } from "@/index";
 
+async function collect<T>(gen: AsyncGenerator<T>): Promise<T[]> {
+  const items: T[] = [];
+  for await (const item of gen) {
+    items.push(item);
+  }
+  return items;
+}
+
 const TEST_DIR = ".temp/ooneex-fs-test";
 const SUB_DIR = `${TEST_DIR}/subdir`;
 const NESTED_DIR = `${TEST_DIR}/level1/level2/level3`;
@@ -299,7 +307,7 @@ describe("Directory", () => {
   describe("getFiles", () => {
     test("should return only files, not directories", async () => {
       const dir = new Directory(TEST_DIR);
-      const files = await dir.getFiles();
+      const files = await collect(dir.getFiles());
 
       expect(files.every((f) => f instanceof File)).toBe(true);
       const names = files.map((f) => f.getName());
@@ -310,7 +318,7 @@ describe("Directory", () => {
 
     test("should return files recursively when option is set", async () => {
       const dir = new Directory(TEST_DIR);
-      const files = await dir.getFiles({ recursive: true });
+      const files = await collect(dir.getFiles({ recursive: true }));
 
       expect(files.every((f) => f instanceof File)).toBe(true);
       const names = files.map((f) => f.getName());
@@ -324,7 +332,7 @@ describe("Directory", () => {
       await Bun.write(`${TEST_DIR}/style.css`, "css");
 
       const dir = new Directory(TEST_DIR);
-      const txtFiles = await dir.getFiles({ pattern: /\.txt$/ });
+      const txtFiles = await collect(dir.getFiles({ pattern: /\.txt$/ }));
 
       const names = txtFiles.map((f) => f.getName());
       expect(names).toContain("file1.txt");
@@ -337,7 +345,7 @@ describe("Directory", () => {
       await Bun.write(`${SUB_DIR}/code.ts`, "typescript");
 
       const dir = new Directory(TEST_DIR);
-      const tsFiles = await dir.getFiles({ recursive: true, pattern: /\.ts$/ });
+      const tsFiles = await collect(dir.getFiles({ recursive: true, pattern: /\.ts$/ }));
 
       expect(tsFiles.length).toBe(1);
       expect(tsFiles[0]?.getName()).toBe("code.ts");
@@ -348,25 +356,25 @@ describe("Directory", () => {
       const dir = new Directory(emptyDir);
       await dir.mkdir();
 
-      const files = await dir.getFiles();
+      const files = await collect(dir.getFiles());
       expect(files).toEqual([]);
     });
 
     test("should throw for non-existent directory", async () => {
       const dir = new Directory(`${TEST_DIR}/nonexistent`);
-      expect(dir.getFiles()).rejects.toThrow(DirectoryException);
+      expect(collect(dir.getFiles())).rejects.toThrow(DirectoryException);
     });
 
     test("should return empty array when pattern matches nothing", async () => {
       const dir = new Directory(TEST_DIR);
-      const files = await dir.getFiles({ pattern: /\.xyz$/ });
+      const files = await collect(dir.getFiles({ pattern: /\.xyz$/ }));
 
       expect(files).toEqual([]);
     });
 
     test("should return files with correct absolute paths", async () => {
       const dir = new Directory(TEST_DIR);
-      const files = await dir.getFiles();
+      const files = await collect(dir.getFiles());
 
       for (const file of files) {
         expect(file.getPath().startsWith(TEST_DIR)).toBe(true);
@@ -378,7 +386,7 @@ describe("Directory", () => {
   describe("getDirectories", () => {
     test("should return only directories, not files", async () => {
       const dir = new Directory(TEST_DIR);
-      const dirs = await dir.getDirectories();
+      const dirs = await collect(dir.getDirectories());
 
       expect(dirs.every((d) => d instanceof Directory)).toBe(true);
       const names = dirs.map((d) => d.getName());
@@ -392,7 +400,7 @@ describe("Directory", () => {
       await mkdir(`${SUB_DIR}/deeper`, { recursive: true });
 
       const dir = new Directory(TEST_DIR);
-      const dirs = await dir.getDirectories({ recursive: true });
+      const dirs = await collect(dir.getDirectories({ recursive: true }));
 
       expect(dirs.every((d) => d instanceof Directory)).toBe(true);
       const names = dirs.map((d) => d.getName());
@@ -406,7 +414,7 @@ describe("Directory", () => {
       await mkdir(`${TEST_DIR}/other-dir`, { recursive: true });
 
       const dir = new Directory(TEST_DIR);
-      const testDirs = await dir.getDirectories({ pattern: /^test/ });
+      const testDirs = await collect(dir.getDirectories({ pattern: /^test/ }));
 
       const names = testDirs.map((d) => d.getName());
       expect(names).toContain("test-dir");
@@ -420,7 +428,7 @@ describe("Directory", () => {
       await mkdir(`${SUB_DIR}/other-nested`, { recursive: true });
 
       const dir = new Directory(TEST_DIR);
-      const testDirs = await dir.getDirectories({ recursive: true, pattern: /test-nested$/ });
+      const testDirs = await collect(dir.getDirectories({ recursive: true, pattern: /test-nested$/ }));
 
       expect(testDirs.length).toBe(1);
       expect(testDirs[0]?.getName()).toBe("test-nested");
@@ -428,26 +436,26 @@ describe("Directory", () => {
 
     test("should return empty array for directory with no subdirectories", async () => {
       const dir = new Directory(SUB_DIR);
-      const dirs = await dir.getDirectories();
+      const dirs = await collect(dir.getDirectories());
 
       expect(dirs).toEqual([]);
     });
 
     test("should throw for non-existent directory", async () => {
       const dir = new Directory(`${TEST_DIR}/nonexistent`);
-      expect(dir.getDirectories()).rejects.toThrow(DirectoryException);
+      expect(collect(dir.getDirectories())).rejects.toThrow(DirectoryException);
     });
 
     test("should return empty array when pattern matches nothing", async () => {
       const dir = new Directory(TEST_DIR);
-      const dirs = await dir.getDirectories({ pattern: /^xyz/ });
+      const dirs = await collect(dir.getDirectories({ pattern: /^xyz/ }));
 
       expect(dirs).toEqual([]);
     });
 
     test("should return directories with correct absolute paths", async () => {
       const dir = new Directory(TEST_DIR);
-      const dirs = await dir.getDirectories();
+      const dirs = await collect(dir.getDirectories());
 
       for (const subdir of dirs) {
         expect(subdir.getPath().startsWith(TEST_DIR)).toBe(true);

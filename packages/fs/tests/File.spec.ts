@@ -148,30 +148,34 @@ describe("File", () => {
   });
 
   describe("stream", () => {
-    test("should return a ReadableStream", () => {
+    test("should yield Uint8Array chunks", async () => {
       const file = new File(TEST_FILE);
-      const stream = file.stream();
-      expect(stream).toBeInstanceOf(ReadableStream);
+      const chunks: Uint8Array[] = [];
+
+      for await (const chunk of file.stream()) {
+        expect(chunk).toBeInstanceOf(Uint8Array);
+        chunks.push(chunk);
+      }
+
+      expect(chunks.length).toBeGreaterThan(0);
     });
   });
 
   describe("streamAsText", () => {
-    test("should return a ReadableStream of strings", () => {
+    test("should yield string chunks", async () => {
       const file = new File(TEST_FILE);
-      const stream = file.streamAsText();
-      expect(stream).toBeInstanceOf(ReadableStream);
+
+      for await (const chunk of file.streamAsText()) {
+        expect(typeof chunk).toBe("string");
+      }
     });
 
     test("should stream file content as text", async () => {
       const file = new File(TEST_FILE);
-      const stream = file.streamAsText();
       const chunks: string[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
+      for await (const chunk of file.streamAsText()) {
+        chunks.push(chunk);
       }
 
       const content = chunks.join("");
@@ -184,14 +188,10 @@ describe("File", () => {
       await Bun.write(largeFile, largeContent);
 
       const file = new File(largeFile);
-      const stream = file.streamAsText();
       const chunks: string[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
+      for await (const chunk of file.streamAsText()) {
+        chunks.push(chunk);
       }
 
       const content = chunks.join("");
@@ -200,26 +200,16 @@ describe("File", () => {
   });
 
   describe("streamAsJson", () => {
-    test("should return a ReadableStream", () => {
-      const file = new File(TEST_JSON_FILE);
-      const stream = file.streamAsJson();
-      expect(stream).toBeInstanceOf(ReadableStream);
-    });
-
     test("should stream JSON array elements", async () => {
       const jsonArrayFile = `${TEST_DIR}/array.json`;
       const data = [{ id: 1 }, { id: 2 }, { id: 3 }];
       await Bun.write(jsonArrayFile, JSON.stringify(data));
 
       const file = new File(jsonArrayFile);
-      const stream = file.streamAsJson<{ id: number }>();
       const items: { id: number }[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        items.push(value);
+      for await (const item of file.streamAsJson<{ id: number }>()) {
+        items.push(item);
       }
 
       expect(items).toHaveLength(3);
@@ -237,14 +227,10 @@ describe("File", () => {
       await Bun.write(jsonArrayFile, JSON.stringify(data));
 
       const file = new File(jsonArrayFile);
-      const stream = file.streamAsJson<{ name: string; details: { age: number; city: string } }>();
       const items: { name: string; details: { age: number; city: string } }[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        items.push(value);
+      for await (const item of file.streamAsJson<{ name: string; details: { age: number; city: string } }>()) {
+        items.push(item);
       }
 
       expect(items).toHaveLength(2);
@@ -260,14 +246,10 @@ describe("File", () => {
       await Bun.write(jsonArrayFile, JSON.stringify(data));
 
       const file = new File(jsonArrayFile);
-      const stream = file.streamAsJson<{ text: string }>();
       const items: { text: string }[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        items.push(value);
+      for await (const item of file.streamAsJson<{ text: string }>()) {
+        items.push(item);
       }
 
       expect(items).toHaveLength(3);
@@ -280,14 +262,10 @@ describe("File", () => {
       await Bun.write(jsonArrayFile, "[]");
 
       const file = new File(jsonArrayFile);
-      const stream = file.streamAsJson();
       const items: unknown[] = [];
-      const reader = stream.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        items.push(value);
+      for await (const item of file.streamAsJson()) {
+        items.push(item);
       }
 
       expect(items).toHaveLength(0);

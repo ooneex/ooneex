@@ -162,43 +162,41 @@ export interface IFile {
    * @example
    * ```typescript
    * const stream = file.stream();
-   * for await (const chunk of stream) {
+   * for await (const chunk of file.stream()) {
    *   console.log(chunk);
    * }
    * ```
    */
-  stream: () => ReadableStream<Uint8Array>;
+  stream: () => AsyncGenerator<Uint8Array>;
 
   /**
-   * Returns a ReadableStream for incremental file reading as text.
+   * Returns an async generator for incremental file reading as text.
    *
-   * @returns A ReadableStream of string chunks
+   * @returns An async generator that yields string chunks
    *
    * @example
    * ```typescript
-   * const stream = file.streamAsText();
-   * for await (const chunk of stream) {
+   * for await (const chunk of file.streamAsText()) {
    *   console.log(chunk);
    * }
    * ```
    */
-  streamAsText: () => ReadableStream<string>;
+  streamAsText: () => AsyncGenerator<string>;
 
   /**
-   * Returns a ReadableStream for incremental JSON parsing from a JSON array file.
+   * Returns an async generator for incremental JSON parsing from a JSON array file.
    *
    * @typeParam T - The expected type of each JSON element
-   * @returns A ReadableStream of parsed JSON elements
+   * @returns An async generator that yields parsed JSON elements
    *
    * @example
    * ```typescript
-   * const stream = file.streamAsJson<{ id: number }>();
-   * for await (const item of stream) {
+   * for await (const item of file.streamAsJson<{ id: number }>()) {
    *   console.log(item.id);
    * }
    * ```
    */
-  streamAsJson: <T = unknown>() => ReadableStream<T>;
+  streamAsJson: <T = unknown>() => AsyncGenerator<T>;
 
   /**
    * Writes data to the file, overwriting existing content.
@@ -473,41 +471,53 @@ export interface IDirectory {
    * Gets a list of files (not directories) in the directory.
    *
    * @param options - Optional configuration for getting files
-   * @returns A promise that resolves to an array of File instances
+   * @returns An async generator that yields File instances
    *
    * @example
    * ```typescript
    * // Get immediate files
-   * const files = await dir.getFiles();
+   * for await (const file of dir.getFiles()) {
+   *   console.log(file.getName());
+   * }
    *
    * // Get all files recursively
-   * const allFiles = await dir.getFiles({ recursive: true });
+   * for await (const file of dir.getFiles({ recursive: true })) {
+   *   console.log(file.getName());
+   * }
    *
    * // Get only TypeScript files
-   * const tsFiles = await dir.getFiles({ pattern: /\.ts$/ });
+   * for await (const file of dir.getFiles({ pattern: /\.ts$/ })) {
+   *   console.log(file.getName());
+   * }
    * ```
    */
-  getFiles: (options?: DirectoryGetFilesOptionsType) => Promise<IFile[]>;
+  getFiles: (options?: DirectoryGetFilesOptionsType) => AsyncGenerator<IFile>;
 
   /**
    * Gets a list of subdirectories (not files) in the directory.
    *
    * @param options - Optional configuration for getting directories
-   * @returns A promise that resolves to an array of Directory instances
+   * @returns An async generator that yields Directory instances
    *
    * @example
    * ```typescript
    * // Get immediate subdirectories
-   * const dirs = await dir.getDirectories();
+   * for await (const subdir of dir.getDirectories()) {
+   *   console.log(subdir.getName());
+   * }
    *
    * // Get all subdirectories recursively
-   * const allDirs = await dir.getDirectories({ recursive: true });
+   * for await (const subdir of dir.getDirectories({ recursive: true })) {
+   *   console.log(subdir.getName());
+   * }
    *
    * // Get only directories starting with "test"
-   * const testDirs = await dir.getDirectories({ pattern: /^test/ });
+   * for await (const subdir of dir.getDirectories({ pattern: /^test/ })) {
+   *   console.log(subdir.getName());
+   * }
    * ```
    */
-  getDirectories: (options?: DirectoryGetDirectoriesOptionsType) => Promise<IDirectory[]>;
+  getDirectories: (options?: DirectoryGetDirectoriesOptionsType) => AsyncGenerator<IDirectory>;
 
   /**
    * Changes to a subdirectory and returns a new Directory instance.

@@ -1,155 +1,149 @@
-import { mkdir, readdir, rename } from "node:fs/promises";
 import path from "node:path";
-import { convert } from "@opendataloader/pdf";
-import { PDF } from "@ooneex/pdf";
 import { random } from "@ooneex/utils";
+import { convert } from "@opendataloader/pdf";
 import { ConvertorException } from "./ConvertorException";
-import type { ConvertorOptionsType, ConvertorPageResultType, IConvertor } from "./types";
+import type { ChunkType, ConvertorFileType, ConvertorOptionsType, IConvertor } from "./types";
 
-/**
- * Converts PDF files to Markdown format using OpenDataLoader PDF
- *
- * @example
- * ```typescript
- * import { Convertor } from "@ooneex/rag";
- *
- * const convertor = new Convertor("path/to/document.pdf");
- * for await (const page of convertor.convert({ outputDir: "path/to/output" })) {
- *   console.log(page);
- * }
- * ```
- */
 export class Convertor implements IConvertor {
   private readonly source: string;
 
-  /**
-   * Create a new Convertor instance
-   * @param source - Path to PDF file or directory containing PDF files
-   */
   constructor(source: string) {
     this.source = path.join(...source.split(/[/\\]/));
   }
 
-  /**
-   * Convert PDF to markdown format, split by page
-   * @param options - Conversion options
-   */
-  public async *convert(options: ConvertorOptionsType = {}): AsyncGenerator<ConvertorPageResultType, void, unknown> {
+  public async *convert(
+    options: ConvertorOptionsType = {},
+  ): AsyncGenerator<ChunkType, { json: ConvertorFileType; markdown: ConvertorFileType }> {
     try {
       const subDir = random.nanoid(15);
-      const outputDir = options.outputDir ? path.join(options.outputDir, subDir) : subDir;
+      const outputDir = path.join(options.outputDir ?? "", subDir);
+      const { password, imageFormat, quiet, pages } = options;
 
-      const pdf = new PDF(this.source, ...(options.password !== undefined ? [{ password: options.password }] : []));
-      const baseConvertOptions = this.buildOptions(options);
-      const splitResults = pdf.split({ outputDir });
+      await convert([this.source], {
+        outputDir,
+        format: "json,markdown",
+        imageDir: path.join(outputDir, "images"),
+        imageOutput: "external",
+        ...(password !== undefined && { password }),
+        ...(imageFormat !== undefined && { imageFormat }),
+        ...(quiet !== undefined && { quiet }),
+        ...(pages !== undefined && { pages }),
+      });
 
-      for await (const splitResult of splitResults) {
-        const pageNum = splitResult.pages.start;
-        const pageDir = path.join(outputDir, String(pageNum));
-        const imageDir = path.join(pageDir, "images");
-        await mkdir(pageDir, { recursive: true });
-
-        await this.convertPage(this.source, pageDir, imageDir, pageNum, baseConvertOptions);
-
-        const pdfFileName = `${random.nanoid(15)}.pdf`;
-        await rename(splitResult.path, path.join(pageDir, pdfFileName));
-
-        const [mdFileName, renamedImages] = await Promise.all([
-          this.renameOutputMd(pageDir),
-          this.renameImages(imageDir),
-        ]);
-
-        await this.postProcessMd(pageDir, mdFileName, renamedImages);
-
-        const imageFiles = await readdir(imageDir).catch(() => []);
-
-        yield {
-          page: pageNum,
-          images: imageFiles.map((name) => ({ name, path: path.join(imageDir, name) })),
-          content: { name: mdFileName, path: path.join(pageDir, mdFileName) },
-          pdf: { name: pdfFileName, path: path.join(pageDir, pdfFileName) },
-        };
+      const glob = new Bun.Glob("*");
+      let jsonFile: string | undefined;
+      let mdFile: string | undefined;
+      for await (const file of glob.scan(outputDir)) {
+        if (!jsonFile && file.endsWith(".json")) jsonFile = file;
+        if (!mdFile && file.endsWith(".md")) mdFile = file;
+        if (jsonFile && mdFile) break;
       }
+
+      if (!jsonFile) {
+        throw new ConvertorException("No JSON output file found after conversion", { source: this.source });
+      }
+
+      if (!mdFile) {
+        throw new ConvertorException("No Markdown output file found after conversion", { source: this.source });
+      }
+
+      const jsonPath = path.join(outputDir, jsonFile);
+      const doc = await Bun.file(jsonPath).json();
+      const fileName = doc["file name"] ?? path.basename(this.source);
+
+      yield* this.generateChunks(doc.kids ?? [], fileName);
+
+      const renamedJson = `${random.nanoid(15)}.json`;
+      const renamedMd = `${random.nanoid(15)}.md`;
+
+      const mdPath = path.join(outputDir, mdFile);
+      const renamedJsonPath = path.join(outputDir, renamedJson);
+      const renamedMdPath = path.join(outputDir, renamedMd);
+
+      await Promise.all([
+        Bun.write(renamedJsonPath, Bun.file(jsonPath)),
+        Bun.write(renamedMdPath, Bun.file(mdPath)),
+      ]);
+
+      await Promise.all([
+        Bun.file(jsonPath).delete(),
+        Bun.file(mdPath).delete(),
+      ]);
+
+      return {
+        json: { name: renamedJson, path: renamedJsonPath },
+        markdown: { name: renamedMd, path: renamedMdPath },
+      };
     } catch (error) {
       if (error instanceof ConvertorException) throw error;
-      throw new ConvertorException(error instanceof Error ? error.message : "PDF conversion failed", {
+      throw new ConvertorException(error instanceof Error ? error.message : "PDF conversion with chunking failed", {
         source: this.source,
       });
     }
   }
 
-  private async convertPage(
-    pdfPath: string,
-    outputDir: string,
-    imageDir: string,
-    pageNum: number,
-    baseConvertOptions: Record<string, string | boolean | undefined>,
-  ): Promise<void> {
-    await convert([pdfPath], {
-      ...baseConvertOptions,
-      outputDir,
-      imageDir,
-      imageOutput: "external",
-      format: "markdown",
-      pages: String(pageNum),
-    });
-  }
+  private *generateChunks(kids: Record<string, unknown>[], source: string): Generator<ChunkType> {
+    let currentHeading: string | null = null;
+    let currentContent: string[] = [];
+    let startPage: number | null = null;
+    let pageSet = new Set<number>();
 
-  private async renameOutputMd(outputDir: string): Promise<string> {
-    const files = await readdir(outputDir);
-    const mdFile = files.find((f) => f.endsWith(".md"));
-    const newName = `${random.nanoid(15)}.md`;
-    if (mdFile) {
-      await rename(path.join(outputDir, mdFile), path.join(outputDir, newName));
-    }
-    return newName;
-  }
+    for (const element of kids) {
+      const type = element.type as string | undefined;
+      if (!type) continue;
 
-  private async renameImages(imageDir: string): Promise<Map<string, string>> {
-    const renamedMap = new Map<string, string>();
-    const files = await readdir(imageDir).catch(() => []);
-    await Promise.all(
-      files.map(async (file) => {
-        const ext = path.extname(file);
-        const newName = `${random.nanoid(15)}${ext}`;
-        await rename(path.join(imageDir, file), path.join(imageDir, newName));
-        renamedMap.set(file, newName);
-      }),
-    );
-    return renamedMap;
-  }
+      if (type === "heading") {
+        if (currentContent.length > 0) {
+          yield {
+            text: currentContent.join("\n"),
+            metadata: { heading: currentHeading, page: startPage, pages: Array.from(pageSet), source },
+          };
+        }
+        const content = this.extractContent(element);
+        currentHeading = content;
+        currentContent = content ? [content] : [];
+        startPage = (element["page number"] as number) ?? null;
+        pageSet = new Set(startPage !== null ? [startPage] : []);
+        continue;
+      }
 
-  /**
-   * Single-pass post-processing of the generated markdown file:
-   * 1. Updates image references to their renamed filenames.
-   * 2. Strips the bare page number that @opendataloader/pdf appends as plain
-   *    text at the end of each single-page conversion output.
-   */
-  private async postProcessMd(outputDir: string, mdFileName: string, renamedImages: Map<string, string>): Promise<void> {
-    const mdPath = path.join(outputDir, mdFileName);
-    const file = Bun.file(mdPath);
-    if (!(await file.exists())) return;
-
-    let content = await file.text();
-
-    for (const [oldName, newName] of renamedImages) {
-      content = content.replaceAll(oldName, newName);
+      if (type === "paragraph" || type === "list") {
+        const content = this.extractContent(element);
+        if (content) {
+          currentContent.push(content);
+          const page = element["page number"] as number | undefined;
+          if (page !== undefined) {
+            pageSet.add(page);
+          }
+        }
+      }
     }
 
-    // Remove a bare page number (one or more digits, optional surrounding
-    // whitespace) that the Java CLI appends at the very end of the output.
-    content = content.replace(/\n+\d+\s*$/, "");
-
-    await Bun.write(mdPath, content);
+    if (currentContent.length > 0) {
+      yield {
+        text: currentContent.join("\n"),
+        metadata: { heading: currentHeading, page: startPage, pages: Array.from(pageSet), source },
+      };
+    }
   }
 
-  private buildOptions(
-    options: ConvertorOptionsType,
-  ): Record<string, string | boolean | undefined> {
-    return {
-      ...(options.password !== undefined && { password: options.password }),
-      ...(options.imageFormat !== undefined && { imageFormat: options.imageFormat }),
-      ...(options.quiet !== undefined && { quiet: options.quiet }),
-    };
+  private extractContent(element: Record<string, unknown>): string | null {
+    const parts = Array.from(this.extractTexts(element));
+    return parts.length > 0 ? parts.join(" ") : null;
+  }
+
+  private *extractTexts(element: Record<string, unknown>): Generator<string> {
+    const content = element.content as string | undefined;
+    if (content) {
+      yield content;
+      return;
+    }
+
+    const kids = element.kids as Record<string, unknown>[] | undefined;
+    if (kids) {
+      for (const kid of kids) {
+        yield* this.extractTexts(kid);
+      }
+    }
   }
 }

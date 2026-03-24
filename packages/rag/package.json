@@ -29,7 +29,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "@ooneex/pdf": "workspace:*",
     "@ooneex/utils": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",

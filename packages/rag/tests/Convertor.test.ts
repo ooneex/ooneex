@@ -1,26 +1,34 @@
 import { describe, expect, test } from "bun:test";
-import { Convertor } from "../src";
+import { Convertor } from "@/index";
 
 const outputDir = "tests/tmp";
 
 describe("Convertor", () => {
-  test("should convert file-sample.pdf to markdown", async () => {
+  test("should convert file-sample.pdf and produce section chunks", async () => {
     const convertor = new Convertor("tests/file-sample.pdf");
-    const results = [];
+    const generator = convertor.convert({ outputDir, quiet: true });
 
-    for await (const result of convertor.convert({ outputDir, quiet: true })) {
-      expect(result.page).toBeNumber();
-      expect(result.content.name).toEndWith(".md");
+    const chunks = [];
+    let result = await generator.next();
+    while (!result.done) {
+      chunks.push(result.value);
+      result = await generator.next();
+    }
+    const files = result.value;
 
-      const file = Bun.file(result.content.path);
-      expect(await file.exists()).toBe(true);
+    expect(chunks.length).toBeGreaterThan(0);
 
-      const content = await file.text();
-      expect(content.length).toBeGreaterThan(0);
-
-      results.push(result);
+    for (const chunk of chunks) {
+      expect(chunk.text.length).toBeGreaterThan(0);
+      expect(chunk.metadata.pages).toBeArray();
     }
 
-    expect(results.length).toBe(4);
-  }, 30_000);
+    expect(files.json.name).toEndWith(".json");
+    const jsonFile = Bun.file(files.json.path);
+    expect(await jsonFile.exists()).toBe(true);
+
+    expect(files.markdown.name).toEndWith(".md");
+    const mdFile = Bun.file(files.markdown.path);
+    expect(await mdFile.exists()).toBe(true);
+  });
 });

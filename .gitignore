@@ -154,3 +154,4 @@ packages/app/src/fetchers
 packages/app/src/hooks
 **/locales/.wuchale
 packages/pdf/tests/tmp
+packages/rag/tests/tmp

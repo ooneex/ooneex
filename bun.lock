@@ -428,6 +428,17 @@
         "@ooneex/types": "workspace:*",
       },
     },
+    "packages/rag": {
+      "name": "@ooneex/rag",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+        "@ooneex/pdf": "workspace:*",
+        "@ooneex/utils": "workspace:*",
+        "@opendataloader/pdf": "^2.0.2",
+      },
+    },
     "packages/rate-limit": {
       "name": "@ooneex/rate-limit",
       "version": "0.0.19",
@@ -1049,6 +1060,8 @@
 
     "@ooneex/pub-sub": ["@ooneex/pub-sub@workspace:packages/pub-sub"],
 
+    "@ooneex/rag": ["@ooneex/rag@workspace:packages/rag"],
+
     "@ooneex/rate-limit": ["@ooneex/rate-limit@workspace:packages/rate-limit"],
 
     "@ooneex/repository": ["@ooneex/repository@workspace:packages/repository"],
@@ -1080,6 +1093,8 @@
     "@ooneex/validation": ["@ooneex/validation@workspace:packages/validation"],
 
     "@ooneex/youtube": ["@ooneex/youtube@workspace:packages/youtube"],
+
+    "@opendataloader/pdf": ["@opendataloader/pdf@2.0.2", "", { "dependencies": { "commander": "^14.0.3" }, "bin": { "opendataloader-pdf": "dist/cli.js" } }, "sha512-pNlY3w1+MNxsNn+UdVtTyS0gfqe/zgkf01rizN156WWz2AN5C/zyGFWbweB0Owy6TYE76LeysSHREjbKJ/rXFA=="],
 
     "@oxc-minify/binding-android-arm64": ["@oxc-minify/binding-android-arm64@0.93.0", "", { "os": "android", "cpu": "arm64" }, "sha512-N3j/JoK4hXwQbnyOJoEltM8MEkddWV3XtfYimO6jsMjr5R6QdauKaSVeQHO/lSezB7SFkrMPqr6X7tBfghHiXA=="],
 
@@ -2180,6 +2195,8 @@
     "@nx/workspace/enquirer": ["enquirer@2.3.6", "", { "dependencies": { "ansi-colors": "^4.1.1" } }, "sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg=="],
 
     "@nx/workspace/nx": ["nx@22.3.3", "", { "dependencies": { "@napi-rs/wasm-runtime": "0.2.4", "@yarnpkg/lockfile": "^1.1.0", "@yarnpkg/parsers": "3.0.2", "@zkochan/js-yaml": "0.0.7", "axios": "^1.12.0", "chalk": "^4.1.0", "cli-cursor": "3.1.0", "cli-spinners": "2.6.1", "cliui": "^8.0.1", "dotenv": "~16.4.5", "dotenv-expand": "~11.0.6", "enquirer": "~2.3.6", "figures": "3.2.0", "flat": "^5.0.2", "front-matter": "^4.0.2", "ignore": "^7.0.5", "jest-diff": "^30.0.2", "jsonc-parser": "3.2.0", "lines-and-columns": "2.0.3", "minimatch": "9.0.3", "node-machine-id": "1.1.12", "npm-run-path": "^4.0.1", "open": "^8.4.0", "ora": "5.3.0", "resolve.exports": "2.0.3", "semver": "^7.6.3", "string-width": "^4.2.3", "tar-stream": "~2.2.0", "tmp": "~0.2.1", "tree-kill": "^1.2.2", "tsconfig-paths": "^4.1.2", "tslib": "^2.3.0", "yaml": "^2.6.0", "yargs": "^17.6.2", "yargs-parser": "21.1.1" }, "optionalDependencies": { "@nx/nx-darwin-arm64": "22.3.3", "@nx/nx-darwin-x64": "22.3.3", "@nx/nx-freebsd-x64": "22.3.3", "@nx/nx-linux-arm-gnueabihf": "22.3.3", "@nx/nx-linux-arm64-gnu": "22.3.3", "@nx/nx-linux-arm64-musl": "22.3.3", "@nx/nx-linux-x64-gnu": "22.3.3", "@nx/nx-linux-x64-musl": "22.3.3", "@nx/nx-win32-arm64-msvc": "22.3.3", "@nx/nx-win32-x64-msvc": "22.3.3" }, "peerDependencies": { "@swc-node/register": "^1.8.0", "@swc/core": "^1.3.85" }, "optionalPeers": ["@swc-node/register", "@swc/core"], "bin": { "nx": "bin/nx.js", "nx-cloud": "bin/nx-cloud.js" } }, "sha512-pOxtKWUfvf0oD8Geqs8D89Q2xpstRTaSY+F6Ut/Wd0GnEjUjO32SS1ymAM6WggGPHDZN4qpNrd5cfIxQmAbRLg=="],
+
+    "@opendataloader/pdf/commander": ["commander@14.0.3", "", {}, "sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw=="],
 
     "@oxc-minify/binding-wasm32-wasi/@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.1", "", { "dependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1", "@tybys/wasm-util": "^0.10.1" } }, "sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A=="],
 

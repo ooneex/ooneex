@@ -1,12 +1,24 @@
 import * as A from "arktype";
 import type { TypeParser } from "arktype/internal/type.ts";
-import type { AssertType } from "./types";
+import type { AssertType, ValidationResultType } from "./types";
 import { Validation } from "./Validation";
 
 // biome-ignore lint/complexity/noBannedTypes: trust me
 export const Assert: TypeParser<{}> = A.type;
 
-export function createConstraint(constraintFn: () => AssertType, errorMessage: string | null) {
+type ConcreteValidation = {
+  // biome-ignore lint/suspicious/noExplicitAny: mixin pattern requires any
+  new (...args: any[]): {
+    getConstraint(): AssertType;
+    getErrorMessage(): string | null;
+    validate(data: unknown, constraint?: AssertType): ValidationResultType;
+  };
+};
+
+export function createConstraint(
+  constraintFn: () => AssertType,
+  errorMessage: string | null,
+): ConcreteValidation {
   return class extends Validation {
     public getConstraint(): AssertType {
       return constraintFn();

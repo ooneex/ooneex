@@ -8,16 +8,16 @@ import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/mid
 import { router } from "@ooneex/routing";
 import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
-import type { ServerWebSocket } from "bun";
+import type { BunRequest, Server, ServerWebSocket } from "bun";
 import { generateRouteDoc } from "./generateRouteDoc";
-import { formatHttpRoutes } from "./httpRouteUtils";
+import { buildHttpContext, formatHttpRoutes, runMiddlewares } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
 import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, analytics, cache, storage, database, env, mailer } = this.config;
+    const { loggers, cronJobs, analytics, cache, storage, env, mailer } = this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
@@ -48,10 +48,6 @@ export class App {
 
     if (mailer) {
       container.addAlias("mailer", mailer);
-    }
-
-    if (database) {
-      container.addConstant("database", database);
     }
   }
 
@@ -105,10 +101,8 @@ export class App {
 
     const { middlewares = [] } = this.config;
 
-    const { authMiddleware } = this.config;
-
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], authMiddleware),
+      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[]),
       ...formatSocketRoutes(router.getSocketRoutes()),
     };
 
@@ -120,7 +114,16 @@ export class App {
       development: env.isLocal,
       routes: {
         ...routes,
-        "/*": new Response("Not Found", { status: HttpStatus.Code.NotFound }),
+        "/*": async (req: BunRequest, server: Server<unknown>) => {
+          let context = await buildHttpContext({ req, server });
+          context.response.notFound("Not Found");
+
+          if (this.config.cors) {
+            context = await runMiddlewares(context, [this.config.cors]);
+          }
+
+          return context.response.get();
+        },
       },
       websocket: {
         perMessageDeflate: true,
@@ -130,7 +133,6 @@ export class App {
             ws,
             server,
             middlewares: middlewares as SocketMiddlewareClassType[],
-            ...(authMiddleware && { authMiddleware }),
           });
         },
         async close(ws: ServerWebSocket<{ id: string }>) {

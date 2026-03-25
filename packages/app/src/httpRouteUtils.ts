@@ -1,5 +1,4 @@
 import { Environment } from "@ooneex/app-env";
-import type { AuthMiddlewareClassType, IAuthMiddleware } from "@ooneex/auth";
 import { container } from "@ooneex/container";
 import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
@@ -42,7 +41,7 @@ export const validateConstraint = (constraint: AssertType | IAssert, value: unkn
 export const buildHttpContext = async (ctx: {
   req: BunRequest;
   server: Server<unknown>;
-  route: RouteConfigType;
+  route?: RouteConfigType;
 }): Promise<ContextType> => {
   const { req, server, route } = ctx;
 
@@ -77,12 +76,14 @@ export const buildHttpContext = async (ctx: {
     cache: container.get("cache"),
     storage: container.get("storage"),
     mailer: container.get("mailer"),
-    route: {
-      name: route.name,
-      path: route.path,
-      method: route.method,
-      description: route.description ?? "",
-    },
+    route: route
+      ? {
+          name: route.name,
+          path: route.path,
+          method: route.method,
+          description: route.description ?? "",
+        }
+      : null,
     app: {
       env: container.get("app.env"),
     },
@@ -322,7 +323,7 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
   return httpResponse;
 };
 
-const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClassType[]): Promise<ContextType> => {
+export const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClassType[]): Promise<ContextType> => {
   let currentContext = context;
 
   for (const MiddlewareClass of middlewares) {
@@ -336,7 +337,6 @@ const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClass
 export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
-  authMiddleware?: AuthMiddlewareClassType,
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 
@@ -354,19 +354,6 @@ export const formatHttpRoutes = (
           const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
           logRequest(context, status, route.path);
           return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
-        }
-
-        if (authMiddleware) {
-          try {
-            const authMiddlewareInstance = container.get<IAuthMiddleware>(authMiddleware);
-            const user = await authMiddlewareInstance.handler(context);
-            context.user = user;
-          } catch (error: unknown) {
-            const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
-            const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
-            logRequest(context, status, route.path);
-            return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
-          }
         }
 
         return httpRouteHandler({ context, route });

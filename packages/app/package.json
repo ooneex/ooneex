@@ -34,7 +34,6 @@
     "@ooneex/app-env": "workspace:*",
     "@ooneex/cache": "workspace:*",
     "@ooneex/container": "workspace:*",
-    "@ooneex/database": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-request": "workspace:*",
     "@ooneex/http-response": "workspace:*",

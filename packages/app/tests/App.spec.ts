@@ -155,17 +155,6 @@ describe("App", () => {
       expect(container.has(MockMailer)).toBe(true);
     });
 
-    test("adds database constant when provided", () => {
-      const mockDatabase = { query: mock(() => {}) };
-      const config = createMockConfig({
-        database: mockDatabase as unknown as AppConfigType["database"],
-      });
-
-      new App(config);
-
-      expect(container.hasConstant("database")).toBe(true);
-    });
-
     test("handles config without optional dependencies", () => {
       const config = createMockConfig();
 

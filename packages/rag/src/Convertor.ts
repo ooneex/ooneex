@@ -60,15 +60,9 @@ export class Convertor implements IConvertor {
       const renamedJsonPath = path.join(outputDir, renamedJson);
       const renamedMdPath = path.join(outputDir, renamedMd);
 
-      await Promise.all([
-        Bun.write(renamedJsonPath, Bun.file(jsonPath)),
-        Bun.write(renamedMdPath, Bun.file(mdPath)),
-      ]);
+      await Promise.all([Bun.write(renamedJsonPath, Bun.file(jsonPath)), Bun.write(renamedMdPath, Bun.file(mdPath))]);
 
-      await Promise.all([
-        Bun.file(jsonPath).delete(),
-        Bun.file(mdPath).delete(),
-      ]);
+      await Promise.all([Bun.file(jsonPath).delete(), Bun.file(mdPath).delete()]);
 
       return {
         json: { name: renamedJson, path: renamedJsonPath },

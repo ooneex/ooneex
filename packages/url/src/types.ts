@@ -1,5 +1,5 @@
-import type { ScalarType } from "@ooneex/types";
 import type { LocaleType } from "@ooneex/translation";
+import type { ScalarType } from "@ooneex/types";
 
 export interface IReadonlyUrl {
   getNative: () => URL;

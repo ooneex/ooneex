@@ -1,6 +1,6 @@
-import type { ScalarType } from "@ooneex/types";
 import type { LocaleType } from "@ooneex/translation";
 import { locales } from "@ooneex/translation";
+import type { ScalarType } from "@ooneex/types";
 import { parseString, trim } from "@ooneex/utils";
 import type { IReadonlyUrl } from "./types";
 
@@ -14,9 +14,9 @@ export class ReadonlyUrl implements IReadonlyUrl {
   protected path: string;
   protected queries: Record<string, ScalarType> = {};
   protected lang: LocaleType = "en";
-  protected page: number = 1;
-  protected limit: number = 100;
-  protected order: 'ASC' | 'DESC' = 'ASC';
+  protected page = 1;
+  protected limit = 100;
+  protected order: "ASC" | "DESC" = "ASC";
   protected orderBy: string | null = null;
   protected fragment: string;
   protected base: string;

@@ -1,4 +1,5 @@
 import type { ScalarType } from "@ooneex/types";
+import type { LocaleType } from "@ooneex/translation";
 
 export interface IReadonlyUrl {
   getNative: () => URL;
@@ -13,6 +14,11 @@ export interface IReadonlyUrl {
   getBase: () => string;
   getOrigin: () => string;
   getQuery: (name: string) => ScalarType | null;
+  getLang: () => LocaleType;
+  getPage: () => number;
+  getLimit: () => number;
+  getOrder: () => "ASC" | "DESC";
+  getOrderBy: () => string | null;
   toString: () => string;
 }
 

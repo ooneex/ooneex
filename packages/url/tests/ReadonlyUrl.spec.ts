@@ -323,6 +323,99 @@ describe("ReadonlyUrl", () => {
     });
   });
 
+  describe("Lang parsing", () => {
+    test("should default to 'en' when no lang query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getLang()).toBe("en");
+    });
+
+    test("should parse valid lang query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?lang=fr");
+      expect(url.getLang()).toBe("fr");
+    });
+
+    test("should parse other valid locales", () => {
+      const url = new ReadonlyUrl("https://example.com?lang=ja");
+      expect(url.getLang()).toBe("ja");
+    });
+
+    test("should handle zh-tw locale", () => {
+      const url = new ReadonlyUrl("https://example.com?lang=zh-tw");
+      expect(url.getLang()).toBe("zh-tw");
+    });
+
+    test("should default to 'en' for invalid lang value", () => {
+      const url = new ReadonlyUrl("https://example.com?lang=invalid");
+      expect(url.getLang()).toBe("en");
+    });
+  });
+
+  describe("Pagination parsing", () => {
+    test("should default page to 1 when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getPage()).toBe(1);
+    });
+
+    test("should parse page query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?page=5");
+      expect(url.getPage()).toBe(5);
+    });
+
+    test("should default limit to 100 when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getLimit()).toBe(100);
+    });
+
+    test("should parse limit query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?limit=25");
+      expect(url.getLimit()).toBe(25);
+    });
+
+    test("should parse page and limit together", () => {
+      const url = new ReadonlyUrl("https://example.com?page=3&limit=50");
+      expect(url.getPage()).toBe(3);
+      expect(url.getLimit()).toBe(50);
+    });
+  });
+
+  describe("Order parsing", () => {
+    test("should default order to 'ASC' when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getOrder()).toBe("ASC");
+    });
+
+    test("should parse ASC order", () => {
+      const url = new ReadonlyUrl("https://example.com?order=ASC");
+      expect(url.getOrder()).toBe("ASC");
+    });
+
+    test("should parse DESC order", () => {
+      const url = new ReadonlyUrl("https://example.com?order=DESC");
+      expect(url.getOrder()).toBe("DESC");
+    });
+
+    test("should default to 'ASC' for invalid order value", () => {
+      const url = new ReadonlyUrl("https://example.com?order=invalid");
+      expect(url.getOrder()).toBe("ASC");
+    });
+
+    test("should default orderBy to null when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getOrderBy()).toBeNull();
+    });
+
+    test("should parse orderBy query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?orderBy=name");
+      expect(url.getOrderBy()).toBe("name");
+    });
+
+    test("should parse order and orderBy together", () => {
+      const url = new ReadonlyUrl("https://example.com?order=DESC&orderBy=createdAt");
+      expect(url.getOrder()).toBe("DESC");
+      expect(url.getOrderBy()).toBe("createdAt");
+    });
+  });
+
   describe("Edge cases and special URLs", () => {
     test("should handle file:// protocol", () => {
       const url = new ReadonlyUrl("file:///path/to/file.txt");

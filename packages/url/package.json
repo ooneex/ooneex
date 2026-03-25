@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/url",
   "description": "URL parsing, manipulation, and query string utilities for web applications",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "type": "module",
   "files": [
     "dist",
@@ -31,7 +31,8 @@
     "@ooneex/utils": "workspace:*"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:*",
+    "@ooneex/translation": "workspace:*"
   },
   "keywords": [
     "bun",

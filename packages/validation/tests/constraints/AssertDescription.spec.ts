@@ -47,11 +47,7 @@ describe("AssertDescription", () => {
   });
 
   test("should accept descriptions with newlines and whitespace", () => {
-    const validDescriptions = [
-      "Line one\nLine two",
-      "Paragraph one\n\nParagraph two",
-      "Text with\ttabs",
-    ];
+    const validDescriptions = ["Line one\nLine two", "Paragraph one\n\nParagraph two", "Text with\ttabs"];
 
     for (const desc of validDescriptions) {
       const result = validator.validate(desc);

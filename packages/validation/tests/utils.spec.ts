@@ -93,10 +93,7 @@ describe("createConstraint", () => {
   });
 
   test("should support complex constraints", () => {
-    const TestClass = createConstraint(
-      () => Assert("1 <= string <= 10"),
-      "Must be 1-10 characters",
-    );
+    const TestClass = createConstraint(() => Assert("1 <= string <= 10"), "Must be 1-10 characters");
     const instance = new TestClass();
 
     expect(instance.validate("hello").isValid).toBe(true);

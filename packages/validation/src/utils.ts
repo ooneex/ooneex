@@ -7,18 +7,17 @@ import { Validation } from "./Validation";
 export const Assert: TypeParser<{}> = A.type;
 
 type ConcreteValidation = {
-  // biome-ignore lint/suspicious/noExplicitAny: mixin pattern requires any
-  new (...args: any[]): {
+  new (
+    // biome-ignore lint/suspicious/noExplicitAny: mixin pattern requires any
+    ...args: any[]
+  ): {
     getConstraint(): AssertType;
     getErrorMessage(): string | null;
     validate(data: unknown, constraint?: AssertType): ValidationResultType;
   };
 };
 
-export function createConstraint(
-  constraintFn: () => AssertType,
-  errorMessage: string | null,
-): ConcreteValidation {
+export function createConstraint(constraintFn: () => AssertType, errorMessage: string | null): ConcreteValidation {
   return class extends Validation {
     public getConstraint(): AssertType {
       return constraintFn();

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { type FilterResultType, HTTP_METHODS, type IBase, type IStat } from "../src/index";
+import { type FilterResultType, HTTP_METHODS, type IBase } from "../src/index";
 
 describe("@ooneex/types - HTTP_METHODS", () => {
   test("should expose standard HTTP methods", () => {
@@ -49,45 +49,6 @@ describe("@ooneex/types - IBase", () => {
     expect(base.updatedAt).toBe(now);
     expect(base.isBlocked).toBe(true);
     expect(base.blockReason).toBe("violation");
-  });
-});
-
-describe("@ooneex/types - IStat", () => {
-  test("should create a fully populated stats object", () => {
-    const stat: IStat = {
-      id: "stat-1",
-      commentsCount: 1,
-      likesCount: 2,
-      dislikesCount: 3,
-      sharesCount: 4,
-      viewsCount: 5,
-      downloadsCount: 6,
-      savesCount: 7,
-      bookmarksCount: 8,
-      repostsCount: 9,
-      impressionsCount: 10,
-      clicksCount: 11,
-      engagementRate: 0.5,
-      reach: 100,
-      followersCount: 0,
-      followingCount: 0,
-      blockedCount: 0,
-      reportsCount: 0,
-    };
-
-    expect(stat.commentsCount).toBe(1);
-    expect(stat.likesCount).toBe(2);
-    expect(stat.dislikesCount).toBe(3);
-    expect(stat.sharesCount).toBe(4);
-    expect(stat.viewsCount).toBe(5);
-    expect(stat.downloadsCount).toBe(6);
-    expect(stat.savesCount).toBe(7);
-    expect(stat.bookmarksCount).toBe(8);
-    expect(stat.repostsCount).toBe(9);
-    expect(stat.impressionsCount).toBe(10);
-    expect(stat.clicksCount).toBe(11);
-    expect(stat.engagementRate).toBe(0.5);
-    expect(stat.reach).toBe(100);
   });
 });
 

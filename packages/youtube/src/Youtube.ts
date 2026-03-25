@@ -1,6 +1,4 @@
-import type {
-  IYoutube,
-} from "./types";
+import type { IYoutube } from "./types";
 
 export class Youtube implements IYoutube {
   public getWatchId(url: string): string | null {

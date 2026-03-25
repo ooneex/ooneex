@@ -1,10 +1,4 @@
-import type {
-  ArgsOptions,
-  FormatOptions,
-  QualityOptions,
-  VideoFormat,
-  VideoProgress,
-} from "ytdlp-nodejs";
+import type { ArgsOptions, FormatOptions, QualityOptions, VideoFormat, VideoProgress } from "ytdlp-nodejs";
 
 export type YoutubeVideoFormatType = VideoFormat;
 

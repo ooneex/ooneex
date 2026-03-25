@@ -1,0 +1,66 @@
+import type { ContextConfigType, ContextType } from "@ooneex/controller";
+import type { HttpMethodType } from "@ooneex/types";
+import type { IMiddleware } from "./types";
+import { injectable } from "@ooneex/container";
+
+const defaultMethods: HttpMethodType[] = ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"];
+const defaultHeaders: string[] = ["Content-Type", "Authorization"];
+
+@injectable()
+export class CorsMiddleware<T extends ContextConfigType = ContextConfigType> implements IMiddleware<T> {
+  private readonly origins: string[] | "*";
+  private readonly methods: HttpMethodType[];
+  private readonly headers: string[];
+  private readonly exposedHeaders: string[];
+  private readonly credentials: boolean;
+  private readonly maxAge: number;
+
+  constructor() {
+    const origins = Bun.env.CORS_ORIGINS ?? "*";
+    this.origins = origins === "*" ? "*" : origins.split(",").map((o) => o.trim());
+    this.methods = (Bun.env.CORS_METHODS?.split(",").map((m) => m.trim()) as HttpMethodType[]) ?? defaultMethods;
+    this.headers = Bun.env.CORS_HEADERS?.split(",").map((h) => h.trim()) ?? defaultHeaders;
+    this.exposedHeaders = Bun.env.CORS_EXPOSED_HEADERS?.split(",").map((h) => h.trim()) ?? [];
+    this.credentials = Bun.env.CORS_CREDENTIALS === "true";
+    this.maxAge = Number(Bun.env.CORS_MAX_AGE ?? 86400);
+  }
+
+  public handler = async (context: ContextType<T>): Promise<ContextType<T>> => {
+    const origin = context.header.get("Origin");
+
+    if (!origin) {
+      return context;
+    }
+
+    if (!this.isOriginAllowed(origin)) {
+      return context;
+    }
+
+    const allowedOrigin = this.origins === "*" ? "*" : origin;
+
+    context.response.header
+      .setAccessControlAllowOrigin(allowedOrigin)
+      .setAccessControlAllowMethods(this.methods)
+      .setAccessControlAllowHeaders(this.headers)
+      .setAccessControlAllowCredentials(this.credentials);
+
+    if (this.exposedHeaders.length > 0) {
+      context.response.header.set("Access-Control-Expose-Headers", this.exposedHeaders.join(", "));
+    }
+
+    if (context.method === "OPTIONS") {
+      context.response.header.set("Access-Control-Max-Age", String(this.maxAge));
+      context.response.json({}, 204);
+    }
+
+    return context;
+  };
+
+  private isOriginAllowed(origin: string): boolean {
+    if (this.origins === "*") {
+      return true;
+    }
+
+    return this.origins.includes(origin);
+  }
+}

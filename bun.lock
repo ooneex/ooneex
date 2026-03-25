@@ -75,7 +75,6 @@
         "@ooneex/auth": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
-        "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-request": "workspace:*",
         "@ooneex/http-response": "workspace:*",
@@ -110,13 +109,16 @@
     },
     "packages/auth": {
       "name": "@ooneex/auth",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "@clerk/backend": "^1.24.1",
         "@ooneex/container": "workspace:*",
         "@ooneex/controller": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/middleware": "workspace:*",
         "@ooneex/user": "workspace:*",
       },
     },
@@ -348,13 +350,14 @@
     },
     "packages/middleware": {
       "name": "@ooneex/middleware",
-      "version": "0.17.0",
+      "version": "0.17.1",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
         "@ooneex/socket": "workspace:*",
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/migrations": {
@@ -553,7 +556,7 @@
     },
     "packages/url": {
       "name": "@ooneex/url",
-      "version": "0.17.0",
+      "version": "0.17.1",
       "dependencies": {
         "@ooneex/utils": "workspace:*",
       },

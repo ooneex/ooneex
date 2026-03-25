@@ -23,7 +23,7 @@ type BunnyFileInfoType = {
   StorageZoneId: number;
   Checksum: string | null;
   ReplicatedZones: string | null;
-}
+};
 
 const REGION_ENDPOINTS: Record<BunnyRegionType, string> = {
   de: "storage.bunnycdn.com",

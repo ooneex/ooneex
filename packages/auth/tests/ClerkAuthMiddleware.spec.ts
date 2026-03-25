@@ -31,6 +31,7 @@ const createMockContext = (token: string | null = "valid-token") => ({
   header: {
     getBearerToken: mock(() => token),
   },
+  user: undefined as unknown,
 });
 
 describe("ClerkAuthMiddleware", () => {
@@ -133,11 +134,21 @@ describe("ClerkAuthMiddleware", () => {
   });
 
   describe("User mapping", () => {
-    test("should map required fields correctly", async () => {
+    test("should return the context", async () => {
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      const result = await middleware.handler(context as never);
 
+      expect(result).toBe(context as never);
+    });
+
+    test("should set user on context with required fields mapped correctly", async () => {
+      const context = createMockContext();
+
+      await middleware.handler(context as never);
+
+      expect(context.user).toBeDefined();
+      const user = context.user as Record<string, unknown>;
       expect(user.id).toBe("ext_123");
       expect(user.externalId).toBe("clerk_user_123");
       expect(user.email).toBe("john@example.com");
@@ -154,9 +165,9 @@ describe("ClerkAuthMiddleware", () => {
       );
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
-      expect(user.roles).toEqual([ERole.USER]);
+      expect((context.user as Record<string, unknown>).roles).toEqual([ERole.USER]);
     });
 
     test("should default roles to [ERole.USER] when privateMetadata.roles is undefined", async () => {
@@ -169,16 +180,17 @@ describe("ClerkAuthMiddleware", () => {
       );
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
-      expect(user.roles).toEqual([ERole.USER]);
+      expect((context.user as Record<string, unknown>).roles).toEqual([ERole.USER]);
     });
 
     test("should map optional string fields when present", async () => {
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
+      const user = context.user as Record<string, unknown>;
       expect(user.firstName).toBe("John");
       expect(user.lastName).toBe("Doe");
       expect(user.username).toBe("johndoe");
@@ -198,8 +210,9 @@ describe("ClerkAuthMiddleware", () => {
       );
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
+      const user = context.user as Record<string, unknown>;
       expect(user.firstName).toBeUndefined();
       expect(user.lastName).toBeUndefined();
       expect(user.username).toBeUndefined();
@@ -209,9 +222,9 @@ describe("ClerkAuthMiddleware", () => {
     test("should map phone number from first phone entry", async () => {
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
-      expect(user.phone).toBe("+1234567890");
+      expect((context.user as Record<string, unknown>).phone).toBe("+1234567890");
     });
 
     test("should not set phone when phoneNumbers is empty", async () => {
@@ -224,16 +237,17 @@ describe("ClerkAuthMiddleware", () => {
       );
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
-      expect(user.phone).toBeUndefined();
+      expect((context.user as Record<string, unknown>).phone).toBeUndefined();
     });
 
     test("should map date fields correctly", async () => {
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
+      const user = context.user as Record<string, unknown>;
       expect(user.lastActiveAt).toEqual(new Date(1700000000000));
       expect(user.lastLoginAt).toEqual(new Date(1699999000000));
       expect(user.createdAt).toEqual(new Date(1690000000000));
@@ -253,8 +267,9 @@ describe("ClerkAuthMiddleware", () => {
       );
       const context = createMockContext();
 
-      const user = await middleware.handler(context as never);
+      await middleware.handler(context as never);
 
+      const user = context.user as Record<string, unknown>;
       expect(user.lastActiveAt).toBeUndefined();
       expect(user.lastLoginAt).toBeUndefined();
       expect(user.createdAt).toBeUndefined();

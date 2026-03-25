@@ -1,16 +1,17 @@
-import { inject } from "@ooneex/container";
+import { inject, injectable } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import { HttpStatus } from "@ooneex/http-status";
+import type { IMiddleware } from "@ooneex/middleware";
 import { ERole } from "@ooneex/role";
 import type { IUser } from "@ooneex/user";
 import { AuthException } from "./AuthException";
 import { ClerkAuth } from "./ClerkAuth";
-import type { IAuthMiddleware } from "./types";
 
-export class ClerkAuthMiddleware implements IAuthMiddleware {
+@injectable()
+export class ClerkAuthMiddleware implements IMiddleware {
   constructor(@inject(ClerkAuth) private readonly clerkAuth: ClerkAuth) {}
 
-  public async handler<T extends ContextConfigType>(context: ContextType<T>): Promise<IUser> {
+  public async handler<T extends ContextConfigType>(context: ContextType<T>): Promise<ContextType<T>> {
     const token = context.header.getBearerToken();
 
     if (!token) {
@@ -52,6 +53,8 @@ export class ClerkAuthMiddleware implements IAuthMiddleware {
     if (clerkUser.createdAt) user.createdAt = new Date(clerkUser.createdAt);
     if (clerkUser.updatedAt) user.updatedAt = new Date(clerkUser.updatedAt);
 
-    return user;
+    context.user = user;
+
+    return context;
   }
 }

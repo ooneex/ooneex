@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/auth",
   "description": "Authentication utilities and strategies for securing Ooneex applications",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "files": [
     "dist",
@@ -31,10 +31,12 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/controller": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
+    "@ooneex/http-status": "workspace:*"
+  },
+  "devDependencies": {
+    "@ooneex/middleware": "workspace:*",
     "@ooneex/user": "workspace:*"
   },
-  "devDependencies": {},
   "keywords": [
     "auth",
     "authentication",

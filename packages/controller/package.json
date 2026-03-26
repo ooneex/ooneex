@@ -27,6 +27,7 @@
     "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "devDependencies": {
+    "@ooneex/rate-limit": "workspace:*",
     "@ooneex/analytics": "workspace:*",
     "@ooneex/app-env": "workspace:*",
     "@ooneex/cache": "workspace:*",

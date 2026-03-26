@@ -7,6 +7,7 @@ import type { IRequestFile } from "@ooneex/http-request-file";
 import type { IResponse } from "@ooneex/http-response";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
+import type { IRateLimiter } from "@ooneex/rate-limit";
 import type { IStorage } from "@ooneex/storage";
 import type { LocaleInfoType } from "@ooneex/translation";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
@@ -29,6 +30,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   cache?: ICache;
   storage?: IStorage;
   mailer?: IMailer;
+  rateLimiter?: IRateLimiter;
   route?: {
     name: string;
     path: `/${string}`;

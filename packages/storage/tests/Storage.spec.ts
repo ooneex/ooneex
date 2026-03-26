@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { S3File, S3Options } from "bun";
-import { AbstractStorage } from "@/AbstractStorage";
+import { Storage } from "@/Storage";
 
 // Mock S3File for testing
 class MockS3File {
@@ -98,7 +98,7 @@ class MockS3Client {
 }
 
 // Concrete implementation for testing
-class TestStorage extends AbstractStorage {
+class TestStorage extends Storage {
   protected bucket = "test-bucket";
   private mockClient: MockS3Client;
 
@@ -136,7 +136,7 @@ class TestStorage extends AbstractStorage {
   }
 }
 
-describe("AbstractStorage", () => {
+describe("Storage", () => {
   let storage: TestStorage;
   let mockClient: MockS3Client;
 

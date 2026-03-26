@@ -1,4 +1,4 @@
-export { AbstractStorage } from "./AbstractStorage";
+export { Storage } from "./Storage";
 export { BunnyStorage } from "./BunnyStorage";
 export { CloudflareStorage } from "./CloudflareStorage";
 export { decorator } from "./decorators";

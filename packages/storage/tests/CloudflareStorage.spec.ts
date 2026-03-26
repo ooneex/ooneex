@@ -187,18 +187,18 @@ describe("CloudflareStorage", () => {
     });
   });
 
-  describe("inheritance from AbstractStorage", () => {
-    test("should extend AbstractStorage", () => {
+  describe("inheritance from Storage", () => {
+    test("should extend Storage", () => {
       const storage = new CloudflareStorage();
 
       // CloudflareStorage should have abstract method implementation
       expect(typeof storage.getOptions).toBe("function");
     });
 
-    test("should inherit storage methods from AbstractStorage", () => {
+    test("should inherit storage methods from Storage", () => {
       const storage = new CloudflareStorage();
 
-      // These methods are inherited from AbstractStorage
+      // These methods are inherited from Storage
       expect(storage.list).toBeDefined();
       expect(storage.clearBucket).toBeDefined();
       expect(storage.exists).toBeDefined();

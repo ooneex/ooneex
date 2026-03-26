@@ -3,7 +3,7 @@ import { basename, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
 import type { GetFileOptionsType, IStorage, PutDirOptionsType } from "./types";
 
-export abstract class AbstractStorage implements IStorage {
+export abstract class Storage implements IStorage {
   protected client: Bun.S3Client | null = null;
   public abstract getOptions(): S3Options;
   protected abstract bucket: string;

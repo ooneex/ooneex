@@ -50,7 +50,7 @@
         "@tanstack/ai-gemini": "^0.2.0",
         "@tanstack/ai-groq": "^0.1.2",
         "@tanstack/ai-ollama": "^0.2.0",
-        "@tanstack/ai-openai": "^0.2.0",
+        "@tanstack/ai-openai": "^0.7.0",
       },
       "devDependencies": {
         "@ooneex/translation": "workspace:*",
@@ -1366,13 +1366,17 @@
 
     "@tanstack/ai-anthropic": ["@tanstack/ai-anthropic@0.2.0", "", { "dependencies": { "@anthropic-ai/sdk": "^0.71.0" }, "peerDependencies": { "@tanstack/ai": "^0.2.0", "zod": "^4.0.0" } }, "sha512-52uwfHGmclhFQx+xOlaNnqLUfh1O1arcAIPlenzFp8infqgG9wVPwtDfvGRlr8zUkYlEKlXsZSpUxRbT21RYuA=="],
 
+    "@tanstack/ai-client": ["@tanstack/ai-client@0.7.2", "", { "dependencies": { "@tanstack/ai": "0.8.1", "@tanstack/ai-event-client": "0.1.1" } }, "sha512-vpmuopa7AcwcYZehgaX4y5gqrSORNHLBgc7MvSFBMRo6rKPw2Y0kdpjd/WzI6zieSL4UXgTtPvqj2/Bvqkn1Iw=="],
+
+    "@tanstack/ai-event-client": ["@tanstack/ai-event-client@0.1.1", "", { "dependencies": { "@tanstack/devtools-event-client": "^0.4.1" }, "peerDependencies": { "@tanstack/ai": "0.8.1" } }, "sha512-cAjpbE4ilwoEvmkk7sCJ3Wea9GI9V/qlKaNrH276jqY9cm8HpOYq8IuRb47Pcxt0XY3VwNjxtdKDlX4PUkr+0g=="],
+
     "@tanstack/ai-gemini": ["@tanstack/ai-gemini@0.2.0", "", { "dependencies": { "@google/genai": "^1.30.0" }, "peerDependencies": { "@tanstack/ai": "^0.2.0", "zod": "^4.0.0" } }, "sha512-0pt7QxTGBzqCFk/rnuUj0LABF1qdhw/Scj1nlSfquD2GSrr7lOyOiXu2RcJsR1l/sRztRTHKmGg4mbRfNYjtdA=="],
 
     "@tanstack/ai-groq": ["@tanstack/ai-groq@0.1.2", "", { "dependencies": { "groq-sdk": "^0.37.0" }, "peerDependencies": { "@tanstack/ai": "^0.8.0", "zod": "^4.0.0" } }, "sha512-oV/AdWy3qoK8qBI2oxPkpf0bNLAkStFLvolbtwhY3ZZJsUjAnA7xXfRSHdNIsME2jwXL52svMSzNpfBIb41+SQ=="],
 
     "@tanstack/ai-ollama": ["@tanstack/ai-ollama@0.2.0", "", { "dependencies": { "ollama": "^0.6.3" }, "peerDependencies": { "@tanstack/ai": "^0.2.0", "zod": "^4.0.0" } }, "sha512-4StABJNpgQcbCCawQSTxhGx9hk+BtG6LTqjgOfsjeDvADQqZFf2BvAkABlSGDpi/inAhtWMXT4bpNRH5tElvNw=="],
 
-    "@tanstack/ai-openai": ["@tanstack/ai-openai@0.2.1", "", { "dependencies": { "openai": "^6.9.1" }, "peerDependencies": { "@tanstack/ai": "^0.2.1", "zod": "^4.0.0" } }, "sha512-MCD/WgJ7qZr/oWyik/zlsXzuO++np+Ag5l5n/5ZmX4mXc3R8Ga1qDeCt+/7RSSmxDJbogeGGn/0j6JpQLrLmRA=="],
+    "@tanstack/ai-openai": ["@tanstack/ai-openai@0.7.1", "", { "dependencies": { "openai": "^6.9.1" }, "peerDependencies": { "@tanstack/ai": "^0.8.0", "@tanstack/ai-client": "^0.7.1", "zod": "^4.0.0" } }, "sha512-BsrozA5SelvY5IJccaA3lGho7NaOuza7vmJlqLdrIsjYVZcB3MI/psg2GK46W0gqCDF1jpCg7x8q8EkYaSpblw=="],
 
     "@tanstack/devtools-event-client": ["@tanstack/devtools-event-client@0.4.0", "", {}, "sha512-RPfGuk2bDZgcu9bAJodvO2lnZeHuz4/71HjZ0bGb/SPg8+lyTA+RLSKQvo7fSmPSi8/vcH3aKQ8EM9ywf1olaw=="],
 
@@ -2389,6 +2393,12 @@
     "@prisma/instrumentation/@opentelemetry/instrumentation": ["@opentelemetry/instrumentation@0.207.0", "", { "dependencies": { "@opentelemetry/api-logs": "0.207.0", "import-in-the-middle": "^2.0.0", "require-in-the-middle": "^8.0.0" }, "peerDependencies": { "@opentelemetry/api": "^1.3.0" } }, "sha512-y6eeli9+TLKnznrR8AZlQMSJT7wILpXH+6EYq5Vf/4Ao+huI7EedxQHwRgVUOMLFbe7VFDvHJrX9/f4lcwnJsA=="],
 
     "@swc-node/sourcemap-support/source-map-support": ["source-map-support@0.5.21", "", { "dependencies": { "buffer-from": "^1.0.0", "source-map": "^0.6.0" } }, "sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w=="],
+
+    "@tanstack/ai-client/@tanstack/ai": ["@tanstack/ai@0.8.1", "", { "dependencies": { "@tanstack/ai-event-client": "0.1.1", "partial-json": "^0.1.7" } }, "sha512-BMWrPJCpJNXPsXeqQOXrg6eHBTZcAVwmc9UFQkcWYeC/B50ilIwVmBQUzCvUq+2R5jz5+MBCY4gEqtH6ERju3A=="],
+
+    "@tanstack/ai-event-client/@tanstack/ai": ["@tanstack/ai@0.8.1", "", { "dependencies": { "@tanstack/ai-event-client": "0.1.1", "partial-json": "^0.1.7" } }, "sha512-BMWrPJCpJNXPsXeqQOXrg6eHBTZcAVwmc9UFQkcWYeC/B50ilIwVmBQUzCvUq+2R5jz5+MBCY4gEqtH6ERju3A=="],
+
+    "@tanstack/ai-event-client/@tanstack/devtools-event-client": ["@tanstack/devtools-event-client@0.4.3", "", { "bin": { "intent": "bin/intent.js" } }, "sha512-OZI6QyULw0FI0wjgmeYzCIfbgPsOEzwJtCpa69XrfLMtNXLGnz3d/dIabk7frg0TmHo+Ah49w5I4KC7Tufwsvw=="],
 
     "@types/node/undici-types": ["undici-types@7.16.0", "", {}, "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw=="],
 

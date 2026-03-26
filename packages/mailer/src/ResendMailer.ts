@@ -5,7 +5,7 @@ import { MailerException } from "./MailerException";
 import type { IMailer } from "./types";
 
 @decorator.mailer()
-export class ResendMailerAdapter implements IMailer {
+export class ResendMailer implements IMailer {
   private apiKey: string;
   private from?: { name: string; address: string };
 

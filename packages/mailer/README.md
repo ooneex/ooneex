@@ -49,9 +49,9 @@ npm install @ooneex/mailer
 ### Basic Usage with Resend
 
 ```typescript
-import { ResendMailerAdapter } from '@ooneex/mailer';
+import { ResendMailer } from '@ooneex/mailer';
 
-const mailer = new ResendMailerAdapter({
+const mailer = new ResendMailer({
   apiKey: 'your-resend-api-key'
 });
 
@@ -87,10 +87,10 @@ await mailer.send({
 ### With Environment Variables
 
 ```typescript
-import { ResendMailerAdapter } from '@ooneex/mailer';
+import { ResendMailer } from '@ooneex/mailer';
 
 // Automatically uses MAILER_RESEND_API_KEY environment variable
-const mailer = new ResendMailerAdapter();
+const mailer = new ResendMailer();
 
 await mailer.send({
   to: ['user@example.com'],
@@ -128,9 +128,9 @@ function WelcomeEmail({ userName }: { userName: string }) {
 ### Custom Sender Information
 
 ```typescript
-import { ResendMailerAdapter } from '@ooneex/mailer';
+import { ResendMailer } from '@ooneex/mailer';
 
-const mailer = new ResendMailerAdapter();
+const mailer = new ResendMailer();
 
 await mailer.send({
   to: ['user@example.com'],
@@ -147,13 +147,13 @@ await mailer.send({
 
 ### Classes
 
-#### `ResendMailerAdapter`
+#### `ResendMailer`
 
 Email adapter using the Resend API for sending emails.
 
 **Constructor:**
 ```typescript
-new ResendMailerAdapter(options?: { apiKey?: string })
+new ResendMailer(options?: { apiKey?: string })
 ```
 
 **Parameters:**
@@ -173,7 +173,7 @@ Sends an email using the Resend API.
 
 **Example:**
 ```typescript
-const mailer = new ResendMailerAdapter();
+const mailer = new ResendMailer();
 
 await mailer.send({
   to: ['recipient@example.com'],
@@ -207,7 +207,7 @@ new NodeMailerAdapter(options?: NodeMailerOptionsType)
 Sends an email using SMTP.
 
 **Parameters:**
-Same as `ResendMailerAdapter.send()`
+Same as `ResendMailer.send()`
 
 ---
 
@@ -260,10 +260,10 @@ type MailerClassType = new (...args: any[]) => IMailer;
 
 ```typescript
 import { App } from '@ooneex/app';
-import { ResendMailerAdapter } from '@ooneex/mailer';
+import { ResendMailer } from '@ooneex/mailer';
 
 const app = new App({
-  mailer: ResendMailerAdapter,
+  mailer: ResendMailer,
   // ... other config
 });
 
@@ -301,11 +301,11 @@ class InviteUserController implements IController {
 
 ```typescript
 import { container } from '@ooneex/container';
-import { ResendMailerAdapter, decorator } from '@ooneex/mailer';
+import { ResendMailer, decorator } from '@ooneex/mailer';
 
 // Register with container using decorator
 @decorator.mailer()
-class MyMailerService extends ResendMailerAdapter {
+class MyMailerService extends ResendMailer {
   // Custom implementation
 }
 
@@ -316,9 +316,9 @@ const mailer = container.get(MyMailerService);
 ### Error Handling
 
 ```typescript
-import { ResendMailerAdapter, MailerException } from '@ooneex/mailer';
+import { ResendMailer, MailerException } from '@ooneex/mailer';
 
-const mailer = new ResendMailerAdapter();
+const mailer = new ResendMailer();
 
 try {
   await mailer.send({
@@ -394,9 +394,9 @@ function OrderConfirmationEmail({ orderId, items, total }: OrderConfirmationProp
 ### Sending to Multiple Recipients
 
 ```typescript
-import { ResendMailerAdapter } from '@ooneex/mailer';
+import { ResendMailer } from '@ooneex/mailer';
 
-const mailer = new ResendMailerAdapter();
+const mailer = new ResendMailer();
 
 await mailer.send({
   to: [

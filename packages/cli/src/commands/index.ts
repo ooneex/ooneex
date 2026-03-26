@@ -2,6 +2,7 @@ export { MakeAiCommand } from "./MakeAiCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";
 export { MakeAppCommand } from "./MakeAppCommand";
 export { MakeCacheCommand } from "./MakeCacheCommand";
+export { MakeClaudeSkillCommand } from "./MakeClaudeSkillCommand";
 export { MakeControllerCommand } from "./MakeControllerCommand";
 export { MakeCronCommand } from "./MakeCronCommand";
 export { MakeDatabaseCommand } from "./MakeDatabaseCommand";

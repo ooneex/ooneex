@@ -1,6 +1,6 @@
 import type { S3Options } from "bun";
-import { Storage } from "./Storage";
 import { decorator } from "./decorators";
+import { Storage } from "./Storage";
 import { StorageException } from "./StorageException";
 
 @decorator.storage()

@@ -2,8 +2,8 @@ import { existsSync, mkdirSync } from "node:fs";
 import { mkdir, readdir, rm, rmdir } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
-import { Storage } from "./Storage";
 import { decorator } from "./decorators";
+import { Storage } from "./Storage";
 import { StorageException } from "./StorageException";
 import type { GetFileOptionsType } from "./types";
 

@@ -2,8 +2,9 @@ import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
 import { AppEnv, type EnvType } from "@ooneex/app-env";
 import { RedisCache } from "@ooneex/cache";
-import { DatabaseLogger, TerminalLogger } from "@ooneex/logger";
+import { DatabaseLogger, ExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
+import { CorsMiddleware } from "@ooneex/middleware";
 import { RedisRateLimiter } from "@ooneex/rate-limit";
 import { CloudflareStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
@@ -12,15 +13,18 @@ const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") 
 
 const app = new App({
   loggers: [DatabaseLogger, TerminalLogger],
+  onException: ExceptionLogger,
   analytics: PostHogAnalytics,
   cache: RedisCache,
   storage: CloudflareStorage,
   mailer: ResendMailer,
   rateLimiter: RedisRateLimiter,
   middlewares: AppModule.middlewares,
+  cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,
   env: appEnv,
+  generateRouteDoc: true,
 });
 
 await app.run();

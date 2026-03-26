@@ -76,7 +76,7 @@ const createMockSocketRoute = (overrides: Record<string, unknown> = {}): RouteCo
     name: "api.socket.list" as const,
     path: "/socket" as const,
     method: "GET" as const,
-    version: "v1" as const,
+    version: 1,
     controller: DefaultSocketController,
     description: "Socket route",
     isSocket: true,
@@ -131,6 +131,26 @@ describe("socketRouteUtils", () => {
       expect(result["/v1/ws/notifications"]).toBeDefined();
       expect(typeof result["/v1/ws/chat"]).toBe("function");
       expect(typeof result["/v1/ws/notifications"]).toBe("function");
+    });
+
+    test("prepends prefix to versioned path", () => {
+      const socketRoutes = new Map<string, RouteConfigType>();
+      socketRoutes.set("/ws/chat", createMockSocketRoute({ path: "/ws/chat", name: "api.chat.list" }));
+
+      const result = formatSocketRoutes(socketRoutes, "api");
+
+      expect(result["/api/v1/ws/chat"]).toBeDefined();
+      expect(typeof result["/api/v1/ws/chat"]).toBe("function");
+    });
+
+    test("works without prefix", () => {
+      const socketRoutes = new Map<string, RouteConfigType>();
+      socketRoutes.set("/ws/chat", createMockSocketRoute({ path: "/ws/chat", name: "api.chat.list" }));
+
+      const result = formatSocketRoutes(socketRoutes);
+
+      expect(result["/v1/ws/chat"]).toBeDefined();
+      expect(typeof result["/v1/ws/chat"]).toBe("function");
     });
   });
 

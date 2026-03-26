@@ -865,5 +865,25 @@ describe("httpRouteUtils", () => {
       expect(testRoute).toBeDefined();
       expect(typeof testRoute?.GET).toBe("function");
     });
+
+    test("prepends prefix to versioned path", () => {
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/users", [createMockRoute({ path: "/users", method: "GET" })]);
+
+      const result = formatHttpRoutes(httpRoutes, [], undefined, "api");
+
+      expect(result["/api/v1/users"]).toBeDefined();
+      expect(typeof result["/api/v1/users"]?.GET).toBe("function");
+    });
+
+    test("works without prefix", () => {
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/users", [createMockRoute({ path: "/users", method: "GET" })]);
+
+      const result = formatHttpRoutes(httpRoutes, [], undefined, undefined);
+
+      expect(result["/v1/users"]).toBeDefined();
+      expect(typeof result["/v1/users"]?.GET).toBe("function");
+    });
   });
 });

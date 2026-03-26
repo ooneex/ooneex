@@ -18,11 +18,11 @@ import { buildHttpContext, validateResponse, validateRouteAccess } from "./httpR
 type SocketRouteHandler = (req: BunRequest, server: Server<unknown>) => Promise<undefined>;
 type SocketRoutesMap = Record<string, SocketRouteHandler>;
 
-export const formatSocketRoutes = (socketRoutes: Map<string, RouteConfigType>): SocketRoutesMap => {
+export const formatSocketRoutes = (socketRoutes: Map<string, RouteConfigType>, prefix?: string): SocketRoutesMap => {
   const routes: SocketRoutesMap = {};
 
   for (const [path, route] of socketRoutes) {
-    const versionedPath = `/${route.version}${path}`;
+    const versionedPath = `/${prefix ? `${prefix}/` : ""}v${route.version}${path}`;
     routes[versionedPath] = async (req: BunRequest, server: Server<unknown>) => {
       const context = await buildHttpContext({ req, server, route });
       const id = random.nanoid(30);

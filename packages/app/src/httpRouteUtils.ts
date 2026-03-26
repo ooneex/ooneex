@@ -376,12 +376,13 @@ export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
   permissions?: PermissionClassType[],
+  prefix?: string,
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 
   for (const [path, routeConfigs] of httpRoutes) {
     for (const route of routeConfigs) {
-      const versionedPath = `/v${route.version}${path}`;
+      const versionedPath = `/${prefix ? `${prefix}/` : ""}v${route.version}${path}`;
 
       routes[versionedPath] ??= {};
       const methodHandlers = routes[versionedPath];

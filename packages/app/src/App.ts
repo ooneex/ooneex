@@ -113,11 +113,11 @@ export class App {
     const env = container.getConstant<IAppEnv>("app.env");
     let hostname = Bun.env.HOST_NAME || "0.0.0.0";
 
-    const { middlewares = [], permissions } = this.config;
+    const { middlewares = [], permissions, prefix } = this.config;
 
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], permissions),
-      ...formatSocketRoutes(router.getSocketRoutes()),
+      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], permissions, prefix),
+      ...formatSocketRoutes(router.getSocketRoutes(), prefix),
     };
 
     const port = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;

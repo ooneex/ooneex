@@ -11,6 +11,7 @@ import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
 
 export type AppConfigType = {
+  prefix?: string;
   loggers: LoggerClassType[];
   onException?: LoggerClassType;
   analytics?: AnalyticsClassType;

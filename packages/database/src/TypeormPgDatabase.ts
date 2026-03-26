@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
-import { AbstractTypeormDatabase } from "./AbstractTypeormDatabase";
+import { TypeormDatabase } from "./TypeormDatabase";
 import { DatabaseException } from "./DatabaseException";
 import { injectable } from "@ooneex/container";
 
 @injectable()
-export class TypeormPgDatabase extends AbstractTypeormDatabase {
+export class TypeormPgDatabase extends TypeormDatabase {
   public getSource(url?: string): DataSource {
     url = url || Bun.env.DATABASE_URL;
 

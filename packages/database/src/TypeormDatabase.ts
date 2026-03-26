@@ -1,7 +1,7 @@
 import type { DataSource, EntityManager, EntityTarget, ObjectLiteral, Repository } from "typeorm";
 import type { ITypeormDatabase } from "./types";
 
-export abstract class AbstractTypeormDatabase implements ITypeormDatabase {
+export abstract class TypeormDatabase implements ITypeormDatabase {
   protected source: DataSource;
   public abstract getSource(database?: string): DataSource;
 

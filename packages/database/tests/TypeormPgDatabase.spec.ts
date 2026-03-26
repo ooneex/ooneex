@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { DataSource } from "typeorm";
-import { TypeormPgDatabase } from "../src/TypeormPgDatabase";
 import { DatabaseException } from "../src/DatabaseException";
+import { TypeormPgDatabase } from "../src/TypeormPgDatabase";
 
 describe("TypeormPgDatabase", () => {
   test("should return a DataSource instance with provided URL", () => {

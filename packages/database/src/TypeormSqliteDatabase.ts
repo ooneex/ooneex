@@ -1,7 +1,7 @@
-import { DataSource } from "typeorm";
-import { TypeormDatabase } from "./TypeormDatabase";
-import { DatabaseException } from "./DatabaseException";
 import { injectable } from "@ooneex/container";
+import { DataSource } from "typeorm";
+import { DatabaseException } from "./DatabaseException";
+import { TypeormDatabase } from "./TypeormDatabase";
 
 @injectable()
 export class TypeormSqliteDatabase extends TypeormDatabase {

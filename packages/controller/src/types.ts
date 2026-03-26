@@ -36,7 +36,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
     name: string;
     path: `/${string}`;
     method: HttpMethodType;
-    version: `v${number}`;
+    version: number;
     description: string;
   } | null;
   app: {

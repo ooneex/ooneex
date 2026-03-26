@@ -8,7 +8,7 @@ export type RouteConfigType = {
   name: string;
   path: `/${string}`;
   method: HttpMethodType;
-  version: `v${number}`;
+  version: number;
   params?: Record<string, AssertType | IAssert>;
   queries?: AssertType | IAssert;
   payload?: AssertType | IAssert;

@@ -10,14 +10,13 @@ export abstract class PubSub<Data extends Record<string, ScalarType> = Record<st
   constructor(protected readonly client: IPubSubClient<Data>) {}
 
   public abstract getChannel(): string | Promise<string>;
-  public abstract handler(context: { data: Data; channel: string; key?: string }): Promise<void> | void;
+  public abstract handler(context: { data: Data; channel: string }): Promise<void> | void;
 
-  public async publish(data: Data, options?: { ws?: ServerWebSocket; key?: string }): Promise<void> {
+  public async publish(data: Data, options?: { ws?: ServerWebSocket }): Promise<void> {
     this.ws = options?.ws;
     await this.client.publish({
       channel: await this.getChannel(),
       data,
-      ...(options?.key !== undefined && { key: options.key }),
     });
   }
 

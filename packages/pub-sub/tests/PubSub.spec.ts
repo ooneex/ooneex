@@ -13,7 +13,7 @@ const createMockClient = (): IPubSubClient<TestData> => ({
 
 class TestPubSub extends PubSub<TestData> {
   private channel = "test-channel";
-  public handlerCalls: Array<{ data: TestData; channel: string; key?: string }> = [];
+  public handlerCalls: Array<{ data: TestData; channel: string }> = [];
 
   public getChannel(): string {
     return this.channel;
@@ -23,7 +23,7 @@ class TestPubSub extends PubSub<TestData> {
     this.channel = channel;
   }
 
-  public handler(context: { data: TestData; channel: string; key?: string }): void {
+  public handler(context: { data: TestData; channel: string }): void {
     this.handlerCalls.push(context);
   }
 }
@@ -88,20 +88,6 @@ describe("PubSub", () => {
       expect(client.publish).toHaveBeenCalledWith({
         channel: "test-channel",
         data,
-      });
-    });
-
-    test("should pass key to client publish when provided", async () => {
-      const client = createMockClient();
-      const pubsub = new TestPubSub(client);
-      const data: TestData = { message: "with key", count: 1 };
-
-      await pubsub.publish(data, { key: "my-key" });
-
-      expect(client.publish).toHaveBeenCalledWith({
-        channel: "test-channel",
-        data,
-        key: "my-key",
       });
     });
 
@@ -253,7 +239,6 @@ describe("PubSub", () => {
       const context = {
         data: { message: "handler test", count: 99 },
         channel: "test-channel",
-        key: "optional-key",
       };
 
       capturedHandler?.(context);

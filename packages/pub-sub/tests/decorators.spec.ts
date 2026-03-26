@@ -19,7 +19,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -46,7 +46,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -76,7 +76,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -114,7 +114,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -145,7 +145,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -175,7 +175,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -204,7 +204,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -238,7 +238,7 @@ describe("decorator.pubSub", () => {
       public handler(_context: { data: CustomData; channel: string }): void {
         // noop
       }
-      public publish(_data: CustomData, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: CustomData, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -269,7 +269,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {
@@ -299,7 +299,7 @@ describe("decorator.pubSub", () => {
       public handler(): void {
         // noop
       }
-      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket; key?: string }): void {
+      public publish(_data: Record<string, unknown>, _options?: { ws?: ServerWebSocket }): void {
         // noop
       }
       public subscribe(_ws?: ServerWebSocket): void {

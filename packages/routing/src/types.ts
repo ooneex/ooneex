@@ -9,6 +9,7 @@ export type RouteConfigType = {
   name: string;
   path: `/${string}`;
   method: HttpMethodType;
+  version: `v${number}`;
   params?: Record<string, AssertType | IAssert>;
   queries?: AssertType | IAssert;
   payload?: AssertType | IAssert;
@@ -19,6 +20,7 @@ export type RouteConfigType = {
   ip?: string[];
   host?: string[];
   roles?: ERole[];
+  // TODO: add to app -> permissions
   permission?: PermissionClassType;
   cache?: boolean;
   isSocket: boolean;

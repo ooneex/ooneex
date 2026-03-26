@@ -203,6 +203,7 @@ export const routeConfigToJsonDoc = (config: RouteConfigType): Record<string, un
     name: config.name,
     path: config.path,
     method: config.method,
+    version: config.version,
     description: config.description,
     controller: config.controller.name,
     isSocket: config.isSocket,

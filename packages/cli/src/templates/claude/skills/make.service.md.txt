@@ -1,0 +1,83 @@
+---
+name: make:service
+description: Generate a new service class with its test file, then complete the generated code. Use when creating a new business logic service that implements IService from @ooneex/service.
+---
+
+# Make Service Class
+
+Generate a new service class and its test file using the `make:service` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the service class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:service --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/services/<Name>Service.ts` - The service class file
+- `tests/services/<Name>Service.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the service class
+
+Edit `src/services/<Name>Service.ts` to complete the implementation:
+
+- Define a proper type for `ServiceDataType` instead of `Record<string, unknown>`
+- Implement the `execute()` method with actual business logic
+- Inject any required dependencies (repositories, other services, etc.) via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+
+type ServiceDataType = Record<string, unknown>;
+
+@decorator.service()
+export class <Name>Service<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  public async execute(data?: T): Promise<void> {
+    // TODO: Implement service logic
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/services/<Name>Service.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, execute method)
+- Add tests relevant to the specific service behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Service } from "@/services/<Name>Service";
+
+describe("<Name>Service", () => {
+  test("should have class name ending with 'Service'", () => {
+    expect(<Name>Service.name.endsWith("Service")).toBe(true);
+  });
+
+  test("should have 'execute' method", () => {
+    expect(<Name>Service.prototype.execute).toBeDefined();
+    expect(typeof <Name>Service.prototype.execute).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/services/<Name>Service.ts tests/services/<Name>Service.spec.ts
+```

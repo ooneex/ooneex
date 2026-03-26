@@ -1,0 +1,104 @@
+---
+name: make:cron
+description: Generate a new cron job class with its test file, then complete the generated code. Use when creating a new scheduled task that extends the Cron base class from @ooneex/cron.
+---
+
+# Make Cron Class
+
+Generate a new cron class and its test file using the `make:cron` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the cron class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:cron --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/cron/<Name>Cron.ts` - The cron class file
+- `tests/cron/<Name>Cron.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the cron class
+
+Edit `src/cron/<Name>Cron.ts` to complete the implementation:
+
+- Set the appropriate cron schedule in `getTime()` (e.g., `"every 5 minutes"`, `"every 1 hours"`, `"every 30 seconds"`)
+- Set the timezone in `getTimeZone()` if needed, or keep `null` for server timezone
+- Implement the `handler()` method with the actual cron job logic
+- Inject any required dependencies via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import type { TimeZoneType } from "@ooneex/country";
+import type { CronTimeType } from "@ooneex/cron";
+import { Cron, decorator } from "@ooneex/cron";
+
+@decorator.cron()
+export class <Name>Cron extends Cron {
+  public getTime(): CronTimeType {
+    // Examples: "every 5 minutes", "every 1 hours", "every 30 seconds"
+    return "every 1 hours";
+  }
+
+  public getTimeZone(): TimeZoneType | null {
+    // Return null to use server timezone, or specify a timezone like "Europe/Paris"
+    return null;
+  }
+
+  public async handler(): Promise<void> {
+    // Implement your cron handler logic here
+    // console.log("<Name>Cron handler executed");
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/cron/<Name>Cron.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, getTime, getTimeZone, handler methods)
+- Add tests relevant to the specific cron class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Cron } from "@/cron/<Name>Cron";
+
+describe("<Name>Cron", () => {
+  test("should have class name ending with 'Cron'", () => {
+    expect(<Name>Cron.name.endsWith("Cron")).toBe(true);
+  });
+
+  test("should have 'getTime' method", () => {
+    expect(<Name>Cron.prototype.getTime).toBeDefined();
+    expect(typeof <Name>Cron.prototype.getTime).toBe("function");
+  });
+
+  test("should have 'getTimeZone' method", () => {
+    expect(<Name>Cron.prototype.getTimeZone).toBeDefined();
+    expect(typeof <Name>Cron.prototype.getTimeZone).toBe("function");
+  });
+
+  test("should have 'handler' method", () => {
+    expect(<Name>Cron.prototype.handler).toBeDefined();
+    expect(typeof <Name>Cron.prototype.handler).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/cron/<Name>Cron.ts tests/cron/<Name>Cron.spec.ts
+```

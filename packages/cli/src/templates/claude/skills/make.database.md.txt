@@ -1,0 +1,96 @@
+---
+name: make:database
+description: Generate a new database class with its test file, then complete the generated code. Use when creating a new database adapter that extends TypeormDatabase from @ooneex/database.
+---
+
+# Make Database Class
+
+Generate a new database class and its test file using the `make:database` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the database class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:database --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/databases/<Name>Database.ts` - The database class file
+- `tests/databases/<Name>Database.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the database class
+
+Edit `src/databases/<Name>Database.ts` to complete the implementation:
+
+- Add entity imports and register them in the `entities` array
+- Adjust the database path if needed (default is `"var/db"`)
+- Configure DataSource options as appropriate (type, synchronize, etc.)
+- Inject any required dependencies via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import { DataSource } from "typeorm";
+import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
+
+@decorator.database()
+export class <Name>Database extends TypeormDatabase {
+  public getSource(database?: string): DataSource {
+    database = database || "var/db";
+
+    this.source = new DataSource({
+      synchronize: false,
+      entities: [
+        // TODO: Load your entities here
+      ],
+      enableWAL: true,
+      busyErrorRetry: 2000,
+      busyTimeout: 30_000,
+      database,
+      type: "sqlite",
+    });
+
+    return this.source;
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/databases/<Name>Database.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, getSource method)
+- Add tests relevant to the specific database class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Database } from "@/databases/<Name>Database";
+
+describe("<Name>Database", () => {
+  test("should have class name ending with 'Database'", () => {
+    expect(<Name>Database.name.endsWith("Database")).toBe(true);
+  });
+
+  test("should have 'getSource' method", () => {
+    expect(<Name>Database.prototype.getSource).toBeDefined();
+    expect(typeof <Name>Database.prototype.getSource).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/databases/<Name>Database.ts tests/databases/<Name>Database.spec.ts
+```

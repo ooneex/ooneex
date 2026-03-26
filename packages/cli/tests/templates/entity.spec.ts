@@ -71,7 +71,9 @@ describe("entity.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain('import type { LocaleType } from "@ooneex/translation"');
     expect(content).toContain('import { random } from "@ooneex/utils"');
-    expect(content).toContain("import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from \"typeorm\"");
+    expect(content).toContain(
+      'import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from "typeorm"',
+    );
   });
 });
 

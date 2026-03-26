@@ -1,0 +1,122 @@
+---
+name: make:permission
+description: Generate a new permission class with its test file, then complete the generated code. Use when creating a new permission that extends Permission from @ooneex/permission.
+---
+
+# Make Permission Class
+
+Generate a new permission class and its test file using the `make:permission` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the permission class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:permission --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/permissions/<Name>Permission.ts` - The permission class file
+- `tests/permissions/<Name>Permission.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the permission class
+
+Edit `src/permissions/<Name>Permission.ts` to complete the implementation:
+
+- Implement the `allow()` method with permission rules using `this.ability.can()`
+- Implement the `setUserPermissions()` method with role-based permission logic
+- Define which actions (read, create, update, delete, manage) are allowed on which entities
+
+The generated class structure follows this pattern:
+
+```typescript
+import { decorator, Permission } from "@ooneex/permission";
+import type { IUser } from "@ooneex/user";
+
+@decorator.permission()
+export class <Name>Permission extends Permission {
+  public allow(): this {
+    // Example: Add permissions using this.ability.can()
+    // this.ability.can("read", "YourEntity");
+    // this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
+
+    return this;
+  }
+
+  public setUserPermissions(user: IUser | null): this {
+    if (!user) {
+      return this;
+    }
+
+    // Example: Grant full access to admins
+    // const { roles } = user;
+    // if (roles.includes(ERole.ADMIN)) {
+    //   this.ability.can("manage", "all");
+    //   return this;
+    // }
+
+    // Example: Grant specific permissions based on roles
+    // for (const role of roles) {
+    //   if (role === ERole.USER) {
+    //     this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
+    //   }
+    //
+    //   if (role === ERole.GUEST) {
+    //     this.ability.can("read", "YourEntity", { public: true });
+    //   }
+    // }
+
+    return this;
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/permissions/<Name>Permission.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, extends Permission, allow, setUserPermissions methods)
+- Add tests relevant to the specific permission rules
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { Permission } from "@ooneex/permission";
+import { <Name>Permission } from "@/permissions/<Name>Permission";
+
+describe("<Name>Permission", () => {
+  test("should have class name ending with 'Permission'", () => {
+    expect(<Name>Permission.name.endsWith("Permission")).toBe(true);
+  });
+
+  test("should extend Permission", () => {
+    const permission = new <Name>Permission();
+    expect(permission).toBeInstanceOf(Permission);
+  });
+
+  test("should have 'allow' method", () => {
+    expect(<Name>Permission.prototype.allow).toBeDefined();
+    expect(typeof <Name>Permission.prototype.allow).toBe("function");
+  });
+
+  test("should have 'setUserPermissions' method", () => {
+    expect(<Name>Permission.prototype.setUserPermissions).toBeDefined();
+    expect(typeof <Name>Permission.prototype.setUserPermissions).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/permissions/<Name>Permission.ts tests/permissions/<Name>Permission.spec.ts
+```

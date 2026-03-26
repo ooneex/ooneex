@@ -1,0 +1,43 @@
+---
+name: make:seed
+description: Generate a new database seed file, then complete the generated code. Use when creating seed data for populating the database using @ooneex/seeds.
+---
+
+# Make Seed
+
+Generate a new seed file using the `make:seed` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the seed file:
+
+```bash
+bunx @ooneex/cli@latest make:seed --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will:
+- Generate a seed file in `src/seeds/`
+- Add a `seed:run` script to `package.json` if not already present
+
+### 2. Read the generated file
+
+Read the generated seed file in `src/seeds/` to understand the scaffolded code.
+
+### 3. Complete the seed
+
+Edit the generated seed file to implement:
+
+- Import the relevant entity classes
+- Create seed data with hardcoded nanoid values for `id` fields (generate via `bun -e "import { random } from '@ooneex/utils'; console.log(random.nanoid())"`)
+- Do NOT use sequential IDs like `"item-1"`, `"item-2"`
+- Ensure the same entity uses the same ID everywhere it appears
+
+### 4. Lint and format
+
+Run linting and formatting on the generated file:
+
+```bash
+bunx biome check --fix src/seeds/
+```

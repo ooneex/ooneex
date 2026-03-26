@@ -153,6 +153,5 @@ describe("MakeModuleCommand", () => {
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("UserModuleModule");
     });
-
   });
 });

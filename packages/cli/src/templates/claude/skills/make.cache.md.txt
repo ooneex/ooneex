@@ -1,0 +1,111 @@
+---
+name: make:cache
+description: Generate a new cache adapter class with its test file, then complete the generated code. Use when creating a new cache adapter that implements the ICache interface from @ooneex/cache.
+---
+
+# Make Cache Class
+
+Generate a new cache class and its test file using the `make:cache` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the cache class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:cache --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/cache/<Name>Cache.ts` - The cache class file
+- `tests/cache/<Name>Cache.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the cache class
+
+Edit `src/cache/<Name>Cache.ts` to complete the implementation:
+
+- Implement the `get` method to retrieve cached values by key
+- Implement the `set` method to store values with optional TTL
+- Implement the `delete` method to remove cached entries
+- Implement the `has` method to check key existence
+- Replace the `CacheException` throws with actual cache logic
+- Inject any required dependencies (e.g., Redis client) via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import { CacheException, decorator } from "@ooneex/cache";
+import type { ICache } from "@ooneex/cache";
+
+@decorator.cache()
+export class <Name>Cache implements ICache {
+  public async get<T = unknown>(key: string): Promise<T | undefined> {
+    throw new CacheException(`Failed to get key "${key}": Not implemented`);
+  }
+
+  public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
+    throw new CacheException(`Failed to set key "${key}": Not implemented`);
+  }
+
+  public async delete(key: string): Promise<boolean> {
+    throw new CacheException(`Failed to delete key "${key}": Not implemented`);
+  }
+
+  public async has(key: string): Promise<boolean> {
+    throw new CacheException(`Failed to check if key "${key}" exists: Not implemented`);
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/cache/<Name>Cache.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, get, set, delete, has methods)
+- Add tests relevant to the specific cache class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Cache } from "@/cache/<Name>Cache";
+
+describe("<Name>Cache", () => {
+  test("should have class name ending with 'Cache'", () => {
+    expect(<Name>Cache.name.endsWith("Cache")).toBe(true);
+  });
+
+  test("should have 'get' method", () => {
+    expect(<Name>Cache.prototype.get).toBeDefined();
+    expect(typeof <Name>Cache.prototype.get).toBe("function");
+  });
+
+  test("should have 'set' method", () => {
+    expect(<Name>Cache.prototype.set).toBeDefined();
+    expect(typeof <Name>Cache.prototype.set).toBe("function");
+  });
+
+  test("should have 'delete' method", () => {
+    expect(<Name>Cache.prototype.delete).toBeDefined();
+    expect(typeof <Name>Cache.prototype.delete).toBe("function");
+  });
+
+  test("should have 'has' method", () => {
+    expect(<Name>Cache.prototype.has).toBeDefined();
+    expect(typeof <Name>Cache.prototype.has).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/cache/<Name>Cache.ts tests/cache/<Name>Cache.spec.ts
+```

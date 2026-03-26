@@ -1,0 +1,119 @@
+---
+name: make:pubsub
+description: Generate a new PubSub event class with its test file, then complete the generated code. Use when creating a new publish/subscribe event that extends PubSub from @ooneex/pub-sub.
+---
+
+# Make PubSub Event Class
+
+Generate a new PubSub event class and its test file using the `make:pubsub` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the PubSub event class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:pubsub --name <name> --channel <channel>
+```
+
+Where `<name>` is the name provided by the user. The `--channel` option is optional — if omitted, it defaults to the kebab-case form of the name (e.g., `UserCreated` becomes `user-created`). The command will generate:
+- `src/events/<Name>Event.ts` - The event class file
+- `tests/events/<Name>Event.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the PubSub event class
+
+Edit `src/events/<Name>Event.ts` to complete the implementation:
+
+- Define a proper data type instead of `Record<string, ScalarType>` for the event payload
+- Implement the `handler()` method with actual event handling logic
+- Set the appropriate channel name in `getChannel()`
+
+The generated class structure follows this pattern:
+
+```typescript
+import { inject } from "@ooneex/container";
+import type { ScalarType } from "@ooneex/types";
+import { decorator, PubSub, RedisPubSub } from "@ooneex/pub-sub";
+
+@decorator.pubSub()
+export class <Name>Event<Data extends Record<string, ScalarType> = Record<string, ScalarType>> extends PubSub<Data> {
+  constructor(
+    @inject(RedisPubSub)
+    client: RedisPubSub<Data>,
+  ) {
+    super(client);
+  }
+
+  public getChannel(): string {
+    return "<channel>";
+  }
+
+  public async handler(context: { data: Data; channel: string }): Promise<void> {
+    console.log(context);
+    // TODO: Implement handler logic here
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/events/<Name>Event.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, getChannel, handler, publish, subscribe, unsubscribe, unsubscribeAll methods)
+- Add tests relevant to the specific event behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>PubSub } from "@/pubsub/<Name>PubSub";
+
+describe("<Name>PubSub", () => {
+  test("should have class name ending with 'PubSub'", () => {
+    expect(<Name>PubSub.name.endsWith("PubSub")).toBe(true);
+  });
+
+  test("should have 'getChannel' method", () => {
+    expect(<Name>PubSub.prototype.getChannel).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.getChannel).toBe("function");
+  });
+
+  test("should have 'handler' method", () => {
+    expect(<Name>PubSub.prototype.handler).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.handler).toBe("function");
+  });
+
+  test("should have 'publish' method", () => {
+    expect(<Name>PubSub.prototype.publish).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.publish).toBe("function");
+  });
+
+  test("should have 'subscribe' method", () => {
+    expect(<Name>PubSub.prototype.subscribe).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.subscribe).toBe("function");
+  });
+
+  test("should have 'unsubscribe' method", () => {
+    expect(<Name>PubSub.prototype.unsubscribe).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.unsubscribe).toBe("function");
+  });
+
+  test("should have 'unsubscribeAll' method", () => {
+    expect(<Name>PubSub.prototype.unsubscribeAll).toBeDefined();
+    expect(typeof <Name>PubSub.prototype.unsubscribeAll).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/events/<Name>Event.ts tests/events/<Name>Event.spec.ts
+```

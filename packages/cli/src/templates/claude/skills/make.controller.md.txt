@@ -1,0 +1,182 @@
+---
+name: make:controller
+description: Generate a new controller class with route type and test file, then complete the generated code. Use when creating a new HTTP or WebSocket controller with routing, validation, and role-based access.
+---
+
+# Make Controller Class
+
+Generate a new controller class, its route type, and test file using the `make:controller` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the controller class and related files:
+
+```bash
+bunx @ooneex/cli@latest make:controller --name <name> --is-socket <true|false> --route.name <route.name> --route.path <route.path> --route.method <route.method>
+```
+
+Where:
+- `<name>` is the controller name provided by the user
+- `--is-socket` determines HTTP vs WebSocket controller (defaults to `false`)
+- `--route.name` is the route name (e.g., `api.user.create`)
+- `--route.path` is the route path (e.g., `/api/users`)
+- `--route.method` is the HTTP method (e.g., `get`, `post`, `put`, `patch`, `delete`) — only for HTTP controllers
+
+The command will generate:
+- `src/controllers/<Name>Controller.ts` - The controller class file
+- `src/types/routes/<route.name>.ts` - The route type file
+- `tests/controllers/<Name>Controller.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read all three generated files to understand the scaffolded code.
+
+### 3. Complete the route type
+
+Edit `src/types/routes/<route.name>.ts` to define the route's type contract:
+
+- Add params types (URL parameters)
+- Add payload types (request body)
+- Add queries types (query string parameters)
+- Add response types (response body)
+
+The generated route type structure follows this pattern:
+
+```typescript
+export type <TypeName>RouteType = {
+  params: {
+
+  },
+  payload: {
+
+  },
+  queries: {
+
+  },
+  response: {
+
+  },
+};
+```
+
+### 4. Complete the controller class
+
+Edit `src/controllers/<Name>Controller.ts` to complete the implementation:
+
+- Define route params validation in `params` using `Assert()`
+- Define payload validation in `payload` using `Assert()`
+- Define query validation in `queries` using `Assert()`
+- Define response schema in `response` using `Assert()`
+- Set appropriate `roles` for access control
+- Add a `description` for the route
+- Implement the `index` method with actual controller logic
+- Inject any required dependencies (repositories, services) via the constructor
+
+**HTTP controller** generated structure:
+
+```typescript
+import type { ContextType } from "@ooneex/controller";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import type { <TypeName>RouteType } from "../types/routes/<route.name>";
+
+@Route.<method>("<route.path>", {
+  name: "<route.name>",
+  description: "",
+  params: {
+    // id: Assert("string"),
+  },
+  payload: Assert({
+
+  }),
+  queries: Assert({
+
+  }),
+  response: Assert({
+
+  }),
+  roles: [ERole.USER],
+})
+export class <Name>Controller {
+  public async index(context: ContextType<<TypeName>RouteType>) {
+    // const { id } = context.params;
+
+    return context.response.json({
+
+    });
+  }
+}
+```
+
+**Socket controller** generated structure:
+
+```typescript
+import type { ContextType } from "@ooneex/socket";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import type { <TypeName>RouteType } from "../types/routes/<route.name>";
+
+@Route.socket("<route.path>", {
+  name: "<route.name>",
+  description: "",
+  params: {
+    // id: Assert("string"),
+  },
+  payload: Assert({
+
+  }),
+  queries: Assert({
+
+  }),
+  response: Assert({
+
+  }),
+  roles: [ERole.USER],
+})
+export class <Name>Controller {
+  public async index(context: ContextType<<TypeName>RouteType>) {
+    // const { id } = context.params;
+
+    return context.response.json({
+
+    });
+  }
+}
+```
+
+### 5. Complete the test file
+
+Edit `tests/controllers/<Name>Controller.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, index method)
+- Add tests relevant to the specific controller behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Controller } from "@/controllers/<Name>Controller";
+
+describe("<Name>Controller", () => {
+  test("should have class name ending with 'Controller'", () => {
+    expect(<Name>Controller.name.endsWith("Controller")).toBe(true);
+  });
+
+  test("should have 'index' method", () => {
+    expect(<Name>Controller.prototype.index).toBeDefined();
+    expect(typeof <Name>Controller.prototype.index).toBe("function");
+  });
+});
+```
+
+### 6. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/controllers/<Name>Controller.ts src/types/routes/<route.name>.ts tests/controllers/<Name>Controller.spec.ts
+```

@@ -1,0 +1,93 @@
+---
+name: make:repository
+description: Generate a new repository class with its test file, then complete the generated code. Use when creating a new TypeORM repository for database operations on an entity.
+---
+
+# Make Repository Class
+
+Generate a new repository class and its test file using the `make:repository` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the repository class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:repository --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/repositories/<Name>Repository.ts` - The repository class file
+- `tests/repositories/<Name>Repository.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the repository class
+
+Edit `src/repositories/<Name>Repository.ts` to complete the implementation:
+
+- Verify the entity import path matches the actual entity location
+- Adjust the `find` method's search fields (default searches `name` with `ILike`)
+- Add any entity-specific query methods
+- Customize relations loading in `findOne`/`findOneBy` if needed
+
+The generated class structure follows this pattern:
+
+```typescript
+import { inject } from "@ooneex/container";
+import type { ITypeormDatabase } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
+import type { FilterResultType } from "@ooneex/types";
+import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
+import { ILike } from "typeorm";
+import { <Name>Entity } from "../entities/<Name>Entity";
+
+@decorator.repository()
+export class <Name>Repository {
+  constructor(
+    @inject("database")
+    private readonly database: ITypeormDatabase,
+  ) {}
+
+  public async open(): Promise<Repository<<Name>Entity>> {
+    return await this.database.open(<Name>Entity);
+  }
+
+  public async close(): Promise<void> {
+    await this.database.close();
+  }
+
+  public async find(
+    criteria: FindManyOptions<<Name>Entity> & { page?: number; limit?: number; q?: string },
+  ): Promise<FilterResultType<<Name>Entity>> {
+    // ... pagination and search logic
+  }
+
+  public async findOne(id: string): Promise<<Name>Entity | null> { ... }
+  public async findOneBy(criteria: FindOptionsWhere<<Name>Entity>): Promise<<Name>Entity | null> { ... }
+  public async create(entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> { ... }
+  public async createMany(entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> { ... }
+  public async update(entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> { ... }
+  public async updateMany(entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> { ... }
+  public async delete(criteria: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<UpdateResult> { ... }
+  public async count(criteria?: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<number> { ... }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/repositories/<Name>Repository.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, open, close, find, findOne, findOneBy, create, createMany, update, updateMany, delete, count methods)
+- Add tests relevant to the specific repository behavior
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/repositories/<Name>Repository.ts tests/repositories/<Name>Repository.spec.ts
+```

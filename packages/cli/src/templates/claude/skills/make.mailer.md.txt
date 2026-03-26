@@ -1,0 +1,104 @@
+---
+name: make:mailer
+description: Generate a new mailer class with its template and test files, then complete the generated code. Use when creating a new email sender with JSX template using @ooneex/mailer.
+---
+
+# Make Mailer Class
+
+Generate a new mailer class, its JSX template, and test files using the `make:mailer` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the mailer class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:mailer --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/mailers/<Name>Mailer.ts` - The mailer class file
+- `src/mailers/<Name>MailerTemplate.tsx` - The JSX email template
+- `tests/mailers/<Name>Mailer.spec.ts` - The mailer test file
+- `tests/mailers/<Name>MailerTemplate.spec.ts` - The template test file
+
+### 2. Read the generated files
+
+Read all four generated files to understand the scaffolded code.
+
+### 3. Complete the mailer class
+
+Edit `src/mailers/<Name>Mailer.ts` to complete the implementation:
+
+- Adjust the `send` method config type if additional parameters are needed
+- Add any pre-send logic (validation, data transformation, etc.)
+
+The generated class structure follows this pattern:
+
+```typescript
+import { inject } from "@ooneex/container";
+import type { IMailer } from "@ooneex/mailer";
+import { type <Name>MailerPropsType, <Name>MailerTemplate } from "./<Name>MailerTemplate";
+
+export class <Name>Mailer implements IMailer {
+  constructor(
+    @inject("mailer")
+    private readonly mailer: IMailer,
+  ) {}
+
+  public async send(config: {
+    to: string[];
+    subject: string;
+    from?: { name: string; address: string };
+    data?: <Name>MailerPropsType;
+  }): Promise<void> {
+    const { data, ...rest } = config;
+
+    await this.mailer.send({
+      ...rest,
+      content: <Name>MailerTemplate(data),
+    });
+  }
+}
+```
+
+### 4. Complete the mailer template
+
+Edit `src/mailers/<Name>MailerTemplate.tsx` to complete the implementation:
+
+- Update `<Name>MailerPropsType` with the actual props needed for the email
+- Build the email body using `MailerLayout` components (Header, Body, Footer)
+- Add email content, styling, and dynamic data rendering
+
+The generated template structure follows this pattern:
+
+```tsx
+import { MailerLayout } from "@ooneex/mailer";
+
+export type <Name>MailerPropsType = {
+  link: string;
+};
+
+export const <Name>MailerTemplate = (props?: <Name>MailerPropsType) => (
+  <MailerLayout>
+    <MailerLayout.Header />
+    <MailerLayout.Body>
+      <a href={props?.link}>Login</a>
+    </MailerLayout.Body>
+    <MailerLayout.Footer />
+  </MailerLayout>
+);
+```
+
+### 5. Complete the test files
+
+Edit `tests/mailers/<Name>Mailer.spec.ts` and `tests/mailers/<Name>MailerTemplate.spec.ts` to add meaningful tests beyond the scaffolded ones.
+
+### 6. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/mailers/<Name>Mailer.ts src/mailers/<Name>MailerTemplate.tsx tests/mailers/<Name>Mailer.spec.ts tests/mailers/<Name>MailerTemplate.spec.ts
+```

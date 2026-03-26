@@ -1,0 +1,137 @@
+---
+name: make:logger
+description: Generate a new logger class with its test file, then complete the generated code. Use when creating a new logger that implements the ILogger interface from @ooneex/logger.
+---
+
+# Make Logger Class
+
+Generate a new logger class and its test file using the `make:logger` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the logger class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:logger --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/loggers/<Name>Logger.ts` - The logger class file
+- `tests/loggers/<Name>Logger.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the logger class
+
+Edit `src/loggers/<Name>Logger.ts` to complete the implementation:
+
+- Implement the `init()` method to set up the logger (e.g., open file handles, configure transports)
+- Implement `log`, `debug`, `info`, `success`, `warn`, and `error` methods with actual logging logic
+- Inject any required dependencies via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import type { IException } from "@ooneex/exception";
+import type { ILogger } from "@ooneex/logger";
+import type { ScalarType } from "@ooneex/types";
+import { decorator } from "@ooneex/logger";
+
+@decorator.logger()
+export class <Name>Logger implements ILogger {
+  public async init(): Promise<void> {
+    // Initialize your logger here
+  }
+
+  public log(message: string, data?: Record<string, ScalarType>): void {
+    // Handle general logging
+  }
+
+  public debug(message: string, data?: Record<string, ScalarType>): void {
+    // Handle debug logging
+  }
+
+  public info(message: string, data?: Record<string, ScalarType>): void {
+    // Handle info logging
+  }
+
+  public success(message: string, data?: Record<string, ScalarType>): void {
+    // Handle success logging
+  }
+
+  public warn(message: string, data?: Record<string, ScalarType>): void {
+    // Handle warning logging
+  }
+
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
+    // Handle error logging
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/loggers/<Name>Logger.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, init, log, debug, info, success, warn, error methods)
+- Add tests relevant to the specific logger class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Logger } from "@/loggers/<Name>Logger";
+
+describe("<Name>Logger", () => {
+  test("should have class name ending with 'Logger'", () => {
+    expect(<Name>Logger.name.endsWith("Logger")).toBe(true);
+  });
+
+  test("should have 'init' method", () => {
+    expect(<Name>Logger.prototype.init).toBeDefined();
+    expect(typeof <Name>Logger.prototype.init).toBe("function");
+  });
+
+  test("should have 'log' method", () => {
+    expect(<Name>Logger.prototype.log).toBeDefined();
+    expect(typeof <Name>Logger.prototype.log).toBe("function");
+  });
+
+  test("should have 'debug' method", () => {
+    expect(<Name>Logger.prototype.debug).toBeDefined();
+    expect(typeof <Name>Logger.prototype.debug).toBe("function");
+  });
+
+  test("should have 'info' method", () => {
+    expect(<Name>Logger.prototype.info).toBeDefined();
+    expect(typeof <Name>Logger.prototype.info).toBe("function");
+  });
+
+  test("should have 'success' method", () => {
+    expect(<Name>Logger.prototype.success).toBeDefined();
+    expect(typeof <Name>Logger.prototype.success).toBe("function");
+  });
+
+  test("should have 'warn' method", () => {
+    expect(<Name>Logger.prototype.warn).toBeDefined();
+    expect(typeof <Name>Logger.prototype.warn).toBe("function");
+  });
+
+  test("should have 'error' method", () => {
+    expect(<Name>Logger.prototype.error).toBeDefined();
+    expect(typeof <Name>Logger.prototype.error).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/loggers/<Name>Logger.ts tests/loggers/<Name>Logger.spec.ts
+```

@@ -6,6 +6,7 @@ import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}"
 
 @Route.socket("{{ROUTE_PATH}}", {
   name: "{{ROUTE_NAME}}",
+  version: "v1",
   description: "",
   params: {
     // id: Assert("string"),

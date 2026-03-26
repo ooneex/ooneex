@@ -44,20 +44,20 @@ describe("MakeCacheCommand", () => {
       process.chdir(testDir);
     });
 
-    test("should generate cache adapter file with correct name", async () => {
+    test("should generate cache file with correct name", async () => {
       await command.run({ name: "Redis" });
 
-      const filePath = join(testDir, "src", "cache", "RedisCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "RedisCache.ts");
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("RedisCache");
     });
 
-    test("should generate test file for cache adapter", async () => {
+    test("should generate test file for cache", async () => {
       await command.run({ name: "Redis" });
 
-      const testFilePath = join(testDir, "tests", "cache", "RedisCacheAdapter.spec.ts");
+      const testFilePath = join(testDir, "tests", "cache", "RedisCache.spec.ts");
       expect(existsSync(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
@@ -67,14 +67,14 @@ describe("MakeCacheCommand", () => {
     test("should normalize name with toPascalCase", async () => {
       await command.run({ name: "in-memory" });
 
-      const filePath = join(testDir, "src", "cache", "InMemoryCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "InMemoryCache.ts");
       expect(existsSync(filePath)).toBe(true);
     });
 
     test("should remove Cache suffix if provided", async () => {
       await command.run({ name: "RedisCache" });
 
-      const filePath = join(testDir, "src", "cache", "RedisCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "RedisCache.ts");
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
@@ -84,21 +84,21 @@ describe("MakeCacheCommand", () => {
     test("should handle lowercase input", async () => {
       await command.run({ name: "memcached" });
 
-      const filePath = join(testDir, "src", "cache", "MemcachedCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "MemcachedCache.ts");
       expect(existsSync(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "file_system" });
 
-      const filePath = join(testDir, "src", "cache", "FileSystemCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "FileSystemCache.ts");
       expect(existsSync(filePath)).toBe(true);
     });
 
     test("should replace template placeholders correctly", async () => {
       await command.run({ name: "Memory" });
 
-      const filePath = join(testDir, "src", "cache", "MemoryCacheAdapter.ts");
+      const filePath = join(testDir, "src", "cache", "MemoryCache.ts");
       const content = await Bun.file(filePath).text();
 
       expect(content).not.toContain("{{NAME}}");

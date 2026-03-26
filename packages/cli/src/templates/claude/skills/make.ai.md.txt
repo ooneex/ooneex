@@ -1,0 +1,96 @@
+---
+name: make:ai
+description: Generate a new AI class with its test file, then complete the generated code. Use when creating a new AI chat class that uses OpenAI via the @ooneex/ai package.
+---
+
+# Make AI Class
+
+Generate a new AI class and its test file using the `make:ai` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the AI class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:ai --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/ai/<Name>Ai.ts` - The AI class file
+- `tests/ai/<Name>Ai.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the AI class
+
+Edit `src/ai/<Name>Ai.ts` to complete the implementation:
+
+- Update the prompt in the `run` method from `"My prompt"` to a meaningful prompt based on the class purpose
+- Update the prompt in the `runStream` method from `"My prompt"` to a meaningful prompt based on the class purpose
+- Add any additional configuration or methods relevant to the AI class purpose
+- Ensure proper typing for the `run<T>()` generic return type
+
+The generated class structure follows this pattern:
+
+```typescript
+import { decorator, type IAiChat, OpenAi, type OpenAiConfigType } from "@ooneex/ai";
+import { inject } from "@ooneex/container";
+
+@decorator.ai()
+export class <Name>Ai implements IAiChat<OpenAiConfigType> {
+  constructor(@inject(OpenAi) private readonly ai: OpenAi) {}
+
+  public async run<T>(prompt?: string, config?: Omit<OpenAiConfigType, "prompt">): Promise<T> {
+    return this.ai.run<T>(prompt || "My prompt", config);
+  }
+
+  public async *runStream(
+    prompt?: string,
+    config?: Omit<OpenAiConfigType, "prompt" | "output">,
+  ): AsyncGenerator<string, void, unknown> {
+    yield* this.ai.runStream(prompt || "My prompt", config);
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/ai/<Name>Ai.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, run method, runStream method)
+- Add tests relevant to the specific AI class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Ai } from "@/ai/<Name>Ai";
+
+describe("<Name>Ai", () => {
+  test("should have class name ending with 'Ai'", () => {
+    expect(<Name>Ai.name.endsWith("Ai")).toBe(true);
+  });
+
+  test("should have 'run' method", () => {
+    expect(<Name>Ai.prototype.run).toBeDefined();
+    expect(typeof <Name>Ai.prototype.run).toBe("function");
+  });
+
+  test("should have 'runStream' method", () => {
+    expect(<Name>Ai.prototype.runStream).toBeDefined();
+    expect(typeof <Name>Ai.prototype.runStream).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/ai/<Name>Ai.ts tests/ai/<Name>Ai.spec.ts
+```

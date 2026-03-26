@@ -1,0 +1,83 @@
+---
+name: make:analytics
+description: Generate a new analytics class with its test file, then complete the generated code. Use when creating a new analytics tracking class that uses the @ooneex/analytics package.
+---
+
+# Make Analytics Class
+
+Generate a new analytics class and its test file using the `make:analytics` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the analytics class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:analytics --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/analytics/<Name>Analytics.ts` - The analytics class file
+- `tests/analytics/<Name>Analytics.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the analytics class
+
+Edit `src/analytics/<Name>Analytics.ts` to complete the implementation:
+
+- Implement the `capture` method with actual analytics tracking logic
+- Define a proper type for `CaptureOptionsType` instead of `Record<string, unknown>` based on the analytics purpose
+- Add any additional methods or properties relevant to the analytics class purpose
+
+The generated class structure follows this pattern:
+
+```typescript
+import { decorator } from "@ooneex/analytics";
+import type { IAnalytics } from "@ooneex/analytics";
+
+type CaptureOptionsType = Record<string, unknown>;
+
+@decorator.analytics()
+export class <Name>Analytics<T extends CaptureOptionsType = CaptureOptionsType> implements IAnalytics<T> {
+  public capture(options: T): void {
+    // console.log("Analytics captured:", options);
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/analytics/<Name>Analytics.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, capture method)
+- Add tests relevant to the specific analytics class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Analytics } from "@/analytics/<Name>Analytics";
+
+describe("<Name>Analytics", () => {
+  test("should have class name ending with 'Analytics'", () => {
+    expect(<Name>Analytics.name.endsWith("Analytics")).toBe(true);
+  });
+
+  test("should have 'capture' method", () => {
+    expect(<Name>Analytics.prototype.capture).toBeDefined();
+    expect(typeof <Name>Analytics.prototype.capture).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/analytics/<Name>Analytics.ts tests/analytics/<Name>Analytics.spec.ts
+```

@@ -1,0 +1,134 @@
+---
+name: make:entity
+description: Generate a new TypeORM entity class with its test file, then complete the generated code. Use when creating a new database entity with columns, relations, and table mapping.
+---
+
+# Make Entity Class
+
+Generate a new entity class and its test file using the `make:entity` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the entity class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:entity --name <name> --table-name <table_name>
+```
+
+Where `<name>` is the name provided by the user. The `--table-name` option is optional — if omitted, it defaults to the snake_case pluralized form of the name (e.g., `UserProfile` becomes `user_profiles`). The command will generate:
+- `src/entities/<Name>Entity.ts` - The entity class file
+- `tests/entities/<Name>Entity.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the entity class
+
+Edit `src/entities/<Name>Entity.ts` to complete the implementation:
+
+- Add entity-specific columns with appropriate TypeORM decorators (`@Column`)
+- Add relations if needed (`@ManyToOne`, `@OneToMany`, `@ManyToMany`, etc.)
+- Remove any scaffolded columns that are not relevant to the entity
+- Adjust column types, lengths, and constraints as needed
+
+The generated class structure follows this pattern:
+
+```typescript
+import type { LocaleType } from "@ooneex/translation";
+import { random } from "@ooneex/utils";
+import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from "typeorm";
+
+@Entity({
+  name: "<table_name>",
+})
+export class <Name>Entity extends BaseEntity {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.nanoid(25);
+
+  @Column({
+    name: "is_locked",
+    type: "boolean",
+    default: false,
+    nullable: true,
+  })
+  isLocked?: boolean;
+
+  @Column({ name: "locked_at", type: "timestamptz", nullable: true })
+  lockedAt?: Date;
+
+  @Column({
+    name: "is_blocked",
+    type: "boolean",
+    default: false,
+    nullable: true,
+  })
+  isBlocked?: boolean;
+
+  @Column({ name: "blocked_at", type: "timestamptz", nullable: true })
+  blockedAt?: Date;
+
+  @Column({ name: "block_reason", type: "text", nullable: true })
+  blockReason?: string;
+
+  @Column({ name: "is_public", type: "boolean", default: true, nullable: true })
+  isPublic?: boolean;
+
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date;
+
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt?: Date;
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/entities/<Name>Entity.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, id, default columns)
+- Add tests for any new entity-specific columns and relations
+- Update tests if scaffolded columns were removed
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Entity } from "@/entities/<Name>Entity";
+
+describe("<Name>Entity", () => {
+  test("should have class name ending with 'Entity'", () => {
+    expect(<Name>Entity.name.endsWith("Entity")).toBe(true);
+  });
+
+  test("should have 'id' property with default nanoid", () => {
+    const entity = new <Name>Entity();
+    expect(entity.id).toBeDefined();
+    expect(typeof entity.id).toBe("string");
+    expect(entity.id.length).toBe(25);
+  });
+
+  test("should have 'isLocked' property", () => {
+    const entity = new <Name>Entity();
+    expect("isLocked" in entity).toBe(true);
+  });
+
+  // ... additional property tests
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/entities/<Name>Entity.ts tests/entities/<Name>Entity.spec.ts
+```

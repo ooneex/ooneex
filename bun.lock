@@ -72,7 +72,6 @@
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
-        "@ooneex/auth": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -93,6 +92,7 @@
         "@ooneex/cron": "workspace:*",
         "@ooneex/middleware": "workspace:*",
         "@ooneex/module": "workspace:*",
+        "@ooneex/pub-sub": "workspace:*",
         "@ooneex/socket": "workspace:*",
         "@ooneex/socket-client": "workspace:*",
         "@ooneex/translation": "workspace:*",
@@ -373,9 +373,10 @@
     },
     "packages/module": {
       "name": "@ooneex/module",
-      "version": "0.17.0",
+      "version": "0.17.1",
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
+        "@ooneex/cron": "workspace:*",
         "@ooneex/entity": "workspace:*",
         "@ooneex/permission": "workspace:*",
         "@ooneex/pub-sub": "workspace:*",

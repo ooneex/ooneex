@@ -76,6 +76,7 @@ export const buildHttpContext = async (ctx: {
     cache: container.get("cache"),
     storage: container.get("storage"),
     mailer: container.get("mailer"),
+    rateLimiter: container.get("rateLimiter"),
     route: route
       ? {
           name: route.name,
@@ -224,7 +225,8 @@ const buildExceptionResponse = (
   return context.response.exception(message, { status }).get(env);
 };
 
-const logRequest = (context: ContextType, status: number, path: string): void => {
+export const logRequest = (context: ContextType): void => {
+  const path = context.route?.path || "";
   const logger = context.logger as {
     success: (message: string, data?: LogsEntity) => void;
     info: (message: string, data?: LogsEntity) => void;
@@ -236,6 +238,7 @@ const logRequest = (context: ContextType, status: number, path: string): void =>
     return;
   }
 
+  const status = context.response.getStatus();
   const logData = new LogsEntity();
   logData.date = new Date();
   logData.status = status;
@@ -299,26 +302,29 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
-    logRequest(context, validationError.status, route.path);
-    return buildExceptionResponse(context, validationError.message, validationError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(context, validationError.message, validationError.status, currentEnv);
+    logRequest(context);
+    return httpResponse;
   }
 
   const controller = container.get(route.controller);
 
   const [response, controllerError] = await executeController(controller, context);
   if (controllerError) {
-    logRequest(context, controllerError.status, route.path);
-    return buildExceptionResponse(context, controllerError.message, controllerError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(context, controllerError.message, controllerError.status, currentEnv);
+    logRequest(context);
+    return httpResponse;
   }
 
   const responseValidationError = validateResponse(route, response.getData());
   if (responseValidationError) {
-    logRequest(context, responseValidationError.status, route.path);
-    return buildExceptionResponse(context, responseValidationError.message, responseValidationError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(context, responseValidationError.message, responseValidationError.status, currentEnv);
+    logRequest(context);
+    return httpResponse;
   }
 
   const httpResponse = response.get(currentEnv);
-  logRequest(context, httpResponse.status, route.path);
+  logRequest(context);
 
   return httpResponse;
 };
@@ -351,9 +357,10 @@ export const formatHttpRoutes = (
           context = await runMiddlewares(context, middlewares);
         } catch (error: unknown) {
           const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
-          const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
-          logRequest(context, status, route.path);
-          return buildExceptionResponse(context, (error as Error).message, status as StatusCodeType, env);
+          const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as StatusCodeType;
+          const httpResponse = buildExceptionResponse(context, (error as Error).message, status, env);
+          logRequest(context);
+          return httpResponse;
         }
 
         return httpRouteHandler({ context, route });

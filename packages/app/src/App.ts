@@ -10,7 +10,7 @@ import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
 import { generateRouteDoc } from "./generateRouteDoc";
-import { buildHttpContext, formatHttpRoutes, runMiddlewares } from "./httpRouteUtils";
+import { buildHttpContext, formatHttpRoutes, logRequest, runMiddlewares } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
 import type { AppConfigType } from "./types";
@@ -18,7 +18,7 @@ import type { IPubSub } from "@ooneex/pub-sub";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer } = this.config;
+    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer, rateLimiter } = this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
@@ -44,6 +44,10 @@ export class App {
 
     if (mailer) {
       container.addAlias("mailer", mailer);
+    }
+
+    if (rateLimiter) {
+      container.addAlias("rateLimiter", rateLimiter);
     }
 
     cronJobs?.forEach((cronJob) => {
@@ -127,6 +131,8 @@ export class App {
           if (this.config.cors) {
             context = await runMiddlewares(context, [this.config.cors]);
           }
+
+          logRequest(context);
 
           return context.response.get();
         },

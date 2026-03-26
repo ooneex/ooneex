@@ -5,13 +5,11 @@ import type { CronClassType } from "@ooneex/cron";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
 import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
-import type { ModuleType } from "@ooneex/module";
 import type { PubSubClassType } from "@ooneex/pub-sub";
 import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
 
 export type AppConfigType = {
-  modules: ModuleType[];
   loggers: LoggerClassType[];
   analytics?: AnalyticsClassType;
   cache?: CacheClassType;

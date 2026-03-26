@@ -14,21 +14,17 @@ import { buildHttpContext, formatHttpRoutes, runMiddlewares } from "./httpRouteU
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
 import type { AppConfigType } from "./types";
+import type { IPubSub } from "@ooneex/pub-sub";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, analytics, cache, storage, env, mailer } = this.config;
+    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer } = this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
-
-    cronJobs?.forEach((cronJob) => {
-      const cron = container.get<ICron>(cronJob);
-      cron.start();
-    });
 
     if (env) {
       container.addConstant("app.env", env);
@@ -49,6 +45,16 @@ export class App {
     if (mailer) {
       container.addAlias("mailer", mailer);
     }
+
+    cronJobs?.forEach((cronJob) => {
+      const cron = container.get<ICron>(cronJob);
+      cron.start();
+    });
+
+    events?.forEach((event) => {
+      const e = container.get<IPubSub>(event);
+      e.subscribe();
+    });
   }
 
   public async init(): Promise<App> {

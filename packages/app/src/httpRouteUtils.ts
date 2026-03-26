@@ -196,7 +196,7 @@ export const validateRouteAccess = async (
   // Check permission
   if (route.permission) {
     const permission = container.get(route.permission);
-    permission.setUserPermissions(context.user).build();
+    permission.allow().setUserPermissions(context.user).build();
   }
 
   return null;

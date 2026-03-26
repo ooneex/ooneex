@@ -830,8 +830,8 @@ describe("httpRouteUtils", () => {
     test("groups routes by versioned path when versions differ", () => {
       const httpRoutes = new Map<string, RouteConfigType[]>();
       httpRoutes.set("/users", [
-        createMockRoute({ path: "/users", method: "GET", version: "v1" }),
-        createMockRoute({ path: "/users", method: "GET", version: "v2" }),
+        createMockRoute({ path: "/users", method: "GET", version: 1 }),
+        createMockRoute({ path: "/users", method: "GET", version: 2 }),
       ]);
 
       const result = formatHttpRoutes(httpRoutes);

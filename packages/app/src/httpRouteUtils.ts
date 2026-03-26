@@ -381,7 +381,7 @@ export const formatHttpRoutes = (
 
   for (const [path, routeConfigs] of httpRoutes) {
     for (const route of routeConfigs) {
-      const versionedPath = `/${route.version}${path}`;
+      const versionedPath = `/v${route.version}${path}`;
 
       routes[versionedPath] ??= {};
       const methodHandlers = routes[versionedPath];

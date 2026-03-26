@@ -146,8 +146,5 @@ vite.config.ts.timestamp-*
 .nx/cache
 .nx/workspace-data
 
-# Translations
-**/locales/.wuchale
-
 # Application
 var/

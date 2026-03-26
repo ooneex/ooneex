@@ -59,7 +59,6 @@
     "@types/bun": "latest",
     "@types/node": "^24.10.8",
     "@typescript/native-preview": "^7.0.0-dev.20260113.1",
-    "bunup": "^0.16.19",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "nx": "22.0.2",

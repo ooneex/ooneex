@@ -12,6 +12,7 @@ import { AppModule } from "./AppModule";
 const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") as EnvType);
 
 const app = new App({
+  prefix: "api",
   loggers: [DatabaseLogger, TerminalLogger],
   onException: ExceptionLogger,
   analytics: PostHogAnalytics,

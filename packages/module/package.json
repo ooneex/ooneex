@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/module",
   "description": "Module system for organizing application features by grouping controllers, entities, and related components",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "type": "module",
   "files": [
     "dist",
@@ -30,6 +30,7 @@
     "@ooneex/controller": "workspace:*",
     "@ooneex/permission": "workspace:*",
     "@ooneex/pub-sub": "workspace:*",
+    "@ooneex/cron": "workspace:*",
     "@ooneex/entity": "workspace:*"
   },
   "keywords": [

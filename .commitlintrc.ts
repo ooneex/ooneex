@@ -53,6 +53,7 @@ const Configuration: UserConfig = {
         "middleware",
         "migrations",
         "model",
+        "module",
         "payment",
         "pdf",
         "permission",

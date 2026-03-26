@@ -9,7 +9,6 @@ export type ModuleType = {
   controllers: ControllerClassType[];
   entities: EntityClassType[];
   permissions?: PermissionClassType[];
-
   middlewares?: MiddlewareClassType[];
   cronJobs?: CronClassType[];
   events?: PubSubClassType[];

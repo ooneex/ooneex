@@ -74,6 +74,10 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
     return this.data;
   }
 
+  public getStatus(): StatusCodeType {
+    return this.status;
+  }
+
   public get(env?: Environment): Response {
     if (this.redirectUrl) {
       return new Response(null, {

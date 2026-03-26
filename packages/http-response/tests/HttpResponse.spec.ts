@@ -707,6 +707,48 @@ describe("HttpResponse", () => {
     });
   });
 
+  describe("getStatus method", () => {
+    test("should return default status 200", () => {
+      expect(response.getStatus()).toBe(HttpStatus.Code.OK);
+    });
+
+    test("should return status after json is called", () => {
+      response.json({ message: "test" }, HttpStatus.Code.Created);
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.Created);
+    });
+
+    test("should return status after exception is called", () => {
+      response.exception("Error occurred");
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.InternalServerError);
+    });
+
+    test("should return custom status after exception is called with config", () => {
+      response.exception("Bad request", { status: HttpStatus.Code.BadRequest });
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.BadRequest);
+    });
+
+    test("should return status after notFound is called", () => {
+      response.notFound("Not found");
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.NotFound);
+    });
+
+    test("should return status after redirect is called", () => {
+      response.redirect("https://example.com");
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.Found);
+    });
+
+    test("should return custom status after redirect is called", () => {
+      response.redirect("https://example.com", HttpStatus.Code.MovedPermanently);
+
+      expect(response.getStatus()).toBe(HttpStatus.Code.MovedPermanently);
+    });
+  });
+
   describe("done property", () => {
     test("should default to false", () => {
       expect(response.done).toBe(false);

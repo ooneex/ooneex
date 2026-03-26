@@ -23,6 +23,7 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
   redirect: (url: string | URL, status?: StatusCodeType) => IResponse<DataType>;
   get: (env?: Environment) => Response;
   getData: () => DataType | null;
+  getStatus: () => StatusCodeType;
 }
 
 export type ResponseDataType<Data extends Record<string, unknown>> = {

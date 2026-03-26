@@ -13,11 +13,6 @@ export class ReadonlyUrl implements IReadonlyUrl {
   protected port: number;
   protected path: string;
   protected queries: Record<string, ScalarType> = {};
-  protected lang: LocaleType = "en";
-  protected page = 1;
-  protected limit = 100;
-  protected order: "ASC" | "DESC" = "ASC";
-  protected orderBy: string | null = null;
   protected fragment: string;
   protected base: string;
   protected origin: string;
@@ -84,17 +79,6 @@ export class ReadonlyUrl implements IReadonlyUrl {
         this.queries[key] = value;
       }
     }
-
-    if (locales.includes(this.queries.lang as LocaleType)) {
-      this.lang = this.queries.lang as LocaleType;
-    }
-    this.page = (this.queries.page as number) ?? 1;
-    this.limit = (this.queries.limit as number) ?? 100;
-    this.orderBy = (this.queries.orderBy as string) ?? null;
-
-    if (this.queries.order === "ASC" || this.queries.order === "DESC") {
-      this.order = this.queries.order;
-    }
   }
 
   public getNative(): URL {
@@ -134,23 +118,27 @@ export class ReadonlyUrl implements IReadonlyUrl {
   }
 
   public getLang(): LocaleType {
-    return this.lang;
+    const lang = this.queries.lang as LocaleType;
+
+    return locales.includes(lang) ? lang : "en";
   }
 
   public getPage(): number {
-    return this.page;
+    return (this.queries.page as number) ?? 1;
   }
 
   public getLimit(): number {
-    return this.limit;
+    return (this.queries.limit as number) ?? 100;
   }
 
   public getOrder(): "ASC" | "DESC" {
-    return this.order;
+    const order = this.queries.order;
+
+    return ["ASC", "DESC"].includes(order as string) ? (order as "ASC" | "DESC") : "ASC";
   }
 
   public getOrderBy(): string | null {
-    return this.orderBy;
+    return (this.queries.orderBy as string) ?? null;
   }
 
   public getFragment(): string {

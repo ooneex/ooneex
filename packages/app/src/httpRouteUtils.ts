@@ -11,6 +11,7 @@ import type { ILogger } from "@ooneex/logger";
 import { LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
 import type { IMiddleware, MiddlewareClassType } from "@ooneex/middleware";
+import type { PermissionClassType } from "@ooneex/permission";
 import type { IRateLimiter } from "@ooneex/rate-limit";
 import { Role } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
@@ -217,12 +218,6 @@ export const validateRouteAccess = async (
     }
   }
 
-  // Check permission
-  if (route.permission) {
-    const permission = container.get(route.permission);
-    permission.allow().setUserPermissions(context.user).build();
-  }
-
   return null;
 };
 
@@ -318,9 +313,10 @@ const executeController = async (
 type HttpRouteHandlerOptions = {
   context: ContextType;
   route: RouteConfigType;
+  permissions?: PermissionClassType[];
 };
 
-export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptions): Promise<Response> => {
+export const httpRouteHandler = async ({ context, route, permissions }: HttpRouteHandlerOptions): Promise<Response> => {
   const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
@@ -331,6 +327,11 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
   }
 
   const controller = container.get(route.controller);
+
+  permissions?.forEach((permission) => {
+    const perm = container.get(permission);
+    perm.allow().setUserPermissions(context.user).build();
+  });
 
   const [response, controllerError] = await executeController(controller, context);
   if (controllerError) {
@@ -374,6 +375,7 @@ export const runMiddlewares = async (
 export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
+  permissions?: PermissionClassType[]
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 
@@ -381,11 +383,10 @@ export const formatHttpRoutes = (
     for (const route of routeConfigs) {
       const versionedPath = `/${route.version}${path}`;
 
-      if (!routes[versionedPath]) {
-        routes[versionedPath] = {};
-      }
+      routes[versionedPath] ??= {};
+      const methodHandlers = routes[versionedPath];
 
-      routes[versionedPath][route.method] = async (req: BunRequest, server: Server<unknown>) => {
+      methodHandlers[route.method] = async (req: BunRequest, server: Server<unknown>) => {
         let context = await buildHttpContext({ req, server, route });
 
         try {
@@ -400,7 +401,7 @@ export const formatHttpRoutes = (
           return httpResponse;
         }
 
-        return httpRouteHandler({ context, route });
+        return httpRouteHandler({ context, route, ...(permissions && { permissions }) });
       };
     }
   }

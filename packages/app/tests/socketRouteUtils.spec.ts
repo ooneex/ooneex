@@ -4,6 +4,7 @@ import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus } from "@ooneex/http-status";
+import type { PermissionClassType } from "@ooneex/permission";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { ContextType } from "@ooneex/socket";
 import { formatSocketRoutes, socketRouteHandler } from "@/socketRouteUtils";
@@ -505,6 +506,136 @@ describe("socketRouteUtils", () => {
       expect(unsubscribeMock).toHaveBeenCalledWith(route.name);
       expect(closeMock).toHaveBeenCalledWith(1000, "test close");
       expect(publishMock).toHaveBeenCalled();
+    });
+
+    test("calls permissions with allow, setUserPermissions, and build", async () => {
+      const allowMock = mock(() => mockPermission);
+      const setUserPermissionsMock = mock(() => mockPermission);
+      const buildMock = mock(() => mockPermission);
+
+      const mockPermission = {
+        allow: allowMock,
+        setUserPermissions: setUserPermissionsMock,
+        build: buildMock,
+      };
+
+      class SocketPermission {
+        allow = allowMock;
+        setUserPermissions = setUserPermissionsMock;
+        build = buildMock;
+      }
+      container.add(SocketPermission);
+
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext();
+
+      class PermSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(PermSocketController);
+
+      const route = createMockSocketRoute({ controller: PermSocketController });
+
+      const wsId = `test-ws-id-permission-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+        permissions: [SocketPermission as unknown as PermissionClassType],
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      expect(allowMock).toHaveBeenCalled();
+      expect(setUserPermissionsMock).toHaveBeenCalled();
+      expect(buildMock).toHaveBeenCalled();
+    });
+
+    test("calls multiple permissions in order", async () => {
+      const calls: string[] = [];
+
+      class SocketPerm1 {
+        allow() {
+          calls.push("allow1");
+          return this;
+        }
+        setUserPermissions() {
+          calls.push("setUser1");
+          return this;
+        }
+        build() {
+          calls.push("build1");
+          return this;
+        }
+      }
+
+      class SocketPerm2 {
+        allow() {
+          calls.push("allow2");
+          return this;
+        }
+        setUserPermissions() {
+          calls.push("setUser2");
+          return this;
+        }
+        build() {
+          calls.push("build2");
+          return this;
+        }
+      }
+
+      container.add(SocketPerm1);
+      container.add(SocketPerm2);
+
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext();
+
+      class MultiPermSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(MultiPermSocketController);
+
+      const route = createMockSocketRoute({ controller: MultiPermSocketController });
+
+      const wsId = `test-ws-id-multi-perm-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+        permissions: [
+          SocketPerm1 as unknown as PermissionClassType,
+          SocketPerm2 as unknown as PermissionClassType,
+        ],
+      });
+
+      expect(calls).toEqual(["allow1", "setUser1", "build1", "allow2", "setUser2", "build2"]);
     });
 
     test("runs multiple middlewares in sequence", async () => {

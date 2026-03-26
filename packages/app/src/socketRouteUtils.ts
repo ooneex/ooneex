@@ -5,6 +5,7 @@ import type { IResponse } from "@ooneex/http-response";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
 import { LogsEntity } from "@ooneex/logger";
 import type { ISocketMiddleware, SocketMiddlewareClassType } from "@ooneex/middleware";
+import type { PermissionClassType } from "@ooneex/permission";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { ContextType } from "@ooneex/socket";
 import type { RequestDataType } from "@ooneex/socket-client";
@@ -103,6 +104,7 @@ type SocketRouteHandlerOptions = {
   ws: ServerWebSocket<{ id: string }>;
   server: Server<{ id: string }>;
   middlewares?: SocketMiddlewareClassType[];
+  permissions?: PermissionClassType[];
 };
 
 export const socketRouteHandler = async ({
@@ -110,6 +112,7 @@ export const socketRouteHandler = async ({
   ws,
   server,
   middlewares = [],
+  permissions,
 }: SocketRouteHandlerOptions): Promise<void> => {
   let { context, route } = container.getConstant<{ context: ContextType; route: RouteConfigType }>(ws.data.id);
   const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
@@ -158,6 +161,12 @@ export const socketRouteHandler = async ({
   }
 
   const controller = container.get(route.controller);
+
+  permissions?.forEach((permission) => {
+    const perm = container.get(permission);
+    perm.allow().setUserPermissions(context.user).build();
+  });
+
   try {
     context.response = await controller.index(context);
   } catch (error: unknown) {

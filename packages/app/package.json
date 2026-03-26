@@ -47,6 +47,7 @@
     "@ooneex/validation": "workspace:*"
   },
   "devDependencies": {
+    "@ooneex/permission": "workspace:*",
     "@ooneex/controller": "workspace:*",
     "@ooneex/cron": "workspace:*",
     "@ooneex/pub-sub": "workspace:*",

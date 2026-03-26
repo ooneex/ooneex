@@ -113,10 +113,10 @@ export class App {
     const env = container.getConstant<IAppEnv>("app.env");
     let hostname = Bun.env.HOST_NAME || "0.0.0.0";
 
-    const { middlewares = [] } = this.config;
+    const { middlewares = [], permissions } = this.config;
 
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[]),
+      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], permissions),
       ...formatSocketRoutes(router.getSocketRoutes()),
     };
 
@@ -149,6 +149,7 @@ export class App {
             ws,
             server,
             middlewares: middlewares as SocketMiddlewareClassType[],
+            ...(permissions && { permissions }),
           });
         },
         async close(ws: ServerWebSocket<{ id: string }>) {

@@ -8,6 +8,7 @@ import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/mid
 import type { PubSubClassType } from "@ooneex/pub-sub";
 import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
+import type { PermissionClassType } from "@ooneex/permission";
 
 export type AppConfigType = {
   loggers: LoggerClassType[];
@@ -19,6 +20,7 @@ export type AppConfigType = {
   rateLimiter?: RateLimiterClassType;
   cronJobs?: CronClassType[];
   events?: PubSubClassType[];
+  permissions?: PermissionClassType[];
   env: IAppEnv;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;

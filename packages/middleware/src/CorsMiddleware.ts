@@ -1,7 +1,7 @@
+import { injectable } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import type { HttpMethodType } from "@ooneex/types";
 import type { IMiddleware } from "./types";
-import { injectable } from "@ooneex/container";
 
 const defaultMethods: HttpMethodType[] = ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"];
 const defaultHeaders: string[] = ["Content-Type", "Authorization"];

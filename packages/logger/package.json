@@ -31,7 +31,8 @@
     "@logtail/node": "^0.5.2",
     "@ooneex/container": "workspace:*",
     "@ooneex/database": "workspace:*",
-    "@ooneex/utils": "workspace:*"
+    "@ooneex/utils": "workspace:*",
+    "@sentry/node": "^10.46.0"
   },
   "devDependencies": {
     "@ooneex/exception": "workspace:*",

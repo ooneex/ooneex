@@ -4,6 +4,7 @@ export const {{NAME}}Module: ModuleType = {
   controllers: [],
   entities: [],
   permissions: [],
+  middlewares: [],
   cronJobs: [],
   events: [],
 };

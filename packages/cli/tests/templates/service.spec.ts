@@ -30,6 +30,11 @@ describe("service.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("execute");
   });
+
+  test("should have ServiceDataType", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("ServiceDataType");
+  });
 });
 
 describe("service.test.txt", () => {

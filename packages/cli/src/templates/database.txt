@@ -1,16 +1,15 @@
 import { DataSource } from "typeorm";
-import { AbstractTypeormDatabase, DatabaseException } from "@ooneex/database";
-import { injectable } from "@ooneex/container";
+import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
 
-@injectable()
-export class {{NAME}}Database extends AbstractTypeormDatabase {
+@decorator.database()
+export class {{NAME}}Database extends TypeormDatabase {
   public getSource(database?: string): DataSource {
     database = database || "var/db";
 
     this.source = new DataSource({
       synchronize: false,
       entities: [
-        // Load your entities here
+        // TODO: Load your entities here
       ],
       enableWAL: true,
       busyErrorRetry: 2000,

@@ -22,9 +22,9 @@ describe("storage.txt", () => {
     expect(content).toContain("@decorator.storage()");
   });
 
-  test("should extend AbstractStorage", async () => {
+  test("should extend Storage", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("extends AbstractStorage");
+    expect(content).toContain("extends Storage");
   });
 
   test("should have getOptions method", async () => {

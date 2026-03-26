@@ -6,7 +6,6 @@ packages = ["modules/*"]
 
 [install]
 hoistPattern = [
-  "@app/*",
   "@ooneex/*",
   "@biomejs/biome",
   "@nx/js",
@@ -18,13 +17,10 @@ hoistPattern = [
   "typescript",
   "@typescript/native-preview",
   "undici-types",
-  "nuqs",
-  "nuqs/*",
   "react",
   "react-error-boundary",
   "react-*",
   "react-*/*",
-  "@tanstack/*",
   "@types/*",
   "pg",
   "reflect-metadata",

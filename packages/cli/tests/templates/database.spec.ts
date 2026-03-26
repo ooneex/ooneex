@@ -15,14 +15,14 @@ describe("database.txt", () => {
     expect(content).toContain("{{NAME}}");
   });
 
-  test("should contain injectable decorator", async () => {
+  test("should contain database decorator", async () => {
     const content = await file.text();
-    expect(content).toContain("@injectable()");
+    expect(content).toContain("@decorator.database()");
   });
 
-  test("should extend AbstractTypeormDatabase", async () => {
+  test("should extend TypeormDatabase", async () => {
     const content = await file.text();
-    expect(content).toContain("extends AbstractTypeormDatabase");
+    expect(content).toContain("extends TypeormDatabase");
   });
 
   test("should have getSource method", async () => {

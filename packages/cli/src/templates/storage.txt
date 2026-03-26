@@ -1,8 +1,8 @@
-import { AbstractStorage, decorator, StorageException } from "@ooneex/storage";
+import { Storage, decorator, StorageException } from "@ooneex/storage";
 import type { S3Options } from "bun";
 
 @decorator.storage()
-export class {{NAME}}Storage extends AbstractStorage {
+export class {{NAME}}Storage extends Storage {
   protected bucket: string;
   private readonly accessKey: string;
   private readonly secretKey: string;

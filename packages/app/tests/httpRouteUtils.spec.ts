@@ -40,6 +40,7 @@ const createMockContext = (overrides: Partial<ContextType> = {}): ContextType =>
       name: "api.test.list",
       path: "/test" as const,
       method: "GET" as const,
+      version: "v1" as const,
       description: "Test route",
     },
     app: {
@@ -72,6 +73,7 @@ const createMockRoute = (overrides: Record<string, unknown> = {}): RouteConfigTy
     name: "api.test.list",
     path: "/test",
     method: "GET",
+    version: "v1",
     controller: DefaultTestController,
     description: "Test route",
     isSocket: false,
@@ -731,7 +733,7 @@ describe("httpRouteUtils", () => {
       expect(result).toEqual({});
     });
 
-    test("creates route handlers for each path and method", () => {
+    test("creates route handlers for each path and method with version prefix", () => {
       const httpRoutes = new Map<string, RouteConfigType[]>();
       httpRoutes.set("/users", [
         createMockRoute({ path: "/users", method: "GET" }),
@@ -739,21 +741,21 @@ describe("httpRouteUtils", () => {
       ]);
 
       const result = formatHttpRoutes(httpRoutes);
-      const usersRoute = result["/users"];
+      const usersRoute = result["/v1/users"];
 
       expect(usersRoute).toBeDefined();
       expect(typeof usersRoute?.GET).toBe("function");
       expect(typeof usersRoute?.POST).toBe("function");
     });
 
-    test("creates handlers for multiple paths", () => {
+    test("creates handlers for multiple paths with version prefix", () => {
       const httpRoutes = new Map<string, RouteConfigType[]>();
       httpRoutes.set("/users", [createMockRoute({ path: "/users", method: "GET" })]);
       httpRoutes.set("/posts", [createMockRoute({ path: "/posts", method: "GET" })]);
 
       const result = formatHttpRoutes(httpRoutes);
-      const usersRoute = result["/users"];
-      const postsRoute = result["/posts"];
+      const usersRoute = result["/v1/users"];
+      const postsRoute = result["/v1/posts"];
 
       expect(usersRoute).toBeDefined();
       expect(postsRoute).toBeDefined();
@@ -771,7 +773,7 @@ describe("httpRouteUtils", () => {
       ]);
 
       const result = formatHttpRoutes(httpRoutes);
-      const resourceRoute = result["/api/resource"];
+      const resourceRoute = result["/v1/api/resource"];
 
       expect(typeof resourceRoute?.GET).toBe("function");
       expect(typeof resourceRoute?.POST).toBe("function");
@@ -784,10 +786,25 @@ describe("httpRouteUtils", () => {
       httpRoutes.set("/test", [createMockRoute({ path: "/test", method: "GET" })]);
 
       const result = formatHttpRoutes(httpRoutes, []);
-      const testRoute = result["/test"];
+      const testRoute = result["/v1/test"];
 
       expect(testRoute).toBeDefined();
       expect(typeof testRoute?.GET).toBe("function");
+    });
+
+    test("groups routes by versioned path when versions differ", () => {
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/users", [
+        createMockRoute({ path: "/users", method: "GET", version: "v1" }),
+        createMockRoute({ path: "/users", method: "GET", version: "v2" }),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+
+      expect(result["/v1/users"]).toBeDefined();
+      expect(result["/v2/users"]).toBeDefined();
+      expect(typeof result["/v1/users"]?.GET).toBe("function");
+      expect(typeof result["/v2/users"]?.GET).toBe("function");
     });
   });
 });

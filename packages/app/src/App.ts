@@ -5,6 +5,7 @@ import { Exception, type IException } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
 import { type ILogger, type LogsEntity, TerminalLogger } from "@ooneex/logger";
 import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
+import type { IPubSub } from "@ooneex/pub-sub";
 import { router } from "@ooneex/routing";
 import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
@@ -14,7 +15,6 @@ import { buildHttpContext, formatHttpRoutes, logRequest, runMiddlewares } from "
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
 import type { AppConfigType } from "./types";
-import type { IPubSub } from "@ooneex/pub-sub";
 
 export class App {
   constructor(private readonly config: AppConfigType) {

@@ -104,6 +104,7 @@ export const buildHttpContext = async (ctx: {
           name: route.name,
           path: route.path,
           method: route.method,
+          version: route.version,
           description: route.description ?? "",
         }
       : null,
@@ -340,7 +341,12 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
 
   const responseValidationError = validateResponse(route, response.getData());
   if (responseValidationError) {
-    const httpResponse = buildExceptionResponse(context, responseValidationError.message, responseValidationError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(
+      context,
+      responseValidationError.message,
+      responseValidationError.status,
+      currentEnv,
+    );
     logRequest(context);
     return httpResponse;
   }
@@ -351,7 +357,10 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
   return httpResponse;
 };
 
-export const runMiddlewares = async (context: ContextType, middlewares: MiddlewareClassType[]): Promise<ContextType> => {
+export const runMiddlewares = async (
+  context: ContextType,
+  middlewares: MiddlewareClassType[],
+): Promise<ContextType> => {
   let currentContext = context;
 
   for (const MiddlewareClass of middlewares) {
@@ -369,17 +378,23 @@ export const formatHttpRoutes = (
   const routes: HttpRoutesMap = {};
 
   for (const [path, routeConfigs] of httpRoutes) {
-    const methodHandlers: Record<string, (req: BunRequest, server: Server<unknown>) => Promise<Response>> = {};
-
     for (const route of routeConfigs) {
-      methodHandlers[route.method] = async (req: BunRequest, server: Server<unknown>) => {
+      const versionedPath = `/${route.version}${path}`;
+
+      if (!routes[versionedPath]) {
+        routes[versionedPath] = {};
+      }
+
+      routes[versionedPath][route.method] = async (req: BunRequest, server: Server<unknown>) => {
         let context = await buildHttpContext({ req, server, route });
 
         try {
           context = await runMiddlewares(context, middlewares);
         } catch (error: unknown) {
           const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
-          const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as StatusCodeType;
+          const status = (
+            error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError
+          ) as StatusCodeType;
           const httpResponse = buildExceptionResponse(context, (error as Error).message, status, env);
           logRequest(context);
           return httpResponse;
@@ -388,8 +403,6 @@ export const formatHttpRoutes = (
         return httpRouteHandler({ context, route });
       };
     }
-
-    routes[path] = methodHandlers;
   }
 
   return routes;

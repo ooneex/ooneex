@@ -40,6 +40,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
       name: "api.socket.test",
       path: "/socket" as const,
       method: "GET" as const,
+      version: "v1" as const,
       description: "Test socket route",
     },
     app: {
@@ -74,6 +75,7 @@ const createMockSocketRoute = (overrides: Record<string, unknown> = {}): RouteCo
     name: "api.socket.list" as const,
     path: "/socket" as const,
     method: "GET" as const,
+    version: "v1" as const,
     controller: DefaultSocketController,
     description: "Socket route",
     isSocket: true,
@@ -104,17 +106,17 @@ describe("socketRouteUtils", () => {
       expect(result).toEqual({});
     });
 
-    test("creates handler for each socket path", () => {
+    test("creates handler for each socket path with version prefix", () => {
       const socketRoutes = new Map<string, RouteConfigType>();
       socketRoutes.set("/ws/chat", createMockSocketRoute({ path: "/ws/chat", name: "api.chat.list" }));
 
       const result = formatSocketRoutes(socketRoutes);
 
-      expect(result["/ws/chat"]).toBeDefined();
-      expect(typeof result["/ws/chat"]).toBe("function");
+      expect(result["/v1/ws/chat"]).toBeDefined();
+      expect(typeof result["/v1/ws/chat"]).toBe("function");
     });
 
-    test("creates handlers for multiple socket paths", () => {
+    test("creates handlers for multiple socket paths with version prefix", () => {
       const socketRoutes = new Map<string, RouteConfigType>();
       socketRoutes.set("/ws/chat", createMockSocketRoute({ path: "/ws/chat", name: "api.chat.list" }));
       socketRoutes.set(
@@ -124,10 +126,10 @@ describe("socketRouteUtils", () => {
 
       const result = formatSocketRoutes(socketRoutes);
 
-      expect(result["/ws/chat"]).toBeDefined();
-      expect(result["/ws/notifications"]).toBeDefined();
-      expect(typeof result["/ws/chat"]).toBe("function");
-      expect(typeof result["/ws/notifications"]).toBe("function");
+      expect(result["/v1/ws/chat"]).toBeDefined();
+      expect(result["/v1/ws/notifications"]).toBeDefined();
+      expect(typeof result["/v1/ws/chat"]).toBe("function");
+      expect(typeof result["/v1/ws/notifications"]).toBe("function");
     });
   });
 

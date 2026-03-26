@@ -15,7 +15,7 @@ export class {{NAME}}Event<Data extends Record<string, ScalarType> = Record<stri
     return "{{CHANNEL}}";
   }
 
-  public async handler(context: { data: Data; channel: string; key?: string }): Promise<void> {
+  public async handler(context: { data: Data; channel: string }): Promise<void> {
     console.log(context);
     // TODO: Implement handler logic here
   }

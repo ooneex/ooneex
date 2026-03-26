@@ -16,6 +16,11 @@ describe("tsconfig.txt", () => {
     expect(content).toContain("extends");
   });
 
+  test("should have bun types", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@types/bun");
+  });
+
   test("should have path alias", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("paths");

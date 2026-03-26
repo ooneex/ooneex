@@ -6,8 +6,8 @@ describe("{{NAME}}Middleware", () => {
     expect({{NAME}}Middleware.name.endsWith("Middleware")).toBe(true);
   });
 
-  test("should have 'handle' method", () => {
-    expect({{NAME}}Middleware.prototype.handle).toBeDefined();
-    expect(typeof {{NAME}}Middleware.prototype.handle).toBe("function");
+  test("should have 'handler' method", () => {
+    expect({{NAME}}Middleware.prototype.handler).toBeDefined();
+    expect(typeof {{NAME}}Middleware.prototype.handler).toBe("function");
   });
 });

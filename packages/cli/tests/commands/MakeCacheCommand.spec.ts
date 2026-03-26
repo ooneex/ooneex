@@ -61,7 +61,7 @@ describe("MakeCacheCommand", () => {
       expect(existsSync(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
-      expect(content).toContain("RedisCacheAdapter");
+      expect(content).toContain("RedisCache");
     });
 
     test("should normalize name with toPascalCase", async () => {
@@ -78,7 +78,7 @@ describe("MakeCacheCommand", () => {
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
-      expect(content).not.toContain("RedisCacheCacheAdapter");
+      expect(content).not.toContain("RedisCacheCache");
     });
 
     test("should handle lowercase input", async () => {

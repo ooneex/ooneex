@@ -9,4 +9,16 @@ describe("{{NAME}}Module", () => {
   test("should have entities array", () => {
     expect(Array.isArray({{NAME}}Module.entities)).toBe(true);
   });
+
+  test("should have permissions array", () => {
+    expect(Array.isArray({{NAME}}Module.permissions)).toBe(true);
+  });
+
+  test("should have cronJobs array", () => {
+    expect(Array.isArray({{NAME}}Module.cronJobs)).toBe(true);
+  });
+
+  test("should have events array", () => {
+    expect(Array.isArray({{NAME}}Module.events)).toBe(true);
+  });
 });

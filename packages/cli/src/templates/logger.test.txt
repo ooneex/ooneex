@@ -11,19 +11,9 @@ describe("{{NAME}}Logger", () => {
     expect(typeof {{NAME}}Logger.prototype.init).toBe("function");
   });
 
-  test("should have 'error' method", () => {
-    expect({{NAME}}Logger.prototype.error).toBeDefined();
-    expect(typeof {{NAME}}Logger.prototype.error).toBe("function");
-  });
-
-  test("should have 'warn' method", () => {
-    expect({{NAME}}Logger.prototype.warn).toBeDefined();
-    expect(typeof {{NAME}}Logger.prototype.warn).toBe("function");
-  });
-
-  test("should have 'info' method", () => {
-    expect({{NAME}}Logger.prototype.info).toBeDefined();
-    expect(typeof {{NAME}}Logger.prototype.info).toBe("function");
+  test("should have 'log' method", () => {
+    expect({{NAME}}Logger.prototype.log).toBeDefined();
+    expect(typeof {{NAME}}Logger.prototype.log).toBe("function");
   });
 
   test("should have 'debug' method", () => {
@@ -31,13 +21,23 @@ describe("{{NAME}}Logger", () => {
     expect(typeof {{NAME}}Logger.prototype.debug).toBe("function");
   });
 
-  test("should have 'log' method", () => {
-    expect({{NAME}}Logger.prototype.log).toBeDefined();
-    expect(typeof {{NAME}}Logger.prototype.log).toBe("function");
+  test("should have 'info' method", () => {
+    expect({{NAME}}Logger.prototype.info).toBeDefined();
+    expect(typeof {{NAME}}Logger.prototype.info).toBe("function");
   });
 
   test("should have 'success' method", () => {
     expect({{NAME}}Logger.prototype.success).toBeDefined();
     expect(typeof {{NAME}}Logger.prototype.success).toBe("function");
+  });
+
+  test("should have 'warn' method", () => {
+    expect({{NAME}}Logger.prototype.warn).toBeDefined();
+    expect(typeof {{NAME}}Logger.prototype.warn).toBe("function");
+  });
+
+  test("should have 'error' method", () => {
+    expect({{NAME}}Logger.prototype.error).toBeDefined();
+    expect(typeof {{NAME}}Logger.prototype.error).toBe("function");
   });
 });

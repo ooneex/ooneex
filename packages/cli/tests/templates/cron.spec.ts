@@ -21,9 +21,9 @@ describe("cron.txt", () => {
     expect(content).toContain("@decorator.cron()");
   });
 
-  test("should extend CronAdapter", async () => {
+  test("should extend Cron", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("extends CronAdapter");
+    expect(content).toContain("extends Cron");
   });
 
   test("should have cron methods", async () => {

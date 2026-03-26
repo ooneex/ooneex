@@ -3,8 +3,6 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
-import bunupTemplate from "../templates/module/bunup.config.txt";
-import indexTemplate from "../templates/module/index.txt";
 import migrationUpTemplate from "../templates/module/migration.up.txt";
 import moduleTemplate from "../templates/module/module.txt";
 import packageTemplate from "../templates/module/package.txt";
@@ -20,7 +18,6 @@ type CommandOptionsType = {
   skipBin?: boolean;
   skipMigrations?: boolean;
   skipSeeds?: boolean;
-  bunupPackages?: "external" | "bundle";
 };
 
 @decorator.command()
@@ -40,7 +37,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       skipBin = false,
       skipMigrations = false,
       skipSeeds = false,
-      bunupPackages = "external",
     } = options;
     let { name } = options;
 
@@ -57,18 +53,14 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const testsDir = join(moduleDir, "tests");
 
     const moduleContent = moduleTemplate.replace(/{{NAME}}/g, pascalName);
-    const indexContent = indexTemplate.replace(/{{NAME}}/g, pascalName);
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
     const testContent = testTemplate.replace(/{{NAME}}/g, pascalName);
 
-    const bunupContent = bunupTemplate.replace('packages: "external"', `packages: "${bunupPackages}"`);
-    await Bun.write(join(moduleDir, "bunup.config.ts"), bunupContent);
     if (!skipBin) {
       await Bun.write(join(binDir, "migration", "up.ts"), migrationUpTemplate);
       await Bun.write(join(binDir, "seed", "run.ts"), seedRunTemplate);
     }
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
-    await Bun.write(join(srcDir, "index.ts"), indexContent);
     if (!skipMigrations) {
       await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");
     }

@@ -2,14 +2,8 @@
   "name": "@module/{{NAME}}",
   "description": "",
   "version": "0.0.1",
-  "type": "module",
-  "files": [
-    "dist",
-    "package.json"
-  ],
   "scripts": {
     "test": "bun test tests",
-    "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
     "migration:up": "bun run ./bin/migration/up.ts",
     "seed:run": "bun run ./bin/bin/run.ts"

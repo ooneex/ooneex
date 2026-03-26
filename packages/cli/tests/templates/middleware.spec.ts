@@ -26,9 +26,9 @@ describe("middleware.txt", () => {
     expect(content).toContain("implements IMiddleware");
   });
 
-  test("should have handle method", async () => {
+  test("should have handler method", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("handle");
+    expect(content).toContain("handler");
   });
 });
 
@@ -44,9 +44,9 @@ describe("middleware.test.txt", () => {
     expect(content).toContain("{{NAME}}");
   });
 
-  test("should test handle method", async () => {
+  test("should test handler method", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("handle");
+    expect(content).toContain("handler");
   });
 });
 
@@ -65,5 +65,20 @@ describe("middleware.socket.txt", () => {
   test("should import from @ooneex/socket", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("@ooneex/socket");
+  });
+
+  test("should contain middleware decorator", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@decorator.middleware()");
+  });
+
+  test("should implement IMiddleware interface", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("implements IMiddleware");
+  });
+
+  test("should have handler method", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("handler");
   });
 });

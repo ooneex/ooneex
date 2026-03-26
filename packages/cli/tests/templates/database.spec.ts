@@ -1,51 +1,56 @@
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 const templatesDir = join(import.meta.dir, "../../src/templates");
 
 describe("database.txt", () => {
-  const templatePath = join(templatesDir, "database.txt");
+  const file = Bun.file(join(templatesDir, "database.txt"));
 
-  test("should exist", () => {
-    expect(existsSync(templatePath)).toBe(true);
+  test("should exist", async () => {
+    expect(await file.exists()).toBe(true);
   });
 
   test("should contain required placeholders", async () => {
-    const content = await Bun.file(templatePath).text();
+    const content = await file.text();
     expect(content).toContain("{{NAME}}");
   });
 
-  test("should extend AbstractTypeormSqliteDatabase", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("extends AbstractTypeormSqliteDatabase");
+  test("should contain injectable decorator", async () => {
+    const content = await file.text();
+    expect(content).toContain("@injectable()");
+  });
+
+  test("should extend AbstractTypeormDatabase", async () => {
+    const content = await file.text();
+    expect(content).toContain("extends AbstractTypeormDatabase");
   });
 
   test("should have getSource method", async () => {
-    const content = await Bun.file(templatePath).text();
+    const content = await file.text();
     expect(content).toContain("getSource");
+    expect(content).toContain("DataSource");
   });
 
-  test("should return DataSource", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("DataSource");
+  test("should use sqlite type", async () => {
+    const content = await file.text();
+    expect(content).toContain('type: "sqlite"');
   });
 });
 
 describe("database.test.txt", () => {
-  const templatePath = join(templatesDir, "database.test.txt");
+  const file = Bun.file(join(templatesDir, "database.test.txt"));
 
-  test("should exist", () => {
-    expect(existsSync(templatePath)).toBe(true);
+  test("should exist", async () => {
+    expect(await file.exists()).toBe(true);
   });
 
   test("should contain required placeholders", async () => {
-    const content = await Bun.file(templatePath).text();
+    const content = await file.text();
     expect(content).toContain("{{NAME}}");
   });
 
   test("should test getSource method", async () => {
-    const content = await Bun.file(templatePath).text();
+    const content = await file.text();
     expect(content).toContain("getSource");
   });
 });

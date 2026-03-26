@@ -3,7 +3,7 @@ import { decorator, type IMiddleware } from "@ooneex/middleware";
 
 @decorator.middleware()
 export class {{NAME}}Middleware implements IMiddleware {
-  public async handle(context: ContextType): Promise<ContextType> {
+  public async handler(context: ContextType): Promise<ContextType> {
     // Example: Add custom header
     // context.response.header("X-Custom-Header", "value");
 

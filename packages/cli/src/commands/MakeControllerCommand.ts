@@ -55,26 +55,29 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     let routeTypeFileName = "";
 
     if (!route.name) {
-      const routeName = await askRouteName({ message: "Enter route name (e.g., api.user.create)" });
-      route.name = routeName;
-
-      routeTypeName = toPascalCase(routeName);
-      routeTypeFileName = routeName;
-
-      content = content
-        .replaceAll("{{ROUTE_NAME}}", routeName)
-        .replaceAll("{{TYPE_NAME}}", routeTypeName)
-        .replaceAll("{{TYPE_NAME_FILE}}", routeTypeFileName);
+      route.name = await askRouteName({ message: "Enter route name (e.g., api.user.create)" });
     }
+
+    routeTypeName = toPascalCase(route.name);
+    routeTypeFileName = route.name;
+
+    content = content
+      .replaceAll("{{ROUTE_NAME}}", route.name)
+      .replaceAll("{{TYPE_NAME}}", routeTypeName)
+      .replaceAll("{{TYPE_NAME_FILE}}", routeTypeFileName);
 
     if (!route.path) {
       route.path = (await askRoutePath({ message: "Enter route path", initial: "/" })) as `/${string}`;
-      const routePath = `/${toKebabCase(trim(route.path, "/"))}`;
-      content = content.replaceAll("{{ROUTE_PATH}}", routePath);
     }
+
+    const routePath = `/${toKebabCase(trim(route.path, "/"))}`;
+    content = content.replaceAll("{{ROUTE_PATH}}", routePath);
 
     if (!isSocket && !route.method) {
       route.method = (await askRouteMethod({ message: "Enter route method" })) as HttpMethodType;
+    }
+
+    if (!isSocket && route.method) {
       content = content.replaceAll("{{ROUTE_METHOD}}", route.method.toLowerCase());
     }
 

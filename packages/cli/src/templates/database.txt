@@ -1,22 +1,21 @@
-import { AbstractTypeormSqliteDatabase } from "@ooneex/database";
 import { DataSource } from "typeorm";
+import { AbstractTypeormDatabase, DatabaseException } from "@ooneex/database";
+import { injectable } from "@ooneex/container";
 
-export class {{NAME}}Database extends AbstractTypeormSqliteDatabase {
+@injectable()
+export class {{NAME}}Database extends AbstractTypeormDatabase {
   public getSource(database?: string): DataSource {
-    if (!database && this.source) {
-      return this.source;
-    }
+    database = database || "var/db";
 
     this.source = new DataSource({
       synchronize: false,
       entities: [
-        // Add your entities here
-        // Example: UserEntity, PostEntity, etc.
+        // Load your entities here
       ],
       enableWAL: true,
       busyErrorRetry: 2000,
       busyTimeout: 30_000,
-      database: database || ":memory:",
+      database,
       type: "sqlite",
     });
 

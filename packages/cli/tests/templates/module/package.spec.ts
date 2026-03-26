@@ -25,7 +25,9 @@ describe("package.txt", () => {
 
   test("should have required scripts", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("migration:up");
-    expect(content).toContain("seed:run");
+    expect(content).toContain('"test"');
+    expect(content).toContain('"lint"');
+    expect(content).toContain('"migration:up"');
+    expect(content).toContain('"seed:run"');
   });
 });

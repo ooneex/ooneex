@@ -3,6 +3,7 @@
 import { parseArgs } from "node:util";
 import type { IException } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
+import type { HttpMethodType } from "@ooneex/types";
 import { getCommand } from "./getCommand";
 import "./commands";
 
@@ -10,6 +11,24 @@ const { values, positionals } = parseArgs({
   args: Bun.argv,
   options: {
     name: {
+      type: "string",
+    },
+    "route-name": {
+      type: "string",
+    },
+    "route-path": {
+      type: "string",
+    },
+    "route-method": {
+      type: "string",
+    },
+    "is-socket": {
+      type: "boolean",
+    },
+    dir: {
+      type: "string",
+    },
+    channel: {
       type: "string",
     },
   },
@@ -33,8 +52,20 @@ if (!command) {
   process.exit(1);
 }
 
+const parsedValues = {
+  name: values.name,
+  dir: values.dir,
+  channel: values.channel,
+  isSocket: values["is-socket"],
+  route: {
+    name: values["route-name"],
+    path: values["route-path"] as `/${string}` | undefined,
+    method: values["route-method"] as HttpMethodType | undefined,
+  },
+};
+
 try {
-  await command.run(values);
+  await command.run(parsedValues);
 } catch (error) {
   logger.error(error as IException, undefined, {
     showArrow: false,

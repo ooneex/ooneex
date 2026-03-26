@@ -49,13 +49,6 @@ describe("MakeModuleCommand", () => {
       expect(existsSync(moduleDir)).toBe(true);
     });
 
-    test("should generate bunup.config.ts", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const filePath = join(testDir, "modules", "user", "bunup.config.ts");
-      expect(existsSync(filePath)).toBe(true);
-    });
-
     test("should generate package.json", async () => {
       await command.run({ name: "User", cwd: testDir, silent: true });
 
@@ -81,13 +74,6 @@ describe("MakeModuleCommand", () => {
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("UserModule");
-    });
-
-    test("should generate index.ts file", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const filePath = join(testDir, "modules", "user", "src", "index.ts");
-      expect(existsSync(filePath)).toBe(true);
     });
 
     test("should generate test file", async () => {
@@ -168,20 +154,5 @@ describe("MakeModuleCommand", () => {
       expect(content).not.toContain("UserModuleModule");
     });
 
-    test("should use external packages by default in bunup config", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const filePath = join(testDir, "modules", "user", "bunup.config.ts");
-      const content = await Bun.file(filePath).text();
-      expect(content).toContain('packages: "external"');
-    });
-
-    test("should use bundle packages when bunupPackages is bundle", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true, bunupPackages: "bundle" });
-
-      const filePath = join(testDir, "modules", "user", "bunup.config.ts");
-      const content = await Bun.file(filePath).text();
-      expect(content).toContain('packages: "bundle"');
-    });
   });
 });

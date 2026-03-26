@@ -1,9 +1,9 @@
 import type { TimeZoneType } from "@ooneex/country";
 import type { CronTimeType } from "@ooneex/cron";
-import { CronAdapter, decorator } from "@ooneex/cron";
+import { Cron, decorator } from "@ooneex/cron";
 
 @decorator.cron()
-export class {{NAME}}Cron extends CronAdapter {
+export class {{NAME}}Cron extends Cron {
   public getTime(): CronTimeType {
     // Examples: "every 5 minutes", "every 1 hours", "every 30 seconds"
     return "every 1 hours";

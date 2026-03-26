@@ -1,33 +1,35 @@
 import type { IException } from "@ooneex/exception";
 import type { ILogger } from "@ooneex/logger";
 import type { ScalarType } from "@ooneex/types";
+import { decorator } from "@ooneex/logger";
 
+@decorator.logger()
 export class {{NAME}}Logger implements ILogger {
   public async init(): Promise<void> {
     // Initialize your logger here
-  }
-
-  public error(message: string | IException, data?: Record<string, ScalarType>): void {
-    // Handle error logging
-  }
-
-  public warn(message: string, data?: Record<string, ScalarType>): void {
-    // Handle warning logging
-  }
-
-  public info(message: string, data?: Record<string, ScalarType>): void {
-    // Handle info logging
-  }
-
-  public debug(message: string, data?: Record<string, ScalarType>): void {
-    // Handle debug logging
   }
 
   public log(message: string, data?: Record<string, ScalarType>): void {
     // Handle general logging
   }
 
+  public debug(message: string, data?: Record<string, ScalarType>): void {
+    // Handle debug logging
+  }
+
+  public info(message: string, data?: Record<string, ScalarType>): void {
+    // Handle info logging
+  }
+
   public success(message: string, data?: Record<string, ScalarType>): void {
     // Handle success logging
+  }
+
+  public warn(message: string, data?: Record<string, ScalarType>): void {
+    // Handle warning logging
+  }
+
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
+    // Handle error logging
   }
 }

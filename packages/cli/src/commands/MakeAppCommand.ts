@@ -64,7 +64,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       skipBin: true,
       skipMigrations: true,
       skipSeeds: true,
-      bunupPackages: "bundle",
     });
 
     await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);

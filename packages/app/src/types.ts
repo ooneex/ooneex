@@ -11,6 +11,7 @@ import type { StorageClassType } from "@ooneex/storage";
 
 export type AppConfigType = {
   loggers: LoggerClassType[];
+  onException?: LoggerClassType;
   analytics?: AnalyticsClassType;
   cache?: CacheClassType;
   storage?: StorageClassType;

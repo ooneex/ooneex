@@ -18,13 +18,17 @@ import type { IPubSub } from "@ooneex/pub-sub";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer, rateLimiter } = this.config;
+    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer, rateLimiter, onException } = this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
+
+    if (onException) {
+      container.addConstant("exception.logger", onException);
+    }
 
     if (env) {
       container.addConstant("app.env", env);

@@ -1,14 +1,20 @@
+import type { IAnalytics } from "@ooneex/analytics";
 import { Environment } from "@ooneex/app-env";
+import type { ICache } from "@ooneex/cache";
 import { container } from "@ooneex/container";
 import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
 import { HttpRequest } from "@ooneex/http-request";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
+import type { ILogger } from "@ooneex/logger";
 import { LogsEntity } from "@ooneex/logger";
+import type { IMailer } from "@ooneex/mailer";
 import type { IMiddleware, MiddlewareClassType } from "@ooneex/middleware";
+import type { IRateLimiter } from "@ooneex/rate-limit";
 import { Role } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
+import type { IStorage } from "@ooneex/storage";
 import type { ScalarType } from "@ooneex/types";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
@@ -70,13 +76,29 @@ export const buildHttpContext = async (ctx: {
     ip,
   });
 
+  const tryGet = <T>(key: string): T | undefined => {
+    try {
+      return container.get<T>(key);
+    } catch {
+      return undefined;
+    }
+  };
+
+  const exceptionLogger = tryGet<ILogger>("exception.logger");
+  const analytics = tryGet<IAnalytics>("analytics");
+  const cache = tryGet<ICache>("cache");
+  const storage = tryGet<IStorage>("storage");
+  const mailer = tryGet<IMailer>("mailer");
+  const rateLimiter = tryGet<IRateLimiter>("rateLimiter");
+
   const context: ContextType = {
     logger: container.get("logger"),
-    analytics: container.get("analytics"),
-    cache: container.get("cache"),
-    storage: container.get("storage"),
-    mailer: container.get("mailer"),
-    rateLimiter: container.get("rateLimiter"),
+    ...(exceptionLogger && { exceptionLogger }),
+    ...(analytics && { analytics }),
+    ...(cache && { cache }),
+    ...(storage && { storage }),
+    ...(mailer && { mailer }),
+    ...(rateLimiter && { rateLimiter }),
     route: route
       ? {
           name: route.name,

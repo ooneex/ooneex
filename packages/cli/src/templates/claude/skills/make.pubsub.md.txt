@@ -110,7 +110,29 @@ describe("<Name>PubSub", () => {
 });
 ```
 
-### 5. Lint and format
+### 5. Register the event in the module
+
+Add the new event to the module's `events` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
+
+```typescript
+import type { ModuleType } from "@ooneex/module";
+import { <Name>Event } from "./events/<Name>Event";
+
+export const <PascalModuleName>Module: ModuleType = {
+  controllers: [],
+  entities: [],
+  permissions: [],
+  middlewares: [],
+  cronJobs: [],
+  events: [<Name>Event],
+};
+```
+
+The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
+
+If the module already has other events registered, append the new event to the existing `events` array and add the import alongside existing imports.
+
+### 6. Lint and format
 
 Run linting and formatting on the generated files:
 

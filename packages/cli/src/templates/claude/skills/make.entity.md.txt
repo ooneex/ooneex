@@ -125,7 +125,29 @@ describe("<Name>Entity", () => {
 });
 ```
 
-### 5. Lint and format
+### 5. Register the entity in the module
+
+Add the new entity to the module's `entities` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
+
+```typescript
+import type { ModuleType } from "@ooneex/module";
+import { <Name>Entity } from "./entities/<Name>Entity";
+
+export const <PascalModuleName>Module: ModuleType = {
+  controllers: [],
+  entities: [<Name>Entity],
+  permissions: [],
+  middlewares: [],
+  cronJobs: [],
+  events: [],
+};
+```
+
+The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
+
+If the module already has other entities registered, append the new entity to the existing `entities` array and add the import alongside existing imports.
+
+### 6. Lint and format
 
 Run linting and formatting on the generated files:
 

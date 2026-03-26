@@ -95,7 +95,29 @@ describe("<Name>Cron", () => {
 });
 ```
 
-### 5. Lint and format
+### 5. Register the cron job in the module
+
+Add the new cron job to the module's `cronJobs` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
+
+```typescript
+import type { ModuleType } from "@ooneex/module";
+import { <Name>Cron } from "./cron/<Name>Cron";
+
+export const <PascalModuleName>Module: ModuleType = {
+  controllers: [],
+  entities: [],
+  permissions: [],
+  middlewares: [],
+  cronJobs: [<Name>Cron],
+  events: [],
+};
+```
+
+The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
+
+If the module already has other cron jobs registered, append the new cron job to the existing `cronJobs` array and add the import alongside existing imports.
+
+### 6. Lint and format
 
 Run linting and formatting on the generated files:
 

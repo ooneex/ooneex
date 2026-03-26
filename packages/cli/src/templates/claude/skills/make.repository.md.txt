@@ -31,8 +31,24 @@ Edit `src/repositories/<Name>Repository.ts` to complete the implementation:
 
 - Verify the entity import path matches the actual entity location
 - Adjust the `find` method's search fields (default searches `name` with `ILike`)
-- Add any entity-specific query methods
 - Customize relations loading in `findOne`/`findOneBy` if needed
+
+#### Adding methods
+
+Look at the entity's fields, relations, and business context to determine if custom domain-specific methods are needed. For example:
+- A `SessionRepository` might need `revokeSession(sessionId: string)` and `revokeAllUserSessions(userId: string)`
+- A `NotificationRepository` might need `markAsRead(id: string)` and `markAllAsRead(userId: string)`
+- Entities with status fields may need methods like `archive(id: string)` or `activate(id: string)`
+
+Read related entities, services, or actions in the module to understand what operations the repository should support, then add the appropriate methods.
+
+#### Removing methods
+
+Remove scaffolded methods that don't make sense for the entity's context:
+- Remove `createMany`/`updateMany` if the entity is always managed individually (e.g., user profiles, settings)
+- Remove `delete` if the entity uses soft deletes only (use a custom `softDelete` or `archive` method instead)
+- Remove `find` if the entity is only ever accessed by ID or specific criteria (e.g., singleton config entities)
+- Remove `count` if there's no use case for counting records of this entity
 
 The generated class structure follows this pattern:
 
@@ -81,7 +97,8 @@ export class <Name>Repository {
 
 Edit `tests/repositories/<Name>Repository.spec.ts` to add meaningful tests beyond the scaffolded ones:
 
-- Keep the existing scaffolded tests (class name, open, close, find, findOne, findOneBy, create, createMany, update, updateMany, delete, count methods)
+- Keep scaffolded tests for methods that remain in the repository (remove tests for methods that were removed)
+- Add tests for any custom domain-specific methods added to the repository
 - Add tests relevant to the specific repository behavior
 
 ### 5. Lint and format

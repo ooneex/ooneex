@@ -92,7 +92,29 @@ describe("<Name>Middleware", () => {
 });
 ```
 
-### 5. Lint and format
+### 5. Register the middleware in the module
+
+Add the new middleware to the module's `middlewares` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
+
+```typescript
+import type { ModuleType } from "@ooneex/module";
+import { <Name>Middleware } from "./middlewares/<Name>Middleware";
+
+export const <PascalModuleName>Module: ModuleType = {
+  controllers: [],
+  entities: [],
+  permissions: [],
+  middlewares: [<Name>Middleware],
+  cronJobs: [],
+  events: [],
+};
+```
+
+The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
+
+If the module already has other middlewares registered, append the new middleware to the existing `middlewares` array and add the import alongside existing imports.
+
+### 6. Lint and format
 
 Run linting and formatting on the generated files:
 

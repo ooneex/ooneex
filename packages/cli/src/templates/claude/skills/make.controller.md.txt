@@ -20,7 +20,7 @@ bunx @ooneex/cli@latest make:controller --name <name> --is-socket <true|false> -
 Where:
 - `<name>` is the controller name provided by the user
 - `--is-socket` determines HTTP vs WebSocket controller (defaults to `false`)
-- `--route.name` is the route name (e.g., `api.user.create`)
+- `--route.name` is the route name using dot notation: `<resource>.<action>` (e.g., `user.create`, `book.list`, `flashcard.delete`)
 - `--route.path` is the route path (e.g., `/api/users`)
 - `--route.method` is the HTTP method (e.g., `get`, `post`, `put`, `patch`, `delete`) — only for HTTP controllers
 
@@ -35,24 +35,54 @@ Read all three generated files to understand the scaffolded code.
 
 ### 3. Complete the route type
 
-Edit `src/types/routes/<route.name>.ts` to define the route's type contract:
+Edit `src/types/routes/<route.name>.ts` to define the route's type contract.
 
-- Add params types (URL parameters)
-- Add payload types (request body)
-- Add queries types (query string parameters)
-- Add response types (response body)
+**Add or remove `params`, `payload`, and `queries` based on context:**
 
-The generated route type structure follows this pattern:
+- **`params`** — Include only when the route path contains dynamic segments (e.g., `/api/users/:id`). Remove entirely for routes with no URL parameters (e.g., `/api/users`).
+- **`payload`** — Include only for methods that accept a request body (`post`, `put`, `patch`). Remove entirely for `get` and `delete` routes.
+- **`queries`** — Include only when the route supports query string filtering, pagination, or sorting (e.g., list/search endpoints). Remove entirely when not needed.
+- **`response`** — Always include.
+
+The generated route type structure follows this pattern (remove unused sections):
 
 ```typescript
+// Example: GET /api/users (list) — no params, no payload, has queries
+export type <TypeName>RouteType = {
+  queries: {
+
+  },
+  response: {
+
+  },
+};
+
+// Example: POST /api/users (create) — no params, has payload, no queries
+export type <TypeName>RouteType = {
+  payload: {
+
+  },
+  response: {
+
+  },
+};
+
+// Example: GET /api/users/:id (detail) — has params, no payload, no queries
+export type <TypeName>RouteType = {
+  params: {
+
+  },
+  response: {
+
+  },
+};
+
+// Example: PUT /api/users/:id (update) — has params, has payload, no queries
 export type <TypeName>RouteType = {
   params: {
 
   },
   payload: {
-
-  },
-  queries: {
 
   },
   response: {
@@ -65,16 +95,19 @@ export type <TypeName>RouteType = {
 
 Edit `src/controllers/<Name>Controller.ts` to complete the implementation:
 
-- Define route params validation in `params` using `Assert()`
-- Define payload validation in `payload` using `Assert()`
-- Define query validation in `queries` using `Assert()`
-- Define response schema in `response` using `Assert()`
 - Set appropriate `roles` for access control
-- Add a `description` for the route
+- Add a meaningful `description` for the route that explains what the endpoint does (e.g., `"Create a new user account"`, `"List all books with pagination"`)
 - Implement the `index` method with actual controller logic
 - Inject any required dependencies (repositories, services) via the constructor
 
-**HTTP controller** generated structure:
+**Add or remove `params`, `payload`, and `queries` in the `@Route` decorator to match the route type (step 3):**
+
+- **`params`** — Include with `Assert()` validators only when the route has URL parameters. Remove the `params` key entirely otherwise.
+- **`payload`** — Include with `Assert({...})` only for `post`, `put`, `patch` methods. Remove the `payload` key entirely for `get` and `delete`.
+- **`queries`** — Include with `Assert({...})` only when query parameters are expected. Remove the `queries` key entirely otherwise.
+- **`response`** — Always include with `Assert({...})`.
+
+**HTTP controller** generated structure (remove `params`, `payload`, `queries` as needed — see rules above):
 
 ```typescript
 import type { ContextType } from "@ooneex/controller";
@@ -85,6 +118,7 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
 
 @Route.<method>("<route.path>", {
   name: "<route.name>",
+  version: 1,
   description: "",
   params: {
     // id: Assert("string"),
@@ -111,7 +145,7 @@ export class <Name>Controller {
 }
 ```
 
-**Socket controller** generated structure:
+**Socket controller** generated structure (remove `params`, `payload`, `queries` as needed — see rules above):
 
 ```typescript
 import type { ContextType } from "@ooneex/socket";
@@ -122,6 +156,7 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
 
 @Route.socket("<route.path>", {
   name: "<route.name>",
+  version: 1,
   description: "",
   params: {
     // id: Assert("string"),
@@ -173,7 +208,29 @@ describe("<Name>Controller", () => {
 });
 ```
 
-### 6. Lint and format
+### 6. Register the controller in the module
+
+Add the new controller to the module's `controllers` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
+
+```typescript
+import type { ModuleType } from "@ooneex/module";
+import { <Name>Controller } from "./controllers/<Name>Controller";
+
+export const <PascalModuleName>Module: ModuleType = {
+  controllers: [<Name>Controller],
+  entities: [],
+  permissions: [],
+  middlewares: [],
+  cronJobs: [],
+  events: [],
+};
+```
+
+The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
+
+If the module already has other controllers registered, append the new controller to the existing `controllers` array and add the import alongside existing imports.
+
+### 7. Lint and format
 
 Run linting and formatting on the generated files:
 

@@ -28,6 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --access public"
   },
   "dependencies": {
+    "@logtail/node": "^0.5.2",
     "@ooneex/container": "workspace:*",
     "@ooneex/database": "workspace:*",
     "@ooneex/utils": "workspace:*"

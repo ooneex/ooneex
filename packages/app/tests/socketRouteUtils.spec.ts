@@ -41,7 +41,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
       name: "api.socket.test",
       path: "/socket" as const,
       method: "GET" as const,
-      version: "v1" as const,
+      version: 1,
       description: "Test socket route",
     },
     app: {
@@ -629,10 +629,7 @@ describe("socketRouteUtils", () => {
         message,
         ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
         server: mockServer as unknown as import("bun").Server<{ id: string }>,
-        permissions: [
-          SocketPerm1 as unknown as PermissionClassType,
-          SocketPerm2 as unknown as PermissionClassType,
-        ],
+        permissions: [SocketPerm1 as unknown as PermissionClassType, SocketPerm2 as unknown as PermissionClassType],
       });
 
       expect(calls).toEqual(["allow1", "setUser1", "build1", "allow2", "setUser2", "build2"]);

@@ -74,7 +74,7 @@ const createMockRoute = (overrides: Record<string, unknown> = {}): RouteConfigTy
     name: "api.test.list",
     path: "/test",
     method: "GET",
-    version: "v1",
+    version: 1,
     controller: DefaultTestController,
     description: "Test route",
     isSocket: false,
@@ -432,7 +432,6 @@ describe("httpRouteUtils", () => {
         expect(result).toBeNull();
       });
     });
-
   });
 
   describe("validateResponse", () => {
@@ -737,10 +736,7 @@ describe("httpRouteUtils", () => {
       await httpRouteHandler({
         context,
         route,
-        permissions: [
-          Permission1 as unknown as PermissionClassType,
-          Permission2 as unknown as PermissionClassType,
-        ],
+        permissions: [Permission1 as unknown as PermissionClassType, Permission2 as unknown as PermissionClassType],
       });
 
       expect(calls).toEqual(["allow1", "setUser1", "build1", "allow2", "setUser2", "build2"]);

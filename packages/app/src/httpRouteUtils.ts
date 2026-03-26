@@ -375,7 +375,7 @@ export const runMiddlewares = async (
 export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
-  permissions?: PermissionClassType[]
+  permissions?: PermissionClassType[],
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 

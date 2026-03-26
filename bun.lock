@@ -92,6 +92,7 @@
         "@ooneex/cron": "workspace:*",
         "@ooneex/middleware": "workspace:*",
         "@ooneex/module": "workspace:*",
+        "@ooneex/permission": "workspace:*",
         "@ooneex/pub-sub": "workspace:*",
         "@ooneex/socket": "workspace:*",
         "@ooneex/socket-client": "workspace:*",

@@ -1,7 +1,7 @@
 export { DatabaseLogger } from "./DatabaseLogger";
+export { decorator } from "./decorators";
 export { ExceptionLogger } from "./ExceptionLogger";
 export { LoggerException } from "./LoggerException";
-export { decorator } from "./decorators";
 export { LogsDatabase } from "./LogsDatabase";
 export { LogsEntity } from "./LogsEntity";
 export { LogsRepository } from "./LogsRepository";

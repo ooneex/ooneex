@@ -1,8 +1,8 @@
 import type { IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
 import * as Sentry from "@sentry/node";
-import { LoggerException } from "./LoggerException";
 import { decorator } from "./decorators";
+import { LoggerException } from "./LoggerException";
 import type { ILogger } from "./types";
 
 @decorator.logger()
@@ -31,10 +31,7 @@ export class ExceptionLogger implements ILogger {
 
   public init(): void {}
 
-  public error(
-    message: string | IException,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
     Sentry.withScope((scope) => {
       if (typeof message === "string") {
         if (data) {
@@ -77,38 +74,23 @@ export class ExceptionLogger implements ILogger {
     });
   }
 
-  public warn(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public warn(message: string, data?: Record<string, ScalarType>): void {
     Sentry.logger.warn(message, data);
   }
 
-  public info(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public info(message: string, data?: Record<string, ScalarType>): void {
     Sentry.logger.info(message, data);
   }
 
-  public debug(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public debug(message: string, data?: Record<string, ScalarType>): void {
     Sentry.logger.debug(message, data);
   }
 
-  public log(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public log(message: string, data?: Record<string, ScalarType>): void {
     Sentry.logger.info(message, { ...data, level: "LOG" });
   }
 
-  public success(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public success(message: string, data?: Record<string, ScalarType>): void {
     Sentry.logger.info(message, { ...data, level: "SUCCESS" });
   }
 

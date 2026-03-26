@@ -1,8 +1,8 @@
+import { Logtail } from "@logtail/node";
 import type { IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
-import { Logtail } from "@logtail/node";
-import { LoggerException } from "./LoggerException";
 import { decorator } from "./decorators";
+import { LoggerException } from "./LoggerException";
 import type { ILogger } from "./types";
 
 @decorator.logger()
@@ -26,10 +26,7 @@ export class LogtailLogger implements ILogger {
 
   public init(): void {}
 
-  public error(
-    message: string | IException,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {
       this.logtail.error(message, data);
     } else {
@@ -40,38 +37,23 @@ export class LogtailLogger implements ILogger {
     }
   }
 
-  public warn(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public warn(message: string, data?: Record<string, ScalarType>): void {
     this.logtail.warn(message, data);
   }
 
-  public info(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public info(message: string, data?: Record<string, ScalarType>): void {
     this.logtail.info(message, data);
   }
 
-  public debug(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public debug(message: string, data?: Record<string, ScalarType>): void {
     this.logtail.debug(message, data);
   }
 
-  public log(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public log(message: string, data?: Record<string, ScalarType>): void {
     this.logtail.info(message, { ...data, level: "LOG" });
   }
 
-  public success(
-    message: string,
-    data?: Record<string, ScalarType>,
-  ): void {
+  public success(message: string, data?: Record<string, ScalarType>): void {
     this.logtail.info(message, { ...data, level: "SUCCESS" });
   }
 
@@ -79,9 +61,7 @@ export class LogtailLogger implements ILogger {
     await this.logtail.flush();
   }
 
-  private extractExceptionData(
-    exception: IException,
-  ): Record<string, ScalarType> {
+  private extractExceptionData(exception: IException): Record<string, ScalarType> {
     const data: Record<string, ScalarType> = {};
 
     if (exception.name !== undefined) data.exceptionName = exception.name;

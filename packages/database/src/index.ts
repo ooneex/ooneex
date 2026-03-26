@@ -1,4 +1,4 @@
-export { AbstractTypeormSqliteDatabase } from "./AbstractTypeormSqliteDatabase";
+export { AbstractTypeormDatabase as AbstractTypeormSqliteDatabase } from "./AbstractTypeormDatabase";
 export { DatabaseException } from "./DatabaseException";
 export * from "./decorators";
 export { RedisDatabase } from "./RedisDatabase";

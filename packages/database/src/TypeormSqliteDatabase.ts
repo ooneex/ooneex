@@ -1,19 +1,12 @@
 import { DataSource } from "typeorm";
-import type { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions.js";
-import { AbstractTypeormSqliteDatabase } from "./AbstractTypeormSqliteDatabase";
+import { AbstractTypeormDatabase } from "./AbstractTypeormDatabase";
 import { DatabaseException } from "./DatabaseException";
+import { injectable } from "@ooneex/container";
 
-export class TypeormSqliteDatabase extends AbstractTypeormSqliteDatabase {
-  constructor(private readonly options: Omit<SqliteConnectionOptions, "type"> | undefined = undefined) {
-    super();
-  }
-
+@injectable()
+export class TypeormSqliteDatabase extends AbstractTypeormDatabase {
   public getSource(database?: string): DataSource {
-    if (!database && this.source) {
-      return this.source;
-    }
-
-    database = database || this.options?.database || Bun.env.SQLITE_DATABASE_PATH || "";
+    database = database || Bun.env.SQLITE_DATABASE_PATH;
 
     if (!database) {
       throw new DatabaseException(
@@ -23,11 +16,12 @@ export class TypeormSqliteDatabase extends AbstractTypeormSqliteDatabase {
 
     this.source = new DataSource({
       synchronize: false,
-      entities: [],
+      entities: [
+        // Load your entities here
+      ],
       enableWAL: true,
       busyErrorRetry: 2000,
       busyTimeout: 30_000,
-      ...(this.options || {}),
       database,
       type: "sqlite",
     });

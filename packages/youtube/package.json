@@ -30,7 +30,7 @@
   "dependencies": {
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
-    "ytdlp-nodejs": "^2.3.5"
+    "ytdlp-nodejs": "^3.0.0"
   },
   "keywords": [
     "api",

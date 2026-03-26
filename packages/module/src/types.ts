@@ -1,9 +1,9 @@
 import type { ControllerClassType } from "@ooneex/controller";
+import type { CronClassType } from "@ooneex/cron";
 import type { EntityClassType } from "@ooneex/entity";
+import type { MiddlewareClassType } from "@ooneex/middleware";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { PubSubClassType } from "@ooneex/pub-sub";
-import type { CronClassType } from "@ooneex/cron";
-import type { MiddlewareClassType } from "@ooneex/middleware";
 
 export type ModuleType = {
   controllers: ControllerClassType[];
@@ -11,6 +11,6 @@ export type ModuleType = {
   permissions?: PermissionClassType[];
 
   middlewares?: MiddlewareClassType[];
-  cronJobs?: CronClassType[]
+  cronJobs?: CronClassType[];
   events?: PubSubClassType[];
 };

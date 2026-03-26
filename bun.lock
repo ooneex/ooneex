@@ -46,7 +46,7 @@
         "@ooneex/http-status": "workspace:*",
         "@ooneex/validation": "workspace:*",
         "@tanstack/ai": "^0.2.0",
-        "@tanstack/ai-anthropic": "^0.2.0",
+        "@tanstack/ai-anthropic": "^0.7.0",
         "@tanstack/ai-gemini": "^0.2.0",
         "@tanstack/ai-groq": "^0.1.2",
         "@tanstack/ai-ollama": "^0.2.0",
@@ -1364,7 +1364,7 @@
 
     "@tanstack/ai": ["@tanstack/ai@0.2.2", "", { "dependencies": { "@tanstack/devtools-event-client": "^0.4.0", "partial-json": "^0.1.7" } }, "sha512-qqnUSKYMuJnGhiL6t8BAu3Joc9QhQTJIxUIWgQlObDhdY+dCJMLyv+Z7Zw+WqzCCjDfvWmHgLNWDI8+f3KkOPw=="],
 
-    "@tanstack/ai-anthropic": ["@tanstack/ai-anthropic@0.2.0", "", { "dependencies": { "@anthropic-ai/sdk": "^0.71.0" }, "peerDependencies": { "@tanstack/ai": "^0.2.0", "zod": "^4.0.0" } }, "sha512-52uwfHGmclhFQx+xOlaNnqLUfh1O1arcAIPlenzFp8infqgG9wVPwtDfvGRlr8zUkYlEKlXsZSpUxRbT21RYuA=="],
+    "@tanstack/ai-anthropic": ["@tanstack/ai-anthropic@0.7.0", "", { "dependencies": { "@anthropic-ai/sdk": "^0.71.2" }, "peerDependencies": { "@tanstack/ai": "^0.8.1", "zod": "^4.0.0" } }, "sha512-zNm02rwF4dPZ7596k/delF59Ox1smZ9U2d5DfNDbOBd1WLw7dNQavJ+o+AbQrIK3fNZdx+v1knnXNFS3I/Cq2A=="],
 
     "@tanstack/ai-gemini": ["@tanstack/ai-gemini@0.2.0", "", { "dependencies": { "@google/genai": "^1.30.0" }, "peerDependencies": { "@tanstack/ai": "^0.2.0", "zod": "^4.0.0" } }, "sha512-0pt7QxTGBzqCFk/rnuUj0LABF1qdhw/Scj1nlSfquD2GSrr7lOyOiXu2RcJsR1l/sRztRTHKmGg4mbRfNYjtdA=="],
 

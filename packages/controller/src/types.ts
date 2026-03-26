@@ -26,6 +26,7 @@ export type ContextConfigType = {
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
+  exceptionLogger?: ILogger;
   analytics?: IAnalytics;
   cache?: ICache;
   storage?: IStorage;

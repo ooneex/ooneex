@@ -1,6 +1,6 @@
 # @ooneex/pub-sub
 
-A publish-subscribe messaging pattern implementation for TypeScript applications with Redis support. This package provides an abstract base class for creating pub/sub handlers and a Redis client for distributed messaging across application components.
+Publish-subscribe messaging system for decoupled, event-driven communication between application components with typed event channels.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -22,7 +22,7 @@ A publish-subscribe messaging pattern implementation for TypeScript applications
 
 ✅ **Auto Reconnection** - Redis client with automatic reconnection support
 
-✅ **Key Support** - Optional message keys for routing and filtering
+✅ **WebSocket Support** - Built-in ServerWebSocket integration for real-time communication
 
 ## Installation
 

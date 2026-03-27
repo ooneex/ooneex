@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/controller",
-  "description": "Base controller classes and decorators for handling HTTP requests and responses in Ooneex applications",
-  "version": "0.17.1",
+  "description": "HTTP controller layer with decorator-based route binding, request/response handling, and seamless integration with the routing and middleware systems",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

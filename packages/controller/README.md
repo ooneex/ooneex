@@ -1,6 +1,6 @@
 # @ooneex/controller
 
-Base controller types and interfaces for handling HTTP requests and responses in Ooneex applications. This package provides the foundational `IController` interface and context types that define how controllers interact with requests, responses, and framework services.
+HTTP controller layer with decorator-based route binding, request/response handling, and seamless integration with the routing and middleware systems.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,15 +10,19 @@ Base controller types and interfaces for handling HTTP requests and responses in
 
 ## Features
 
-✅ **Controller Interface** - Standard interface for all HTTP controllers
+✅ **Controller Interface** - Standard IController interface for all HTTP controllers with typed index method
 
-✅ **Rich Context** - Access to request, response, logger, cache, database, and more
+✅ **Rich Context** - Access to request, response, logger, cache, storage, mailer, analytics, rate limiter, and more
 
-✅ **Type-Safe** - Full TypeScript support with generic type parameters
+✅ **Type-Safe** - Full TypeScript support with generic ContextConfigType for typed params, payload, queries, and response
 
-✅ **Framework Integration** - Works seamlessly with routing, middleware, and DI container
+✅ **Route Information** - Context includes matched route metadata (name, path, method, version, description)
 
-✅ **Service Access** - Built-in access to analytics, storage, mailer, and other services
+✅ **Service Access** - Built-in access to analytics, storage, mailer, rate limiter, and exception logger
+
+✅ **Request Data** - Parsed params, payload, queries, headers, files, IP, host, and detected language
+
+✅ **User Context** - Authenticated user (IUser) available on the context when using auth middleware
 
 ## Installation
 

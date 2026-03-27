@@ -1,6 +1,6 @@
 # @ooneex/validation
 
-A type-safe validation framework powered by ArkType for TypeScript applications. This package provides a robust foundation for data validation with built-in constraints, JSON schema support, and seamless integration with the Ooneex framework.
+Type-safe validation framework powered by ArkType -- define schemas with built-in constraints, custom rules, and JSON Schema generation.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,19 @@ A type-safe validation framework powered by ArkType for TypeScript applications.
 
 ## Features
 
-✅ **ArkType Powered** - Built on the fast and type-safe ArkType validation library
+✅ **ArkType Powered** - Full re-export of ArkType (`type`, `scope`, `union`, `intersection`) for schema definition
 
-✅ **Built-in Constraints** - Pre-built validators for common use cases (email, URL, port, etc.)
+✅ **16 Built-in Constraints** - Pre-built validators for email, URL, port, hostname, locale, currency, country code, hex color, YouTube URL, names, and more
 
-✅ **JSON Schema Support** - Convert schemas to JSON Schema format for documentation
+✅ **Abstract Validation Class** - Extend `Validation` to create custom validators with `getConstraint` and `getErrorMessage`
+
+✅ **JSON Schema Conversion** - `jsonSchemaToTypeString` utility to convert JSON Schema to readable type strings
+
+✅ **Inline Assertions** - `Assert` utility for quick inline validation checks
 
 ✅ **Custom Error Messages** - Define user-friendly error messages for validation failures
 
-✅ **Type-Safe** - Full TypeScript support with inferred types from schemas
-
-✅ **Extensible** - Create custom validators by extending the base `Validation` class
-
-✅ **Framework Integration** - Works seamlessly with Ooneex routing and controllers
+✅ **Type-Safe** - Full TypeScript support with `AssertType`, `IAssert`, and `ValidationResultType` types
 
 ## Installation
 

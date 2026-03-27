@@ -3,8 +3,6 @@
 Base entity classes and decorators for defining database models with type-safe column mappings, relationships, and lifecycle hooks. This package provides the foundational `IEntity` interface and `EntityClassType` used across the Ooneex framework for domain-driven design patterns.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -22,24 +20,8 @@ Base entity classes and decorators for defining database models with type-safe c
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/entity
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/entity
-```
-
-### Yarn
-```bash
-yarn add @ooneex/entity
-```
-
-### npm
-```bash
-npm install @ooneex/entity
 ```
 
 ## Usage

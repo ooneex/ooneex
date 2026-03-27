@@ -32,7 +32,7 @@
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
     "@ooneex/validation": "workspace:*",
-    "@tanstack/ai": "^0.2.0",
+    "@tanstack/ai": "^0.8.0",
     "@tanstack/ai-anthropic": "^0.2.0",
     "@tanstack/ai-gemini": "^0.2.0",
     "@tanstack/ai-groq": "^0.1.2",

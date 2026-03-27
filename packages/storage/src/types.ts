@@ -14,6 +14,7 @@ export type GetFileOptionsType = {
 };
 
 export interface IStorage {
+  getBucket(): string;
   setBucket(name: string): IStorage;
   list(): Promise<string[]>;
   clearBucket(): Promise<this>;

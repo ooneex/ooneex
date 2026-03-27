@@ -135,6 +135,23 @@ describe("CloudflareStorage", () => {
     });
   });
 
+  describe("getBucket", () => {
+    test("should return the current bucket name", () => {
+      const storage = new CloudflareStorage();
+      storage.setBucket("my-bucket");
+
+      expect(storage.getBucket()).toBe("my-bucket");
+    });
+
+    test("should return updated bucket after setBucket", () => {
+      const storage = new CloudflareStorage();
+      storage.setBucket("first");
+      storage.setBucket("second");
+
+      expect(storage.getBucket()).toBe("second");
+    });
+  });
+
   describe("setBucket", () => {
     test("should set bucket and return this for chaining", () => {
       const storage = new CloudflareStorage();
@@ -173,6 +190,7 @@ describe("CloudflareStorage", () => {
     test("should implement all IStorage methods", () => {
       const storage = new CloudflareStorage();
 
+      expect(typeof storage.getBucket).toBe("function");
       expect(typeof storage.setBucket).toBe("function");
       expect(typeof storage.list).toBe("function");
       expect(typeof storage.clearBucket).toBe("function");

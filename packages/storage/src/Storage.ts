@@ -8,6 +8,10 @@ export abstract class Storage implements IStorage {
   public abstract getOptions(): S3Options;
   protected abstract bucket: string;
 
+  public getBucket(): string {
+    return this.bucket;
+  }
+
   public setBucket(name: string): this {
     this.bucket = name;
     this.client = new Bun.S3Client(this.getOptions());

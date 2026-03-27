@@ -145,6 +145,20 @@ describe("Storage", () => {
     mockClient = storage.getMockClient();
   });
 
+  describe("getBucket", () => {
+    test("should return the current bucket name", () => {
+      const result = storage.getBucket();
+
+      expect(result).toBe("test-bucket");
+    });
+
+    test("should return updated bucket after setBucket", () => {
+      storage.setBucket("new-bucket");
+
+      expect(storage.getBucket()).toBe("new-bucket");
+    });
+  });
+
   describe("setBucket", () => {
     test("should set bucket and return this for chaining", () => {
       const result = storage.setBucket("new-bucket");
@@ -405,6 +419,7 @@ describe("Storage", () => {
 
   describe("IStorage interface compliance", () => {
     test("should implement all IStorage methods", () => {
+      expect(typeof storage.getBucket).toBe("function");
       expect(typeof storage.setBucket).toBe("function");
       expect(typeof storage.list).toBe("function");
       expect(typeof storage.clearBucket).toBe("function");

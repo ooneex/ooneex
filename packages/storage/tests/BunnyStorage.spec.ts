@@ -59,6 +59,21 @@ describe("BunnyStorage", () => {
     });
   });
 
+  describe("getBucket", () => {
+    test("should return empty string by default", () => {
+      const storage = new BunnyStorage();
+
+      expect(storage.getBucket()).toBe("");
+    });
+
+    test("should return bucket after setBucket", () => {
+      const storage = new BunnyStorage();
+      storage.setBucket("my-bucket");
+
+      expect(storage.getBucket()).toBe("my-bucket");
+    });
+  });
+
   describe("setBucket", () => {
     test("should set bucket and return this for chaining", () => {
       const storage = new BunnyStorage();

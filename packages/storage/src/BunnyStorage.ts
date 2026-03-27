@@ -67,6 +67,10 @@ export class BunnyStorage implements IStorage {
     this.baseUrl = `https://${REGION_ENDPOINTS[this.region]}`;
   }
 
+  public getBucket(): string {
+    return this.bucket;
+  }
+
   public setBucket(name: string): this {
     this.bucket = name;
 

@@ -12,6 +12,9 @@ describe("decorator.storage", () => {
 
   test("should register class successfully", () => {
     class TestStorage implements IStorage {
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -57,6 +60,9 @@ describe("decorator.storage", () => {
 
   test("should register class with default singleton scope", () => {
     class SingletonStorage implements IStorage {
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -105,6 +111,9 @@ describe("decorator.storage", () => {
 
   test("should register class with explicit singleton scope", () => {
     class ExplicitSingletonStorage implements IStorage {
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -161,6 +170,9 @@ describe("decorator.storage", () => {
         this.instanceId = TransientStorage.instanceCount;
       }
 
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -210,6 +222,9 @@ describe("decorator.storage", () => {
 
   test("should register class with request scope", () => {
     class RequestScopedStorage implements IStorage {
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -260,6 +275,9 @@ describe("decorator.storage", () => {
     class RetrievableStorage implements IStorage {
       public readonly name = "retrievable";
 
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }
@@ -307,6 +325,9 @@ describe("decorator.storage", () => {
 
   test("should return void from the decorator function", () => {
     class VoidReturnStorage implements IStorage {
+      public getBucket(): string {
+        return "";
+      }
       public setBucket(): IStorage {
         return this;
       }

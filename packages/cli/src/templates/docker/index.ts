@@ -1,7 +1,6 @@
 import clickhouse from "./clickhouse.txt";
 import elasticsearch from "./elasticsearch.txt";
 import grafana from "./grafana.txt";
-import ooneexJade from "./ooneex-jade.txt";
 import jaeger from "./jaeger.txt";
 import keycloak from "./keycloak.txt";
 import libretranslate from "./libretranslate.txt";
@@ -11,6 +10,7 @@ import minio from "./minio.txt";
 import mongodb from "./mongodb.txt";
 import mysql from "./mysql.txt";
 import nats from "./nats.txt";
+import ooneexJade from "./ooneex-jade.txt";
 import postgres from "./postgres.txt";
 import prometheus from "./prometheus.txt";
 import rabbitmq from "./rabbitmq.txt";

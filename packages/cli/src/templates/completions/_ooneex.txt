@@ -1,0 +1,49 @@
+#compdef oo ooneex
+
+_ooneex() {
+  local -a commands
+  commands=(
+    'make\:ai:Generate a new AI class'
+    'make\:analytics:Generate a new analytics class'
+    'make\:app:Generate a new application'
+    'make\:cache:Generate a new cache class'
+    'make\:claude\:skill:Generate Claude skills from templates'
+    'make\:controller:Generate a new controller class'
+    'make\:cron:Generate a new cron class'
+    'make\:database:Generate a new database class'
+    'make\:docker:Add a docker service to docker-compose.yml'
+    'make\:entity:Generate a new entity class'
+    'make\:logger:Generate a new logger class'
+    'make\:mailer:Generate a new mailer class'
+    'make\:middleware:Generate a new middleware class'
+    'make\:migration:Generate a new migration file'
+    'make\:module:Generate a new module'
+    'make\:permission:Generate a new permission class'
+    'make\:pubsub:Generate a new PubSub event class'
+    'make\:repository:Generate a new repository class'
+    'make\:seed:Generate a new seed file'
+    'make\:service:Generate a new service class'
+    'make\:storage:Generate a new storage class'
+    'make\:vector-database:Generate a new vector database class'
+  )
+
+  _arguments -s \
+    '--name=[Name of the resource]:name' \
+    '--route-name=[Route name]:route_name' \
+    '--route-path=[Route path]:route_path' \
+    '--route-method=[Route HTTP method]:method:(GET POST PUT PATCH DELETE HEAD OPTIONS)' \
+    '--is-socket[Socket mode]' \
+    '--dir=[Directory]:dir:_files -/' \
+    '--channel=[Channel name]:channel' \
+    '--table-name=[Database table name]:table_name' \
+    '1:command:->cmds' \
+    && return 0
+
+  case "$state" in
+    cmds)
+      _describe -t commands 'oo command' commands
+      ;;
+  esac
+}
+
+_ooneex "$@"

@@ -1,3 +1,4 @@
+export { CompletionZshCommand } from "./CompletionZshCommand";
 export { MakeAiCommand } from "./MakeAiCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";
 export { MakeAppCommand } from "./MakeAppCommand";

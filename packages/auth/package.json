@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/auth",
-  "description": "Authentication utilities and strategies for securing Ooneex applications",
-  "version": "0.1.2",
+  "description": "Authentication framework with pluggable strategies for securing APIs and web applications — supports token-based and session-based authentication flows",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

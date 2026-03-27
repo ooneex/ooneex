@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/database",
-  "description": "Database connection and management utilities with TypeORM integration for Ooneex applications",
-  "version": "0.0.19",
+  "description": "Database abstraction layer with TypeORM integration — provides connection pooling, query building, and migration support for relational databases",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

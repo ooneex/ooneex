@@ -1,6 +1,6 @@
 # @ooneex/database
 
-A database connection and management library for TypeScript applications with TypeORM integration. This package provides unified interfaces for Redis, PostgreSQL, and SQLite databases with automatic connection handling, repository management, and seamless integration with the Ooneex framework.
+Database abstraction layer with TypeORM integration -- provides connection pooling, query building, and migration support for relational databases. This package provides unified interfaces for Redis, PostgreSQL, and SQLite databases with automatic connection handling, repository management, and seamless integration with the Ooneex framework.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -12,17 +12,17 @@ A database connection and management library for TypeScript applications with Ty
 
 ✅ **Multiple Databases** - Support for PostgreSQL, SQLite, and Redis
 
-✅ **TypeORM Integration** - Full TypeORM support for relational databases
+✅ **TypeORM Integration** - Full TypeORM support with connection pooling and query building
 
-✅ **Repository Pattern** - Easy access to TypeORM repositories
+✅ **Repository Pattern** - Easy access to TypeORM repositories for entity management
 
-✅ **Connection Management** - Automatic connection handling and reconnection
+✅ **Connection Management** - Automatic connection handling with open/close lifecycle
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Container Integration** - Register database services with `@decorator.database()` for DI
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe** - Full TypeScript support with typed interfaces for each database type
 
-✅ **Decorators** - Register database services with decorators
+✅ **Migration Support** - Schema synchronization and database management via TypeORM
 
 ## Installation
 

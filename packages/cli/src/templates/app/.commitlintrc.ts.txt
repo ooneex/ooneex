@@ -15,6 +15,7 @@ const Configuration: UserConfig = {
       "always",
       [
         "common",
+        "app",
         // Add your scopes here
       ],
     ],

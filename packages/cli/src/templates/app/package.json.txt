@@ -40,6 +40,7 @@
     "@ooneex/utils": "^0.1.1",
     "@ooneex/validation": "^0.0.19",
     "pg": "^8.16.3",
+    "apache-arrow": "^21.1.0",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

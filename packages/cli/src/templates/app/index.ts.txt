@@ -2,22 +2,22 @@ import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
 import { AppEnv, type EnvType } from "@ooneex/app-env";
 import { RedisCache } from "@ooneex/cache";
-import { DatabaseLogger, ExceptionLogger, TerminalLogger } from "@ooneex/logger";
+import { LogtailLogger, ExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
 import { CorsMiddleware } from "@ooneex/middleware";
 import { RedisRateLimiter } from "@ooneex/rate-limit";
-import { CloudflareStorage } from "@ooneex/storage";
+import { BunnyStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
 
 const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") as EnvType);
 
 const app = new App({
   prefix: "api",
-  loggers: [DatabaseLogger, TerminalLogger],
+  loggers: [LogtailLogger, TerminalLogger],
   onException: ExceptionLogger,
   analytics: PostHogAnalytics,
   cache: RedisCache,
-  storage: CloudflareStorage,
+  storage: BunnyStorage,
   mailer: ResendMailer,
   rateLimiter: RedisRateLimiter,
   middlewares: AppModule.middlewares,

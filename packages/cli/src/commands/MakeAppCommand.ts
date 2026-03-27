@@ -48,6 +48,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
 
     await Bun.write(join(destination, ".commitlintrc.ts"), commitlintTemplate);
     await Bun.write(join(destination, ".env"), envTemplate);
+    await Bun.write(join(destination, ".env.example"), envTemplate);
     await Bun.write(join(destination, ".gitignore"), gitignoreTemplate);
     await Bun.write(join(destination, "biome.jsonc"), biomeTemplate);
     await Bun.write(join(destination, "bunfig.toml"), bunfigTemplate);

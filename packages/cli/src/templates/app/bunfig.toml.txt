@@ -23,6 +23,7 @@ hoistPattern = [
   "react-*/*",
   "@types/*",
   "pg",
+  "apache-arrow",
   "reflect-metadata",
 ]
 external = false

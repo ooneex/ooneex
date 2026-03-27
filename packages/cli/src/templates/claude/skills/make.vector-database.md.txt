@@ -1,0 +1,107 @@
+---
+name: make:vector-database
+description: Generate a new vector database class with its test file, then complete the generated code. Use when creating a new vector database that extends VectorDatabase from @ooneex/rag.
+---
+
+# Make Vector Database Class
+
+Generate a new vector database class and its test file using the `make:vector-database` CLI command, then complete the generated code with proper implementation.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the vector database class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:vector-database --name <name>
+```
+
+Where `<name>` is the name provided by the user. The command will generate:
+- `src/databases/<Name>VectorDatabase.ts` - The vector database class file
+- `tests/databases/<Name>VectorDatabase.spec.ts` - The test file
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the vector database class
+
+Edit `src/databases/<Name>VectorDatabase.ts` to complete the implementation:
+
+- Set the `getDatabaseUri()` return value to the actual LanceDB database path
+- Configure the embedding provider and model in `getEmbeddingModel()`
+- Define the custom data fields in `DataType` and map them in `getSchema()`
+- Import the appropriate Apache Arrow types for your schema fields
+
+The generated class structure follows this pattern:
+
+```typescript
+import { VectorDatabase, decorator } from "@ooneex/rag";
+import type { EmbeddingModelType, EmbeddingProviderType, FieldValueType } from "@ooneex/rag";
+import { Utf8 } from "apache-arrow";
+
+type DataType = {
+  name: string;
+};
+
+@decorator.vectorDatabase()
+export class <Name>VectorDatabase extends VectorDatabase<DataType> {
+  public getDatabaseUri(): string {
+    return "";
+  }
+
+  public getEmbeddingModel(): { provider: EmbeddingProviderType; model: EmbeddingModelType["model"] } {
+    return { provider: "openai", model: "text-embedding-ada-002" };
+  }
+
+  public getSchema(): { [K in keyof DataType]: FieldValueType } {
+    return {
+      name: new Utf8(),
+    };
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/databases/<Name>VectorDatabase.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, getDatabaseUri, getEmbeddingModel, getSchema methods)
+- Add tests relevant to the specific vector database class behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>VectorDatabase } from "@/databases/<Name>VectorDatabase";
+
+describe("<Name>VectorDatabase", () => {
+  test("should have class name ending with 'VectorDatabase'", () => {
+    expect(<Name>VectorDatabase.name.endsWith("VectorDatabase")).toBe(true);
+  });
+
+  test("should have 'getDatabaseUri' method", () => {
+    expect(<Name>VectorDatabase.prototype.getDatabaseUri).toBeDefined();
+    expect(typeof <Name>VectorDatabase.prototype.getDatabaseUri).toBe("function");
+  });
+
+  test("should have 'getEmbeddingModel' method", () => {
+    expect(<Name>VectorDatabase.prototype.getEmbeddingModel).toBeDefined();
+    expect(typeof <Name>VectorDatabase.prototype.getEmbeddingModel).toBe("function");
+  });
+
+  test("should have 'getSchema' method", () => {
+    expect(<Name>VectorDatabase.prototype.getSchema).toBeDefined();
+    expect(typeof <Name>VectorDatabase.prototype.getSchema).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/databases/<Name>VectorDatabase.ts tests/databases/<Name>VectorDatabase.spec.ts
+```

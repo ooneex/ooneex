@@ -110,7 +110,7 @@ describe("MakeClaudeSkillCommand", () => {
       }
     });
 
-    test("should generate all 17 skill templates", async () => {
+    test("should generate all 18 skill templates", async () => {
       await command.run();
 
       const skillsDir = join(testDir, ".claude", "skills");
@@ -121,7 +121,7 @@ describe("MakeClaudeSkillCommand", () => {
         files.push(file);
       }
 
-      expect(files.length).toBe(17);
+      expect(files.length).toBe(18);
     });
   });
 });

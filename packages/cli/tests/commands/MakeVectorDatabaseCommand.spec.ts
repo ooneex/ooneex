@@ -1,0 +1,118 @@
+import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+const { MakeVectorDatabaseCommand } = await import("@/commands/MakeVectorDatabaseCommand");
+
+describe("MakeVectorDatabaseCommand", () => {
+  let command: InstanceType<typeof MakeVectorDatabaseCommand>;
+  let testDir: string;
+  let originalCwd: string;
+
+  beforeEach(() => {
+    command = new MakeVectorDatabaseCommand();
+    originalCwd = process.cwd();
+    testDir = join(originalCwd, ".temp", `vector-database-${Date.now()}`);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    if (existsSync(testDir)) {
+      rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  describe("Command Metadata", () => {
+    test("should return correct command name", () => {
+      expect(command.getName()).toBe("make:vector-database");
+    });
+
+    test("should return correct description", () => {
+      expect(command.getDescription()).toBe("Generate a new vector database class");
+    });
+  });
+
+  describe("run()", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, "src", "databases", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "databases", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate vector database file with correct name", async () => {
+      await command.run({ name: "Knowledge" });
+
+      const filePath = join(testDir, "src", "databases", "KnowledgeVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("KnowledgeVectorDatabase");
+    });
+
+    test("should generate test file for vector database", async () => {
+      await command.run({ name: "Knowledge" });
+
+      const testFilePath = join(testDir, "tests", "databases", "KnowledgeVectorDatabase.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).toContain("KnowledgeVectorDatabase");
+    });
+
+    test("should normalize name with toPascalCase", async () => {
+      await command.run({ name: "my-knowledge" });
+
+      const filePath = join(testDir, "src", "databases", "MyKnowledgeVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should remove VectorDatabase suffix if provided", async () => {
+      await command.run({ name: "KnowledgeVectorDatabase" });
+
+      const filePath = join(testDir, "src", "databases", "KnowledgeVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).not.toContain("KnowledgeVectorDatabaseVectorDatabase");
+    });
+
+    test("should remove Database suffix if provided", async () => {
+      await command.run({ name: "KnowledgeDatabase" });
+
+      const filePath = join(testDir, "src", "databases", "KnowledgeVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).not.toContain("KnowledgeDatabaseVectorDatabase");
+    });
+
+    test("should handle lowercase input", async () => {
+      await command.run({ name: "product" });
+
+      const filePath = join(testDir, "src", "databases", "ProductVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should handle snake_case input", async () => {
+      await command.run({ name: "knowledge_base" });
+
+      const filePath = join(testDir, "src", "databases", "KnowledgeBaseVectorDatabase.ts");
+      expect(existsSync(filePath)).toBe(true);
+    });
+
+    test("should replace template placeholders correctly", async () => {
+      await command.run({ name: "Document" });
+
+      const filePath = join(testDir, "src", "databases", "DocumentVectorDatabase.ts");
+      const content = await Bun.file(filePath).text();
+
+      expect(content).not.toContain("{{NAME}}");
+      expect(content).toContain("Document");
+    });
+  });
+});

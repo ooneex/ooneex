@@ -1,6 +1,6 @@
 # @ooneex/http-response
 
-A comprehensive TypeScript/JavaScript library for building HTTP responses in web applications. This package provides a fluent API for creating JSON responses, handling exceptions, managing redirects, and working with HTTP headers in a type-safe manner.
+HTTP response builder with fluent API for setting status codes, headers, cookies, and streaming or buffered content delivery.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,25 +11,25 @@ A comprehensive TypeScript/JavaScript library for building HTTP responses in web
 
 ## Features
 
-✅ **Fluent API** - Chain methods for easy response building
+✅ **Fluent API** - Chain methods like json(), exception(), notFound(), and redirect() for easy response building
 
-✅ **Type-Safe** - Full TypeScript support with generic types
+✅ **Type-Safe** - Full TypeScript support with generic data types
 
-✅ **JSON Responses** - Easy creation of JSON API responses
+✅ **JSON Responses** - Create structured JSON responses with success/error flags, status, and metadata
 
-✅ **Exception Handling** - Built-in error response formatting
+✅ **Exception Handling** - Built-in error response formatting with configurable status codes and data
 
-✅ **HTTP Redirects** - Support for all redirect status codes
+✅ **Not Found Responses** - Dedicated notFound() method for 404 responses
 
-✅ **Header Management** - Integrated HTTP header handling
+✅ **HTTP Redirects** - Support for all redirect status codes with Location header management
+
+✅ **Header Management** - Integrated HTTP header handling via @ooneex/http-header
 
 ✅ **Web Standards** - Returns native Web API Response objects
 
-✅ **Method Chaining** - All methods return the instance for chaining
+✅ **Environment-Aware** - Includes application environment info in response data
 
-✅ **State Management** - Proper state transitions between response types
-
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+✅ **Socket Support** - Built-in done flag for WebSocket response completion tracking
 
 ## Installation
 

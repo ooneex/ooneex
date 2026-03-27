@@ -3,8 +3,6 @@
 Publish-subscribe messaging system for decoupled, event-driven communication between application components with typed event channels.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -26,24 +24,8 @@ Publish-subscribe messaging system for decoupled, event-driven communication bet
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/pub-sub
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/pub-sub
-```
-
-### Yarn
-```bash
-yarn add @ooneex/pub-sub
-```
-
-### npm
-```bash
-npm install @ooneex/pub-sub
 ```
 
 ## Usage

@@ -3,8 +3,6 @@
 YouTube video downloader and metadata extraction library for fetching video information, thumbnails, and media streams.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -26,24 +24,8 @@ YouTube video downloader and metadata extraction library for fetching video info
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/youtube
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/youtube
-```
-
-### Yarn
-```bash
-yarn add @ooneex/youtube
-```
-
-### npm
-```bash
-npm install @ooneex/youtube
 ```
 
 ## License

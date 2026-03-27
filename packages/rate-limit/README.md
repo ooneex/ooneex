@@ -30,24 +30,8 @@ API rate limiting middleware with configurable throttling strategies, sliding wi
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/rate-limit
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/rate-limit
-```
-
-### Yarn
-```bash
-yarn add @ooneex/rate-limit
-```
-
-### npm
-```bash
-npm install @ooneex/rate-limit
 ```
 
 ## Usage

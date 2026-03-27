@@ -3,8 +3,6 @@
 Database abstraction layer with TypeORM integration -- provides connection pooling, query building, and migration support for relational databases. This package provides unified interfaces for Redis, PostgreSQL, and SQLite databases with automatic connection handling, repository management, and seamless integration with the Ooneex framework.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -26,24 +24,8 @@ Database abstraction layer with TypeORM integration -- provides connection pooli
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/database
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/database
-```
-
-### Yarn
-```bash
-yarn add @ooneex/database
-```
-
-### npm
-```bash
-npm install @ooneex/database
 ```
 
 ## Usage

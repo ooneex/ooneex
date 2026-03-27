@@ -34,24 +34,8 @@ Full-featured application framework for Bun — orchestrates routing, middleware
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/app
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/app
-```
-
-### Yarn
-```bash
-yarn add @ooneex/app
-```
-
-### npm
-```bash
-npm install @ooneex/app
 ```
 
 ## Usage

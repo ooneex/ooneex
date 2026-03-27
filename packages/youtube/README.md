@@ -1,1 +1,73 @@
 # @ooneex/youtube
+
+YouTube video downloader and metadata extraction library for fetching video information, thumbnails, and media streams.
+
+![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
+![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
+![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
+![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+## Features
+
+✅ **Video ID Extraction** - Parse video IDs from watch URLs, short URLs, embed URLs, and other YouTube URL formats
+
+✅ **Embed URL Generation** - Convert any YouTube URL or video ID into an embeddable URL via `getEmbedUrl`
+
+✅ **Watch URL Generation** - Convert any YouTube URL or video ID into a standard watch URL via `getWatchUrl`
+
+✅ **ytdlp Integration** - Type definitions for ytdlp-nodejs including video/audio quality, format options, and download progress
+
+✅ **Quality Types** - `YoutubeVideoQualityType` (144p to 2160p) and `YoutubeAudioQualityType` for stream selection
+
+✅ **Error Handling** - Custom `YoutubeException` for YouTube-specific error scenarios
+
+✅ **Type-Safe** - Full TypeScript support with `IYoutube` interface and re-exported ytdlp types
+
+## Installation
+
+### Bun
+```bash
+bun add @ooneex/youtube
+```
+
+### pnpm
+```bash
+pnpm add @ooneex/youtube
+```
+
+### Yarn
+```bash
+yarn add @ooneex/youtube
+```
+
+### npm
+```bash
+npm install @ooneex/youtube
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### Development Setup
+
+1. Clone the repository
+2. Install dependencies: `bun install`
+3. Run tests: `bun run test`
+4. Build the project: `bun run build`
+
+### Guidelines
+
+- Write tests for new features
+- Follow the existing code style
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
+
+---
+
+Made with ❤️ by the Ooneex team

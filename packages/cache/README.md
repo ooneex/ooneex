@@ -1,6 +1,6 @@
 # @ooneex/cache
 
-A flexible caching library for TypeScript applications with support for filesystem and Redis backends. This package provides a consistent interface for caching data with TTL support, automatic serialization, and seamless integration with the Ooneex dependency injection container.
+High-performance caching layer with filesystem and Redis backends -- features TTL expiration, auto-serialization, configurable size limits, and dependency injection integration.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,21 @@ A flexible caching library for TypeScript applications with support for filesyst
 
 ## Features
 
-✅ **Multiple Backends** - Support for filesystem and Redis caching
+✅ **Multiple Backends** - Support for filesystem and Redis caching via AbstractCache base class
 
-✅ **TTL Support** - Automatic expiration with configurable time-to-live
+✅ **TTL Support** - Automatic expiration with configurable time-to-live for both backends
 
-✅ **Type-Safe** - Full TypeScript support with generic cache values
+✅ **Type-Safe** - Full TypeScript support with generic cache values through the ICache interface
 
-✅ **Auto Serialization** - Automatic JSON serialization for complex objects
+✅ **Auto Serialization** - Automatic JSON serialization and deserialization for complex objects
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Container Integration** - Cache decorator for registering implementations with the DI container
 
-✅ **File Size Limits** - Configurable maximum file size for filesystem cache
+✅ **File Size Limits** - Configurable maximum file size for filesystem cache entries
 
-✅ **Auto Reconnection** - Redis client with automatic reconnection support
+✅ **Auto Reconnection** - Redis client with configurable reconnection, retries, and offline queue
+
+✅ **Expired Entry Cleanup** - Automatic deletion of expired filesystem cache entries on read
 
 ## Installation
 

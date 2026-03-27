@@ -1,6 +1,6 @@
 # @ooneex/container
 
-A lightweight dependency injection container built on Inversify for managing services, their lifecycle, and dependencies. This package provides a simple yet powerful API for registering, resolving, and managing service instances with support for singletons, transients, and request-scoped dependencies.
+Dependency injection container built on Inversify -- manages service lifecycle with singleton, transient, and request-scoped registrations and automatic dependency resolution.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -12,17 +12,19 @@ A lightweight dependency injection container built on Inversify for managing ser
 
 ✅ **Dependency Injection** - Full DI container with automatic dependency resolution
 
-✅ **Multiple Scopes** - Support for Singleton, Transient, and Request scopes
+✅ **Multiple Scopes** - Support for Singleton, Transient, and Request scopes via EContainerScope
 
 ✅ **Service Aliases** - Register services with string aliases for flexible resolution
 
-✅ **Constant Values** - Store and retrieve constant values across your application
+✅ **Constant Values** - Store and retrieve constant values with string or symbol identifiers
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe** - Full TypeScript support with generic type parameters on get and getConstant
 
-✅ **Inversify Based** - Built on the battle-tested Inversify library
+✅ **Inversify Based** - Built on the Inversify library with a shared singleton DI instance
 
-✅ **Shared Instance** - Global container instance for easy access across modules
+✅ **Shared Instance** - Pre-configured global container instance exported for convenience
+
+✅ **Service Lifecycle** - Add, get, has, and remove services and constants programmatically
 
 ## Installation
 

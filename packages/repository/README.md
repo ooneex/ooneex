@@ -1,6 +1,6 @@
 # @ooneex/repository
 
-A base repository decorator and interface for data access layer abstraction in TypeScript applications. This package provides the foundation for creating injectable repository classes with dependency injection support, standardized CRUD operations, and paginated query results.
+Data access layer with decorator-based repository registration, query abstraction, and dependency injection for clean persistence patterns.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)

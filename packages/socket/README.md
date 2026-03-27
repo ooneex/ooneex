@@ -1,6 +1,6 @@
 # @ooneex/socket
 
-A WebSocket server and client implementation for real-time bidirectional communication in TypeScript applications. This package provides types and utilities for creating WebSocket controllers with pub/sub capabilities, channel management, and seamless integration with the Ooneex framework.
+WebSocket server implementation with room management, event broadcasting, client tracking, and middleware integration for real-time applications.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,17 @@ A WebSocket server and client implementation for real-time bidirectional communi
 
 ## Features
 
-✅ **WebSocket Controllers** - Define socket endpoints using decorators
+✅ **IController Interface** - Standard interface for WebSocket controller implementations with typed context
 
-✅ **Channel Management** - Subscribe, publish, and manage WebSocket channels
+✅ **Channel Management** - Subscribe, unsubscribe, publish, and send messages through typed channel API
 
-✅ **Pub/Sub Support** - Built-in publish/subscribe pattern for real-time messaging
+✅ **Pub/Sub Support** - Built-in publish/subscribe pattern with `channel.publish()` and `channel.subscribe()`
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe Context** - Generic `ContextType` extending the HTTP controller context with WebSocket channel operations
 
-✅ **Framework Integration** - Works seamlessly with Ooneex routing and controllers
+✅ **Connection Lifecycle** - Close connections with status codes and reasons via `channel.close()`
 
-✅ **Bidirectional Communication** - Send and receive messages in real-time
-
-✅ **Client Library** - Separate client export for frontend applications
+✅ **Framework Integration** - Extends `@ooneex/controller` context and works with `@ooneex/routing` socket decorators
 
 ## Installation
 

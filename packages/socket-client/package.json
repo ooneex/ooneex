@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/socket-client",
-  "description": "WebSocket client implementation for real-time bidirectional communication",
-  "version": "0.0.1",
+  "description": "WebSocket client for real-time bidirectional communication with automatic reconnection, event handling, and typed message serialization",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

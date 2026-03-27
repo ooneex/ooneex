@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/socket",
-  "description": "WebSocket server implementation for real-time bidirectional communication",
-  "version": "0.17.1",
+  "description": "WebSocket server implementation with room management, event broadcasting, client tracking, and middleware integration for real-time applications",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

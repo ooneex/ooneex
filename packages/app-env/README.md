@@ -1,6 +1,6 @@
 # @ooneex/app-env
 
-A lightweight application environment configuration and management utility for TypeScript applications. This package provides type-safe environment detection with boolean flags for all common deployment environments, making it easy to write environment-specific logic.
+Environment detection and configuration management for Ooneex applications — supports development, staging, production, and testing environments.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)

@@ -1,6 +1,6 @@
 # @ooneex/http-request-file
 
-A comprehensive TypeScript/JavaScript library for handling HTTP request files with type-safe file operations and MIME type detection. This package provides a robust wrapper around the native File API with additional utilities for file processing, validation, and I/O operations.
+Multipart file upload handler with MIME type validation, size constraints, and temporary file management for HTTP request processing.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)

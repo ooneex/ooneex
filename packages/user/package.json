@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/user",
-  "description": "User entity types and interfaces for user profiles, authentication data, and role-based identity management",
-  "version": "0.0.19",
+  "description": "User identity types and interfaces defining profiles, authentication credentials, roles, and account metadata for user management systems",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

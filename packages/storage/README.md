@@ -1,6 +1,6 @@
 # @ooneex/storage
 
-A file and object storage abstraction layer for TypeScript applications with support for local filesystem, Cloudflare R2, and Bunny CDN. This package provides a unified interface for storing, retrieving, and managing files across different storage backends.
+File storage abstraction supporting local filesystem and cloud providers -- upload, download, list, and manage files with a unified bucket-based API.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,21 @@ A file and object storage abstraction layer for TypeScript applications with sup
 
 ## Features
 
-✅ **Multiple Backends** - Support for filesystem, Cloudflare R2, and Bunny CDN
+✅ **Multiple Backends** - Support for local filesystem, Cloudflare R2, and Bunny CDN via a shared abstract `Storage` base class
 
-✅ **Unified Interface** - Consistent API across all storage providers
+✅ **Unified Interface** - Consistent `IStorage` API across all storage providers
 
-✅ **Bucket Management** - Organize files into buckets/directories
+✅ **Bucket Management** - Organize files into buckets with `getBucket`/`setBucket` methods
+
+✅ **Directory Upload** - Upload entire directories recursively with optional regex filtering via `putDir`
+
+✅ **File Download** - Download files from storage to local filesystem with `getFile`
 
 ✅ **Streaming Support** - Read files as streams for memory-efficient processing
 
-✅ **JSON Support** - Store and retrieve JSON data directly
+✅ **JSON Support** - Store and retrieve JSON data directly with `getAsJson`
 
-✅ **File Upload** - Upload files from local paths or binary data
-
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Container Integration** - Built-in decorator for dependency injection registration
 
 ✅ **Type-Safe** - Full TypeScript support with proper type definitions
 

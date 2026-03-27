@@ -37,7 +37,7 @@
     "@tanstack/ai-gemini": "^0.2.0",
     "@tanstack/ai-groq": "^0.1.2",
     "@tanstack/ai-ollama": "^0.2.0",
-    "@tanstack/ai-openai": "^0.2.0"
+    "@tanstack/ai-openai": "^0.7.0"
   },
   "devDependencies": {
     "@ooneex/translation": "workspace:*"

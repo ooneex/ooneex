@@ -1,6 +1,6 @@
 # @ooneex/analytics
 
-An analytics and event tracking integration library for TypeScript applications. This package provides seamless integration with PostHog for user behavior insights, product analytics, and event tracking across your applications.
+PostHog-powered analytics integration for tracking user behavior, product events, and feature usage with decorator-based service registration.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)

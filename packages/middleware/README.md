@@ -1,6 +1,6 @@
 # @ooneex/middleware
 
-A middleware framework for TypeScript applications with decorators for request/response pipeline processing. This package provides interfaces and utilities for creating HTTP and WebSocket middleware that intercept and transform requests before they reach controllers.
+Middleware pipeline framework with decorator-based registration for processing HTTP requests, responses, and WebSocket events in sequence.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,17 +10,17 @@ A middleware framework for TypeScript applications with decorators for request/r
 
 ## Features
 
-✅ **HTTP Middleware** - Intercept and process HTTP requests and responses
+✅ **HTTP Middleware** - Intercept and process HTTP requests and responses in a pipeline
 
-✅ **WebSocket Middleware** - Handle WebSocket connection processing
+✅ **WebSocket Middleware** - Handle WebSocket connection events with dedicated interface
 
-✅ **Decorator Support** - Register middleware with decorators for clean code
+✅ **Built-in CORS** - Ready-to-use CorsMiddleware with environment variable configuration
 
-✅ **Context Access** - Full access to request, response, and application context
+✅ **Decorator Registration** - Register middleware with `@decorator.middleware()` for clean code
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Context Access** - Full access to request, response, headers, and application context
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Container Integration** - Works seamlessly with the Ooneex dependency injection container
 
 ## Installation
 

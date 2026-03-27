@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/seeds",
-  "description": "Database seeding utilities for populating initial and test data with logging support",
-  "version": "0.17.0",
+  "description": "Database seeding framework for populating initial data, fixtures, and test datasets with execution logging and idempotent operations",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

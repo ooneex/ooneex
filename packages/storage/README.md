@@ -3,8 +3,6 @@
 File storage abstraction supporting local filesystem and cloud providers -- upload, download, list, and manage files with a unified bucket-based API.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -30,24 +28,8 @@ File storage abstraction supporting local filesystem and cloud providers -- uplo
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/storage
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/storage
-```
-
-### Yarn
-```bash
-yarn add @ooneex/storage
-```
-
-### npm
-```bash
-npm install @ooneex/storage
 ```
 
 ## Usage

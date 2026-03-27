@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/logger",
   "description": "Structured logging service with multiple output targets, log level filtering, contextual metadata, and dependency injection integration",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "files": [
     "dist",
@@ -28,7 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@logtail/node": "^0.5.2",
+    "@logtail/node": "^0.5.8",
     "@ooneex/container": "workspace:*",
     "@ooneex/database": "workspace:*",
     "@ooneex/utils": "workspace:*",

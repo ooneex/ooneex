@@ -3,8 +3,6 @@
 HTTP controller layer with decorator-based route binding, request/response handling, and seamless integration with the routing and middleware systems.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -26,24 +24,8 @@ HTTP controller layer with decorator-based route binding, request/response handl
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/controller
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/controller
-```
-
-### Yarn
-```bash
-yarn add @ooneex/controller
-```
-
-### npm
-```bash
-npm install @ooneex/controller
 ```
 
 ## Usage

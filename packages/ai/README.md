@@ -1,6 +1,6 @@
 # @ooneex/ai
 
-A unified AI client library for TypeScript applications with support for OpenAI, Anthropic, Google Gemini, and Ollama providers. This package provides a consistent interface for text generation, content transformation, and streaming responses across multiple AI backends.
+Multi-provider AI toolkit for TypeScript — seamlessly integrate OpenAI, Anthropic Claude, Google Gemini, Groq, and Ollama with a unified API for text generation, streaming, and content transformation.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,7 +10,7 @@ A unified AI client library for TypeScript applications with support for OpenAI,
 
 ## Features
 
-✅ **Multiple Providers** - Support for OpenAI, Anthropic Claude, Google Gemini, and Ollama
+✅ **Multiple Providers** - Support for OpenAI, Anthropic Claude, Google Gemini, Groq, and Ollama
 
 ✅ **Unified Interface** - Consistent API across all AI providers
 
@@ -21,6 +21,8 @@ A unified AI client library for TypeScript applications with support for OpenAI,
 ✅ **Output Validation** - Validate AI responses against schemas using ArkType
 
 ✅ **Configurable Tone** - 15 different tone options for content generation
+
+✅ **Text-to-Speech** - Groq-powered text-to-speech with configurable voices and formats
 
 ✅ **Multi-language** - Translate and generate content in multiple languages
 
@@ -120,18 +122,18 @@ const result = await ai.run<string>('Explain microservices', config);
 
 ```typescript
 import { OpenAi } from '@ooneex/ai';
-import { type } from 'arktype';
+import { Assert } from '@ooneex/validation';
 
 const ai = new OpenAi();
 
 // Define expected output schema
-const ProductSchema = type({
+const ProductSchema = Assert({
   name: 'string',
   price: 'number',
   description: 'string'
 });
 
-const product = await ai.run<{ name: string; price: number; description: string }>(
+const product = await ai.run<typeof ProductSchema.infer>(
   'Generate a product for an e-commerce store',
   { output: ProductSchema }
 );

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/ai",
-  "description": "Unified AI client library with support for OpenAI, Anthropic, Google Gemini, Groq, and Ollama providers",
-  "version": "0.0.19",
+  "description": "Multi-provider AI toolkit for TypeScript — seamlessly integrate OpenAI, Anthropic Claude, Google Gemini, Groq, and Ollama with a unified API for text generation, streaming, and content transformation",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

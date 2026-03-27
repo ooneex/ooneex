@@ -1,6 +1,6 @@
 # @ooneex/permission
 
-A flexible ability-based access control (ABAC) library for TypeScript applications powered by CASL. This package provides fine-grained permission management with support for actions, subjects, and field-level permissions for comprehensive authorization control.
+Fine-grained access control using CASL -- define, evaluate, and enforce ability-based permissions with role and resource scoping.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)

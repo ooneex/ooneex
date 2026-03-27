@@ -1,6 +1,6 @@
 # @ooneex/utils
 
-A collection of common utility functions for TypeScript applications including unique ID generation with nanoid, string manipulation helpers, time formatting utilities, and more. This package provides lightweight, type-safe utilities used throughout the Ooneex framework.
+General-purpose utility functions including unique ID generation with nanoid, type guards, and common helper methods.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,19 +11,23 @@ A collection of common utility functions for TypeScript applications including u
 
 ## Features
 
-✅ **ID Generation** - Generate unique IDs using nanoid
+✅ **ID Generation** - Generate unique IDs using nanoid with configurable length
 
-✅ **String Manipulation** - Convert between camelCase, kebab-case, snake_case, and PascalCase
+✅ **String Case Conversion** - Convert between camelCase, kebab-case, snake_case, and PascalCase
 
-✅ **Time Formatting** - Convert milliseconds and seconds to human-readable formats
+✅ **String Utilities** - `trim`, `splitToWords`, `capitalizeWord` for common string operations
 
-✅ **Data Conversion** - Convert data URLs to files and parse strings
+✅ **Value Parsing** - `parseString` to convert string values to boolean, number, or string types
 
-✅ **Async Utilities** - Sleep function for async/await workflows
+✅ **Time Formatting** - `secondsToHMS`, `secondsToMS`, and `millisecondsToHMS` for duration display
 
-✅ **Number Formatting** - Format numbers with relative suffixes (K, M, B)
+✅ **Number Formatting** - `formatRelativeNumber` for human-readable numbers with K, M, B suffixes
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Data Conversion** - `dataURLtoFile` to convert data URLs to File objects
+
+✅ **Environment Variables** - `parseEnvVars` to parse .env file content into key-value pairs
+
+✅ **Async Utilities** - `sleep` function for async/await workflows
 
 ✅ **Zero Config** - Simple, pure functions with no configuration needed
 

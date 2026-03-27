@@ -3,8 +3,6 @@
 Dependency injection container built on Inversify -- manages service lifecycle with singleton, transient, and request-scoped registrations and automatic dependency resolution.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -28,24 +26,8 @@ Dependency injection container built on Inversify -- manages service lifecycle w
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/container
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/container
-```
-
-### Yarn
-```bash
-yarn add @ooneex/container
-```
-
-### npm
-```bash
-npm install @ooneex/container
 ```
 
 ## Usage

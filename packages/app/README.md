@@ -1,6 +1,6 @@
 # @ooneex/app
 
-A core application framework for building modern web applications with Bun. This package provides a unified foundation for routing, middleware, caching, logging, database connections, file storage, and real-time WebSocket communication.
+Full-featured application framework for Bun — orchestrates routing, middleware pipelines, dependency injection, caching, logging, and WebSocket support in a modular architecture.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)

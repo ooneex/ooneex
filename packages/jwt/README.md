@@ -1,6 +1,6 @@
 # @ooneex/jwt
 
-A JWT (JSON Web Token) generation and validation library for TypeScript applications using the JOSE library. This package provides secure token creation, verification, and payload extraction with full TypeScript support and expiration time helpers.
+JWT authentication toolkit using the JOSE library -- generate, sign, verify, and decode JSON Web Tokens with support for multiple algorithms.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,23 @@ A JWT (JSON Web Token) generation and validation library for TypeScript applicat
 
 ## Features
 
-✅ **JOSE Powered** - Built on the robust JOSE library for secure JWT operations
+✅ **JOSE Powered** - Built on the robust JOSE library for secure JWT operations with HS256 signing
 
-✅ **Token Generation** - Create signed JWT tokens with custom payloads and headers
+✅ **Token Generation** - Create signed JWT tokens with custom payloads and protected headers
 
-✅ **Token Validation** - Verify token signatures and expiration
+✅ **Token Validation** - Verify token signatures and expiration via jwtVerify
 
-✅ **Payload Extraction** - Decode and retrieve payload data from tokens
+✅ **Payload Extraction** - Decode and retrieve payload and header data from tokens without verification
 
-✅ **Flexible Expiration** - Support for various expiration formats (seconds, minutes, hours, days)
+✅ **Flexible Expiration** - Support for various expiration formats (seconds, minutes, hours, days, weeks, years)
 
 ✅ **Type-Safe** - Full TypeScript support with generic payload types
 
-✅ **Environment Config** - Automatic secret loading from environment variables
+✅ **Standard Claims** - Built-in support for iss, sub, aud, exp, iat, nbf, and jti claims
+
+✅ **Dependency Injection** - Injectable via @ooneex/container for seamless DI integration
+
+✅ **Environment Config** - Automatic secret loading from JWT_SECRET environment variable
 
 ## Installation
 

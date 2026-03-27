@@ -1,6 +1,6 @@
 # @ooneex/http-mimes
 
-A comprehensive TypeScript/JavaScript library for working with HTTP MIME types. This package provides a complete collection of MIME types and utility methods to identify and work with different content types in web applications.
+Complete MIME type registry with TypeScript constants and lookup utilities for HTTP content type negotiation and file type detection.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,21 +11,23 @@ A comprehensive TypeScript/JavaScript library for working with HTTP MIME types. 
 
 ## Features
 
-✅ **Complete MIME Type Collection** - Extensive list of standard MIME types
+✅ **Complete MIME Type Registry** - Comprehensive collection of standard MIME type constants
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Content Type Detection** - Methods for identifying JSON, HTML, CSS, JavaScript, XML, images, audio, video, fonts, and more
 
-✅ **Lightweight** - Minimal dependencies and optimized bundle size
+✅ **Document Detection** - Detect Word, Excel, PowerPoint, PDF, CSV, Markdown, and RTF formats
 
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+✅ **Media Detection** - Identify specific formats like JPEG, PNG, GIF, WebP, SVG, MP3, MP4
 
-✅ **Easy Detection** - Simple methods to identify content types
+✅ **Form and Stream Detection** - Detect form data, multipart, blob, and stream MIME types
 
-✅ **Case Insensitive** - Handles different case variations
+✅ **Type-Safe** - Full TypeScript support with `MimeType` union type for all valid MIME types
 
-✅ **Whitespace Tolerant** - Automatically trims whitespace
+✅ **Case Insensitive** - Handles different case variations automatically
 
 ✅ **Zero Dependencies** - No external dependencies required
+
+✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 
 ## Installation
 

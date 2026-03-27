@@ -3,8 +3,6 @@
 PDF document toolkit for generating, editing, merging, splitting, and converting PDF files to images with page-level content extraction.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -30,24 +28,8 @@ PDF document toolkit for generating, editing, merging, splitting, and converting
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/pdf
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/pdf
-```
-
-### Yarn
-```bash
-yarn add @ooneex/pdf
-```
-
-### npm
-```bash
-npm install @ooneex/pdf
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 # @ooneex/http-status
 
-A comprehensive HTTP status codes library providing TypeScript enums, constants, and helper utilities for status classification. This package offers type-safe access to all standard HTTP status codes (1xx-5xx) with methods to categorize responses by type.
+Complete HTTP status code library with TypeScript enums covering 1xx-5xx ranges and helper utilities for status classification and messaging.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)

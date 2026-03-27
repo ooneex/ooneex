@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/http-status",
-  "description": "Comprehensive HTTP status codes (1xx-5xx) with TypeScript enums and helper utilities for status classification",
-  "version": "0.0.18",
+  "description": "Complete HTTP status code library with TypeScript enums covering 1xx–5xx ranges and helper utilities for status classification and messaging",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

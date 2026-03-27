@@ -1,6 +1,6 @@
 # @ooneex/url
 
-A comprehensive TypeScript/JavaScript library for working with URLs. This package provides powerful URL parsing, manipulation, and building capabilities with a clean, type-safe API for web applications.
+URL parsing and manipulation library with query string handling, path normalization, and route parameter extraction for web applications.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -13,21 +13,19 @@ A comprehensive TypeScript/JavaScript library for working with URLs. This packag
 
 ✅ **Complete URL Parsing** - Parse and extract all URL components (protocol, hostname, port, path, queries, fragment)
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
-
-✅ **Immutable & Mutable** - Choose between ReadonlyUrl for parsing or Url for manipulation
-
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+✅ **Immutable & Mutable** - Choose between `ReadonlyUrl` for parsing or `Url` for manipulation with chaining
 
 ✅ **Smart Query Parsing** - Automatically converts query parameters to appropriate types (string, number, boolean)
 
-✅ **Subdomain Detection** - Intelligently separates subdomains from domains
+✅ **Subdomain Detection** - Intelligently separates subdomains from domains, handles IP addresses and localhost
 
-✅ **Port Handling** - Proper default port detection and custom port support
+✅ **Pagination Helpers** - Built-in `getLang`, `getPage`, `getLimit`, `getOrder`, and `getOrderBy` query extractors
 
-✅ **Path Normalization** - Clean path handling with proper slash management
+✅ **Path Normalization** - Clean path handling with proper trailing slash management
 
-✅ **Zero Dependencies** - No external dependencies required (uses workspace utilities)
+✅ **Type-Safe** - Full TypeScript support with `IReadonlyUrl` and `IUrl` interfaces
+
+✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 
 ## Installation
 

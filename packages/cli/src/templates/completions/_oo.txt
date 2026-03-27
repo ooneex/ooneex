@@ -3,6 +3,7 @@
 _oo() {
   local -a commands
   commands=(
+    'completion\:zsh:Install Zsh completion for oo command'
     'make\:ai:Generate a new AI class'
     'make\:analytics:Generate a new analytics class'
     'make\:app:Generate a new application'
@@ -28,20 +29,63 @@ _oo() {
   )
 
   _arguments -s \
-    '--name=[Name of the resource]:name' \
-    '--route-name=[Route name]:route_name' \
-    '--route-path=[Route path]:route_path' \
-    '--route-method=[Route HTTP method]:method:(GET POST PUT PATCH DELETE HEAD OPTIONS)' \
-    '--is-socket[Socket mode]' \
-    '--dir=[Directory]:dir:_files -/' \
-    '--channel=[Channel name]:channel' \
-    '--table-name=[Database table name]:table_name' \
     '1:command:->cmds' \
+    '*::options:->opts' \
     && return 0
 
   case "$state" in
     cmds)
       _describe -t commands 'oo command' commands
+      ;;
+    opts)
+      case "$words[1]" in
+        make:controller)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--route-name=[Route name]:route_name' \
+            '--route-path=[Route path]:route_path' \
+            '--route-method=[Route HTTP method]:method:(GET POST PUT PATCH DELETE HEAD OPTIONS)' \
+            '--is-socket[Socket mode]'
+          ;;
+        make:middleware)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--is-socket[Socket mode]'
+          ;;
+        make:entity)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--table-name=[Database table name]:table_name'
+          ;;
+        make:pubsub)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--channel=[Channel name]:channel'
+          ;;
+        make:migration)
+          _arguments -s \
+            '--dir=[Directory]:dir:_files -/'
+          ;;
+        make:seed)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--dir=[Directory]:dir:_files -/'
+          ;;
+        make:module)
+          _arguments -s \
+            '--name=[Name of the resource]:name'
+          ;;
+        make:docker)
+          _arguments -s \
+            '--name=[Docker service name]:name:(clickhouse elasticsearch grafana jaeger keycloak libretranslate maildev memcached minio mongodb mysql nats ooneex-jade postgres prometheus rabbitmq redis temporal vault)'
+          ;;
+        make:ai|make:analytics|make:app|make:cache|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
+          _arguments -s \
+            '--name=[Name of the resource]:name'
+          ;;
+        make:claude:skill|completion:zsh)
+          ;;
+      esac
       ;;
   esac
 }

@@ -1,6 +1,6 @@
 # @ooneex/fetcher
 
-A lightweight HTTP client wrapper for making fetch requests with typed headers and response handling. This package provides a fluent API for HTTP operations with built-in support for authentication tokens, content types, request cancellation, and file uploads.
+Lightweight HTTP client with typed headers, response parsing, and configurable request/response handling for external API integration. This package provides a fluent API for HTTP operations with built-in support for authentication tokens, content types, request cancellation, and file uploads.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -13,7 +13,7 @@ A lightweight HTTP client wrapper for making fetch requests with typed headers a
 
 ✅ **Simple API** - Intuitive methods for GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
 
-✅ **Type-Safe Responses** - Generic response types with full TypeScript support
+✅ **Typed Responses** - Generic response types with `ResponseDataType<T>` for full TypeScript support
 
 ✅ **Authentication** - Built-in support for Bearer and Basic authentication tokens
 
@@ -21,7 +21,7 @@ A lightweight HTTP client wrapper for making fetch requests with typed headers a
 
 ✅ **Request Cancellation** - Abort in-flight requests with AbortController integration
 
-✅ **Header Management** - Fluent API for managing request headers
+✅ **Header Management** - Typed header manipulation via `@ooneex/http-header`
 
 ✅ **Base URL Support** - Configure base URL for cleaner API calls
 

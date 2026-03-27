@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/routing",
-  "description": "Flexible HTTP routing system with decorator-based route definitions, validation support, and permission handling",
-  "version": "0.17.1",
+  "description": "Decorator-driven HTTP routing with path parameters, validation constraints, permission guards, and named route generation",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

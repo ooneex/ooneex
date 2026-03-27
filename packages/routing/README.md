@@ -1,6 +1,6 @@
 # @ooneex/routing
 
-A flexible HTTP routing system for TypeScript applications with decorator-based route definitions, parameter validation, permission handling, and type-safe route generation. This package provides a powerful foundation for building RESTful APIs with support for WebSocket routes.
+Decorator-driven HTTP routing with path parameters, validation constraints, permission guards, and named route generation.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,23 +10,25 @@ A flexible HTTP routing system for TypeScript applications with decorator-based 
 
 ## Features
 
-✅ **Decorator-Based Routes** - Define routes using TypeScript decorators for clean, readable code
+✅ **Method-Specific Decorators** - Define routes using `Route.get`, `Route.post`, `Route.put`, `Route.delete`, `Route.patch`, `Route.options`, `Route.head`, and `Route.socket` decorators
 
-✅ **Parameter Validation** - Built-in validation for route params, query strings, and payloads
+✅ **Parameter Validation** - Built-in validation for route params, query strings, and payloads using ArkType schemas
 
-✅ **Type-Safe Route Names** - Enforce `namespace.resource.action` naming convention
+✅ **Type-Safe Route Paths** - Compile-time validation of route paths with typed parameter extraction
 
-✅ **WebSocket Support** - Define WebSocket routes alongside HTTP routes
+✅ **WebSocket Support** - Define WebSocket routes alongside HTTP routes with `Route.socket`
 
-✅ **Permission System** - Role-based access control with custom permission classes
+✅ **Route Versioning** - Version routes with a numeric version field in route configuration
 
-✅ **Environment Filtering** - Restrict routes to specific environments
+✅ **Role-Based Access Control** - Restrict routes by user roles and environment
 
 ✅ **IP/Host Restrictions** - Limit access by IP address or hostname
 
-✅ **Route Generation** - Type-safe URL generation with parameter interpolation
+✅ **Route Generation** - Generate URLs for named routes with parameter interpolation
 
-✅ **Container Integration** - Automatic controller registration with DI container
+✅ **Route Documentation Utilities** - Convert route configurations to TypeScript type strings or JSON documentation
+
+✅ **Container Integration** - Automatic controller registration with the DI container
 
 ## Installation
 

@@ -1,6 +1,6 @@
 # @ooneex/country
 
-A comprehensive country data library for TypeScript applications with timezone support and multi-language localization. This package provides type-safe access to country information, timezone data, and localized country names in English, French, and Romanian.
+Country metadata library providing timezone data, ISO codes, and multi-language localization support for internationalized applications. This package provides type-safe access to country information, IANA timezone data, and localized country names in English, French, Romanian, German, Spanish, and Italian.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,13 +11,13 @@ A comprehensive country data library for TypeScript applications with timezone s
 
 ## Features
 
-✅ **Country Data** - Complete list of countries with ISO codes and names
+✅ **Country Data** - Complete list of countries with ISO 3166-1 alpha-2 codes and names
 
-✅ **Timezone Support** - Full timezone data powered by @vvo/tzdb
+✅ **Timezone Support** - Full IANA timezone data powered by @vvo/tzdb
 
-✅ **Multi-Language** - Localized country names in English, French, and Romanian
+✅ **Multi-Language** - Localized country names in English, French, Romanian, German, Spanish, and Italian
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe** - Full TypeScript support with union types for country codes, names, and timezones
 
 ✅ **Zero Config** - Ready to use out of the box
 

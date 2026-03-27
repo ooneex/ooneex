@@ -134,12 +134,13 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.1.0",
+      "version": "1.1.7",
       "bin": {
         "ooneex": "./dist/index.js",
         "@ooneex/cli": "./dist/index.js",
       },
       "dependencies": {
+        "@logtail/node": "^0.5.8",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -327,9 +328,9 @@
     },
     "packages/logger": {
       "name": "@ooneex/logger",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "dependencies": {
-        "@logtail/node": "^0.5.2",
+        "@logtail/node": "^0.5.8",
         "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
         "@ooneex/utils": "workspace:*",

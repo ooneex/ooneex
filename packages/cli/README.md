@@ -1,6 +1,6 @@
 # @ooneex/cli
 
-A powerful command-line interface for scaffolding Ooneex applications, modules, controllers, services, and more. This package provides an interactive CLI tool with code generation capabilities to accelerate development workflows.
+Interactive CLI toolkit for scaffolding Ooneex projects, modules, controllers, services, repositories, and more with customizable code generation templates.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
@@ -16,15 +16,21 @@ A powerful command-line interface for scaffolding Ooneex applications, modules, 
 
 ✅ **Service Generation** - Create service classes with dependency injection
 
-✅ **Entity Generation** - Generate TypeORM entities with common fields
+✅ **Entity & Repository Generation** - Generate entities and repository classes
 
-✅ **CRUD Generation** - Scaffold complete CRUD operations in one command
+✅ **Middleware Generation** - Scaffold HTTP and WebSocket middleware classes
 
-✅ **Interactive Prompts** - User-friendly prompts for customization
+✅ **Interactive Prompts** - User-friendly prompts with input validation constraints
 
 ✅ **Docker Support** - Generate Docker configuration files
 
 ✅ **Migration & Seeds** - Create database migrations and seed files
+
+✅ **AI & Vector Database** - Generate AI service integrations and vector database configurations
+
+✅ **Claude Skill Generation** - Scaffold Claude AI skill templates
+
+✅ **Comprehensive Templates** - 20+ code generation commands covering cron, logger, mailer, storage, analytics, cache, permissions, pub/sub, and more
 
 ## Installation
 
@@ -165,7 +171,8 @@ Scaffolds complete CRUD operations including:
 | `make:repository` | Generate repository class |
 | `make:seed` | Generate database seeder |
 | `make:storage` | Generate storage service |
-| `make:translation` | Generate translation files |
+| `make:vector-database` | Generate vector database configuration |
+| `make:claude-skill` | Generate Claude AI skill template |
 
 ## API Reference
 

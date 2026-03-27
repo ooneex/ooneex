@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/cron",
   "description": "Cron job scheduler with timezone-aware scheduling, task lifecycle management, and structured logging for recurring background tasks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "files": [
     "dist",

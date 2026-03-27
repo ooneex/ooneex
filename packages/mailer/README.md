@@ -1,6 +1,6 @@
 # @ooneex/mailer
 
-An email sending service for TypeScript applications with support for Nodemailer SMTP and Resend API. This package provides a unified interface for sending transactional emails with React-based email templates and seamless integration with the Ooneex framework.
+Transactional email service supporting Nodemailer SMTP and Resend API -- send templated emails with attachments and delivery tracking.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,17 +10,17 @@ An email sending service for TypeScript applications with support for Nodemailer
 
 ## Features
 
-✅ **Multiple Providers** - Support for Nodemailer SMTP and Resend API
+✅ **Resend API** - Send transactional emails via the Resend service
 
-✅ **React Templates** - Build email templates using React components
+✅ **React Templates** - Build email templates using React components with server-side rendering
 
-✅ **Layout System** - Pre-built email layout with header, body, and footer
+✅ **Layout System** - Pre-built email layout with header, body, and footer components
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Environment Configuration** - Configure sender and API keys via environment variables
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Container Integration** - Decorator-based registration with dependency injection
 
-✅ **Error Handling** - Comprehensive error handling with custom exceptions
+✅ **Error Handling** - Comprehensive error handling with custom MailerException
 
 ## Installation
 

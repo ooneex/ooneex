@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cli",
-  "version": "1.1.0",
+  "version": "1.1.7",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -48,7 +48,8 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/utils": "workspace:*",
     "@ooneex/routing": "workspace:*",
-    "@ooneex/logger": "workspace:*"
+    "@ooneex/logger": "workspace:*",
+    "@logtail/node": "^0.5.8"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:*"

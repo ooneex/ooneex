@@ -1,5 +1,17 @@
 {
   "permissions": {
-    "allow": ["Bash(bun test:*)", "Bash(cat:*)", "Bash(git add:*)", "Bash(git commit:*)", "Bash(git reset:*)"]
+    "allow": [
+      "Bash(bun test:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(grep -rl \"### pnpm\\\\|### Yarn\\\\|### npm\\\\|### Deno\\\\|### Node\" packages/*/README.md)",
+      "Bash(grep -rl \"pnpm\\\\|### Yarn\\\\|### npm\\\\|### Deno\\\\|### Node\" packages/*/README.md)",
+      "Bash(find /Volumes/Projects/Ooneex/Ooneex -path */modules/*/src/*Module.ts)",
+      "Bash(bun run:*)",
+      "Bash(bunx tsgo:*)",
+      "Bash(ls:*)"
+    ]
   }
 }

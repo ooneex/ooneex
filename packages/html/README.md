@@ -3,8 +3,6 @@
 HTML parsing and DOM manipulation toolkit powered by Cheerio -- extract, transform, and query HTML content with a jQuery-like API.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -23,24 +21,8 @@ HTML parsing and DOM manipulation toolkit powered by Cheerio -- extract, transfo
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/html
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/html
-```
-
-### Yarn
-```bash
-yarn add @ooneex/html
-```
-
-### npm
-```bash
-npm install @ooneex/html
 ```
 
 ## Usage

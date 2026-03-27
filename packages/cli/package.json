@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cli",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -10,7 +10,7 @@
   },
   "bin": {
     "ooneex": "./dist/index.js",
-    "@ooneex/cli": "./dist/index.js"
+    "oo": "./dist/index.js"
   },
   "description": "Interactive CLI toolkit for scaffolding Ooneex projects, modules, controllers, services, repositories, and more with customizable code generation templates",
   "keywords": [

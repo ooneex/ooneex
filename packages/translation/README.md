@@ -1,6 +1,6 @@
 # @ooneex/translation
 
-A comprehensive TypeScript/JavaScript library for internationalization (i18n) and localization (l10n). This package provides powerful translation utilities with support for multiple languages, parameter interpolation, pluralization, and nested key structures.
+Internationalization framework with locale management, translation key resolution, and pluralization support for multi-language applications.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -13,21 +13,11 @@ A comprehensive TypeScript/JavaScript library for internationalization (i18n) an
 
 ✅ **Multi-Language Support** - 31 supported locales including Arabic, Chinese, French, Spanish, and more
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe Locales** - `LocaleType` union type and `LocaleInfoType` with region data
 
-✅ **Parameter Interpolation** - Replace placeholders with dynamic values
+✅ **Locale Constants** - Readonly `locales` array of all supported locale codes
 
-✅ **Pluralization Support** - Handle singular, plural, and zero forms automatically
-
-✅ **Nested Keys** - Support for dot notation in translation keys
-
-✅ **Flexible Input** - Accept both dictionary keys and direct translation objects
-
-✅ **Fallback System** - Graceful fallbacks to English or base keys
-
-✅ **Error Handling** - Custom exceptions for missing translations
-
-✅ **Lightweight** - Minimal dependencies and optimized bundle size
+✅ **Error Handling** - Custom `TranslationException` for missing or invalid translations
 
 ✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 

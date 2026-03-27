@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/translation",
-  "description": "Internationalization (i18n) and localization utilities for multi-language support in Ooneex applications",
-  "version": "0.0.18",
+  "description": "Internationalization framework with locale management, translation key resolution, and pluralization support for multi-language applications",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

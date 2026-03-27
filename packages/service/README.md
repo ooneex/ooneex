@@ -1,6 +1,6 @@
 # @ooneex/service
 
-A service layer decorator and base interface for business logic encapsulation in TypeScript applications. This package provides the foundation for creating injectable service classes with dependency injection support through the Ooneex container.
+Service layer foundation with decorator-based registration and dependency injection for encapsulating business logic and domain operations.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,17 +11,15 @@ A service layer decorator and base interface for business logic encapsulation in
 
 ## Features
 
-✅ **Service Decorator** - Register services with the DI container using decorators
+✅ **Service Decorator** - Register service classes with the DI container using `@decorator.service()`
 
-✅ **Interface Contract** - Standard interface for service implementations
+✅ **IService Interface** - Standard generic interface with an `execute(data?)` method for service implementations
 
-✅ **Scope Control** - Configure singleton, transient, or request-scoped services
+✅ **Scope Control** - Configure singleton, transient, or request-scoped services via `EContainerScope`
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **ServiceClassType** - Type definition for service class constructors
 
-✅ **Container Integration** - Seamless integration with @ooneex/container
-
-✅ **Zero Boilerplate** - Simple decorator-based registration
+✅ **Container Integration** - Seamless integration with `@ooneex/container` for automatic dependency resolution
 
 ## Installation
 

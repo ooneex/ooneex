@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/service",
-  "description": "Service layer decorator and base classes for business logic encapsulation with dependency injection support",
-  "version": "0.0.18",
+  "description": "Service layer foundation with decorator-based registration and dependency injection for encapsulating business logic and domain operations",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

@@ -30,6 +30,44 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     return "Generate a new module";
   }
 
+  private async addToAppModule(appModulePath: string, pascalName: string, kebabName: string): Promise<void> {
+    let content = await Bun.file(appModulePath).text();
+    const moduleName = `${pascalName}Module`;
+    const importPath = `@${kebabName}/${moduleName}`;
+    const importLine = `import { ${moduleName} } from "${importPath}";\n`;
+
+    // Add import after the last import statement
+    const lastImportIndex = content.lastIndexOf("import ");
+    const lineEnd = content.indexOf("\n", lastImportIndex);
+    content = `${content.slice(0, lineEnd + 1)}${importLine}${content.slice(lineEnd + 1)}`;
+
+    // Spread new module arrays into each AppModule field
+    const fields = ["controllers", "entities", "permissions", "middlewares", "cronJobs", "events"] as const;
+    for (const field of fields) {
+      const regex = new RegExp(`(${field}:\\s*\\[)([^\\]]*)`, "s");
+      const match = content.match(regex);
+      if (match) {
+        const existing = match[2]?.trim();
+        const spread = `...${moduleName}.${field}`;
+        const newValue = existing ? `${existing}, ${spread}` : spread;
+        content = content.replace(regex, `$1${newValue}`);
+      }
+    }
+
+    await Bun.write(appModulePath, content);
+  }
+
+  private async addPathAlias(tsconfigPath: string, kebabName: string): Promise<void> {
+    const content = await Bun.file(tsconfigPath).text();
+    const tsconfig = JSON.parse(content);
+
+    tsconfig.compilerOptions ??= {};
+    tsconfig.compilerOptions.paths ??= {};
+    tsconfig.compilerOptions.paths[`@${kebabName}/*`] = [`../${kebabName}/src/*`];
+
+    await Bun.write(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
+  }
+
   public async run(options: T): Promise<void> {
     const { cwd = process.cwd(), silent = false, skipBin = false, skipMigrations = false, skipSeeds = false } = options;
     let { name } = options;
@@ -64,6 +102,18 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(testsDir, `${pascalName}Module.spec.ts`), testContent);
+
+    // Add module to AppModule
+    const appModulePath = join(cwd, "modules", "app", "src", "AppModule.ts");
+    if (await Bun.file(appModulePath).exists()) {
+      await this.addToAppModule(appModulePath, pascalName, kebabName);
+    }
+
+    // Add path alias in app module tsconfig
+    const appTsconfigPath = join(cwd, "modules", "app", "tsconfig.json");
+    if (await Bun.file(appTsconfigPath).exists()) {
+      await this.addPathAlias(appTsconfigPath, kebabName);
+    }
 
     if (!silent) {
       const logger = new TerminalLogger();

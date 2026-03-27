@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { join } from "node:path";
+import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
 mock.module("enquirer", () => ({
@@ -8,6 +9,8 @@ mock.module("enquirer", () => ({
 }));
 
 const { MakeEntityCommand } = await import("@/commands/MakeEntityCommand");
+
+const exists = (path: string) => Bun.file(path).exists();
 
 describe("MakeEntityCommand", () => {
   let command: InstanceType<typeof MakeEntityCommand>;
@@ -22,9 +25,7 @@ describe("MakeEntityCommand", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (existsSync(testDir)) {
-      rmSync(testDir, { recursive: true, force: true });
-    }
+    rmSync(testDir, { recursive: true, force: true });
   });
 
   describe("Command Metadata", () => {
@@ -48,7 +49,7 @@ describe("MakeEntityCommand", () => {
       await command.run({ name: "User" });
 
       const filePath = join(testDir, "src", "entities", "UserEntity.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("UserEntity");
@@ -58,7 +59,7 @@ describe("MakeEntityCommand", () => {
       await command.run({ name: "User" });
 
       const testFilePath = join(testDir, "tests", "entities", "UserEntity.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
       expect(content).toContain("UserEntity");
@@ -68,14 +69,14 @@ describe("MakeEntityCommand", () => {
       await command.run({ name: "user-profile" });
 
       const filePath = join(testDir, "src", "entities", "UserProfileEntity.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove Entity suffix if provided", async () => {
       await command.run({ name: "UserEntity" });
 
       const filePath = join(testDir, "src", "entities", "UserEntity.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("UserEntityEntity");
@@ -109,14 +110,14 @@ describe("MakeEntityCommand", () => {
       await command.run({ name: "product" });
 
       const filePath = join(testDir, "src", "entities", "ProductEntity.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "order_item" });
 
       const filePath = join(testDir, "src", "entities", "OrderItemEntity.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("order_items");
@@ -131,6 +132,35 @@ describe("MakeEntityCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).not.toContain("{{TABLE_NAME}}");
       expect(content).toContain("Book");
+    });
+  });
+
+  describe("Module integration", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", "blog");
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "src", "entities", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "entities", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should add import and class to module entities array", async () => {
+      await command.run({ name: "Post" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostEntity } from "./entities/PostEntity"');
+      expect(content).toMatch(/entities:\s*\[.*PostEntity.*\]/s);
+    });
+
+    test("should accumulate multiple entities in module", async () => {
+      await command.run({ name: "Post" });
+      await command.run({ name: "Comment" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostEntity } from "./entities/PostEntity"');
+      expect(content).toContain('import { CommentEntity } from "./entities/CommentEntity"');
+      expect(content).toMatch(/entities:\s*\[.*PostEntity.*CommentEntity.*\]/s);
     });
   });
 });

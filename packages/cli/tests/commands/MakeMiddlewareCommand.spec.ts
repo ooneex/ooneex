@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { join } from "node:path";
+import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
 mock.module("enquirer", () => ({
@@ -8,6 +9,8 @@ mock.module("enquirer", () => ({
 }));
 
 const { MakeMiddlewareCommand } = await import("@/commands/MakeMiddlewareCommand");
+
+const exists = (path: string) => Bun.file(path).exists();
 
 describe("MakeMiddlewareCommand", () => {
   let command: InstanceType<typeof MakeMiddlewareCommand>;
@@ -22,9 +25,7 @@ describe("MakeMiddlewareCommand", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (existsSync(testDir)) {
-      rmSync(testDir, { recursive: true, force: true });
-    }
+    rmSync(testDir, { recursive: true, force: true });
   });
 
   describe("Command Metadata", () => {
@@ -48,7 +49,7 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "Auth", isSocket: false });
 
       const filePath = join(testDir, "src", "middlewares", "AuthMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("AuthMiddleware");
@@ -58,7 +59,7 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "Auth", isSocket: false });
 
       const testFilePath = join(testDir, "tests", "middlewares", "AuthMiddleware.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
       expect(content).toContain("AuthMiddleware");
@@ -68,14 +69,14 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "rate-limiter", isSocket: false });
 
       const filePath = join(testDir, "src", "middlewares", "RateLimiterMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove Middleware suffix if provided", async () => {
       await command.run({ name: "AuthMiddleware", isSocket: false });
 
       const filePath = join(testDir, "src", "middlewares", "AuthMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("AuthMiddlewareMiddleware");
@@ -85,14 +86,14 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "cors", isSocket: false });
 
       const filePath = join(testDir, "src", "middlewares", "CorsMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "request_logger", isSocket: false });
 
       const filePath = join(testDir, "src", "middlewares", "RequestLoggerMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should replace template placeholders correctly", async () => {
@@ -117,14 +118,14 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "SocketAuth", isSocket: true });
 
       const filePath = join(testDir, "src", "middlewares", "SocketAuthMiddleware.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should generate test file for socket middleware", async () => {
       await command.run({ name: "SocketAuth", isSocket: true });
 
       const testFilePath = join(testDir, "tests", "middlewares", "SocketAuthMiddleware.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
     });
 
     test("should use socket template for socket middleware", async () => {
@@ -133,6 +134,35 @@ describe("MakeMiddlewareCommand", () => {
       const filePath = join(testDir, "src", "middlewares", "ConnectionMiddleware.ts");
       const content = await Bun.file(filePath).text();
       expect(content).toContain("ConnectionMiddleware");
+    });
+  });
+
+  describe("Module integration", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", "blog");
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "src", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "middlewares", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should add import and class to module middlewares array", async () => {
+      await command.run({ name: "Auth", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AuthMiddleware } from "./middlewares/AuthMiddleware"');
+      expect(content).toMatch(/middlewares:\s*\[.*AuthMiddleware.*\]/s);
+    });
+
+    test("should accumulate multiple middlewares in module", async () => {
+      await command.run({ name: "Auth", isSocket: false });
+      await command.run({ name: "Logger", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AuthMiddleware } from "./middlewares/AuthMiddleware"');
+      expect(content).toContain('import { LoggerMiddleware } from "./middlewares/LoggerMiddleware"');
+      expect(content).toMatch(/middlewares:\s*\[.*AuthMiddleware.*LoggerMiddleware.*\]/s);
     });
   });
 });

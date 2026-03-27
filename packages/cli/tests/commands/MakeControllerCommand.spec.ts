@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { join } from "node:path";
+import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands - return proper values for prompts
 const promptMock = mock(() =>
@@ -19,6 +20,8 @@ mock.module("enquirer", () => ({
 
 const { MakeControllerCommand } = await import("@/commands/MakeControllerCommand");
 
+const exists = (path: string) => Bun.file(path).exists();
+
 describe("MakeControllerCommand", () => {
   let command: InstanceType<typeof MakeControllerCommand>;
   let testDir: string;
@@ -32,9 +35,7 @@ describe("MakeControllerCommand", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (existsSync(testDir)) {
-      rmSync(testDir, { recursive: true, force: true });
-    }
+    rmSync(testDir, { recursive: true, force: true });
   });
 
   describe("Command Metadata", () => {
@@ -62,7 +63,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const filePath = join(testDir, "src", "controllers", "UserController.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("UserController");
@@ -75,7 +76,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const testFilePath = join(testDir, "tests", "controllers", "UserController.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
       expect(content).toContain("UserController");
@@ -89,7 +90,7 @@ describe("MakeControllerCommand", () => {
 
       // Route type file is named after the routeName from the prompt
       const routeTypeFilePath = join(testDir, "src", "types", "routes", "api.test.index.ts");
-      expect(existsSync(routeTypeFilePath)).toBe(true);
+      expect(await exists(routeTypeFilePath)).toBe(true);
 
       const content = await Bun.file(routeTypeFilePath).text();
       expect(content).toContain("ApiTestIndex");
@@ -103,7 +104,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const filePath = join(testDir, "src", "controllers", "UserProfileController.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove Controller suffix if provided", async () => {
@@ -113,7 +114,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const filePath = join(testDir, "src", "controllers", "UserController.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("UserControllerController");
@@ -154,7 +155,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const filePath = join(testDir, "src", "controllers", "ChatController.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should generate test file for socket controller", async () => {
@@ -164,7 +165,7 @@ describe("MakeControllerCommand", () => {
       });
 
       const testFilePath = join(testDir, "tests", "controllers", "NotificationController.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
     });
 
     test("should use socket template for socket controller", async () => {
@@ -174,10 +175,43 @@ describe("MakeControllerCommand", () => {
       });
 
       const filePath = join(testDir, "src", "controllers", "RealtimeController.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("RealtimeController");
+    });
+  });
+
+  describe("Module integration", () => {
+    beforeEach(async () => {
+      // Use a properly named directory so basename works for module detection
+      testDir = join(originalCwd, ".temp", "blog");
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "src", "types", "routes", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should add import and class to module controllers array", async () => {
+      await command.run({ name: "CreatePost", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CreatePostController } from "./controllers/CreatePostController"');
+      expect(content).toContain("CreatePostController");
+      // Should be in the controllers array
+      expect(content).toMatch(/controllers:\s*\[.*CreatePostController.*\]/s);
+    });
+
+    test("should accumulate multiple controllers in module", async () => {
+      await command.run({ name: "CreatePost", isSocket: false });
+      await command.run({ name: "ListPost", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CreatePostController } from "./controllers/CreatePostController"');
+      expect(content).toContain('import { ListPostController } from "./controllers/ListPostController"');
+      expect(content).toMatch(/controllers:\s*\[.*CreatePostController.*ListPostController.*\]/s);
     });
   });
 });

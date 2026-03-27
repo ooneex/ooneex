@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { join } from "node:path";
+import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
 mock.module("enquirer", () => ({
@@ -8,6 +9,8 @@ mock.module("enquirer", () => ({
 }));
 
 const { MakePermissionCommand } = await import("@/commands/MakePermissionCommand");
+
+const exists = (path: string) => Bun.file(path).exists();
 
 describe("MakePermissionCommand", () => {
   let command: InstanceType<typeof MakePermissionCommand>;
@@ -22,9 +25,7 @@ describe("MakePermissionCommand", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (existsSync(testDir)) {
-      rmSync(testDir, { recursive: true, force: true });
-    }
+    rmSync(testDir, { recursive: true, force: true });
   });
 
   describe("Command Metadata", () => {
@@ -48,7 +49,7 @@ describe("MakePermissionCommand", () => {
       await command.run({ name: "Admin" });
 
       const filePath = join(testDir, "src", "permissions", "AdminPermission.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("AdminPermission");
@@ -58,7 +59,7 @@ describe("MakePermissionCommand", () => {
       await command.run({ name: "Admin" });
 
       const testFilePath = join(testDir, "tests", "permissions", "AdminPermission.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
       expect(content).toContain("AdminPermission");
@@ -68,14 +69,14 @@ describe("MakePermissionCommand", () => {
       await command.run({ name: "super-admin" });
 
       const filePath = join(testDir, "src", "permissions", "SuperAdminPermission.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove Permission suffix if provided", async () => {
       await command.run({ name: "AdminPermission" });
 
       const filePath = join(testDir, "src", "permissions", "AdminPermission.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("AdminPermissionPermission");
@@ -85,14 +86,14 @@ describe("MakePermissionCommand", () => {
       await command.run({ name: "moderator" });
 
       const filePath = join(testDir, "src", "permissions", "ModeratorPermission.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "content_manager" });
 
       const filePath = join(testDir, "src", "permissions", "ContentManagerPermission.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should replace template placeholders correctly", async () => {
@@ -103,6 +104,35 @@ describe("MakePermissionCommand", () => {
 
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Editor");
+    });
+  });
+
+  describe("Module integration", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", "blog");
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "src", "permissions", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "permissions", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should add import and class to module permissions array", async () => {
+      await command.run({ name: "Admin" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AdminPermission } from "./permissions/AdminPermission"');
+      expect(content).toMatch(/permissions:\s*\[.*AdminPermission.*\]/s);
+    });
+
+    test("should accumulate multiple permissions in module", async () => {
+      await command.run({ name: "Admin" });
+      await command.run({ name: "Editor" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AdminPermission } from "./permissions/AdminPermission"');
+      expect(content).toContain('import { EditorPermission } from "./permissions/EditorPermission"');
+      expect(content).toMatch(/permissions:\s*\[.*AdminPermission.*EditorPermission.*\]/s);
     });
   });
 });

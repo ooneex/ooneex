@@ -22,11 +22,11 @@ Interactive CLI toolkit for scaffolding Ooneex projects, modules, controllers, s
 
 ✅ **Interactive Prompts** - User-friendly prompts with input validation constraints
 
-✅ **Docker Support** - Generate Docker configuration files
+✅ **Docker Support** - Add docker services to docker-compose.yml
 
 ✅ **Migration & Seeds** - Create database migrations and seed files
 
-✅ **AI & Vector Database** - Generate AI service integrations and vector database configurations
+✅ **AI & Vector Database** - Generate AI and vector database classes
 
 ✅ **Claude Skill Generation** - Scaffold Claude AI skill templates
 
@@ -71,12 +71,12 @@ ooneex make:module
 ```
 
 Creates a new feature module with:
-- Module structure
-- Controllers directory
-- Services directory
-- Entities directory
-- Repository files
-- Test scaffolding
+- Module file (`src/ModuleNameModule.ts`)
+- Migrations directory (`src/migrations/`)
+- Seeds directory (`src/seeds/`)
+- Bin scripts (`bin/migration/up.ts`, `bin/seed/run.ts`)
+- Test file
+- `package.json` and `tsconfig.json`
 
 ### Generating a Controller
 
@@ -87,9 +87,7 @@ ooneex make:controller
 Interactive prompts will ask for:
 - Controller name
 - Socket or HTTP controller
-- Route namespace (api, admin, public, etc.)
-- Resource name
-- Route action
+- Route name (e.g., api.user.create)
 - Route path
 - HTTP method (for HTTP controllers)
 
@@ -107,8 +105,7 @@ ooneex make:service
 ```
 
 Creates a service class with:
-- Dependency injection decorator
-- Interface implementation
+- Service file
 - Test file
 
 ### Generating an Entity
@@ -118,46 +115,30 @@ ooneex make:entity
 ```
 
 Creates a TypeORM entity with:
-- Base entity fields (id, timestamps)
-- Primary column configuration
-- Repository integration
-
-### Generating CRUD Operations
-
-```bash
-ooneex make:crud
-```
-
-Scaffolds complete CRUD operations including:
-- List controller
-- Show controller
-- Create controller
-- Update controller
-- Delete controller
-- Associated route types
-- Test files
+- Entity file
+- Test file
 
 ### Additional Commands
 
 | Command | Description |
 |---------|-------------|
-| `make:ai` | Generate AI service integration |
-| `make:analytics` | Generate analytics service |
-| `make:cache` | Generate cache service |
-| `make:cron` | Generate cron job class |
-| `make:database` | Generate database configuration |
-| `make:docker` | Generate Docker files |
-| `make:logger` | Generate logger service |
-| `make:mailer` | Generate mailer service |
-| `make:middleware` | Generate middleware class |
-| `make:migration` | Generate database migration |
-| `make:permission` | Generate permission class |
-| `make:pubsub` | Generate pub/sub handler |
-| `make:repository` | Generate repository class |
-| `make:seed` | Generate database seeder |
-| `make:storage` | Generate storage service |
-| `make:vector-database` | Generate vector database configuration |
-| `make:claude-skill` | Generate Claude AI skill template |
+| `make:ai` | Generate a new AI class |
+| `make:analytics` | Generate a new analytics class |
+| `make:cache` | Generate a new cache class |
+| `make:cron` | Generate a new cron class |
+| `make:database` | Generate a new database class |
+| `make:docker` | Add a docker service to docker-compose.yml |
+| `make:logger` | Generate a new logger class |
+| `make:mailer` | Generate a new mailer class |
+| `make:middleware` | Generate a new middleware class |
+| `make:migration` | Generate a new migration file |
+| `make:permission` | Generate a new permission class |
+| `make:pubsub` | Generate a new PubSub event class |
+| `make:repository` | Generate a new repository class |
+| `make:seed` | Generate a new seed file |
+| `make:storage` | Generate a new storage class |
+| `make:vector-database` | Generate a new vector database class |
+| `make:claude:skill` | Generate Claude skills from templates |
 
 ## API Reference
 
@@ -257,8 +238,10 @@ class MyCustomCommand implements ICommand<MyCommandOptions> {
 ### Using with Arguments
 
 ```bash
-ooneex make:controller --name UserList
+ooneex make:controller --name UserList --route-name api.users.list --route-path /api/users --route-method GET
 ```
+
+Available CLI flags: `--name`, `--route-name`, `--route-path`, `--route-method`, `--is-socket`, `--dir`, `--channel`, `--table-name`.
 
 ### Programmatic Usage
 
@@ -286,16 +269,22 @@ When running `make:app`, the following structure is created:
 
 ```
 my-app/
+├── .husky/
+│   ├── commit-msg
+│   └── pre-commit
 ├── modules/
 │   └── app/
 │       ├── src/
-│       │   ├── controllers/
-│       │   ├── entities/
-│       │   ├── services/
+│       │   └── AppModule.ts
 │       │   └── index.ts
 │       ├── tests/
-│       └── package.json
+│       │   └── AppModule.spec.ts
+│       ├── var/
+│       ├── package.json
+│       └── tsconfig.json
 ├── .commitlintrc.ts
+├── .env
+├── .env.example
 ├── .gitignore
 ├── biome.jsonc
 ├── bunfig.toml
@@ -309,21 +298,21 @@ my-app/
 ```
 modules/
 └── user/
+    ├── bin/
+    │   ├── migration/
+    │   │   └── up.ts
+    │   └── seed/
+    │       └── run.ts
     ├── src/
-    │   ├── controllers/
-    │   ├── entities/
-    │   │   └── UserEntity.ts
-    │   ├── services/
-    │   │   └── UserService.ts
-    │   ├── types/
-    │   │   └── routes/
-    │   └── index.ts
+    │   ├── migrations/
+    │   │   └── migrations.ts
+    │   ├── seeds/
+    │   │   └── seeds.ts
+    │   └── UserModule.ts
     ├── tests/
-    │   ├── controllers/
-    │   ├── entities/
-    │   └── services/
+    │   └── UserModule.spec.ts
     ├── package.json
-    └── bunup.config.ts
+    └── tsconfig.json
 ```
 
 ## Error Handling

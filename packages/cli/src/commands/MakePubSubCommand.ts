@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
@@ -20,6 +20,26 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
 
   public getDescription(): string {
     return "Generate a new PubSub event class";
+  }
+
+  private async addToModule(modulePath: string, eventName: string): Promise<void> {
+    let content = await Bun.file(modulePath).text();
+    const className = `${eventName}Event`;
+    const importLine = `import { ${className} } from "./events/${className}";\n`;
+
+    const lastImportIndex = content.lastIndexOf("import ");
+    const lineEnd = content.indexOf("\n", lastImportIndex);
+    content = `${content.slice(0, lineEnd + 1)}${importLine}${content.slice(lineEnd + 1)}`;
+
+    const regex = /(events:\s*\[)([^\]]*)/s;
+    const match = content.match(regex);
+    if (match) {
+      const existing = match[2]?.trim();
+      const newValue = existing ? `${existing}, ${className}` : className;
+      content = content.replace(regex, `$1${newValue}`);
+    }
+
+    await Bun.write(modulePath, content);
   }
 
   public async run(options: T): Promise<void> {
@@ -48,6 +68,13 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Event.spec.ts`);
     await Bun.write(testFilePath, testContent);
+
+    // Import event in its module
+    const modulePascalName = toPascalCase(basename(process.cwd()));
+    const modulePath = join(process.cwd(), "src", `${modulePascalName}Module.ts`);
+    if (await Bun.file(modulePath).exists()) {
+      await this.addToModule(modulePath, name);
+    }
 
     const logger = new TerminalLogger();
 

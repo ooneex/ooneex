@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { rmSync } from "node:fs";
 import { join } from "node:path";
+import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
 mock.module("enquirer", () => ({
@@ -8,6 +9,8 @@ mock.module("enquirer", () => ({
 }));
 
 const { MakePubSubCommand } = await import("@/commands/MakePubSubCommand");
+
+const exists = (path: string) => Bun.file(path).exists();
 
 describe("MakePubSubCommand", () => {
   let command: InstanceType<typeof MakePubSubCommand>;
@@ -22,9 +25,7 @@ describe("MakePubSubCommand", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
-    if (existsSync(testDir)) {
-      rmSync(testDir, { recursive: true, force: true });
-    }
+    rmSync(testDir, { recursive: true, force: true });
   });
 
   describe("Command Metadata", () => {
@@ -48,7 +49,7 @@ describe("MakePubSubCommand", () => {
       await command.run({ name: "UserCreated" });
 
       const filePath = join(testDir, "src", "events", "UserCreatedEvent.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("UserCreatedEvent");
@@ -58,7 +59,7 @@ describe("MakePubSubCommand", () => {
       await command.run({ name: "UserCreated" });
 
       const testFilePath = join(testDir, "tests", "events", "UserCreatedEvent.spec.ts");
-      expect(existsSync(testFilePath)).toBe(true);
+      expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
       expect(content).toContain("UserCreated");
@@ -68,14 +69,14 @@ describe("MakePubSubCommand", () => {
       await command.run({ name: "order-placed" });
 
       const filePath = join(testDir, "src", "events", "OrderPlacedEvent.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove PubSub suffix if provided", async () => {
       await command.run({ name: "UserCreatedPubSub" });
 
       const filePath = join(testDir, "src", "events", "UserCreatedEvent.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).not.toContain("UserCreatedPubSubEvent");
@@ -103,14 +104,14 @@ describe("MakePubSubCommand", () => {
       await command.run({ name: "notification" });
 
       const filePath = join(testDir, "src", "events", "NotificationEvent.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "payment_received" });
 
       const filePath = join(testDir, "src", "events", "PaymentReceivedEvent.ts");
-      expect(existsSync(filePath)).toBe(true);
+      expect(await exists(filePath)).toBe(true);
     });
 
     test("should replace template placeholders correctly", async () => {
@@ -131,6 +132,35 @@ describe("MakePubSubCommand", () => {
       const content = await Bun.file(filePath).text();
 
       expect(content).toContain("order-payment-processed");
+    });
+  });
+
+  describe("Module integration", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", "blog");
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "src", "events", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "events", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should add import and class to module events array", async () => {
+      await command.run({ name: "PostPublished" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostPublishedEvent } from "./events/PostPublishedEvent"');
+      expect(content).toMatch(/events:\s*\[.*PostPublishedEvent.*\]/s);
+    });
+
+    test("should accumulate multiple events in module", async () => {
+      await command.run({ name: "PostPublished" });
+      await command.run({ name: "CommentAdded" });
+
+      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostPublishedEvent } from "./events/PostPublishedEvent"');
+      expect(content).toContain('import { CommentAddedEvent } from "./events/CommentAddedEvent"');
+      expect(content).toMatch(/events:\s*\[.*PostPublishedEvent.*CommentAddedEvent.*\]/s);
     });
   });
 });

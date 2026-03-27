@@ -1,6 +1,6 @@
 # @ooneex/types
 
-Shared TypeScript types, interfaces, and base definitions used across the Ooneex framework. This package provides common type definitions for HTTP methods, character encodings, scalar values, and base entity interfaces that ensure consistency throughout your application.
+Shared TypeScript type definitions, interfaces, and utility types used as foundational building blocks across the Ooneex ecosystem.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,15 +11,15 @@ Shared TypeScript types, interfaces, and base definitions used across the Ooneex
 
 ## Features
 
-✅ **HTTP Method Types** - Type-safe HTTP method definitions (GET, POST, PUT, DELETE, etc.)
+✅ **HTTP Method Types** - `HttpMethodType` union and `HTTP_METHODS` constant array (GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD)
 
-✅ **Base Interfaces** - Common entity interfaces with standard fields (id, timestamps, etc.)
+✅ **Base Entity Interface** - `IBase` interface with id, timestamps, locking, blocking, and locale fields
 
-✅ **Scalar Types** - Union type for primitive values (boolean, number, bigint, string)
+✅ **Scalar Types** - `ScalarType` union for primitive values (boolean, number, bigint, string)
 
-✅ **Filter Result Type** - Standardized pagination and filtering result structure
+✅ **Filter Result Type** - `FilterResultType<T>` generic for paginated results with total, page, and limit
 
-✅ **Encoding Types** - Character encoding and compression type definitions
+✅ **Encoding Types** - `EncodingType` and `CharsetType` for HTTP content encoding and character set definitions
 
 ✅ **Zero Runtime** - Pure type definitions with no runtime overhead
 

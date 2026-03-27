@@ -1,6 +1,6 @@
 # @ooneex/logger
 
-A structured logging service for TypeScript applications with console and database output support. This package provides customizable log levels, colorized terminal output, SQLite persistence, and seamless integration with the Ooneex dependency injection container.
+Structured logging service with multiple output targets, log level filtering, contextual metadata, and dependency injection integration.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,21 +10,21 @@ A structured logging service for TypeScript applications with console and databa
 
 ## Features
 
-✅ **Multiple Outputs** - Terminal (console) and SQLite database logging
+✅ **Multiple Output Targets** - Terminal, SQLite database, Logtail, and Sentry/Better Stack
 
-✅ **Colorized Output** - Beautiful, color-coded terminal logs with ANSI colors
+✅ **Colorized Terminal Output** - Beautiful, color-coded terminal logs with ANSI colors
 
 ✅ **Log Levels** - Support for ERROR, WARN, INFO, DEBUG, LOG, and SUCCESS levels
 
-✅ **Exception Support** - Log full exception details including stack traces
+✅ **Exception Logging** - Log full exception details including stack traces to Sentry
+
+✅ **Contextual Metadata** - Attach structured data (user, request, IP, path) to log entries
 
 ✅ **Customizable Display** - Toggle timestamps, log levels, arrows, and symbols
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Container Integration** - Decorator-based registration with dependency injection
 
-✅ **Structured Data** - Attach custom data to log entries
-
-✅ **Query Logs** - Search and filter logs from SQLite database
+✅ **Query Logs** - Search and filter logs from SQLite database with pagination
 
 ## Installation
 

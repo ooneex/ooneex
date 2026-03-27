@@ -1,6 +1,6 @@
 # @ooneex/cron
 
-A scheduled task runner and cron job management library for TypeScript applications with timezone support. This package provides an abstract base class for creating scheduled jobs with a human-readable time syntax and seamless integration with the Ooneex framework.
+Cron job scheduler with timezone-aware scheduling, task lifecycle management, and structured logging for recurring background tasks. This package provides an abstract base class for creating scheduled jobs with a human-readable time syntax and seamless integration with the Ooneex framework.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -14,15 +14,15 @@ A scheduled task runner and cron job management library for TypeScript applicati
 
 ✅ **Timezone Support** - Run jobs in specific timezones using IANA timezone names
 
-✅ **Start/Stop Control** - Programmatically start and stop scheduled jobs
+✅ **Task Lifecycle** - Programmatically start and stop scheduled jobs with active status tracking
 
-✅ **Active Status** - Check if a job is currently running
+✅ **Container Integration** - Register cron jobs with DI container via `@decorator.cron()`
 
-✅ **Container Integration** - Works seamlessly with dependency injection
+✅ **Type-Safe** - Full TypeScript support with typed schedule expressions
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Error Handling** - Structured error handling with `CronException`
 
-✅ **Error Handling** - Comprehensive error handling with custom exceptions
+✅ **Crontab Conversion** - Automatic conversion from human-readable syntax to crontab expressions
 
 ## Installation
 

@@ -4,8 +4,6 @@ HTTP header parser with user agent detection, browser fingerprinting, device ide
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -39,24 +37,8 @@ HTTP header parser with user agent detection, browser fingerprinting, device ide
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/http-header
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/http-header
-```
-
-### Yarn
-```bash
-yarn add @ooneex/http-header
-```
-
-### npm
-```bash
-npm install @ooneex/http-header
 ```
 
 ## Usage

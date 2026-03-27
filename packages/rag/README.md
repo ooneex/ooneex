@@ -28,24 +28,8 @@ Retrieval-Augmented Generation toolkit with vector database integration, documen
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/rag
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/rag
-```
-
-### Yarn
-```bash
-yarn add @ooneex/rag
-```
-
-### npm
-```bash
-npm install @ooneex/rag
 ```
 
 ## Usage

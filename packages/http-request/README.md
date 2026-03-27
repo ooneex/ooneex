@@ -30,24 +30,8 @@ HTTP request abstraction with URL parsing, query parameters, language detection,
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/http-request
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/http-request
-```
-
-### Yarn
-```bash
-yarn add @ooneex/http-request
-```
-
-### npm
-```bash
-npm install @ooneex/http-request
 ```
 
 ## Usage

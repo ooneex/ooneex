@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cli",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -35,7 +35,7 @@
     "test": "bun test tests",
     "build": "bunup",
     "lint": "tsgo --noEmit && bunx biome lint",
-    "npm:publish": "bun publish --tolerate-republish --access public"
+    "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "type": "module",
   "dependencies": {

@@ -3,8 +3,6 @@
 WebSocket server implementation with room management, event broadcasting, client tracking, and middleware integration for real-time applications.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -24,24 +22,8 @@ WebSocket server implementation with room management, event broadcasting, client
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/socket
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/socket
-```
-
-### Yarn
-```bash
-yarn add @ooneex/socket
-```
-
-### npm
-```bash
-npm install @ooneex/socket
 ```
 
 ## Usage

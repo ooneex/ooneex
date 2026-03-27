@@ -1,0 +1,18 @@
+services:
+  # Jade - FastAPI REST API to fetch YouTube metadata and download videos or audio via Dockerized microservice.
+  # API: http://localhost:8000
+  # Docs: http://localhost:8000/docs
+  # Docker: https://hub.docker.com/r/ooneex/jade
+  ooneex-jade:
+    image: ooneex/jade:v3
+    container_name: ooneex-jade
+    restart: "on-failure"
+    environment:
+      - WORKERS=4
+    ports:
+      - "8000:8000"
+    volumes:
+      - jade_data:/code/var:rw
+
+volumes:
+  jade_data:

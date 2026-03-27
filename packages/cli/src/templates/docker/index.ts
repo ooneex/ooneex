@@ -1,6 +1,7 @@
 import clickhouse from "./clickhouse.txt";
 import elasticsearch from "./elasticsearch.txt";
 import grafana from "./grafana.txt";
+import ooneexJade from "./ooneex-jade.txt";
 import jaeger from "./jaeger.txt";
 import keycloak from "./keycloak.txt";
 import libretranslate from "./libretranslate.txt";
@@ -21,6 +22,7 @@ export const templates = {
   clickhouse,
   elasticsearch,
   grafana,
+  "ooneex-jade": ooneexJade,
   jaeger,
   keycloak,
   libretranslate,

@@ -3,8 +3,6 @@
 Multi-provider AI toolkit for TypeScript — seamlessly integrate OpenAI, Anthropic Claude, Google Gemini, Groq, and Ollama with a unified API for text generation, streaming, and content transformation.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
-![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
-![Node.js](https://img.shields.io/badge/Node.js-Compatible-green?style=flat-square&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=flat-square&logo=typescript)
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
@@ -30,24 +28,8 @@ Multi-provider AI toolkit for TypeScript — seamlessly integrate OpenAI, Anthro
 
 ## Installation
 
-### Bun
 ```bash
 bun add @ooneex/ai
-```
-
-### pnpm
-```bash
-pnpm add @ooneex/ai
-```
-
-### Yarn
-```bash
-yarn add @ooneex/ai
-```
-
-### npm
-```bash
-npm install @ooneex/ai
 ```
 
 ## Usage

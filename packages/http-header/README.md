@@ -1,6 +1,6 @@
 # @ooneex/http-header
 
-A comprehensive TypeScript/JavaScript library for working with HTTP headers. This package provides powerful classes and utilities to easily manipulate, read, and manage HTTP headers with type safety and convenient methods for common operations.
+HTTP header parser with user agent detection, browser fingerprinting, device identification, and content negotiation utilities.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
@@ -11,15 +11,13 @@ A comprehensive TypeScript/JavaScript library for working with HTTP headers. Thi
 
 ## Features
 
-✅ **Complete Header Management** - Full support for reading and writing HTTP headers
+✅ **Read/Write Header Management** - Full support via `Header` (read/write) and `ReadonlyHeader` (read-only) classes
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **User Agent Parsing** - Built-in user agent detection powered by ua-parser-js with browser, OS, device, and CPU info
 
-✅ **User Agent Parsing** - Built-in user agent detection and parsing with device information
+✅ **Content Negotiation** - Easy MIME type, charset, language, and encoding management
 
-✅ **Content Type Handling** - Easy MIME type and charset management
-
-✅ **Authentication Support** - Built-in methods for Basic Auth, Bearer tokens
+✅ **Authentication Support** - Built-in methods for Basic Auth, Bearer tokens, and custom authorization
 
 ✅ **Cookie Management** - Comprehensive cookie parsing and setting with all options
 
@@ -27,15 +25,17 @@ A comprehensive TypeScript/JavaScript library for working with HTTP headers. Thi
 
 ✅ **Security Headers** - Built-in support for common security headers (CSP, HSTS, XSS)
 
-✅ **Caching Headers** - Cache control and ETags management
+✅ **Caching Headers** - Cache control, ETags, and conditional request management
 
-✅ **Client IP Detection** - Multiple methods to detect client IP addresses
+✅ **Client IP Detection** - Multiple methods to detect client IP addresses (X-Forwarded-For, X-Real-IP)
+
+✅ **Request Type Detection** - Detect HTTPS, AJAX, and CORS requests
 
 ✅ **Method Chaining** - Fluent API for easy header manipulation
 
-✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
+✅ **Type-Safe** - Full TypeScript support with proper type definitions
 
-✅ **Zero Config** - Works out of the box with sensible defaults
+✅ **Cross-Platform** - Works in Browser, Node.js, Bun, and Deno
 
 ## Installation
 

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/role",
-  "description": "Role type definitions and utilities for user authorization and access control",
-  "version": "0.0.18",
+  "description": "Role-based authorization types and utilities for defining user roles, hierarchies, and access levels in multi-tenant applications",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

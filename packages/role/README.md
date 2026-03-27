@@ -1,6 +1,6 @@
 # @ooneex/role
 
-A comprehensive role-based access control (RBAC) library for TypeScript applications with hierarchical role support. This package provides predefined roles, role hierarchy management, and utilities for checking user permissions based on role levels.
+Role-based authorization types and utilities for defining user roles, hierarchies, and access levels in multi-tenant applications.
 
 ![Browser](https://img.shields.io/badge/Browser-Compatible-green?style=flat-square&logo=googlechrome)
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)

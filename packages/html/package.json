@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/html",
-  "description": "HTML parsing and DOM manipulation utilities powered by Cheerio",
-  "version": "0.0.19",
+  "description": "HTML parsing and DOM manipulation toolkit powered by Cheerio — extract, transform, and query HTML content with a jQuery-like API",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist",

@@ -44,21 +44,6 @@ bun add -g @ooneex/cli
 bun add -D @ooneex/cli
 ```
 
-### pnpm
-```bash
-pnpm add -D @ooneex/cli
-```
-
-### Yarn
-```bash
-yarn add -D @ooneex/cli
-```
-
-### npm
-```bash
-npm install -D @ooneex/cli
-```
-
 ## Usage
 
 ### Creating a New Application

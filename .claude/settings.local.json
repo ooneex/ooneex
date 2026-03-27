@@ -11,7 +11,10 @@
       "Bash(find /Volumes/Projects/Ooneex/Ooneex -path */modules/*/src/*Module.ts)",
       "Bash(bun run:*)",
       "Bash(bunx tsgo:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(find /Volumes/Projects/Ooneex/Ooneex -maxdepth 2 -name .bunfig* -o -name bunfig*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)"
     ]
   }
 }

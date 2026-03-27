@@ -1,6 +1,6 @@
 # @ooneex/fs
 
-A comprehensive file system utilities library for TypeScript applications with async support and streaming capabilities. This package provides intuitive `File` and `Directory` classes for reading, writing, copying, and manipulating files and directories with proper error handling.
+Async file system utilities for reading, writing, copying, and watching files and directories with type-safe error handling and stream support. This package provides intuitive `File` and `Directory` classes for managing files and directories with proper error handling, streaming, and glob pattern matching.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -14,19 +14,19 @@ A comprehensive file system utilities library for TypeScript applications with a
 
 ✅ **Directory Management** - Create, list, copy, move, and watch directories
 
-✅ **Streaming Support** - Stream file contents as text, bytes, or JSON objects
+✅ **Streaming Support** - Stream file contents as text, bytes, or JSON objects via async generators
 
 ✅ **Async/Await** - Full async support for all I/O operations
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe** - Full TypeScript support with `IFile` and `IDirectory` interfaces
 
-✅ **Error Handling** - Custom exceptions with detailed error information
+✅ **Error Handling** - Dedicated `FileException` and `DirectoryException` classes
 
-✅ **URL Downloads** - Download files from URLs directly to disk
+✅ **Pattern Matching** - Filter files and directories using regular expression patterns
 
-✅ **Glob Patterns** - Filter files and directories using glob patterns
+✅ **File Watching** - Watch directories for changes with recursive support and event callbacks
 
-✅ **File Watching** - Watch directories for changes with recursive support
+✅ **Buffered Writing** - Efficient file writing via Bun's `FileSink` writer API
 
 ## Installation
 

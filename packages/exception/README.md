@@ -1,6 +1,6 @@
 # @ooneex/exception
 
-A type-safe exception handling library with HTTP status code integration for structured error management. This package provides a base `Exception` class and specialized exception types for common HTTP error scenarios with rich metadata including timestamps, status codes, and structured stack traces.
+Structured exception handling with HTTP status code mapping, typed error data, and JSON-formatted stack traces for consistent error reporting. This package provides a base `Exception` class and specialized exception types for common HTTP error scenarios with rich metadata including timestamps, status codes, and structured stack traces.
 
 ![Bun](https://img.shields.io/badge/Bun-Compatible-orange?style=flat-square&logo=bun)
 ![Deno](https://img.shields.io/badge/Deno-Compatible-blue?style=flat-square&logo=deno)
@@ -10,19 +10,19 @@ A type-safe exception handling library with HTTP status code integration for str
 
 ## Features
 
-✅ **HTTP Status Integration** - Built-in support for all HTTP status codes
+✅ **HTTP Status Mapping** - Built-in support for all HTTP status codes via `@ooneex/http-status`
 
-✅ **Structured Stack Traces** - Parse stack traces into JSON for logging and debugging
+✅ **JSON Stack Traces** - Parse stack traces into structured JSON arrays for logging and debugging
 
-✅ **Rich Metadata** - Include timestamps, custom data, and original errors
+✅ **Typed Error Data** - Include timestamps, custom data, and original errors with read-only access
 
-✅ **Specialized Exceptions** - Pre-built exceptions for common HTTP errors
+✅ **Specialized Exceptions** - Pre-built `BadRequestException`, `NotFoundException`, `UnauthorizedException`, and `MethodNotAllowedException`
 
-✅ **Type-Safe** - Full TypeScript support with proper type definitions
+✅ **Type-Safe** - Full TypeScript support with `IException` interface and `ExceptionStackFrameType`
 
 ✅ **Immutable Data** - Exception data is frozen after creation
 
-✅ **Native Error Wrapping** - Wrap native JavaScript errors while preserving context
+✅ **Native Error Wrapping** - Wrap native JavaScript errors while preserving context and stack traces
 
 ## Installation
 

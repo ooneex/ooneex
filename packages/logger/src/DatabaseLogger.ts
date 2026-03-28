@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import { decorator } from "./decorators";
 import { LogsDatabase } from "./LogsDatabase";
@@ -10,8 +12,8 @@ export class DatabaseLogger implements ILogger<LogsEntity> {
   private db: LogsDatabase;
   private repository: LogsRepository;
 
-  constructor() {
-    this.db = new LogsDatabase();
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    this.db = new LogsDatabase(this.env);
     this.repository = new LogsRepository(this.db);
   }
 

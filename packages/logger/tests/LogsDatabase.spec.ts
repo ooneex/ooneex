@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import type { AppEnv } from "@ooneex/app-env";
 import { DatabaseException } from "@ooneex/database";
 import { LogsDatabase } from "@/LogsDatabase";
 
@@ -10,6 +11,13 @@ type MockSQLClient = ((strings: TemplateStringsArray, ...values: unknown[]) => P
 let mockSQLInstance: MockSQLClient;
 let mockSQLConstructor: ReturnType<typeof mock>;
 let queriesExecuted: string[];
+
+const createMockEnv = (overrides: Partial<AppEnv> = {}): AppEnv => {
+  return {
+    LOGS_DATABASE_URL: undefined,
+    ...overrides,
+  } as AppEnv;
+};
 
 describe("LogsDatabase", () => {
   beforeEach(() => {
@@ -37,54 +45,40 @@ describe("LogsDatabase", () => {
 
   describe("constructor", () => {
     test("should accept a URL parameter", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(db).toBeInstanceOf(LogsDatabase);
     });
 
     test("should use LOGS_DATABASE_URL environment variable as fallback", () => {
-      const originalUrl = Bun.env.LOGS_DATABASE_URL;
-      Bun.env.LOGS_DATABASE_URL = "postgresql://localhost:5432/env-logs";
-
-      const db = new LogsDatabase();
+      const env = createMockEnv({ LOGS_DATABASE_URL: "postgresql://localhost:5432/env-logs" });
+      const db = new LogsDatabase(env);
       expect(db).toBeInstanceOf(LogsDatabase);
-
-      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
 
     test("should throw DatabaseException when no URL is provided and env var is not set", () => {
-      const originalUrl = Bun.env.LOGS_DATABASE_URL;
-      Bun.env.LOGS_DATABASE_URL = "";
-
-      expect(() => new LogsDatabase()).toThrow(DatabaseException);
-
-      Bun.env.LOGS_DATABASE_URL = originalUrl;
+      const env = createMockEnv({ LOGS_DATABASE_URL: "" });
+      expect(() => new LogsDatabase(env)).toThrow(DatabaseException);
     });
 
     test("should throw with descriptive message when no URL is available", () => {
-      const originalUrl = Bun.env.LOGS_DATABASE_URL;
-      Bun.env.LOGS_DATABASE_URL = "";
-
-      expect(() => new LogsDatabase()).toThrow(/No database URL provided/);
-
-      Bun.env.LOGS_DATABASE_URL = originalUrl;
+      const env = createMockEnv({ LOGS_DATABASE_URL: "" });
+      expect(() => new LogsDatabase(env)).toThrow(/No database URL provided/);
     });
 
     test("should prefer provided URL over environment variable", () => {
-      const originalUrl = Bun.env.LOGS_DATABASE_URL;
-      Bun.env.LOGS_DATABASE_URL = "postgresql://env-url";
-
-      const db = new LogsDatabase("postgresql://provided-url");
+      const env = createMockEnv({ LOGS_DATABASE_URL: "postgresql://env-url" });
+      const db = new LogsDatabase(env, "postgresql://provided-url");
       db.getClient();
 
       expect(mockSQLConstructor).toHaveBeenCalledWith("postgresql://provided-url");
-
-      Bun.env.LOGS_DATABASE_URL = originalUrl;
     });
   });
 
   describe("getClient", () => {
     test("should create a new Bun.SQL client", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       const client = db.getClient();
 
       expect(client as unknown).toBe(mockSQLInstance);
@@ -92,7 +86,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should return the same client on subsequent calls (lazy initialization)", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       const client1 = db.getClient();
       const client2 = db.getClient();
 
@@ -106,7 +101,8 @@ describe("LogsDatabase", () => {
         throw new Error("Connection refused");
       });
 
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(() => db.getClient()).toThrow(DatabaseException);
     });
 
@@ -116,28 +112,32 @@ describe("LogsDatabase", () => {
         throw new Error("Connection refused");
       });
 
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(() => db.getClient()).toThrow("Connection refused");
     });
   });
 
   describe("open", () => {
     test("should call getClient to initialize the connection", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       await db.open();
 
       expect(mockSQLConstructor).toHaveBeenCalledTimes(1);
     });
 
     test("should resolve without error on success", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(db.open()).resolves.toBeUndefined();
     });
   });
 
   describe("createTable", () => {
     test("should create the app_logs table if it does not exist", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 
@@ -146,7 +146,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should create table with all required columns", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 
@@ -187,7 +188,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should create index on level column", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 
@@ -197,7 +199,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should create index on userId column", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 
@@ -217,7 +220,8 @@ describe("LogsDatabase", () => {
       // @ts-expect-error - mocking Bun.SQL constructor
       globalThis.Bun.SQL = mock(() => failingClient);
 
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
 
       expect(db.createTable()).rejects.toThrow(DatabaseException);
@@ -227,7 +231,8 @@ describe("LogsDatabase", () => {
 
   describe("dropTable", () => {
     test("should drop the app_logs table", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.dropTable();
 
@@ -246,7 +251,8 @@ describe("LogsDatabase", () => {
       // @ts-expect-error - mocking Bun.SQL constructor
       globalThis.Bun.SQL = mock(() => failingClient);
 
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
 
       expect(db.dropTable()).rejects.toThrow(DatabaseException);
@@ -256,7 +262,8 @@ describe("LogsDatabase", () => {
 
   describe("close", () => {
     test("should close the client connection", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.close();
 
@@ -264,7 +271,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should set client to undefined after closing", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.close();
 
@@ -274,7 +282,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should not throw if client was never initialized", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(db.close()).resolves.toBeUndefined();
     });
 
@@ -289,7 +298,8 @@ describe("LogsDatabase", () => {
       // @ts-expect-error - mocking Bun.SQL constructor
       globalThis.Bun.SQL = mock(() => failingCloseClient);
 
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
 
       expect(db.close()).rejects.toThrow(DatabaseException);
@@ -299,46 +309,54 @@ describe("LogsDatabase", () => {
 
   describe("drop", () => {
     test("should resolve without error (no-op)", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(db.drop()).resolves.toBeUndefined();
     });
   });
 
   describe("IDatabase interface compliance", () => {
     test("should implement open method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.open).toBe("function");
     });
 
     test("should implement close method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.close).toBe("function");
     });
 
     test("should implement drop method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.drop).toBe("function");
     });
 
     test("should implement getClient method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.getClient).toBe("function");
     });
 
     test("should implement createTable method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.createTable).toBe("function");
     });
 
     test("should implement dropTable method", () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       expect(typeof db.dropTable).toBe("function");
     });
   });
 
   describe("connection lifecycle", () => {
     test("should support open, createTable, close cycle", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       await db.open();
       await db.createTable();
       await db.close();
@@ -348,7 +366,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should support reopening after close", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       await db.open();
       await db.close();
       await db.open();
@@ -357,7 +376,8 @@ describe("LogsDatabase", () => {
     });
 
     test("should execute 3 SQL statements during createTable", async () => {
-      const db = new LogsDatabase("postgresql://localhost:5432/logs");
+      const env = createMockEnv();
+      const db = new LogsDatabase(env, "postgresql://localhost:5432/logs");
       db.getClient();
       await db.createTable();
 

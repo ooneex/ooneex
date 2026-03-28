@@ -2,13 +2,8 @@ import type { IException } from "@ooneex/exception";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
 import type { LogsEntity } from "./LogsEntity";
 
-export type LoggerClassType =
-  | (new (
-      ...args: unknown[]
-    ) => ILogger)
-  | (new (
-      options?: Bun.SQL.SQLiteOptions,
-    ) => ILogger<LogsEntity>);
+// biome-ignore lint/suspicious/noExplicitAny: Required for decorator compatibility with @inject parameters
+export type LoggerClassType = new (...args: any[]) => ILogger | ILogger<LogsEntity>;
 
 export type LoggerOptionsType = {
   showArrow?: boolean;

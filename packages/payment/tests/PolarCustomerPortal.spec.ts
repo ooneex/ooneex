@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import type { AppEnv } from "@ooneex/app-env";
 import { PaymentException, PolarCustomerPortal } from "@/index";
+
+const createMockEnv = (): AppEnv => {
+  return {
+    POLAR_ACCESS_TOKEN: Bun.env.POLAR_ACCESS_TOKEN,
+    POLAR_ENVIRONMENT: Bun.env.POLAR_ENVIRONMENT,
+  } as unknown as AppEnv;
+};
 
 // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
 const mockCustomerSessionsCreate = mock((): any => Promise.resolve(createMockCustomerSessionResponse()));
@@ -43,7 +51,7 @@ describe("PolarCustomerPortal", () => {
   beforeEach(() => {
     Bun.env.POLAR_ACCESS_TOKEN = "test-access-token";
     Bun.env.POLAR_ENVIRONMENT = "production";
-    customerPortal = new PolarCustomerPortal();
+    customerPortal = new PolarCustomerPortal(createMockEnv());
     mockCustomerSessionsCreate.mockClear();
     mockCustomerSessionsCreate.mockImplementation(() => Promise.resolve(createMockCustomerSessionResponse()));
   });
@@ -57,14 +65,14 @@ describe("PolarCustomerPortal", () => {
     test("should throw PaymentException when access token is missing", () => {
       Bun.env.POLAR_ACCESS_TOKEN = "";
 
-      expect(() => new PolarCustomerPortal()).toThrow(PaymentException);
+      expect(() => new PolarCustomerPortal(createMockEnv())).toThrow(PaymentException);
     });
 
     test("should throw with descriptive message when access token is missing", () => {
       Bun.env.POLAR_ACCESS_TOKEN = "";
 
       try {
-        new PolarCustomerPortal();
+        new PolarCustomerPortal(createMockEnv());
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(PaymentException);
@@ -136,7 +144,7 @@ describe("PolarCustomerPortal", () => {
   describe("getPortalUrl", () => {
     test("should return production portal URL", () => {
       Bun.env.POLAR_ENVIRONMENT = "production";
-      customerPortal = new PolarCustomerPortal();
+      customerPortal = new PolarCustomerPortal(createMockEnv());
 
       const url = customerPortal.getPortalUrl("my-organization");
 
@@ -145,7 +153,7 @@ describe("PolarCustomerPortal", () => {
 
     test("should return sandbox portal URL", () => {
       Bun.env.POLAR_ENVIRONMENT = "sandbox";
-      customerPortal = new PolarCustomerPortal();
+      customerPortal = new PolarCustomerPortal(createMockEnv());
 
       const url = customerPortal.getPortalUrl("my-organization");
 
@@ -160,7 +168,7 @@ describe("PolarCustomerPortal", () => {
 
     test("should default to production when environment is not set", () => {
       Bun.env.POLAR_ENVIRONMENT = "";
-      customerPortal = new PolarCustomerPortal();
+      customerPortal = new PolarCustomerPortal(createMockEnv());
 
       const url = customerPortal.getPortalUrl("org");
 

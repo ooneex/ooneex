@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import type { AppEnv } from "@ooneex/app-env";
 import { PaymentException, PolarCheckout } from "@/index";
+
+const createMockEnv = (): AppEnv => {
+  return {
+    POLAR_ACCESS_TOKEN: Bun.env.POLAR_ACCESS_TOKEN,
+    POLAR_ENVIRONMENT: Bun.env.POLAR_ENVIRONMENT,
+  } as unknown as AppEnv;
+};
 
 // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
 const mockCheckoutsCreate = mock((): any => Promise.resolve(createMockCheckoutResponse()));
@@ -73,7 +81,7 @@ describe("PolarCheckout", () => {
 
   beforeEach(() => {
     Bun.env.POLAR_ACCESS_TOKEN = "test-access-token";
-    checkout = new PolarCheckout();
+    checkout = new PolarCheckout(createMockEnv());
     mockCheckoutsCreate.mockClear();
     mockCheckoutsGet.mockClear();
     mockCheckoutsCreate.mockImplementation(() => Promise.resolve(createMockCheckoutResponse()));
@@ -88,14 +96,14 @@ describe("PolarCheckout", () => {
     test("should throw PaymentException when access token is missing", () => {
       Bun.env.POLAR_ACCESS_TOKEN = "";
 
-      expect(() => new PolarCheckout()).toThrow(PaymentException);
+      expect(() => new PolarCheckout(createMockEnv())).toThrow(PaymentException);
     });
 
     test("should throw with descriptive message when access token is missing", () => {
       Bun.env.POLAR_ACCESS_TOKEN = "";
 
       try {
-        new PolarCheckout();
+        new PolarCheckout(createMockEnv());
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(PaymentException);

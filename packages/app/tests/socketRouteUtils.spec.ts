@@ -45,7 +45,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
       version: 1,
       description: "Test socket route",
     },
-    env: { env: Environment.DEVELOPMENT } as ContextType["env"],
+    env: { env: Environment.DEVELOPMENT } as unknown as ContextType["env"],
     response,
     request: {} as ContextType["request"],
     params: {},

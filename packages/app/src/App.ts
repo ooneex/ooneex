@@ -18,7 +18,8 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, events, analytics, cache, database, storage, mailer, rateLimiter, onException } = this.config;
+    const { loggers, cronJobs, events, analytics, cache, database, storage, mailer, rateLimiter, onException } =
+      this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);

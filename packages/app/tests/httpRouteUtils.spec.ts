@@ -45,7 +45,7 @@ const createMockContext = (overrides: Partial<ContextType> = {}): ContextType =>
       version: "v1" as const,
       description: "Test route",
     },
-    env: { env: Environment.DEVELOPMENT } as ContextType["env"],
+    env: { env: Environment.DEVELOPMENT } as unknown as ContextType["env"],
     response,
     request: {} as ContextType["request"],
     params: {},

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { type } from "arktype";
 import { AiException, GroqAi } from "@/index";
 
@@ -40,7 +41,7 @@ describe("GroqAi", () => {
   const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
-    ai = new GroqAi();
+    ai = new GroqAi(new AppEnv());
     Bun.env.GROQ_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
@@ -885,7 +886,7 @@ describe("GroqAi", () => {
 
   describe("instance creation", () => {
     test("should create GroqAi instance", () => {
-      const instance = new GroqAi();
+      const instance = new GroqAi(new AppEnv());
 
       expect(instance).toBeInstanceOf(GroqAi);
     });

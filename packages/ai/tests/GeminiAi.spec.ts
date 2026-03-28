@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { type } from "arktype";
 import { AiException, GeminiAi } from "@/index";
 
@@ -40,7 +41,7 @@ describe("GeminiAi", () => {
   const originalEnv = Bun.env.GEMINI_API_KEY;
 
   beforeEach(() => {
-    ai = new GeminiAi();
+    ai = new GeminiAi(new AppEnv());
     Bun.env.GEMINI_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
@@ -895,7 +896,7 @@ describe("GeminiAi", () => {
 
   describe("instance creation", () => {
     test("should create GeminiAi instance", () => {
-      const instance = new GeminiAi();
+      const instance = new GeminiAi(new AppEnv());
 
       expect(instance).toBeInstanceOf(GeminiAi);
     });

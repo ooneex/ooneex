@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { type } from "arktype";
 import { AiException, OpenAi } from "@/index";
 
@@ -46,7 +47,7 @@ describe("OpenAi", () => {
   const originalEnv = Bun.env.OPENAI_API_KEY;
 
   beforeEach(() => {
-    ai = new OpenAi();
+    ai = new OpenAi(new AppEnv());
     Bun.env.OPENAI_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
@@ -930,7 +931,7 @@ describe("OpenAi", () => {
 
   describe("instance creation", () => {
     test("should create OpenAi instance", () => {
-      const instance = new OpenAi();
+      const instance = new OpenAi(new AppEnv());
 
       expect(instance).toBeInstanceOf(OpenAi);
     });

@@ -1,6 +1,6 @@
-import { createAnthropicChat } from "@tanstack/ai-anthropic";
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
+import { createAnthropicChat } from "@tanstack/ai-anthropic";
 import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";

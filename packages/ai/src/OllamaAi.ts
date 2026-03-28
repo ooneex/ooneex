@@ -1,6 +1,6 @@
-import { createOllamaChat } from "@tanstack/ai-ollama";
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
+import { createOllamaChat } from "@tanstack/ai-ollama";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
 import type { OllamaConfigType, OllamaModelType } from "./types";

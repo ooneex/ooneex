@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { type } from "arktype";
 import { AiException, OllamaAi } from "@/index";
 
@@ -28,7 +29,7 @@ describe("OllamaAi", () => {
   const originalHost = Bun.env.OLLAMA_HOST;
 
   beforeEach(() => {
-    ai = new OllamaAi();
+    ai = new OllamaAi(new AppEnv());
     Bun.env.OLLAMA_HOST = "http://localhost:11434";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
@@ -771,7 +772,7 @@ describe("OllamaAi", () => {
 
   describe("instance creation", () => {
     test("should create OllamaAi instance", () => {
-      const instance = new OllamaAi();
+      const instance = new OllamaAi(new AppEnv());
 
       expect(instance).toBeInstanceOf(OllamaAi);
     });

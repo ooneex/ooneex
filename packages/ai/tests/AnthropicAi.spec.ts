@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { type } from "arktype";
 import { AiException, AnthropicAi } from "@/index";
 
@@ -28,7 +29,7 @@ describe("AnthropicAi", () => {
   const originalEnv = Bun.env.ANTHROPIC_API_KEY;
 
   beforeEach(() => {
-    ai = new AnthropicAi();
+    ai = new AnthropicAi(new AppEnv());
     Bun.env.ANTHROPIC_API_KEY = "test-api-key";
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
@@ -790,7 +791,7 @@ describe("AnthropicAi", () => {
 
   describe("instance creation", () => {
     test("should create AnthropicAi instance", () => {
-      const instance = new AnthropicAi();
+      const instance = new AnthropicAi(new AppEnv());
 
       expect(instance).toBeInstanceOf(AnthropicAi);
     });

@@ -9,7 +9,10 @@ import type { IJwt, JwtDefaultPayloadType, JwtPayloadType } from "./types";
 export class Jwt implements IJwt {
   private secret: Uint8Array<ArrayBuffer>;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, secret?: string) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    secret?: string,
+  ) {
     secret = secret || this.env.JWT_SECRET;
 
     if (!secret) {

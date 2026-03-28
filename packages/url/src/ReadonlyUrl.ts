@@ -141,6 +141,10 @@ export class ReadonlyUrl implements IReadonlyUrl {
     return (this.queries.orderBy as string) ?? null;
   }
 
+  public getSearch(): string | null {
+    return (this.queries.q as string) ?? null;
+  }
+
   public getFragment(): string {
     return this.fragment;
   }

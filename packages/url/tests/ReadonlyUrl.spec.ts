@@ -416,6 +416,25 @@ describe("ReadonlyUrl", () => {
     });
   });
 
+  describe("Search (q parameter)", () => {
+    test("should default search to null when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getSearch()).toBeNull();
+    });
+
+    test("should parse q query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?q=hello");
+      expect(url.getSearch()).toBe("hello");
+    });
+
+    test("should parse q with other parameters", () => {
+      const url = new ReadonlyUrl("https://example.com?q=test&page=2&limit=10");
+      expect(url.getSearch()).toBe("test");
+      expect(url.getPage()).toBe(2);
+      expect(url.getLimit()).toBe(10);
+    });
+  });
+
   describe("Edge cases and special URLs", () => {
     test("should handle file:// protocol", () => {
       const url = new ReadonlyUrl("file:///path/to/file.txt");

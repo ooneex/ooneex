@@ -19,6 +19,7 @@ export interface IReadonlyUrl {
   getLimit: () => number;
   getOrder: () => "ASC" | "DESC";
   getOrderBy: () => string | null;
+  getSearch: () => string | null;
   toString: () => string;
 }
 

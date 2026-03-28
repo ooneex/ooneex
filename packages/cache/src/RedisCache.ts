@@ -9,7 +9,10 @@ import type { RedisCacheOptionsType } from "./types";
 export class RedisCache extends AbstractCache {
   private client: Bun.RedisClient;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisCacheOptionsType = {}) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    options: RedisCacheOptionsType = {},
+  ) {
     super();
     const connectionString = options.connectionString || this.env.CACHE_REDIS_URL;
 

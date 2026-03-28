@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { CacheException, RedisCache } from "@/index";
 
 // Default options that the adapter uses
@@ -55,7 +56,7 @@ describe("RedisCacheAdapter", () => {
     mockRedisClient.connected = false;
 
     // Create a new adapter for each test to reset isConnected state
-    adapter = new RedisCache({
+    adapter = new RedisCache(new AppEnv(), {
       connectionString: "redis://localhost:6379/1",
     });
 
@@ -89,7 +90,7 @@ describe("RedisCacheAdapter", () => {
 
   describe("constructor", () => {
     test("should create RedisClient with connection string and default options", () => {
-      new RedisCache({
+      new RedisCache(new AppEnv(), {
         connectionString: "redis://test:6379/2",
       });
 
@@ -100,7 +101,7 @@ describe("RedisCacheAdapter", () => {
       const originalRedisUrl = Bun.env.CACHE_REDIS_URL;
       Bun.env.CACHE_REDIS_URL = "redis://localhost:6379";
 
-      new RedisCache();
+      new RedisCache(new AppEnv());
 
       expect(MockRedisClient).toHaveBeenCalledWith("redis://localhost:6379", defaultOptions);
 
@@ -113,7 +114,7 @@ describe("RedisCacheAdapter", () => {
 
     test("should merge additional client options with defaults", () => {
       const customOptions = { connectionTimeout: 5000 };
-      new RedisCache({
+      new RedisCache(new AppEnv(), {
         connectionString: "redis://localhost:6379",
         ...customOptions,
       });

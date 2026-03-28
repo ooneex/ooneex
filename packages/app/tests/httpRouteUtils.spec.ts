@@ -841,6 +841,150 @@ describe("httpRouteUtils", () => {
       expect(result).not.toBeNull();
       expect(result?.status).toBe(HttpStatus.Code.Forbidden);
     });
+
+    test("adds SYSTEM role when user is in SYSTEM_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SYSTEM_USERS: ["system@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "system@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).toContain(ERole.SYSTEM);
+    });
+
+    test("does not duplicate SYSTEM role if already present", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SYSTEM_USERS: ["system@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "system@test.com", roles: [ERole.SYSTEM] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles.filter((r) => r === ERole.SYSTEM)).toHaveLength(1);
+    });
+
+    test("does not add SYSTEM role when user is not in SYSTEM_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SYSTEM_USERS: ["other@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "user@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).not.toContain(ERole.SYSTEM);
+    });
+
+    test("adds SUPER_ADMIN role when user is in SUPER_ADMIN_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SUPER_ADMIN_USERS: ["superadmin@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "superadmin@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).toContain(ERole.SUPER_ADMIN);
+    });
+
+    test("does not duplicate SUPER_ADMIN role if already present", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SUPER_ADMIN_USERS: ["superadmin@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "superadmin@test.com", roles: [ERole.SUPER_ADMIN] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles.filter((r) => r === ERole.SUPER_ADMIN)).toHaveLength(1);
+    });
+
+    test("does not add SUPER_ADMIN role when user is not in SUPER_ADMIN_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SUPER_ADMIN_USERS: ["other@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "user@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).not.toContain(ERole.SUPER_ADMIN);
+    });
+
+    test("adds ADMIN role when user is in ADMIN_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          ADMIN_USERS: ["admin@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "admin@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).toContain(ERole.ADMIN);
+    });
+
+    test("does not duplicate ADMIN role if already present", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          ADMIN_USERS: ["admin@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "admin@test.com", roles: [ERole.ADMIN] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles.filter((r) => r === ERole.ADMIN)).toHaveLength(1);
+    });
+
+    test("does not add ADMIN role when user is not in ADMIN_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          ADMIN_USERS: ["other@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "user@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).not.toContain(ERole.ADMIN);
+    });
+
+    test("adds all roles when user is in SYSTEM_USERS, SUPER_ADMIN_USERS, and ADMIN_USERS", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+          SYSTEM_USERS: ["multi@test.com"],
+          SUPER_ADMIN_USERS: ["multi@test.com"],
+          ADMIN_USERS: ["multi@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "multi@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      checkAllowedUsers(context);
+
+      expect(context.user?.roles).toContain(ERole.SYSTEM);
+      expect(context.user?.roles).toContain(ERole.SUPER_ADMIN);
+      expect(context.user?.roles).toContain(ERole.ADMIN);
+    });
   });
 
   describe("formatHttpRoutes", () => {

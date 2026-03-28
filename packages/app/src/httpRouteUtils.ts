@@ -14,7 +14,7 @@ import type { IMailer } from "@ooneex/mailer";
 import type { IMiddleware, MiddlewareClassType } from "@ooneex/middleware";
 import type { PermissionClassType } from "@ooneex/permission";
 import type { IRateLimiter } from "@ooneex/rate-limit";
-import { Role } from "@ooneex/role";
+import { ERole, Role } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { IStorage } from "@ooneex/storage";
 import type { ScalarType } from "@ooneex/types";
@@ -26,6 +26,27 @@ export const checkAllowedUsers = (
 ): RouteValidationError | null => {
   if (!context.user) {
     return null;
+  }
+
+  const systemUsers = context.env.SYSTEM_USERS;
+  if (systemUsers && systemUsers.includes(context.user.email)) {
+    if (!context.user.roles.includes(ERole.SYSTEM)) {
+      context.user.roles.push(ERole.SYSTEM);
+    }
+  }
+
+  const superAdminUsers = context.env.SUPER_ADMIN_USERS;
+  if (superAdminUsers && superAdminUsers.includes(context.user.email)) {
+    if (!context.user.roles.includes(ERole.SUPER_ADMIN)) {
+      context.user.roles.push(ERole.SUPER_ADMIN);
+    }
+  }
+
+  const adminUsers = context.env.ADMIN_USERS;
+  if (adminUsers && adminUsers.includes(context.user.email)) {
+    if (!context.user.roles.includes(ERole.ADMIN)) {
+      context.user.roles.push(ERole.ADMIN);
+    }
   }
 
   const allowedUsersKey = `${context.env.APP_ENV.toUpperCase()}_ALLOWED_USERS` as keyof typeof context.env;

@@ -7,10 +7,10 @@ import { askName } from "../prompts/askName";
 import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
 import gitignoreTemplate from "../templates/app/.gitignore.txt";
 import databaseTemplate from "../templates/app/app-database.txt";
-import dockerComposeTemplate from "../templates/app/docker-compose.yml.txt";
-import dockerfileTemplate from "../templates/app/Dockerfile.txt";
 import biomeTemplate from "../templates/app/biome.jsonc.txt";
 import bunfigTemplate from "../templates/app/bunfig.toml.txt";
+import dockerfileTemplate from "../templates/app/Dockerfile.txt";
+import dockerComposeTemplate from "../templates/app/docker-compose.yml.txt";
 import envTemplate from "../templates/app/env.txt";
 import indexTemplate from "../templates/app/index.ts.txt";
 import nxTemplate from "../templates/app/nx.json.txt";
@@ -77,11 +77,11 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     await Bun.write(appModulePackagePath, JSON.stringify(appModulePackageJson, null, 2));
 
     const envContent = envTemplate
-      .replace("DATABASE_URL=", "DATABASE_URL=\"postgresql://ooneex:ooneex@localhost:5432/ooneex\"")
-      .replace("CACHE_REDIS_URL=", "CACHE_REDIS_URL=\"redis://localhost:6379\"")
-      .replace("PUBSUB_REDIS_URL=", "PUBSUB_REDIS_URL=\"redis://localhost:6379\"")
-      .replace("RATE_LIMIT_REDIS_URL=", "RATE_LIMIT_REDIS_URL=\"redis://localhost:6379\"")
-      .replace("DATABASE_REDIS_URL=", "DATABASE_REDIS_URL=\"redis://localhost:6379\"");
+      .replace("DATABASE_URL=", 'DATABASE_URL="postgresql://ooneex:ooneex@localhost:5432/ooneex"')
+      .replace("CACHE_REDIS_URL=", 'CACHE_REDIS_URL="redis://localhost:6379"')
+      .replace("PUBSUB_REDIS_URL=", 'PUBSUB_REDIS_URL="redis://localhost:6379"')
+      .replace("RATE_LIMIT_REDIS_URL=", 'RATE_LIMIT_REDIS_URL="redis://localhost:6379"')
+      .replace("DATABASE_REDIS_URL=", 'DATABASE_REDIS_URL="redis://localhost:6379"');
     await Bun.write(join(destination, "modules", "app", ".env"), envContent);
     await Bun.write(join(destination, "modules", "app", ".env.example"), envTemplate);
     await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseTemplate);

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { CorsMiddleware } from "@/CorsMiddleware";
 
 function createMockContext(options: { origin?: string; method?: string } = {}) {
@@ -58,7 +59,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should default to wildcard origins when CORS_ORIGINS is not set", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://anything.com" });
 
     await middleware.handler(context);
@@ -68,7 +69,7 @@ describe("CorsMiddleware", () => {
 
   test("should use CORS_ORIGINS env var for allowed origins", async () => {
     Bun.env.CORS_ORIGINS = "https://example.com, https://api.example.com";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
 
     const allowed = createMockContext({ origin: "https://example.com" });
     await middleware.handler(allowed);
@@ -81,7 +82,7 @@ describe("CorsMiddleware", () => {
 
   test("should use CORS_METHODS env var", async () => {
     Bun.env.CORS_METHODS = "GET, POST";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -90,7 +91,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should use default methods when CORS_METHODS is not set", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -100,7 +101,7 @@ describe("CorsMiddleware", () => {
 
   test("should use CORS_HEADERS env var", async () => {
     Bun.env.CORS_HEADERS = "X-Custom-Header";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -109,7 +110,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should use default headers when CORS_HEADERS is not set", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -119,7 +120,7 @@ describe("CorsMiddleware", () => {
 
   test("should set exposed headers from CORS_EXPOSED_HEADERS env var", async () => {
     Bun.env.CORS_EXPOSED_HEADERS = "X-Request-Id, X-Total-Count";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -128,7 +129,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should not set exposed headers when CORS_EXPOSED_HEADERS is not set", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -138,7 +139,7 @@ describe("CorsMiddleware", () => {
 
   test("should enable credentials when CORS_CREDENTIALS is 'true'", async () => {
     Bun.env.CORS_CREDENTIALS = "true";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -147,7 +148,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should disable credentials by default", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     await middleware.handler(context);
@@ -157,7 +158,7 @@ describe("CorsMiddleware", () => {
 
   test("should use CORS_MAX_AGE env var on preflight requests", async () => {
     Bun.env.CORS_MAX_AGE = "3600";
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com", method: "OPTIONS" });
 
     await middleware.handler(context);
@@ -166,7 +167,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should default max age to 86400 on preflight requests", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com", method: "OPTIONS" });
 
     await middleware.handler(context);
@@ -175,7 +176,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should not set CORS headers when no Origin header", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext();
 
     await middleware.handler(context);
@@ -184,7 +185,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should not set Access-Control-Max-Age on non-preflight requests", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com", method: "GET" });
 
     await middleware.handler(context);
@@ -193,7 +194,7 @@ describe("CorsMiddleware", () => {
   });
 
   test("should return context from handler", async () => {
-    const middleware = new CorsMiddleware();
+    const middleware = new CorsMiddleware(new AppEnv());
     const context = createMockContext({ origin: "https://example.com" });
 
     const result = await middleware.handler(context);

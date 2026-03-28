@@ -21,7 +21,7 @@ describe("AppEnv", () => {
       const appEnv = new AppEnv();
 
       expect(appEnv).toBeInstanceOf(AppEnv);
-      expect(appEnv.env).toBe("production");
+      expect(appEnv.APP_ENV).toBe("production");
       expect(appEnv.isProduction).toBe(true);
     });
 
@@ -29,7 +29,7 @@ describe("AppEnv", () => {
       setEnv(undefined);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("local");
+      expect(appEnv.APP_ENV).toBe("local");
       expect(appEnv.APP_ENV).toBe("local");
       expect(appEnv.isLocal).toBe(true);
     });
@@ -38,7 +38,7 @@ describe("AppEnv", () => {
       setEnv("");
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("local");
+      expect(appEnv.APP_ENV).toBe("local");
       expect(appEnv.APP_ENV).toBe("local");
       expect(appEnv.isLocal).toBe(true);
     });
@@ -63,7 +63,7 @@ describe("AppEnv", () => {
       setEnv("custom-environment");
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("custom-environment" as EnvironmentNameType);
+      expect(appEnv.APP_ENV).toBe("custom-environment" as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
       expect(appEnv.isLocal).toBe(false);
     });
@@ -74,7 +74,7 @@ describe("AppEnv", () => {
       setEnv(Environment.LOCAL);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("local");
+      expect(appEnv.APP_ENV).toBe("local");
       expect(appEnv.isLocal).toBe(true);
       expect(appEnv.isDevelopment).toBe(false);
       expect(appEnv.isStaging).toBe(false);
@@ -98,7 +98,7 @@ describe("AppEnv", () => {
       setEnv(Environment.DEVELOPMENT);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("development");
+      expect(appEnv.APP_ENV).toBe("development");
       expect(appEnv.isDevelopment).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isStaging).toBe(false);
@@ -122,7 +122,7 @@ describe("AppEnv", () => {
       setEnv(Environment.STAGING);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("staging");
+      expect(appEnv.APP_ENV).toBe("staging");
       expect(appEnv.isStaging).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -146,7 +146,7 @@ describe("AppEnv", () => {
       setEnv(Environment.TESTING);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("testing");
+      expect(appEnv.APP_ENV).toBe("testing");
       expect(appEnv.isTesting).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -170,7 +170,7 @@ describe("AppEnv", () => {
       setEnv(Environment.TEST);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("test");
+      expect(appEnv.APP_ENV).toBe("test");
       expect(appEnv.isTest).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -194,7 +194,7 @@ describe("AppEnv", () => {
       setEnv(Environment.QA);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("qa");
+      expect(appEnv.APP_ENV).toBe("qa");
       expect(appEnv.isQa).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -218,7 +218,7 @@ describe("AppEnv", () => {
       setEnv(Environment.UAT);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("uat");
+      expect(appEnv.APP_ENV).toBe("uat");
       expect(appEnv.isUat).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -242,7 +242,7 @@ describe("AppEnv", () => {
       setEnv(Environment.INTEGRATION);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("integration");
+      expect(appEnv.APP_ENV).toBe("integration");
       expect(appEnv.isIntegration).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -266,7 +266,7 @@ describe("AppEnv", () => {
       setEnv(Environment.PREVIEW);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("preview");
+      expect(appEnv.APP_ENV).toBe("preview");
       expect(appEnv.isPreview).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -290,7 +290,7 @@ describe("AppEnv", () => {
       setEnv(Environment.DEMO);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("demo");
+      expect(appEnv.APP_ENV).toBe("demo");
       expect(appEnv.isDemo).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -314,7 +314,7 @@ describe("AppEnv", () => {
       setEnv(Environment.SANDBOX);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("sandbox");
+      expect(appEnv.APP_ENV).toBe("sandbox");
       expect(appEnv.isSandbox).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -338,7 +338,7 @@ describe("AppEnv", () => {
       setEnv(Environment.BETA);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("beta");
+      expect(appEnv.APP_ENV).toBe("beta");
       expect(appEnv.isBeta).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -362,7 +362,7 @@ describe("AppEnv", () => {
       setEnv(Environment.CANARY);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("canary");
+      expect(appEnv.APP_ENV).toBe("canary");
       expect(appEnv.isCanary).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -386,7 +386,7 @@ describe("AppEnv", () => {
       setEnv(Environment.HOTFIX);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("hotfix");
+      expect(appEnv.APP_ENV).toBe("hotfix");
       expect(appEnv.isHotfix).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -410,7 +410,7 @@ describe("AppEnv", () => {
       setEnv(Environment.PRODUCTION);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("production");
+      expect(appEnv.APP_ENV).toBe("production");
       expect(appEnv.isProduction).toBe(true);
       expect(appEnv.isLocal).toBe(false);
       expect(appEnv.isDevelopment).toBe(false);
@@ -452,7 +452,7 @@ describe("AppEnv", () => {
       for (const env of environments) {
         setEnv(env);
         const appEnv = new AppEnv();
-        expect(appEnv.env).toBe(env);
+        expect(appEnv.APP_ENV).toBe(env);
 
         // Verify only the correct property is true
         const propertyMap = {
@@ -504,13 +504,13 @@ describe("AppEnv", () => {
   });
 
   describe("Property Immutability", () => {
-    test("should have env property defined", () => {
+    test("should have APP_ENV property defined", () => {
       setEnv("production");
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("production");
+      expect(appEnv.APP_ENV).toBe("production");
 
-      const descriptor = Object.getOwnPropertyDescriptor(appEnv, "env");
+      const descriptor = Object.getOwnPropertyDescriptor(appEnv, "APP_ENV");
       expect(descriptor).toBeDefined();
       expect(descriptor?.value).toBe("production");
     });
@@ -550,7 +550,7 @@ describe("AppEnv", () => {
       setEnv("production");
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBeDefined();
+      expect(appEnv.APP_ENV).toBeDefined();
       expect(typeof appEnv.isLocal).toBe("boolean");
       expect(typeof appEnv.isDevelopment).toBe("boolean");
       expect(typeof appEnv.isStaging).toBe("boolean");
@@ -575,7 +575,6 @@ describe("AppEnv", () => {
       const appEnv = new AppEnv();
 
       expect(appEnv.APP_ENV).toBe("production");
-      expect(appEnv.APP_ENV).toBe(appEnv.env);
     });
   });
 
@@ -829,14 +828,14 @@ describe("AppEnv", () => {
 
       expect(appEnvLower.isProduction).toBe(true);
       expect(appEnvUpper.isProduction).toBe(false);
-      expect(appEnvUpper.env).toBe("PRODUCTION" as EnvironmentNameType);
+      expect(appEnvUpper.APP_ENV).toBe("PRODUCTION" as EnvironmentNameType);
     });
 
     test("should handle environment names with special characters", () => {
       setEnv("test-env-123");
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe("test-env-123" as EnvironmentNameType);
+      expect(appEnv.APP_ENV).toBe("test-env-123" as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
       expect(appEnv.isLocal).toBe(false);
     });
@@ -846,7 +845,7 @@ describe("AppEnv", () => {
       setEnv(longEnv);
       const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe(longEnv as EnvironmentNameType);
+      expect(appEnv.APP_ENV).toBe(longEnv as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
     });
   });
@@ -875,7 +874,7 @@ describe("AppEnv", () => {
         setEnv(envType);
         expect(() => new AppEnv()).not.toThrow();
         const appEnv = new AppEnv();
-        expect(appEnv.env).toBe(envType);
+        expect(appEnv.APP_ENV).toBe(envType);
       }
     });
   });
@@ -903,7 +902,7 @@ describe("AppEnv", () => {
       for (const { env, flag } of environments) {
         setEnv(env);
         const appEnv = new AppEnv();
-        expect(appEnv.env).toBe(env);
+        expect(appEnv.APP_ENV).toBe(env);
         expect(appEnv[flag]).toBe(true);
 
         const otherFlags = environments.filter((e) => e.flag !== flag).map((e) => e.flag);

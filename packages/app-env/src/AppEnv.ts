@@ -3,7 +3,6 @@ import type { EnvironmentNameType, IAppEnv } from "./types";
 
 @injectable()
 export class AppEnv implements IAppEnv {
-  public readonly env: EnvironmentNameType;
   public readonly isLocal: boolean;
   public readonly isDevelopment: boolean;
   public readonly isStaging: boolean;
@@ -91,27 +90,23 @@ export class AppEnv implements IAppEnv {
   public readonly CLERK_SECRET_KEY: string | undefined;
 
   public constructor() {
-    const env = (Bun.env.APP_ENV || "local") as EnvironmentNameType;
-
-    this.env = env;
-    this.isLocal = this.env === "local";
-    this.isDevelopment = this.env === "development";
-    this.isStaging = this.env === "staging";
-    this.isTesting = this.env === "testing";
-    this.isTest = this.env === "test";
-    this.isQa = this.env === "qa";
-    this.isUat = this.env === "uat";
-    this.isIntegration = this.env === "integration";
-    this.isPreview = this.env === "preview";
-    this.isDemo = this.env === "demo";
-    this.isSandbox = this.env === "sandbox";
-    this.isBeta = this.env === "beta";
-    this.isCanary = this.env === "canary";
-    this.isHotfix = this.env === "hotfix";
-    this.isProduction = this.env === "production";
-
     // App
-    this.APP_ENV = env;
+    this.APP_ENV = (Bun.env.APP_ENV || "production") as EnvironmentNameType;
+    this.isLocal = this.APP_ENV === "local";
+    this.isDevelopment = this.APP_ENV === "development";
+    this.isStaging = this.APP_ENV === "staging";
+    this.isTesting = this.APP_ENV === "testing";
+    this.isTest = this.APP_ENV === "test";
+    this.isQa = this.APP_ENV === "qa";
+    this.isUat = this.APP_ENV === "uat";
+    this.isIntegration = this.APP_ENV === "integration";
+    this.isPreview = this.APP_ENV === "preview";
+    this.isDemo = this.APP_ENV === "demo";
+    this.isSandbox = this.APP_ENV === "sandbox";
+    this.isBeta = this.APP_ENV === "beta";
+    this.isCanary = this.APP_ENV === "canary";
+    this.isHotfix = this.APP_ENV === "hotfix";
+    this.isProduction = this.APP_ENV === "production";
     this.PORT = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 80;
     this.HOST_NAME = Bun.env.HOST_NAME || "0.0.0.0";
 

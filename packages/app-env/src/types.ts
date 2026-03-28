@@ -21,7 +21,6 @@ export enum Environment {
 export type EnvironmentNameType = `${Environment}`;
 
 export interface IAppEnv {
-  readonly env: EnvironmentNameType;
   readonly isLocal: boolean;
   readonly isDevelopment: boolean;
   readonly isStaging: boolean;

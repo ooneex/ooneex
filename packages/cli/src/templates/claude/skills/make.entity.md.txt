@@ -147,10 +147,48 @@ The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with expor
 
 If the module already has other entities registered, append the new entity to the existing `entities` array and add the import alongside existing imports.
 
-### 6. Lint and format
+### 6. Create a migration for the entity
 
-Run linting and formatting on the generated files:
+After creating or updating an entity, generate a migration to apply the corresponding schema changes to the database.
+
+Run the generator:
 
 ```bash
-bunx biome check --fix src/entities/<Name>Entity.ts tests/entities/<Name>Entity.spec.ts
+bunx @ooneex/cli@latest make:migration
+```
+
+Then read the generated migration file in `src/migrations/` and complete it:
+
+- In the `up` method, write the SQL to create the table (or alter it if updating an existing entity). Include all columns, types, constraints, defaults, and indexes matching the entity definition.
+- In the `down` method, write the reverse SQL to undo the changes (e.g., `DROP TABLE` or `ALTER TABLE DROP COLUMN`).
+- If the migration depends on another migration (e.g., a foreign key referencing another table), add that migration class to the `getDependencies()` return array.
+
+Example `up` method for a new entity:
+
+```typescript
+public async up(tx: TransactionSQL): Promise<void> {
+  await tx`
+    CREATE TABLE IF NOT EXISTS <table_name> (
+      id VARCHAR(25) PRIMARY KEY,
+      is_locked BOOLEAN DEFAULT false,
+      locked_at TIMESTAMPTZ,
+      is_blocked BOOLEAN DEFAULT false,
+      blocked_at TIMESTAMPTZ,
+      block_reason TEXT,
+      is_public BOOLEAN DEFAULT true,
+      lang VARCHAR(10),
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      deleted_at TIMESTAMPTZ
+    )
+  `;
+}
+```
+
+### 7. Lint and format
+
+Run linting and formatting on all generated files:
+
+```bash
+bunx biome check --fix src/entities/<Name>Entity.ts tests/entities/<Name>Entity.spec.ts src/migrations/
 ```

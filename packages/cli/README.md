@@ -118,10 +118,19 @@ Creates a TypeORM entity with:
 - Entity file
 - Test file
 
+### Installing Zsh Completions
+
+```bash
+ooneex completion:zsh
+```
+
+Installs Zsh completions for the `oo` and `ooneex` commands with context-aware option suggestions per command.
+
 ### Additional Commands
 
 | Command | Description |
 |---------|-------------|
+| `completion:zsh` | Install Zsh completion for oo command |
 | `make:ai` | Generate a new AI class |
 | `make:analytics` | Generate a new analytics class |
 | `make:cache` | Generate a new cache class |

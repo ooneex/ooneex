@@ -1,6 +1,5 @@
 import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
-import { AppEnv, type EnvType } from "@ooneex/app-env";
 import { RedisCache } from "@ooneex/cache";
 import { LogtailLogger, ExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
@@ -8,8 +7,6 @@ import { CorsMiddleware } from "@ooneex/middleware";
 import { RedisRateLimiter } from "@ooneex/rate-limit";
 import { BunnyStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
-
-const appEnv = new AppEnv((Bun.env.NODE_ENV || Bun.env.APP_ENV || "production") as EnvType);
 
 const app = new App({
   prefix: "api",
@@ -25,7 +22,6 @@ const app = new App({
   cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,
-  env: appEnv,
   generateRouteDoc: true,
 });
 

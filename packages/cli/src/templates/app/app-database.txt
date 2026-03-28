@@ -1,0 +1,34 @@
+import { inject } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { DataSource } from "typeorm";
+import { TypeormPgDatabase, DatabaseException, decorator } from "@ooneex/database";
+import { AppModule } from "@/AppModule";
+
+@decorator.database()
+export class {{NAME}}Database extends TypeormPgDatabase {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
+  public getSource(): DataSource {
+    const url = this.env.DATABASE_URL;
+
+    if (!url) {
+      throw new DatabaseException(
+        "Database URL is required. Please set the DATABASE_URL environment variable.",
+      );
+    }
+
+    this.source = new DataSource({
+      synchronize: false,
+      entities: AppModule.entities,
+      extra: {
+        max: 10,
+      },
+      url,
+      type: "postgres",
+    });
+
+    return this.source;
+  }
+}

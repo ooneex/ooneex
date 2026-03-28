@@ -6,6 +6,7 @@ import { askDestination } from "../prompts/askDestination";
 import { askName } from "../prompts/askName";
 import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
 import gitignoreTemplate from "../templates/app/.gitignore.txt";
+import databaseTemplate from "../templates/app/app-database.txt";
 import biomeTemplate from "../templates/app/biome.jsonc.txt";
 import bunfigTemplate from "../templates/app/bunfig.toml.txt";
 import envTemplate from "../templates/app/env.txt";
@@ -66,6 +67,10 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       skipMigrations: true,
       skipSeeds: true,
     });
+
+    // Create database file
+    const databaseContent = databaseTemplate.replace(/{{NAME}}/g, "App");
+    await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseContent);
 
     await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
     await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");

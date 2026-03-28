@@ -107,7 +107,7 @@ export class AppEnv implements IAppEnv {
     this.isCanary = this.APP_ENV === "canary";
     this.isHotfix = this.APP_ENV === "hotfix";
     this.isProduction = this.APP_ENV === "production";
-    this.PORT = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 80;
+    this.PORT = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
     this.HOST_NAME = Bun.env.HOST_NAME || "0.0.0.0";
 
     // Logs

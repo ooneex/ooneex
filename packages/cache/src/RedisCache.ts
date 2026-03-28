@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { AbstractCache } from "./AbstractCache";
 import { CacheException } from "./CacheException";
 import { decorator } from "./decorators";
@@ -7,9 +9,9 @@ import type { RedisCacheOptionsType } from "./types";
 export class RedisCache extends AbstractCache {
   private client: Bun.RedisClient;
 
-  constructor(options: RedisCacheOptionsType = {}) {
+  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisCacheOptionsType = {}) {
     super();
-    const connectionString = options.connectionString || Bun.env.CACHE_REDIS_URL;
+    const connectionString = options.connectionString || this.env.CACHE_REDIS_URL;
 
     if (!connectionString) {
       throw new CacheException(

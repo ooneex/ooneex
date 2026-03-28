@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import { RateLimitException } from "./RateLimitException";
 import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } from "./types";
 
@@ -6,8 +7,8 @@ import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } f
 export class RedisRateLimiter implements IRateLimiter {
   private client: Bun.RedisClient;
 
-  constructor(options: RedisRateLimiterOptionsType = {}) {
-    const connectionString = options.connectionString || Bun.env.RATE_LIMIT_REDIS_URL;
+  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisRateLimiterOptionsType = {}) {
+    const connectionString = options.connectionString || this.env.RATE_LIMIT_REDIS_URL;
 
     if (!connectionString) {
       throw new RateLimitException(

@@ -1,12 +1,13 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
-import { toKebabCase } from "@ooneex/utils";
+import { toKebabCase, toSnakeCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askDestination } from "../prompts/askDestination";
 import { askName } from "../prompts/askName";
 import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
 import gitignoreTemplate from "../templates/app/.gitignore.txt";
 import databaseTemplate from "../templates/app/app-database.txt";
+import dockerComposeTemplate from "../templates/app/docker-compose.yml.txt";
 import biomeTemplate from "../templates/app/biome.jsonc.txt";
 import bunfigTemplate from "../templates/app/bunfig.toml.txt";
 import envTemplate from "../templates/app/env.txt";
@@ -48,14 +49,14 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
 
     await Bun.write(join(destination, ".commitlintrc.ts"), commitlintTemplate);
-    await Bun.write(join(destination, ".env"), envTemplate);
-    await Bun.write(join(destination, ".env.example"), envTemplate);
     await Bun.write(join(destination, ".gitignore"), gitignoreTemplate);
     await Bun.write(join(destination, "biome.jsonc"), biomeTemplate);
     await Bun.write(join(destination, "bunfig.toml"), bunfigTemplate);
     await Bun.write(join(destination, "nx.json"), nxTemplate);
     await Bun.write(join(destination, "package.json"), packageContent);
     await Bun.write(join(destination, "tsconfig.json"), tsconfigTemplate);
+    await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
+    await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");
 
     // Create app module
     const makeModuleCommand = new MakeModuleCommand();
@@ -68,12 +69,19 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       skipSeeds: true,
     });
 
-    // Create database file
+    const envContent = envTemplate
+      .replace("DATABASE_URL=", "DATABASE_URL=\"postgresql://ooneex:ooneex@localhost:5432/ooneex\"")
+      .replace("CACHE_REDIS_URL=", "CACHE_REDIS_URL=\"redis://localhost:6379\"")
+      .replace("PUBSUB_REDIS_URL=", "PUBSUB_REDIS_URL=\"redis://localhost:6379\"")
+      .replace("RATE_LIMIT_REDIS_URL=", "RATE_LIMIT_REDIS_URL=\"redis://localhost:6379\"")
+      .replace("DATABASE_REDIS_URL=", "DATABASE_REDIS_URL=\"redis://localhost:6379\"");
+    await Bun.write(join(destination, "modules", "app", ".env"), envContent);
+    await Bun.write(join(destination, "modules", "app", ".env.example"), envTemplate);
     await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseTemplate);
-
-    await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
-    await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");
     await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);
+    const snakeName = toSnakeCase(name);
+    const dockerComposeContent = dockerComposeTemplate.replace(/{{NAME}}/g, snakeName);
+    await Bun.write(join(destination, "modules", "app", "docker-compose.yml"), dockerComposeContent);
     await Bun.write(join(destination, "modules", "app", "var", ".gitkeep"), "");
 
     const logger = new TerminalLogger();

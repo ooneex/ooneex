@@ -9,7 +9,10 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
   private client: Bun.RedisClient;
   private subscriber: Bun.RedisClient | null = null;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisPubSubOptionsType = {}) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    options: RedisPubSubOptionsType = {},
+  ) {
     const connectionString = options.connectionString || this.env.PUBSUB_REDIS_URL;
 
     if (!connectionString) {

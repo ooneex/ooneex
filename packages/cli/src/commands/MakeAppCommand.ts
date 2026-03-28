@@ -8,6 +8,7 @@ import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
 import gitignoreTemplate from "../templates/app/.gitignore.txt";
 import databaseTemplate from "../templates/app/app-database.txt";
 import dockerComposeTemplate from "../templates/app/docker-compose.yml.txt";
+import dockerfileTemplate from "../templates/app/Dockerfile.txt";
 import biomeTemplate from "../templates/app/biome.jsonc.txt";
 import bunfigTemplate from "../templates/app/bunfig.toml.txt";
 import envTemplate from "../templates/app/env.txt";
@@ -69,6 +70,12 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       skipSeeds: true,
     });
 
+    const appModulePackagePath = join(destination, "modules", "app", "package.json");
+    const appModulePackageJson = await Bun.file(appModulePackagePath).json();
+    appModulePackageJson.scripts.dev = "docker compose up -d && bun --hot run ./src/index.ts";
+    appModulePackageJson.scripts.build = "bun build ./src/index.ts --outdir ./dist --target bun";
+    await Bun.write(appModulePackagePath, JSON.stringify(appModulePackageJson, null, 2));
+
     const envContent = envTemplate
       .replace("DATABASE_URL=", "DATABASE_URL=\"postgresql://ooneex:ooneex@localhost:5432/ooneex\"")
       .replace("CACHE_REDIS_URL=", "CACHE_REDIS_URL=\"redis://localhost:6379\"")
@@ -82,6 +89,8 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const snakeName = toSnakeCase(name);
     const dockerComposeContent = dockerComposeTemplate.replace(/{{NAME}}/g, snakeName);
     await Bun.write(join(destination, "modules", "app", "docker-compose.yml"), dockerComposeContent);
+    const dockerfileContent = dockerfileTemplate.replace(/{{NAME}}/g, snakeName);
+    await Bun.write(join(destination, "modules", "app", "Dockerfile"), dockerfileContent);
     await Bun.write(join(destination, "modules", "app", "var", ".gitkeep"), "");
 
     const logger = new TerminalLogger();

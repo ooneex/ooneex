@@ -104,6 +104,7 @@
       "name": "@ooneex/app-env",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
       },

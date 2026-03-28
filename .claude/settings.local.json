@@ -14,7 +14,9 @@
       "Bash(ls:*)",
       "Bash(find /Volumes/Projects/Ooneex/Ooneex -maxdepth 2 -name .bunfig* -o -name bunfig*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find /Volumes/Projects/Ooneex/Ooneex/packages -name \"*.ts\" -type f -exec grep -l \"IMigration\\\\|@decorator.migration\" {})",
+      "Bash(npx tsc:*)"
     ]
   }
 }

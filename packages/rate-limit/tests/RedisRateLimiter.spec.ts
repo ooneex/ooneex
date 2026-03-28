@@ -1,5 +1,12 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
+import type { AppEnv } from "@ooneex/app-env";
 import { RateLimitException, RedisRateLimiter } from "@/index";
+
+const createMockEnv = (): AppEnv => {
+  return {
+    RATE_LIMIT_REDIS_URL: Bun.env.RATE_LIMIT_REDIS_URL,
+  } as unknown as AppEnv;
+};
 
 // Default options that the rate limiter uses
 const defaultOptions = {
@@ -54,7 +61,7 @@ describe("RedisRateLimiter", () => {
     mockRedisClient.connected = false;
 
     // Create a new limiter for each test
-    limiter = new RedisRateLimiter({
+    limiter = new RedisRateLimiter(createMockEnv(), {
       connectionString: "redis://localhost:6379/1",
     });
 
@@ -88,7 +95,7 @@ describe("RedisRateLimiter", () => {
 
   describe("constructor", () => {
     test("should create RedisClient with connection string and default options", () => {
-      new RedisRateLimiter({
+      new RedisRateLimiter(createMockEnv(), {
         connectionString: "redis://test:6379/2",
       });
 
@@ -99,7 +106,7 @@ describe("RedisRateLimiter", () => {
       const originalRedisUrl = Bun.env.RATE_LIMIT_REDIS_URL;
       Bun.env.RATE_LIMIT_REDIS_URL = "redis://localhost:6379";
 
-      new RedisRateLimiter();
+      new RedisRateLimiter(createMockEnv());
 
       expect(MockRedisClient).toHaveBeenCalledWith("redis://localhost:6379", defaultOptions);
 
@@ -114,8 +121,8 @@ describe("RedisRateLimiter", () => {
       const originalRedisUrl = Bun.env.RATE_LIMIT_REDIS_URL;
       delete Bun.env.RATE_LIMIT_REDIS_URL;
 
-      expect(() => new RedisRateLimiter()).toThrow(RateLimitException);
-      expect(() => new RedisRateLimiter()).toThrow("Redis connection string is required");
+      expect(() => new RedisRateLimiter(createMockEnv())).toThrow(RateLimitException);
+      expect(() => new RedisRateLimiter(createMockEnv())).toThrow("Redis connection string is required");
 
       if (originalRedisUrl) {
         Bun.env.RATE_LIMIT_REDIS_URL = originalRedisUrl;
@@ -124,7 +131,7 @@ describe("RedisRateLimiter", () => {
 
     test("should merge additional client options with defaults", () => {
       const customOptions = { connectionTimeout: 5000 };
-      new RedisRateLimiter({
+      new RedisRateLimiter(createMockEnv(), {
         connectionString: "redis://localhost:6379",
         ...customOptions,
       });

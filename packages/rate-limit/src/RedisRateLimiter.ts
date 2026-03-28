@@ -7,7 +7,10 @@ import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } f
 export class RedisRateLimiter implements IRateLimiter {
   private client: Bun.RedisClient;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisRateLimiterOptionsType = {}) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    options: RedisRateLimiterOptionsType = {},
+  ) {
     const connectionString = options.connectionString || this.env.RATE_LIMIT_REDIS_URL;
 
     if (!connectionString) {

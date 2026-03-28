@@ -41,6 +41,7 @@
       "name": "@ooneex/ai",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -60,6 +61,7 @@
       "name": "@ooneex/analytics",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -114,6 +116,7 @@
       "version": "1.1.0",
       "dependencies": {
         "@clerk/backend": "^1.24.1",
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/controller": "workspace:*",
         "@ooneex/exception": "workspace:*",
@@ -128,6 +131,7 @@
       "name": "@ooneex/cache",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -220,6 +224,7 @@
       "name": "@ooneex/database",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -321,6 +326,7 @@
       "name": "@ooneex/jwt",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -332,6 +338,7 @@
       "version": "1.1.1",
       "dependencies": {
         "@logtail/node": "^0.5.8",
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/database": "workspace:*",
         "@ooneex/utils": "workspace:*",
@@ -347,6 +354,7 @@
       "name": "@ooneex/mailer",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -358,6 +366,7 @@
       "name": "@ooneex/middleware",
       "version": "1.1.0",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
       },
       "devDependencies": {
@@ -393,6 +402,8 @@
       "name": "@ooneex/payment",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
+        "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@polar-sh/sdk": "^0.30.0",
@@ -431,6 +442,7 @@
       "name": "@ooneex/pub-sub",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -459,6 +471,7 @@
       "name": "@ooneex/rate-limit",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -542,6 +555,7 @@
       "name": "@ooneex/storage",
       "version": "1.0.1",
       "dependencies": {
+        "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",

@@ -45,9 +45,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
       version: 1,
       description: "Test socket route",
     },
-    app: {
-      env: { env: Environment.DEVELOPMENT } as ContextType["app"]["env"],
-    },
+    env: { env: Environment.DEVELOPMENT } as ContextType["env"],
     response,
     request: {} as ContextType["request"],
     params: {},
@@ -435,7 +433,7 @@ describe("socketRouteUtils", () => {
     test("uses PRODUCTION environment as default when app.env.env is undefined", async () => {
       const wsSendMock = mock(() => {});
       const context = createMockSocketContext({
-        app: { env: { env: undefined } as unknown as ContextType["app"]["env"] },
+        env: { env: undefined } as unknown as ContextType["env"],
       });
 
       class EnvTestController {

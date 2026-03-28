@@ -45,9 +45,7 @@ const createMockContext = (overrides: Partial<ContextType> = {}): ContextType =>
       version: "v1" as const,
       description: "Test route",
     },
-    app: {
-      env: { env: Environment.DEVELOPMENT } as ContextType["app"]["env"],
-    },
+    env: { env: Environment.DEVELOPMENT } as ContextType["env"],
     response,
     request: {} as ContextType["request"],
     params: {},
@@ -637,7 +635,7 @@ describe("httpRouteUtils", () => {
       container.add(TestEnvController);
 
       const context = createMockContext({
-        app: { env: { env: undefined } as unknown as ContextType["app"]["env"] },
+        env: { env: undefined } as unknown as ContextType["env"],
       });
       const route = createMockRoute({
         controller: TestEnvController,

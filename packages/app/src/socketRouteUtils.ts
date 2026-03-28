@@ -1,4 +1,4 @@
-import { Environment } from "@ooneex/app-env";
+import type { EnvironmentNameType } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import type { IResponse } from "@ooneex/http-response";
@@ -115,7 +115,7 @@ export const socketRouteHandler = async ({
   permissions,
 }: SocketRouteHandlerOptions): Promise<void> => {
   let { context, route } = container.getConstant<{ context: ContextType; route: RouteConfigType }>(ws.data.id);
-  const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
+  const currentEnv: EnvironmentNameType = context.env.env || "production";
 
   context.channel = {
     send: async (response: IResponse): Promise<void> => {

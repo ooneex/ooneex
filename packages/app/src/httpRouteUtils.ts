@@ -1,5 +1,5 @@
 import type { IAnalytics } from "@ooneex/analytics";
-import { Environment } from "@ooneex/app-env";
+import { AppEnv, type EnvironmentNameType, type IAppEnv } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
 import type { IDatabase } from "@ooneex/database";
 import { container } from "@ooneex/container";
@@ -112,9 +112,7 @@ export const buildHttpContext = async (ctx: {
           description: route.description ?? "",
         }
       : null,
-    app: {
-      env: container.get("app.env"),
-    },
+    env: container.get<IAppEnv>(AppEnv),
     response,
     request,
     params: request.params,
@@ -138,7 +136,7 @@ type RouteValidationError = { message: string; status: StatusCodeType };
 export const validateRouteAccess = async (
   context: ContextType,
   route: RouteConfigType,
-  currentEnv: Environment,
+  currentEnv: EnvironmentNameType,
 ): Promise<RouteValidationError | null> => {
   // Check params
   if (route.params) {
@@ -241,7 +239,7 @@ const buildExceptionResponse = (
   context: ContextType,
   message: string,
   status: StatusCodeType,
-  env: Environment,
+  env: EnvironmentNameType,
 ): Response => {
   return context.response.exception(message, { status }).get(env);
 };
@@ -320,7 +318,7 @@ type HttpRouteHandlerOptions = {
 };
 
 export const httpRouteHandler = async ({ context, route, permissions }: HttpRouteHandlerOptions): Promise<Response> => {
-  const currentEnv = (context.app.env.env as Environment) || Environment.PRODUCTION;
+  const currentEnv = context.env.env;
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
@@ -396,7 +394,7 @@ export const formatHttpRoutes = (
         try {
           context = await runMiddlewares(context, middlewares);
         } catch (error: unknown) {
-          const env = (context.app.env.env as Environment) || Environment.PRODUCTION;
+          const env: EnvironmentNameType = context.env.env || "production";
           const status = (
             error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError
           ) as StatusCodeType;

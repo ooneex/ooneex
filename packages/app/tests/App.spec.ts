@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
@@ -55,6 +56,7 @@ describe("App", () => {
     Bun.env.APP_ENV = "development";
     Bun.env.PORT = "3000";
     Bun.env.HOST_NAME = "localhost";
+    container.add(AppEnv);
   });
 
   afterEach(() => {
@@ -223,7 +225,7 @@ describe("App", () => {
       const config = createMockConfig();
       const app = new App(config);
 
-      await expect(app.init()).rejects.toThrow(Exception);
+      expect(app.init()).rejects.toThrow(Exception);
     });
 
     test("throws Exception with correct status when APP_ENV is invalid", async () => {

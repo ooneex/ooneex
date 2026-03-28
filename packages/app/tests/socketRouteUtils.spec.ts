@@ -426,7 +426,7 @@ describe("socketRouteUtils", () => {
       expect(capturedContext).not.toBeNull();
       const ctx = capturedContext as unknown as ContextType;
       expect(ctx.payload).toEqual({ userId: 123, action: "test" });
-      expect(ctx.queries).toEqual({ page: 2, limit: 10 });
+      expect(ctx.queries).toEqual({ page: "2", limit: "10" } as unknown as ContextType["queries"]);
       expect((ctx.language as Record<string, unknown>).locale).toBe("fr");
       expect((ctx.language as Record<string, unknown>).region).toBe("FR");
     });

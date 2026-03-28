@@ -27,21 +27,21 @@ export const checkAllowedUsers = (context: ContextType): RouteValidationError | 
   }
 
   const systemUsers = context.env.SYSTEM_USERS;
-  if (systemUsers && systemUsers.includes(context.user.email)) {
+  if (systemUsers?.includes(context.user.email)) {
     if (!context.user.roles.includes(ERole.SYSTEM)) {
       context.user.roles.push(ERole.SYSTEM);
     }
   }
 
   const superAdminUsers = context.env.SUPER_ADMIN_USERS;
-  if (superAdminUsers && superAdminUsers.includes(context.user.email)) {
+  if (superAdminUsers?.includes(context.user.email)) {
     if (!context.user.roles.includes(ERole.SUPER_ADMIN)) {
       context.user.roles.push(ERole.SUPER_ADMIN);
     }
   }
 
   const adminUsers = context.env.ADMIN_USERS;
-  if (adminUsers && adminUsers.includes(context.user.email)) {
+  if (adminUsers?.includes(context.user.email)) {
     if (!context.user.roles.includes(ERole.ADMIN)) {
       context.user.roles.push(ERole.ADMIN);
     }

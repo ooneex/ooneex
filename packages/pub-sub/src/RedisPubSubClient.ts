@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import type { ScalarType } from "@ooneex/types";
 import { PubSubException } from "./PubSubException";
 import type { IPubSubClient, PubSubMessageHandlerType, RedisPubSubOptionsType } from "./types";
@@ -8,8 +9,8 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
   private client: Bun.RedisClient;
   private subscriber: Bun.RedisClient | null = null;
 
-  constructor(options: RedisPubSubOptionsType = {}) {
-    const connectionString = options.connectionString || Bun.env.PUBSUB_REDIS_URL;
+  constructor(@inject(AppEnv) private readonly env: AppEnv, options: RedisPubSubOptionsType = {}) {
+    const connectionString = options.connectionString || this.env.PUBSUB_REDIS_URL;
 
     if (!connectionString) {
       throw new PubSubException(

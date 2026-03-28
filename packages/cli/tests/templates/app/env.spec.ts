@@ -139,5 +139,8 @@ describe("env.txt", () => {
     expect(content).toContain("BETA_ALLOWED_USERS=");
     expect(content).toContain("CANARY_ALLOWED_USERS=");
     expect(content).toContain("HOTFIX_ALLOWED_USERS=");
+    expect(content).toContain("SYSTEM_USERS=");
+    expect(content).toContain("SUPER_ADMIN_USERS=");
+    expect(content).toContain("ADMIN_USERS=");
   });
 });

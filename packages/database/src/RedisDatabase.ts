@@ -8,7 +8,10 @@ export class RedisDatabase implements IRedisDatabase {
   private client: RedisClient;
   private connectionUrl: string;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, private readonly options: RedisConnectionOptionsType = {}) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    private readonly options: RedisConnectionOptionsType = {},
+  ) {
     this.connectionUrl = options.url || this.env.DATABASE_REDIS_URL || "";
 
     if (!this.connectionUrl) {

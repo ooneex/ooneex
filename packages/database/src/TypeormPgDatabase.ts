@@ -1,12 +1,12 @@
 import { DataSource } from "typeorm";
 import { DatabaseException } from "./DatabaseException";
-import { TypeormDatabase } from "./TypeormDatabase";
 import { decorator } from "./decorators";
+import { TypeormDatabase } from "./TypeormDatabase";
 
 @decorator.database()
 export class TypeormPgDatabase extends TypeormDatabase {
   public getSource(): DataSource {
-    const url = '';
+    const url = "";
 
     if (!url) {
       throw new DatabaseException(

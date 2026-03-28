@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
+import { AppEnv } from "@ooneex/app-env";
 import type { RedisConnectionOptionsType } from "@/index";
 import { DatabaseException, RedisDatabase } from "@/index";
 
 describe("RedisDatabase", () => {
   let adapter: RedisDatabase;
+  let env: AppEnv;
   const testConnectionUrl = "redis://localhost:6379";
 
   // Environment variables backup
@@ -14,6 +16,7 @@ describe("RedisDatabase", () => {
   beforeEach(() => {
     // Reset environment variables
     delete process.env.DATABASE_REDIS_URL;
+    env = new AppEnv();
   });
 
   afterEach(() => {
@@ -26,7 +29,7 @@ describe("RedisDatabase", () => {
   describe("Constructor", () => {
     test("should create RedisDatabase with provided URL", () => {
       const options: RedisConnectionOptionsType = { url: testConnectionUrl };
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -34,7 +37,8 @@ describe("RedisDatabase", () => {
 
     test("should create RedisDatabase with DATABASE_REDIS_URL environment variable", () => {
       process.env.DATABASE_REDIS_URL = testConnectionUrl;
-      adapter = new RedisDatabase();
+      env = new AppEnv();
+      adapter = new RedisDatabase(env);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -43,8 +47,9 @@ describe("RedisDatabase", () => {
     test("should prefer provided URL over environment variables", () => {
       const providedUrl = "redis://provided:6379";
       process.env.DATABASE_REDIS_URL = "redis://env:6379";
+      env = new AppEnv();
 
-      adapter = new RedisDatabase({ url: providedUrl });
+      adapter = new RedisDatabase(env, { url: providedUrl });
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -52,11 +57,11 @@ describe("RedisDatabase", () => {
 
     test("should throw DatabaseException when no connection URL is provided", () => {
       expect(() => {
-        new RedisDatabase();
+        new RedisDatabase(env);
       }).toThrow(DatabaseException);
 
       expect(() => {
-        new RedisDatabase();
+        new RedisDatabase(env);
       }).toThrow(
         "Redis connection URL is required. Please provide a connection URL either through the constructor options or set the DATABASE_REDIS_URL environment variable.",
       );
@@ -66,7 +71,7 @@ describe("RedisDatabase", () => {
       const options: RedisConnectionOptionsType = { connectionTimeout: 5000 };
 
       try {
-        new RedisDatabase(options);
+        new RedisDatabase(env, options);
       } catch (error) {
         expect(error).toBeInstanceOf(DatabaseException);
         const dbError = error as DatabaseException;
@@ -86,7 +91,7 @@ describe("RedisDatabase", () => {
         tls: true,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -99,7 +104,7 @@ describe("RedisDatabase", () => {
         maxRetries: 5,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -111,7 +116,7 @@ describe("RedisDatabase", () => {
         tls: true,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -130,7 +135,7 @@ describe("RedisDatabase", () => {
         tls: tlsConfig,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -144,7 +149,7 @@ describe("RedisDatabase", () => {
         maxRetries: 0,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -153,7 +158,7 @@ describe("RedisDatabase", () => {
 
   describe("getClient", () => {
     beforeEach(() => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
     });
 
     test("should return the Redis client instance", () => {
@@ -173,7 +178,7 @@ describe("RedisDatabase", () => {
 
   describe("open", () => {
     beforeEach(() => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
     });
 
     test("should return a client instance", async () => {
@@ -248,7 +253,7 @@ describe("RedisDatabase", () => {
 
   describe("close", () => {
     beforeEach(() => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
     });
 
     test("should close connection when connected", async () => {
@@ -360,7 +365,7 @@ describe("RedisDatabase", () => {
 
   describe("drop", () => {
     beforeEach(() => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
     });
 
     test("should flush database when connected", async () => {
@@ -501,7 +506,7 @@ describe("RedisDatabase", () => {
 
   describe("Integration Tests", () => {
     beforeEach(() => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
     });
 
     test("should handle complete lifecycle: open -> drop -> close", async () => {
@@ -635,18 +640,19 @@ describe("RedisDatabase", () => {
   describe("Edge Cases and Error Handling", () => {
     test("should handle empty connection URL from environment", () => {
       process.env.DATABASE_REDIS_URL = "";
+      env = new AppEnv();
 
       expect(() => {
-        new RedisDatabase();
+        new RedisDatabase(env);
       }).toThrow(DatabaseException);
     });
 
     test("should handle whitespace-only connection URL", () => {
       expect(() => {
-        new RedisDatabase({ url: "   " });
+        new RedisDatabase(env, { url: "   " });
       }).not.toThrow();
 
-      const adapter = new RedisDatabase({ url: "   " });
+      const adapter = new RedisDatabase(env, { url: "   " });
       expect(adapter).toBeInstanceOf(RedisDatabase);
     });
 
@@ -654,7 +660,7 @@ describe("RedisDatabase", () => {
       const longUrl =
         "redis://user:password@very-long-hostname-that-exceeds-normal-length.example.com:6379/database?param1=value1&param2=value2";
 
-      adapter = new RedisDatabase({ url: longUrl });
+      adapter = new RedisDatabase(env, { url: longUrl });
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
     });
@@ -662,7 +668,7 @@ describe("RedisDatabase", () => {
     test("should handle special characters in connection URL", () => {
       const urlWithSpecialChars = "redis://user%40domain:p%40ssw0rd@host:6379/0";
 
-      adapter = new RedisDatabase({ url: urlWithSpecialChars });
+      adapter = new RedisDatabase(env, { url: urlWithSpecialChars });
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
     });
@@ -675,7 +681,7 @@ describe("RedisDatabase", () => {
       };
 
       expect(() => {
-        new RedisDatabase(options);
+        new RedisDatabase(env, options);
       }).toThrow();
     });
 
@@ -687,7 +693,7 @@ describe("RedisDatabase", () => {
       };
 
       expect(() => {
-        new RedisDatabase(options);
+        new RedisDatabase(env, options);
       }).toThrow();
     });
 
@@ -700,14 +706,14 @@ describe("RedisDatabase", () => {
       };
 
       expect(() => {
-        new RedisDatabase(options as RedisConnectionOptionsType);
+        new RedisDatabase(env, options as RedisConnectionOptionsType);
       }).toThrow();
     });
   });
 
   describe("Connection Options Defaults and Overrides", () => {
     test("should use correct defaults for all boolean options", () => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -721,7 +727,7 @@ describe("RedisDatabase", () => {
         enableAutoPipelining: false,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -735,7 +741,7 @@ describe("RedisDatabase", () => {
         enableAutoPipelining: true,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -746,7 +752,7 @@ describe("RedisDatabase", () => {
         url: testConnectionUrl,
       };
 
-      adapter = new RedisDatabase(options);
+      adapter = new RedisDatabase(env, options);
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();
@@ -755,7 +761,7 @@ describe("RedisDatabase", () => {
 
   describe("Memory and Resource Management", () => {
     test("should maintain reference to the same client instance", () => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
 
       const client1 = adapter.getClient();
       const client2 = adapter.getClient();
@@ -764,7 +770,7 @@ describe("RedisDatabase", () => {
     });
 
     test("should not recreate client on multiple adapter method calls", () => {
-      adapter = new RedisDatabase({ url: testConnectionUrl });
+      adapter = new RedisDatabase(env, { url: testConnectionUrl });
 
       const client1 = adapter.getClient();
       const client2 = adapter.getClient();
@@ -780,7 +786,7 @@ describe("RedisDatabase", () => {
       delete process.env.REDIS_URL;
 
       expect(() => {
-        new RedisDatabase();
+        new RedisDatabase(env);
       }).toThrow(DatabaseException);
     });
 
@@ -794,7 +800,8 @@ describe("RedisDatabase", () => {
 
       testUrls.forEach((url) => {
         process.env.DATABASE_REDIS_URL = url;
-        adapter = new RedisDatabase();
+        env = new AppEnv();
+        adapter = new RedisDatabase(env);
         expect(adapter).toBeInstanceOf(RedisDatabase);
         delete process.env.DATABASE_REDIS_URL;
       });
@@ -804,7 +811,7 @@ describe("RedisDatabase", () => {
       process.env.REDIS_URL = "redis://env-server:6379";
       const explicitUrl = "redis://explicit-server:6379";
 
-      adapter = new RedisDatabase({ url: explicitUrl });
+      adapter = new RedisDatabase(env, { url: explicitUrl });
 
       expect(adapter).toBeInstanceOf(RedisDatabase);
       expect(adapter.getClient()).toBeDefined();

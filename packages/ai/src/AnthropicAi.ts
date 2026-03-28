@@ -1,4 +1,6 @@
 import { createAnthropicChat } from "@tanstack/ai-anthropic";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
@@ -6,8 +8,12 @@ import type { AnthropicConfigType, AnthropicModelType } from "./types";
 
 @decorator.ai()
 export class AnthropicAi extends BaseAi<AnthropicConfigType> {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
   private getApiKey(config?: AnthropicConfigType): string {
-    const apiKey = config?.apiKey || Bun.env.ANTHROPIC_API_KEY;
+    const apiKey = config?.apiKey || this.env.ANTHROPIC_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

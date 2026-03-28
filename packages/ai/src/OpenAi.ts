@@ -6,6 +6,8 @@ import {
   createOpenaiSpeech,
   createOpenaiTranscription,
 } from "@tanstack/ai-openai";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
@@ -19,8 +21,12 @@ import type {
 
 @decorator.ai()
 export class OpenAi extends BaseAi<OpenAiConfigType> {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
   private getApiKey(config?: { apiKey?: string }): string {
-    const apiKey = config?.apiKey || Bun.env.OPENAI_API_KEY;
+    const apiKey = config?.apiKey || this.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

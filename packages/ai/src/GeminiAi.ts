@@ -1,6 +1,8 @@
 import type { ImageGenerationResult, TTSResult } from "@tanstack/ai";
 import { generateImage, generateSpeech } from "@tanstack/ai";
 import { createGeminiChat, createGeminiImage, createGeminiSpeech } from "@tanstack/ai-gemini";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
@@ -13,8 +15,12 @@ import type {
 
 @decorator.ai()
 export class GeminiAi extends BaseAi<GeminiConfigType> {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
   private getApiKey(config?: { apiKey?: string }): string {
-    const apiKey = config?.apiKey || Bun.env.GEMINI_API_KEY;
+    const apiKey = config?.apiKey || this.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

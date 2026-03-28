@@ -1,5 +1,7 @@
 import type { TTSResult } from "@tanstack/ai";
 import { createGroqText } from "@tanstack/ai-groq";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
@@ -7,8 +9,12 @@ import type { GroqConfigType, GroqModelType, GroqTextToSpeechOptionsType } from 
 
 @decorator.ai()
 export class GroqAi extends BaseAi<GroqConfigType> {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
   private getApiKey(config?: { apiKey?: string }): string {
-    const apiKey = config?.apiKey || Bun.env.GROQ_API_KEY;
+    const apiKey = config?.apiKey || this.env.GROQ_API_KEY;
 
     if (!apiKey) {
       throw new AiException(

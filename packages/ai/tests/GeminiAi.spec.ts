@@ -41,8 +41,8 @@ describe("GeminiAi", () => {
   const originalEnv = Bun.env.GEMINI_API_KEY;
 
   beforeEach(() => {
-    ai = new GeminiAi(new AppEnv());
     Bun.env.GEMINI_API_KEY = "test-api-key";
+    ai = new GeminiAi(new AppEnv());
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
     mockGenerateSpeech.mockClear();
@@ -62,22 +62,25 @@ describe("GeminiAi", () => {
 
     test("should use API key from environment variable", async () => {
       Bun.env.GEMINI_API_KEY = "env-api-key";
-      await ai.makeShorter("test content");
+      const envAi = new GeminiAi(new AppEnv());
+      await envAi.makeShorter("test content");
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });
 
     test("should throw AiException when no API key is provided", async () => {
       Bun.env.GEMINI_API_KEY = "";
+      const noKeyAi = new GeminiAi(new AppEnv());
 
-      expect(ai.makeShorter("test content")).rejects.toBeInstanceOf(AiException);
+      expect(noKeyAi.makeShorter("test content")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should throw with descriptive message when API key is missing", async () => {
       Bun.env.GEMINI_API_KEY = "";
+      const noKeyAi = new GeminiAi(new AppEnv());
 
       try {
-        await ai.makeShorter("test content");
+        await noKeyAi.makeShorter("test content");
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(AiException);
@@ -614,8 +617,9 @@ describe("GeminiAi", () => {
 
     test("should throw when API key is missing", async () => {
       Bun.env.GEMINI_API_KEY = "";
+      const noKeyAi = new GeminiAi(new AppEnv());
 
-      expect(ai.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
+      expect(noKeyAi.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should pass format option", async () => {
@@ -662,8 +666,9 @@ describe("GeminiAi", () => {
 
     test("should throw when API key is missing", async () => {
       Bun.env.GEMINI_API_KEY = "";
+      const noKeyAi = new GeminiAi(new AppEnv());
 
-      expect(ai.generateImage("A cat")).rejects.toBeInstanceOf(AiException);
+      expect(noKeyAi.generateImage("A cat")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should pass numberOfImages option", async () => {
@@ -792,8 +797,9 @@ describe("GeminiAi", () => {
 
     test("should throw when API key is missing", async () => {
       Bun.env.GEMINI_API_KEY = "";
+      const noKeyAi = new GeminiAi(new AppEnv());
 
-      const generator = ai.runStream("Test prompt");
+      const generator = noKeyAi.runStream("Test prompt");
 
       expect(generator.next()).rejects.toBeInstanceOf(AiException);
     });

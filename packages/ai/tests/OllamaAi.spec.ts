@@ -29,8 +29,8 @@ describe("OllamaAi", () => {
   const originalHost = Bun.env.OLLAMA_HOST;
 
   beforeEach(() => {
-    ai = new OllamaAi(new AppEnv());
     Bun.env.OLLAMA_HOST = "http://localhost:11434";
+    ai = new OllamaAi(new AppEnv());
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
   });
@@ -48,14 +48,16 @@ describe("OllamaAi", () => {
 
     test("should use host from environment variable", async () => {
       Bun.env.OLLAMA_HOST = "http://env-host:11434";
-      await ai.makeShorter("test content");
+      const envAi = new OllamaAi(new AppEnv());
+      await envAi.makeShorter("test content");
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });
 
     test("should use default host when not provided", async () => {
       Bun.env.OLLAMA_HOST = "";
-      await ai.makeShorter("test content");
+      const noHostAi = new OllamaAi(new AppEnv());
+      await noHostAi.makeShorter("test content");
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });

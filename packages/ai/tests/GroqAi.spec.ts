@@ -41,8 +41,8 @@ describe("GroqAi", () => {
   const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
-    ai = new GroqAi(new AppEnv());
     Bun.env.GROQ_API_KEY = "test-api-key";
+    ai = new GroqAi(new AppEnv());
     mockChat.mockClear();
     mockChat.mockImplementation(() => Promise.resolve("  Mocked response  "));
     mockFetch.mockClear();
@@ -71,22 +71,25 @@ describe("GroqAi", () => {
 
     test("should use API key from environment variable", async () => {
       Bun.env.GROQ_API_KEY = "env-api-key";
-      await ai.makeShorter("test content");
+      const envAi = new GroqAi(new AppEnv());
+      await envAi.makeShorter("test content");
 
       expect(mockChat).toHaveBeenCalledTimes(1);
     });
 
     test("should throw AiException when no API key is provided", async () => {
       Bun.env.GROQ_API_KEY = "";
+      const noKeyAi = new GroqAi(new AppEnv());
 
-      expect(ai.makeShorter("test content")).rejects.toBeInstanceOf(AiException);
+      expect(noKeyAi.makeShorter("test content")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should throw with descriptive message when API key is missing", async () => {
       Bun.env.GROQ_API_KEY = "";
+      const noKeyAi = new GroqAi(new AppEnv());
 
       try {
-        await ai.makeShorter("test content");
+        await noKeyAi.makeShorter("test content");
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(AiException);
@@ -626,8 +629,9 @@ describe("GroqAi", () => {
 
     test("should throw when API key is missing", async () => {
       Bun.env.GROQ_API_KEY = "";
+      const noKeyAi = new GroqAi(new AppEnv());
 
-      expect(ai.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
+      expect(noKeyAi.textToSpeech("Hello")).rejects.toBeInstanceOf(AiException);
     });
 
     test("should use default model and voice", async () => {
@@ -782,8 +786,9 @@ describe("GroqAi", () => {
 
     test("should throw when API key is missing", async () => {
       Bun.env.GROQ_API_KEY = "";
+      const noKeyAi = new GroqAi(new AppEnv());
 
-      const generator = ai.runStream("Test prompt");
+      const generator = noKeyAi.runStream("Test prompt");
 
       expect(generator.next()).rejects.toBeInstanceOf(AiException);
     });

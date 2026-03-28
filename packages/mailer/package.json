@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/mailer",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "module": "./dist/index.js",
   "dependencies": {
     "@ooneex/app-env": "workspace:*",
@@ -19,7 +19,7 @@
     },
     "./package.json": "./package.json"
   },
-  "description": "Transactional email service supporting Nodemailer SMTP and Resend API — send templated emails with attachments and delivery tracking",
+  "description": "Transactional email service supporting Nodemailer SMTP and Resend API \u2014 send templated emails with attachments and delivery tracking",
   "files": [
     "dist",
     "LICENSE",

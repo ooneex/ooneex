@@ -1,5 +1,13 @@
 #compdef oo ooneex
 
+_ooneex_modules() {
+  local -a modules
+  if [[ -d modules ]]; then
+    modules=(${(@f)"$(command ls -1 modules 2>/dev/null)"})
+    compadd -a modules
+  fi
+}
+
 _ooneex() {
   local -a commands
   commands=(
@@ -42,6 +50,7 @@ _ooneex() {
         make:controller)
           _arguments -s \
             '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--route-name=[Route name]:route_name' \
             '--route-path=[Route path]:route_path' \
             '--route-method=[Route HTTP method]:method:(GET POST PUT PATCH DELETE HEAD OPTIONS)' \
@@ -50,25 +59,30 @@ _ooneex() {
         make:middleware)
           _arguments -s \
             '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--is-socket[Socket mode]'
           ;;
         make:entity)
           _arguments -s \
             '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--table-name=[Database table name]:table_name'
           ;;
         make:pubsub)
           _arguments -s \
             '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--channel=[Channel name]:channel'
           ;;
         make:migration)
           _arguments -s \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--dir=[Directory]:dir:_files -/'
           ;;
         make:seed)
           _arguments -s \
             '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules' \
             '--dir=[Directory]:dir:_files -/'
           ;;
         make:module)
@@ -77,11 +91,17 @@ _ooneex() {
           ;;
         make:docker)
           _arguments -s \
-            '--name=[Docker service name]:name:(clickhouse elasticsearch grafana jaeger keycloak libretranslate maildev memcached minio mongodb mysql nats ooneex-jade postgres prometheus rabbitmq redis temporal vault)'
+            '--name=[Docker service name]:name:(clickhouse elasticsearch grafana jaeger keycloak libretranslate maildev memcached minio mongodb mysql nats ooneex-jade postgres prometheus rabbitmq redis temporal vault)' \
+            '--module=[Module name]:module:_ooneex_modules'
           ;;
-        make:ai|make:analytics|make:app|make:cache|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
+        make:app)
           _arguments -s \
             '--name=[Name of the resource]:name'
+          ;;
+        make:ai|make:analytics|make:cache|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
+          _arguments -s \
+            '--name=[Name of the resource]:name' \
+            '--module=[Module name]:module:_ooneex_modules'
           ;;
         make:claude:skill|completion:zsh)
           ;;

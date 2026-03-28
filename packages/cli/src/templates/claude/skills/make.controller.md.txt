@@ -237,3 +237,29 @@ Run linting and formatting on the generated files:
 ```bash
 bunx biome check --fix src/controllers/<Name>Controller.ts src/types/routes/<route.name>.ts tests/controllers/<Name>Controller.spec.ts
 ```
+
+### 8. Create the service
+
+After the controller is created, generate a service class for the controller's business logic using the `make:service` skill:
+
+```
+/make:service --name <Name>
+```
+
+Where `<Name>` matches the controller name (e.g., if the controller is `CreateUserController`, the service is `CreateUserService`).
+
+### 9. Create the pubsub event
+
+After the service is created, generate a pubsub event class for the controller's domain events using the `make:pubsub` skill:
+
+```
+/make:pubsub --name <Name> --channel <resource>.<action>
+```
+
+Where:
+- `<Name>` matches the controller name (e.g., if the controller is `CreateUserController`, the event is `CreateUserEvent`)
+- `<resource>.<action>` follows the same dot notation as the route name (e.g., `user.create`, `book.delete`)
+
+Once the event is created:
+- Inject the **service** into the **event** via the constructor, and call the service's `execute` method from the event's `handler` method.
+- Inject the **event** into the **controller** via the constructor, and publish the event from the controller's `index` method.

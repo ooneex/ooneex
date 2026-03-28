@@ -34,6 +34,9 @@ const { values, positionals } = parseArgs({
     "table-name": {
       type: "string",
     },
+    module: {
+      type: "string",
+    },
   },
   strict: true,
   allowPositionals: true,
@@ -61,6 +64,7 @@ const parsedValues = {
   channel: values.channel,
   isSocket: values["is-socket"],
   tableName: values["table-name"],
+  module: values.module,
   route: {
     name: values["route-name"],
     path: values["route-path"] as `/${string}` | undefined,

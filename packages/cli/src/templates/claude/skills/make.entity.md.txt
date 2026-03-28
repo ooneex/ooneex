@@ -185,10 +185,32 @@ public async up(tx: TransactionSQL): Promise<void> {
 }
 ```
 
-### 7. Lint and format
+### 7. Create a repository for the entity
+
+After creating the entity, generate a repository to handle database operations for it.
+
+Run the generator:
+
+```bash
+bunx @ooneex/cli@latest make:repository --name <name>
+```
+
+Where `<name>` is the same name used for the entity. The command will generate:
+- `src/repositories/<Name>Repository.ts` - The repository class
+- `tests/repositories/<Name>Repository.spec.ts` - The test file
+
+Then read the generated files and complete the repository implementation:
+
+- Adjust search fields in the `find()` method to match the entity's searchable columns
+- Customize relations loading in `findOne`/`findOneBy` if the entity has relations
+- Add any domain-specific methods relevant to the entity
+- Remove methods that don't apply to the entity
+- Update tests to match the final repository methods
+
+### 8. Lint and format
 
 Run linting and formatting on all generated files:
 
 ```bash
-bunx biome check --fix src/entities/<Name>Entity.ts tests/entities/<Name>Entity.spec.ts src/migrations/
+bunx biome check --fix src/entities/<Name>Entity.ts tests/entities/<Name>Entity.spec.ts src/repositories/<Name>Repository.ts tests/repositories/<Name>Repository.spec.ts src/migrations/
 ```

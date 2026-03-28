@@ -11,7 +11,10 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
 {
   private client: PostHog | null = null;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, config?: PostHogConfigType) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    config?: PostHogConfigType,
+  ) {
     const apiKey = config?.apiKey || this.env.ANALYTICS_POSTHOG_API_KEY?.trim();
 
     if (!apiKey) {

@@ -1,4 +1,5 @@
 import { injectable } from "@ooneex/container";
+import { parseString } from "@ooneex/utils";
 import type { EnvironmentNameType, IAppEnv } from "./types";
 
 @injectable()
@@ -89,6 +90,21 @@ export class AppEnv implements IAppEnv {
   // Authentication
   public readonly CLERK_SECRET_KEY: string | undefined;
 
+  // Allowed Users
+  public readonly DEVELOPMENT_ALLOWED_USERS: string[];
+  public readonly STAGING_ALLOWED_USERS: string[];
+  public readonly TESTING_ALLOWED_USERS: string[];
+  public readonly TEST_ALLOWED_USERS: string[];
+  public readonly QA_ALLOWED_USERS: string[];
+  public readonly UAT_ALLOWED_USERS: string[];
+  public readonly INTEGRATION_ALLOWED_USERS: string[];
+  public readonly PREVIEW_ALLOWED_USERS: string[];
+  public readonly DEMO_ALLOWED_USERS: string[];
+  public readonly SANDBOX_ALLOWED_USERS: string[];
+  public readonly BETA_ALLOWED_USERS: string[];
+  public readonly CANARY_ALLOWED_USERS: string[];
+  public readonly HOTFIX_ALLOWED_USERS: string[];
+
   public constructor() {
     // App
     this.APP_ENV = (Bun.env.APP_ENV || "production") as EnvironmentNameType;
@@ -107,7 +123,7 @@ export class AppEnv implements IAppEnv {
     this.isCanary = this.APP_ENV === "canary";
     this.isHotfix = this.APP_ENV === "hotfix";
     this.isProduction = this.APP_ENV === "production";
-    this.PORT = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
+    this.PORT = Bun.env.PORT ? parseString<number>(Bun.env.PORT) : 3000;
     this.HOST_NAME = Bun.env.HOST_NAME || "0.0.0.0";
 
     // Logs
@@ -174,5 +190,20 @@ export class AppEnv implements IAppEnv {
 
     // Authentication
     this.CLERK_SECRET_KEY = Bun.env.CLERK_SECRET_KEY;
+
+    // Allowed Users
+    this.DEVELOPMENT_ALLOWED_USERS = (Bun.env.DEVELOPMENT_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.STAGING_ALLOWED_USERS = (Bun.env.STAGING_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.TESTING_ALLOWED_USERS = (Bun.env.TESTING_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.TEST_ALLOWED_USERS = (Bun.env.TEST_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.QA_ALLOWED_USERS = (Bun.env.QA_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.UAT_ALLOWED_USERS = (Bun.env.UAT_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.INTEGRATION_ALLOWED_USERS = (Bun.env.INTEGRATION_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.PREVIEW_ALLOWED_USERS = (Bun.env.PREVIEW_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.DEMO_ALLOWED_USERS = (Bun.env.DEMO_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.SANDBOX_ALLOWED_USERS = (Bun.env.SANDBOX_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.BETA_ALLOWED_USERS = (Bun.env.BETA_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.CANARY_ALLOWED_USERS = (Bun.env.CANARY_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.HOTFIX_ALLOWED_USERS = (Bun.env.HOTFIX_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
   }
 }

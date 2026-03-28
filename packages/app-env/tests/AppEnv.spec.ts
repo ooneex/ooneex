@@ -621,6 +621,19 @@ describe("AppEnv", () => {
       delete Bun.env.POLAR_ACCESS_TOKEN;
       delete Bun.env.POLAR_ENVIRONMENT;
       delete Bun.env.CLERK_SECRET_KEY;
+      delete Bun.env.DEVELOPMENT_ALLOWED_USERS;
+      delete Bun.env.STAGING_ALLOWED_USERS;
+      delete Bun.env.TESTING_ALLOWED_USERS;
+      delete Bun.env.TEST_ALLOWED_USERS;
+      delete Bun.env.QA_ALLOWED_USERS;
+      delete Bun.env.UAT_ALLOWED_USERS;
+      delete Bun.env.INTEGRATION_ALLOWED_USERS;
+      delete Bun.env.PREVIEW_ALLOWED_USERS;
+      delete Bun.env.DEMO_ALLOWED_USERS;
+      delete Bun.env.SANDBOX_ALLOWED_USERS;
+      delete Bun.env.BETA_ALLOWED_USERS;
+      delete Bun.env.CANARY_ALLOWED_USERS;
+      delete Bun.env.HOTFIX_ALLOWED_USERS;
     });
 
     test("should read HOST_NAME from environment", () => {
@@ -673,6 +686,19 @@ describe("AppEnv", () => {
       expect(appEnv.POLAR_ACCESS_TOKEN).toBeUndefined();
       expect(appEnv.POLAR_ENVIRONMENT).toBeUndefined();
       expect(appEnv.CLERK_SECRET_KEY).toBeUndefined();
+      expect(appEnv.DEVELOPMENT_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.STAGING_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.TESTING_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.TEST_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.QA_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.UAT_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.INTEGRATION_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.PREVIEW_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.DEMO_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.SANDBOX_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.BETA_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.CANARY_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.HOTFIX_ALLOWED_USERS).toEqual([]);
     });
 
     test("should read all env vars when set", () => {
@@ -815,6 +841,32 @@ describe("AppEnv", () => {
 
       expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
+    });
+
+    test("should read allowed users env vars and split by comma", () => {
+      Bun.env.DEVELOPMENT_ALLOWED_USERS = "user1@test.com, user2@test.com";
+      Bun.env.STAGING_ALLOWED_USERS = "user3@test.com";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.DEVELOPMENT_ALLOWED_USERS).toEqual(["user1@test.com", "user2@test.com"]);
+      expect(appEnv.STAGING_ALLOWED_USERS).toEqual(["user3@test.com"]);
+    });
+
+    test("should trim whitespace from allowed users", () => {
+      Bun.env.QA_ALLOWED_USERS = "  user1@test.com ,  user2@test.com  , user3@test.com  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.QA_ALLOWED_USERS).toEqual(["user1@test.com", "user2@test.com", "user3@test.com"]);
+    });
+
+    test("should filter empty entries from allowed users", () => {
+      Bun.env.BETA_ALLOWED_USERS = "user1@test.com,,, user2@test.com,";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.BETA_ALLOWED_USERS).toEqual(["user1@test.com", "user2@test.com"]);
     });
   });
 

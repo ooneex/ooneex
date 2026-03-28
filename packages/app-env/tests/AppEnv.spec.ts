@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { AppEnv } from "@/AppEnv";
-import { type EnvironmentNameType, Environment } from "@/types";
+import { Environment, type EnvironmentNameType } from "@/types";
 
 const setEnv = (value: string | undefined) => {
   if (value === undefined) {

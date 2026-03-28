@@ -109,6 +109,7 @@
         "@ooneex/container": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
+        "@ooneex/utils": "workspace:*",
       },
     },
     "packages/auth": {

@@ -25,7 +25,12 @@
       "Read(//Volumes/Projects/Ooneex/Ooneex/**)",
       "Bash(done)",
       "Bash(bunx nx:*)",
-      "Bash(bunx tsc:*)"
+      "Bash(bunx tsc:*)",
+      "Bash(bunx biome:*)",
+      "Bash(sed -n '43,50p' packages/ai/tests/GroqAi.spec.ts)",
+      "Bash(sed -n '31,38p' packages/ai/tests/OllamaAi.spec.ts)",
+      "Bash(sed -n '49,56p' packages/ai/tests/OpenAi.spec.ts)",
+      "Bash(sed -n '43,50p' packages/ai/tests/GeminiAi.spec.ts)"
     ]
   }
 }

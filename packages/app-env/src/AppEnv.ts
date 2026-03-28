@@ -195,21 +195,69 @@ export class AppEnv implements IAppEnv {
     this.CLERK_SECRET_KEY = Bun.env.CLERK_SECRET_KEY;
 
     // Allowed Users
-    this.DEVELOPMENT_ALLOWED_USERS = (Bun.env.DEVELOPMENT_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.STAGING_ALLOWED_USERS = (Bun.env.STAGING_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.TESTING_ALLOWED_USERS = (Bun.env.TESTING_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.TEST_ALLOWED_USERS = (Bun.env.TEST_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.QA_ALLOWED_USERS = (Bun.env.QA_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.UAT_ALLOWED_USERS = (Bun.env.UAT_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.INTEGRATION_ALLOWED_USERS = (Bun.env.INTEGRATION_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.PREVIEW_ALLOWED_USERS = (Bun.env.PREVIEW_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.DEMO_ALLOWED_USERS = (Bun.env.DEMO_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.SANDBOX_ALLOWED_USERS = (Bun.env.SANDBOX_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.BETA_ALLOWED_USERS = (Bun.env.BETA_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.CANARY_ALLOWED_USERS = (Bun.env.CANARY_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.HOTFIX_ALLOWED_USERS = (Bun.env.HOTFIX_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.SYSTEM_USERS = (Bun.env.SYSTEM_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.SUPER_ADMIN_USERS = (Bun.env.SUPER_ADMIN_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
-    this.ADMIN_USERS = (Bun.env.ADMIN_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.DEVELOPMENT_ALLOWED_USERS = (Bun.env.DEVELOPMENT_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.STAGING_ALLOWED_USERS = (Bun.env.STAGING_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.TESTING_ALLOWED_USERS = (Bun.env.TESTING_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.TEST_ALLOWED_USERS = (Bun.env.TEST_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.QA_ALLOWED_USERS = (Bun.env.QA_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.UAT_ALLOWED_USERS = (Bun.env.UAT_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.INTEGRATION_ALLOWED_USERS = (Bun.env.INTEGRATION_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.PREVIEW_ALLOWED_USERS = (Bun.env.PREVIEW_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.DEMO_ALLOWED_USERS = (Bun.env.DEMO_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.SANDBOX_ALLOWED_USERS = (Bun.env.SANDBOX_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.BETA_ALLOWED_USERS = (Bun.env.BETA_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.CANARY_ALLOWED_USERS = (Bun.env.CANARY_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.HOTFIX_ALLOWED_USERS = (Bun.env.HOTFIX_ALLOWED_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.SYSTEM_USERS = (Bun.env.SYSTEM_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.SUPER_ADMIN_USERS = (Bun.env.SUPER_ADMIN_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.ADMIN_USERS = (Bun.env.ADMIN_USERS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
 }

@@ -752,7 +752,7 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
-      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
       expect(sentData.status).toBe(HttpStatus.Code.Forbidden);
     });
 
@@ -795,7 +795,7 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
-      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
       expect(sentData.status).toBe(HttpStatus.Code.OK);
     });
 
@@ -838,7 +838,7 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
-      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
       expect(sentData.status).toBe(HttpStatus.Code.OK);
     });
 
@@ -881,7 +881,7 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
-      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
       expect(sentData.status).toBe(HttpStatus.Code.OK);
     });
 

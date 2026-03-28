@@ -318,7 +318,7 @@ type HttpRouteHandlerOptions = {
 };
 
 export const httpRouteHandler = async ({ context, route, permissions }: HttpRouteHandlerOptions): Promise<Response> => {
-  const currentEnv = context.env.env;
+  const currentEnv = context.env.APP_ENV;
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
@@ -394,7 +394,7 @@ export const formatHttpRoutes = (
         try {
           context = await runMiddlewares(context, middlewares);
         } catch (error: unknown) {
-          const env: EnvironmentNameType = context.env.env || "production";
+          const env: EnvironmentNameType = context.env.APP_ENV;
           const status = (
             error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError
           ) as StatusCodeType;

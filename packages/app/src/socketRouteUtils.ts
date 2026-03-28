@@ -115,7 +115,7 @@ export const socketRouteHandler = async ({
   permissions,
 }: SocketRouteHandlerOptions): Promise<void> => {
   let { context, route } = container.getConstant<{ context: ContextType; route: RouteConfigType }>(ws.data.id);
-  const currentEnv: EnvironmentNameType = context.env.env || "production";
+  const currentEnv: EnvironmentNameType = context.env.APP_ENV;
 
   context.channel = {
     send: async (response: IResponse): Promise<void> => {

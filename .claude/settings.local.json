@@ -16,7 +16,16 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(curl:*)",
       "Bash(find /Volumes/Projects/Ooneex/Ooneex/packages -name \"*.ts\" -type f -exec grep -l \"IMigration\\\\|@decorator.migration\" {})",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(grep:*)",
+      "Bash(bun:*)",
+      "Bash(for pkg:*)",
+      "Bash(do echo:*)",
+      "Read(//Volumes/Projects/Ooneex/Ooneex/packages/$pkg/**)",
+      "Read(//Volumes/Projects/Ooneex/Ooneex/**)",
+      "Bash(done)",
+      "Bash(bunx nx:*)",
+      "Bash(bunx tsc:*)"
     ]
   }
 }

@@ -2,6 +2,8 @@ import { existsSync, mkdirSync } from "node:fs";
 import { mkdir, readdir, rm, rmdir } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import type { BunFile, S3File, S3Options } from "bun";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { decorator } from "./decorators";
 import { Storage } from "./Storage";
 import { StorageException } from "./StorageException";
@@ -12,10 +14,10 @@ export class FilesystemStorage extends Storage {
   protected bucket: string;
   private readonly storagePath: string;
 
-  constructor() {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
     super();
 
-    const basePath = Bun.env.FILESYSTEM_STORAGE_PATH;
+    const basePath = this.env.FILESYSTEM_STORAGE_PATH;
 
     if (!basePath) {
       throw new StorageException(

@@ -1,6 +1,8 @@
 import { readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import type { BunFile, S3File } from "bun";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { decorator } from "./decorators";
 import { StorageException } from "./StorageException";
 import type { GetFileOptionsType, IStorage, PutDirOptionsType } from "./types";
@@ -45,10 +47,10 @@ export class BunnyStorage implements IStorage {
   private readonly region: BunnyRegionType;
   private readonly baseUrl: string;
 
-  constructor() {
-    const accessKey = Bun.env.STORAGE_BUNNY_ACCESS_KEY;
-    const storageZone = Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
-    const region = Bun.env.STORAGE_BUNNY_REGION as BunnyRegionType | undefined;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const accessKey = this.env.STORAGE_BUNNY_ACCESS_KEY;
+    const storageZone = this.env.STORAGE_BUNNY_STORAGE_ZONE;
+    const region = this.env.STORAGE_BUNNY_REGION as BunnyRegionType | undefined;
 
     if (!accessKey) {
       throw new StorageException(

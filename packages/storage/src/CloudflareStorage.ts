@@ -1,4 +1,6 @@
 import type { S3Options } from "bun";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { decorator } from "./decorators";
 import { Storage } from "./Storage";
 import { StorageException } from "./StorageException";
@@ -11,12 +13,12 @@ export class CloudflareStorage extends Storage {
   private readonly endpoint: string;
   private readonly region: string;
 
-  constructor() {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
     super();
 
-    const accessKey = Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
-    const secretKey = Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
-    const endpoint = Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
+    const accessKey = this.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
+    const secretKey = this.env.STORAGE_CLOUDFLARE_SECRET_KEY;
+    const endpoint = this.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
     if (!accessKey) {
       throw new StorageException(
@@ -37,7 +39,7 @@ export class CloudflareStorage extends Storage {
     this.accessKey = accessKey;
     this.secretKey = secretKey;
     this.endpoint = endpoint;
-    this.region = Bun.env.STORAGE_CLOUDFLARE_REGION || "EEUR";
+    this.region = this.env.STORAGE_CLOUDFLARE_REGION || "EEUR";
   }
 
   public getOptions(): S3Options {

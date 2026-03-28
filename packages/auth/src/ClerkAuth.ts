@@ -9,7 +9,10 @@ export class ClerkAuth {
   private readonly client: ReturnType<typeof createClerkClient>;
   private readonly secretKey: string;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv, config?: ClerkAuthConfigType) {
+  constructor(
+    @inject(AppEnv) private readonly env: AppEnv,
+    config?: ClerkAuthConfigType,
+  ) {
     const secretKey = config?.secretKey || this.env.CLERK_SECRET_KEY;
 
     if (!secretKey) {

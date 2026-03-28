@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
+import type { AppEnv } from "@ooneex/app-env";
 import { AuthException, ClerkAuth } from "@/index";
+
+const createMockEnv = (): AppEnv => {
+  return {
+    CLERK_SECRET_KEY: Bun.env.CLERK_SECRET_KEY,
+  } as unknown as AppEnv;
+};
 
 const mockCreateClerkClient = mock(() => ({
   users: {
@@ -46,7 +53,7 @@ describe("ClerkAuth", () => {
 
   describe("Secret key handling", () => {
     test("should use secret key from config", () => {
-      const auth = new ClerkAuth({ secretKey: "config-secret-key" });
+      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-secret-key" });
 
       expect(auth).toBeInstanceOf(ClerkAuth);
       expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "config-secret-key" });
@@ -54,7 +61,7 @@ describe("ClerkAuth", () => {
 
     test("should use secret key from environment variable", () => {
       Bun.env.CLERK_SECRET_KEY = "env-secret-key";
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
 
       expect(auth).toBeInstanceOf(ClerkAuth);
       expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "env-secret-key" });
@@ -62,7 +69,7 @@ describe("ClerkAuth", () => {
 
     test("should prefer config secret key over environment variable", () => {
       Bun.env.CLERK_SECRET_KEY = "env-secret-key";
-      const auth = new ClerkAuth({ secretKey: "config-secret-key" });
+      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-secret-key" });
 
       expect(auth).toBeInstanceOf(ClerkAuth);
       expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "config-secret-key" });
@@ -71,14 +78,14 @@ describe("ClerkAuth", () => {
     test("should throw AuthException when no secret key is provided", () => {
       Bun.env.CLERK_SECRET_KEY = "";
 
-      expect(() => new ClerkAuth()).toThrow(AuthException);
+      expect(() => new ClerkAuth(createMockEnv())).toThrow(AuthException);
     });
 
     test("should throw with descriptive message when secret key is missing", () => {
       Bun.env.CLERK_SECRET_KEY = "";
 
       try {
-        new ClerkAuth();
+        new ClerkAuth(createMockEnv());
         expect.unreachable("Should have thrown");
       } catch (error) {
         expect(error).toBeInstanceOf(AuthException);
@@ -89,7 +96,7 @@ describe("ClerkAuth", () => {
 
   describe("getCurrentUser", () => {
     test("should return user when token is valid", async () => {
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
       const user = await auth.getCurrentUser("valid-token");
 
       expect(user).toBeDefined();
@@ -98,14 +105,14 @@ describe("ClerkAuth", () => {
 
     test("should return null when userId is not found", async () => {
       mockVerifyToken.mockImplementation(() => Promise.resolve({ sub: "", sid: "" }));
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
       const user = await auth.getCurrentUser("invalid-token");
 
       expect(user).toBeNull();
     });
 
     test("should use config secret key for token verification", async () => {
-      const auth = new ClerkAuth({ secretKey: "config-key" });
+      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-key" });
       await auth.getCurrentUser("token");
 
       expect(mockVerifyToken).toHaveBeenCalledWith("token", { secretKey: "config-key" });
@@ -114,7 +121,7 @@ describe("ClerkAuth", () => {
 
   describe("getCurrentUserSession", () => {
     test("should return session when token is valid", async () => {
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
       const session = await auth.getCurrentUserSession("valid-token");
 
       expect(session).toBeDefined();
@@ -123,7 +130,7 @@ describe("ClerkAuth", () => {
 
     test("should return null when sessionId is not found", async () => {
       mockVerifyToken.mockImplementation(() => Promise.resolve({ sub: "", sid: "" }));
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
       const session = await auth.getCurrentUserSession("invalid-token");
 
       expect(session).toBeNull();
@@ -134,7 +141,7 @@ describe("ClerkAuth", () => {
     let auth: ClerkAuth;
 
     beforeEach(() => {
-      auth = new ClerkAuth();
+      auth = new ClerkAuth(createMockEnv());
     });
 
     test("should ban user", async () => {
@@ -199,7 +206,7 @@ describe("ClerkAuth", () => {
     let auth: ClerkAuth;
 
     beforeEach(() => {
-      auth = new ClerkAuth();
+      auth = new ClerkAuth(createMockEnv());
     });
 
     test("should get session", async () => {
@@ -215,12 +222,12 @@ describe("ClerkAuth", () => {
 
   describe("Instance creation", () => {
     test("should create ClerkAuth instance", () => {
-      const instance = new ClerkAuth();
+      const instance = new ClerkAuth(createMockEnv());
       expect(instance).toBeInstanceOf(ClerkAuth);
     });
 
     test("should have all required methods", () => {
-      const auth = new ClerkAuth();
+      const auth = new ClerkAuth(createMockEnv());
       expect(typeof auth.getCurrentUser).toBe("function");
       expect(typeof auth.getCurrentUserSession).toBe("function");
       expect(typeof auth.banUser).toBe("function");

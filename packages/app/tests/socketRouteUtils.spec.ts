@@ -711,5 +711,177 @@ describe("socketRouteUtils", () => {
 
       expect(executionOrder).toEqual(["first", "second", "controller"]);
     });
+
+    test("sends Forbidden when user is not in allowed users list", async () => {
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: ["allowed@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "notallowed@test.com", roles: [] },
+      });
+
+      class AllowedUsersController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(AllowedUsersController);
+
+      const route = createMockSocketRoute({ controller: AllowedUsersController });
+
+      const wsId = `test-ws-id-allowed-users-denied-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      expect(sentData.status).toBe(HttpStatus.Code.Forbidden);
+    });
+
+    test("allows user when email is in allowed users list", async () => {
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: ["allowed@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "allowed@test.com", roles: [] },
+      });
+
+      class AllowedUsersPassController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(AllowedUsersPassController);
+
+      const route = createMockSocketRoute({ controller: AllowedUsersPassController });
+
+      const wsId = `test-ws-id-allowed-users-pass-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      expect(sentData.status).toBe(HttpStatus.Code.OK);
+    });
+
+    test("skips allowed users check when no user is present", async () => {
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: ["allowed@test.com"],
+        } as unknown as ContextType["env"],
+        user: null,
+      });
+
+      class NoUserController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(NoUserController);
+
+      const route = createMockSocketRoute({ controller: NoUserController });
+
+      const wsId = `test-ws-id-no-user-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      expect(sentData.status).toBe(HttpStatus.Code.OK);
+    });
+
+    test("skips allowed users check when allowed users list is empty", async () => {
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: [],
+        } as unknown as ContextType["env"],
+        user: { email: "anyone@test.com", roles: [] },
+      });
+
+      class EmptyListController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(EmptyListController);
+
+      const route = createMockSocketRoute({ controller: EmptyListController });
+
+      const wsId = `test-ws-id-empty-list-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])![0]![0]));
+      expect(sentData.status).toBe(HttpStatus.Code.OK);
+    });
   });
 });

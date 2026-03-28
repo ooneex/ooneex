@@ -10,6 +10,7 @@ import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import {
+  checkAllowedUsers,
   formatHttpRoutes,
   httpRouteHandler,
   validateConstraint,
@@ -755,6 +756,90 @@ describe("httpRouteUtils", () => {
       const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.OK);
+    });
+  });
+
+  describe("checkAllowedUsers", () => {
+    test("returns null when no user is present", () => {
+      const context = createMockContext({ user: null });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).toBeNull();
+    });
+
+    test("returns Forbidden when user is not in allowed users list", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: ["allowed@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "notallowed@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).not.toBeNull();
+      expect(result?.status).toBe(HttpStatus.Code.Forbidden);
+      expect(result?.message).toContain("notallowed@test.com");
+      expect(result?.message).toContain("staging");
+    });
+
+    test("returns null when user is in allowed users list", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: ["allowed@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "allowed@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).toBeNull();
+    });
+
+    test("returns null when allowed users list is empty", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "staging",
+          STAGING_ALLOWED_USERS: [],
+        } as unknown as ContextType["env"],
+        user: { email: "anyone@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).toBeNull();
+    });
+
+    test("returns null when allowed users property is undefined", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "production",
+        } as unknown as ContextType["env"],
+        user: { email: "anyone@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).toBeNull();
+    });
+
+    test("checks correct env-specific allowed users list", () => {
+      const context = createMockContext({
+        env: {
+          APP_ENV: "development",
+          DEVELOPMENT_ALLOWED_USERS: ["dev@test.com"],
+          STAGING_ALLOWED_USERS: ["staging@test.com"],
+        } as unknown as ContextType["env"],
+        user: { email: "staging@test.com", roles: [] } as unknown as ContextType["user"],
+      });
+
+      const result = checkAllowedUsers(context);
+
+      expect(result).not.toBeNull();
+      expect(result?.status).toBe(HttpStatus.Code.Forbidden);
     });
   });
 

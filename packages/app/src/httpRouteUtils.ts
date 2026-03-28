@@ -21,6 +21,26 @@ import type { ScalarType } from "@ooneex/types";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
 
+export const checkAllowedUsers = (
+  context: ContextType,
+): RouteValidationError | null => {
+  if (!context.user) {
+    return null;
+  }
+
+  const allowedUsersKey = `${context.env.APP_ENV.toUpperCase()}_ALLOWED_USERS` as keyof typeof context.env;
+  const allowedUsers = context.env[allowedUsersKey] as string[] | undefined;
+
+  if (allowedUsers && allowedUsers.length > 0 && !allowedUsers.includes(context.user.email)) {
+    return {
+      message: `User "${context.user.email}" is not allowed in "${context.env.APP_ENV}" environment`,
+      status: HttpStatus.Code.Forbidden,
+    };
+  }
+
+  return null;
+};
+
 type HttpRouteHandler = (req: BunRequest, server: Server<unknown>) => Promise<Response>;
 type HttpMethodHandlers = Partial<Record<string, HttpRouteHandler | Response>>;
 type HttpRoutesMap = Record<string, HttpMethodHandlers>;
@@ -399,6 +419,19 @@ export const formatHttpRoutes = (
             error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError
           ) as StatusCodeType;
           const httpResponse = buildExceptionResponse(context, (error as Error).message, status, env);
+          logRequest(context);
+          return httpResponse;
+        }
+
+        // Check allowed users
+        const allowedUsersError = checkAllowedUsers(context);
+        if (allowedUsersError) {
+          const httpResponse = buildExceptionResponse(
+            context,
+            allowedUsersError.message,
+            allowedUsersError.status,
+            context.env.APP_ENV,
+          );
           logRequest(context);
           return httpResponse;
         }

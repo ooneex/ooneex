@@ -13,7 +13,7 @@ import type { LocaleInfoType } from "@ooneex/translation";
 import type { ScalarType } from "@ooneex/types";
 import { random } from "@ooneex/utils";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
-import { buildHttpContext, validateResponse, validateRouteAccess } from "./httpRouteUtils";
+import { buildHttpContext, checkAllowedUsers, validateResponse, validateRouteAccess } from "./httpRouteUtils";
 
 type SocketRouteHandler = (req: BunRequest, server: Server<unknown>) => Promise<undefined>;
 type SocketRoutesMap = Record<string, SocketRouteHandler>;
@@ -152,6 +152,13 @@ export const socketRouteHandler = async ({
     const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
     logSocketRequest(context, status, route.path);
     return sendException(context, (error as Error).message, status as StatusCodeType);
+  }
+
+  // Check allowed users
+  const allowedUsersError = checkAllowedUsers(context);
+  if (allowedUsersError) {
+    logSocketRequest(context, allowedUsersError.status, route.path);
+    return sendException(context, allowedUsersError.message, allowedUsersError.status);
   }
 
   const validationError = await validateRouteAccess(context, route, currentEnv);

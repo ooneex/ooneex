@@ -42,7 +42,7 @@ describe("splitToWords", () => {
     });
 
     test("should split camelCase with numbers", () => {
-      expect(splitToWords("user123Profile")).toEqual(["user", "123", "Profile"]);
+      expect(splitToWords("user123Profile")).toEqual(["user123", "Profile"]);
     });
 
     test("should split camelCase starting with number", () => {
@@ -101,15 +101,15 @@ describe("splitToWords", () => {
     });
 
     test("should split words and numbers", () => {
-      expect(splitToWords("hello123world")).toEqual(["hello", "123", "world"]);
+      expect(splitToWords("hello123world")).toEqual(["hello123", "world"]);
     });
 
     test("should handle decimal-like patterns", () => {
-      expect(splitToWords("version1.2.3")).toEqual(["version", "1", "2", "3"]);
+      expect(splitToWords("version1.2.3")).toEqual(["version1", "2", "3"]);
     });
 
     test("should handle large numbers", () => {
-      expect(splitToWords("year2024")).toEqual(["year", "2024"]);
+      expect(splitToWords("year2024")).toEqual(["year2024"]);
     });
   });
 
@@ -229,7 +229,7 @@ describe("splitToWords", () => {
     test("should split API endpoints", () => {
       expect(splitToWords("getUserById")).toEqual(["get", "User", "By", "Id"]);
       expect(splitToWords("createUserProfile")).toEqual(["create", "User", "Profile"]);
-      expect(splitToWords("updatePasswordV2")).toEqual(["update", "Password", "V", "2"]);
+      expect(splitToWords("updatePasswordV2")).toEqual(["update", "Password", "V2"]);
     });
 
     test("should split database column names", () => {
@@ -247,15 +247,15 @@ describe("splitToWords", () => {
 
   describe("complex patterns", () => {
     test("should handle complex mixed patterns", () => {
-      expect(splitToWords("parseHTML5Document")).toEqual(["parse", "HTML", "5", "Document"]);
+      expect(splitToWords("parseHTML5Document")).toEqual(["parse", "HTML5", "Document"]);
     });
 
     test("should handle version numbers", () => {
-      expect(splitToWords("v1.2.3-beta")).toEqual(["v", "1", "2", "3", "beta"]);
+      expect(splitToWords("v1.2.3-beta")).toEqual(["v1", "2", "3", "beta"]);
     });
 
     test("should handle technical terms", () => {
-      expect(splitToWords("XMLHttpRequestV2")).toEqual(["XML", "Http", "Request", "V", "2"]);
+      expect(splitToWords("XMLHttpRequestV2")).toEqual(["XML", "Http", "Request", "V2"]);
     });
 
     test("should handle namespace-like patterns", () => {
@@ -271,7 +271,7 @@ describe("splitToWords", () => {
     });
 
     test("should handle mixed case with numbers", () => {
-      expect(splitToWords("iPhone14Pro")).toEqual(["i", "Phone", "14", "Pro"]);
+      expect(splitToWords("iPhone14Pro")).toEqual(["i", "Phone14", "Pro"]);
     });
 
     test("should handle edge case acronym patterns", () => {
@@ -290,11 +290,11 @@ describe("splitToWords", () => {
       ["HelloWorld", ["Hello", "World"]],
       ["hello_world", ["hello", "world"]],
       ["hello-world", ["hello", "world"]],
-      ["hello123", ["hello", "123"]],
+      ["hello123", ["hello123"]],
       ["123hello", ["123", "hello"]],
       ["XMLParser", ["XML", "Parser"]],
       ["parseXML", ["parse", "XML"]],
-      ["HTML5", ["HTML", "5"]],
+      ["HTML5", ["HTML5"]],
       ["getUserById", ["get", "User", "By", "Id"]],
       ["user_id", ["user", "id"]],
       ["API", ["API"]],
@@ -339,7 +339,7 @@ describe("splitToWords", () => {
 
       expect(result1).toEqual(result2);
       expect(result2).toEqual(result3);
-      expect(result1).toEqual(["complex", "Test", "Case", "123"]);
+      expect(result1).toEqual(["complex", "Test", "Case123"]);
     });
   });
 

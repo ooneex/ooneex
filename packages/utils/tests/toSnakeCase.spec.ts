@@ -52,6 +52,10 @@ describe("toSnakeCase", () => {
     test("should handle snake_case with numbers", () => {
       expect(toSnakeCase("user_123_profile")).toBe("user_123_profile");
     });
+
+    test("should preserve letters followed by digits in snake_case", () => {
+      expect(toSnakeCase("doe_v1")).toBe("doe_v1");
+    });
   });
 
   describe("camelCase conversion", () => {
@@ -72,7 +76,7 @@ describe("toSnakeCase", () => {
     });
 
     test("should handle camelCase with numbers", () => {
-      expect(toSnakeCase("user123Profile")).toBe("user_123_profile");
+      expect(toSnakeCase("user123Profile")).toBe("user123_profile");
     });
 
     test("should handle complex camelCase", () => {
@@ -134,7 +138,7 @@ describe("toSnakeCase", () => {
 
   describe("numbers handling", () => {
     test("should handle words with numbers", () => {
-      expect(toSnakeCase("hello123world")).toBe("hello_123_world");
+      expect(toSnakeCase("hello123world")).toBe("hello123_world");
     });
 
     test("should handle standalone numbers", () => {
@@ -146,11 +150,11 @@ describe("toSnakeCase", () => {
     });
 
     test("should handle version-like patterns", () => {
-      expect(toSnakeCase("version2024Update")).toBe("version_2024_update");
+      expect(toSnakeCase("version2024Update")).toBe("version2024_update");
     });
 
     test("should handle mixed numbers and letters", () => {
-      expect(toSnakeCase("test123ABC456")).toBe("test_123_abc_456");
+      expect(toSnakeCase("test123ABC456")).toBe("test123_abc456");
     });
   });
 
@@ -379,23 +383,23 @@ describe("toSnakeCase", () => {
       ["hello world", "hello_world"],
       ["HELLO_WORLD", "hello_world"],
       ["helloWORLD", "hello_world"],
-      ["hello123World", "hello_123_world"],
+      ["hello123World", "hello123_world"],
       ["URLParser", "url_parser"],
       ["XMLHttpRequest", "xml_http_request"],
       ["getHTMLElement", "get_html_element"],
       ["parseJSON", "parse_json"],
       ["IOError", "io_error"],
       ["EOF", "eof"],
-      ["myHTTP2Server", "my_http_2_server"],
-      ["version2Update", "version_2_update"],
+      ["myHTTP2Server", "my_http2_server"],
+      ["version2Update", "version2_update"],
       ["camelCaseString", "camel_case_string"],
       ["PascalCaseString", "pascal_case_string"],
       ["snake_case_string", "snake_case_string"],
       ["kebab-case-string", "kebab_case_string"],
       ["Mixed_case-string", "mixed_case_string"],
-      ["mixedCase123String", "mixed_case_123_string"],
+      ["mixedCase123String", "mixed_case123_string"],
       ["123StartWithNumber", "123_start_with_number"],
-      ["endWithNumber123", "end_with_number_123"],
+      ["endWithNumber123", "end_with_number123"],
       ["single", "single"],
       ["ALLCAPS", "allcaps"],
       ["a", "a"],
@@ -412,11 +416,11 @@ describe("toSnakeCase", () => {
     });
 
     test("should handle version numbers", () => {
-      expect(toSnakeCase("v2.0.1")).toBe("v_2_0_1");
+      expect(toSnakeCase("v2.0.1")).toBe("v2_0_1");
     });
 
     test("should handle technical terms with versions", () => {
-      expect(toSnakeCase("HTTP2Protocol")).toBe("http_2_protocol");
+      expect(toSnakeCase("HTTP2Protocol")).toBe("http2_protocol");
     });
 
     test("should handle namespace-like patterns", () => {
@@ -436,7 +440,7 @@ describe("toSnakeCase", () => {
     });
 
     test("should handle complex real-world examples", () => {
-      expect(toSnakeCase("HTMLParser2")).toBe("html_parser_2");
+      expect(toSnakeCase("HTMLParser2")).toBe("html_parser2");
       expect(toSnakeCase("getElementById")).toBe("get_element_by_id");
       expect(toSnakeCase("XMLHttpRequest")).toBe("xml_http_request");
     });

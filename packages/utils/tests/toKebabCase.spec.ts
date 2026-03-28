@@ -50,7 +50,7 @@ describe("toKebabCase", () => {
     });
 
     test("should convert camelCase with numbers", () => {
-      expect(toKebabCase("user123Profile")).toBe("user-123-profile");
+      expect(toKebabCase("user123Profile")).toBe("user123-profile");
     });
 
     test("should handle single camelCase word", () => {
@@ -142,7 +142,7 @@ describe("toKebabCase", () => {
 
   describe("numbers handling", () => {
     test("should handle words with numbers", () => {
-      expect(toKebabCase("hello123 world456")).toBe("hello-123-world-456");
+      expect(toKebabCase("hello123 world456")).toBe("hello123-world456");
     });
 
     test("should handle standalone numbers", () => {
@@ -158,11 +158,11 @@ describe("toKebabCase", () => {
     });
 
     test("should handle mixed numbers and letters", () => {
-      expect(toKebabCase("user123 profile456 test")).toBe("user-123-profile-456-test");
+      expect(toKebabCase("user123 profile456 test")).toBe("user123-profile456-test");
     });
 
     test("should handle camelCase with numbers", () => {
-      expect(toKebabCase("version2Beta3")).toBe("version-2-beta-3");
+      expect(toKebabCase("version2Beta3")).toBe("version2-beta3");
     });
   });
 
@@ -198,8 +198,8 @@ describe("toKebabCase", () => {
     });
 
     test("should handle acronym patterns correctly", () => {
-      expect(toKebabCase("parseHTML5Document")).toBe("parse-html-5-document");
-      expect(toKebabCase("XMLHttpRequestV2")).toBe("xml-http-request-v-2");
+      expect(toKebabCase("parseHTML5Document")).toBe("parse-html5-document");
+      expect(toKebabCase("XMLHttpRequestV2")).toBe("xml-http-request-v2");
     });
   });
 
@@ -428,11 +428,11 @@ describe("toKebabCase", () => {
       ["hello", "hello"],
       ["Hello", "hello"],
       ["HELLO", "hello"],
-      ["hello123", "hello-123"],
+      ["hello123", "hello123"],
       ["123hello", "123-hello"],
       ["XMLParser", "xml-parser"],
       ["parseXML", "parse-xml"],
-      ["HTML5", "html-5"],
+      ["HTML5", "html5"],
       ["getUserById", "get-user-by-id"],
       ["user_id", "user-id"],
       ["API", "api"],
@@ -447,7 +447,7 @@ describe("toKebabCase", () => {
       ["hello.world.test", "hello-world-test"],
       ["helloWorldTest", "hello-world-test"],
       ["HTTPSProxy", "https-proxy"],
-      ["iPhone14Pro", "i-phone-14-pro"],
+      ["iPhone14Pro", "i-phone14-pro"],
     ])("toKebabCase(%s) should return %s", (input, expected) => {
       expect(toKebabCase(input)).toBe(expected);
     });
@@ -455,15 +455,15 @@ describe("toKebabCase", () => {
 
   describe("complex patterns", () => {
     test("should handle complex mixed patterns", () => {
-      expect(toKebabCase("parseHTML5Document")).toBe("parse-html-5-document");
+      expect(toKebabCase("parseHTML5Document")).toBe("parse-html5-document");
     });
 
     test("should handle version numbers", () => {
-      expect(toKebabCase("v1.2.3-beta")).toBe("v-1-2-3-beta");
+      expect(toKebabCase("v1.2.3-beta")).toBe("v1-2-3-beta");
     });
 
     test("should handle technical terms with versions", () => {
-      expect(toKebabCase("XMLHttpRequestV2")).toBe("xml-http-request-v-2");
+      expect(toKebabCase("XMLHttpRequestV2")).toBe("xml-http-request-v2");
     });
 
     test("should handle namespace-like patterns", () => {
@@ -479,12 +479,12 @@ describe("toKebabCase", () => {
     });
 
     test("should handle mixed case with numbers and separators", () => {
-      expect(toKebabCase("iPhone14-Pro_Max")).toBe("i-phone-14-pro-max");
+      expect(toKebabCase("iPhone14-Pro_Max")).toBe("i-phone14-pro-max");
     });
 
     test("should handle complex real-world examples", () => {
-      expect(toKebabCase("XMLHttpRequest-v2.0_beta")).toBe("xml-http-request-v-2-0-beta");
-      expect(toKebabCase("getUserProfile_byId-V3")).toBe("get-user-profile-by-id-v-3");
+      expect(toKebabCase("XMLHttpRequest-v2.0_beta")).toBe("xml-http-request-v2-0-beta");
+      expect(toKebabCase("getUserProfile_byId-V3")).toBe("get-user-profile-by-id-v3");
       expect(toKebabCase("API_KEY_VERSION_2")).toBe("api-key-version-2");
     });
 
@@ -539,7 +539,7 @@ describe("toKebabCase", () => {
 
       expect(result1).toBe(result2);
       expect(result2).toBe(result3);
-      expect(result1).toBe("complex-test-case-123");
+      expect(result1).toBe("complex-test-case123");
     });
   });
 
@@ -572,8 +572,8 @@ describe("toKebabCase", () => {
     test("should work correctly with splitToWords edge cases", () => {
       // Test cases that rely heavily on splitToWords behavior
       expect(toKebabCase("XMLHttpRequest")).toBe("xml-http-request");
-      expect(toKebabCase("parseHTML5Document")).toBe("parse-html-5-document");
-      expect(toKebabCase("getUserProfile123")).toBe("get-user-profile-123");
+      expect(toKebabCase("parseHTML5Document")).toBe("parse-html5-document");
+      expect(toKebabCase("getUserProfile123")).toBe("get-user-profile123");
     });
 
     test("should handle trim behavior correctly", () => {
@@ -589,9 +589,9 @@ describe("toKebabCase", () => {
     });
 
     test("should handle splitToWords number patterns", () => {
-      expect(toKebabCase("version2Beta3Release")).toBe("version-2-beta-3-release");
-      expect(toKebabCase("HTML5Parser")).toBe("html-5-parser");
-      expect(toKebabCase("CSS3Animation")).toBe("css-3-animation");
+      expect(toKebabCase("version2Beta3Release")).toBe("version2-beta3-release");
+      expect(toKebabCase("HTML5Parser")).toBe("html5-parser");
+      expect(toKebabCase("CSS3Animation")).toBe("css3-animation");
     });
   });
 

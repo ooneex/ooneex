@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -22,7 +23,7 @@ export class MakeCacheCommand<T extends CommandOptionsType = CommandOptionsType>
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter cache name" });
@@ -32,14 +33,15 @@ export class MakeCacheCommand<T extends CommandOptionsType = CommandOptionsType>
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const cacheLocalDir = join("src", "cache");
+    const base = module ? join("modules", module) : ".";
+    const cacheLocalDir = join(base, "src", "cache");
     const cacheDir = join(process.cwd(), cacheLocalDir);
     const filePath = join(cacheDir, `${name}Cache.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "cache");
+    const testsLocalDir = join(base, "tests", "cache");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Cache.spec.ts`);
     await Bun.write(testFilePath, testContent);

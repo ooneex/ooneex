@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -22,7 +23,7 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter repository name" });
@@ -33,7 +34,8 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const repositoriesLocalDir = join("src", "repositories");
+    const base = module ? join("modules", module) : ".";
+    const repositoriesLocalDir = join(base, "src", "repositories");
     const repositoriesDir = join(process.cwd(), repositoriesLocalDir);
     const filePath = join(repositoriesDir, `${name}Repository.ts`);
 
@@ -41,7 +43,7 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "repositories");
+    const testsLocalDir = join(base, "tests", "repositories");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Repository.spec.ts`);
     await Bun.write(testFilePath, testContent);

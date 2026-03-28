@@ -10,6 +10,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
   tableName?: string;
 };
 
@@ -44,7 +45,7 @@ export class MakeEntityCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    let { name, tableName } = options;
+    let { name, module, tableName } = options;
 
     if (!name) {
       name = await askName({ message: "Enter entity name" });
@@ -58,14 +59,15 @@ export class MakeEntityCommand<T extends CommandOptionsType = CommandOptionsType
 
     const content = template.replace(/{{NAME}}/g, name).replace(/{{TABLE_NAME}}/g, tableName);
 
-    const entitiesLocalDir = join("src", "entities");
+    const base = module ? join("modules", module) : ".";
+    const entitiesLocalDir = join(base, "src", "entities");
     const entitiesDir = join(process.cwd(), entitiesLocalDir);
     const filePath = join(entitiesDir, `${name}Entity.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "entities");
+    const testsLocalDir = join(base, "tests", "entities");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Entity.spec.ts`);
     await Bun.write(testFilePath, testContent);

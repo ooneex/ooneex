@@ -7,6 +7,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
   dir?: string;
 };
 
@@ -21,13 +22,14 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter seed name" });
     }
 
-    const filePath = await seedCreate({ name, dir: "src/seeds" });
+    const base = module ? join("modules", module) : ".";
+    const filePath = await seedCreate({ name, dir: join(base, "src/seeds") });
 
     // Update package.json with seed script
     const packageJsonPath = join(process.cwd(), "package.json");

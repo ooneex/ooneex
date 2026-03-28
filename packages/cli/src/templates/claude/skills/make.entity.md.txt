@@ -14,12 +14,12 @@ Generate a new entity class and its test file using the `make:entity` CLI comman
 Run the following command to scaffold the entity class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:entity --name <name> --table-name <table_name>
+bunx @ooneex/cli@latest make:entity --name <name> --module <module> --table-name <table_name>
 ```
 
-Where `<name>` is the name provided by the user. The `--table-name` option is optional — if omitted, it defaults to the snake_case pluralized form of the name (e.g., `UserProfile` becomes `user_profiles`). The command will generate:
-- `src/entities/<Name>Entity.ts` - The entity class file
-- `tests/entities/<Name>Entity.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--table-name` option is optional — if omitted, it defaults to the snake_case pluralized form of the name (e.g., `UserProfile` becomes `user_profiles`). The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/entities/<Name>Entity.ts` - The entity class file (or `modules/<module>/src/entities/<Name>Entity.ts` with `--module`)
+- `tests/entities/<Name>Entity.spec.ts` - The test file (or `modules/<module>/tests/entities/<Name>Entity.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

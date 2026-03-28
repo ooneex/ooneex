@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -22,7 +23,7 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter logger name" });
@@ -32,14 +33,15 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const loggerLocalDir = join("src", "loggers");
+    const base = module ? join("modules", module) : ".";
+    const loggerLocalDir = join(base, "src", "loggers");
     const loggerDir = join(process.cwd(), loggerLocalDir);
     const filePath = join(loggerDir, `${name}Logger.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "loggers");
+    const testsLocalDir = join(base, "tests", "loggers");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Logger.spec.ts`);
     await Bun.write(testFilePath, testContent);

@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -42,7 +43,7 @@ export class MakePermissionCommand<T extends CommandOptionsType = CommandOptions
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter permission name" });
@@ -52,14 +53,15 @@ export class MakePermissionCommand<T extends CommandOptionsType = CommandOptions
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const permissionLocalDir = join("src", "permissions");
+    const base = module ? join("modules", module) : ".";
+    const permissionLocalDir = join(base, "src", "permissions");
     const permissionDir = join(process.cwd(), permissionLocalDir);
     const filePath = join(permissionDir, `${name}Permission.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "permissions");
+    const testsLocalDir = join(base, "tests", "permissions");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Permission.spec.ts`);
     await Bun.write(testFilePath, testContent);

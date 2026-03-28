@@ -14,12 +14,12 @@ Generate a new logger class and its test file using the `make:logger` CLI comman
 Run the following command to scaffold the logger class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:logger --name <name>
+bunx @ooneex/cli@latest make:logger --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/loggers/<Name>Logger.ts` - The logger class file
-- `tests/loggers/<Name>Logger.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/loggers/<Name>Logger.ts` - The logger class file (or `modules/<module>/src/loggers/<Name>Logger.ts` with `--module`)
+- `tests/loggers/<Name>Logger.spec.ts` - The test file (or `modules/<module>/tests/loggers/<Name>Logger.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

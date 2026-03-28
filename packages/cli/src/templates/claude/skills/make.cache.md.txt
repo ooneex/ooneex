@@ -14,12 +14,12 @@ Generate a new cache class and its test file using the `make:cache` CLI command,
 Run the following command to scaffold the cache class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:cache --name <name>
+bunx @ooneex/cli@latest make:cache --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/cache/<Name>Cache.ts` - The cache class file
-- `tests/cache/<Name>Cache.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/cache/<Name>Cache.ts` - The cache class file (or `modules/<module>/src/cache/<Name>Cache.ts` with `--module`)
+- `tests/cache/<Name>Cache.spec.ts` - The test file (or `modules/<module>/tests/cache/<Name>Cache.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

@@ -14,12 +14,12 @@ Generate a new cron class and its test file using the `make:cron` CLI command, t
 Run the following command to scaffold the cron class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:cron --name <name>
+bunx @ooneex/cli@latest make:cron --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/cron/<Name>Cron.ts` - The cron class file
-- `tests/cron/<Name>Cron.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/cron/<Name>Cron.ts` - The cron class file (or `modules/<module>/src/cron/<Name>Cron.ts` with `--module`)
+- `tests/cron/<Name>Cron.spec.ts` - The test file (or `modules/<module>/tests/cron/<Name>Cron.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

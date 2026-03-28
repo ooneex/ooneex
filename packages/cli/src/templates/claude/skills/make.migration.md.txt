@@ -14,11 +14,11 @@ Generate a new migration file using the `make:migration` CLI command, then compl
 Run the following command to scaffold the migration file:
 
 ```bash
-bunx @ooneex/cli@latest make:migration
+bunx @ooneex/cli@latest make:migration --module <module>
 ```
 
-The command will:
-- Generate a timestamped migration file in `src/migrations/`
+The `--module` option is optional — if provided, the migration file is generated under `modules/<module>/src/migrations/` instead of `src/migrations/`. The command will:
+- Generate a timestamped migration file in `src/migrations/` (or `modules/<module>/src/migrations/` with `--module`)
 - Add a `migration:up` script to `package.json` if not already present
 
 ### 2. Read the generated file

@@ -14,12 +14,12 @@ Generate a new analytics class and its test file using the `make:analytics` CLI 
 Run the following command to scaffold the analytics class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:analytics --name <name>
+bunx @ooneex/cli@latest make:analytics --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/analytics/<Name>Analytics.ts` - The analytics class file
-- `tests/analytics/<Name>Analytics.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/analytics/<Name>Analytics.ts` - The analytics class file (or `modules/<module>/src/analytics/<Name>Analytics.ts` with `--module`)
+- `tests/analytics/<Name>Analytics.spec.ts` - The test file (or `modules/<module>/tests/analytics/<Name>Analytics.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

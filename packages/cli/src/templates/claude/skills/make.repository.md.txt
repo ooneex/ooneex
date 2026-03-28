@@ -14,12 +14,12 @@ Generate a new repository class and its test file using the `make:repository` CL
 Run the following command to scaffold the repository class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:repository --name <name>
+bunx @ooneex/cli@latest make:repository --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/repositories/<Name>Repository.ts` - The repository class file
-- `tests/repositories/<Name>Repository.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/repositories/<Name>Repository.ts` - The repository class file (or `modules/<module>/src/repositories/<Name>Repository.ts` with `--module`)
+- `tests/repositories/<Name>Repository.spec.ts` - The test file (or `modules/<module>/tests/repositories/<Name>Repository.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

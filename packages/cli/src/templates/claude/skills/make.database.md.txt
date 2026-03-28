@@ -14,12 +14,12 @@ Generate a new database class and its test file using the `make:database` CLI co
 Run the following command to scaffold the database class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:database --name <name>
+bunx @ooneex/cli@latest make:database --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/databases/<Name>Database.ts` - The database class file
-- `tests/databases/<Name>Database.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/databases/<Name>Database.ts` - The database class file (or `modules/<module>/src/databases/<Name>Database.ts` with `--module`)
+- `tests/databases/<Name>Database.spec.ts` - The test file (or `modules/<module>/tests/databases/<Name>Database.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

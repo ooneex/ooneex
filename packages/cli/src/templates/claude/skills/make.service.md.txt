@@ -14,12 +14,12 @@ Generate a new service class and its test file using the `make:service` CLI comm
 Run the following command to scaffold the service class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:service --name <name>
+bunx @ooneex/cli@latest make:service --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/services/<Name>Service.ts` - The service class file
-- `tests/services/<Name>Service.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/services/<Name>Service.ts` - The service class file (or `modules/<module>/src/services/<Name>Service.ts` with `--module`)
+- `tests/services/<Name>Service.spec.ts` - The test file (or `modules/<module>/tests/services/<Name>Service.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

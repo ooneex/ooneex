@@ -5,6 +5,7 @@ import { decorator } from "../decorators";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
+  module?: string;
   dir?: string;
 };
 
@@ -18,8 +19,10 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
     return "Generate a new migration file";
   }
 
-  public async run(): Promise<void> {
-    await migrationCreate({ dir: "src/migrations" });
+  public async run(options: T): Promise<void> {
+    const { module } = options;
+    const base = module ? join("modules", module) : ".";
+    await migrationCreate({ dir: join(base, "src/migrations") });
 
     // Update package.json with migration script
     const packageJsonPath = join(process.cwd(), "package.json");

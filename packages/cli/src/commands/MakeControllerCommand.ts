@@ -16,6 +16,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
   isSocket?: boolean;
   route?: {
     name?: string;
@@ -57,7 +58,7 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
   }
 
   public async run(options: T): Promise<void> {
-    let { name, isSocket } = options;
+    let { name, module, isSocket } = options;
 
     if (!name) {
       name = await askName({ message: "Enter controller name" });
@@ -103,13 +104,14 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
       content = content.replaceAll("{{ROUTE_METHOD}}", route.method.toLowerCase());
     }
 
-    const controllersLocalDir = join("src", "controllers");
+    const base = module ? join("modules", module) : ".";
+    const controllersLocalDir = join(base, "src", "controllers");
     const controllersDir = join(process.cwd(), controllersLocalDir);
     const filePath = join(controllersDir, `${name}Controller.ts`);
     await Bun.write(filePath, content);
 
     // Create route type file
-    const routeTypesLocalDir = join("src", "types", "routes");
+    const routeTypesLocalDir = join(base, "src", "types", "routes");
     const routeTypesDir = join(process.cwd(), routeTypesLocalDir);
     const routeTypeFilePath = join(routeTypesDir, `${routeTypeFileName}.ts`);
     const routeTypeContent = routeTypeTemplate.replaceAll("{{TYPE_NAME}}", routeTypeName);
@@ -117,7 +119,7 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "controllers");
+    const testsLocalDir = join(base, "tests", "controllers");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Controller.spec.ts`);
     await Bun.write(testFilePath, testContent);

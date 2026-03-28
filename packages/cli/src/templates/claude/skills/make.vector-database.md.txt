@@ -14,12 +14,12 @@ Generate a new vector database class and its test file using the `make:vector-da
 Run the following command to scaffold the vector database class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:vector-database --name <name>
+bunx @ooneex/cli@latest make:vector-database --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will generate:
-- `src/databases/<Name>VectorDatabase.ts` - The vector database class file
-- `tests/databases/<Name>VectorDatabase.spec.ts` - The test file
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/databases/<Name>VectorDatabase.ts` - The vector database class file (or `modules/<module>/src/databases/<Name>VectorDatabase.ts` with `--module`)
+- `tests/databases/<Name>VectorDatabase.spec.ts` - The test file (or `modules/<module>/tests/databases/<Name>VectorDatabase.spec.ts` with `--module`)
 
 ### 2. Read the generated files
 

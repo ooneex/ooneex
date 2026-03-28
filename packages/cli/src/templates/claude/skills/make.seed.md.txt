@@ -14,11 +14,11 @@ Generate a new seed file using the `make:seed` CLI command, then complete the ge
 Run the following command to scaffold the seed file:
 
 ```bash
-bunx @ooneex/cli@latest make:seed --name <name>
+bunx @ooneex/cli@latest make:seed --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The command will:
-- Generate a seed file in `src/seeds/`
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, the seed file is generated under `modules/<module>/src/seeds/` instead of `src/seeds/`. The command will:
+- Generate a seed file in `src/seeds/` (or `modules/<module>/src/seeds/` with `--module`)
 - Add a `seed:run` script to `package.json` if not already present
 
 ### 2. Read the generated file

@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
   channel?: string;
 };
 
@@ -43,7 +44,7 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    let { name, channel } = options;
+    let { name, module, channel } = options;
 
     if (!name) {
       name = await askName({ message: "Enter name" });
@@ -57,14 +58,15 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
 
     const content = template.replace(/{{NAME}}/g, name).replace(/{{CHANNEL}}/g, channel);
 
-    const pubSubLocalDir = join("src", "events");
+    const base = module ? join("modules", module) : ".";
+    const pubSubLocalDir = join(base, "src", "events");
     const pubSubDir = join(process.cwd(), pubSubLocalDir);
     const filePath = join(pubSubDir, `${name}Event.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "events");
+    const testsLocalDir = join(base, "tests", "events");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Event.spec.ts`);
     await Bun.write(testFilePath, testContent);

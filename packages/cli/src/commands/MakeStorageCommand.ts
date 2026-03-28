@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -22,7 +23,7 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter storage name" });
@@ -32,14 +33,15 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
     const nameUpper = toSnakeCase(name).toUpperCase();
     const content = template.replace(/{{NAME}}/g, name).replace(/{{NAME_UPPER}}/g, nameUpper);
 
-    const storageLocalDir = join("src", "storage");
+    const base = module ? join("modules", module) : ".";
+    const storageLocalDir = join(base, "src", "storage");
     const storageDir = join(process.cwd(), storageLocalDir);
     const filePath = join(storageDir, `${name}Storage.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "storage");
+    const testsLocalDir = join(base, "tests", "storage");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Storage.spec.ts`);
     await Bun.write(testFilePath, testContent);

@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -42,7 +43,7 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter cron name" });
@@ -52,14 +53,15 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const cronLocalDir = join("src", "cron");
+    const base = module ? join("modules", module) : ".";
+    const cronLocalDir = join(base, "src", "cron");
     const cronDir = join(process.cwd(), cronLocalDir);
     const filePath = join(cronDir, `${name}Cron.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "cron");
+    const testsLocalDir = join(base, "tests", "cron");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Cron.spec.ts`);
     await Bun.write(testFilePath, testContent);

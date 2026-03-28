@@ -11,6 +11,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -24,7 +25,7 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter mailer name" });
@@ -35,7 +36,8 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     const mailerContent = mailerTemplate.replace(/{{NAME}}/g, name);
     const templateContent = mailerTemplateTemplate.replace(/{{NAME}}/g, name);
 
-    const mailerLocalDir = join("src", "mailers");
+    const base = module ? join("modules", module) : ".";
+    const mailerLocalDir = join(base, "src", "mailers");
     const mailerDir = join(process.cwd(), mailerLocalDir);
     const mailerFilePath = join(mailerDir, `${name}Mailer.ts`);
     const templateFilePath = join(mailerDir, `${name}MailerTemplate.tsx`);
@@ -46,7 +48,7 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     // Generate test files
     const mailerTestContent = mailerTestTemplate.replace(/{{NAME}}/g, name);
     const templateTestContent = mailerTemplateTestTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "mailers");
+    const testsLocalDir = join(base, "tests", "mailers");
     const testsDir = join(process.cwd(), testsLocalDir);
     const mailerTestFilePath = join(testsDir, `${name}Mailer.spec.ts`);
     const templateTestFilePath = join(testsDir, `${name}MailerTemplate.spec.ts`);

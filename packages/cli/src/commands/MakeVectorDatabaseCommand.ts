@@ -9,6 +9,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
 };
 
 @decorator.command()
@@ -22,7 +23,7 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
   }
 
   public async run(options: T): Promise<void> {
-    let { name } = options;
+    let { name, module } = options;
 
     if (!name) {
       name = await askName({ message: "Enter vector database name" });
@@ -34,14 +35,15 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
 
     const content = template.replace(/{{NAME}}/g, name);
 
-    const vectorDatabaseLocalDir = join("src", "databases");
+    const base = module ? join("modules", module) : ".";
+    const vectorDatabaseLocalDir = join(base, "src", "databases");
     const vectorDatabaseDir = join(process.cwd(), vectorDatabaseLocalDir);
     const filePath = join(vectorDatabaseDir, `${name}VectorDatabase.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "databases");
+    const testsLocalDir = join(base, "tests", "databases");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}VectorDatabase.spec.ts`);
     await Bun.write(testFilePath, testContent);

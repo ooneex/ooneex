@@ -7,6 +7,11 @@ mock.module("enquirer", () => ({
   prompt: mock(() => Promise.resolve({ name: "Test" })),
 }));
 
+// Mock @ooneex/migrations to prevent actual migration file creation
+mock.module("@ooneex/migrations", () => ({
+  migrationCreate: mock(() => Promise.resolve()),
+}));
+
 const { MakeMigrationCommand } = await import("@/commands/MakeMigrationCommand");
 
 describe("MakeMigrationCommand", () => {
@@ -45,7 +50,7 @@ describe("MakeMigrationCommand", () => {
     });
 
     test("should update package.json with migration:up script", async () => {
-      await command.run();
+      await command.run({});
 
       const packageJson = await Bun.file(join(testDir, "package.json")).json();
       expect(packageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
@@ -57,7 +62,7 @@ describe("MakeMigrationCommand", () => {
         JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
       );
 
-      await command.run();
+      await command.run({});
 
       const packageJson = await Bun.file(join(testDir, "package.json")).json();
       expect(packageJson.scripts.build).toBe("bun build");
@@ -67,7 +72,7 @@ describe("MakeMigrationCommand", () => {
     test("should create scripts object if it does not exist", async () => {
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
 
-      await command.run();
+      await command.run({});
 
       const packageJson = await Bun.file(join(testDir, "package.json")).json();
       expect(packageJson.scripts).toBeDefined();

@@ -11,6 +11,7 @@ import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
+  module?: string;
   isSocket?: boolean;
 };
 
@@ -45,7 +46,7 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
   }
 
   public async run(options: T): Promise<void> {
-    let { name, isSocket } = options;
+    let { name, module, isSocket } = options;
 
     if (!name) {
       name = await askName({ message: "Enter middleware name" });
@@ -60,14 +61,15 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
     const selectedTemplate = isSocket ? socketTemplate : template;
     const content = selectedTemplate.replace(/{{NAME}}/g, name);
 
-    const middlewareLocalDir = join("src", "middlewares");
+    const base = module ? join("modules", module) : ".";
+    const middlewareLocalDir = join(base, "src", "middlewares");
     const middlewareDir = join(process.cwd(), middlewareLocalDir);
     const filePath = join(middlewareDir, `${name}Middleware.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join("tests", "middlewares");
+    const testsLocalDir = join(base, "tests", "middlewares");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Middleware.spec.ts`);
     await Bun.write(testFilePath, testContent);

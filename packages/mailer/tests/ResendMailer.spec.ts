@@ -16,6 +16,7 @@ mock.module("@/decorators", () => ({
 
 const { ResendMailer } = await import("@/ResendMailer");
 const { MailerException } = await import("@/MailerException");
+const { AppEnv } = await import("@ooneex/app-env");
 
 describe("ResendMailer", () => {
   const originalEnv = { ...Bun.env };
@@ -35,27 +36,27 @@ describe("ResendMailer", () => {
 
   describe("constructor", () => {
     test("should create instance with environment variables", () => {
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
       expect(mailer).toBeInstanceOf(ResendMailer);
     });
 
     test("should throw MailerException when no API key is provided", () => {
       Bun.env.RESEND_API_KEY = undefined;
 
-      expect(() => new ResendMailer()).toThrow(MailerException);
-      expect(() => new ResendMailer()).toThrow("Resend API key is required");
+      expect(() => new ResendMailer(new AppEnv())).toThrow(MailerException);
+      expect(() => new ResendMailer(new AppEnv())).toThrow("Resend API key is required");
     });
 
     test("should throw MailerException when API key is empty string", () => {
       Bun.env.RESEND_API_KEY = "   ";
 
-      expect(() => new ResendMailer()).toThrow(MailerException);
+      expect(() => new ResendMailer(new AppEnv())).toThrow(MailerException);
     });
   });
 
   describe("send", () => {
     test("should send email with all required fields", async () => {
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       await mailer.send({
         to: ["recipient@example.com"],
@@ -73,7 +74,7 @@ describe("ResendMailer", () => {
     });
 
     test("should send email to multiple recipients", async () => {
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       await mailer.send({
         to: ["a@example.com", "b@example.com"],
@@ -89,7 +90,7 @@ describe("ResendMailer", () => {
     });
 
     test("should use per-send from over env from", async () => {
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       await mailer.send({
         to: ["recipient@example.com"],
@@ -108,7 +109,7 @@ describe("ResendMailer", () => {
     test("should throw MailerException when sender name is missing", async () => {
       Bun.env.MAILER_SENDER_NAME = undefined;
 
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       expect(
         mailer.send({
@@ -122,7 +123,7 @@ describe("ResendMailer", () => {
     test("should throw MailerException when sender address is missing", async () => {
       Bun.env.MAILER_SENDER_ADDRESS = undefined;
 
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       expect(
         mailer.send({
@@ -134,7 +135,7 @@ describe("ResendMailer", () => {
     });
 
     test("should render React content to HTML string", async () => {
-      const mailer = new ResendMailer();
+      const mailer = new ResendMailer(new AppEnv());
 
       await mailer.send({
         to: ["recipient@example.com"],

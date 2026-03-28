@@ -25,29 +25,29 @@ describe("AppEnv", () => {
       expect(appEnv.isProduction).toBe(true);
     });
 
-    test("should default to 'local' when APP_ENV is not set", () => {
+    test("should default to 'production' when APP_ENV is not set", () => {
       setEnv(undefined);
       const appEnv = new AppEnv();
 
-      expect(appEnv.APP_ENV).toBe("local");
-      expect(appEnv.APP_ENV).toBe("local");
-      expect(appEnv.isLocal).toBe(true);
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.isProduction).toBe(true);
     });
 
-    test("should default to 'local' when APP_ENV is empty string", () => {
+    test("should default to 'production' when APP_ENV is empty string", () => {
       setEnv("");
       const appEnv = new AppEnv();
 
-      expect(appEnv.APP_ENV).toBe("local");
-      expect(appEnv.APP_ENV).toBe("local");
-      expect(appEnv.isLocal).toBe(true);
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.isProduction).toBe(true);
     });
 
-    test("should default PORT to 80", () => {
+    test("should default PORT to 3000", () => {
       setEnv("production");
       const appEnv = new AppEnv();
 
-      expect(appEnv.PORT).toBe(80);
+      expect(appEnv.PORT).toBe(3000);
     });
 
     test("should parse PORT from environment variable", () => {

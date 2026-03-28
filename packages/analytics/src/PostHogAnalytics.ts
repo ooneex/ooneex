@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { PostHog } from "posthog-node";
 import { AnalyticsException } from "./AnalyticsException";
 import { decorator } from "./decorators";
@@ -9,8 +11,8 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
 {
   private client: PostHog | null = null;
 
-  constructor(config?: PostHogConfigType) {
-    const apiKey = config?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY?.trim();
+  constructor(@inject(AppEnv) private readonly env: AppEnv, config?: PostHogConfigType) {
+    const apiKey = config?.apiKey || this.env.ANALYTICS_POSTHOG_API_KEY?.trim();
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -19,7 +21,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
     }
 
     this.client = new PostHog(apiKey, {
-      host: config?.host || Bun.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
+      host: config?.host || this.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
     });
   }
 

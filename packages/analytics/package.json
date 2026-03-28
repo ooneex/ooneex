@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "module": "./dist/index.js",
   "dependencies": {
+    "@ooneex/app-env": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",

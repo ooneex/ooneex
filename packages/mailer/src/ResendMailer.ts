@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { renderToString } from "react-dom/server";
 import { Resend } from "resend";
 import { decorator } from "./decorators";
@@ -9,12 +11,12 @@ export class ResendMailer implements IMailer {
   private apiKey: string;
   private from?: { name: string; address: string };
 
-  constructor() {
-    this.apiKey = Bun.env.RESEND_API_KEY?.trim() as string;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    this.apiKey = this.env.RESEND_API_KEY?.trim() as string;
 
     this.from = {
-      name: Bun.env.MAILER_SENDER_NAME?.trim() || "",
-      address: Bun.env.MAILER_SENDER_ADDRESS?.trim() || "",
+      name: this.env.MAILER_SENDER_NAME?.trim() || "",
+      address: this.env.MAILER_SENDER_ADDRESS?.trim() || "",
     };
 
     if (!this.apiKey) {

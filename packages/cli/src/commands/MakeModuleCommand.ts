@@ -109,12 +109,12 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       if (await Bun.file(appModulePath).exists()) {
         await this.addToAppModule(appModulePath, pascalName, kebabName);
       }
-    }
 
-    // Add path alias in app module tsconfig
-    const appTsconfigPath = join(cwd, "modules", "app", "tsconfig.json");
-    if (await Bun.file(appTsconfigPath).exists()) {
-      await this.addPathAlias(appTsconfigPath, kebabName);
+      // Add path alias in app module tsconfig
+      const appTsconfigPath = join(cwd, "modules", "app", "tsconfig.json");
+      if (await Bun.file(appTsconfigPath).exists()) {
+        await this.addPathAlias(appTsconfigPath, kebabName);
+      }
     }
 
     if (!silent) {

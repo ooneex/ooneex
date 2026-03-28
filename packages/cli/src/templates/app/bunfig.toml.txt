@@ -18,11 +18,9 @@ hoistPattern = [
   "@typescript/native-preview",
   "undici-types",
   "react",
-  "react-error-boundary",
-  "react-*",
-  "react-*/*",
   "@types/*",
   "pg",
+  "typeorm",
   "apache-arrow",
   "reflect-metadata",
 ]

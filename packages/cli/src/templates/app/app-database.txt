@@ -1,11 +1,11 @@
 import { inject } from "@ooneex/container";
 import { AppEnv } from "@ooneex/app-env";
 import { DataSource } from "typeorm";
-import { TypeormPgDatabase, DatabaseException, decorator } from "@ooneex/database";
+import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
 import { AppModule } from "@/AppModule";
 
 @decorator.database()
-export class AppDatabase extends TypeormPgDatabase {
+export class AppDatabase extends TypeormDatabase {
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
     super();
   }

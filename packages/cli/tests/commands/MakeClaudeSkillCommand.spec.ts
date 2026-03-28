@@ -43,7 +43,7 @@ describe("MakeClaudeSkillCommand", () => {
       await command.run();
 
       const skillsDir = join(testDir, ".claude", "skills");
-      const glob = new Glob("*.md");
+      const glob = new Glob("*/SKILL.md");
       const files: string[] = [];
 
       for await (const file of glob.scan(skillsDir)) {
@@ -53,42 +53,41 @@ describe("MakeClaudeSkillCommand", () => {
       expect(files.length).toBeGreaterThan(0);
     });
 
-    test("should generate files with .md extension", async () => {
+    test("should generate SKILL.md files inside skill directories", async () => {
       await command.run();
 
       const skillsDir = join(testDir, ".claude", "skills");
-      const glob = new Glob("*.md");
+      const glob = new Glob("*/SKILL.md");
 
       for await (const file of glob.scan(skillsDir)) {
-        expect(file.endsWith(".md")).toBe(true);
-        expect(file.endsWith(".md.txt")).toBe(false);
+        expect(file.endsWith("SKILL.md")).toBe(true);
       }
     });
 
-    test("should generate make.ai skill", async () => {
+    test("should generate make-ai skill", async () => {
       await command.run();
 
-      const filePath = join(testDir, ".claude", "skills", "make.ai.md");
+      const filePath = join(testDir, ".claude", "skills", "make-ai", "SKILL.md");
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("name: make:ai");
     });
 
-    test("should generate make.controller skill", async () => {
+    test("should generate make-controller skill", async () => {
       await command.run();
 
-      const filePath = join(testDir, ".claude", "skills", "make.controller.md");
+      const filePath = join(testDir, ".claude", "skills", "make-controller", "SKILL.md");
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
       expect(content).toContain("name: make:controller");
     });
 
-    test("should generate make.service skill", async () => {
+    test("should generate make-service skill", async () => {
       await command.run();
 
-      const filePath = join(testDir, ".claude", "skills", "make.service.md");
+      const filePath = join(testDir, ".claude", "skills", "make-service", "SKILL.md");
       expect(existsSync(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
@@ -99,10 +98,9 @@ describe("MakeClaudeSkillCommand", () => {
       await command.run();
 
       const skillsDir = join(testDir, ".claude", "skills");
-      const glob = new Glob("*.md");
+      const glob = new Glob("*/SKILL.md");
 
       for await (const file of glob.scan(skillsDir)) {
-        if (file === ".gitkeep") continue;
         const content = await Bun.file(join(skillsDir, file)).text();
         expect(content).toStartWith("---\n");
         expect(content).toContain("name:");
@@ -114,7 +112,7 @@ describe("MakeClaudeSkillCommand", () => {
       await command.run();
 
       const skillsDir = join(testDir, ".claude", "skills");
-      const glob = new Glob("*.md");
+      const glob = new Glob("*/SKILL.md");
       const files: string[] = [];
 
       for await (const file of glob.scan(skillsDir)) {

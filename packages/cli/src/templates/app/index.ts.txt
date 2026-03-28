@@ -7,6 +7,7 @@ import { CorsMiddleware } from "@ooneex/middleware";
 import { RedisRateLimiter } from "@ooneex/rate-limit";
 import { BunnyStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
+import { AppDatabase } from "./databases/AppDatabase";
 
 const app = new App({
   prefix: "api",
@@ -22,6 +23,7 @@ const app = new App({
   cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,
+  database: AppDatabase,
   generateRouteDoc: true,
 });
 

@@ -209,5 +209,25 @@ describe("MakeModuleCommand", () => {
       expect(tsconfig.compilerOptions.paths["@shop/*"]).toEqual(["../shop/src/*"]);
       expect(tsconfig.compilerOptions.paths["@/*"]).toEqual(["./src/*"]);
     });
+
+    test("should not add path alias when creating app module", async () => {
+      const originalContent = await Bun.file(join(testDir, "modules", "app", "tsconfig.json")).text();
+      const originalTsconfig = JSON.parse(originalContent);
+
+      await command.run({ name: "App", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, "modules", "app", "tsconfig.json")).text();
+      const tsconfig = JSON.parse(content);
+      expect(tsconfig.compilerOptions.paths).toEqual(originalTsconfig.compilerOptions.paths);
+    });
+
+    test("should not modify AppModule when creating app module", async () => {
+      const originalContent = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
+
+      await command.run({ name: "App", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
+      expect(content).toBe(originalContent);
+    });
   });
 });

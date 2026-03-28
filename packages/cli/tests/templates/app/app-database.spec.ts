@@ -20,14 +20,14 @@ describe("app-database.txt", () => {
     expect(content).toContain("@decorator.database()");
   });
 
-  test("should extend TypeormPgDatabase", async () => {
+  test("should extend TypeormDatabase", async () => {
     const content = await file.text();
-    expect(content).toContain("extends TypeormPgDatabase");
+    expect(content).toContain("extends TypeormDatabase");
   });
 
   test("should import from @ooneex/database", async () => {
     const content = await file.text();
-    expect(content).toContain("TypeormPgDatabase");
+    expect(content).toContain("TypeormDatabase");
     expect(content).toContain("DatabaseException");
     expect(content).toContain("decorator");
     expect(content).toContain("@ooneex/database");

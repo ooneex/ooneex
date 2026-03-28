@@ -2,6 +2,7 @@
 
 import { parseArgs } from "node:util";
 import type { IException } from "@ooneex/exception";
+import { Exception } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
 import type { HttpMethodType } from "@ooneex/types";
 import { getCommand } from "./getCommand";
@@ -75,7 +76,9 @@ const parsedValues = {
 try {
   await command.run(parsedValues);
 } catch (error) {
-  logger.error(error as IException, undefined, {
+  const exception: IException =
+    error instanceof Exception ? error : new Exception(error instanceof Error ? error : String(error));
+  logger.error(exception, undefined, {
     showArrow: false,
     showTimestamp: false,
     showLevel: false,

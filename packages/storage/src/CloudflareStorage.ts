@@ -1,6 +1,6 @@
-import type { S3Options } from "bun";
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
+import type { S3Options } from "bun";
 import { decorator } from "./decorators";
 import { Storage } from "./Storage";
 import { StorageException } from "./StorageException";

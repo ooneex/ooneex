@@ -12,6 +12,7 @@ mock.module("@/decorators", () => ({
 // Import after mocking
 const { BunnyStorage } = await import("@/BunnyStorage");
 const { StorageException } = await import("@/StorageException");
+const { AppEnv } = await import("@ooneex/app-env");
 
 describe("BunnyStorage", () => {
   const originalEnv = { ...Bun.env };
@@ -33,41 +34,41 @@ describe("BunnyStorage", () => {
 
   describe("constructor", () => {
     test("should create instance with environment variables", () => {
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       expect(storage).toBeInstanceOf(BunnyStorage);
     });
 
     test("should throw StorageException when access key is missing", () => {
       delete Bun.env.STORAGE_BUNNY_ACCESS_KEY;
 
-      expect(() => new BunnyStorage()).toThrow(StorageException);
-      expect(() => new BunnyStorage()).toThrow("Bunny access key is required");
+      expect(() => new BunnyStorage(new AppEnv())).toThrow(StorageException);
+      expect(() => new BunnyStorage(new AppEnv())).toThrow("Bunny access key is required");
     });
 
     test("should throw StorageException when storage zone is missing", () => {
       delete Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
 
-      expect(() => new BunnyStorage()).toThrow(StorageException);
-      expect(() => new BunnyStorage()).toThrow("Bunny storage zone is required");
+      expect(() => new BunnyStorage(new AppEnv())).toThrow(StorageException);
+      expect(() => new BunnyStorage(new AppEnv())).toThrow("Bunny storage zone is required");
     });
 
     test("should use default region when not provided", () => {
       delete Bun.env.STORAGE_BUNNY_REGION;
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       expect(storage).toBeInstanceOf(BunnyStorage);
     });
   });
 
   describe("getBucket", () => {
     test("should return empty string by default", () => {
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.getBucket()).toBe("");
     });
 
     test("should return bucket after setBucket", () => {
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       storage.setBucket("my-bucket");
 
       expect(storage.getBucket()).toBe("my-bucket");
@@ -76,7 +77,7 @@ describe("BunnyStorage", () => {
 
   describe("setBucket", () => {
     test("should set bucket and return this for chaining", () => {
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const result = storage.setBucket("my-bucket");
 
       expect(result).toBe(storage);
@@ -93,7 +94,7 @@ describe("BunnyStorage", () => {
 
       fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(mockFiles), { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const files = await storage.list();
 
       expect(files).toEqual(["file1.txt", "file2.jpg"]);
@@ -114,7 +115,7 @@ describe("BunnyStorage", () => {
 
       fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(mockFiles), { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       storage.setBucket("my-bucket");
       const files = await storage.list();
 
@@ -128,7 +129,7 @@ describe("BunnyStorage", () => {
     test("should throw StorageException on failed list request", async () => {
       fetchMock.mockResolvedValueOnce(new Response("Not Found", { status: 404, statusText: "Not Found" }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.list()).rejects.toThrow(StorageException);
     });
@@ -138,7 +139,7 @@ describe("BunnyStorage", () => {
     test("should return true when file exists", async () => {
       fetchMock.mockResolvedValueOnce(new Response("content", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const exists = await storage.exists("test-file.txt");
 
       expect(exists).toBe(true);
@@ -147,7 +148,7 @@ describe("BunnyStorage", () => {
     test("should return false when file does not exist", async () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 404 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const exists = await storage.exists("missing-file.txt");
 
       expect(exists).toBe(false);
@@ -156,7 +157,7 @@ describe("BunnyStorage", () => {
     test("should build correct URL with bucket", async () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       storage.setBucket("my-bucket");
       await storage.exists("file.txt");
 
@@ -171,7 +172,7 @@ describe("BunnyStorage", () => {
     test("should delete file successfully", async () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       expect(await storage.delete("file-to-delete.txt")).toBeUndefined();
 
       expect(fetchMock).toHaveBeenCalledWith(
@@ -186,14 +187,14 @@ describe("BunnyStorage", () => {
     test("should not throw when file does not exist (404)", async () => {
       fetchMock.mockResolvedValueOnce(new Response("", { status: 404 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       expect(await storage.delete("non-existent.txt")).toBeUndefined();
     });
 
     test("should throw StorageException on other errors", async () => {
       fetchMock.mockResolvedValueOnce(new Response("Server Error", { status: 500, statusText: "Server Error" }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.delete("file.txt")).rejects.toThrow(StorageException);
     });
@@ -211,7 +212,7 @@ describe("BunnyStorage", () => {
         .mockResolvedValueOnce(new Response("", { status: 200 }))
         .mockResolvedValueOnce(new Response("", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       storage.setBucket("test-bucket");
       const result = await storage.clearBucket();
 
@@ -224,7 +225,7 @@ describe("BunnyStorage", () => {
     test("should upload string content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const size = await storage.put("test.txt", "Hello World");
 
       expect(size).toBe(11);
@@ -243,7 +244,7 @@ describe("BunnyStorage", () => {
     test("should upload ArrayBuffer content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const buffer = new ArrayBuffer(8);
       const size = await storage.put("test.bin", buffer);
 
@@ -253,7 +254,7 @@ describe("BunnyStorage", () => {
     test("should upload ArrayBufferView content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const view = new Uint8Array([1, 2, 3, 4, 5]);
       const size = await storage.put("test.bin", view);
 
@@ -263,7 +264,7 @@ describe("BunnyStorage", () => {
     test("should upload SharedArrayBuffer content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const sharedBuffer = new SharedArrayBuffer(16);
       const size = await storage.put("test.bin", sharedBuffer);
 
@@ -273,7 +274,7 @@ describe("BunnyStorage", () => {
     test("should upload Blob content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const blob = new Blob(["Hello Blob"], { type: "text/plain" });
       const size = await storage.put("test.txt", blob);
 
@@ -283,7 +284,7 @@ describe("BunnyStorage", () => {
     test("should upload Request content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const request = new Request("https://example.com", { body: "Request body", method: "POST" });
       const size = await storage.put("test.txt", request);
 
@@ -293,7 +294,7 @@ describe("BunnyStorage", () => {
     test("should upload Response content", async () => {
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const response = new Response("Response body");
       const size = await storage.put("test.txt", response);
 
@@ -303,7 +304,7 @@ describe("BunnyStorage", () => {
     test("should throw StorageException on upload failure", async () => {
       fetchMock.mockResolvedValueOnce(new Response("Error", { status: 500, statusText: "Server Error" }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.put("test.txt", "content")).rejects.toThrow(StorageException);
     });
@@ -316,7 +317,7 @@ describe("BunnyStorage", () => {
       const tempFile = Bun.file("/tmp/test-upload.txt");
       await Bun.write(tempFile, "Test file content");
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const size = await storage.putFile("remote.txt", "/tmp/test-upload.txt");
 
       expect(size).toBe(17);
@@ -333,7 +334,7 @@ describe("BunnyStorage", () => {
         .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }))
         .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const size = await storage.putDir("remote", { path: localDir });
 
       expect(size).toBe(16);
@@ -351,7 +352,7 @@ describe("BunnyStorage", () => {
         .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }))
         .mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const size = await storage.putDir("dest", { path: localDir });
 
       expect(size).toBe(10);
@@ -367,7 +368,7 @@ describe("BunnyStorage", () => {
 
       fetchMock.mockResolvedValueOnce(new Response('{"HttpCode":201}', { status: 201 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const size = await storage.putDir("filtered", { path: localDir, filter: /\.txt$/ });
 
       expect(size).toBe(3);
@@ -382,7 +383,7 @@ describe("BunnyStorage", () => {
       const mockData = { name: "Test", value: 42 };
       fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(mockData), { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const data = await storage.getAsJson<{ name: string; value: number }>("data.json");
 
       expect(data).toEqual(mockData);
@@ -391,7 +392,7 @@ describe("BunnyStorage", () => {
     test("should throw StorageException on failure", async () => {
       fetchMock.mockResolvedValueOnce(new Response("Not Found", { status: 404, statusText: "Not Found" }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.getAsJson("missing.json")).rejects.toThrow(StorageException);
     });
@@ -402,7 +403,7 @@ describe("BunnyStorage", () => {
       const content = new Uint8Array([1, 2, 3, 4, 5]);
       fetchMock.mockResolvedValueOnce(new Response(content, { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const buffer = await storage.getAsArrayBuffer("binary.bin");
 
       expect(buffer).toBeInstanceOf(ArrayBuffer);
@@ -412,7 +413,7 @@ describe("BunnyStorage", () => {
     test("should throw StorageException on failure", async () => {
       fetchMock.mockResolvedValueOnce(new Response("Error", { status: 500, statusText: "Server Error" }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
 
       expect(storage.getAsArrayBuffer("file.bin")).rejects.toThrow(StorageException);
     });
@@ -422,7 +423,7 @@ describe("BunnyStorage", () => {
     test("should return a ReadableStream", () => {
       fetchMock.mockResolvedValueOnce(new Response("stream content", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const stream = storage.getAsStream("file.txt");
 
       expect(stream).toBeInstanceOf(ReadableStream);
@@ -431,7 +432,7 @@ describe("BunnyStorage", () => {
     test("should stream file content", async () => {
       fetchMock.mockResolvedValueOnce(new Response("streamed content", { status: 200 }));
 
-      const storage = new BunnyStorage();
+      const storage = new BunnyStorage(new AppEnv());
       const stream = storage.getAsStream("file.txt");
       const reader = stream.getReader();
 

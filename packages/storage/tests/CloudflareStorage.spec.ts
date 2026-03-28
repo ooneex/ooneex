@@ -12,6 +12,7 @@ mock.module("@/decorators", () => ({
 // Import after mocking
 const { CloudflareStorage } = await import("@/CloudflareStorage");
 const { StorageException } = await import("@/StorageException");
+const { AppEnv } = await import("@ooneex/app-env");
 
 describe("CloudflareStorage", () => {
   const originalEnv = { ...Bun.env };
@@ -32,41 +33,41 @@ describe("CloudflareStorage", () => {
 
   describe("constructor", () => {
     test("should create instance with environment variables", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       expect(storage).toBeInstanceOf(CloudflareStorage);
     });
 
     test("should create instance with constructor options", () => {
       // CloudflareStorage uses environment variables only
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       expect(storage).toBeInstanceOf(CloudflareStorage);
     });
 
     test("should throw StorageException when access key is missing", () => {
       delete Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
 
-      expect(() => new CloudflareStorage()).toThrow(StorageException);
-      expect(() => new CloudflareStorage()).toThrow("Cloudflare access key is required");
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow(StorageException);
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow("Cloudflare access key is required");
     });
 
     test("should throw StorageException when secret key is missing", () => {
       delete Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
 
-      expect(() => new CloudflareStorage()).toThrow(StorageException);
-      expect(() => new CloudflareStorage()).toThrow("Cloudflare secret key is required");
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow(StorageException);
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow("Cloudflare secret key is required");
     });
 
     test("should throw StorageException when endpoint is missing", () => {
       delete Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
 
-      expect(() => new CloudflareStorage()).toThrow(StorageException);
-      expect(() => new CloudflareStorage()).toThrow("Cloudflare endpoint is required");
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow(StorageException);
+      expect(() => new CloudflareStorage(new AppEnv())).toThrow("Cloudflare endpoint is required");
     });
 
     test("should use default region when not provided", () => {
       delete Bun.env.STORAGE_CLOUDFLARE_REGION;
 
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options.region).toBe("EEUR");
@@ -75,7 +76,7 @@ describe("CloudflareStorage", () => {
     test("should use region from environment variable", () => {
       Bun.env.STORAGE_CLOUDFLARE_REGION = "APAC";
 
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options.region).toBe("APAC");
@@ -87,7 +88,7 @@ describe("CloudflareStorage", () => {
       Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "https://env.r2.cloudflarestorage.com";
       Bun.env.STORAGE_CLOUDFLARE_REGION = "WEUR";
 
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options.accessKeyId).toBe("env-access-key");
@@ -99,7 +100,7 @@ describe("CloudflareStorage", () => {
 
   describe("getOptions", () => {
     test("should return S3Options with all required fields", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options).toHaveProperty("accessKeyId");
@@ -110,7 +111,7 @@ describe("CloudflareStorage", () => {
     });
 
     test("should return correct values from environment variables", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options.accessKeyId).toBe("test-access-key");
@@ -120,14 +121,14 @@ describe("CloudflareStorage", () => {
     });
 
     test("should return undefined bucket before setBucket is called", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const options = storage.getOptions();
 
       expect(options.bucket).toBeUndefined();
     });
 
     test("should return correct bucket after setBucket is called", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       storage.setBucket("my-bucket");
       const options = storage.getOptions();
 
@@ -137,14 +138,14 @@ describe("CloudflareStorage", () => {
 
   describe("getBucket", () => {
     test("should return the current bucket name", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       storage.setBucket("my-bucket");
 
       expect(storage.getBucket()).toBe("my-bucket");
     });
 
     test("should return updated bucket after setBucket", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       storage.setBucket("first");
       storage.setBucket("second");
 
@@ -154,14 +155,14 @@ describe("CloudflareStorage", () => {
 
   describe("setBucket", () => {
     test("should set bucket and return this for chaining", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       const result = storage.setBucket("test-bucket");
 
       expect(result).toBe(storage);
     });
 
     test("should update bucket in options", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
       storage.setBucket("first-bucket");
 
       expect(storage.getOptions().bucket).toBe("first-bucket");
@@ -179,7 +180,7 @@ describe("CloudflareStorage", () => {
       test(`should accept region ${region}`, () => {
         Bun.env.STORAGE_CLOUDFLARE_REGION = region;
 
-        const storage = new CloudflareStorage();
+        const storage = new CloudflareStorage(new AppEnv());
         const options = storage.getOptions();
         expect(options.region).toBe(region);
       });
@@ -188,7 +189,7 @@ describe("CloudflareStorage", () => {
 
   describe("IStorage interface compliance", () => {
     test("should implement all IStorage methods", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
 
       expect(typeof storage.getBucket).toBe("function");
       expect(typeof storage.setBucket).toBe("function");
@@ -207,14 +208,14 @@ describe("CloudflareStorage", () => {
 
   describe("inheritance from Storage", () => {
     test("should extend Storage", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
 
       // CloudflareStorage should have abstract method implementation
       expect(typeof storage.getOptions).toBe("function");
     });
 
     test("should inherit storage methods from Storage", () => {
-      const storage = new CloudflareStorage();
+      const storage = new CloudflareStorage(new AppEnv());
 
       // These methods are inherited from Storage
       expect(storage.list).toBeDefined();

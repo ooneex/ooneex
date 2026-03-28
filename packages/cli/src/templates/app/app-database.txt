@@ -5,7 +5,7 @@ import { TypeormPgDatabase, DatabaseException, decorator } from "@ooneex/databas
 import { AppModule } from "@/AppModule";
 
 @decorator.database()
-export class {{NAME}}Database extends TypeormPgDatabase {
+export class AppDatabase extends TypeormPgDatabase {
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
     super();
   }

@@ -69,8 +69,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     });
 
     // Create database file
-    const databaseContent = databaseTemplate.replace(/{{NAME}}/g, "App");
-    await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseContent);
+    await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseTemplate);
 
     await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
     await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");

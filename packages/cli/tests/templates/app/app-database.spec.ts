@@ -10,9 +10,9 @@ describe("app-database.txt", () => {
     expect(await file.exists()).toBe(true);
   });
 
-  test("should contain required placeholders", async () => {
+  test("should contain AppDatabase class", async () => {
     const content = await file.text();
-    expect(content).toContain("{{NAME}}");
+    expect(content).toContain("class AppDatabase");
   });
 
   test("should contain database decorator", async () => {

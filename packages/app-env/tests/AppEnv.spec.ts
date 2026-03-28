@@ -634,6 +634,9 @@ describe("AppEnv", () => {
       delete Bun.env.BETA_ALLOWED_USERS;
       delete Bun.env.CANARY_ALLOWED_USERS;
       delete Bun.env.HOTFIX_ALLOWED_USERS;
+      delete Bun.env.SYSTEM_USERS;
+      delete Bun.env.SUPER_ADMIN_USERS;
+      delete Bun.env.ADMIN_USERS;
     });
 
     test("should read HOST_NAME from environment", () => {
@@ -699,6 +702,9 @@ describe("AppEnv", () => {
       expect(appEnv.BETA_ALLOWED_USERS).toEqual([]);
       expect(appEnv.CANARY_ALLOWED_USERS).toEqual([]);
       expect(appEnv.HOTFIX_ALLOWED_USERS).toEqual([]);
+      expect(appEnv.SYSTEM_USERS).toEqual([]);
+      expect(appEnv.SUPER_ADMIN_USERS).toEqual([]);
+      expect(appEnv.ADMIN_USERS).toEqual([]);
     });
 
     test("should read all env vars when set", () => {

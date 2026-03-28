@@ -106,4 +106,24 @@ export interface IAppEnv {
 
   // Authentication
   readonly CLERK_SECRET_KEY: string | undefined;
+
+  // Allowed Users
+  readonly DEVELOPMENT_ALLOWED_USERS: string[];
+  readonly STAGING_ALLOWED_USERS: string[];
+  readonly TESTING_ALLOWED_USERS: string[];
+  readonly TEST_ALLOWED_USERS: string[];
+  readonly QA_ALLOWED_USERS: string[];
+  readonly UAT_ALLOWED_USERS: string[];
+  readonly INTEGRATION_ALLOWED_USERS: string[];
+  readonly PREVIEW_ALLOWED_USERS: string[];
+  readonly DEMO_ALLOWED_USERS: string[];
+  readonly SANDBOX_ALLOWED_USERS: string[];
+  readonly BETA_ALLOWED_USERS: string[];
+  readonly CANARY_ALLOWED_USERS: string[];
+  readonly HOTFIX_ALLOWED_USERS: string[];
+
+  // Users
+  readonly SYSTEM_USERS: string[];
+  readonly SUPER_ADMIN_USERS: string[];
+  readonly ADMIN_USERS: string[];
 }

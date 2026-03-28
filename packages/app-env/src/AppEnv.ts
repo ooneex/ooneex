@@ -104,6 +104,9 @@ export class AppEnv implements IAppEnv {
   public readonly BETA_ALLOWED_USERS: string[];
   public readonly CANARY_ALLOWED_USERS: string[];
   public readonly HOTFIX_ALLOWED_USERS: string[];
+  public readonly SYSTEM_USERS: string[];
+  public readonly SUPER_ADMIN_USERS: string[];
+  public readonly ADMIN_USERS: string[];
 
   public constructor() {
     // App
@@ -205,5 +208,8 @@ export class AppEnv implements IAppEnv {
     this.BETA_ALLOWED_USERS = (Bun.env.BETA_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
     this.CANARY_ALLOWED_USERS = (Bun.env.CANARY_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
     this.HOTFIX_ALLOWED_USERS = (Bun.env.HOTFIX_ALLOWED_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.SYSTEM_USERS = (Bun.env.SYSTEM_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.SUPER_ADMIN_USERS = (Bun.env.SUPER_ADMIN_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
+    this.ADMIN_USERS = (Bun.env.ADMIN_USERS || "").split(",").map((s) => s.trim()).filter(Boolean);
   }
 }

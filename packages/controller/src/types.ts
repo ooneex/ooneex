@@ -41,9 +41,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
     version: number;
     description: string;
   } | null;
-  app: {
-    env: IAppEnv;
-  };
+  env: IAppEnv;
   response: IResponse<T["response"]>;
   request: IRequest<{ params: T["params"]; payload: T["payload"]; queries: T["queries"] }>;
   params: T["params"];

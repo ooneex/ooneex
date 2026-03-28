@@ -1,39 +1,69 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 import { AppEnv } from "@/AppEnv";
-import { AppEnvException } from "@/AppEnvException";
-import type { EnvironmentNameType } from "@/types";
-import { Environment } from "@/types";
+import { type EnvironmentNameType, Environment } from "@/types";
+
+const setEnv = (value: string | undefined) => {
+  if (value === undefined) {
+    delete Bun.env.APP_ENV;
+  } else {
+    Bun.env.APP_ENV = value;
+  }
+};
+
+afterEach(() => {
+  delete Bun.env.APP_ENV;
+});
 
 describe("AppEnv", () => {
   describe("Constructor", () => {
     test("should create AppEnv instance with valid environment", () => {
-      const appEnv = new AppEnv("production");
+      setEnv("production");
+      const appEnv = new AppEnv();
 
       expect(appEnv).toBeInstanceOf(AppEnv);
       expect(appEnv.env).toBe("production");
       expect(appEnv.isProduction).toBe(true);
     });
 
-    test("should throw AppEnvException when env is null", () => {
-      expect(() => new AppEnv(null as unknown as EnvironmentNameType)).toThrow(AppEnvException);
-      expect(() => new AppEnv(null as unknown as EnvironmentNameType)).toThrow("APP_ENV is not set");
+    test("should default to 'local' when APP_ENV is not set", () => {
+      setEnv(undefined);
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("local");
+      expect(appEnv.APP_ENV).toBe("local");
+      expect(appEnv.isLocal).toBe(true);
     });
 
-    test("should throw AppEnvException when env is undefined", () => {
-      expect(() => new AppEnv(undefined as unknown as EnvironmentNameType)).toThrow(AppEnvException);
-      expect(() => new AppEnv(undefined as unknown as EnvironmentNameType)).toThrow("APP_ENV is not set");
+    test("should default to 'local' when APP_ENV is empty string", () => {
+      setEnv("");
+      const appEnv = new AppEnv();
+
+      expect(appEnv.env).toBe("local");
+      expect(appEnv.APP_ENV).toBe("local");
+      expect(appEnv.isLocal).toBe(true);
     });
 
-    test("should throw AppEnvException when env is empty string", () => {
-      expect(() => new AppEnv("" as EnvironmentNameType)).toThrow(AppEnvException);
-      expect(() => new AppEnv("" as EnvironmentNameType)).toThrow("APP_ENV is not set");
+    test("should default PORT to 80", () => {
+      setEnv("production");
+      const appEnv = new AppEnv();
+
+      expect(appEnv.PORT).toBe(80);
+    });
+
+    test("should parse PORT from environment variable", () => {
+      setEnv("production");
+      Bun.env.PORT = "3000";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.PORT).toBe(3000);
+      delete Bun.env.PORT;
     });
 
     test("should accept any string as environment type", () => {
-      const customEnv = "custom-environment" as EnvironmentNameType;
-      const appEnv = new AppEnv(customEnv);
+      setEnv("custom-environment");
+      const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe(customEnv);
+      expect(appEnv.env).toBe("custom-environment" as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
       expect(appEnv.isLocal).toBe(false);
     });
@@ -41,7 +71,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Local", () => {
     test("should detect local environment correctly", () => {
-      const appEnv = new AppEnv(Environment.LOCAL);
+      setEnv(Environment.LOCAL);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("local");
       expect(appEnv.isLocal).toBe(true);
@@ -64,7 +95,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Development", () => {
     test("should detect development environment correctly", () => {
-      const appEnv = new AppEnv(Environment.DEVELOPMENT);
+      setEnv(Environment.DEVELOPMENT);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("development");
       expect(appEnv.isDevelopment).toBe(true);
@@ -87,7 +119,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Staging", () => {
     test("should detect staging environment correctly", () => {
-      const appEnv = new AppEnv(Environment.STAGING);
+      setEnv(Environment.STAGING);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("staging");
       expect(appEnv.isStaging).toBe(true);
@@ -110,7 +143,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Testing", () => {
     test("should detect testing environment correctly", () => {
-      const appEnv = new AppEnv(Environment.TESTING);
+      setEnv(Environment.TESTING);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("testing");
       expect(appEnv.isTesting).toBe(true);
@@ -133,7 +167,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Test", () => {
     test("should detect test environment correctly", () => {
-      const appEnv = new AppEnv(Environment.TEST);
+      setEnv(Environment.TEST);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("test");
       expect(appEnv.isTest).toBe(true);
@@ -156,7 +191,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - QA", () => {
     test("should detect qa environment correctly", () => {
-      const appEnv = new AppEnv(Environment.QA);
+      setEnv(Environment.QA);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("qa");
       expect(appEnv.isQa).toBe(true);
@@ -179,7 +215,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - UAT", () => {
     test("should detect uat environment correctly", () => {
-      const appEnv = new AppEnv(Environment.UAT);
+      setEnv(Environment.UAT);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("uat");
       expect(appEnv.isUat).toBe(true);
@@ -202,7 +239,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Integration", () => {
     test("should detect integration environment correctly", () => {
-      const appEnv = new AppEnv(Environment.INTEGRATION);
+      setEnv(Environment.INTEGRATION);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("integration");
       expect(appEnv.isIntegration).toBe(true);
@@ -225,7 +263,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Preview", () => {
     test("should detect preview environment correctly", () => {
-      const appEnv = new AppEnv(Environment.PREVIEW);
+      setEnv(Environment.PREVIEW);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("preview");
       expect(appEnv.isPreview).toBe(true);
@@ -248,7 +287,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Demo", () => {
     test("should detect demo environment correctly", () => {
-      const appEnv = new AppEnv(Environment.DEMO);
+      setEnv(Environment.DEMO);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("demo");
       expect(appEnv.isDemo).toBe(true);
@@ -271,7 +311,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Sandbox", () => {
     test("should detect sandbox environment correctly", () => {
-      const appEnv = new AppEnv(Environment.SANDBOX);
+      setEnv(Environment.SANDBOX);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("sandbox");
       expect(appEnv.isSandbox).toBe(true);
@@ -294,7 +335,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Beta", () => {
     test("should detect beta environment correctly", () => {
-      const appEnv = new AppEnv(Environment.BETA);
+      setEnv(Environment.BETA);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("beta");
       expect(appEnv.isBeta).toBe(true);
@@ -317,7 +359,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Canary", () => {
     test("should detect canary environment correctly", () => {
-      const appEnv = new AppEnv(Environment.CANARY);
+      setEnv(Environment.CANARY);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("canary");
       expect(appEnv.isCanary).toBe(true);
@@ -340,7 +383,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Hotfix", () => {
     test("should detect hotfix environment correctly", () => {
-      const appEnv = new AppEnv(Environment.HOTFIX);
+      setEnv(Environment.HOTFIX);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("hotfix");
       expect(appEnv.isHotfix).toBe(true);
@@ -363,7 +407,8 @@ describe("AppEnv", () => {
 
   describe("Environment Detection - Production", () => {
     test("should detect production environment correctly", () => {
-      const appEnv = new AppEnv(Environment.PRODUCTION);
+      setEnv(Environment.PRODUCTION);
+      const appEnv = new AppEnv();
 
       expect(appEnv.env).toBe("production");
       expect(appEnv.isProduction).toBe(true);
@@ -405,7 +450,8 @@ describe("AppEnv", () => {
       ];
 
       for (const env of environments) {
-        const appEnv = new AppEnv(env);
+        setEnv(env);
+        const appEnv = new AppEnv();
         expect(appEnv.env).toBe(env);
 
         // Verify only the correct property is true
@@ -459,19 +505,19 @@ describe("AppEnv", () => {
 
   describe("Property Immutability", () => {
     test("should have env property defined", () => {
-      const appEnv = new AppEnv("production");
+      setEnv("production");
+      const appEnv = new AppEnv();
 
-      // Check that env property is defined and has correct value
       expect(appEnv.env).toBe("production");
 
-      // Property descriptors check for readonly nature (TypeScript enforces this at compile time)
       const descriptor = Object.getOwnPropertyDescriptor(appEnv, "env");
       expect(descriptor).toBeDefined();
       expect(descriptor?.value).toBe("production");
     });
 
     test("should have all boolean properties defined and immutable by design", () => {
-      const appEnv = new AppEnv("production");
+      setEnv("production");
+      const appEnv = new AppEnv();
 
       const readonlyProperties = [
         "isLocal",
@@ -491,8 +537,6 @@ describe("AppEnv", () => {
         "isProduction",
       ];
 
-      // TypeScript readonly ensures compile-time immutability
-      // At runtime, verify properties exist and have correct types
       for (const property of readonlyProperties) {
         const descriptor = Object.getOwnPropertyDescriptor(appEnv, property);
         expect(descriptor).toBeDefined();
@@ -503,9 +547,9 @@ describe("AppEnv", () => {
 
   describe("Interface Compliance", () => {
     test("should implement IAppEnv interface correctly", () => {
-      const appEnv = new AppEnv("production");
+      setEnv("production");
+      const appEnv = new AppEnv();
 
-      // Check all required properties exist
       expect(appEnv.env).toBeDefined();
       expect(typeof appEnv.isLocal).toBe("boolean");
       expect(typeof appEnv.isDevelopment).toBe("boolean");
@@ -525,10 +569,263 @@ describe("AppEnv", () => {
     });
   });
 
+  describe("APP_ENV property", () => {
+    test("should have APP_ENV matching env", () => {
+      setEnv("production");
+      const appEnv = new AppEnv();
+
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.APP_ENV).toBe(appEnv.env);
+    });
+  });
+
+  describe("Environment Variables", () => {
+    afterEach(() => {
+      delete Bun.env.PORT;
+      delete Bun.env.HOST_NAME;
+      delete Bun.env.LOGS_DATABASE_URL;
+      delete Bun.env.LOGTAIL_SOURCE_TOKEN;
+      delete Bun.env.LOGTAIL_ENDPOINT;
+      delete Bun.env.BETTERSTACK_APPLICATION_TOKEN;
+      delete Bun.env.BETTERSTACK_INGESTING_HOST;
+      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_HOST;
+      delete Bun.env.CACHE_REDIS_URL;
+      delete Bun.env.PUBSUB_REDIS_URL;
+      delete Bun.env.RATE_LIMIT_REDIS_URL;
+      delete Bun.env.CORS_ORIGINS;
+      delete Bun.env.CORS_METHODS;
+      delete Bun.env.CORS_HEADERS;
+      delete Bun.env.CORS_EXPOSED_HEADERS;
+      delete Bun.env.CORS_CREDENTIALS;
+      delete Bun.env.CORS_MAX_AGE;
+      delete Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
+      delete Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
+      delete Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
+      delete Bun.env.STORAGE_CLOUDFLARE_REGION;
+      delete Bun.env.STORAGE_BUNNY_ACCESS_KEY;
+      delete Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
+      delete Bun.env.STORAGE_BUNNY_REGION;
+      delete Bun.env.FILESYSTEM_STORAGE_PATH;
+      delete Bun.env.DATABASE_URL;
+      delete Bun.env.DATABASE_REDIS_URL;
+      delete Bun.env.SQLITE_DATABASE_PATH;
+      delete Bun.env.MAILER_SENDER_NAME;
+      delete Bun.env.MAILER_SENDER_ADDRESS;
+      delete Bun.env.RESEND_API_KEY;
+      delete Bun.env.JWT_SECRET;
+      delete Bun.env.OPENAI_API_KEY;
+      delete Bun.env.ANTHROPIC_API_KEY;
+      delete Bun.env.GEMINI_API_KEY;
+      delete Bun.env.GROQ_API_KEY;
+      delete Bun.env.OLLAMA_HOST;
+      delete Bun.env.POLAR_ACCESS_TOKEN;
+      delete Bun.env.POLAR_ENVIRONMENT;
+      delete Bun.env.CLERK_SECRET_KEY;
+    });
+
+    test("should read HOST_NAME from environment", () => {
+      Bun.env.HOST_NAME = "example.com";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.HOST_NAME).toBe("example.com");
+    });
+
+    test("should have undefined for unset optional env vars", () => {
+      const appEnv = new AppEnv();
+
+      expect(appEnv.HOST_NAME).toBe("0.0.0.0");
+      expect(appEnv.LOGS_DATABASE_URL).toBeUndefined();
+      expect(appEnv.LOGTAIL_SOURCE_TOKEN).toBeUndefined();
+      expect(appEnv.LOGTAIL_ENDPOINT).toBeUndefined();
+      expect(appEnv.BETTERSTACK_APPLICATION_TOKEN).toBeUndefined();
+      expect(appEnv.BETTERSTACK_INGESTING_HOST).toBeUndefined();
+      expect(appEnv.ANALYTICS_POSTHOG_API_KEY).toBeUndefined();
+      expect(appEnv.ANALYTICS_POSTHOG_HOST).toBeUndefined();
+      expect(appEnv.CACHE_REDIS_URL).toBeUndefined();
+      expect(appEnv.PUBSUB_REDIS_URL).toBeUndefined();
+      expect(appEnv.RATE_LIMIT_REDIS_URL).toBeUndefined();
+      expect(appEnv.CORS_ORIGINS).toBeUndefined();
+      expect(appEnv.CORS_METHODS).toBeUndefined();
+      expect(appEnv.CORS_HEADERS).toBeUndefined();
+      expect(appEnv.CORS_EXPOSED_HEADERS).toBeUndefined();
+      expect(appEnv.CORS_CREDENTIALS).toBeUndefined();
+      expect(appEnv.CORS_MAX_AGE).toBeUndefined();
+      expect(appEnv.STORAGE_CLOUDFLARE_ACCESS_KEY).toBeUndefined();
+      expect(appEnv.STORAGE_CLOUDFLARE_SECRET_KEY).toBeUndefined();
+      expect(appEnv.STORAGE_CLOUDFLARE_ENDPOINT).toBeUndefined();
+      expect(appEnv.STORAGE_CLOUDFLARE_REGION).toBeUndefined();
+      expect(appEnv.STORAGE_BUNNY_ACCESS_KEY).toBeUndefined();
+      expect(appEnv.STORAGE_BUNNY_STORAGE_ZONE).toBeUndefined();
+      expect(appEnv.STORAGE_BUNNY_REGION).toBeUndefined();
+      expect(appEnv.FILESYSTEM_STORAGE_PATH).toBeUndefined();
+      expect(appEnv.DATABASE_URL).toBeUndefined();
+      expect(appEnv.DATABASE_REDIS_URL).toBeUndefined();
+      expect(appEnv.SQLITE_DATABASE_PATH).toBeUndefined();
+      expect(appEnv.MAILER_SENDER_NAME).toBeUndefined();
+      expect(appEnv.MAILER_SENDER_ADDRESS).toBeUndefined();
+      expect(appEnv.RESEND_API_KEY).toBeUndefined();
+      expect(appEnv.JWT_SECRET).toBeUndefined();
+      expect(appEnv.OPENAI_API_KEY).toBeUndefined();
+      expect(appEnv.ANTHROPIC_API_KEY).toBeUndefined();
+      expect(appEnv.GEMINI_API_KEY).toBeUndefined();
+      expect(appEnv.GROQ_API_KEY).toBeUndefined();
+      expect(appEnv.OLLAMA_HOST).toBeUndefined();
+      expect(appEnv.POLAR_ACCESS_TOKEN).toBeUndefined();
+      expect(appEnv.POLAR_ENVIRONMENT).toBeUndefined();
+      expect(appEnv.CLERK_SECRET_KEY).toBeUndefined();
+    });
+
+    test("should read all env vars when set", () => {
+      Bun.env.LOGS_DATABASE_URL = "postgres://logs";
+      Bun.env.CACHE_REDIS_URL = "redis://cache";
+      Bun.env.DATABASE_URL = "postgres://db";
+      Bun.env.JWT_SECRET = "secret123";
+      Bun.env.ANTHROPIC_API_KEY = "sk-ant-123";
+      Bun.env.CLERK_SECRET_KEY = "sk_clerk_123";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.LOGS_DATABASE_URL).toBe("postgres://logs");
+      expect(appEnv.CACHE_REDIS_URL).toBe("redis://cache");
+      expect(appEnv.DATABASE_URL).toBe("postgres://db");
+      expect(appEnv.JWT_SECRET).toBe("secret123");
+      expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant-123");
+      expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
+    });
+
+    test("should read CORS env vars", () => {
+      Bun.env.CORS_ORIGINS = "https://example.com";
+      Bun.env.CORS_METHODS = "GET,POST";
+      Bun.env.CORS_HEADERS = "Content-Type";
+      Bun.env.CORS_EXPOSED_HEADERS = "X-Custom";
+      Bun.env.CORS_CREDENTIALS = "true";
+      Bun.env.CORS_MAX_AGE = "3600";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.CORS_ORIGINS).toBe("https://example.com");
+      expect(appEnv.CORS_METHODS).toBe("GET,POST");
+      expect(appEnv.CORS_HEADERS).toBe("Content-Type");
+      expect(appEnv.CORS_EXPOSED_HEADERS).toBe("X-Custom");
+      expect(appEnv.CORS_CREDENTIALS).toBe("true");
+      expect(appEnv.CORS_MAX_AGE).toBe("3600");
+    });
+
+    test("should read storage env vars", () => {
+      Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY = "cf-key";
+      Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY = "cf-secret";
+      Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "https://cf.endpoint";
+      Bun.env.STORAGE_CLOUDFLARE_REGION = "auto";
+      Bun.env.STORAGE_BUNNY_ACCESS_KEY = "bunny-key";
+      Bun.env.STORAGE_BUNNY_STORAGE_ZONE = "zone1";
+      Bun.env.STORAGE_BUNNY_REGION = "eu";
+      Bun.env.FILESYSTEM_STORAGE_PATH = "/tmp/storage";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.STORAGE_CLOUDFLARE_ACCESS_KEY).toBe("cf-key");
+      expect(appEnv.STORAGE_CLOUDFLARE_SECRET_KEY).toBe("cf-secret");
+      expect(appEnv.STORAGE_CLOUDFLARE_ENDPOINT).toBe("https://cf.endpoint");
+      expect(appEnv.STORAGE_CLOUDFLARE_REGION).toBe("auto");
+      expect(appEnv.STORAGE_BUNNY_ACCESS_KEY).toBe("bunny-key");
+      expect(appEnv.STORAGE_BUNNY_STORAGE_ZONE).toBe("zone1");
+      expect(appEnv.STORAGE_BUNNY_REGION).toBe("eu");
+      expect(appEnv.FILESYSTEM_STORAGE_PATH).toBe("/tmp/storage");
+    });
+
+    test("should read database env vars", () => {
+      Bun.env.DATABASE_URL = "postgres://localhost/mydb";
+      Bun.env.DATABASE_REDIS_URL = "redis://localhost:6379";
+      Bun.env.SQLITE_DATABASE_PATH = "/data/app.db";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.DATABASE_URL).toBe("postgres://localhost/mydb");
+      expect(appEnv.DATABASE_REDIS_URL).toBe("redis://localhost:6379");
+      expect(appEnv.SQLITE_DATABASE_PATH).toBe("/data/app.db");
+    });
+
+    test("should read mailer env vars", () => {
+      Bun.env.MAILER_SENDER_NAME = "Ooneex";
+      Bun.env.MAILER_SENDER_ADDRESS = "noreply@ooneex.com";
+      Bun.env.RESEND_API_KEY = "re_123";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.MAILER_SENDER_NAME).toBe("Ooneex");
+      expect(appEnv.MAILER_SENDER_ADDRESS).toBe("noreply@ooneex.com");
+      expect(appEnv.RESEND_API_KEY).toBe("re_123");
+    });
+
+    test("should read AI env vars", () => {
+      Bun.env.OPENAI_API_KEY = "sk-openai";
+      Bun.env.ANTHROPIC_API_KEY = "sk-ant";
+      Bun.env.GEMINI_API_KEY = "gemini-key";
+      Bun.env.GROQ_API_KEY = "groq-key";
+      Bun.env.OLLAMA_HOST = "http://localhost:11434";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.OPENAI_API_KEY).toBe("sk-openai");
+      expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant");
+      expect(appEnv.GEMINI_API_KEY).toBe("gemini-key");
+      expect(appEnv.GROQ_API_KEY).toBe("groq-key");
+      expect(appEnv.OLLAMA_HOST).toBe("http://localhost:11434");
+    });
+
+    test("should read payment env vars", () => {
+      Bun.env.POLAR_ACCESS_TOKEN = "polar-token";
+      Bun.env.POLAR_ENVIRONMENT = "sandbox";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.POLAR_ACCESS_TOKEN).toBe("polar-token");
+      expect(appEnv.POLAR_ENVIRONMENT).toBe("sandbox");
+    });
+
+    test("should read logs env vars", () => {
+      Bun.env.LOGTAIL_SOURCE_TOKEN = "lt-token";
+      Bun.env.LOGTAIL_ENDPOINT = "https://logtail.com";
+      Bun.env.BETTERSTACK_APPLICATION_TOKEN = "bs-token";
+      Bun.env.BETTERSTACK_INGESTING_HOST = "https://bs.com";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.LOGTAIL_SOURCE_TOKEN).toBe("lt-token");
+      expect(appEnv.LOGTAIL_ENDPOINT).toBe("https://logtail.com");
+      expect(appEnv.BETTERSTACK_APPLICATION_TOKEN).toBe("bs-token");
+      expect(appEnv.BETTERSTACK_INGESTING_HOST).toBe("https://bs.com");
+    });
+
+    test("should read analytics env vars", () => {
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "ph-key";
+      Bun.env.ANALYTICS_POSTHOG_HOST = "https://posthog.com";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.ANALYTICS_POSTHOG_API_KEY).toBe("ph-key");
+      expect(appEnv.ANALYTICS_POSTHOG_HOST).toBe("https://posthog.com");
+    });
+
+    test("should read pub/sub and rate limit env vars", () => {
+      Bun.env.PUBSUB_REDIS_URL = "redis://pubsub";
+      Bun.env.RATE_LIMIT_REDIS_URL = "redis://ratelimit";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
+      expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
+    });
+  });
+
   describe("Edge Cases", () => {
     test("should handle case-sensitive environment names", () => {
-      const appEnvLower = new AppEnv("production");
-      const appEnvUpper = new AppEnv("PRODUCTION" as EnvironmentNameType);
+      setEnv("production");
+      const appEnvLower = new AppEnv();
+
+      setEnv("PRODUCTION");
+      const appEnvUpper = new AppEnv();
 
       expect(appEnvLower.isProduction).toBe(true);
       expect(appEnvUpper.isProduction).toBe(false);
@@ -536,26 +833,26 @@ describe("AppEnv", () => {
     });
 
     test("should handle environment names with special characters", () => {
-      const specialEnv = "test-env-123" as EnvironmentNameType;
-      const appEnv = new AppEnv(specialEnv);
+      setEnv("test-env-123");
+      const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe(specialEnv);
+      expect(appEnv.env).toBe("test-env-123" as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
       expect(appEnv.isLocal).toBe(false);
     });
 
     test("should handle very long environment names", () => {
-      const longEnv =
-        "very-long-environment-name-that-exceeds-normal-length-expectations-for-testing-purposes" as EnvironmentNameType;
-      const appEnv = new AppEnv(longEnv);
+      const longEnv = "very-long-environment-name-that-exceeds-normal-length-expectations-for-testing-purposes";
+      setEnv(longEnv);
+      const appEnv = new AppEnv();
 
-      expect(appEnv.env).toBe(longEnv);
+      expect(appEnv.env).toBe(longEnv as EnvironmentNameType);
       expect(appEnv.isProduction).toBe(false);
     });
   });
 
   describe("Type Safety", () => {
-    test("should accept EnvType as constructor parameter", () => {
+    test("should work with all valid environment types", () => {
       const validEnvTypes: EnvironmentNameType[] = [
         "local",
         "development",
@@ -575,42 +872,11 @@ describe("AppEnv", () => {
       ];
 
       for (const envType of validEnvTypes) {
-        expect(() => new AppEnv(envType)).not.toThrow();
-        const appEnv = new AppEnv(envType);
+        setEnv(envType);
+        expect(() => new AppEnv()).not.toThrow();
+        const appEnv = new AppEnv();
         expect(appEnv.env).toBe(envType);
       }
-    });
-  });
-
-  describe("Multiple Instance Independence", () => {
-    test("should create independent instances with different environments", () => {
-      const prodEnv = new AppEnv("production");
-      const devEnv = new AppEnv("development");
-      const localEnv = new AppEnv("local");
-
-      expect(prodEnv.isProduction).toBe(true);
-      expect(prodEnv.isDevelopment).toBe(false);
-      expect(prodEnv.isLocal).toBe(false);
-
-      expect(devEnv.isProduction).toBe(false);
-      expect(devEnv.isDevelopment).toBe(true);
-      expect(devEnv.isLocal).toBe(false);
-
-      expect(localEnv.isProduction).toBe(false);
-      expect(localEnv.isDevelopment).toBe(false);
-      expect(localEnv.isLocal).toBe(true);
-    });
-
-    test("should not affect other instances when creating new ones", () => {
-      const originalEnv = new AppEnv("production");
-      expect(originalEnv.isProduction).toBe(true);
-
-      const newEnv = new AppEnv("development");
-      expect(newEnv.isDevelopment).toBe(true);
-
-      // Original should remain unchanged
-      expect(originalEnv.isProduction).toBe(true);
-      expect(originalEnv.isDevelopment).toBe(false);
     });
   });
 
@@ -635,11 +901,11 @@ describe("AppEnv", () => {
       ];
 
       for (const { env, flag } of environments) {
-        const appEnv = new AppEnv(env);
+        setEnv(env);
+        const appEnv = new AppEnv();
         expect(appEnv.env).toBe(env);
         expect(appEnv[flag]).toBe(true);
 
-        // All other flags should be false
         const otherFlags = environments.filter((e) => e.flag !== flag).map((e) => e.flag);
 
         for (const otherFlag of otherFlags) {

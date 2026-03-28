@@ -77,73 +77,73 @@ describe("_ooneex.txt", () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:controller\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--route-name=");
-      expect(match![1]).toContain("--route-path=");
-      expect(match![1]).toContain("--route-method=");
-      expect(match![1]).toContain("--is-socket");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--route-name=");
+      expect(match?.[1]).toContain("--route-path=");
+      expect(match?.[1]).toContain("--route-method=");
+      expect(match?.[1]).toContain("--is-socket");
     });
 
     test("make:middleware should have name, module, and is-socket options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:middleware\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--is-socket");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--is-socket");
     });
 
     test("make:entity should have name, module, and table-name options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:entity\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--table-name=");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--table-name=");
     });
 
     test("make:pubsub should have name, module, and channel options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:pubsub\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--channel=");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--channel=");
     });
 
     test("make:migration should have module and dir options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:migration\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--dir=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--dir=");
     });
 
     test("make:seed should have name, module, and dir options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:seed\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("--dir=");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--dir=");
     });
 
     test("make:docker should have name with predefined services and module option", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:docker\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).toContain("--module=");
-      expect(match![1]).toContain("_ooneex_modules");
-      expect(match![1]).toContain("postgres");
-      expect(match![1]).toContain("redis");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("postgres");
+      expect(match?.[1]).toContain("redis");
     });
 
     test("make:controller should include all HTTP methods", async () => {
@@ -151,7 +151,7 @@ describe("_ooneex.txt", () => {
       const match = content.match(/make:controller\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       for (const method of ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]) {
-        expect(match![1]).toContain(method);
+        expect(match?.[1]).toContain(method);
       }
     });
 
@@ -177,9 +177,9 @@ describe("_ooneex.txt", () => {
         const regex = new RegExp(`(${pattern})\\)(.*?);;`, "s");
         const match = content.match(regex);
         expect(match).not.toBeNull();
-        expect(match![2]).toContain("--name=");
-        expect(match![2]).toContain("--module=");
-        expect(match![2]).toContain("_ooneex_modules");
+        expect(match?.[2]).toContain("--name=");
+        expect(match?.[2]).toContain("--module=");
+        expect(match?.[2]).toContain("_ooneex_modules");
       });
     });
   });
@@ -189,16 +189,16 @@ describe("_ooneex.txt", () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:module\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).not.toContain("--module=");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).not.toContain("--module=");
     });
 
     test("make:app should only have --name", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:app\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("--name=");
-      expect(match![1]).not.toContain("--module=");
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).not.toContain("--module=");
     });
 
     test("completion:zsh and make:claude:skill should have no options", async () => {

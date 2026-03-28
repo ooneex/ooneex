@@ -1,4 +1,4 @@
-import type { Environment } from "@ooneex/app-env";
+import type { EnvironmentNameType } from "@ooneex/app-env";
 import type { IHeader } from "@ooneex/http-header";
 import type { StatusCodeType } from "@ooneex/http-status";
 
@@ -21,7 +21,7 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
     },
   ) => IResponse<DataType>;
   redirect: (url: string | URL, status?: StatusCodeType) => IResponse<DataType>;
-  get: (env?: Environment) => Response;
+  get: (env?: EnvironmentNameType) => Response;
   getData: () => DataType | null;
   getStatus: () => StatusCodeType;
 }
@@ -38,6 +38,6 @@ export type ResponseDataType<Data extends Record<string, unknown>> = {
   isUnauthorized: boolean;
   isForbidden: boolean;
   app: {
-    env: Environment;
+    env: EnvironmentNameType;
   };
 };

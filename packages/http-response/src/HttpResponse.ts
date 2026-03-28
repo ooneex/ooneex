@@ -1,4 +1,4 @@
-import { Environment } from "@ooneex/app-env";
+import { Environment, type EnvironmentNameType } from "@ooneex/app-env";
 import { Header, type IHeader } from "@ooneex/http-header";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
 import type { IResponse, ResponseDataType } from "./types";
@@ -78,7 +78,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
     return this.status;
   }
 
-  public get(env?: Environment): Response {
+  public get(env?: EnvironmentNameType): Response {
     if (this.redirectUrl) {
       return new Response(null, {
         status: this.status,

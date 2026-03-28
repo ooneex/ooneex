@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import type { CurrencyCodeType } from "@ooneex/currencies";
 import { Polar } from "@polar-sh/sdk";
 import { PaymentException } from "./PaymentException";
@@ -15,8 +16,8 @@ import type {
 export class PolarCheckout {
   private client: Polar;
 
-  constructor() {
-    const accessToken = Bun.env.POLAR_ACCESS_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const accessToken = this.env.POLAR_ACCESS_TOKEN;
 
     if (!accessToken) {
       throw new PaymentException(
@@ -26,7 +27,7 @@ export class PolarCheckout {
 
     this.client = new Polar({
       accessToken,
-      server: (Bun.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
+      server: (this.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
     });
   }
 

@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import { Polar } from "@polar-sh/sdk";
 import { PaymentException } from "./PaymentException";
 import type { CustomerSessionCreateType, CustomerSessionResponseType, CustomerSessionType } from "./types";
@@ -7,8 +8,8 @@ import type { CustomerSessionCreateType, CustomerSessionResponseType, CustomerSe
 export class PolarCustomerPortal {
   private client: Polar;
 
-  constructor() {
-    const accessToken = Bun.env.POLAR_ACCESS_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const accessToken = this.env.POLAR_ACCESS_TOKEN;
 
     if (!accessToken) {
       throw new PaymentException(
@@ -18,7 +19,7 @@ export class PolarCustomerPortal {
 
     this.client = new Polar({
       accessToken,
-      server: (Bun.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
+      server: (this.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
     });
   }
 
@@ -31,7 +32,7 @@ export class PolarCustomerPortal {
   }
 
   public getPortalUrl(organizationSlug: string): string {
-    const baseUrl = Bun.env.POLAR_ENVIRONMENT === "sandbox" ? "https://sandbox.polar.sh" : "https://polar.sh";
+    const baseUrl = this.env.POLAR_ENVIRONMENT === "sandbox" ? "https://sandbox.polar.sh" : "https://polar.sh";
 
     return `${baseUrl}/${organizationSlug}/portal`;
   }

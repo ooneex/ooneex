@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import { Polar } from "@polar-sh/sdk";
 import type { SubscriptionRecurringInterval } from "@polar-sh/sdk/models/components/subscriptionrecurringinterval.js";
 import { PaymentException } from "./PaymentException";
@@ -8,8 +9,8 @@ import type { BenefitType, CustomFieldType, IProduct, PriceType, SubscriptionPer
 export class PolarProduct {
   private client: Polar;
 
-  constructor() {
-    const accessToken = Bun.env.POLAR_ACCESS_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const accessToken = this.env.POLAR_ACCESS_TOKEN;
 
     if (!accessToken) {
       throw new PaymentException(
@@ -19,7 +20,7 @@ export class PolarProduct {
 
     this.client = new Polar({
       accessToken,
-      server: (Bun.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
+      server: (this.env.POLAR_ENVIRONMENT as "sandbox" | "production") || "production",
     });
   }
 

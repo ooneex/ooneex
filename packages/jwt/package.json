@@ -28,6 +28,7 @@
     "test": "bun test tests"
   },
   "dependencies": {
+    "@ooneex/app-env": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/http-status": "workspace:*",

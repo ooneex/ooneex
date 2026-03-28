@@ -1,4 +1,5 @@
-import { injectable } from "@ooneex/container";
+import { AppEnv } from "@ooneex/app-env";
+import { inject, injectable } from "@ooneex/container";
 import type { JWTHeaderParameters } from "jose";
 import * as jose from "jose";
 import { JwtException } from "./JwtException";
@@ -8,8 +9,8 @@ import type { IJwt, JwtDefaultPayloadType, JwtPayloadType } from "./types";
 export class Jwt implements IJwt {
   private secret: Uint8Array<ArrayBuffer>;
 
-  constructor(secret?: string) {
-    secret = secret || Bun.env.JWT_SECRET;
+  constructor(@inject(AppEnv) private readonly env: AppEnv, secret?: string) {
+    secret = secret || this.env.JWT_SECRET;
 
     if (!secret) {
       throw new JwtException(

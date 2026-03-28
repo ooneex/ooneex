@@ -1,4 +1,4 @@
-import type { IAppEnv } from "@ooneex/app-env";
+import { AppEnv, type IAppEnv } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import type { ICron } from "@ooneex/cron";
 import { Exception, type IException } from "@ooneex/exception";
@@ -18,7 +18,7 @@ import type { AppConfigType } from "./types";
 
 export class App {
   constructor(private readonly config: AppConfigType) {
-    const { loggers, cronJobs, events, analytics, cache, storage, env, mailer, rateLimiter, onException } = this.config;
+    const { loggers, cronJobs, events, analytics, cache, storage, mailer, rateLimiter, onException } = this.config;
 
     loggers.forEach((log) => {
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
@@ -28,10 +28,6 @@ export class App {
 
     if (onException) {
       container.addConstant("exception.logger", onException);
-    }
-
-    if (env) {
-      container.addConstant("app.env", env);
     }
 
     if (analytics) {
@@ -66,34 +62,32 @@ export class App {
   }
 
   public async init(): Promise<App> {
-    const appEnv = Bun.env.APP_ENV;
-    const port = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
-    const hostname = Bun.env.HOST_NAME ?? "";
+    const env = container.get<IAppEnv>(AppEnv);
 
     const appEnvValidator = new AssertAppEnv();
-    const appEnvResult = appEnvValidator.validate(appEnv);
+    const appEnvResult = appEnvValidator.validate(env.APP_ENV);
     if (!appEnvResult.isValid) {
       throw new Exception(`Invalid APP_ENV: ${appEnvResult.message}`, {
         status: HttpStatus.Code.InternalServerError,
-        data: { appEnv },
+        data: { appEnv: env.APP_ENV },
       });
     }
 
     const portValidator = new AssertPort();
-    const portResult = portValidator.validate(port);
+    const portResult = portValidator.validate(env.PORT);
     if (!portResult.isValid) {
       throw new Exception(`Invalid PORT: ${portResult.message}`, {
         status: HttpStatus.Code.InternalServerError,
-        data: { port: Bun.env.PORT },
+        data: { port: env.PORT },
       });
     }
 
     const hostnameValidator = new AssertHostname();
-    const hostnameResult = hostnameValidator.validate(hostname);
+    const hostnameResult = hostnameValidator.validate(env.HOST_NAME);
     if (!hostnameResult.isValid) {
       throw new Exception(`Invalid HOST_NAME: ${hostnameResult.message}`, {
         status: HttpStatus.Code.InternalServerError,
-        data: { hostname },
+        data: { hostname: env.HOST_NAME },
       });
     }
 
@@ -110,8 +104,8 @@ export class App {
       process.exit(1);
     }
 
-    const env = container.getConstant<IAppEnv>("app.env");
-    let hostname = Bun.env.HOST_NAME || "0.0.0.0";
+    const env = container.get<IAppEnv>(AppEnv);
+    let hostname = env.HOST_NAME;
 
     const { middlewares = [], permissions, prefix } = this.config;
 
@@ -120,7 +114,7 @@ export class App {
       ...formatSocketRoutes(router.getSocketRoutes(), prefix),
     };
 
-    const port = Bun.env.PORT ? Number.parseInt(Bun.env.PORT, 10) : 3000;
+    const port = env.PORT;
 
     const server = Bun.serve({
       port,

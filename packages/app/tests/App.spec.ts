@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { Environment } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
@@ -41,21 +40,10 @@ container.add(MockCache);
 container.add(MockStorage);
 container.add(MockMailer);
 
-const createMockAppEnv = (overrides: Record<string, unknown> = {}) => ({
-  env: Environment.DEVELOPMENT,
-  isLocal: true,
-  isDevelopment: true,
-  isProduction: false,
-  isTesting: false,
-  isStaging: false,
-  ...overrides,
-});
-
 const createMockConfig = (overrides: Record<string, unknown> = {}): AppConfigType => {
   const base = {
     modules: [],
     loggers: [MockLogger as unknown as AppConfigType["loggers"][0]],
-    env: createMockAppEnv() as unknown as AppConfigType["env"],
   };
   return { ...base, ...overrides } as unknown as AppConfigType;
 };
@@ -102,17 +90,6 @@ describe("App", () => {
 
       expect(container.has(TestCronJob)).toBe(true);
       expect(startMock).toHaveBeenCalled();
-    });
-
-    test("adds app.env constant when env is provided", () => {
-      const mockEnv = createMockAppEnv({ env: Environment.PRODUCTION });
-      const config = createMockConfig({
-        env: mockEnv as unknown as AppConfigType["env"],
-      });
-
-      new App(config);
-
-      expect(container.hasConstant("app.env")).toBe(true);
     });
 
     test("adds analytics to container when provided", () => {

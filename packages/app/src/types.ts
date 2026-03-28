@@ -1,5 +1,4 @@
 import type { AnalyticsClassType } from "@ooneex/analytics";
-import type { IAppEnv } from "@ooneex/app-env";
 import type { CacheClassType } from "@ooneex/cache";
 import type { CronClassType } from "@ooneex/cron";
 import type { LoggerClassType } from "@ooneex/logger";
@@ -22,7 +21,6 @@ export type AppConfigType = {
   cronJobs?: CronClassType[];
   events?: PubSubClassType[];
   permissions?: PermissionClassType[];
-  env: IAppEnv;
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;
   generateRouteDoc?: boolean;

@@ -192,7 +192,7 @@ describe("httpRouteUtils", () => {
 
     describe("queries validation", () => {
       test("returns null when queries are valid", async () => {
-        const context = createMockContext({ queries: { page: "1" } });
+        const context = createMockContext({ queries: { page: 1 } });
         const route = createMockRoute({
           queries: type({ page: "string" }),
         });

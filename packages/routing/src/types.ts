@@ -1,4 +1,4 @@
-import type { Environment } from "@ooneex/app-env";
+import type { EnvironmentNameType } from "@ooneex/app-env";
 import type { ControllerClassType } from "@ooneex/controller";
 import type { ERole } from "@ooneex/role";
 import type { HttpMethodType } from "@ooneex/types";
@@ -15,7 +15,7 @@ export type RouteConfigType = {
   response?: AssertType | IAssert;
   controller: ControllerClassType;
   description: string;
-  env?: Environment[];
+  env?: EnvironmentNameType[];
   ip?: string[];
   host?: string[];
   roles?: ERole[];

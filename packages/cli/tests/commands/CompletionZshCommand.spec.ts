@@ -127,14 +127,14 @@ describe("CompletionZshCommand", () => {
       // make:module should only have --name, not --module
       const moduleMatch = ooContent.match(/make:module\)([\s\S]*?);;/);
       expect(moduleMatch).not.toBeNull();
-      expect(moduleMatch![1]).toContain("--name=");
-      expect(moduleMatch![1]).not.toContain("--module=");
+      expect(moduleMatch?.[1]).toContain("--name=");
+      expect(moduleMatch?.[1]).not.toContain("--module=");
 
       // make:app should only have --name, not --module
       const appMatch = ooContent.match(/make:app\)([\s\S]*?);;/);
       expect(appMatch).not.toBeNull();
-      expect(appMatch![1]).toContain("--name=");
-      expect(appMatch![1]).not.toContain("--module=");
+      expect(appMatch?.[1]).toContain("--name=");
+      expect(appMatch?.[1]).not.toContain("--module=");
     });
   });
 });

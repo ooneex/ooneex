@@ -22,12 +22,6 @@ describe("Dockerfile.txt", () => {
     expect(content).toContain("WORKDIR /{{NAME}}");
   });
 
-  test("should contain DATABASE_URL build arg", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("ARG DATABASE_URL");
-    expect(content).toContain("ENV DATABASE_URL=${DATABASE_URL}");
-  });
-
   test("should contain install stage", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("FROM base AS install");

@@ -1,12 +1,12 @@
-import { injectable } from "@ooneex/container";
 import { DataSource } from "typeorm";
 import { DatabaseException } from "./DatabaseException";
 import { TypeormDatabase } from "./TypeormDatabase";
+import { decorator } from "./decorators";
 
-@injectable()
+@decorator.database()
 export class TypeormPgDatabase extends TypeormDatabase {
-  public getSource(url?: string): DataSource {
-    url = url || Bun.env.DATABASE_URL;
+  public getSource(): DataSource {
+    const url = '';
 
     if (!url) {
       throw new DatabaseException(

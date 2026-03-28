@@ -1,9 +1,7 @@
-import { injectable } from "@ooneex/container";
 import { DataSource } from "typeorm";
 import { DatabaseException } from "./DatabaseException";
 import { TypeormDatabase } from "./TypeormDatabase";
 
-@injectable()
 export class TypeormSqliteDatabase extends TypeormDatabase {
   public getSource(database?: string): DataSource {
     database = database || Bun.env.SQLITE_DATABASE_PATH;

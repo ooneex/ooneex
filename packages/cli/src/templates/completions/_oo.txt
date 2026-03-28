@@ -96,7 +96,8 @@ _oo() {
           ;;
         make:app)
           _arguments -s \
-            '--name=[Name of the resource]:name'
+            '--name=[Name of the resource]:name' \
+            '--destination=[Destination path]:destination:_files -/'
           ;;
         make:ai|make:analytics|make:cache|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
           _arguments -s \

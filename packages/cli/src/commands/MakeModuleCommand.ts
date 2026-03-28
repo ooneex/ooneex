@@ -104,9 +104,11 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     await Bun.write(join(testsDir, `${pascalName}Module.spec.ts`), testContent);
 
     // Add module to AppModule
-    const appModulePath = join(cwd, "modules", "app", "src", "AppModule.ts");
-    if (await Bun.file(appModulePath).exists()) {
-      await this.addToAppModule(appModulePath, pascalName, kebabName);
+    if (kebabName !== "app") {
+      const appModulePath = join(cwd, "modules", "app", "src", "AppModule.ts");
+      if (await Bun.file(appModulePath).exists()) {
+        await this.addToAppModule(appModulePath, pascalName, kebabName);
+      }
     }
 
     // Add path alias in app module tsconfig

@@ -1,10 +1,16 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { DataSource } from "typeorm";
 import { DatabaseException } from "./DatabaseException";
 import { TypeormDatabase } from "./TypeormDatabase";
 
 export class TypeormSqliteDatabase extends TypeormDatabase {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    super();
+  }
+
   public getSource(database?: string): DataSource {
-    database = database || Bun.env.SQLITE_DATABASE_PATH;
+    database = database || this.env.SQLITE_DATABASE_PATH;
 
     if (!database) {
       throw new DatabaseException(

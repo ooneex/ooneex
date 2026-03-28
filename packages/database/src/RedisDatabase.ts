@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { RedisClient } from "bun";
 import { DatabaseException } from "./DatabaseException";
 import type { IRedisDatabase, RedisConnectionOptionsType } from "./types";
@@ -6,8 +8,8 @@ export class RedisDatabase implements IRedisDatabase {
   private client: RedisClient;
   private connectionUrl: string;
 
-  constructor(private readonly options: RedisConnectionOptionsType = {}) {
-    this.connectionUrl = options.url || Bun.env.DATABASE_REDIS_URL || "";
+  constructor(@inject(AppEnv) private readonly env: AppEnv, private readonly options: RedisConnectionOptionsType = {}) {
+    this.connectionUrl = options.url || this.env.DATABASE_REDIS_URL || "";
 
     if (!this.connectionUrl) {
       throw new DatabaseException(

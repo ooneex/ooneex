@@ -21,9 +21,7 @@ import type { ScalarType } from "@ooneex/types";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
 
-export const checkAllowedUsers = (
-  context: ContextType,
-): RouteValidationError | null => {
+export const checkAllowedUsers = (context: ContextType): RouteValidationError | null => {
   if (!context.user) {
     return null;
   }

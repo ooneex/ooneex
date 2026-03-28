@@ -1,11 +1,13 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import { DatabaseException, type IDatabase } from "@ooneex/database";
 
 export class LogsDatabase implements IDatabase {
   private client: Bun.SQL | undefined;
   private url: string;
 
-  constructor(url?: string) {
-    this.url = url || Bun.env.LOGS_DATABASE_URL || "";
+  constructor(@inject(AppEnv) private readonly env: AppEnv, url?: string) {
+    this.url = url || this.env.LOGS_DATABASE_URL || "";
 
     if (!this.url) {
       throw new DatabaseException(

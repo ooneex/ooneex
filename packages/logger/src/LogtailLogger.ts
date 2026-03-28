@@ -1,4 +1,6 @@
 import { Logtail } from "@logtail/node";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
 import { decorator } from "./decorators";
@@ -9,15 +11,15 @@ import type { ILogger } from "./types";
 export class LogtailLogger implements ILogger {
   private logtail: Logtail;
 
-  constructor() {
-    const sourceToken = Bun.env.LOGTAIL_SOURCE_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const sourceToken = this.env.LOGTAIL_SOURCE_TOKEN;
     if (!sourceToken) {
       throw new LoggerException(
         "Logtail source token is required. Please set the LOGTAIL_SOURCE_TOKEN environment variable.",
       );
     }
 
-    const endpoint = Bun.env.LOGTAIL_ENDPOINT;
+    const endpoint = this.env.LOGTAIL_ENDPOINT;
 
     this.logtail = new Logtail(sourceToken, {
       ...(endpoint && { endpoint }),

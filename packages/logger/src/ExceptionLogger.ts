@@ -1,3 +1,5 @@
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import type { ScalarType } from "@ooneex/types";
 import * as Sentry from "@sentry/node";
@@ -7,15 +9,15 @@ import type { ILogger } from "./types";
 
 @decorator.logger()
 export class ExceptionLogger implements ILogger {
-  constructor() {
-    const applicationToken = Bun.env.BETTERSTACK_APPLICATION_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const applicationToken = this.env.BETTERSTACK_APPLICATION_TOKEN;
     if (!applicationToken) {
       throw new LoggerException(
         "Better Stack application token is required. Please set the BETTERSTACK_APPLICATION_TOKEN environment variable.",
       );
     }
 
-    const ingestingHost = Bun.env.BETTERSTACK_INGESTING_HOST;
+    const ingestingHost = this.env.BETTERSTACK_INGESTING_HOST;
     if (!ingestingHost) {
       throw new LoggerException(
         "Better Stack ingesting host is required. Please set the BETTERSTACK_INGESTING_HOST environment variable.",

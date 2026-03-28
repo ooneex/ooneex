@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@logtail/node": "^0.5.8",
+    "@ooneex/app-env": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/database": "workspace:*",
     "@ooneex/utils": "workspace:*",

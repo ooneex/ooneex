@@ -1,6 +1,7 @@
 import type { IAnalytics } from "@ooneex/analytics";
 import { Environment } from "@ooneex/app-env";
 import type { ICache } from "@ooneex/cache";
+import type { IDatabase } from "@ooneex/database";
 import { container } from "@ooneex/container";
 import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
@@ -91,6 +92,7 @@ export const buildHttpContext = async (ctx: {
   const storage = tryGet<IStorage>("storage");
   const mailer = tryGet<IMailer>("mailer");
   const rateLimiter = tryGet<IRateLimiter>("rateLimiter");
+  const database: IDatabase = container.get("database");
 
   const context: ContextType = {
     logger: container.get("logger"),
@@ -100,6 +102,7 @@ export const buildHttpContext = async (ctx: {
     ...(storage && { storage }),
     ...(mailer && { mailer }),
     ...(rateLimiter && { rateLimiter }),
+    database,
     route: route
       ? {
           name: route.name,

@@ -37,6 +37,7 @@ const createMockContext = (overrides: Partial<ContextType> = {}): ContextType =>
     cache: {} as ContextType["cache"],
     storage: {} as ContextType["storage"],
     mailer: {} as ContextType["mailer"],
+    database: {} as ContextType["database"],
     route: {
       name: "api.test.list",
       path: "/test" as const,

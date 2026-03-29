@@ -20,6 +20,6 @@ describe("package.json.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain('"name"');
     expect(content).toContain('"scripts"');
-    expect(content).toContain('"type"');
+    expect(content).toContain('"workspaces"');
   });
 });

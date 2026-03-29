@@ -1,7 +1,5 @@
 {
   "name": "{{NAME}}",
-  "module": "index.ts",
-  "private": true,
   "scripts": {
     "dev": "bun run --filter app dev",
     "build": "bun run --filter app build",
@@ -15,7 +13,6 @@
     "commit": "bunx commit",
     "prepare": "husky"
   },
-  "type": "module",
   "workspaces": [
     "modules/*"
   ],

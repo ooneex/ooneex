@@ -97,25 +97,15 @@ export class MakeReleaseCommand implements ICommand {
       const bumpType = this.determineBumpType(commits);
       const newVersion = this.bumpVersion(pkgJson.version, bumpType);
 
-      logger.info(`Bumping ${pkgJson.name} version: ${pkgJson.version} -> ${newVersion} (${bumpType})`, undefined, logOptions);
-
       pkgJson.version = newVersion;
       await Bun.write(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
-      logger.info("Updated package.json", undefined, logOptions);
-
       await this.updateChangelog(fullDir, newVersion, commits);
-      logger.info("Updated CHANGELOG.md", undefined, logOptions);
 
       const tag = `${pkgJson.name}@${newVersion}`;
 
       await this.gitAdd(join(dir.base, "package.json"), join(dir.base, "CHANGELOG.md"));
-      logger.info("Staged files", undefined, logOptions);
-
       await this.gitCommit(`chore(release): ${pkgJson.name}@${newVersion}`);
-      logger.info(`Committed: chore(release): ${pkgJson.name}@${newVersion}`, undefined, logOptions);
-
       await this.gitTag(tag, `chore(release): ${pkgJson.name}@${newVersion}`);
-      logger.info(`Created tag: ${tag}`, undefined, logOptions);
 
       logger.success(
         `${pkgJson.name}@${newVersion} released (${bumpType} bump, ${commits.length} commit(s))`,
@@ -281,8 +271,6 @@ export class MakeReleaseCommand implements ICommand {
       }
     } else {
       newContent = `# Changelog
-
-## [Unreleased]
 
 ${section}
 `;

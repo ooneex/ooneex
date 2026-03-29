@@ -69,12 +69,10 @@ export class MakeReleaseCommand implements ICommand {
       );
     }
 
+    const logOptions = { showTimestamp: false, showArrow: false, useSymbol: true };
+
     if (dirs.length === 0) {
-      logger.error("No packages or modules found", undefined, {
-        showTimestamp: false,
-        showArrow: false,
-        useSymbol: true,
-      });
+      logger.error("No packages or modules found", undefined, logOptions);
       return;
     }
 
@@ -99,25 +97,30 @@ export class MakeReleaseCommand implements ICommand {
       const bumpType = this.determineBumpType(commits);
       const newVersion = this.bumpVersion(pkgJson.version, bumpType);
 
+      logger.info(`Bumping ${pkgJson.name} version: ${pkgJson.version} -> ${newVersion} (${bumpType})`, undefined, logOptions);
+
       pkgJson.version = newVersion;
       await Bun.write(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
+      logger.info("Updated package.json", undefined, logOptions);
 
       await this.updateChangelog(fullDir, newVersion, commits);
+      logger.info("Updated CHANGELOG.md", undefined, logOptions);
 
       const tag = `${pkgJson.name}@${newVersion}`;
 
       await this.gitAdd(join(dir.base, "package.json"), join(dir.base, "CHANGELOG.md"));
+      logger.info("Staged files", undefined, logOptions);
+
       await this.gitCommit(`chore(release): ${pkgJson.name}@${newVersion}`);
-      await this.gitTag(tag);
+      logger.info(`Committed: chore(release): ${pkgJson.name}@${newVersion}`, undefined, logOptions);
+
+      await this.gitTag(tag, `chore(release): ${pkgJson.name}@${newVersion}`);
+      logger.info(`Created tag: ${tag}`, undefined, logOptions);
 
       logger.success(
         `${pkgJson.name}@${newVersion} released (${bumpType} bump, ${commits.length} commit(s))`,
         undefined,
-        {
-          showTimestamp: false,
-          showArrow: false,
-          useSymbol: true,
-        },
+        logOptions,
       );
 
       releasedCount++;
@@ -128,28 +131,16 @@ export class MakeReleaseCommand implements ICommand {
       return;
     }
 
-    logger.success(`\n${releasedCount} package(s) released`, undefined, {
-      showTimestamp: false,
-      showArrow: false,
-      useSymbol: true,
-    });
+    logger.success(`\n${releasedCount} package(s) released`, undefined, logOptions);
 
     const shouldPush = await askConfirm({ message: "Push commits and tags to remote?" });
 
     if (shouldPush) {
       try {
         await $`git push && git push --tags`;
-        logger.success("Pushed commits and tags to remote", undefined, {
-          showTimestamp: false,
-          showArrow: false,
-          useSymbol: true,
-        });
+        logger.success("Pushed commits and tags to remote", undefined, logOptions);
       } catch {
-        logger.error("Failed to push to remote", undefined, {
-          showTimestamp: false,
-          showArrow: false,
-          useSymbol: true,
-        });
+        logger.error("Failed to push to remote", undefined, logOptions);
       }
     }
   }
@@ -308,7 +299,7 @@ ${section}
     await $`git commit --no-verify -m ${message}`;
   }
 
-  private async gitTag(tag: string): Promise<void> {
-    await $`git tag ${tag}`;
+  private async gitTag(tag: string, message: string): Promise<void> {
+    await $`git tag -a ${tag} -m ${message}`;
   }
 }

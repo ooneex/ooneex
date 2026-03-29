@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.3.1) - 2026-03-29
+
+### Changed
+
+- Remove Unreleased sections from changelogs — Franck ([971c3895](https://github.com/ooneex/ooneex/commit/971c3895))
+
 ## [0.3.0] - 2026-03-29
 
 ### Added

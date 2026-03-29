@@ -6,7 +6,6 @@
     "fmt": "bunx biome check --write",
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
-    "docker": "bunx nx run-many -t docker --output-style=stream --verbose",
     "docker:stop": "bunx nx run-many -t docker:stop --output-style=stream --verbose",
     "migration:up": "bunx nx run-many -t migration:up --output-style=stream --verbose",
     "seed:run": "bunx nx run-many -t seed:run --output-style=stream --verbose",

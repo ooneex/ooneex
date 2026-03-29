@@ -15,6 +15,7 @@ import envTemplate from "../templates/app/env.txt";
 import indexTemplate from "../templates/app/index.ts.txt";
 import nxTemplate from "../templates/app/nx.json.txt";
 import packageTemplate from "../templates/app/package.json.txt";
+import readmeTemplate from "../templates/app/README.md.txt";
 import tsconfigTemplate from "../templates/app/tsconfig.json.txt";
 import type { ICommand } from "../types";
 import { MakeModuleCommand } from "./MakeModuleCommand";
@@ -55,6 +56,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     await Bun.write(join(destination, "bunfig.toml"), bunfigTemplate);
     await Bun.write(join(destination, "nx.json"), nxTemplate);
     await Bun.write(join(destination, "package.json"), packageContent);
+    await Bun.write(join(destination, "README.md"), readmeTemplate.replace(/{{NAME}}/g, kebabName));
     await Bun.write(join(destination, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
     await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");

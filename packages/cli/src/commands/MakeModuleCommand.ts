@@ -54,6 +54,22 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     await Bun.write(appModulePath, content);
   }
 
+  private async addModuleScope(commitlintPath: string, kebabName: string): Promise<void> {
+    let content = await Bun.file(commitlintPath).text();
+
+    const regex = /("scope-enum":\s*\[\s*RuleConfigSeverity\.Error,\s*"always",\s*\[)([\s\S]*?)(\])/;
+    const match = content.match(regex);
+    if (match) {
+      const existing = match[2]?.trim();
+      const newScope = `"${kebabName}"`;
+      if (!existing.includes(newScope)) {
+        const newValue = existing ? `${existing}\n        ${newScope},` : `\n        ${newScope},`;
+        content = content.replace(regex, `$1${newValue}\n      $3`);
+        await Bun.write(commitlintPath, content);
+      }
+    }
+  }
+
   private async addPathAlias(tsconfigPath: string, kebabName: string): Promise<void> {
     const content = await Bun.file(tsconfigPath).text();
     const tsconfig = JSON.parse(content);
@@ -107,6 +123,12 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       if (await Bun.file(appTsconfigPath).exists()) {
         await this.addPathAlias(appTsconfigPath, kebabName);
       }
+    }
+
+    // Add module scope to commitlint config if it exists
+    const commitlintPath = join(cwd, ".commitlintrc.ts");
+    if (await Bun.file(commitlintPath).exists()) {
+      await this.addModuleScope(commitlintPath, kebabName);
     }
 
     if (!silent) {

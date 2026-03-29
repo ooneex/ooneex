@@ -104,7 +104,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add release command", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const changelogPath = join(testDir, "CHANGELOG.md");
       expect(existsSync(changelogPath)).toBe(true);
@@ -119,6 +119,8 @@ describe("MakeReleaseCommand", () => {
     test("should insert after Unreleased section in existing changelog", async () => {
       const existingChangelog = `# Changelog
 
+## [Unreleased]
+
 ## [1.0.0] - 2025-01-01
 
 ### Added
@@ -130,7 +132,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "fix", scope: "cli", subject: "Fix a bug", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.0.1", commits);
+      await command.updateChangelog(testDir, "1.0.1", "v1.0.1", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain("## [Unreleased]");
@@ -155,7 +157,7 @@ describe("MakeReleaseCommand", () => {
       ];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain("### Added");
@@ -173,7 +175,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain(`## [1.1.0] - ${today}`);
@@ -193,7 +195,7 @@ describe("MakeReleaseCommand", () => {
       ];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
 
@@ -223,7 +225,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain("### Added");
@@ -248,7 +250,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "New feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       const newVersionIndex = content.indexOf("## [1.1.0]");
@@ -263,7 +265,7 @@ describe("MakeReleaseCommand", () => {
       const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
-      await command.updateChangelog(testDir, "1.1.0", commits);
+      await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain("- Add feature — Test Author ([abc12345](https://github.com/test/repo/commit/abc12345))");

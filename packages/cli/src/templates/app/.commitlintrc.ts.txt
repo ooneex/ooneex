@@ -16,7 +16,6 @@ const Configuration: UserConfig = {
       [
         "common",
         "app",
-        // Add your scopes here
       ],
     ],
     "scope-case": [RuleConfigSeverity.Error, "always", "lower-case"],

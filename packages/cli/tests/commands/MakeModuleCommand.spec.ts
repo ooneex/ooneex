@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
+import commitlintTemplate from "@/templates/app/.commitlintrc.ts.txt";
 import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
@@ -212,6 +213,53 @@ describe("MakeModuleCommand", () => {
 
       const content = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
       expect(content).toBe(originalContent);
+    });
+  });
+
+  describe("Commitlint integration", () => {
+    beforeEach(async () => {
+      await Bun.write(join(testDir, ".commitlintrc.ts"), commitlintTemplate);
+    });
+
+    test("should add module scope to commitlint config", async () => {
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, ".commitlintrc.ts")).text();
+      expect(content).toContain('"blog"');
+    });
+
+    test("should accumulate multiple module scopes", async () => {
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+      await command.run({ name: "Shop", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, ".commitlintrc.ts")).text();
+      expect(content).toContain('"blog"');
+      expect(content).toContain('"shop"');
+    });
+
+    test("should not duplicate existing scope", async () => {
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, ".commitlintrc.ts")).text();
+      const matches = content.match(/"blog"/g);
+      expect(matches).toHaveLength(1);
+    });
+
+    test("should preserve existing scopes", async () => {
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, ".commitlintrc.ts")).text();
+      expect(content).toContain('"common"');
+      expect(content).toContain('"app"');
+    });
+
+    test("should not modify commitlint config if file does not exist", async () => {
+      rmSync(join(testDir, ".commitlintrc.ts"), { force: true });
+
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      expect(await exists(join(testDir, ".commitlintrc.ts"))).toBe(false);
     });
   });
 });

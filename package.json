@@ -1,6 +1,5 @@
 {
   "name": "ooneex",
-  "module": "index.ts",
   "dependencies": {
     "arktype": "^2.1.29",
     "enquirer": "^2.4.1",
@@ -36,20 +35,16 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": []
   },
-  "private": true,
   "scripts": {
     "build": "bunx nx run-many -t build --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "check": "bun run build && bun run lint && bun run test",
     "fmt": "bunx biome check --write",
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
-    "npm:publish": "bunx nx run-many -t npm:publish --output-style=stream --verbose",
-    "release": "bunx nx release",
-    "release:dry": "bunx nx release --dry-run",
+    "npm:publish": "bun install && bun run build && bunx nx run-many -t npm:publish --output-style=stream --verbose",
     "commit": "bunx commit",
     "prepare": "husky"
   },
-  "type": "module",
   "workspaces": [
     "packages/*"
   ]

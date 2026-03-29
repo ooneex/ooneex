@@ -93,7 +93,7 @@ describe("CompletionZshCommand", () => {
       expect(content).toContain("--route-path=");
       expect(content).toContain("--route-method=");
       expect(content).toContain("--is-socket");
-      expect(content).toContain("--dir=");
+      expect(content).toContain("--destination=");
       expect(content).toContain("--channel=");
       expect(content).toContain("--table-name=");
       expect(content).toContain("--module=");

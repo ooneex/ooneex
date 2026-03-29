@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.13] - 2026-03-29
+
+### Changed
+
+- @ooneex/jwt@1.1.12
+- @ooneex/jwt@1.1.11
+- @ooneex/jwt@1.1.10
+- @ooneex/jwt@1.1.9
+- @ooneex/jwt@1.1.8
+- @ooneex/jwt@1.1.7
+- @ooneex/jwt@1.1.6
+- @ooneex/jwt@1.1.5
+- @ooneex/jwt@1.1.4
+- @ooneex/jwt@1.1.3
+- @ooneex/jwt@1.1.2
+- @ooneex/jwt@1.1.1
+- Bump versions and fix em-dash encoding in descriptions
+
+
 ## [1.1.12] - 2026-03-29
 
 ### Changed

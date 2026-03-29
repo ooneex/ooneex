@@ -76,11 +76,11 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     await Bun.write(appModulePackagePath, JSON.stringify(appModulePackageJson, null, 2));
 
     const envContent = envTemplate
-      .replace("DATABASE_URL=", 'DATABASE_URL="postgresql://ooneex:ooneex@localhost:5432/ooneex"')
-      .replace("CACHE_REDIS_URL=", 'CACHE_REDIS_URL="redis://localhost:6379"')
-      .replace("PUBSUB_REDIS_URL=", 'PUBSUB_REDIS_URL="redis://localhost:6379"')
-      .replace("RATE_LIMIT_REDIS_URL=", 'RATE_LIMIT_REDIS_URL="redis://localhost:6379"')
-      .replace("DATABASE_REDIS_URL=", 'DATABASE_REDIS_URL="redis://localhost:6379"');
+      .replace(/^DATABASE_URL=/m, 'DATABASE_URL="postgresql://ooneex:ooneex@localhost:5432/ooneex"')
+      .replace(/^CACHE_REDIS_URL=/m, 'CACHE_REDIS_URL="redis://localhost:6379"')
+      .replace(/^PUBSUB_REDIS_URL=/m, 'PUBSUB_REDIS_URL="redis://localhost:6379"')
+      .replace(/^RATE_LIMIT_REDIS_URL=/m, 'RATE_LIMIT_REDIS_URL="redis://localhost:6379"')
+      .replace(/^DATABASE_REDIS_URL=/m, 'DATABASE_REDIS_URL="redis://localhost:6379"');
     await Bun.write(join(destination, "modules", "app", ".env"), envContent);
     await Bun.write(join(destination, "modules", "app", ".env.example"), envTemplate);
     await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseTemplate);

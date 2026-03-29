@@ -116,7 +116,12 @@ export class MakeReleaseCommand implements ICommand {
     }
 
     if (releasedCount === 0) {
-      logger.info("No packages have unreleased commits\n");
+      logger.info("No packages have unreleased commits\n", undefined, {
+        showArrow: false,
+        showTimestamp: false,
+        showLevel: false,
+        useSymbol: false,
+      });
       return;
     }
 

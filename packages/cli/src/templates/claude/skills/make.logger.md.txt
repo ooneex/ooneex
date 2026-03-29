@@ -50,33 +50,33 @@ import { decorator } from "@ooneex/logger";
 
 @decorator.logger()
 export class <Name>Logger implements ILogger {
-  public init = async (): Promise<void> => {
+  public async init(): Promise<void> {
     // Initialize your logger here
-  };
+  }
 
-  public log = (message: string, data?: Record<string, ScalarType>): void => {
+  public log(message: string, data?: Record<string, ScalarType>): void {
     // Handle general logging
-  };
+  }
 
-  public debug = (message: string, data?: Record<string, ScalarType>): void => {
+  public debug(message: string, data?: Record<string, ScalarType>): void {
     // Handle debug logging
-  };
+  }
 
-  public info = (message: string, data?: Record<string, ScalarType>): void => {
+  public info(message: string, data?: Record<string, ScalarType>): void {
     // Handle info logging
-  };
+  }
 
-  public success = (message: string, data?: Record<string, ScalarType>): void => {
+  public success(message: string, data?: Record<string, ScalarType>): void {
     // Handle success logging
-  };
+  }
 
-  public warn = (message: string, data?: Record<string, ScalarType>): void => {
+  public warn(message: string, data?: Record<string, ScalarType>): void {
     // Handle warning logging
-  };
+  }
 
-  public error = (message: string | IException, data?: Record<string, ScalarType>): void => {
+  public error(message: string | IException, data?: Record<string, ScalarType>): void {
     // Handle error logging
-  };
+  }
 }
 ```
 

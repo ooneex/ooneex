@@ -74,7 +74,7 @@ export class <Name>Storage extends Storage {
     this.region = options?.region || Bun.env.STORAGE_<NAME_UPPER>_REGION || "auto";
   }
 
-  public getOptions = (): S3Options => {
+  public getOptions(): S3Options {
     return {
       accessKeyId: this.accessKey,
       secretAccessKey: this.secretKey,
@@ -82,7 +82,7 @@ export class <Name>Storage extends Storage {
       bucket: this.bucket,
       region: this.region,
     };
-  };
+  }
 }
 ```
 

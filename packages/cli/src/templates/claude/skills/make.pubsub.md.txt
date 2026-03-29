@@ -56,14 +56,14 @@ export class <Name>Event<Data extends Record<string, ScalarType> = Record<string
     super(client);
   }
 
-  public getChannel = (): string => {
+  public getChannel(): string {
     return "<channel>";
-  };
+  }
 
-  public handler = async (context: { data: Data; channel: string }): Promise<void> => {
+  public async handler(context: { data: Data; channel: string }): Promise<void> {
     console.log(context);
     // TODO: Implement handler logic here
-  };
+  }
 }
 ```
 

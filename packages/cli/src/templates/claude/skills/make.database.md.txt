@@ -49,7 +49,7 @@ import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database"
 
 @decorator.database()
 export class <Name>Database extends TypeormDatabase {
-  public getSource = (database?: string): DataSource => {
+  public getSource(database?: string): DataSource {
     database = database || "var/db";
 
     this.source = new DataSource({
@@ -65,7 +65,7 @@ export class <Name>Database extends TypeormDatabase {
     });
 
     return this.source;
-  };
+  }
 }
 ```
 

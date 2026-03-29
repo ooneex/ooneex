@@ -143,13 +143,13 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
   roles: [ERole.USER],
 })
 export class <Name>Controller {
-  public index = async (context: ContextType<<TypeName>RouteType>) => {
+  public async index(context: ContextType<<TypeName>RouteType>) {
     // const { id } = context.params;
 
     return context.response.json({
 
     });
-  };
+  }
 }
 ```
 
@@ -181,13 +181,13 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
   roles: [ERole.USER],
 })
 export class <Name>Controller {
-  public index = async (context: ContextType<<TypeName>RouteType>) => {
+  public async index(context: ContextType<<TypeName>RouteType>) {
     // const { id } = context.params;
 
     return context.response.json({
 
     });
-  };
+  }
 }
 ```
 

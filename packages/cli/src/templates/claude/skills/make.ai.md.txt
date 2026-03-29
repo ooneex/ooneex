@@ -51,9 +51,9 @@ import { inject } from "@ooneex/container";
 export class <Name>Ai implements IAiChat<OpenAiConfigType> {
   constructor(@inject(OpenAi) private readonly ai: OpenAi) {}
 
-  public run = async <T>(prompt?: string, config?: Omit<OpenAiConfigType, "prompt">): Promise<T> => {
+  public async run<T>(prompt?: string, config?: Omit<OpenAiConfigType, "prompt">): Promise<T> {
     return this.ai.run<T>(prompt || "My prompt", config);
-  };
+  }
 
   public async *runStream(
     prompt?: string,

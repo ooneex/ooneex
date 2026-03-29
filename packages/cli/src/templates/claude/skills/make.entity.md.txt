@@ -173,7 +173,7 @@ Then read the generated migration file in `src/migrations/` and complete it:
 Example `up` method for a new entity:
 
 ```typescript
-public up = async (tx: TransactionSQL): Promise<void> => {
+public async up(tx: TransactionSQL): Promise<void> {
   await tx`
     CREATE TABLE IF NOT EXISTS <table_name> (
       id VARCHAR(25) PRIMARY KEY,
@@ -189,7 +189,7 @@ public up = async (tx: TransactionSQL): Promise<void> => {
       deleted_at TIMESTAMPTZ
     )
   `;
-};
+}
 ```
 
 ### 7. Create a repository for the entity

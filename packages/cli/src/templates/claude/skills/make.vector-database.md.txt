@@ -54,19 +54,19 @@ type DataType = {
 
 @decorator.vectorDatabase()
 export class <Name>VectorDatabase extends VectorDatabase<DataType> {
-  public getDatabaseUri = (): string => {
+  public getDatabaseUri(): string {
     return "";
-  };
+  }
 
-  public getEmbeddingModel = (): { provider: EmbeddingProviderType; model: EmbeddingModelType["model"] } => {
+  public getEmbeddingModel(): { provider: EmbeddingProviderType; model: EmbeddingModelType["model"] } {
     return { provider: "openai", model: "text-embedding-ada-002" };
-  };
+  }
 
-  public getSchema = (): { [K in keyof DataType]: FieldValueType } => {
+  public getSchema(): { [K in keyof DataType]: FieldValueType } {
     return {
       name: new Utf8(),
     };
-  };
+  }
 }
 ```
 

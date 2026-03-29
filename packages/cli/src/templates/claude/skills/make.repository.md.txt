@@ -75,28 +75,28 @@ export class <Name>Repository {
     private readonly database: ITypeormDatabase,
   ) {}
 
-  public open = async (): Promise<Repository<<Name>Entity>> => {
+  public async open(): Promise<Repository<<Name>Entity>> {
     return await this.database.open(<Name>Entity);
-  };
+  }
 
-  public close = async (): Promise<void> => {
+  public async close(): Promise<void> {
     await this.database.close();
-  };
+  }
 
-  public find = async (
+  public async find(
     criteria: FindManyOptions<<Name>Entity> & { page?: number; limit?: number; q?: string },
-  ): Promise<FilterResultType<<Name>Entity>> => {
+  ): Promise<FilterResultType<<Name>Entity>> {
     // ... pagination and search logic
-  };
+  }
 
-  public findOne = async (id: string): Promise<<Name>Entity | null> => { ... };
-  public findOneBy = async (criteria: FindOptionsWhere<<Name>Entity>): Promise<<Name>Entity | null> => { ... };
-  public create = async (entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> => { ... };
-  public createMany = async (entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> => { ... };
-  public update = async (entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> => { ... };
-  public updateMany = async (entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> => { ... };
-  public delete = async (criteria: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<UpdateResult> => { ... };
-  public count = async (criteria?: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<number> => { ... };
+  public async findOne(id: string): Promise<<Name>Entity | null> { ... }
+  public async findOneBy(criteria: FindOptionsWhere<<Name>Entity>): Promise<<Name>Entity | null> { ... }
+  public async create(entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> { ... }
+  public async createMany(entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> { ... }
+  public async update(entity: <Name>Entity, options?: SaveOptions): Promise<<Name>Entity> { ... }
+  public async updateMany(entities: <Name>Entity[], options?: SaveOptions): Promise<<Name>Entity[]> { ... }
+  public async delete(criteria: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<UpdateResult> { ... }
+  public async count(criteria?: FindOptionsWhere<<Name>Entity> | FindOptionsWhere<<Name>Entity>[]): Promise<number> { ... }
 }
 ```
 

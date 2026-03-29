@@ -50,9 +50,9 @@ type CaptureOptionsType = Record<string, unknown>;
 
 @decorator.analytics()
 export class <Name>Analytics<T extends CaptureOptionsType = CaptureOptionsType> implements IAnalytics<T> {
-  public capture = (options: T): void => {
+  public capture(options: T): void {
     // console.log("Analytics captured:", options);
-  };
+  }
 }
 ```
 

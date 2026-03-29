@@ -50,9 +50,9 @@ type ServiceDataType = Record<string, unknown>;
 
 @decorator.service()
 export class <Name>Service<T extends ServiceDataType = ServiceDataType> implements IService<T> {
-  public execute = async (data?: T): Promise<void> => {
+  public async execute(data?: T): Promise<void> {
     // TODO: Implement service logic
-  };
+  }
 }
 ```
 

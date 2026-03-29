@@ -48,12 +48,12 @@ import { decorator, type IMiddleware } from "@ooneex/middleware";
 
 @decorator.middleware()
 export class <Name>Middleware implements IMiddleware {
-  public handler = async (context: ContextType): Promise<ContextType> => {
+  public async handler(context: ContextType): Promise<ContextType> {
     // Example: Add custom header
     // context.response.header("X-Custom-Header", "value");
 
     return context
-  };
+  }
 }
 ```
 
@@ -65,12 +65,12 @@ import { decorator, type IMiddleware } from "@ooneex/middleware";
 
 @decorator.middleware()
 export class <Name>Middleware implements IMiddleware {
-  public handler = async (context: ContextType): Promise<ContextType> => {
+  public async handler(context: ContextType): Promise<ContextType> {
     // Example: Add custom header
     // context.response.header("X-Custom-Header", "value");
 
     return context
-  };
+  }
 }
 ```
 

@@ -51,21 +51,21 @@ import type { ICache } from "@ooneex/cache";
 
 @decorator.cache()
 export class <Name>Cache implements ICache {
-  public get = async <T = unknown>(key: string): Promise<T | undefined> => {
+  public async get<T = unknown>(key: string): Promise<T | undefined> {
     throw new CacheException(`Failed to get key "${key}": Not implemented`);
-  };
+  }
 
-  public set = async <T = unknown>(key: string, value: T, ttl?: number): Promise<void> => {
+  public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
     throw new CacheException(`Failed to set key "${key}": Not implemented`);
-  };
+  }
 
-  public delete = async (key: string): Promise<boolean> => {
+  public async delete(key: string): Promise<boolean> {
     throw new CacheException(`Failed to delete key "${key}": Not implemented`);
-  };
+  }
 
-  public has = async (key: string): Promise<boolean> => {
+  public async has(key: string): Promise<boolean> {
     throw new CacheException(`Failed to check if key "${key}" exists: Not implemented`);
-  };
+  }
 }
 ```
 

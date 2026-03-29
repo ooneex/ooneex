@@ -1,6 +1,6 @@
-import { execSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { $ } from "bun";
 import { TerminalLogger } from "@ooneex/logger";
 import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
@@ -88,8 +88,8 @@ export class MakeReleaseCommand implements ICommand {
       }
 
       const pkgJson: PackageJsonType = JSON.parse(await Bun.file(pkgJsonPath).text());
-      const lastTag = this.getLastTag(pkgJson.name);
-      const commits = this.getCommitsSinceTag(lastTag, dir.base);
+      const lastTag = await this.getLastTag(pkgJson.name);
+      const commits = await this.getCommitsSinceTag(lastTag, dir.base);
 
       if (commits.length === 0) {
         continue;
@@ -105,9 +105,9 @@ export class MakeReleaseCommand implements ICommand {
 
       const tag = `${pkgJson.name}@${newVersion}`;
 
-      this.gitAdd(join(dir.base, "package.json"), join(dir.base, "CHANGELOG.md"));
-      this.gitCommit(`chore(release): ${pkgJson.name}@${newVersion}`);
-      this.gitTag(tag);
+      await this.gitAdd(join(dir.base, "package.json"), join(dir.base, "CHANGELOG.md"));
+      await this.gitCommit(`chore(release): ${pkgJson.name}@${newVersion}`);
+      await this.gitTag(tag);
 
       logger.success(
         `${pkgJson.name}@${newVersion} released (${bumpType} bump, ${commits.length} commit(s))`,
@@ -137,7 +137,7 @@ export class MakeReleaseCommand implements ICommand {
 
     if (shouldPush) {
       try {
-        execSync("git push && git push --tags", { encoding: "utf-8", stdio: "inherit" });
+        await $`git push && git push --tags`;
         logger.success("Pushed commits and tags to remote", undefined, {
           showTimestamp: false,
           showArrow: false,
@@ -153,11 +153,10 @@ export class MakeReleaseCommand implements ICommand {
     }
   }
 
-  private getLastTag(packageName: string): string | null {
+  private async getLastTag(packageName: string): Promise<string | null> {
     try {
-      const tags = execSync(`git tag --list "${packageName}@*" --sort=-v:refname`, {
-        encoding: "utf-8",
-      }).trim();
+      const result = await $`git tag --list "${packageName}@*" --sort=-v:refname`.quiet();
+      const tags = result.text().trim();
 
       if (!tags) {
         return null;
@@ -169,14 +168,13 @@ export class MakeReleaseCommand implements ICommand {
     }
   }
 
-  private getCommitsSinceTag(tag: string | null, dirPath: string): CommitInfoType[] {
+  private async getCommitsSinceTag(tag: string | null, dirPath: string): Promise<CommitInfoType[]> {
     const range = tag ? `${tag}..HEAD` : "HEAD";
     const format = "%H|%s";
 
     try {
-      const output = execSync(`git log ${range} --format="${format}" -- "${dirPath}"`, {
-        encoding: "utf-8",
-      }).trim();
+      const result = await $`git log ${range} --format=${format} -- ${dirPath}`.quiet();
+      const output = result.text().trim();
 
       if (!output) {
         return [];
@@ -291,15 +289,15 @@ ${section}
     await Bun.write(changelogPath, newContent);
   }
 
-  private gitAdd(...files: string[]): void {
-    execSync(`git add ${files.map((f) => `"${f}"`).join(" ")}`, { encoding: "utf-8" });
+  private async gitAdd(...files: string[]): Promise<void> {
+    await $`git add ${files}`;
   }
 
-  private gitCommit(message: string): void {
-    execSync(`git commit -m "${message}"`, { encoding: "utf-8" });
+  private async gitCommit(message: string): Promise<void> {
+    await $`git commit --no-verify -m ${message}`;
   }
 
-  private gitTag(tag: string): void {
-    execSync(`git tag "${tag}"`, { encoding: "utf-8" });
+  private async gitTag(tag: string): Promise<void> {
+    await $`git tag ${tag}`;
   }
 }

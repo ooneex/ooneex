@@ -155,7 +155,7 @@ export class MakeReleaseCommand implements ICommand {
 
   private async getLastTag(packageName: string): Promise<string | null> {
     try {
-      const result = await $`git tag --list "${packageName}@*" --sort=-v:refname`.quiet();
+      const result = await $`git --no-pager tag --list "${packageName}@*" --sort=-v:refname`.quiet();
       const tags = result.text().trim();
 
       if (!tags) {
@@ -173,7 +173,7 @@ export class MakeReleaseCommand implements ICommand {
     const format = "%H|%s";
 
     try {
-      const result = await $`git log ${range} --format=${format} -- ${dirPath}`.quiet();
+      const result = await $`git --no-pager log ${range} --format=${format} -- ${dirPath}`.quiet();
       const output = result.text().trim();
 
       if (!output) {

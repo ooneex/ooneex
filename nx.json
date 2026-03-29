@@ -2,52 +2,29 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true
     },
     "fmt": {
       "cache": true
     },
     "lint": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true
     },
     "test": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true
-    },
-    "npm:publish": {
-      "dependsOn": ["^build"]
-    },
-    "nx-release-publish": {
-      "dependsOn": ["build"],
-      "options": {
-        "packageRoot": "{projectRoot}"
-      }
     }
   },
   "tui": {
     "autoExit": true
-  },
-  "release": {
-    "projects": ["packages/*"],
-    "projectsRelationship": "independent",
-    "git": {
-      "commitMessage": "chore(release): Release {projectName}-v{version}"
-    },
-    "version": {
-      "conventionalCommits": true,
-      "preVersionCommand": "bun install && bun run build",
-      "currentVersionResolver": "disk",
-      "versionPrefix": "auto"
-    },
-    "changelog": {
-      "automaticFromRef": true,
-      "projectChangelogs": {
-        "file": false,
-        "createRelease": "github"
-      }
-    }
   },
   "plugins": [
     {
@@ -57,8 +34,12 @@
   ],
   "packageManager": "bun",
   "namedInputs": {
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"],
-    "default": ["sharedGlobals"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ],
+    "default": [
+      "sharedGlobals"
+    ]
   },
-  "analytics": true
+  "analytics": false
 }

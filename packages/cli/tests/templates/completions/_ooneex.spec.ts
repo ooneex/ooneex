@@ -59,6 +59,7 @@ describe("_ooneex.txt", () => {
       "make\\:module",
       "make\\:permission",
       "make\\:pubsub",
+      "make\\:release",
       "make\\:repository",
       "make\\:seed",
       "make\\:service",
@@ -201,7 +202,7 @@ describe("_ooneex.txt", () => {
 
     test("completion:zsh and make:claude:skill should have no options", async () => {
       const content = await Bun.file(templatePath).text();
-      const match = content.match(/make:claude:skill\|completion:zsh\)\s*;;/);
+      const match = content.match(/make:release\|make:claude:skill\|completion:zsh\)\s*;;/);
       expect(match).not.toBeNull();
     });
   });

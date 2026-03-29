@@ -29,6 +29,7 @@ _oo() {
     'make\:module:Generate a new module'
     'make\:permission:Generate a new permission class'
     'make\:pubsub:Generate a new PubSub event class'
+    'make\:release:Release packages with version bump, changelog, and git tag'
     'make\:repository:Generate a new repository class'
     'make\:seed:Generate a new seed file'
     'make\:service:Generate a new service class'
@@ -102,7 +103,7 @@ _oo() {
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_oo_modules'
           ;;
-        make:claude:skill|completion:zsh)
+        make:release|make:claude:skill|completion:zsh)
           ;;
       esac
       ;;

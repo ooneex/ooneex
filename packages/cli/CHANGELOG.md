@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-03-29
+
+### Changed
+
+- Use async fs APIs in MakeReleaseCommand and update tests — Franck ([ff7a1dc8](https://github.com/ooneex/ooneex/commit/ff7a1dc8))
+- Simplify MakeReleaseCommand logging and changelog template — Franck ([7828b82a](https://github.com/ooneex/ooneex/commit/7828b82a))
+
+
 ## [1.3.0] - 2026-03-29
 
 ### Added

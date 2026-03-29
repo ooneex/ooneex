@@ -37,8 +37,8 @@
     },
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "bun run build",
-      "fallbackCurrentVersionResolver": "disk",
+      "preVersionCommand": "bun install && bun run build",
+      "currentVersionResolver": "disk",
       "versionPrefix": "auto"
     },
     "changelog": {

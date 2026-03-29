@@ -35,6 +35,7 @@ describe("README.md.txt", () => {
     expect(content).toContain("## Module Architecture");
     expect(content).toContain("## Docker");
     expect(content).toContain("## Code Quality");
+    expect(content).toContain("## Ooneex CLI");
     expect(content).toContain("## License");
   });
 
@@ -66,5 +67,31 @@ describe("README.md.txt", () => {
     expect(content).toContain("middlewares");
     expect(content).toContain("cronJobs");
     expect(content).toContain("events");
+  });
+
+  test("should contain CLI installation instructions", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("bun add -g @ooneex/cli");
+  });
+
+  test("should contain CLI completion setup", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("oo completion:zsh");
+    expect(content).toContain("fpath=(~/.zsh $fpath)");
+  });
+
+  test("should contain CLI scaffolding examples", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("oo make:module");
+    expect(content).toContain("oo make:controller");
+    expect(content).toContain("oo make:service");
+    expect(content).toContain("oo make:entity");
+    expect(content).toContain("oo make:pubsub");
+  });
+
+  test("should contain Claude skills installation", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("oo make:claude:skill");
+    expect(content).toContain(".claude/skills/");
   });
 });

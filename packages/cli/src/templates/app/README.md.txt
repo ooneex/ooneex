@@ -83,6 +83,75 @@ docker run -p 3000:3000 {{NAME}}
 - **Commit conventions:** Conventional Commits enforced via Commitlint + Husky
 - **Pre-commit hooks:** Biome check + TypeScript type check on staged files
 
+## Ooneex CLI
+
+The **@ooneex/cli** provides code scaffolding commands to quickly generate modules, controllers, services, entities, pub/sub events, and more.
+
+### Install
+
+```bash
+bun add -g @ooneex/cli
+```
+
+After installation, both `ooneex` and `oo` commands are available globally.
+
+### Install Zsh Completion
+
+```bash
+oo completion:zsh
+```
+
+Then add the following to your `~/.zshrc`:
+
+```bash
+fpath=(~/.zsh $fpath)
+autoload -Uz compinit && compinit
+```
+
+Restart your terminal to enable autocompletion for all `oo` commands.
+
+### Examples
+
+#### Generate a new module
+
+```bash
+oo make:module --name=billing
+```
+
+#### Generate a controller
+
+```bash
+oo make:controller --name=invoice --module=billing --route-path=/invoices --route-method=GET
+```
+
+#### Generate a service
+
+```bash
+oo make:service --name=invoice --module=billing
+```
+
+#### Generate an entity
+
+```bash
+oo make:entity --name=invoice --module=billing --table-name=invoices
+```
+
+#### Generate a pub/sub event
+
+```bash
+oo make:pubsub --name=invoice-created --module=billing --channel=billing.invoice.created
+```
+
+### Install Claude Skills
+
+Generate Claude skill definitions for AI-assisted code scaffolding:
+
+```bash
+oo make:claude:skill
+```
+
+This creates `.claude/skills/` in your project with skill guides for each `make:*` command (controller, service, entity, pubsub, etc.), enabling Claude to scaffold code following your project's conventions.
+
 ## License
 
 Proprietary - All rights reserved.

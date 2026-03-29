@@ -94,6 +94,16 @@ describe("MakeClaudeSkillCommand", () => {
       expect(content).toContain("name: make:service");
     });
 
+    test("should generate optimize skill", async () => {
+      await command.run();
+
+      const filePath = join(testDir, ".claude", "skills", "optimize", "SKILL.md");
+      expect(existsSync(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("name: optimize");
+    });
+
     test("should preserve frontmatter in generated files", async () => {
       await command.run();
 
@@ -119,7 +129,7 @@ describe("MakeClaudeSkillCommand", () => {
         files.push(file);
       }
 
-      expect(files.length).toBe(18);
+      expect(files.length).toBe(19);
     });
   });
 });

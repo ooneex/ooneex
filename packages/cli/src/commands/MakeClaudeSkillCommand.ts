@@ -19,6 +19,7 @@ import makeSeed from "../templates/claude/skills/make.seed.md.txt";
 import makeService from "../templates/claude/skills/make.service.md.txt";
 import makeStorage from "../templates/claude/skills/make.storage.md.txt";
 import makeVectorDatabase from "../templates/claude/skills/make.vector-database.md.txt";
+import optimize from "../templates/claude/skills/optimize.md.txt";
 import type { ICommand } from "../types";
 
 const skills: Record<string, string> = {
@@ -40,6 +41,7 @@ const skills: Record<string, string> = {
   "make.service": makeService,
   "make.storage": makeStorage,
   "make.vector-database": makeVectorDatabase,
+  optimize: optimize,
 };
 
 @decorator.command()

@@ -1,0 +1,94 @@
+---
+name: optimize
+description: Optimize a module's codebase for quality, performance, and clean conventions. Enforces arrow functions (except class methods), type/interface naming, removes duplication, and ensures only important tests remain.
+---
+
+# Optimize Codebase
+
+Optimize a module's codebase for quality, performance, and clean conventions.
+
+## Coding Conventions
+
+Apply these conventions across all files in the target module:
+
+- **Arrow functions everywhere** — use arrow functions for all function expressions, callbacks, standalone functions, and variable declarations. The ONLY exception is class methods, which must use regular method syntax.
+- **Type naming** — all type aliases must end with the `Type` suffix (e.g., `UserDataType`, `ConfigOptionsType`). Rename any that don't comply.
+- **Interface naming** — all interface names must start with the `I` prefix (e.g., `IUser`, `IService`, `IRepository`). Rename any that don't comply.
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`).
+
+## Steps
+
+### 1. Identify the target
+
+Determine the module to optimize. If the user specifies a module name, work in `modules/<module>/`. If no module is specified, ask the user which module to optimize.
+
+### 2. Read and analyze the module
+
+Read all source files (`src/**/*.ts`) and test files (`tests/**/*.ts`) in the target module. Build a full picture of:
+
+- All types, interfaces, classes, and functions
+- Dependencies between files
+- Existing test coverage
+
+### 3. Enforce naming conventions
+
+Scan every file and fix:
+
+- **Types not ending with `Type`** — rename the type and update all references across the module
+- **Interfaces not starting with `I`** — rename the interface and update all references across the module
+- **Non-arrow functions** — convert all function expressions, callbacks, and standalone functions to arrow functions. Do NOT convert class methods.
+- **Missing visibility modifiers** — add explicit `public`, `private`, or `protected` to all class methods and properties
+
+### 4. Remove code duplication
+
+Identify duplicated or near-duplicated code within the module:
+
+- Extract shared logic into well-named helper arrow functions or base classes
+- Consolidate repeated type definitions
+- Merge similar utility functions
+- Remove dead code (unused imports, unreachable branches, unused variables)
+
+### 5. Optimize for performance
+
+Review and improve:
+
+- Replace inefficient loops or repeated iterations with single-pass approaches where possible
+- Use `Map`/`Set` instead of arrays for lookups when appropriate
+- Avoid unnecessary object spreads or deep clones
+- Prefer early returns to reduce nesting
+- Remove unnecessary `async`/`await` where a direct return suffices
+- Eliminate redundant null/undefined checks when the type system already guarantees the value
+
+### 6. Optimize tests
+
+Review all test files and restructure:
+
+- **Remove trivial tests** — delete tests that only check obvious things (e.g., "class name ends with X", "method exists") unless they serve as smoke tests for generated code
+- **Keep and improve important tests** — focus on tests that verify actual business logic, edge cases, error handling, and integration behavior
+- **Write fewer but more meaningful tests** — each test should validate a real scenario or invariant, not just existence checks
+- **Consolidate redundant test cases** — merge tests that cover the same code path with slightly different inputs into parameterized patterns
+- **Ensure critical paths are covered** — every public method with logic should have at least one test covering its happy path and one covering its error/edge case
+
+### 7. Final cleanup
+
+- Remove all unused imports
+- Remove empty files or files with no exports
+- Ensure consistent formatting
+
+### 8. Lint and format
+
+Run linting and formatting on all modified files:
+
+```bash
+bunx biome check --fix <list of modified files>
+```
+
+### 9. Run tests
+
+Run the module's tests to verify nothing is broken:
+
+```bash
+bun test <module test directory>
+```
+
+If any test fails, fix the issue and re-run until all tests pass.

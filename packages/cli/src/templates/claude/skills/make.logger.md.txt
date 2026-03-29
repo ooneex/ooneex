@@ -7,6 +7,13 @@ description: Generate a new logger class with its test file, then complete the g
 
 Generate a new logger class and its test file using the `make:logger` CLI command, then complete the generated code with proper implementation.
 
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+
 ## Steps
 
 ### 1. Run the generator
@@ -43,33 +50,33 @@ import { decorator } from "@ooneex/logger";
 
 @decorator.logger()
 export class <Name>Logger implements ILogger {
-  public async init(): Promise<void> {
+  public init = async (): Promise<void> => {
     // Initialize your logger here
-  }
+  };
 
-  public log(message: string, data?: Record<string, ScalarType>): void {
+  public log = (message: string, data?: Record<string, ScalarType>): void => {
     // Handle general logging
-  }
+  };
 
-  public debug(message: string, data?: Record<string, ScalarType>): void {
+  public debug = (message: string, data?: Record<string, ScalarType>): void => {
     // Handle debug logging
-  }
+  };
 
-  public info(message: string, data?: Record<string, ScalarType>): void {
+  public info = (message: string, data?: Record<string, ScalarType>): void => {
     // Handle info logging
-  }
+  };
 
-  public success(message: string, data?: Record<string, ScalarType>): void {
+  public success = (message: string, data?: Record<string, ScalarType>): void => {
     // Handle success logging
-  }
+  };
 
-  public warn(message: string, data?: Record<string, ScalarType>): void {
+  public warn = (message: string, data?: Record<string, ScalarType>): void => {
     // Handle warning logging
-  }
+  };
 
-  public error(message: string | IException, data?: Record<string, ScalarType>): void {
+  public error = (message: string | IException, data?: Record<string, ScalarType>): void => {
     // Handle error logging
-  }
+  };
 }
 ```
 

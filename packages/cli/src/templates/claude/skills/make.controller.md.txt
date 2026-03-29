@@ -7,6 +7,13 @@ description: Generate a new controller class with route type and test file, then
 
 Generate a new controller class, its route type, and test file using the `make:controller` CLI command, then complete the generated code with proper implementation.
 
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+
 ## Steps
 
 ### 1. Run the generator
@@ -136,13 +143,13 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
   roles: [ERole.USER],
 })
 export class <Name>Controller {
-  public async index(context: ContextType<<TypeName>RouteType>) {
+  public index = async (context: ContextType<<TypeName>RouteType>) => {
     // const { id } = context.params;
 
     return context.response.json({
 
     });
-  }
+  };
 }
 ```
 
@@ -174,13 +181,13 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
   roles: [ERole.USER],
 })
 export class <Name>Controller {
-  public async index(context: ContextType<<TypeName>RouteType>) {
+  public index = async (context: ContextType<<TypeName>RouteType>) => {
     // const { id } = context.params;
 
     return context.response.json({
 
     });
-  }
+  };
 }
 ```
 

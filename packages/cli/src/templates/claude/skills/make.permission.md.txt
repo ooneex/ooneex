@@ -7,6 +7,13 @@ description: Generate a new permission class with its test file, then complete t
 
 Generate a new permission class and its test file using the `make:permission` CLI command, then complete the generated code with proper implementation.
 
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+
 ## Steps
 
 ### 1. Run the generator
@@ -41,15 +48,15 @@ import type { IUser } from "@ooneex/user";
 
 @decorator.permission()
 export class <Name>Permission extends Permission {
-  public allow(): this {
+  public allow = (): this => {
     // Example: Add permissions using this.ability.can()
     // this.ability.can("read", "YourEntity");
     // this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
 
     return this;
-  }
+  };
 
-  public setUserPermissions(user: IUser | null): this {
+  public setUserPermissions = (user: IUser | null): this => {
     if (!user) {
       return this;
     }
@@ -73,7 +80,7 @@ export class <Name>Permission extends Permission {
     // }
 
     return this;
-  }
+  };
 }
 ```
 

@@ -7,6 +7,13 @@ description: Generate a new middleware class with its test file, then complete t
 
 Generate a new middleware class and its test file using the `make:middleware` CLI command, then complete the generated code with proper implementation.
 
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+
 ## Steps
 
 ### 1. Run the generator
@@ -41,12 +48,12 @@ import { decorator, type IMiddleware } from "@ooneex/middleware";
 
 @decorator.middleware()
 export class <Name>Middleware implements IMiddleware {
-  public async handler(context: ContextType): Promise<ContextType> {
+  public handler = async (context: ContextType): Promise<ContextType> => {
     // Example: Add custom header
     // context.response.header("X-Custom-Header", "value");
 
     return context
-  }
+  };
 }
 ```
 
@@ -58,12 +65,12 @@ import { decorator, type IMiddleware } from "@ooneex/middleware";
 
 @decorator.middleware()
 export class <Name>Middleware implements IMiddleware {
-  public async handler(context: ContextType): Promise<ContextType> {
+  public handler = async (context: ContextType): Promise<ContextType> => {
     // Example: Add custom header
     // context.response.header("X-Custom-Header", "value");
 
     return context
-  }
+  };
 }
 ```
 

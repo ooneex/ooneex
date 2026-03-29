@@ -7,6 +7,13 @@ description: Generate a new TypeORM entity class with its test file, then comple
 
 Generate a new entity class and its test file using the `make:entity` CLI command, then complete the generated code with proper implementation.
 
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+
 ## Steps
 
 ### 1. Run the generator
@@ -166,7 +173,7 @@ Then read the generated migration file in `src/migrations/` and complete it:
 Example `up` method for a new entity:
 
 ```typescript
-public async up(tx: TransactionSQL): Promise<void> {
+public up = async (tx: TransactionSQL): Promise<void> => {
   await tx`
     CREATE TABLE IF NOT EXISTS <table_name> (
       id VARCHAR(25) PRIMARY KEY,
@@ -182,7 +189,7 @@ public async up(tx: TransactionSQL): Promise<void> {
       deleted_at TIMESTAMPTZ
     )
   `;
-}
+};
 ```
 
 ### 7. Create a repository for the entity

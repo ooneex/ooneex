@@ -84,22 +84,6 @@ describe("MakeModuleCommand", () => {
       expect(await exists(filePath)).toBe(true);
     });
 
-    test("should generate bin files by default", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const migrationUp = join(testDir, "modules", "user", "bin", "migration", "up.ts");
-      const seedRun = join(testDir, "modules", "user", "bin", "seed", "run.ts");
-      expect(await exists(migrationUp)).toBe(true);
-      expect(await exists(seedRun)).toBe(true);
-    });
-
-    test("should skip bin files when skipBin is true", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true, skipBin: true });
-
-      const migrationUp = join(testDir, "modules", "user", "bin", "migration", "up.ts");
-      expect(await exists(migrationUp)).toBe(false);
-    });
-
     test("should generate migrations directory by default", async () => {
       await command.run({ name: "User", cwd: testDir, silent: true });
 

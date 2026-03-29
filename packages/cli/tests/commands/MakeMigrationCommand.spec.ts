@@ -9,7 +9,7 @@ mock.module("enquirer", () => ({
 
 // Mock @ooneex/migrations to prevent actual migration file creation
 mock.module("@ooneex/migrations", () => ({
-  migrationCreate: mock(() => Promise.resolve()),
+  migrationCreate: mock(() => Promise.resolve("src/migrations/Migration00000000000000.ts")),
 }));
 
 const { MakeMigrationCommand } = await import("@/commands/MakeMigrationCommand");
@@ -77,6 +77,25 @@ describe("MakeMigrationCommand", () => {
       const packageJson = await Bun.file(join(testDir, "package.json")).json();
       expect(packageJson.scripts).toBeDefined();
       expect(packageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
+    });
+
+    test("should create bin/migration/up.ts if it does not exist", async () => {
+      await command.run({});
+
+      const binFile = join(testDir, "bin", "migration", "up.ts");
+      expect(await Bun.file(binFile).exists()).toBe(true);
+      const content = await Bun.file(binFile).text();
+      expect(content).toContain("migrationUp");
+    });
+
+    test("should not overwrite bin/migration/up.ts if it already exists", async () => {
+      const binFile = join(testDir, "bin", "migration", "up.ts");
+      await Bun.write(binFile, "// custom content");
+
+      await command.run({});
+
+      const content = await Bun.file(binFile).text();
+      expect(content).toBe("// custom content");
     });
   });
 });

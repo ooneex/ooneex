@@ -37,7 +37,7 @@
     "@ooneex/storage": "^1.0.2",
     "@ooneex/translation": "^1.0.1",
     "@ooneex/types": "^1.0.1",
-    "@ooneex/utils": "^0.1.0",
+    "@ooneex/utils": "^0.2.1",
     "@ooneex/validation": "^1.0.2",
     "pg": "^8.16.3",
     "apache-arrow": "^21.1.0",
@@ -58,12 +58,12 @@
     "@swc/core": "^1.15.8",
     "@swc/helpers": "~0.5.18",
     "@types/bun": "latest",
-    "@types/node": "^24.10.8",
+    "@types/node": "^25.5.0",
     "@typescript/native-preview": "^7.0.0-dev.20260113.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "nx": "22.0.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "undici-types": "^7.18.2"
   },
   "lint-staged": {

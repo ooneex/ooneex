@@ -76,14 +76,12 @@ _ooneex() {
           ;;
         make:migration)
           _arguments -s \
-            '--module=[Module name]:module:_ooneex_modules' \
-            '--dir=[Directory]:dir:_files -/'
+            '--module=[Module name]:module:_ooneex_modules'
           ;;
         make:seed)
           _arguments -s \
             '--name=[Name of the resource]:name' \
-            '--module=[Module name]:module:_ooneex_modules' \
-            '--dir=[Directory]:dir:_files -/'
+            '--module=[Module name]:module:_ooneex_modules'
           ;;
         make:module)
           _arguments -s \

@@ -65,7 +65,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       name: "app",
       cwd: destination,
       silent: true,
-      skipBin: true,
       skipMigrations: true,
       skipSeeds: true,
     });

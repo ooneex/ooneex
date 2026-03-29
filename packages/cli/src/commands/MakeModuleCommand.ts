@@ -3,10 +3,8 @@ import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
-import migrationUpTemplate from "../templates/module/migration.up.txt";
 import moduleTemplate from "../templates/module/module.txt";
 import packageTemplate from "../templates/module/package.txt";
-import seedRunTemplate from "../templates/module/seed.run.txt";
 import testTemplate from "../templates/module/test.txt";
 import tsconfigTemplate from "../templates/module/tsconfig.txt";
 import type { ICommand } from "../types";
@@ -15,7 +13,6 @@ type CommandOptionsType = {
   name?: string;
   cwd?: string;
   silent?: boolean;
-  skipBin?: boolean;
   skipMigrations?: boolean;
   skipSeeds?: boolean;
 };
@@ -69,7 +66,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    const { cwd = process.cwd(), silent = false, skipBin = false, skipMigrations = false, skipSeeds = false } = options;
+    const { cwd = process.cwd(), silent = false, skipMigrations = false, skipSeeds = false } = options;
     let { name } = options;
 
     if (!name) {
@@ -80,7 +77,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const kebabName = toKebabCase(pascalName);
 
     const moduleDir = join(cwd, "modules", kebabName);
-    const binDir = join(moduleDir, "bin");
     const srcDir = join(moduleDir, "src");
     const testsDir = join(moduleDir, "tests");
 
@@ -88,10 +84,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
     const testContent = testTemplate.replace(/{{NAME}}/g, pascalName);
 
-    if (!skipBin) {
-      await Bun.write(join(binDir, "migration", "up.ts"), migrationUpTemplate);
-      await Bun.write(join(binDir, "seed", "run.ts"), seedRunTemplate);
-    }
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
     if (!skipMigrations) {
       await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");

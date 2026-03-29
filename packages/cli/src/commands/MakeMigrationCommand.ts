@@ -2,11 +2,11 @@ import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { migrationCreate } from "@ooneex/migrations";
 import { decorator } from "../decorators";
+import migrationUpTemplate from "../templates/module/migration.up.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   module?: string;
-  dir?: string;
 };
 
 @decorator.command()
@@ -22,7 +22,14 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
   public async run(options: T): Promise<void> {
     const { module } = options;
     const base = module ? join("modules", module) : ".";
-    await migrationCreate({ dir: join(base, "src/migrations") });
+    const filePath = await migrationCreate({ dir: join(base, "src/migrations") });
+
+    // Create bin/migration/up.ts if it doesn't exist
+    const binMigrationUpPath = join(process.cwd(), base, "bin", "migration", "up.ts");
+    const binMigrationUpFile = Bun.file(binMigrationUpPath);
+    if (!(await binMigrationUpFile.exists())) {
+      await Bun.write(binMigrationUpPath, migrationUpTemplate);
+    }
 
     // Update package.json with migration script
     const packageJsonPath = join(process.cwd(), "package.json");
@@ -36,7 +43,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
 
     const logger = new TerminalLogger();
 
-    logger.success("Migration file created successfully", undefined, {
+    logger.success(`${filePath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

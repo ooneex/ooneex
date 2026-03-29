@@ -3,12 +3,12 @@ import { TerminalLogger } from "@ooneex/logger";
 import { seedCreate } from "@ooneex/seeds";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
+import seedRunTemplate from "../templates/module/seed.run.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;
   module?: string;
-  dir?: string;
 };
 
 @decorator.command()
@@ -30,6 +30,13 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     const base = module ? join("modules", module) : ".";
     const filePath = await seedCreate({ name, dir: join(base, "src/seeds") });
+
+    // Create bin/seed/run.ts if it doesn't exist
+    const binSeedRunPath = join(process.cwd(), base, "bin", "seed", "run.ts");
+    const binSeedRunFile = Bun.file(binSeedRunPath);
+    if (!(await binSeedRunFile.exists())) {
+      await Bun.write(binSeedRunPath, seedRunTemplate);
+    }
 
     // Update package.json with seed script
     const packageJsonPath = join(process.cwd(), "package.json");

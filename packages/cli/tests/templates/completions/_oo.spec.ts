@@ -116,23 +116,21 @@ describe("_oo.txt", () => {
       expect(match?.[1]).toContain("--channel=");
     });
 
-    test("make:migration should have module and dir options", async () => {
+    test("make:migration should have module option", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:migration\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("--module=");
       expect(match?.[1]).toContain("_oo_modules");
-      expect(match?.[1]).toContain("--dir=");
     });
 
-    test("make:seed should have name, module, and dir options", async () => {
+    test("make:seed should have name and module options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:seed\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("--name=");
       expect(match?.[1]).toContain("--module=");
       expect(match?.[1]).toContain("_oo_modules");
-      expect(match?.[1]).toContain("--dir=");
     });
 
     test("make:docker should have name with predefined services and module option", async () => {

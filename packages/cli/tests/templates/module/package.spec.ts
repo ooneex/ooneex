@@ -27,7 +27,5 @@ describe("package.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain('"test"');
     expect(content).toContain('"lint"');
-    expect(content).toContain('"migration:up"');
-    expect(content).toContain('"seed:run"');
   });
 });

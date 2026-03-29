@@ -73,5 +73,24 @@ describe("MakeSeedCommand", () => {
       expect(packageJson.scripts).toBeDefined();
       expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
     });
+
+    test("should create bin/seed/run.ts if it does not exist", async () => {
+      await command.run({ name: "User" });
+
+      const binFile = join(testDir, "bin", "seed", "run.ts");
+      expect(await Bun.file(binFile).exists()).toBe(true);
+      const content = await Bun.file(binFile).text();
+      expect(content).toContain("seedRun");
+    });
+
+    test("should not overwrite bin/seed/run.ts if it already exists", async () => {
+      const binFile = join(testDir, "bin", "seed", "run.ts");
+      await Bun.write(binFile, "// custom content");
+
+      await command.run({ name: "User" });
+
+      const content = await Bun.file(binFile).text();
+      expect(content).toBe("// custom content");
+    });
   });
 });

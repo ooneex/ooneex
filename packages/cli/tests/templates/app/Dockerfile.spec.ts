@@ -22,17 +22,20 @@ describe("Dockerfile.txt", () => {
     expect(content).toContain("WORKDIR /{{NAME}}");
   });
 
-  test("should contain install stage", async () => {
+  test("should contain build stage", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("FROM base AS install");
+    expect(content).toContain("FROM base AS build");
     expect(content).toContain("COPY package.json bun.lock /temp/dev/");
     expect(content).toContain("bun install --frozen-lockfile");
     expect(content).toContain("bun install --frozen-lockfile --production");
   });
 
-  test("should contain prerelease stage", async () => {
+  test("should contain prerelease stage with migrations and seed", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("FROM base AS prerelease");
+    expect(content).toContain("COPY --from=build /temp/dev/node_modules node_modules");
+    expect(content).toContain("RUN bun run migration:up");
+    expect(content).toContain("RUN bun run seed:run");
     expect(content).toContain("ENV NODE_ENV=production");
     expect(content).toContain("RUN bun run build");
   });
@@ -40,7 +43,7 @@ describe("Dockerfile.txt", () => {
   test("should contain release stage", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("FROM base AS release");
-    expect(content).toContain("COPY --from=install /temp/prod/node_modules node_modules");
+    expect(content).toContain("COPY --from=prerelease /{{NAME}}/dist .");
   });
 
   test("should expose port and set entrypoint", async () => {

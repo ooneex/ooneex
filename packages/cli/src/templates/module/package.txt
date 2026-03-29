@@ -4,8 +4,6 @@
   "version": "0.0.1",
   "scripts": {
     "test": "bun test tests",
-    "lint": "tsgo --noEmit && bunx biome lint",
-    "migration:up": "bun run ./bin/migration/up.ts",
-    "seed:run": "bun run ./bin/bin/run.ts"
+    "lint": "tsgo --noEmit && bunx biome lint"
   }
 }

@@ -60,7 +60,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const regex = /("scope-enum":\s*\[\s*RuleConfigSeverity\.Error,\s*"always",\s*\[)([\s\S]*?)(\])/;
     const match = content.match(regex);
     if (match) {
-      const existing = match[2]?.trim();
+      const existing = match[2]?.trim() ?? "";
       const newScope = `"${kebabName}"`;
       if (!existing.includes(newScope)) {
         const newValue = existing ? `${existing}\n        ${newScope},` : `\n        ${newScope},`;

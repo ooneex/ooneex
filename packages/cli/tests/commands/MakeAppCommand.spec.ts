@@ -10,7 +10,16 @@ mock.module("enquirer", () => ({
 // Mock logger to suppress output
 mock.module("@ooneex/logger", () => ({
   TerminalLogger: class {
+    init() {}
+    info() {}
+    error() {}
+    warn() {}
+    debug() {}
+    log() {}
     success() {}
+  },
+  decorator: {
+    logger: () => () => {},
   },
 }));
 

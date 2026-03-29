@@ -140,7 +140,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.2.15",
+      "version": "1.2.17",
       "bin": {
         "ooneex": "./dist/index.js",
         "@ooneex/cli": "./dist/index.js",
@@ -325,7 +325,7 @@
     },
     "packages/jwt": {
       "name": "@ooneex/jwt",
-      "version": "1.1.14",
+      "version": "1.1.17",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",

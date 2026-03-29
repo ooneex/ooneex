@@ -97,10 +97,10 @@ export class MakeReleaseCommand implements ICommand {
       const newVersion = this.bumpVersion(pkgJson.version, bumpType);
 
       pkgJson.version = newVersion;
-      await Bun.write(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
-      await this.updateChangelog(fullDir, newVersion, commits);
-
       const tag = `${pkgJson.name}@${newVersion}`;
+
+      await Bun.write(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
+      await this.updateChangelog(fullDir, newVersion, tag, commits);
 
       await this.gitAdd(join(dir.base, "package.json"), join(dir.base, "CHANGELOG.md"));
       await this.gitCommit(`chore(release): ${pkgJson.name}@${newVersion}`);
@@ -120,7 +120,7 @@ export class MakeReleaseCommand implements ICommand {
       return;
     }
 
-    logger.success(`\n${releasedCount} package(s) released`, undefined, logOptions);
+    logger.success(`${releasedCount} package(s) released`, undefined, logOptions);
 
     const shouldPush = await askConfirm({ message: "Push commits and tags to remote?" });
 
@@ -220,7 +220,7 @@ export class MakeReleaseCommand implements ICommand {
     }
   }
 
-  private async updateChangelog(dir: string, version: string, commits: CommitInfoType[]): Promise<void> {
+  private async updateChangelog(dir: string, version: string, tag: string, commits: CommitInfoType[]): Promise<void> {
     const changelogPath = join(dir, "CHANGELOG.md");
     const today = new Date().toISOString().split("T")[0];
     const repoUrl = await this.getRepoUrl();
@@ -234,7 +234,8 @@ export class MakeReleaseCommand implements ICommand {
     }
 
     const categoryOrder: ChangelogCategory[] = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"];
-    let section = `## [${version}] - ${today}\n`;
+    const versionLink = repoUrl ? `[${version}](${repoUrl}/releases/tag/${tag})` : `[${version}]`;
+    let section = `## ${versionLink} - ${today}\n`;
 
     for (const category of categoryOrder) {
       const categoryCommits = grouped.get(category);

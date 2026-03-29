@@ -119,8 +119,6 @@ describe("MakeReleaseCommand", () => {
     test("should insert after Unreleased section in existing changelog", async () => {
       const existingChangelog = `# Changelog
 
-## [Unreleased]
-
 ## [1.0.0] - 2025-01-01
 
 ### Added

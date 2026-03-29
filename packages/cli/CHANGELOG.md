@@ -1,7 +1,5 @@
 # Changelog
 
-## [Unreleased]
-
 ## [1.3.1] - 2026-03-29
 
 ### Changed
@@ -36,4 +34,3 @@
 
 - Add --no-pager flag to git commands in MakeReleaseCommand — Franck ([2aec10d6](https://github.com/ooneex/ooneex/commit/2aec10d6))
 - Use regex for env template replacements in MakeAppCommand — Franck ([a17552b5](https://github.com/ooneex/ooneex/commit/a17552b5))
-

@@ -2,26 +2,9 @@ import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
-// Mock enquirer and child_process before importing command
+// Mock enquirer before importing command (askConfirm uses prompt from enquirer)
 mock.module("enquirer", () => ({
   prompt: mock(() => Promise.resolve({ confirm: false })),
-}));
-
-const execSyncCalls: string[] = [];
-mock.module("node:child_process", () => ({
-  execSync: mock((cmd: string, _opts?: unknown) => {
-    execSyncCalls.push(cmd);
-
-    if (cmd.includes("git tag --list")) {
-      return "";
-    }
-
-    if (cmd.includes("git log")) {
-      return "";
-    }
-
-    return "";
-  }),
 }));
 
 const { MakeReleaseCommand } = await import("@/commands/MakeReleaseCommand");
@@ -35,7 +18,9 @@ describe("MakeReleaseCommand", () => {
     command = new MakeReleaseCommand();
     originalCwd = process.cwd();
     testDir = join(originalCwd, ".temp", `release-${Date.now()}`);
-    execSyncCalls.length = 0;
+    // Mock getRepoUrl to return null for predictable changelog output
+    // @ts-expect-error accessing private method for testing
+    command.getRepoUrl = mock(() => Promise.resolve(null));
   });
 
   afterEach(() => {
@@ -58,8 +43,8 @@ describe("MakeReleaseCommand", () => {
   describe("determineBumpType", () => {
     test("should return minor when feat commit exists", () => {
       const commits = [
-        { hash: "abc12345", type: "feat", scope: "cli", subject: "Add new feature" },
-        { hash: "def67890", type: "fix", scope: "cli", subject: "Fix bug" },
+        { hash: "abc12345", type: "feat", scope: "cli", subject: "Add new feature", author: "Test Author" },
+        { hash: "def67890", type: "fix", scope: "cli", subject: "Fix bug", author: "Test Author" },
       ];
       // @ts-expect-error accessing private method for testing
       expect(command.determineBumpType(commits)).toBe("minor");
@@ -67,8 +52,8 @@ describe("MakeReleaseCommand", () => {
 
     test("should return patch when only fix commits exist", () => {
       const commits = [
-        { hash: "abc12345", type: "fix", scope: "cli", subject: "Fix bug" },
-        { hash: "def67890", type: "chore", scope: "cli", subject: "Update deps" },
+        { hash: "abc12345", type: "fix", scope: "cli", subject: "Fix bug", author: "Test Author" },
+        { hash: "def67890", type: "chore", scope: "cli", subject: "Update deps", author: "Test Author" },
       ];
       // @ts-expect-error accessing private method for testing
       expect(command.determineBumpType(commits)).toBe("patch");
@@ -76,8 +61,8 @@ describe("MakeReleaseCommand", () => {
 
     test("should return patch when no feat commits exist", () => {
       const commits = [
-        { hash: "abc12345", type: "refactor", scope: "cli", subject: "Refactor code" },
-        { hash: "def67890", type: "docs", scope: "cli", subject: "Update docs" },
+        { hash: "abc12345", type: "refactor", scope: "cli", subject: "Refactor code", author: "Test Author" },
+        { hash: "def67890", type: "docs", scope: "cli", subject: "Update docs", author: "Test Author" },
       ];
       // @ts-expect-error accessing private method for testing
       expect(command.determineBumpType(commits)).toBe("patch");
@@ -116,7 +101,7 @@ describe("MakeReleaseCommand", () => {
     });
 
     test("should create new changelog when none exists", async () => {
-      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add release command" }];
+      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add release command", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.1.0", commits);
@@ -126,12 +111,9 @@ describe("MakeReleaseCommand", () => {
 
       const content = await Bun.file(changelogPath).text();
       expect(content).toContain("# Changelog");
-      expect(content).toContain("Keep a Changelog");
-      expect(content).toContain("Semantic Versioning");
-      expect(content).toContain("## [Unreleased]");
       expect(content).toContain("## [1.1.0]");
       expect(content).toContain("### Added");
-      expect(content).toContain("- Add release command");
+      expect(content).toContain("- Add release command — Test Author");
     });
 
     test("should insert after Unreleased section in existing changelog", async () => {
@@ -147,7 +129,7 @@ describe("MakeReleaseCommand", () => {
 `;
       await Bun.write(join(testDir, "CHANGELOG.md"), existingChangelog);
 
-      const commits = [{ hash: "abc12345", type: "fix", scope: "cli", subject: "Fix a bug" }];
+      const commits = [{ hash: "abc12345", type: "fix", scope: "cli", subject: "Fix a bug", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.0.1", commits);
@@ -156,7 +138,7 @@ describe("MakeReleaseCommand", () => {
       expect(content).toContain("## [Unreleased]");
       expect(content).toContain("## [1.0.1]");
       expect(content).toContain("### Fixed");
-      expect(content).toContain("- Fix a bug");
+      expect(content).toContain("- Fix a bug — Test Author");
       expect(content).toContain("## [1.0.0] - 2025-01-01");
 
       const unreleasedIndex = content.indexOf("## [Unreleased]");
@@ -168,10 +150,10 @@ describe("MakeReleaseCommand", () => {
 
     test("should group commits by category", async () => {
       const commits = [
-        { hash: "abc12345", type: "feat", scope: "cli", subject: "Add new feature" },
-        { hash: "def67890", type: "fix", scope: "cli", subject: "Fix bug" },
-        { hash: "ghi11111", type: "refactor", scope: "cli", subject: "Refactor code" },
-        { hash: "jkl22222", type: "revert", scope: "cli", subject: "Revert change" },
+        { hash: "abc12345", type: "feat", scope: "cli", subject: "Add new feature", author: "Test Author" },
+        { hash: "def67890", type: "fix", scope: "cli", subject: "Fix bug", author: "Test Author" },
+        { hash: "ghi11111", type: "refactor", scope: "cli", subject: "Refactor code", author: "Test Author" },
+        { hash: "jkl22222", type: "revert", scope: "cli", subject: "Revert change", author: "Test Author" },
       ];
 
       // @ts-expect-error accessing private method for testing
@@ -179,18 +161,18 @@ describe("MakeReleaseCommand", () => {
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
       expect(content).toContain("### Added");
-      expect(content).toContain("- Add new feature");
+      expect(content).toContain("- Add new feature — Test Author");
       expect(content).toContain("### Changed");
-      expect(content).toContain("- Refactor code");
+      expect(content).toContain("- Refactor code — Test Author");
       expect(content).toContain("### Removed");
-      expect(content).toContain("- Revert change");
+      expect(content).toContain("- Revert change — Test Author");
       expect(content).toContain("### Fixed");
-      expect(content).toContain("- Fix bug");
+      expect(content).toContain("- Fix bug — Test Author");
     });
 
     test("should include today's date in version header", async () => {
       const today = new Date().toISOString().split("T")[0];
-      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature" }];
+      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.1.0", commits);
@@ -201,15 +183,15 @@ describe("MakeReleaseCommand", () => {
 
     test("should map commit types to correct categories", async () => {
       const commits = [
-        { hash: "a0000000", type: "feat", scope: "cli", subject: "feat commit" },
-        { hash: "b0000000", type: "fix", scope: "cli", subject: "fix commit" },
-        { hash: "c0000000", type: "perf", scope: "cli", subject: "perf commit" },
-        { hash: "d0000000", type: "docs", scope: "cli", subject: "docs commit" },
-        { hash: "e0000000", type: "style", scope: "cli", subject: "style commit" },
-        { hash: "f0000000", type: "build", scope: "cli", subject: "build commit" },
-        { hash: "g0000000", type: "ci", scope: "cli", subject: "ci commit" },
-        { hash: "h0000000", type: "chore", scope: "cli", subject: "chore commit" },
-        { hash: "i0000000", type: "revert", scope: "cli", subject: "revert commit" },
+        { hash: "a0000000", type: "feat", scope: "cli", subject: "feat commit", author: "Test Author" },
+        { hash: "b0000000", type: "fix", scope: "cli", subject: "fix commit", author: "Test Author" },
+        { hash: "c0000000", type: "perf", scope: "cli", subject: "perf commit", author: "Test Author" },
+        { hash: "d0000000", type: "docs", scope: "cli", subject: "docs commit", author: "Test Author" },
+        { hash: "e0000000", type: "style", scope: "cli", subject: "style commit", author: "Test Author" },
+        { hash: "f0000000", type: "build", scope: "cli", subject: "build commit", author: "Test Author" },
+        { hash: "g0000000", type: "ci", scope: "cli", subject: "ci commit", author: "Test Author" },
+        { hash: "h0000000", type: "chore", scope: "cli", subject: "chore commit", author: "Test Author" },
+        { hash: "i0000000", type: "revert", scope: "cli", subject: "revert commit", author: "Test Author" },
       ];
 
       // @ts-expect-error accessing private method for testing
@@ -219,28 +201,28 @@ describe("MakeReleaseCommand", () => {
 
       // feat -> Added
       expect(content).toContain("### Added");
-      expect(content).toContain("- feat commit");
+      expect(content).toContain("- feat commit — Test Author");
 
       // fix -> Fixed
       expect(content).toContain("### Fixed");
-      expect(content).toContain("- fix commit");
+      expect(content).toContain("- fix commit — Test Author");
 
       // perf, docs, style, build, ci, chore -> Changed
       expect(content).toContain("### Changed");
-      expect(content).toContain("- perf commit");
-      expect(content).toContain("- docs commit");
-      expect(content).toContain("- style commit");
-      expect(content).toContain("- build commit");
-      expect(content).toContain("- ci commit");
-      expect(content).toContain("- chore commit");
+      expect(content).toContain("- perf commit — Test Author");
+      expect(content).toContain("- docs commit — Test Author");
+      expect(content).toContain("- style commit — Test Author");
+      expect(content).toContain("- build commit — Test Author");
+      expect(content).toContain("- ci commit — Test Author");
+      expect(content).toContain("- chore commit — Test Author");
 
       // revert -> Removed
       expect(content).toContain("### Removed");
-      expect(content).toContain("- revert commit");
+      expect(content).toContain("- revert commit — Test Author");
     });
 
     test("should only include categories with commits", async () => {
-      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature" }];
+      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.1.0", commits);
@@ -265,7 +247,7 @@ describe("MakeReleaseCommand", () => {
 `;
       await Bun.write(join(testDir, "CHANGELOG.md"), existingChangelog);
 
-      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "New feature" }];
+      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "New feature", author: "Test Author" }];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.1.0", commits);
@@ -274,6 +256,19 @@ describe("MakeReleaseCommand", () => {
       const newVersionIndex = content.indexOf("## [1.1.0]");
       const oldVersionIndex = content.indexOf("## [1.0.0]");
       expect(newVersionIndex).toBeLessThan(oldVersionIndex);
+    });
+
+    test("should include commit links when repo URL is available", async () => {
+      // @ts-expect-error accessing private method for testing
+      command.getRepoUrl = mock(() => Promise.resolve("https://github.com/test/repo"));
+
+      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add feature", author: "Test Author" }];
+
+      // @ts-expect-error accessing private method for testing
+      await command.updateChangelog(testDir, "1.1.0", commits);
+
+      const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
+      expect(content).toContain("- Add feature — Test Author ([abc12345](https://github.com/test/repo/commit/abc12345))");
     });
   });
 

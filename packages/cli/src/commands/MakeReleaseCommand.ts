@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from "node:fs";
+import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { $ } from "bun";
 import { TerminalLogger } from "@ooneex/logger";
@@ -51,22 +51,20 @@ export class MakeReleaseCommand implements ICommand {
 
     const dirs: { base: string; type: string }[] = [];
 
-    const packagesDir = join(cwd, "packages");
-    if (existsSync(packagesDir)) {
-      dirs.push(
-        ...readdirSync(packagesDir, { withFileTypes: true })
-          .filter((d) => d.isDirectory())
-          .map((d) => ({ base: join("packages", d.name), type: "package" })),
-      );
-    }
-
-    const modulesDir = join(cwd, "modules");
-    if (existsSync(modulesDir)) {
-      dirs.push(
-        ...readdirSync(modulesDir, { withFileTypes: true })
-          .filter((d) => d.isDirectory())
-          .map((d) => ({ base: join("modules", d.name), type: "module" })),
-      );
+    for (const { name, type } of [
+      { name: "packages", type: "package" },
+      { name: "modules", type: "module" },
+    ]) {
+      try {
+        const entries = await readdir(join(cwd, name), { withFileTypes: true });
+        dirs.push(
+          ...entries
+            .filter((d) => d.isDirectory())
+            .map((d) => ({ base: join(name, d.name), type })),
+        );
+      } catch {
+        // Directory doesn't exist
+      }
     }
 
     const logOptions = { showTimestamp: false, showArrow: false, useSymbol: true };
@@ -82,11 +80,12 @@ export class MakeReleaseCommand implements ICommand {
       const fullDir = join(cwd, dir.base);
       const pkgJsonPath = join(fullDir, "package.json");
 
-      if (!existsSync(pkgJsonPath)) {
+      const pkgJsonFile = Bun.file(pkgJsonPath);
+      if (!(await pkgJsonFile.exists())) {
         continue;
       }
 
-      const pkgJson: PackageJsonType = JSON.parse(await Bun.file(pkgJsonPath).text());
+      const pkgJson: PackageJsonType = await pkgJsonFile.json();
       const lastTag = await this.getLastTag(pkgJson.name);
       const commits = await this.getCommitsSinceTag(lastTag, dir.base);
 
@@ -250,9 +249,10 @@ export class MakeReleaseCommand implements ICommand {
       }
     }
 
+    const changelogFile = Bun.file(changelogPath);
     let existingContent = "";
-    if (existsSync(changelogPath)) {
-      existingContent = await Bun.file(changelogPath).text();
+    if (await changelogFile.exists()) {
+      existingContent = await changelogFile.text();
     }
 
     let newContent: string;

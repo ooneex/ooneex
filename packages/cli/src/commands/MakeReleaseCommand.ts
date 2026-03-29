@@ -17,6 +17,7 @@ type CommitInfoType = {
   type: string;
   scope: string;
   subject: string;
+  author: string;
 };
 
 type ChangelogCategory = "Added" | "Changed" | "Deprecated" | "Removed" | "Fixed" | "Security";
@@ -170,7 +171,7 @@ export class MakeReleaseCommand implements ICommand {
 
   private async getCommitsSinceTag(tag: string | null, dirPath: string): Promise<CommitInfoType[]> {
     const range = tag ? `${tag}..HEAD` : "HEAD";
-    const format = "%H|%s";
+    const format = "%H|%an|%s";
 
     try {
       const result = await $`git --no-pager log ${range} --format=${format} -- ${dirPath}`.quiet();
@@ -184,10 +185,10 @@ export class MakeReleaseCommand implements ICommand {
       const conventionalRegex = /^([a-z]+)\(([^)]+)\):\s*(.+)$/;
 
       for (const line of output.split("\n")) {
-        const [hash, ...subjectParts] = line.split("|");
+        const [hash, author, ...subjectParts] = line.split("|");
         const subject = subjectParts.join("|");
 
-        if (!hash || !subject) {
+        if (!hash || !author || !subject) {
           continue;
         }
 
@@ -195,7 +196,7 @@ export class MakeReleaseCommand implements ICommand {
         if (match) {
           const [, type, scope, message] = match;
           if (type && scope && message) {
-            commits.push({ hash: hash.substring(0, 8), type, scope, subject: message });
+            commits.push({ hash: hash.substring(0, 8), type, scope, subject: message, author });
           }
         }
       }
@@ -226,9 +227,23 @@ export class MakeReleaseCommand implements ICommand {
     return `${major}.${minor}.${patch + 1}`;
   }
 
+  private async getRepoUrl(): Promise<string | null> {
+    try {
+      const result = await $`git --no-pager remote get-url origin`.quiet();
+      const url = result.text().trim();
+
+      return url
+        .replace(/\.git$/, "")
+        .replace(/^git@([^:]+):/, "https://$1/");
+    } catch {
+      return null;
+    }
+  }
+
   private async updateChangelog(dir: string, version: string, commits: CommitInfoType[]): Promise<void> {
     const changelogPath = join(dir, "CHANGELOG.md");
     const today = new Date().toISOString().split("T")[0];
+    const repoUrl = await this.getRepoUrl();
 
     const grouped = new Map<ChangelogCategory, CommitInfoType[]>();
     for (const commit of commits) {
@@ -249,7 +264,8 @@ export class MakeReleaseCommand implements ICommand {
 
       section += `\n### ${category}\n\n`;
       for (const commit of categoryCommits) {
-        section += `- ${commit.subject}\n`;
+        const link = repoUrl ? ` ([${commit.hash}](${repoUrl}/commit/${commit.hash}))` : "";
+        section += `- ${commit.subject} — ${commit.author}${link}\n`;
       }
     }
 
@@ -274,11 +290,6 @@ export class MakeReleaseCommand implements ICommand {
       }
     } else {
       newContent = `# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 

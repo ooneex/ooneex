@@ -42,6 +42,10 @@ export interface IAppEnv {
   readonly PORT: number;
   readonly HOST_NAME: string;
 
+  // API
+  readonly INTERNAL_API_URLS: string[];
+  readonly EXTERNAL_API_URLS: string[];
+
   // Logs
   readonly LOGS_DATABASE_URL: string | undefined;
   readonly LOGTAIL_SOURCE_TOKEN: string | undefined;

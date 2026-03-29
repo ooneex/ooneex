@@ -25,6 +25,10 @@ export class AppEnv implements IAppEnv {
   public readonly PORT: number;
   public readonly HOST_NAME: string;
 
+  // API
+  public readonly INTERNAL_API_URLS: string[];
+  public readonly EXTERNAL_API_URLS: string[];
+
   // Logs
   public readonly LOGS_DATABASE_URL: string | undefined;
   public readonly LOGTAIL_SOURCE_TOKEN: string | undefined;
@@ -128,6 +132,16 @@ export class AppEnv implements IAppEnv {
     this.isProduction = this.APP_ENV === "production";
     this.PORT = Bun.env.PORT ? parseString<number>(Bun.env.PORT) : 3000;
     this.HOST_NAME = Bun.env.HOST_NAME || "0.0.0.0";
+
+    // API
+    this.INTERNAL_API_URLS = (Bun.env.INTERNAL_API_URLS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    this.EXTERNAL_API_URLS = (Bun.env.EXTERNAL_API_URLS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
 
     // Logs
     this.LOGS_DATABASE_URL = Bun.env.LOGS_DATABASE_URL;

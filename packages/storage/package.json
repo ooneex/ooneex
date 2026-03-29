@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/storage",
-  "description": "File storage abstraction supporting local filesystem and cloud providers \u2014 upload, download, list, and manage files with a unified bucket-based API",
-  "version": "1.1.0",
+  "description": "File storage abstraction supporting local filesystem and cloud providers — upload, download, list, and manage files with a unified bucket-based API",
+  "version": "1.1.1",
   "type": "module",
   "files": [
     "dist",

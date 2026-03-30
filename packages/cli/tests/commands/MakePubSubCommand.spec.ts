@@ -16,14 +16,26 @@ describe("MakePubSubCommand", () => {
   let command: InstanceType<typeof MakePubSubCommand>;
   let testDir: string;
   let originalCwd: string;
+  let originalSpawn: typeof Bun.spawn;
 
   beforeEach(() => {
     command = new MakePubSubCommand();
     originalCwd = process.cwd();
     testDir = join(originalCwd, ".temp", `pubsub-${Date.now()}`);
+
+    // Mock Bun.spawn to avoid running bun add in tests
+    originalSpawn = Bun.spawn;
+    Bun.spawn = ((...args: unknown[]) => {
+      const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
+      if (Array.isArray(cmd) && cmd[0] === "bun" && cmd[1] === "add") {
+        return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
+      }
+      return originalSpawn.apply(Bun, args as Parameters<typeof Bun.spawn>);
+    }) as typeof Bun.spawn;
   });
 
   afterEach(() => {
+    Bun.spawn = originalSpawn;
     process.chdir(originalCwd);
     rmSync(testDir, { recursive: true, force: true });
   });

@@ -108,10 +108,11 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       },
     });
 
-    // Install and update dependencies
-    const install = Bun.spawn(["bun", "install"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
-    await install.exited;
+    // Initialize git repository
+    const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
+    await gitInit.exited;
 
+    // Update dependencies
     const update = Bun.spawn(["bun", "update"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
     await update.exited;
 

@@ -20,7 +20,6 @@ const app = new App({
   mailer: ResendMailer,
   rateLimiter: RedisRateLimiter,
   middlewares: AppModule.middlewares,
-  permissions: AppModule.permissions,
   cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,

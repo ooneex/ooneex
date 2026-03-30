@@ -81,8 +81,8 @@ describe("index.ts.txt", () => {
     expect(content).toContain("mailer: ResendMailer");
     expect(content).toContain("rateLimiter: RedisRateLimiter");
     expect(content).toContain("middlewares: AppModule.middlewares");
-    expect(content).toContain("permissions: AppModule.permissions");
     expect(content).toContain("cors: CorsMiddleware");
+    expect(content).not.toContain("permissions");
     expect(content).toContain("cronJobs: AppModule.cronJobs");
     expect(content).toContain("events: AppModule.events");
     expect(content).toContain("database: AppDatabase");

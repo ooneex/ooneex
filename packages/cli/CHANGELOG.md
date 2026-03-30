@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.6.1) - 2026-03-30
+
+### Changed
+
+- Format MakeAppCommand spec Bun.spawn mock condition — Franck ([4b8d4541](https://github.com/ooneex/ooneex/commit/4b8d4541))
+- Replace bun install with git init in app generation — Franck ([4205de51](https://github.com/ooneex/ooneex/commit/4205de51))
+
 ## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.6.0) - 2026-03-30
 
 ### Added

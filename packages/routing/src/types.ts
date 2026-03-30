@@ -1,5 +1,6 @@
 import type { EnvironmentNameType } from "@ooneex/app-env";
 import type { ControllerClassType } from "@ooneex/controller";
+import type { PermissionClassType } from "@ooneex/permission";
 import type { ERole } from "@ooneex/role";
 import type { HttpMethodType } from "@ooneex/types";
 import type { AssertType, IAssert } from "@ooneex/validation";
@@ -19,6 +20,7 @@ export type RouteConfigType = {
   ip?: string[];
   host?: string[];
   roles?: ERole[];
+  permission?: PermissionClassType;
   cache?: boolean;
   isSocket: boolean;
 };

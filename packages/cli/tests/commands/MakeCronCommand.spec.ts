@@ -119,7 +119,7 @@ describe("MakeCronCommand", () => {
     });
   });
 
-  describe("Module integration", () => {
+  describe("Module integration (basename fallback)", () => {
     beforeEach(async () => {
       testDir = join(originalCwd, ".temp", "blog");
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
@@ -142,6 +142,45 @@ describe("MakeCronCommand", () => {
       await command.run({ name: "Backup" });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
+      expect(content).toContain('import { BackupCron } from "./cron/BackupCron"');
+      expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*BackupCron.*\]/s);
+    });
+  });
+
+  describe("Module integration (with module parameter)", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", `cron-module-${Date.now()}`);
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "modules", "blog", "src", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "tests", "cron", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate files under modules directory", async () => {
+      await command.run({ name: "Cleanup", module: "blog" });
+
+      const cronPath = join(testDir, "modules", "blog", "src", "cron", "CleanupCron.ts");
+      expect(await exists(cronPath)).toBe(true);
+
+      const testFilePath = join(testDir, "modules", "blog", "tests", "cron", "CleanupCron.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+    });
+
+    test("should add import and class to module cronJobs array", async () => {
+      await command.run({ name: "Cleanup", module: "blog" });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
+      expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*\]/s);
+    });
+
+    test("should accumulate multiple cron jobs in module", async () => {
+      await command.run({ name: "Cleanup", module: "blog" });
+      await command.run({ name: "Backup", module: "blog" });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
       expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
       expect(content).toContain('import { BackupCron } from "./cron/BackupCron"');
       expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*BackupCron.*\]/s);

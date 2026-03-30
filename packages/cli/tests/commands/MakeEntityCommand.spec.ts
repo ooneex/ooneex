@@ -135,7 +135,7 @@ describe("MakeEntityCommand", () => {
     });
   });
 
-  describe("Module integration", () => {
+  describe("Module integration (basename fallback)", () => {
     beforeEach(async () => {
       testDir = join(originalCwd, ".temp", "blog");
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
@@ -158,6 +158,45 @@ describe("MakeEntityCommand", () => {
       await command.run({ name: "Comment" });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostEntity } from "./entities/PostEntity"');
+      expect(content).toContain('import { CommentEntity } from "./entities/CommentEntity"');
+      expect(content).toMatch(/entities:\s*\[.*PostEntity.*CommentEntity.*\]/s);
+    });
+  });
+
+  describe("Module integration (with module parameter)", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", `entity-module-${Date.now()}`);
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "modules", "blog", "src", "entities", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "tests", "entities", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate files under modules directory", async () => {
+      await command.run({ name: "Post", module: "blog" });
+
+      const entityPath = join(testDir, "modules", "blog", "src", "entities", "PostEntity.ts");
+      expect(await exists(entityPath)).toBe(true);
+
+      const testFilePath = join(testDir, "modules", "blog", "tests", "entities", "PostEntity.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+    });
+
+    test("should add import and class to module entities array", async () => {
+      await command.run({ name: "Post", module: "blog" });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { PostEntity } from "./entities/PostEntity"');
+      expect(content).toMatch(/entities:\s*\[.*PostEntity.*\]/s);
+    });
+
+    test("should accumulate multiple entities in module", async () => {
+      await command.run({ name: "Post", module: "blog" });
+      await command.run({ name: "Comment", module: "blog" });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
       expect(content).toContain('import { PostEntity } from "./entities/PostEntity"');
       expect(content).toContain('import { CommentEntity } from "./entities/CommentEntity"');
       expect(content).toMatch(/entities:\s*\[.*PostEntity.*CommentEntity.*\]/s);

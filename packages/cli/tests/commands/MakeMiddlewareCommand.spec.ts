@@ -149,7 +149,7 @@ describe("MakeMiddlewareCommand", () => {
     });
   });
 
-  describe("Module integration", () => {
+  describe("Module integration (basename fallback)", () => {
     beforeEach(async () => {
       testDir = join(originalCwd, ".temp", "blog");
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
@@ -172,6 +172,45 @@ describe("MakeMiddlewareCommand", () => {
       await command.run({ name: "Logger", isSocket: false });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AuthMiddleware } from "./middlewares/AuthMiddleware"');
+      expect(content).toContain('import { LoggerMiddleware } from "./middlewares/LoggerMiddleware"');
+      expect(content).toMatch(/middlewares:\s*\[.*AuthMiddleware.*LoggerMiddleware.*\]/s);
+    });
+  });
+
+  describe("Module integration (with module parameter)", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", `middleware-module-${Date.now()}`);
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "modules", "blog", "src", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "tests", "middlewares", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate files under modules directory", async () => {
+      await command.run({ name: "Auth", module: "blog", isSocket: false });
+
+      const middlewarePath = join(testDir, "modules", "blog", "src", "middlewares", "AuthMiddleware.ts");
+      expect(await exists(middlewarePath)).toBe(true);
+
+      const testFilePath = join(testDir, "modules", "blog", "tests", "middlewares", "AuthMiddleware.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+    });
+
+    test("should add import and class to module middlewares array", async () => {
+      await command.run({ name: "Auth", module: "blog", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { AuthMiddleware } from "./middlewares/AuthMiddleware"');
+      expect(content).toMatch(/middlewares:\s*\[.*AuthMiddleware.*\]/s);
+    });
+
+    test("should accumulate multiple middlewares in module", async () => {
+      await command.run({ name: "Auth", module: "blog", isSocket: false });
+      await command.run({ name: "Logger", module: "blog", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
       expect(content).toContain('import { AuthMiddleware } from "./middlewares/AuthMiddleware"');
       expect(content).toContain('import { LoggerMiddleware } from "./middlewares/LoggerMiddleware"');
       expect(content).toMatch(/middlewares:\s*\[.*AuthMiddleware.*LoggerMiddleware.*\]/s);

@@ -75,8 +75,8 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
     await Bun.write(testFilePath, testContent);
 
     // Import middleware in its module
-    const modulePascalName = toPascalCase(basename(process.cwd()));
-    const modulePath = join(process.cwd(), "src", `${modulePascalName}Module.ts`);
+    const modulePascalName = module ? toPascalCase(module) : toPascalCase(basename(process.cwd()));
+    const modulePath = join(process.cwd(), base, "src", `${modulePascalName}Module.ts`);
     if (await Bun.file(modulePath).exists()) {
       await this.addToModule(modulePath, name);
     }

@@ -194,7 +194,7 @@ describe("MakeControllerCommand", () => {
     });
   });
 
-  describe("Module integration", () => {
+  describe("Module integration (basename fallback)", () => {
     beforeEach(async () => {
       // Use a properly named directory so basename works for module detection
       testDir = join(originalCwd, ".temp", "blog");
@@ -221,6 +221,50 @@ describe("MakeControllerCommand", () => {
       await command.run({ name: "ListPost", isSocket: false });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CreatePostController } from "./controllers/CreatePostController"');
+      expect(content).toContain('import { ListPostController } from "./controllers/ListPostController"');
+      expect(content).toMatch(/controllers:\s*\[.*CreatePostController.*ListPostController.*\]/s);
+    });
+  });
+
+  describe("Module integration (with module parameter)", () => {
+    beforeEach(async () => {
+      testDir = join(originalCwd, ".temp", `controller-module-${Date.now()}`);
+      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
+      await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
+      await Bun.write(join(testDir, "modules", "blog", "src", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "src", "types", "routes", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "tests", "controllers", ".gitkeep"), "");
+      process.chdir(testDir);
+    });
+
+    test("should generate files under modules directory", async () => {
+      await command.run({ name: "CreatePost", module: "blog", isSocket: false });
+
+      const controllerPath = join(testDir, "modules", "blog", "src", "controllers", "CreatePostController.ts");
+      expect(await exists(controllerPath)).toBe(true);
+
+      const testFilePath = join(testDir, "modules", "blog", "tests", "controllers", "CreatePostController.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const routeTypePath = join(testDir, "modules", "blog", "src", "types", "routes", "api.test.index.ts");
+      expect(await exists(routeTypePath)).toBe(true);
+    });
+
+    test("should add import and class to module controllers array", async () => {
+      await command.run({ name: "CreatePost", module: "blog", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
+      expect(content).toContain('import { CreatePostController } from "./controllers/CreatePostController"');
+      expect(content).toContain("CreatePostController");
+      expect(content).toMatch(/controllers:\s*\[.*CreatePostController.*\]/s);
+    });
+
+    test("should accumulate multiple controllers in module", async () => {
+      await command.run({ name: "CreatePost", module: "blog", isSocket: false });
+      await command.run({ name: "ListPost", module: "blog", isSocket: false });
+
+      const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
       expect(content).toContain('import { CreatePostController } from "./controllers/CreatePostController"');
       expect(content).toContain('import { ListPostController } from "./controllers/ListPostController"');
       expect(content).toMatch(/controllers:\s*\[.*CreatePostController.*ListPostController.*\]/s);

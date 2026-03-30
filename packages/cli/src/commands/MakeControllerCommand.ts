@@ -124,9 +124,8 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const testFilePath = join(testsDir, `${name}Controller.spec.ts`);
     await Bun.write(testFilePath, testContent);
 
-    // Import controller in its module
-    const modulePascalName = toPascalCase(basename(process.cwd()));
-    const modulePath = join(process.cwd(), "src", `${modulePascalName}Module.ts`);
+    const modulePascalName = module ? toPascalCase(module) : toPascalCase(basename(process.cwd()));
+    const modulePath = join(process.cwd(), base, "src", `${modulePascalName}Module.ts`);
     if (await Bun.file(modulePath).exists()) {
       await this.addToModule(modulePath, name);
     }

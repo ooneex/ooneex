@@ -84,6 +84,7 @@ describe("MakeAppCommand", () => {
       expect(await exists(join(testDir, "package.json"))).toBe(true);
       expect(await exists(join(testDir, "README.md"))).toBe(true);
       expect(await exists(join(testDir, "tsconfig.json"))).toBe(true);
+      expect(await exists(join(testDir, ".zed", "settings.json"))).toBe(true);
     });
 
     test("should generate husky hooks", async () => {

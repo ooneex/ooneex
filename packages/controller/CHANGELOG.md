@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.0) - 2026-03-30
+
+### Added
+
+- Add permission property to ContextType — Franck ([feee97bb](https://github.com/ooneex/ooneex/commit/feee97bb))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.2.2) - 2026-03-29
 
 ### Changed

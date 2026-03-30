@@ -25,5 +25,5 @@ export type AppConfigType = {
   permissions?: PermissionClassType[];
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;
-  generateRouteDoc?: boolean;
+  healthCheckPath?: string;
 };

@@ -10,7 +10,6 @@ import { router } from "@ooneex/routing";
 import type { ScalarType } from "@ooneex/types";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
-import { generateRouteDoc } from "./generateRouteDoc";
 import { buildHttpContext, formatHttpRoutes, logRequest, runMiddlewares } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
@@ -163,19 +162,15 @@ export class App {
 
     logger.info(`Server running at ${server.protocol}://${hostname}:${server.port}`);
 
-    const allRoutes = router.getRoutes();
-    let routeDocCount = 0;
-    for (const routeConfigs of allRoutes.values()) {
-      for (const routeConfig of routeConfigs) {
-        if (this.config.generateRouteDoc) {
-          await generateRouteDoc(routeConfig);
-          routeDocCount++;
-        }
-      }
-    }
+    if (this.config.healthCheckPath) {
+      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.healthCheckPath}`;
+      const response = await fetch(healthCheckUrl);
 
-    if (this.config.generateRouteDoc && routeDocCount > 0) {
-      logger.info(`Generated ${routeDocCount} route doc${routeDocCount > 1 ? "s" : ""}`);
+      if (response.ok) {
+        logger.info(`Health check passed at ${this.config.healthCheckPath}`);
+      } else {
+        logger.warn(`Health check failed at ${this.config.healthCheckPath} with status ${response.status}`);
+      }
     }
 
     return this;

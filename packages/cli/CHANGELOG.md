@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.6.0) - 2026-03-30
+
+### Added
+
+- Run bun install and update after app generation — Franck ([3d2e68e2](https://github.com/ooneex/ooneex/commit/3d2e68e2))
+- Add commit skill template and health check controller generation — Franck ([d15f624a](https://github.com/ooneex/ooneex/commit/d15f624a))
+
+### Changed
+
+- Remove permissions from app template and tests — Franck ([6e8761dd](https://github.com/ooneex/ooneex/commit/6e8761dd))
+- Format MakeReleaseCommand and update MakeAppCommand test setup — Franck ([7b201d0e](https://github.com/ooneex/ooneex/commit/7b201d0e))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.5.0) - 2026-03-29
 
 ### Added

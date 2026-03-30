@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.1) - 2026-03-30
+
+### Changed
+
+- Rename healthCheckPath to healthcheckPath — Franck ([12ec59b7](https://github.com/ooneex/ooneex/commit/12ec59b7))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.0) - 2026-03-30
 
 ### Added

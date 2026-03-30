@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.0) - 2026-03-30
+
+### Added
+
+- Add per-route permission support to RouteConfigType — Franck ([e2eeb60d](https://github.com/ooneex/ooneex/commit/e2eeb60d))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.2.2) - 2026-03-29
 
 ### Changed

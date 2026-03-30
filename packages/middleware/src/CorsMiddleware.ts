@@ -1,13 +1,14 @@
 import { AppEnv } from "@ooneex/app-env";
-import { inject, injectable } from "@ooneex/container";
+import { inject } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import type { HttpMethodType } from "@ooneex/types";
+import { decorator } from "./decorators";
 import type { IMiddleware } from "./types";
 
 const defaultMethods: HttpMethodType[] = ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"];
 const defaultHeaders: string[] = ["Content-Type", "Authorization"];
 
-@injectable()
+@decorator.middleware()
 export class CorsMiddleware<T extends ContextConfigType = ContextConfigType> implements IMiddleware<T> {
   private readonly origins: string[] | "*";
   private readonly methods: HttpMethodType[];

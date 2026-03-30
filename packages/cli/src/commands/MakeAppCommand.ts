@@ -112,9 +112,69 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
     await gitInit.exited;
 
-    // Update dependencies
-    const update = Bun.spawn(["bun", "update"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
-    await update.exited;
+    // Install dependencies
+    const addDeps = Bun.spawn(
+      [
+        "bun",
+        "add",
+        "@ooneex/analytics",
+        "@ooneex/app",
+        "@ooneex/app-env",
+        "@ooneex/auth",
+        "@ooneex/cache",
+        "@ooneex/container",
+        "@ooneex/database",
+        "@ooneex/logger",
+        "@ooneex/mailer",
+        "@ooneex/middleware",
+        "@ooneex/module",
+        "@ooneex/rate-limit",
+        "@ooneex/role",
+        "@ooneex/routing",
+        "@ooneex/storage",
+        "@ooneex/translation",
+        "@ooneex/types",
+        "@ooneex/user",
+        "@ooneex/utils",
+        "@ooneex/validation",
+        "@ooneex/controller",
+        "pg",
+        "apache-arrow",
+        "reflect-metadata",
+        "typeorm",
+      ],
+      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+    );
+    await addDeps.exited;
+
+    // Install dev dependencies
+    const addDevDeps = Bun.spawn(
+      [
+        "bun",
+        "add",
+        "-D",
+        "@biomejs/biome",
+        "@commitlint/cli",
+        "@commitlint/config-conventional",
+        "@commitlint/prompt-cli",
+        "@commitlint/types",
+        "@nx/js",
+        "@nx/workspace",
+        "@swc-node/register",
+        "@swc/core",
+        "@swc/helpers",
+        "@types/bun",
+        "@types/node",
+        "@typescript/native-preview",
+        "husky",
+        "lint-staged",
+        "nx",
+        "typescript",
+        "undici-types",
+      ],
+      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+    );
+    await addDevDeps.exited;
 
     const logger = new TerminalLogger();
 

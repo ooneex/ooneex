@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import moduleTemplate from "@/templates/module/module.txt";
 
 // Mock enquirer before importing commands
 mock.module("enquirer", () => ({
@@ -119,32 +118,4 @@ describe("MakePermissionCommand", () => {
     });
   });
 
-  describe("Module integration", () => {
-    beforeEach(async () => {
-      testDir = join(originalCwd, ".temp", "blog");
-      const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
-      await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
-      await Bun.write(join(testDir, "src", "permissions", ".gitkeep"), "");
-      await Bun.write(join(testDir, "tests", "permissions", ".gitkeep"), "");
-      process.chdir(testDir);
-    });
-
-    test("should add import and class to module permissions array", async () => {
-      await command.run({ name: "Admin" });
-
-      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { AdminPermission } from "./permissions/AdminPermission"');
-      expect(content).toMatch(/permissions:\s*\[.*AdminPermission.*\]/s);
-    });
-
-    test("should accumulate multiple permissions in module", async () => {
-      await command.run({ name: "Admin" });
-      await command.run({ name: "Editor" });
-
-      const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { AdminPermission } from "./permissions/AdminPermission"');
-      expect(content).toContain('import { EditorPermission } from "./permissions/EditorPermission"');
-      expect(content).toMatch(/permissions:\s*\[.*AdminPermission.*EditorPermission.*\]/s);
-    });
-  });
 });

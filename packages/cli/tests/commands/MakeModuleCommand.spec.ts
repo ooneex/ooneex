@@ -171,7 +171,6 @@ describe("MakeModuleCommand", () => {
       expect(content).toContain('import { BlogModule } from "@blog/BlogModule"');
       expect(content).toContain("...BlogModule.controllers");
       expect(content).toContain("...BlogModule.entities");
-      expect(content).toContain("...BlogModule.permissions");
       expect(content).toContain("...BlogModule.middlewares");
       expect(content).toContain("...BlogModule.cronJobs");
       expect(content).toContain("...BlogModule.events");

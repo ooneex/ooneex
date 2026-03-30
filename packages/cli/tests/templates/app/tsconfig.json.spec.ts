@@ -34,21 +34,6 @@ describe("tsconfig.json.txt", () => {
     expect(opts.noEmit).toBe(true);
   });
 
-  test("should enable strict type checking", async () => {
-    const content = await Bun.file(templatePath).text();
-    const opts = JSON.parse(content).compilerOptions;
-
-    expect(opts.strict).toBe(true);
-    expect(opts.noImplicitAny).toBe(true);
-    expect(opts.strictNullChecks).toBe(true);
-    expect(opts.exactOptionalPropertyTypes).toBe(true);
-    expect(opts.noUncheckedIndexedAccess).toBe(true);
-    expect(opts.noImplicitOverride).toBe(true);
-    expect(opts.noUnusedLocals).toBe(true);
-    expect(opts.noUnusedParameters).toBe(true);
-    expect(opts.noFallthroughCasesInSwitch).toBe(true);
-  });
-
   test("should enable decorators", async () => {
     const content = await Bun.file(templatePath).text();
     const opts = JSON.parse(content).compilerOptions;

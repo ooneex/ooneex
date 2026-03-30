@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 // Mock enquirer before importing commands
@@ -36,6 +36,8 @@ describe("MakeAppCommand", () => {
     command = new MakeAppCommand();
     originalCwd = process.cwd();
     testDir = join(originalCwd, ".temp", `app-${Date.now()}`);
+    mkdirSync(testDir, { recursive: true });
+    process.chdir(testDir);
   });
 
   afterEach(() => {

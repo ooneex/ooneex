@@ -1,7 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { $ } from "bun";
 import { TerminalLogger } from "@ooneex/logger";
+import { $ } from "bun";
 import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
 import type { ICommand } from "../types";
@@ -57,11 +57,7 @@ export class MakeReleaseCommand implements ICommand {
     ]) {
       try {
         const entries = await readdir(join(cwd, name), { withFileTypes: true });
-        dirs.push(
-          ...entries
-            .filter((d) => d.isDirectory())
-            .map((d) => ({ base: join(name, d.name), type })),
-        );
+        dirs.push(...entries.filter((d) => d.isDirectory()).map((d) => ({ base: join(name, d.name), type })));
       } catch {
         // Directory doesn't exist
       }
@@ -217,9 +213,7 @@ export class MakeReleaseCommand implements ICommand {
       const result = await $`git --no-pager remote get-url origin`.quiet();
       const url = result.text().trim();
 
-      return url
-        .replace(/\.git$/, "")
-        .replace(/^git@([^:]+):/, "https://$1/");
+      return url.replace(/\.git$/, "").replace(/^git@([^:]+):/, "https://$1/");
     } catch {
       return null;
     }

@@ -101,7 +101,9 @@ describe("MakeReleaseCommand", () => {
     });
 
     test("should create new changelog when none exists", async () => {
-      const commits = [{ hash: "abc12345", type: "feat", scope: "cli", subject: "Add release command", author: "Test Author" }];
+      const commits = [
+        { hash: "abc12345", type: "feat", scope: "cli", subject: "Add release command", author: "Test Author" },
+      ];
 
       // @ts-expect-error accessing private method for testing
       await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
@@ -268,7 +270,9 @@ describe("MakeReleaseCommand", () => {
       await command.updateChangelog(testDir, "1.1.0", "v1.1.0", commits);
 
       const content = await Bun.file(join(testDir, "CHANGELOG.md")).text();
-      expect(content).toContain("- Add feature — Test Author ([abc12345](https://github.com/test/repo/commit/abc12345))");
+      expect(content).toContain(
+        "- Add feature — Test Author ([abc12345](https://github.com/test/repo/commit/abc12345))",
+      );
     });
   });
 

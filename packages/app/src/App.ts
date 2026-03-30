@@ -161,14 +161,14 @@ export class App {
 
     logger.info(`Server running at ${server.protocol}://${hostname}:${server.port}`);
 
-    if (this.config.healthCheckPath) {
-      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.healthCheckPath}`;
+    if (this.config.healthcheckPath) {
+      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.healthcheckPath}`;
       const response = await fetch(healthCheckUrl);
 
       if (response.ok) {
-        logger.info(`Health check passed at ${this.config.healthCheckPath}`);
+        logger.info(`Health check passed at ${this.config.healthcheckPath}`);
       } else {
-        logger.warn(`Health check failed at ${this.config.healthCheckPath} with status ${response.status}`);
+        logger.warn(`Health check failed at ${this.config.healthcheckPath} with status ${response.status}`);
       }
     }
 

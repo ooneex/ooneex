@@ -5,6 +5,7 @@ import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus } from "@ooneex/http-status";
+import type { PermissionClassType } from "@ooneex/permission";
 import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
@@ -644,6 +645,74 @@ describe("httpRouteUtils", () => {
       const response = await httpRouteHandler({ context, route });
 
       expect(response.status).toBe(HttpStatus.Code.OK);
+    });
+  });
+
+  describe("formatHttpRoutes permission", () => {
+    test("builds permission and sets context.permission when route has permission", async () => {
+      const allowMock = mock(() => mockPermission);
+      const setUserPermissionsMock = mock(() => mockPermission);
+      const buildMock = mock(() => mockPermission);
+
+      const mockPermission = {
+        allow: allowMock,
+        setUserPermissions: setUserPermissionsMock,
+        build: buildMock,
+      };
+
+      class TestPermission {
+        allow = allowMock;
+        setUserPermissions = setUserPermissionsMock;
+        build = buildMock;
+      }
+      container.add(TestPermission);
+
+      class PermController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(PermController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/test", [
+        createMockRoute({
+          path: "/test",
+          method: "GET",
+          controller: PermController,
+          permission: TestPermission as unknown as PermissionClassType,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/test"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
+    });
+
+    test("does not set permission when route has no permission", async () => {
+      class NoPermController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(NoPermController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/test", [
+        createMockRoute({
+          path: "/test",
+          method: "GET",
+          controller: NoPermController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/test"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
     });
   });
 

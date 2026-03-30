@@ -447,6 +447,11 @@ export const formatHttpRoutes = (
           return httpResponse;
         }
 
+        if (route.permission) {
+          const permission = container.get(route.permission);
+          context.permission = permission.allow().setUserPermissions(context.user).build();
+        }
+
         return httpRouteHandler({ context, route });
       };
     }

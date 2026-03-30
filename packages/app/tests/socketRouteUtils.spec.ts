@@ -4,6 +4,7 @@ import { container } from "@ooneex/container";
 import { Exception } from "@ooneex/exception";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus } from "@ooneex/http-status";
+import type { PermissionClassType } from "@ooneex/permission";
 import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { ContextType } from "@ooneex/socket";
@@ -525,6 +526,99 @@ describe("socketRouteUtils", () => {
       expect(unsubscribeMock).toHaveBeenCalledWith(route.name);
       expect(closeMock).toHaveBeenCalledWith(1000, "test close");
       expect(publishMock).toHaveBeenCalled();
+    });
+
+    test("builds permission and sets context.permission when route has permission", async () => {
+      const allowMock = mock(() => mockPermission);
+      const setUserPermissionsMock = mock(() => mockPermission);
+      const buildMock = mock(() => mockPermission);
+
+      const mockPermission = {
+        allow: allowMock,
+        setUserPermissions: setUserPermissionsMock,
+        build: buildMock,
+      };
+
+      class SocketPermission {
+        allow = allowMock;
+        setUserPermissions = setUserPermissionsMock;
+        build = buildMock;
+      }
+      container.add(SocketPermission);
+
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext();
+
+      class PermSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(PermSocketController);
+
+      const route = createMockSocketRoute({
+        controller: PermSocketController,
+        permission: SocketPermission as unknown as PermissionClassType,
+      });
+
+      const wsId = `test-ws-id-permission-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
+      expect(allowMock).toHaveBeenCalled();
+      expect(setUserPermissionsMock).toHaveBeenCalled();
+      expect(buildMock).toHaveBeenCalled();
+    });
+
+    test("does not set permission when route has no permission", async () => {
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext();
+
+      class NoPermSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(NoPermSocketController);
+
+      const route = createMockSocketRoute({ controller: NoPermSocketController });
+
+      const wsId = `test-ws-id-no-permission-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        language: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(wsSendMock).toHaveBeenCalled();
     });
 
     test("runs multiple middlewares in sequence", async () => {

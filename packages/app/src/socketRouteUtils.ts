@@ -164,6 +164,11 @@ export const socketRouteHandler = async ({
     return sendException(context, validationError.message, validationError.status);
   }
 
+  if (route.permission) {
+    const permission = container.get(route.permission);
+    context.permission = permission.allow().setUserPermissions(context.user).build();
+  }
+
   const controller = container.get(route.controller);
 
   try {

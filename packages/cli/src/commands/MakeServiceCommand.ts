@@ -59,5 +59,13 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/service dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/service"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

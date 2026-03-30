@@ -39,7 +39,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     content = `${content.slice(0, lineEnd + 1)}${importLine}${content.slice(lineEnd + 1)}`;
 
     // Spread new module arrays into each AppModule field
-    const fields = ["controllers", "entities", "permissions", "middlewares", "cronJobs", "events"] as const;
+    const fields = ["controllers", "entities", "middlewares", "cronJobs", "events"] as const;
     for (const field of fields) {
       const regex = new RegExp(`(${field}:\\s*\\[)([^\\]]*)`, "s");
       const match = content.match(regex);
@@ -140,5 +140,13 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
         useSymbol: true,
       });
     }
+
+    // Install @ooneex/module dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/module"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

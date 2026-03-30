@@ -59,5 +59,13 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/analytics dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/analytics"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

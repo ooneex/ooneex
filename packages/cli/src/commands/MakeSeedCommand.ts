@@ -61,5 +61,13 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       showArrow: true,
       showLevel: false,
     });
+
+    // Install @ooneex/seeds dev dependency
+    const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

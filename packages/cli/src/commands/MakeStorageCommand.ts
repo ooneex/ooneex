@@ -59,5 +59,13 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/storage dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/storage"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

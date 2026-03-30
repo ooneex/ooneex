@@ -61,5 +61,13 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/rag dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/rag"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

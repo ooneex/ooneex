@@ -61,5 +61,13 @@ export class MakeDatabaseCommand<T extends CommandOptionsType = CommandOptionsTy
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/database dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/database"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

@@ -61,5 +61,13 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/repository dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/repository"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

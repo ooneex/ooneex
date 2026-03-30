@@ -54,5 +54,13 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       showArrow: true,
       showLevel: false,
     });
+
+    // Install @ooneex/migrations dev dependency
+    const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

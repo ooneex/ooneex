@@ -91,5 +91,13 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/pub-sub dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/pub-sub"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

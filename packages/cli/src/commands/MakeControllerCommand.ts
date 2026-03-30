@@ -150,5 +150,13 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/controller dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/controller"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

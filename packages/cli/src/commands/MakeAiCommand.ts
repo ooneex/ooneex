@@ -59,5 +59,13 @@ export class MakeAiCommand<T extends CommandOptionsType = CommandOptionsType> im
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/ai dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/ai"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

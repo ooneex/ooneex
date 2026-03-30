@@ -59,5 +59,13 @@ export class MakeCacheCommand<T extends CommandOptionsType = CommandOptionsType>
       showArrow: false,
       useSymbol: true,
     });
+
+    // Install @ooneex/cache dependency
+    const install = Bun.spawn(["bun", "add", "@ooneex/cache"], {
+      cwd: process.cwd(),
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    await install.exited;
   }
 }

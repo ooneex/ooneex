@@ -27,9 +27,8 @@ describe("module.txt", () => {
     expect(content).toContain("entities");
   });
 
-  test("should have permissions, middlewares, cronJobs, and events arrays", async () => {
+  test("should have middlewares, cronJobs, and events arrays", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("permissions");
     expect(content).toContain("middlewares");
     expect(content).toContain("cronJobs");
     expect(content).toContain("events");

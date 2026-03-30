@@ -44,7 +44,10 @@ describe("MakeAppCommand", () => {
     originalSpawn = Bun.spawn;
     Bun.spawn = ((...args: unknown[]) => {
       const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
-      if (Array.isArray(cmd) && ((cmd[0] === "bun" && cmd[1] === "update") || (cmd[0] === "git" && cmd[1] === "init"))) {
+      if (
+        Array.isArray(cmd) &&
+        ((cmd[0] === "bun" && cmd[1] === "update") || (cmd[0] === "git" && cmd[1] === "init"))
+      ) {
         return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
       }
       return originalSpawn.apply(Bun, args as Parameters<typeof Bun.spawn>);

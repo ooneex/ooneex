@@ -1,0 +1,192 @@
+---
+name: commit
+description: Create commit messages grouped by module. Analyzes git changes, groups files under modules/ by module name, and creates separate commits following commitlint conventions. Uses common scope for non-module changes.
+---
+
+# Commit by Module
+
+Create separate commits for each modified module, following the project's commitlint conventions.
+
+## Workflow
+
+1. **Analyze staged/unstaged changes**
+   - Run `git status --porcelain` to get all modified files
+   - Group changes by module (files under `modules/<module-name>/`)
+   - Identify non-module changes (files not in `modules/`) as scope `common`
+
+2. **For each module with changes**
+   - Stage only that module's files: `git add modules/<module-name>/`
+   - Determine the appropriate commit type based on changes
+   - Create a commit with proper format: `type(scope): Subject`
+   - The scope is the module name in lower-case
+   - Repeat for next module
+
+3. **Handle non-module changes**
+   - Files outside `modules/` (e.g., `bun.lock`, `package.json`, config files, `packages/` changes) use scope `common`
+   - Stage and commit separately from module changes
+
+## Commit Message Format
+
+```
+type(scope): Subject line
+```
+
+### Valid Types
+- `feat`: New feature
+- `fix`: Bug fix
+- `refactor`: Code refactoring (no new feature, no bug fix)
+- `test`: Adding/updating tests
+- `chore`: Maintenance tasks (dependencies, configs)
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, whitespace)
+- `perf`: Performance improvements
+- `build`: Build system changes
+- `ci`: CI configuration changes
+- `revert`: Revert previous commit
+
+### Scope Rules
+- For files under `modules/<name>/`: use the module name as scope (e.g., `module` scope matches the commitlint config)
+- For all other files: use `common`
+- Scope must be lower-case
+- Scope must never be empty
+- If the module name matches a valid commitlint scope, use it directly
+- If it does not match, use `module` as the scope
+
+### Subject Rules
+- Use sentence-case, start-case, pascal-case, or upper-case
+- No period at the end
+- Maximum 100 characters for entire header
+- Use imperative mood ("Add feature" not "Added feature")
+
+## Determining Commit Type
+
+Analyze the changes to determine the appropriate type:
+
+| Change Pattern | Type |
+|---------------|------|
+| New files with functionality | `feat` |
+| Bug fixes, error corrections | `fix` |
+| Code restructuring, renaming | `refactor` |
+| New/updated test files (`*.spec.ts`) | `test` |
+| Documentation files (`*.md`) | `docs` |
+| Dependency updates, lock files | `chore` |
+| Build configs, scripts | `build` |
+| CI/CD files | `ci` |
+| Formatting only | `style` |
+| Performance optimizations | `perf` |
+
+## Examples
+
+### Example 1: Multiple Module Changes
+
+Git status shows:
+```
+M modules/user/src/services/UserService.ts
+A modules/user/src/services/AuthService.ts
+M modules/user/tests/UserService.spec.ts
+M modules/product/src/entities/Product.ts
+M modules/product/src/repositories/ProductRepository.ts
+M bun.lock
+M packages/cache/src/index.ts
+```
+
+Commands to execute:
+```bash
+# Commit user module
+git add modules/user/
+git commit -m "feat(user): Add AuthService and update UserService"
+
+# Commit product module
+git add modules/product/
+git commit -m "refactor(product): Update Product entity and repository"
+
+# Commit non-module changes
+git add bun.lock packages/cache/
+git commit -m "chore(common): Update dependencies and cache package"
+```
+
+### Example 2: Single Module with Tests
+
+Git status shows:
+```
+A modules/payment/src/services/StripeService.ts
+A modules/payment/tests/StripeService.spec.ts
+```
+
+Command:
+```bash
+git add modules/payment/
+git commit -m "feat(payment): Add StripeService with tests"
+```
+
+### Example 3: Only Non-module Changes
+
+Git status shows:
+```
+M package.json
+M bun.lock
+M packages/logger/src/Logger.ts
+```
+
+Command:
+```bash
+git add package.json bun.lock packages/logger/
+git commit -m "chore(common): Update dependencies and logger package"
+```
+
+### Example 4: Module Refactoring with Deletions
+
+Git status shows:
+```
+D modules/order/src/services/OldOrderService.ts
+A modules/order/src/services/OrderService.ts
+M modules/order/src/index.ts
+```
+
+Command:
+```bash
+git add modules/order/
+git commit -m "refactor(order): Replace OldOrderService with OrderService"
+```
+
+## Subject Line Guidelines
+
+Write clear, descriptive subjects:
+
+| Good | Bad |
+|------|-----|
+| `Add Stripe payment integration` | `stripe` |
+| `Fix null check in user validation` | `fix bug` |
+| `Update order processing flow` | `changes` |
+| `Remove deprecated auth methods` | `cleanup` |
+| `Rename UserAdapter to UserService` | `rename` |
+
+## Pre-commit Checklist
+
+Before committing, verify:
+1. Changes are logically grouped by module
+2. Tests pass for modified modules
+3. No debug code or console.logs left in
+4. Commit message follows the format exactly
+
+## Handling Special Cases
+
+### Mixed Changes in One Module
+If a module has both new features and bug fixes, prioritize:
+1. `feat` if primary change is new functionality
+2. `fix` if primary change is a bug fix
+3. Split into multiple commits if changes are truly independent
+
+### Deleted Files Only
+Use `refactor` for removing deprecated code:
+```bash
+git add modules/user/
+git commit -m "refactor(user): Remove deprecated UserAdapter"
+```
+
+### Renamed/Moved Files
+Use `refactor` for file reorganization:
+```bash
+git add modules/product/
+git commit -m "refactor(product): Reorganize service file structure"
+```

@@ -11,6 +11,7 @@ import { AppDatabase } from "./databases/AppDatabase";
 
 const app = new App({
   prefix: "api",
+  healthCheckPath: "/api/v1/health",
   loggers: [LogtailLogger, TerminalLogger],
   onException: ExceptionLogger,
   analytics: PostHogAnalytics,
@@ -24,7 +25,6 @@ const app = new App({
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,
   database: AppDatabase,
-  generateRouteDoc: true,
 });
 
 await app.run();

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.8.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.0) - 2026-03-30
+
+### Added
+
+- Fix module path resolution and add Zed settings to app template — Franck ([03ab5dc0](https://github.com/ooneex/ooneex/commit/03ab5dc0))
+- Add auto-install of package dependencies in Make commands — Franck ([185a65de](https://github.com/ooneex/ooneex/commit/185a65de))
+
+### Changed
+
+- Update health check path to /healthcheck — Franck ([c1904f98](https://github.com/ooneex/ooneex/commit/c1904f98))
+- Replace hardcoded template deps with explicit bun add install — Franck ([7b7fccd8](https://github.com/ooneex/ooneex/commit/7b7fccd8))
+- Mock Bun.spawn in Make command tests to skip bun add — Franck ([af3f3bcf](https://github.com/ooneex/ooneex/commit/af3f3bcf))
+
 ## [1.7.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.7.0) - 2026-03-30
 
 ### Added

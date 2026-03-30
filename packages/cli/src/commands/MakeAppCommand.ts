@@ -103,7 +103,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       module: "app",
       route: {
         name: "api.health.check",
-        path: "/health",
+        path: "/healthcheck",
         method: "GET",
       },
     });

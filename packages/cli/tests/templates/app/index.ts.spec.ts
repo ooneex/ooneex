@@ -86,7 +86,7 @@ describe("index.ts.txt", () => {
     expect(content).toContain("cronJobs: AppModule.cronJobs");
     expect(content).toContain("events: AppModule.events");
     expect(content).toContain("database: AppDatabase");
-    expect(content).toContain('healthCheckPath: "/api/v1/health"');
+    expect(content).toContain('healthcheckPath: "/api/v1/healthcheck"');
     expect(content).not.toContain("generateRouteDoc");
   });
 

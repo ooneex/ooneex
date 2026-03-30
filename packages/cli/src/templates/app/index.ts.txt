@@ -11,7 +11,7 @@ import { AppDatabase } from "./databases/AppDatabase";
 
 const app = new App({
   prefix: "api",
-  healthCheckPath: "/api/v1/health",
+  healthcheckPath: "/api/v1/healthcheck",
   loggers: [LogtailLogger, TerminalLogger],
   onException: ExceptionLogger,
   analytics: PostHogAnalytics,

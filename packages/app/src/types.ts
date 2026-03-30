@@ -5,7 +5,6 @@ import type { DatabaseClassType } from "@ooneex/database";
 import type { LoggerClassType } from "@ooneex/logger";
 import type { MailerClassType } from "@ooneex/mailer";
 import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
-import type { PermissionClassType } from "@ooneex/permission";
 import type { PubSubClassType } from "@ooneex/pub-sub";
 import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
@@ -22,7 +21,6 @@ export type AppConfigType = {
   rateLimiter?: RateLimiterClassType;
   cronJobs?: CronClassType[];
   events?: PubSubClassType[];
-  permissions?: PermissionClassType[];
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;
   healthCheckPath?: string;

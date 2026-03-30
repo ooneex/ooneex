@@ -5,7 +5,6 @@ import type { ContextType } from "@ooneex/controller";
 import { Exception } from "@ooneex/exception";
 import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus } from "@ooneex/http-status";
-import type { PermissionClassType } from "@ooneex/permission";
 import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
@@ -646,117 +645,6 @@ describe("httpRouteUtils", () => {
 
       expect(response.status).toBe(HttpStatus.Code.OK);
     });
-
-    test("calls permissions with allow, setUserPermissions, and build", async () => {
-      const allowMock = mock(() => mockPermission);
-      const setUserPermissionsMock = mock(() => mockPermission);
-      const buildMock = mock(() => mockPermission);
-
-      const mockPermission = {
-        allow: allowMock,
-        setUserPermissions: setUserPermissionsMock,
-        build: buildMock,
-      };
-
-      class TestPermission {
-        allow = allowMock;
-        setUserPermissions = setUserPermissionsMock;
-        build = buildMock;
-      }
-      container.add(TestPermission);
-
-      class PermController {
-        index(): IResponse {
-          return new HttpResponse().json({ ok: true });
-        }
-      }
-      container.add(PermController);
-
-      const context = createMockContext();
-      const route = createMockRoute({ controller: PermController } as Partial<RouteConfigType>);
-
-      const response = await httpRouteHandler({
-        context,
-        route,
-        permissions: [TestPermission as unknown as PermissionClassType],
-      });
-
-      expect(response.status).toBe(HttpStatus.Code.OK);
-      expect(allowMock).toHaveBeenCalled();
-      expect(setUserPermissionsMock).toHaveBeenCalled();
-      expect(buildMock).toHaveBeenCalled();
-    });
-
-    test("calls multiple permissions in order", async () => {
-      const calls: string[] = [];
-
-      class Permission1 {
-        allow() {
-          calls.push("allow1");
-          return this;
-        }
-        setUserPermissions() {
-          calls.push("setUser1");
-          return this;
-        }
-        build() {
-          calls.push("build1");
-          return this;
-        }
-      }
-
-      class Permission2 {
-        allow() {
-          calls.push("allow2");
-          return this;
-        }
-        setUserPermissions() {
-          calls.push("setUser2");
-          return this;
-        }
-        build() {
-          calls.push("build2");
-          return this;
-        }
-      }
-
-      container.add(Permission1);
-      container.add(Permission2);
-
-      class MultiPermController {
-        index(): IResponse {
-          return new HttpResponse().json({ ok: true });
-        }
-      }
-      container.add(MultiPermController);
-
-      const context = createMockContext();
-      const route = createMockRoute({ controller: MultiPermController } as Partial<RouteConfigType>);
-
-      await httpRouteHandler({
-        context,
-        route,
-        permissions: [Permission1 as unknown as PermissionClassType, Permission2 as unknown as PermissionClassType],
-      });
-
-      expect(calls).toEqual(["allow1", "setUser1", "build1", "allow2", "setUser2", "build2"]);
-    });
-
-    test("succeeds without permissions parameter", async () => {
-      class NoPermController {
-        index(): IResponse {
-          return new HttpResponse().json({ ok: true });
-        }
-      }
-      container.add(NoPermController);
-
-      const context = createMockContext();
-      const route = createMockRoute({ controller: NoPermController } as Partial<RouteConfigType>);
-
-      const response = await httpRouteHandler({ context, route });
-
-      expect(response.status).toBe(HttpStatus.Code.OK);
-    });
   });
 
   describe("checkAllowedUsers", () => {
@@ -1070,35 +958,11 @@ describe("httpRouteUtils", () => {
       expect(typeof result["/v2/users"]?.GET).toBe("function");
     });
 
-    test("accepts permissions parameter", () => {
-      class RoutePermission {
-        allow() {
-          return this;
-        }
-        setUserPermissions() {
-          return this;
-        }
-        build() {
-          return this;
-        }
-      }
-      container.add(RoutePermission);
-
-      const httpRoutes = new Map<string, RouteConfigType[]>();
-      httpRoutes.set("/test", [createMockRoute({ path: "/test", method: "GET" })]);
-
-      const result = formatHttpRoutes(httpRoutes, [], [RoutePermission as unknown as PermissionClassType]);
-      const testRoute = result["/v1/test"];
-
-      expect(testRoute).toBeDefined();
-      expect(typeof testRoute?.GET).toBe("function");
-    });
-
     test("prepends prefix to versioned path", () => {
       const httpRoutes = new Map<string, RouteConfigType[]>();
       httpRoutes.set("/users", [createMockRoute({ path: "/users", method: "GET" })]);
 
-      const result = formatHttpRoutes(httpRoutes, [], undefined, "api");
+      const result = formatHttpRoutes(httpRoutes, [], "api");
 
       expect(result["/api/v1/users"]).toBeDefined();
       expect(typeof result["/api/v1/users"]?.GET).toBe("function");
@@ -1108,7 +972,7 @@ describe("httpRouteUtils", () => {
       const httpRoutes = new Map<string, RouteConfigType[]>();
       httpRoutes.set("/users", [createMockRoute({ path: "/users", method: "GET" })]);
 
-      const result = formatHttpRoutes(httpRoutes, [], undefined, undefined);
+      const result = formatHttpRoutes(httpRoutes, []);
 
       expect(result["/v1/users"]).toBeDefined();
       expect(typeof result["/v1/users"]?.GET).toBe("function");

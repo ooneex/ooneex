@@ -109,10 +109,10 @@ export class App {
     const env = container.get<IAppEnv>(AppEnv);
     let hostname = env.HOST_NAME;
 
-    const { middlewares = [], permissions, prefix } = this.config;
+    const { middlewares = [], prefix } = this.config;
 
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], permissions, prefix),
+      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], prefix),
       ...formatSocketRoutes(router.getSocketRoutes(), prefix),
     };
 
@@ -145,7 +145,6 @@ export class App {
             ws,
             server,
             middlewares: middlewares as SocketMiddlewareClassType[],
-            ...(permissions && { permissions }),
           });
         },
         async close(ws: ServerWebSocket<{ id: string }>) {

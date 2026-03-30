@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.3) - 2026-03-30
+
+### Changed
+
+- Update @tanstack/ai dependencies — Franck ([8d2bd0e5](https://github.com/ooneex/ooneex/commit/8d2bd0e5))
+
 ## [1.1.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.2) - 2026-03-29
 
 ### Changed

@@ -8,6 +8,7 @@ import type { IRequestFile } from "@ooneex/http-request-file";
 import type { IResponse } from "@ooneex/http-response";
 import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
+import type { IPermission } from "@ooneex/permission";
 import type { IRateLimiter } from "@ooneex/rate-limit";
 import type { IStorage } from "@ooneex/storage";
 import type { LocaleInfoType } from "@ooneex/translation";
@@ -54,4 +55,5 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   host: string;
   language: LocaleInfoType;
   user: IUser | null;
+  permission?: IPermission;
 };

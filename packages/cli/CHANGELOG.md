@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.7.0) - 2026-03-30
+
+### Added
+
+- Add @ooneex/controller dependency to app template — Franck ([8df4fa2b](https://github.com/ooneex/ooneex/commit/8df4fa2b))
+
 ## [1.6.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.6.1) - 2026-03-30
 
 ### Changed

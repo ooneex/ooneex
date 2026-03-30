@@ -94,7 +94,6 @@
         "@ooneex/cron": "workspace:*",
         "@ooneex/middleware": "workspace:*",
         "@ooneex/module": "workspace:*",
-        "@ooneex/permission": "workspace:*",
         "@ooneex/pub-sub": "workspace:*",
         "@ooneex/socket": "workspace:*",
         "@ooneex/socket-client": "workspace:*",
@@ -140,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "@ooneex/cli": "./dist/index.js",
@@ -184,6 +183,7 @@
         "@ooneex/http-response": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/mailer": "workspace:*",
+        "@ooneex/permission": "workspace:*",
         "@ooneex/rate-limit": "workspace:*",
         "@ooneex/storage": "workspace:*",
         "@ooneex/translation": "workspace:*",

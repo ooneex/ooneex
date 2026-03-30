@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.3) - 2026-03-30
+
+### Changed
+
+- Use decorator.middleware() in CorsMiddleware — Franck ([4ad2c264](https://github.com/ooneex/ooneex/commit/4ad2c264))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.2) - 2026-03-29
 
 ### Changed

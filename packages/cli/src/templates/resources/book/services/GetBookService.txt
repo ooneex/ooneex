@@ -1,0 +1,22 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { BookEntity } from "../entities/BookEntity";
+import { BookRepository } from "../repositories/BookRepository";
+
+type ServiceDataType = {
+  id: string;
+};
+
+@decorator.service()
+export class GetBookService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(BookRepository) private readonly repository: BookRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<BookEntity | null> {
+    if (!data) return null;
+
+    return await this.repository.findOne(data.id);
+  }
+}

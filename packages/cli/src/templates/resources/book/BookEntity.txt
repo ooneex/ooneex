@@ -1,0 +1,60 @@
+import type { IBook } from "@ooneex/book";
+import type { LocaleType } from "@ooneex/translation";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({
+  name: "books",
+})
+export class BookEntity implements IBook {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.id();
+
+  @Column({ name: "title", type: "varchar", length: 255 })
+  title: string;
+
+  @Column({ name: "color", type: "varchar", length: 50, nullable: true })
+  color?: string | null;
+
+  @Column({ name: "description", type: "text", nullable: true })
+  description?: string | null;
+
+  @Column({ name: "summarize", type: "text", nullable: true })
+  summarize?: string | null;
+
+  @Column({ name: "page_count", type: "int", nullable: true })
+  pageCount?: number | null;
+
+  @Column({ name: "src", type: "varchar", length: 255 })
+  src: string;
+
+  @Column({ name: "cover_image", type: "varchar", length: 255, nullable: true })
+  coverImage?: string | null;
+
+  @Column({ name: "tags", type: "text", array: true, nullable: true })
+  tags?: string[] | null;
+
+  @Column({ name: "topics", type: "text", array: true, nullable: true })
+  topics?: string[] | null;
+
+  @Column({ name: "categories", type: "text", array: true, nullable: true })
+  categories?: string[] | null;
+
+  @Column({ name: "lang", type: "varchar", length: 10 })
+  lang: LocaleType;
+
+  @Column({ name: "status", type: "varchar", length: 50, nullable: true })
+  status?: string | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date | null;
+}

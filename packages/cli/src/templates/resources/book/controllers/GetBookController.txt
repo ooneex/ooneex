@@ -1,0 +1,49 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetBookService } from "../services/GetBookService";
+
+type GetBookRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    title: string;
+    color?: string;
+    description?: string;
+    summarize?: string;
+    pageCount?: number;
+    src: string;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang: LocaleType;
+    status?: string;
+  };
+};
+
+@Route.Get("/books/:id", {
+  name: "book.get",
+  version: 1,
+  description: "Get a book by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetBookController {
+  constructor(
+    @inject(GetBookService) private readonly service: GetBookService,
+  ) {}
+
+  public async index(context: ContextType<GetBookRouteType>) {
+    const { id } = context.params;
+
+    const book = await this.service.execute({ id });
+
+    return context.response.json(book);
+  }
+}

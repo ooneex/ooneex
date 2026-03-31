@@ -1,0 +1,48 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { BookEntity } from "../entities/BookEntity";
+import { BookRepository } from "../repositories/BookRepository";
+
+type ServiceDataType = {
+  title: string;
+  color?: string;
+  description?: string;
+  summarize?: string;
+  pageCount?: number;
+  src: string;
+  coverImage?: string;
+  tags?: string[];
+  topics?: string[];
+  categories?: string[];
+  lang: LocaleType;
+  status?: string;
+};
+
+@decorator.service()
+export class CreateBookService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(BookRepository) private readonly repository: BookRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<BookEntity | null> {
+    if (!data) return null;
+
+    const book = new BookEntity();
+    book.title = data.title;
+    book.color = data.color;
+    book.description = data.description;
+    book.summarize = data.summarize;
+    book.pageCount = data.pageCount;
+    book.src = data.src;
+    book.coverImage = data.coverImage;
+    book.tags = data.tags;
+    book.topics = data.topics;
+    book.categories = data.categories;
+    book.lang = data.lang;
+    book.status = data.status;
+
+    return await this.repository.create(book);
+  }
+}

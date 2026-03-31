@@ -1,0 +1,93 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { UpdateBookService } from "../services/UpdateBookService";
+
+type UpdateBookRouteType = {
+  params: { id: string };
+  payload: {
+    title?: string;
+    color?: string;
+    description?: string;
+    summarize?: string;
+    pageCount?: number;
+    src?: string;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+    status?: string;
+  };
+  response: {
+    id: string;
+    title: string;
+    color?: string;
+    description?: string;
+    summarize?: string;
+    pageCount?: number;
+    src: string;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang: LocaleType;
+    status?: string;
+  };
+};
+
+@Route.Patch("/books/:id", {
+  name: "book.update",
+  version: 1,
+  description: "Update a book",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    title: "string?",
+    color: "string?",
+    description: "string?",
+    summarize: "string?",
+    pageCount: "number?",
+    src: "string?",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+    status: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    color: "string?",
+    description: "string?",
+    summarize: "string?",
+    pageCount: "number?",
+    src: "string",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string",
+    status: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateBookController {
+  constructor(
+    @inject(UpdateBookService) private readonly service: UpdateBookService,
+  ) {}
+
+  public async index(context: ContextType<UpdateBookRouteType>) {
+    const { id } = context.params;
+    const { title, color, description, summarize, pageCount, src, coverImage, tags, topics, categories, lang, status } = context.payload;
+
+    const book = await this.service.execute({ id, title, color, description, summarize, pageCount, src, coverImage, tags, topics, categories, lang, status });
+
+    return context.response.json(book);
+  }
+}

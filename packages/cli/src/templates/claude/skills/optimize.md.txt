@@ -16,6 +16,7 @@ Apply these conventions across all files in the target module:
 - **Interface naming** — all interface names must start with the `I` prefix (e.g., `IUser`, `IService`, `IRepository`). Rename any that don't comply.
 - **No definite assignment assertions** — never use `!` on class properties (e.g., `email!: string`). Use a default value or make the property optional (`?`) instead.
 - Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`).
+- For Entity class, if property is optional, add `null` to its type.
 
 ## Steps
 

@@ -12,7 +12,6 @@ export class {{ name }} implements IMigration {
         external_id VARCHAR(255),
         last_name VARCHAR(255),
         first_name VARCHAR(255),
-        username VARCHAR(255),
         avatar TEXT,
         phone VARCHAR(50),
         last_active_at TIMESTAMPTZ,

@@ -168,6 +168,7 @@ Before committing, verify:
 2. Tests pass for modified modules
 3. No debug code or console.logs left in
 4. Commit message follows the format exactly
+5. For Entity class, if property is optional, add `null` to its type.
 
 ## Handling Special Cases
 

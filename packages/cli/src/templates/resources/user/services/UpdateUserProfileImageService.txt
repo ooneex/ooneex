@@ -6,11 +6,11 @@ import { UserRepository } from "../repositories/UserRepository";
 
 type ServiceDataType = {
   userId: string;
-  ban: boolean;
+  file: Blob | File;
 };
 
 @decorator.service()
-export class BanUserService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class UpdateUserProfileImageService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
   constructor(
     @inject(ClerkAuth) private readonly auth: ClerkAuth,
     @inject(UserRepository) private readonly repository: UserRepository,
@@ -19,12 +19,9 @@ export class BanUserService<T extends ServiceDataType = ServiceDataType> impleme
   public async execute(data?: T): Promise<void> {
     if (!data) return;
 
-    if (data.ban) {
-      await this.auth.banUser(data.userId);
-      await this.repository.ban(data.userId);
-    } else {
-      await this.auth.unbanUser(data.userId);
-      await this.repository.unban(data.userId);
-    }
+    const user = await this.auth.updateUserProfileImage(data.userId, {
+      file: data.file,
+    });
+    await this.repository.updateProfile(data.userId, { avatar: user.imageUrl });
   }
 }

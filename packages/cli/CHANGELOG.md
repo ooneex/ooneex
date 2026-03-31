@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.3) - 2026-03-31
+
+### Changed
+
+- Use husky init and move dev deps install after runtime deps — Franck ([474cc08e](https://github.com/ooneex/ooneex/commit/474cc08e))
+
 ## [1.8.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.2) - 2026-03-31
 
 ### Changed

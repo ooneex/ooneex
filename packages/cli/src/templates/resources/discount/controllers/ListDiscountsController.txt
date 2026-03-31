@@ -1,0 +1,52 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListDiscountsService } from "../services/ListDiscountsService";
+
+type ListDiscountsRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      label?: string;
+      code: string;
+      type: "credit" | "access";
+      creditAmount?: number;
+      accessDuration?: number;
+      accessUnit?: "hour" | "day" | "month" | "year";
+      maxUsage?: number;
+      usageCount?: number;
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/discounts", {
+  name: "discount.list",
+  version: 1,
+  description: "List all discounts",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListDiscountsController {
+  constructor(
+    @inject(ListDiscountsService) private readonly service: ListDiscountsService,
+  ) {}
+
+  public async index(context: ContextType<ListDiscountsRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

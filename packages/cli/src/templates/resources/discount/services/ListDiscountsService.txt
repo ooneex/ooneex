@@ -1,0 +1,27 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { FilterResultType } from "@ooneex/types";
+import { DiscountEntity } from "../entities/DiscountEntity";
+import { DiscountRepository } from "../repositories/DiscountRepository";
+
+type ServiceDataType = {
+  page?: number;
+  limit?: number;
+  q?: string;
+};
+
+@decorator.service()
+export class ListDiscountsService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(DiscountRepository) private readonly repository: DiscountRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<FilterResultType<DiscountEntity>> {
+    return await this.repository.find({
+      page: data?.page,
+      limit: data?.limit,
+      q: data?.q,
+    });
+  }
+}

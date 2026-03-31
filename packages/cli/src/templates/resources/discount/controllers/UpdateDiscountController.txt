@@ -1,0 +1,76 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { UpdateDiscountService } from "../services/UpdateDiscountService";
+
+type UpdateDiscountRouteType = {
+  params: { id: string };
+  payload: {
+    label?: string;
+    code?: string;
+    type?: "credit" | "access";
+    creditAmount?: number;
+    accessDuration?: number;
+    accessUnit?: "hour" | "day" | "month" | "year";
+    maxUsage?: number;
+    usageCount?: number;
+  };
+  response: {
+    id: string;
+    label?: string;
+    code: string;
+    type: "credit" | "access";
+    creditAmount?: number;
+    accessDuration?: number;
+    accessUnit?: "hour" | "day" | "month" | "year";
+    maxUsage?: number;
+    usageCount?: number;
+  };
+};
+
+@Route.Patch("/discounts/:id", {
+  name: "discount.update",
+  version: 1,
+  description: "Update a discount",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    label: "string?",
+    code: "string?",
+    type: "string?",
+    creditAmount: "number?",
+    accessDuration: "number?",
+    accessUnit: "string?",
+    maxUsage: "number?",
+    usageCount: "number?",
+  }),
+  response: Assert({
+    id: "string",
+    label: "string?",
+    code: "string",
+    type: "string",
+    creditAmount: "number?",
+    accessDuration: "number?",
+    accessUnit: "string?",
+    maxUsage: "number?",
+    usageCount: "number?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateDiscountController {
+  constructor(
+    @inject(UpdateDiscountService) private readonly service: UpdateDiscountService,
+  ) {}
+
+  public async index(context: ContextType<UpdateDiscountRouteType>) {
+    const { id } = context.params;
+    const { label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount } = context.payload;
+
+    const discount = await this.service.execute({ id, label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount });
+
+    return context.response.json(discount);
+  }
+}

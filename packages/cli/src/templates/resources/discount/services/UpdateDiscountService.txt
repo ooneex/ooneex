@@ -1,0 +1,34 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { DiscountEntity } from "../entities/DiscountEntity";
+import { DiscountRepository } from "../repositories/DiscountRepository";
+
+type ServiceDataType = {
+  id: string;
+  label?: string;
+  code?: string;
+  type?: "credit" | "access";
+  creditAmount?: number;
+  accessDuration?: number;
+  accessUnit?: "hour" | "day" | "month" | "year";
+  maxUsage?: number;
+  usageCount?: number;
+};
+
+@decorator.service()
+export class UpdateDiscountService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(DiscountRepository) private readonly repository: DiscountRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<DiscountEntity | null> {
+    if (!data) return null;
+
+    const { id, ...fields } = data;
+
+    await this.repository.update({ id, ...fields });
+
+    return await this.repository.findOne(id);
+  }
+}

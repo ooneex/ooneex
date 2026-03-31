@@ -1,0 +1,44 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetDiscountService } from "../services/GetDiscountService";
+
+type GetDiscountRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    label?: string;
+    code: string;
+    type: "credit" | "access";
+    creditAmount?: number;
+    accessDuration?: number;
+    accessUnit?: "hour" | "day" | "month" | "year";
+    maxUsage?: number;
+    usageCount?: number;
+  };
+};
+
+@Route.Get("/discounts/:id", {
+  name: "discount.get",
+  version: 1,
+  description: "Get a discount by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetDiscountController {
+  constructor(
+    @inject(GetDiscountService) private readonly service: GetDiscountService,
+  ) {}
+
+  public async index(context: ContextType<GetDiscountRouteType>) {
+    const { id } = context.params;
+
+    const discount = await this.service.execute({ id });
+
+    return context.response.json(discount);
+  }
+}

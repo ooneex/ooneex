@@ -1,0 +1,43 @@
+import type { IDiscount } from "@ooneex/discount";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+} from "typeorm";
+
+@Entity({
+  name: "discounts",
+})
+export class DiscountEntity implements IDiscount {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.id();
+
+  @Column({ name: "label", type: "varchar", length: 255, nullable: true })
+  label?: string | null;
+
+  @Column({ name: "code", type: "varchar", length: 255 })
+  code: string;
+
+  @Column({ name: "type", type: "varchar", length: 10 })
+  type: "credit" | "access";
+
+  @Column({ name: "credit_amount", type: "numeric", nullable: true })
+  creditAmount?: number | null;
+
+  @Column({ name: "access_duration", type: "int", nullable: true })
+  accessDuration?: number | null;
+
+  @Column({ name: "access_unit", type: "varchar", length: 10, nullable: true })
+  accessUnit?: "hour" | "day" | "month" | "year" | null;
+
+  @Column({ name: "max_usage", type: "int", nullable: true })
+  maxUsage?: number | null;
+
+  @Column({ name: "usage_count", type: "int", nullable: true })
+  usageCount?: number | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+}

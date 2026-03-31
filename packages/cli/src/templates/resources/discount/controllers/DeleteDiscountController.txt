@@ -1,0 +1,37 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { DeleteDiscountService } from "../services/DeleteDiscountService";
+
+type DeleteDiscountRouteType = {
+  params: { id: string };
+  response: { id: string };
+};
+
+@Route.Delete("/discounts/:id", {
+  name: "discount.delete",
+  version: 1,
+  description: "Delete a discount",
+  params: {
+    id: Assert("string"),
+  },
+  response: Assert({
+    id: "string",
+  }),
+  roles: [ERole.USER],
+})
+export class DeleteDiscountController {
+  constructor(
+    @inject(DeleteDiscountService) private readonly service: DeleteDiscountService,
+  ) {}
+
+  public async index(context: ContextType<DeleteDiscountRouteType>) {
+    const { id } = context.params;
+
+    await this.service.execute({ id });
+
+    return context.response.json({ id });
+  }
+}

@@ -1,0 +1,71 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { CreateDiscountService } from "../services/CreateDiscountService";
+
+type CreateDiscountRouteType = {
+  payload: {
+    label?: string;
+    code: string;
+    type: "credit" | "access";
+    creditAmount?: number;
+    accessDuration?: number;
+    accessUnit?: "hour" | "day" | "month" | "year";
+    maxUsage?: number;
+    usageCount?: number;
+  };
+  response: {
+    id: string;
+    label?: string;
+    code: string;
+    type: "credit" | "access";
+    creditAmount?: number;
+    accessDuration?: number;
+    accessUnit?: "hour" | "day" | "month" | "year";
+    maxUsage?: number;
+    usageCount?: number;
+  };
+};
+
+@Route.Post("/discounts", {
+  name: "discount.create",
+  version: 1,
+  description: "Create a new discount",
+  payload: Assert({
+    label: "string?",
+    code: "string",
+    type: "string",
+    creditAmount: "number?",
+    accessDuration: "number?",
+    accessUnit: "string?",
+    maxUsage: "number?",
+    usageCount: "number?",
+  }),
+  response: Assert({
+    id: "string",
+    label: "string?",
+    code: "string",
+    type: "string",
+    creditAmount: "number?",
+    accessDuration: "number?",
+    accessUnit: "string?",
+    maxUsage: "number?",
+    usageCount: "number?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateDiscountController {
+  constructor(
+    @inject(CreateDiscountService) private readonly service: CreateDiscountService,
+  ) {}
+
+  public async index(context: ContextType<CreateDiscountRouteType>) {
+    const { label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount } = context.payload;
+
+    const discount = await this.service.execute({ label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount });
+
+    return context.response.json(discount);
+  }
+}

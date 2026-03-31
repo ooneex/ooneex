@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.4) - 2026-03-31
+
+### Changed
+
+- Suppress stdout output from spawned processes — Franck ([57b658ff](https://github.com/ooneex/ooneex/commit/57b658ff))
+
 ## [1.8.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.3) - 2026-03-31
 
 ### Changed

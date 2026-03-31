@@ -93,6 +93,34 @@ describe("random", () => {
     });
   });
 
+  describe("id", () => {
+    test("should return string with default length of 20", () => {
+      const result = random.id();
+      expect(typeof result).toBe("string");
+      expect(result).toHaveLength(20);
+    });
+
+    test("should only contain valid characters (0-9, a-f)", () => {
+      const result = random.id();
+      const validChars = /^[0-9a-f]+$/;
+      expect(validChars.test(result)).toBe(true);
+    });
+
+    test("should generate different values on consecutive calls", () => {
+      const result1 = random.id();
+      const result2 = random.id();
+      expect(result1).not.toBe(result2);
+    });
+
+    test("should generate sufficiently random strings", () => {
+      const results = new Set();
+      for (let i = 0; i < 100; i++) {
+        results.add(random.id());
+      }
+      expect(results.size).toBe(100);
+    });
+  });
+
   describe("stringInt", () => {
     describe("basic functionality", () => {
       test("should return string with default length of 10", () => {

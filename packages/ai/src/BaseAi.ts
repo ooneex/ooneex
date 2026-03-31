@@ -1,5 +1,5 @@
 import { jsonSchemaToTypeString } from "@ooneex/validation";
-import { chat, type ModelMessage } from "@tanstack/ai";
+import { type ContentPartSource, chat, type ModelMessage } from "@tanstack/ai";
 import { type } from "arktype";
 import { AiException } from "./AiException";
 import type {
@@ -378,7 +378,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       role: "user",
       content: [
         { type: "text", content: systemPrompt },
-        { type: "image", source: { type: source.type, value: source.value } },
+        { type: "image", source: source as ContentPartSource },
       ],
     };
 

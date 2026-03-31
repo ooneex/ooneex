@@ -81,7 +81,7 @@ export class GeminiAi extends BaseAi<GeminiConfigType> {
       speechOptions.modelOptions = modelOptions;
     }
 
-    return generateSpeech(speechOptions as Parameters<typeof generateSpeech>[0]);
+    return generateSpeech(speechOptions as Parameters<typeof generateSpeech>[0]) as Promise<TTSResult>;
   }
 
   public async generateImage(prompt: string, options?: GeminiGenerateImageOptionsType): Promise<ImageGenerationResult> {
@@ -119,6 +119,6 @@ export class GeminiAi extends BaseAi<GeminiConfigType> {
       imageOptions.modelOptions = modelOptions;
     }
 
-    return generateImage(imageOptions as Parameters<typeof generateImage>[0]);
+    return generateImage(imageOptions as Parameters<typeof generateImage>[0]) as Promise<ImageGenerationResult>;
   }
 }

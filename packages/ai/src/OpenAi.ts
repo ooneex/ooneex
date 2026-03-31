@@ -77,7 +77,7 @@ export class OpenAi extends BaseAi<OpenAiConfigType> {
       speechOptions.modelOptions = { instructions: instructionParts.join(" ") };
     }
 
-    return generateSpeech(speechOptions as Parameters<typeof generateSpeech>[0]);
+    return generateSpeech(speechOptions as Parameters<typeof generateSpeech>[0]) as Promise<TTSResult>;
   }
 
   public async speechToText(
@@ -104,7 +104,9 @@ export class OpenAi extends BaseAi<OpenAiConfigType> {
       transcriptionOptions.modelOptions = options.modelOptions;
     }
 
-    return generateTranscription(transcriptionOptions as Parameters<typeof generateTranscription>[0]);
+    return generateTranscription(
+      transcriptionOptions as Parameters<typeof generateTranscription>[0],
+    ) as Promise<TranscriptionResult>;
   }
 
   public async generateImage(prompt: string, options?: OpenAiGenerateImageOptionsType): Promise<ImageGenerationResult> {
@@ -142,6 +144,6 @@ export class OpenAi extends BaseAi<OpenAiConfigType> {
       imageOptions.modelOptions = modelOptions;
     }
 
-    return generateImage(imageOptions as Parameters<typeof generateImage>[0]);
+    return generateImage(imageOptions as Parameters<typeof generateImage>[0]) as Promise<ImageGenerationResult>;
   }
 }

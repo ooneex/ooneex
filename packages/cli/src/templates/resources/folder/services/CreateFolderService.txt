@@ -1,0 +1,33 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { FolderEntity } from "../entities/FolderEntity";
+import { FolderRepository } from "../repositories/FolderRepository";
+
+type ServiceDataType = {
+  name: string;
+  icon?: string;
+  color?: string;
+  tags?: string[];
+  categories?: string[];
+};
+
+@decorator.service()
+export class CreateFolderService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(FolderRepository) private readonly repository: FolderRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<FolderEntity | null> {
+    if (!data) return null;
+
+    const folder = new FolderEntity();
+    folder.name = data.name;
+    folder.icon = data.icon;
+    folder.color = data.color;
+    folder.tags = data.tags;
+    folder.categories = data.categories;
+
+    return await this.repository.create(folder);
+  }
+}

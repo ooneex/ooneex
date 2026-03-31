@@ -1,0 +1,49 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListFoldersService } from "../services/ListFoldersService";
+
+type ListFoldersRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      name: string;
+      icon?: string;
+      color?: string;
+      tags?: string[];
+      categories?: string[];
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/folders", {
+  name: "folder.list",
+  version: 1,
+  description: "List all folders",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListFoldersController {
+  constructor(
+    @inject(ListFoldersService) private readonly service: ListFoldersService,
+  ) {}
+
+  public async index(context: ContextType<ListFoldersRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

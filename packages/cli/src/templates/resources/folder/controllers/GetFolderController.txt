@@ -1,0 +1,41 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetFolderService } from "../services/GetFolderService";
+
+type GetFolderRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    name: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+  };
+};
+
+@Route.Get("/folders/:id", {
+  name: "folder.get",
+  version: 1,
+  description: "Get a folder by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetFolderController {
+  constructor(
+    @inject(GetFolderService) private readonly service: GetFolderService,
+  ) {}
+
+  public async index(context: ContextType<GetFolderRouteType>) {
+    const { id } = context.params;
+
+    const folder = await this.service.execute({ id });
+
+    return context.response.json(folder);
+  }
+}

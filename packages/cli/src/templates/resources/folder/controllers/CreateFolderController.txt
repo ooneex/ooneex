@@ -1,0 +1,59 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { CreateFolderService } from "../services/CreateFolderService";
+
+type CreateFolderRouteType = {
+  payload: {
+    name: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+  };
+  response: {
+    id: string;
+    name: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+  };
+};
+
+@Route.Post("/folders", {
+  name: "folder.create",
+  version: 1,
+  description: "Create a new folder",
+  payload: Assert({
+    name: "string",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateFolderController {
+  constructor(
+    @inject(CreateFolderService) private readonly service: CreateFolderService,
+  ) {}
+
+  public async index(context: ContextType<CreateFolderRouteType>) {
+    const { name, icon, color, tags, categories } = context.payload;
+
+    const folder = await this.service.execute({ name, icon, color, tags, categories });
+
+    return context.response.json(folder);
+  }
+}

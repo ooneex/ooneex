@@ -1,0 +1,38 @@
+import type { IFolder } from "@ooneex/folder";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({
+  name: "folders",
+})
+export class FolderEntity implements IFolder {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.id();
+
+  @Column({ name: "name", type: "varchar", length: 255 })
+  name: string;
+
+  @Column({ name: "icon", type: "varchar", length: 255, nullable: true })
+  icon?: string | null;
+
+  @Column({ name: "color", type: "varchar", length: 50, nullable: true })
+  color?: string | null;
+
+  @Column({ name: "tags", type: "text", array: true, nullable: true })
+  tags?: string[] | null;
+
+  @Column({ name: "categories", type: "text", array: true, nullable: true })
+  categories?: string[] | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date | null;
+}

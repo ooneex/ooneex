@@ -153,7 +153,7 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     // Install @ooneex/controller dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/controller"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

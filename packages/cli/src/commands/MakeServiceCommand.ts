@@ -63,7 +63,7 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
     // Install @ooneex/service dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/service"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

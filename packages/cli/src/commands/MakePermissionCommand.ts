@@ -63,7 +63,7 @@ export class MakePermissionCommand<T extends CommandOptionsType = CommandOptions
     // Install @ooneex/permission dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/permission"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

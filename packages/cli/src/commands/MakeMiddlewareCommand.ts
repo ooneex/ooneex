@@ -98,7 +98,7 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
     // Install @ooneex/middleware dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/middleware"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

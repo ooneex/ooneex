@@ -65,7 +65,7 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
     // Install @ooneex/rag dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/rag"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

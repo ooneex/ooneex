@@ -84,7 +84,7 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
     // Install @ooneex/mailer dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/mailer"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

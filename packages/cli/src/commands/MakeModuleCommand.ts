@@ -144,7 +144,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     // Install @ooneex/module dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/module"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

@@ -90,7 +90,7 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
     // Install @ooneex/cron dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/cron"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

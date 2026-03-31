@@ -95,7 +95,7 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
     // Install @ooneex/pub-sub dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/pub-sub"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

@@ -63,7 +63,7 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
     // Install @ooneex/storage dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/storage"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

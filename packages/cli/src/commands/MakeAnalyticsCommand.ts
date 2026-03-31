@@ -63,7 +63,7 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
     // Install @ooneex/analytics dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/analytics"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

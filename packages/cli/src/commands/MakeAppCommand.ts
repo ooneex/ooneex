@@ -109,7 +109,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     });
 
     // Initialize git repository
-    const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
+    const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "ignore", stderr: "inherit" });
     await gitInit.exited;
 
     // Install dependencies
@@ -143,7 +143,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
         "reflect-metadata",
         "typeorm",
       ],
-      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+      { cwd: destination, stdout: "ignore", stderr: "inherit" },
     );
     await addDeps.exited;
 
@@ -172,12 +172,12 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
         "typescript",
         "undici-types",
       ],
-      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+      { cwd: destination, stdout: "ignore", stderr: "inherit" },
     );
     await addDevDeps.exited;
 
     // Configure husky
-    const huskyInit = Bun.spawn(["bunx", "husky", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
+    const huskyInit = Bun.spawn(["bunx", "husky", "init"], { cwd: destination, stdout: "ignore", stderr: "inherit" });
     await huskyInit.exited;
 
     await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");

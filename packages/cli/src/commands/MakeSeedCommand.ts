@@ -65,7 +65,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     // Install @ooneex/seeds dev dependency
     const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

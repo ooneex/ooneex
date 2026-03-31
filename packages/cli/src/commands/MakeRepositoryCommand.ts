@@ -65,7 +65,7 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
     // Install @ooneex/repository dependency
     const install = Bun.spawn(["bun", "add", "@ooneex/repository"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

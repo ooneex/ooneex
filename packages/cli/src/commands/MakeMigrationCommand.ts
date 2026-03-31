@@ -58,7 +58,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
     // Install @ooneex/migrations dev dependency
     const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
       cwd: process.cwd(),
-      stdout: "inherit",
+      stdout: "ignore",
       stderr: "inherit",
     });
     await install.exited;

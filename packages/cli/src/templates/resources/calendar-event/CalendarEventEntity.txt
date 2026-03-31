@@ -1,0 +1,57 @@
+import type { ICalendarEvent } from "@ooneex/calendar-event";
+import type { LocaleType } from "@ooneex/translation";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({
+  name: "calendar_events",
+})
+export class CalendarEventEntity implements ICalendarEvent {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.id();
+
+  @Column({ name: "title", type: "varchar", length: 255 })
+  title: string;
+
+  @Column({ name: "start_date", type: "timestamptz" })
+  startDate: Date;
+
+  @Column({ name: "end_date", type: "timestamptz" })
+  endDate: Date;
+
+  @Column({ name: "icon", type: "varchar", length: 100, nullable: true })
+  icon?: string | null;
+
+  @Column({ name: "description", type: "text", nullable: true })
+  description?: string | null;
+
+  @Column({ name: "type", type: "varchar", length: 100 })
+  type: string;
+
+  @Column({ name: "color", type: "varchar", length: 50, nullable: true })
+  color?: string | null;
+
+  @Column({ name: "priority", type: "varchar", length: 50, nullable: true })
+  priority?: string | null;
+
+  @Column({ name: "organizer", type: "jsonb", nullable: true })
+  organizer?: { id: string; name: string; email?: string } | null;
+
+  @Column({ name: "tags", type: "jsonb", nullable: true })
+  tags?: string[] | null;
+
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date | null;
+}

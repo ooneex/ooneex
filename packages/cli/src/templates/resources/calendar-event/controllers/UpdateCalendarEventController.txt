@@ -1,0 +1,89 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { UpdateCalendarEventService } from "../services/UpdateCalendarEventService";
+
+type UpdateCalendarEventRouteType = {
+  params: { id: string };
+  payload: {
+    title?: string;
+    startDate?: Date;
+    endDate?: Date;
+    type?: string;
+    icon?: string;
+    description?: string;
+    color?: string;
+    priority?: string;
+    organizer?: { id: string; name: string; email?: string };
+    tags?: string[];
+    lang?: LocaleType;
+  };
+  response: {
+    id: string;
+    title: string;
+    startDate: Date;
+    endDate: Date;
+    type: string;
+    icon?: string;
+    description?: string;
+    color?: string;
+    priority?: string;
+    organizer?: { id: string; name: string; email?: string };
+    tags?: string[];
+    lang: LocaleType;
+  };
+};
+
+@Route.Patch("/calendar-events/:id", {
+  name: "calendar-event.update",
+  version: 1,
+  description: "Update a calendar event",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    title: "string?",
+    startDate: "date?",
+    endDate: "date?",
+    type: "string?",
+    icon: "string?",
+    description: "string?",
+    color: "string?",
+    priority: "string?",
+    organizer: "object?",
+    tags: "array?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    startDate: "date",
+    endDate: "date",
+    type: "string",
+    icon: "string?",
+    description: "string?",
+    color: "string?",
+    priority: "string?",
+    organizer: "object?",
+    tags: "array?",
+    lang: "string",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateCalendarEventController {
+  constructor(
+    @inject(UpdateCalendarEventService) private readonly service: UpdateCalendarEventService,
+  ) {}
+
+  public async index(context: ContextType<UpdateCalendarEventRouteType>) {
+    const { id } = context.params;
+    const { title, startDate, endDate, type, icon, description, color, priority, organizer, tags, lang } = context.payload;
+
+    const calendarEvent = await this.service.execute({ id, title, startDate, endDate, type, icon, description, color, priority, organizer, tags, lang });
+
+    return context.response.json(calendarEvent);
+  }
+}

@@ -1,0 +1,56 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListCalendarEventsService } from "../services/ListCalendarEventsService";
+
+type ListCalendarEventsRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      title: string;
+      startDate: Date;
+      endDate: Date;
+      type: string;
+      icon?: string;
+      description?: string;
+      color?: string;
+      priority?: string;
+      organizer?: { id: string; name: string; email?: string };
+      tags?: string[];
+      lang: LocaleType;
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/calendar-events", {
+  name: "calendar-event.list",
+  version: 1,
+  description: "List all calendar events",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListCalendarEventsController {
+  constructor(
+    @inject(ListCalendarEventsService) private readonly service: ListCalendarEventsService,
+  ) {}
+
+  public async index(context: ContextType<ListCalendarEventsRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

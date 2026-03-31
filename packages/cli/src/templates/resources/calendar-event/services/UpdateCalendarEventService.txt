@@ -1,0 +1,38 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { CalendarEventEntity } from "../entities/CalendarEventEntity";
+import { CalendarEventRepository } from "../repositories/CalendarEventRepository";
+
+type ServiceDataType = {
+  id: string;
+  title?: string;
+  startDate?: Date;
+  endDate?: Date;
+  type?: string;
+  icon?: string;
+  description?: string;
+  color?: string;
+  priority?: string;
+  organizer?: { id: string; name: string; email?: string };
+  tags?: string[];
+  lang?: LocaleType;
+};
+
+@decorator.service()
+export class UpdateCalendarEventService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(CalendarEventRepository) private readonly repository: CalendarEventRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<CalendarEventEntity | null> {
+    if (!data) return null;
+
+    const { id, ...fields } = data;
+
+    await this.repository.update({ id, ...fields });
+
+    return await this.repository.findOne(id);
+  }
+}

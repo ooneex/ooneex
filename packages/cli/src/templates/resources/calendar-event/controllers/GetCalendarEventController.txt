@@ -1,0 +1,48 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetCalendarEventService } from "../services/GetCalendarEventService";
+
+type GetCalendarEventRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    title: string;
+    startDate: Date;
+    endDate: Date;
+    type: string;
+    icon?: string;
+    description?: string;
+    color?: string;
+    priority?: string;
+    organizer?: { id: string; name: string; email?: string };
+    tags?: string[];
+    lang: LocaleType;
+  };
+};
+
+@Route.Get("/calendar-events/:id", {
+  name: "calendar-event.get",
+  version: 1,
+  description: "Get a calendar event by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetCalendarEventController {
+  constructor(
+    @inject(GetCalendarEventService) private readonly service: GetCalendarEventService,
+  ) {}
+
+  public async index(context: ContextType<GetCalendarEventRouteType>) {
+    const { id } = context.params;
+
+    const calendarEvent = await this.service.execute({ id });
+
+    return context.response.json(calendarEvent);
+  }
+}

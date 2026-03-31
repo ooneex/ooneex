@@ -1,0 +1,22 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { CalendarEventEntity } from "../entities/CalendarEventEntity";
+import { CalendarEventRepository } from "../repositories/CalendarEventRepository";
+
+type ServiceDataType = {
+  id: string;
+};
+
+@decorator.service()
+export class GetCalendarEventService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(CalendarEventRepository) private readonly repository: CalendarEventRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<CalendarEventEntity | null> {
+    if (!data) return null;
+
+    return await this.repository.findOne(data.id);
+  }
+}

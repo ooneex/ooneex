@@ -1,0 +1,31 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { TopicEntity } from "../entities/TopicEntity";
+import { TopicRepository } from "../repositories/TopicRepository";
+
+type ServiceDataType = {
+  id: string;
+  name?: string;
+  lang?: LocaleType;
+  color?: string;
+  description?: string;
+};
+
+@decorator.service()
+export class UpdateTopicService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(TopicRepository) private readonly repository: TopicRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<TopicEntity | null> {
+    if (!data) return null;
+
+    const { id, ...fields } = data;
+
+    await this.repository.update({ id, ...fields });
+
+    return await this.repository.findOne(id);
+  }
+}

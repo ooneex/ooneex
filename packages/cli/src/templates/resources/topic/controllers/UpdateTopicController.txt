@@ -1,0 +1,50 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { UpdateTopicService } from "../services/UpdateTopicService";
+
+type UpdateTopicRouteType = {
+  params: { id: string };
+  payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Patch("/topics/:id", {
+  name: "topic.update",
+  version: 1,
+  description: "Update a topic",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    name: "string?",
+    lang: "string?",
+    color: "string?",
+    description: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    lang: "string",
+    color: "string?",
+    description: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateTopicController {
+  constructor(
+    @inject(UpdateTopicService) private readonly service: UpdateTopicService,
+  ) {}
+
+  public async index(context: ContextType<UpdateTopicRouteType>) {
+    const { id } = context.params;
+    const { name, lang, color, description } = context.payload;
+
+    const topic = await this.service.execute({ id, name, lang, color, description });
+
+    return context.response.json(topic);
+  }
+}

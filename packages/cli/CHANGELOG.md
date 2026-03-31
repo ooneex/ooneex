@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.2) - 2026-03-31
+
+### Changed
+
+- Install dev dependencies before runtime dependencies — Franck ([9a6c6160](https://github.com/ooneex/ooneex/commit/9a6c6160))
+
 ## [1.8.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.1) - 2026-03-31
 
 ### Changed

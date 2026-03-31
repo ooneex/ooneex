@@ -117,5 +117,4 @@ describe("MakePermissionCommand", () => {
       expect(content).toContain("Editor");
     });
   });
-
 });

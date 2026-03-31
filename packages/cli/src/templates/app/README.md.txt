@@ -60,7 +60,6 @@ Each module under `modules/` follows a consistent structure and registers its co
 @decorator.module({
   controllers: [],   // HTTP / WebSocket route handlers
   entities: [],      // TypeORM database entities
-  permissions: [],   // Role-based access control
   middlewares: [],   // HTTP middleware pipeline
   cronJobs: [],      // Scheduled tasks
   events: [],        // Pub/Sub event handlers

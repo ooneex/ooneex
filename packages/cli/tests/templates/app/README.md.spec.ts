@@ -63,7 +63,6 @@ describe("README.md.txt", () => {
     expect(content).toContain("@decorator.module");
     expect(content).toContain("controllers");
     expect(content).toContain("entities");
-    expect(content).toContain("permissions");
     expect(content).toContain("middlewares");
     expect(content).toContain("cronJobs");
     expect(content).toContain("events");

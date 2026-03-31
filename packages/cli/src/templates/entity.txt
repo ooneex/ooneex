@@ -1,11 +1,11 @@
 import type { LocaleType } from "@ooneex/translation";
 import { random } from "@ooneex/utils";
-import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({
   name: "{{TABLE_NAME}}",
 })
-export class {{NAME}}Entity extends BaseEntity {
+export class {{NAME}}Entity {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
   id: string = random.nanoid(25);
 

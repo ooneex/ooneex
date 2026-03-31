@@ -22,11 +22,6 @@ describe("entity.txt", () => {
     expect(content).toContain('@Entity({\n  name: "{{TABLE_NAME}}",\n})');
   });
 
-  test("should extend BaseEntity", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("extends BaseEntity");
-  });
-
   test("should have id primary column with nanoid", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("@PrimaryColumn");
@@ -72,7 +67,7 @@ describe("entity.txt", () => {
     expect(content).toContain('import type { LocaleType } from "@ooneex/translation"');
     expect(content).toContain('import { random } from "@ooneex/utils"');
     expect(content).toContain(
-      'import { Column, CreateDateColumn, DeleteDateColumn, PrimaryColumn, UpdateDateColumn } from "typeorm"',
+      'import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm"',
     );
   });
 });

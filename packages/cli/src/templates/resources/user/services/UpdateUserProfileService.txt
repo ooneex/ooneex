@@ -1,0 +1,29 @@
+import { ClerkAuth } from "@ooneex/auth";
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+
+type ServiceDataType = {
+  userId: string;
+  lastName?: string;
+  firstName?: string;
+  avatar?: string;
+  phone?: string;
+};
+
+@decorator.service()
+export class UpdateUserProfileService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(@inject(ClerkAuth) private readonly auth: ClerkAuth) {}
+
+  public async execute(data?: T): Promise<void> {
+    if (!data) return;
+
+    const { userId, lastName, firstName, phone } = data;
+
+    await this.auth.updateUser(userId, {
+      lastName,
+      firstName,
+      primaryPhoneNumberID: phone,
+    });
+  }
+}

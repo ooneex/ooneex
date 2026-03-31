@@ -1,0 +1,39 @@
+import { decorator, type IMigration, type MigrationClassType } from '@ooneex/migrations';
+import type { TransactionSQL } from 'bun';
+
+@decorator.migration()
+export class {{ name }} implements IMigration {
+  public async up(tx: TransactionSQL): Promise<void> {
+    await tx`
+      CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(25) PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        roles TEXT NOT NULL DEFAULT 'user',
+        external_id VARCHAR(255),
+        last_name VARCHAR(255),
+        first_name VARCHAR(255),
+        username VARCHAR(255),
+        avatar TEXT,
+        phone VARCHAR(50),
+        last_active_at TIMESTAMPTZ,
+        last_login_at TIMESTAMPTZ,
+        is_banned BOOLEAN DEFAULT false,
+        is_locked BOOLEAN DEFAULT false,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `;
+  }
+
+  public async down(tx: TransactionSQL): Promise<void> {
+    await tx`DROP TABLE IF EXISTS users`;
+  }
+
+  public getVersion(): string {
+    return '{{ version }}';
+  }
+
+  public getDependencies(): MigrationClassType[] {
+    return [];
+  }
+}

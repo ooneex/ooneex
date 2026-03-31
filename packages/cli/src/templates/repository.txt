@@ -3,7 +3,6 @@ import type { ITypeormDatabase } from "@ooneex/database";
 import { decorator } from "@ooneex/repository";
 import type { FilterResultType } from "@ooneex/types";
 import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
-import { ILike } from "typeorm";
 import { {{NAME}}Entity } from "../entities/{{NAME}}Entity";
 
 @decorator.repository()
@@ -35,14 +34,13 @@ export class {{NAME}}Repository {
       skip = (page - 1) * take;
     }
 
-    // Apply name search if q parameter is provided
     let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
     if (q) {
       findOptions = {
         ...findOptions,
         where: {
           ...rest.where,
-          name: ILike(`%${q}%`),
+          // name: ILike(`%${q}%`),
         },
       };
     }
@@ -54,7 +52,7 @@ export class {{NAME}}Repository {
     if (q) {
       countWhere = {
         ...rest.where,
-        name: ILike(`%${q}%`),
+        // name: ILike(`%${q}%`),
       };
     }
 
@@ -98,12 +96,16 @@ export class {{NAME}}Repository {
     return await repository.save(entities, options);
   }
 
-  public async update(entity: {{NAME}}Entity, options?: SaveOptions): Promise<{{NAME}}Entity> {
-    return await this.create(entity, options);
+  public async update(entity: Partial<{{NAME}}Entity> & { id: string }): Promise<UpdateResult> {
+    const repository = await this.open();
+
+    return await repository.update(entity.id, entity);
   }
 
-  public async updateMany(entities: {{NAME}}Entity[], options?: SaveOptions): Promise<{{NAME}}Entity[]> {
-    return await this.createMany(entities, options);
+  public async updateMany(entities: (Partial<{{NAME}}Entity> & { id: string })[]): Promise<UpdateResult[]> {
+    const repository = await this.open();
+
+    return await Promise.all(entities.map((entity) => repository.update(entity.id, entity)));
   }
 
   public async delete(

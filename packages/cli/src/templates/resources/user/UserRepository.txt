@@ -1,0 +1,160 @@
+import { inject } from "@ooneex/container";
+import type { ITypeormDatabase } from "@ooneex/database";
+import { decorator } from "@ooneex/repository";
+import type { ERole } from "@ooneex/role";
+import type { FilterResultType } from "@ooneex/types";
+import type { FindManyOptions, FindOptionsWhere, Repository, SaveOptions, UpdateResult } from "typeorm";
+import { ILike } from "typeorm";
+import { UserEntity } from "../entities/UserEntity";
+
+@decorator.repository()
+export class UserRepository {
+  constructor(
+    @inject("database")
+    private readonly database: ITypeormDatabase,
+  ) {}
+
+  public async open(): Promise<Repository<UserEntity>> {
+    return await this.database.open(UserEntity);
+  }
+
+  public async close(): Promise<void> {
+    await this.database.close();
+  }
+
+  public async find(
+    criteria: FindManyOptions<UserEntity> & { page?: number; limit?: number; q?: string },
+  ): Promise<FilterResultType<UserEntity>> {
+    const repository = await this.open();
+
+    const { page = 1, limit = 100, q, ...rest } = criteria;
+
+    let skip: number | undefined;
+    const take = limit === 0 ? 100 : limit;
+
+    if (page && page > 0 && limit && limit > 0) {
+      skip = (page - 1) * take;
+    }
+
+    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
+    if (q) {
+      findOptions = {
+        ...findOptions,
+        where: {
+          ...rest.where,
+          name: ILike(`%${q}%`),
+        },
+      };
+    }
+
+    const result = await repository.find(findOptions);
+
+    let countWhere = rest.where;
+    if (q) {
+      countWhere = {
+        ...rest.where,
+        name: ILike(`%${q}%`),
+      };
+    }
+
+    const total = await this.count(countWhere);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      resources: result,
+      total,
+      totalPages,
+      page,
+      limit,
+    };
+  }
+
+  public async findOne(id: string): Promise<UserEntity | null> {
+    const repository = await this.open();
+
+    return await repository.findOne({
+      where: { id },
+    });
+  }
+
+  public async findOneBy(criteria: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
+    const repository = await this.open();
+
+    return await repository.findOne({
+      where: criteria,
+    });
+  }
+
+  public async create(entity: UserEntity, options?: SaveOptions): Promise<UserEntity> {
+    const repository = await this.open();
+
+    return await repository.save(entity, options);
+  }
+
+  public async createMany(entities: UserEntity[], options?: SaveOptions): Promise<UserEntity[]> {
+    const repository = await this.open();
+
+    return await repository.save(entities, options);
+  }
+
+  public async update(entity: Partial<UserEntity> & { id: string }): Promise<UpdateResult> {
+    const repository = await this.open();
+
+    return await repository.update(entity.id, entity);
+  }
+
+  public async updateMany(entities: (Partial<UserEntity> & { id: string })[]): Promise<UpdateResult[]> {
+    const repository = await this.open();
+
+    return await Promise.all(entities.map((entity) => repository.update(entity.id, entity)));
+  }
+
+  public async delete(
+    criteria: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
+  ): Promise<UpdateResult> {
+    const repository = await this.open();
+
+    return await repository.softDelete(criteria);
+  }
+
+  public async count(criteria?: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[]): Promise<number> {
+    const repository = await this.open();
+
+    return await repository.count(criteria ? { where: criteria } : {});
+  }
+
+  public async ban(userId: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, isBanned: true });
+  }
+
+  public async unban(userId: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, isBanned: false });
+  }
+
+  public async lock(userId: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, isLocked: true });
+  }
+
+  public async unlock(userId: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, isLocked: false });
+  }
+
+  public async updateProfile(
+    userId: string,
+    profile: { lastName?: string; firstName?: string; avatar?: string; phone?: string },
+  ): Promise<UpdateResult> {
+    return await this.update({ id: userId, ...profile });
+  }
+
+  public async updateRoles(userId: string, roles: ERole[]): Promise<UpdateResult> {
+    return await this.update({ id: userId, roles });
+  }
+
+  public async updateUsername(userId: string, username: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, username });
+  }
+
+  public async updateExternalId(userId: string, externalId: string): Promise<UpdateResult> {
+    return await this.update({ id: userId, externalId });
+  }
+}

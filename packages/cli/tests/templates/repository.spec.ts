@@ -31,6 +31,12 @@ describe("repository.txt", () => {
     expect(content).toContain("count");
   });
 
+  test("should use partial entity with id for update methods", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("Partial<{{NAME}}Entity> & { id: string }");
+    expect(content).toContain("repository.update(entity.id, entity)");
+  });
+
   test("should inject database", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain('@inject("database")');

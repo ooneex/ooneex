@@ -114,6 +114,35 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
     await gitInit.exited;
 
+    // Install dev dependencies
+    const addDevDeps = Bun.spawn(
+      [
+        "bun",
+        "add",
+        "-D",
+        "@biomejs/biome",
+        "@commitlint/cli",
+        "@commitlint/config-conventional",
+        "@commitlint/prompt-cli",
+        "@commitlint/types",
+        "@nx/js",
+        "@nx/workspace",
+        "@swc-node/register",
+        "@swc/core",
+        "@swc/helpers",
+        "@types/bun",
+        "@types/node",
+        "@typescript/native-preview",
+        "husky",
+        "lint-staged",
+        "nx",
+        "typescript",
+        "undici-types",
+      ],
+      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+    );
+    await addDevDeps.exited;
+
     // Install dependencies
     const addDeps = Bun.spawn(
       [
@@ -148,35 +177,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       { cwd: destination, stdout: "inherit", stderr: "inherit" },
     );
     await addDeps.exited;
-
-    // Install dev dependencies
-    const addDevDeps = Bun.spawn(
-      [
-        "bun",
-        "add",
-        "-D",
-        "@biomejs/biome",
-        "@commitlint/cli",
-        "@commitlint/config-conventional",
-        "@commitlint/prompt-cli",
-        "@commitlint/types",
-        "@nx/js",
-        "@nx/workspace",
-        "@swc-node/register",
-        "@swc/core",
-        "@swc/helpers",
-        "@types/bun",
-        "@types/node",
-        "@typescript/native-preview",
-        "husky",
-        "lint-staged",
-        "nx",
-        "typescript",
-        "undici-types",
-      ],
-      { cwd: destination, stdout: "inherit", stderr: "inherit" },
-    );
-    await addDevDeps.exited;
 
     const logger = new TerminalLogger();
 

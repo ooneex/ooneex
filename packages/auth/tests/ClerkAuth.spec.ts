@@ -12,7 +12,7 @@ const mockCreateClerkClient = mock(() => ({
   users: {
     banUser: mock(() => Promise.resolve({ id: "user_1" })),
     unbanUser: mock(() => Promise.resolve({ id: "user_1" })),
-    getUser: mock(() => Promise.resolve({ id: "user_1", publicMetadata: {}, privateMetadata: {}, unsafeMetadata: {} })),
+    getUser: mock(() => Promise.resolve({ id: "user_1", banned: false, locked: false, publicMetadata: {}, privateMetadata: {}, unsafeMetadata: {} })),
     lockUser: mock(() => Promise.resolve({ id: "user_1" })),
     unlockUser: mock(() => Promise.resolve({ id: "user_1" })),
     updateUser: mock(() => Promise.resolve({ id: "user_1" })),
@@ -149,6 +149,11 @@ describe("ClerkAuth", () => {
       expect(result).toBeDefined();
     });
 
+    test("should check if user is banned", async () => {
+      const result = await auth.isBanned("user_1");
+      expect(result).toBe(false);
+    });
+
     test("should unban user", async () => {
       const result = await auth.unbanUser("user_1");
       expect(result).toBeDefined();
@@ -162,6 +167,11 @@ describe("ClerkAuth", () => {
     test("should lock user", async () => {
       const result = await auth.lockUser("user_1");
       expect(result).toBeDefined();
+    });
+
+    test("should check if user is locked", async () => {
+      const result = await auth.isLocked("user_1");
+      expect(result).toBe(false);
     });
 
     test("should unlock user", async () => {
@@ -231,9 +241,11 @@ describe("ClerkAuth", () => {
       expect(typeof auth.getCurrentUser).toBe("function");
       expect(typeof auth.getCurrentUserSession).toBe("function");
       expect(typeof auth.banUser).toBe("function");
+      expect(typeof auth.isBanned).toBe("function");
       expect(typeof auth.unbanUser).toBe("function");
       expect(typeof auth.getUser).toBe("function");
       expect(typeof auth.lockUser).toBe("function");
+      expect(typeof auth.isLocked).toBe("function");
       expect(typeof auth.unlockUser).toBe("function");
       expect(typeof auth.updateUser).toBe("function");
       expect(typeof auth.updateUserProfileImage).toBe("function");

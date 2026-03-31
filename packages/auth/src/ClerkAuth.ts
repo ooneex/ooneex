@@ -43,6 +43,11 @@ export class ClerkAuth {
     return await this.client.users.banUser(userId);
   }
 
+  public async isBanned(userId: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    return user.banned;
+  }
+
   public async unbanUser(userId: string): Promise<User> {
     return await this.client.users.unbanUser(userId);
   }
@@ -53,6 +58,11 @@ export class ClerkAuth {
 
   public async lockUser(userId: string): Promise<User> {
     return await this.client.users.lockUser(userId);
+  }
+
+  public async isLocked(userId: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    return user.locked;
   }
 
   public async unlockUser(userId: string): Promise<User> {

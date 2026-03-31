@@ -18,6 +18,8 @@ const createMockClerkUser = (overrides: Record<string, unknown> = {}) => ({
   imageUrl: "https://example.com/avatar.jpg",
   lastActiveAt: 1700000000000,
   lastSignInAt: 1699999000000,
+  banned: false,
+  locked: false,
   createdAt: 1690000000000,
   updatedAt: 1700000000000,
   privateMetadata: {
@@ -240,6 +242,52 @@ describe("ClerkAuthMiddleware", () => {
       await middleware.handler(context as never);
 
       expect((context.user as Record<string, unknown>).phone).toBeUndefined();
+    });
+
+    test("should map isBanned when user is banned", async () => {
+      mockClerkAuth.getCurrentUser.mockImplementation(() =>
+        Promise.resolve(
+          createMockClerkUser({
+            banned: true,
+          }),
+        ),
+      );
+      const context = createMockContext();
+
+      await middleware.handler(context as never);
+
+      expect((context.user as Record<string, unknown>).isBanned).toBe(true);
+    });
+
+    test("should not set isBanned when user is not banned", async () => {
+      const context = createMockContext();
+
+      await middleware.handler(context as never);
+
+      expect((context.user as Record<string, unknown>).isBanned).toBeUndefined();
+    });
+
+    test("should map isLocked when user is locked", async () => {
+      mockClerkAuth.getCurrentUser.mockImplementation(() =>
+        Promise.resolve(
+          createMockClerkUser({
+            locked: true,
+          }),
+        ),
+      );
+      const context = createMockContext();
+
+      await middleware.handler(context as never);
+
+      expect((context.user as Record<string, unknown>).isLocked).toBe(true);
+    });
+
+    test("should not set isLocked when user is not locked", async () => {
+      const context = createMockContext();
+
+      await middleware.handler(context as never);
+
+      expect((context.user as Record<string, unknown>).isLocked).toBeUndefined();
     });
 
     test("should map date fields correctly", async () => {

@@ -50,6 +50,8 @@ export class ClerkAuthMiddleware implements IMiddleware {
     if (clerkUser.lastActiveAt) user.lastActiveAt = new Date(clerkUser.lastActiveAt);
     if (clerkUser.lastSignInAt) user.lastLoginAt = new Date(clerkUser.lastSignInAt);
     if (clerkUser.imageUrl) user.avatar = clerkUser.imageUrl;
+    if (clerkUser.banned) user.isBanned = clerkUser.banned;
+    if (clerkUser.locked) user.isLocked = clerkUser.locked;
     if (clerkUser.createdAt) user.createdAt = new Date(clerkUser.createdAt);
     if (clerkUser.updatedAt) user.updatedAt = new Date(clerkUser.updatedAt);
 

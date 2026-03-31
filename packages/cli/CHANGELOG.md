@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.1) - 2026-03-31
+
+### Changed
+
+- Replace permissions with middlewares in module test template — Franck ([d143cf84](https://github.com/ooneex/ooneex/commit/d143cf84))
+- Remove permissions from module template and update imports — Franck ([74618a2b](https://github.com/ooneex/ooneex/commit/74618a2b))
+
 ## [1.8.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.0) - 2026-03-30
 
 ### Added

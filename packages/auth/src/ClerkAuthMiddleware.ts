@@ -45,7 +45,6 @@ export class ClerkAuthMiddleware implements IMiddleware {
 
     if (clerkUser.firstName) user.firstName = clerkUser.firstName;
     if (clerkUser.lastName) user.lastName = clerkUser.lastName;
-    if (clerkUser.username) user.username = clerkUser.username;
     if (clerkUser.phoneNumbers[0]?.phoneNumber) user.phone = clerkUser.phoneNumbers[0].phoneNumber;
     if (clerkUser.lastActiveAt) user.lastActiveAt = new Date(clerkUser.lastActiveAt);
     if (clerkUser.lastSignInAt) user.lastLoginAt = new Date(clerkUser.lastSignInAt);

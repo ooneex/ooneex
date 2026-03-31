@@ -11,7 +11,6 @@ const createMockClerkUser = (overrides: Record<string, unknown> = {}) => ({
   id: "clerk_user_123",
   firstName: "John",
   lastName: "Doe",
-  username: "johndoe",
   primaryEmailAddressId: "email_1",
   emailAddresses: [{ id: "email_1", emailAddress: "john@example.com" }],
   phoneNumbers: [{ phoneNumber: "+1234567890" }],
@@ -195,7 +194,6 @@ describe("ClerkAuthMiddleware", () => {
       const user = context.user as Record<string, unknown>;
       expect(user.firstName).toBe("John");
       expect(user.lastName).toBe("Doe");
-      expect(user.username).toBe("johndoe");
       expect(user.avatar).toBe("https://example.com/avatar.jpg");
     });
 
@@ -205,7 +203,6 @@ describe("ClerkAuthMiddleware", () => {
           createMockClerkUser({
             firstName: null,
             lastName: null,
-            username: null,
             imageUrl: null,
           }),
         ),
@@ -217,7 +214,6 @@ describe("ClerkAuthMiddleware", () => {
       const user = context.user as Record<string, unknown>;
       expect(user.firstName).toBeUndefined();
       expect(user.lastName).toBeUndefined();
-      expect(user.username).toBeUndefined();
       expect(user.avatar).toBeUndefined();
     });
 

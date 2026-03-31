@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.4) - 2026-03-31
+
+### Fixed
+
+- Fix return type assertions for @tanstack/ai functions — Franck ([12f8579a](https://github.com/ooneex/ooneex/commit/12f8579a))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.3) - 2026-03-30
 
 ### Changed

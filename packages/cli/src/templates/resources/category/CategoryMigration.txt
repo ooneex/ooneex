@@ -15,6 +15,10 @@ export class {{ name }} implements IMigration {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_categories_name ON categories (name)
+    `;
   }
 
   public async down(tx: TransactionSQL): Promise<void> {

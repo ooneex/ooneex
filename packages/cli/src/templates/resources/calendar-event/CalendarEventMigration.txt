@@ -22,6 +22,10 @@ export class {{ name }} implements IMigration {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_calendar_events_title ON calendar_events (title)
+    `;
   }
 
   public async down(tx: TransactionSQL): Promise<void> {

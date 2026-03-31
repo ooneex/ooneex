@@ -31,6 +31,9 @@ interface IBase {
   id: string;
   isLocked?: boolean;
   lockedAt?: Date;
+  isBanned?: boolean;
+  bannedAt?: Date;
+  banReason?: string;
   isBlocked?: boolean;
   blockedAt?: Date;
   blockReason?: string;

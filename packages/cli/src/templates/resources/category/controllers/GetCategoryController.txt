@@ -1,0 +1,35 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetCategoryService } from "../services/GetCategoryService";
+
+type GetCategoryRouteType = {
+  params: { id: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Get("/categories/:id", {
+  name: "category.get",
+  version: 1,
+  description: "Get a category by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetCategoryController {
+  constructor(
+    @inject(GetCategoryService) private readonly service: GetCategoryService,
+  ) {}
+
+  public async index(context: ContextType<GetCategoryRouteType>) {
+    const { id } = context.params;
+
+    const category = await this.service.execute({ id });
+
+    return context.response.json(category);
+  }
+}

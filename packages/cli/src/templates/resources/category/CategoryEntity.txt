@@ -1,4 +1,4 @@
-import type { ITopic } from "@ooneex/topic";
+import type { ICategory } from "@ooneex/category";
 import type { LocaleType } from "@ooneex/translation";
 import { random } from "@ooneex/utils";
 import {
@@ -10,9 +10,9 @@ import {
 } from "typeorm";
 
 @Entity({
-  name: "topics",
+  name: "categories",
 })
-export class TopicEntity implements ITopic {
+export class CategoryEntity implements ICategory {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
   id: string = random.id();
 

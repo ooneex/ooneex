@@ -6,8 +6,8 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryColumn, Upda
   name: "{{TABLE_NAME}}",
 })
 export class {{NAME}}Entity {
-  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
-  id: string = random.nanoid(25);
+  @PrimaryColumn({ name: "id", type: "varchar", length: 20 })
+  id: string = random.id();
 
   @Column({
     name: "is_locked",

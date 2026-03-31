@@ -22,10 +22,10 @@ describe("entity.txt", () => {
     expect(content).toContain('@Entity({\n  name: "{{TABLE_NAME}}",\n})');
   });
 
-  test("should have id primary column with nanoid", async () => {
+  test("should have id primary column with random.id()", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("@PrimaryColumn");
-    expect(content).toContain("random.nanoid(25)");
+    expect(content).toContain("random.id()");
   });
 
   test("should have lock fields", async () => {

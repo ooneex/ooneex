@@ -1,0 +1,32 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { CategoryEntity } from "../entities/CategoryEntity";
+import { CategoryRepository } from "../repositories/CategoryRepository";
+
+type ServiceDataType = {
+  name: string;
+  lang?: LocaleType;
+  color?: string;
+  description?: string;
+};
+
+@decorator.service()
+export class CreateCategoryService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(CategoryRepository) private readonly repository: CategoryRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<CategoryEntity | null> {
+    if (!data) return null;
+
+    const category = new CategoryEntity();
+    category.name = data.name;
+    category.lang = data.lang;
+    category.color = data.color;
+    category.description = data.description;
+
+    return await this.repository.create(category);
+  }
+}

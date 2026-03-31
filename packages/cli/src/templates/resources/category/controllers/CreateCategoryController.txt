@@ -1,0 +1,45 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateCategoryService } from "../services/CreateCategoryService";
+
+type CreateCategoryRouteType = {
+  payload: { name: string; lang?: LocaleType; color?: string; description?: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Post("/categories", {
+  name: "category.create",
+  version: 1,
+  description: "Create a new category",
+  payload: Assert({
+    name: "string",
+    lang: "string?",
+    color: "string?",
+    description: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    lang: "string",
+    color: "string?",
+    description: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateCategoryController {
+  constructor(
+    @inject(CreateCategoryService) private readonly service: CreateCategoryService,
+  ) {}
+
+  public async index(context: ContextType<CreateCategoryRouteType>) {
+    const { name, lang, color, description } = context.payload;
+
+    const category = await this.service.execute({ name, lang, color, description });
+
+    return context.response.json(category);
+  }
+}

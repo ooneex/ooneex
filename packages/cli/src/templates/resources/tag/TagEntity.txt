@@ -14,7 +14,7 @@ import {
 })
 export class TagEntity implements ITag {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
-  id: string = random.nanoid(25);
+  id: string = random.id();
 
   @Column({ name: "name", type: "varchar", length: 255 })
   name: string;

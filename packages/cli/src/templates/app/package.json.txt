@@ -9,8 +9,7 @@
     "docker:stop": "bunx nx run-many -t docker:stop --output-style=stream --verbose",
     "migration:up": "bunx nx run-many -t migration:up --output-style=stream --verbose",
     "seed:run": "bunx nx run-many -t seed:run --output-style=stream --verbose",
-    "commit": "bunx commit",
-    "prepare": "husky"
+    "commit": "bunx commit"
   },
   "workspaces": [
     "modules/*"

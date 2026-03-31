@@ -61,8 +61,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     await Bun.write(join(destination, "README.md"), readmeTemplate.replace(/{{NAME}}/g, kebabName));
     await Bun.write(join(destination, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(destination, ".zed", "settings.json"), zedSettingsTemplate);
-    await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
-    await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");
 
     // Create app module
     const makeModuleCommand = new MakeModuleCommand();
@@ -114,35 +112,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
     await gitInit.exited;
 
-    // Install dev dependencies
-    const addDevDeps = Bun.spawn(
-      [
-        "bun",
-        "add",
-        "-D",
-        "@biomejs/biome",
-        "@commitlint/cli",
-        "@commitlint/config-conventional",
-        "@commitlint/prompt-cli",
-        "@commitlint/types",
-        "@nx/js",
-        "@nx/workspace",
-        "@swc-node/register",
-        "@swc/core",
-        "@swc/helpers",
-        "@types/bun",
-        "@types/node",
-        "@typescript/native-preview",
-        "husky",
-        "lint-staged",
-        "nx",
-        "typescript",
-        "undici-types",
-      ],
-      { cwd: destination, stdout: "inherit", stderr: "inherit" },
-    );
-    await addDevDeps.exited;
-
     // Install dependencies
     const addDeps = Bun.spawn(
       [
@@ -177,6 +146,42 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       { cwd: destination, stdout: "inherit", stderr: "inherit" },
     );
     await addDeps.exited;
+
+    // Install dev dependencies
+    const addDevDeps = Bun.spawn(
+      [
+        "bun",
+        "add",
+        "-D",
+        "@biomejs/biome",
+        "@commitlint/cli",
+        "@commitlint/config-conventional",
+        "@commitlint/prompt-cli",
+        "@commitlint/types",
+        "@nx/js",
+        "@nx/workspace",
+        "@swc-node/register",
+        "@swc/core",
+        "@swc/helpers",
+        "@types/bun",
+        "@types/node",
+        "@typescript/native-preview",
+        "husky",
+        "lint-staged",
+        "nx",
+        "typescript",
+        "undici-types",
+      ],
+      { cwd: destination, stdout: "inherit", stderr: "inherit" },
+    );
+    await addDevDeps.exited;
+
+    // Configure husky
+    const huskyInit = Bun.spawn(["bunx", "husky", "init"], { cwd: destination, stdout: "inherit", stderr: "inherit" });
+    await huskyInit.exited;
+
+    await Bun.write(join(destination, ".husky", "pre-commit"), "lint-staged");
+    await Bun.write(join(destination, ".husky", "commit-msg"), `bunx commitlint --edit "$1"`);
 
     const logger = new TerminalLogger();
 

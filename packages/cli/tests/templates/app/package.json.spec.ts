@@ -22,4 +22,10 @@ describe("package.json.txt", () => {
     expect(content).toContain('"scripts"');
     expect(content).toContain('"workspaces"');
   });
+
+  test("should not contain husky prepare script", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain('"prepare"');
+    expect(content).not.toContain("husky");
+  });
 });

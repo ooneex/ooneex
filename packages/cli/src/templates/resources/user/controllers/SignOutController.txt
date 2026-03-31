@@ -1,0 +1,37 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { SignOutService } from "../services/SignOutService";
+
+type SignOutRouteType = {
+  payload: { sessionId: string };
+  response: { sessionId: string };
+};
+
+@Route.Post("/users/sign-out", {
+  name: "user.sign-out",
+  version: 1,
+  description: "Sign out a user session",
+  payload: Assert({
+    sessionId: "string",
+  }),
+  response: Assert({
+    sessionId: "string",
+  }),
+  roles: [ERole.USER],
+})
+export class SignOutController {
+  constructor(
+    @inject(SignOutService) private readonly service: SignOutService,
+  ) {}
+
+  public async index(context: ContextType<SignOutRouteType>) {
+    const { sessionId } = context.payload;
+
+    await this.service.execute({ sessionId });
+
+    return context.response.json({ sessionId });
+  }
+}

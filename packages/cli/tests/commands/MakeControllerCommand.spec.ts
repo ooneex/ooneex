@@ -63,7 +63,6 @@ describe("MakeControllerCommand", () => {
   describe("run() with HTTP controller", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
-      await Bun.write(join(testDir, "src", "types", "routes", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
       process.chdir(testDir);
     });
@@ -94,18 +93,15 @@ describe("MakeControllerCommand", () => {
       expect(content).toContain("UserController");
     });
 
-    test("should generate route type file", async () => {
+    test("should include route type in controller file", async () => {
       await command.run({
         name: "User",
         isSocket: false,
       });
 
-      // Route type file is named after the routeName from the prompt
-      const routeTypeFilePath = join(testDir, "src", "types", "routes", "api.test.index.ts");
-      expect(await exists(routeTypeFilePath)).toBe(true);
-
-      const content = await Bun.file(routeTypeFilePath).text();
-      expect(content).toContain("ApiTestIndex");
+      const filePath = join(testDir, "src", "controllers", "UserController.ts");
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain("export type ApiTestIndexRouteType");
       expect(content).not.toContain("{{TYPE_NAME}}");
     });
 
@@ -145,7 +141,6 @@ describe("MakeControllerCommand", () => {
       expect(content).not.toContain("{{ROUTE_PATH}}");
       expect(content).not.toContain("{{ROUTE_METHOD}}");
       expect(content).not.toContain("{{TYPE_NAME}}");
-      expect(content).not.toContain("{{TYPE_NAME_FILE}}");
       expect(content).toContain("ProductController");
       expect(content).toContain("api.test.index");
       expect(content).toContain("/test");
@@ -155,7 +150,6 @@ describe("MakeControllerCommand", () => {
   describe("run() with Socket controller", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
-      await Bun.write(join(testDir, "src", "types", "routes", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
       process.chdir(testDir);
     });
@@ -201,7 +195,6 @@ describe("MakeControllerCommand", () => {
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
-      await Bun.write(join(testDir, "src", "types", "routes", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
       process.chdir(testDir);
     });
@@ -233,7 +226,6 @@ describe("MakeControllerCommand", () => {
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "controllers", ".gitkeep"), "");
-      await Bun.write(join(testDir, "modules", "blog", "src", "types", "routes", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "controllers", ".gitkeep"), "");
       process.chdir(testDir);
     });
@@ -246,9 +238,6 @@ describe("MakeControllerCommand", () => {
 
       const testFilePath = join(testDir, "modules", "blog", "tests", "controllers", "CreatePostController.spec.ts");
       expect(await exists(testFilePath)).toBe(true);
-
-      const routeTypePath = join(testDir, "modules", "blog", "src", "types", "routes", "api.test.index.ts");
-      expect(await exists(routeTypePath)).toBe(true);
     });
 
     test("should add import and class to module controllers array", async () => {

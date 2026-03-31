@@ -1,0 +1,43 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { UpdateUserProfileImageService } from "../services/UpdateUserProfileImageService";
+
+type UpdateUserProfileImageRouteType = {
+  params: { id: string };
+  payload: { file: Blob | File };
+  response: { id: string; avatar: string };
+};
+
+@Route.Patch("/users/:id/profile/image", {
+  name: "user.profile.image.update",
+  version: 1,
+  description: "Update a user profile image",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    file: "File | Blob",
+  }),
+  response: Assert({
+    id: "string",
+    avatar: "string",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateUserProfileImageController {
+  constructor(
+    @inject(UpdateUserProfileImageService) private readonly service: UpdateUserProfileImageService,
+  ) {}
+
+  public async index(context: ContextType<UpdateUserProfileImageRouteType>) {
+    const { id } = context.params;
+    const { file } = context.payload;
+
+    await this.service.execute({ userId: id, file });
+
+    return context.response.json({ id, avatar: "" });
+  }
+}

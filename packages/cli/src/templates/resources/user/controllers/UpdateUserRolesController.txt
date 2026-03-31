@@ -1,0 +1,44 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { ERole } from "@ooneex/role";
+import { ERole as Role } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { UpdateUserRolesService } from "../services/UpdateUserRolesService";
+
+type UpdateUserRolesRouteType = {
+  params: { id: string };
+  payload: { roles: ERole[] };
+  response: { id: string; roles: ERole[] };
+};
+
+@Route.Patch("/users/:id/roles", {
+  name: "user.roles.update",
+  version: 1,
+  description: "Update a user roles",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    roles: "string[]",
+  }),
+  response: Assert({
+    id: "string",
+    roles: "string[]",
+  }),
+  roles: [Role.USER],
+})
+export class UpdateUserRolesController {
+  constructor(
+    @inject(UpdateUserRolesService) private readonly service: UpdateUserRolesService,
+  ) {}
+
+  public async index(context: ContextType<UpdateUserRolesRouteType>) {
+    const { id } = context.params;
+    const { roles } = context.payload;
+
+    await this.service.execute({ userId: id, roles });
+
+    return context.response.json({ id, roles });
+  }
+}

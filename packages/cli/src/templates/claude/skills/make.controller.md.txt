@@ -35,7 +35,7 @@ Where:
 
 The command will generate (paths prefixed with `modules/<module>/` when `--module` is provided):
 - `src/controllers/<Name>Controller.ts` - The controller class file
-- `src/types/routes/<route.name>.ts` - The route type file
+- `src/types/routes/<route.name>.ts` - The route type file (will be moved into the controller file — see step 3)
 - `tests/controllers/<Name>Controller.spec.ts` - The test file
 
 ### 2. Read the generated files
@@ -44,20 +44,20 @@ Read all three generated files to understand the scaffolded code.
 
 ### 3. Complete the route type
 
-Edit `src/types/routes/<route.name>.ts` to define the route's type contract.
+**IMPORTANT: Keep the route type inside the controller file**, not in a separate type file. Define the type directly in `src/controllers/<Name>Controller.ts` above the class definition. Delete the generated `src/types/routes/<route.name>.ts` file if it was created.
 
-**Add or remove `params`, `payload`, and `queries` based on context:**
+**Remove unnecessary `params`, `payload`, and `queries` — only include what the route actually needs:**
 
 - **`params`** — Include only when the route path contains dynamic segments (e.g., `/api/users/:id`). Remove entirely for routes with no URL parameters (e.g., `/api/users`).
 - **`payload`** — Include only for methods that accept a request body (`post`, `put`, `patch`). Remove entirely for `get` and `delete` routes.
 - **`queries`** — Include only when the route supports query string filtering, pagination, or sorting (e.g., list/search endpoints). Remove entirely when not needed.
 - **`response`** — Always include.
 
-The generated route type structure follows this pattern (remove unused sections):
+The route type structure follows this pattern (remove unused sections):
 
 ```typescript
 // Example: GET /api/users (list) — no params, no payload, has queries
-export type <TypeName>RouteType = {
+type <TypeName>RouteType = {
   queries: {
 
   },
@@ -67,7 +67,7 @@ export type <TypeName>RouteType = {
 };
 
 // Example: POST /api/users (create) — no params, has payload, no queries
-export type <TypeName>RouteType = {
+type <TypeName>RouteType = {
   payload: {
 
   },
@@ -77,7 +77,7 @@ export type <TypeName>RouteType = {
 };
 
 // Example: GET /api/users/:id (detail) — has params, no payload, no queries
-export type <TypeName>RouteType = {
+type <TypeName>RouteType = {
   params: {
 
   },
@@ -87,7 +87,7 @@ export type <TypeName>RouteType = {
 };
 
 // Example: PUT /api/users/:id (update) — has params, has payload, no queries
-export type <TypeName>RouteType = {
+type <TypeName>RouteType = {
   params: {
 
   },
@@ -106,8 +106,8 @@ Edit `src/controllers/<Name>Controller.ts` to complete the implementation:
 
 - Set appropriate `roles` for access control
 - Add a meaningful `description` for the route that explains what the endpoint does (e.g., `"Create a new user account"`, `"List all books with pagination"`)
-- Implement the `index` method with actual controller logic
-- Inject any required dependencies (repositories, services) via the constructor
+- **Keep the controller thin** — do NOT put business logic in the controller. Put all logic in the corresponding service and inject the service into the controller via the constructor. The controller's `index` method should only delegate to the service.
+- **Remove unnecessary `params`, `payload`, and `queries`** from both the route type and the `@Route` decorator — only include what the route actually needs (see step 3 rules).
 
 **Add or remove `params`, `payload`, and `queries` in the `@Route` decorator to match the route type (step 3):**
 
@@ -123,21 +123,19 @@ import type { ContextType } from "@ooneex/controller";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
-import type { <TypeName>RouteType } from "../types/routes/<route.name>";
+
+type <TypeName>RouteType = {
+  // Only include params, payload, queries as needed (see step 3)
+  response: {
+
+  },
+};
 
 @Route.<method>("<route.path>", {
   name: "<route.name>",
   version: 1,
   description: "",
-  params: {
-    // id: Assert("string"),
-  },
-  payload: Assert({
-
-  }),
-  queries: Assert({
-
-  }),
+  // Only include params, payload, queries as needed (see step 3)
   response: Assert({
 
   }),
@@ -145,8 +143,6 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
 })
 export class <Name>Controller {
   public async index(context: ContextType<<TypeName>RouteType>) {
-    // const { id } = context.params;
-
     return context.response.json({
 
     });
@@ -161,21 +157,19 @@ import type { ContextType } from "@ooneex/socket";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
-import type { <TypeName>RouteType } from "../types/routes/<route.name>";
+
+type <TypeName>RouteType = {
+  // Only include params, payload, queries as needed (see step 3)
+  response: {
+
+  },
+};
 
 @Route.socket("<route.path>", {
   name: "<route.name>",
   version: 1,
   description: "",
-  params: {
-    // id: Assert("string"),
-  },
-  payload: Assert({
-
-  }),
-  queries: Assert({
-
-  }),
+  // Only include params, payload, queries as needed (see step 3)
   response: Assert({
 
   }),
@@ -183,8 +177,6 @@ import type { <TypeName>RouteType } from "../types/routes/<route.name>";
 })
 export class <Name>Controller {
   public async index(context: ContextType<<TypeName>RouteType>) {
-    // const { id } = context.params;
-
     return context.response.json({
 
     });
@@ -244,7 +236,7 @@ If the module already has other controllers registered, append the new controlle
 Run linting and formatting on the generated files:
 
 ```bash
-bunx biome check --fix src/controllers/<Name>Controller.ts src/types/routes/<route.name>.ts tests/controllers/<Name>Controller.spec.ts
+bunx biome check --fix src/controllers/<Name>Controller.ts tests/controllers/<Name>Controller.spec.ts
 ```
 
 ### 8. Create the service

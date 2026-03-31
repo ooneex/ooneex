@@ -1,0 +1,43 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { LockUserService } from "../services/LockUserService";
+
+type LockUserRouteType = {
+  params: { id: string };
+  payload: { lock: boolean };
+  response: { id: string; locked: boolean };
+};
+
+@Route.Patch("/users/:id/lock", {
+  name: "user.lock",
+  version: 1,
+  description: "Lock or unlock a user",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    lock: "boolean",
+  }),
+  response: Assert({
+    id: "string",
+    locked: "boolean",
+  }),
+  roles: [ERole.USER],
+})
+export class LockUserController {
+  constructor(
+    @inject(LockUserService) private readonly service: LockUserService,
+  ) {}
+
+  public async index(context: ContextType<LockUserRouteType>) {
+    const { id } = context.params;
+    const { lock } = context.payload;
+
+    await this.service.execute({ userId: id, lock });
+
+    return context.response.json({ id, locked: lock });
+  }
+}

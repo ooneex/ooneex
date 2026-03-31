@@ -1,0 +1,43 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { BanUserService } from "../services/BanUserService";
+
+type BanUserRouteType = {
+  params: { id: string };
+  payload: { ban: boolean };
+  response: { id: string; banned: boolean };
+};
+
+@Route.Patch("/users/:id/ban", {
+  name: "user.ban",
+  version: 1,
+  description: "Ban or unban a user",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    ban: "boolean",
+  }),
+  response: Assert({
+    id: "string",
+    banned: "boolean",
+  }),
+  roles: [ERole.USER],
+})
+export class BanUserController {
+  constructor(
+    @inject(BanUserService) private readonly service: BanUserService,
+  ) {}
+
+  public async index(context: ContextType<BanUserRouteType>) {
+    const { id } = context.params;
+    const { ban } = context.payload;
+
+    await this.service.execute({ userId: id, ban });
+
+    return context.response.json({ id, banned: ban });
+  }
+}

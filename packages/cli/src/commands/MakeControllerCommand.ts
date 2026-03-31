@@ -11,7 +11,6 @@ import { askRoutePath } from "../prompts/askRoutePath";
 import socketTemplate from "../templates/controller.socket.txt";
 import testTemplate from "../templates/controller.test.txt";
 import template from "../templates/controller.txt";
-import routeTypeTemplate from "../templates/route.type.txt";
 import type { ICommand } from "../types";
 
 type CommandOptionsType = {
@@ -74,20 +73,13 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const selectedTemplate = isSocket ? socketTemplate : template;
     let content: string = selectedTemplate.replaceAll("{{NAME}}", name);
 
-    let routeTypeName = "";
-    let routeTypeFileName = "";
-
     if (!route.name) {
       route.name = await askRouteName({ message: "Enter route name (e.g., api.user.create)" });
     }
 
-    routeTypeName = toPascalCase(route.name);
-    routeTypeFileName = route.name;
+    const routeTypeName = toPascalCase(route.name);
 
-    content = content
-      .replaceAll("{{ROUTE_NAME}}", route.name)
-      .replaceAll("{{TYPE_NAME}}", routeTypeName)
-      .replaceAll("{{TYPE_NAME_FILE}}", routeTypeFileName);
+    content = content.replaceAll("{{ROUTE_NAME}}", route.name).replaceAll("{{TYPE_NAME}}", routeTypeName);
 
     if (!route.path) {
       route.path = (await askRoutePath({ message: "Enter route path", initial: "/" })) as `/${string}`;
@@ -110,13 +102,6 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const filePath = join(controllersDir, `${name}Controller.ts`);
     await Bun.write(filePath, content);
 
-    // Create route type file
-    const routeTypesLocalDir = join(base, "src", "types", "routes");
-    const routeTypesDir = join(process.cwd(), routeTypesLocalDir);
-    const routeTypeFilePath = join(routeTypesDir, `${routeTypeFileName}.ts`);
-    const routeTypeContent = routeTypeTemplate.replaceAll("{{TYPE_NAME}}", routeTypeName);
-    await Bun.write(routeTypeFilePath, routeTypeContent);
-
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
     const testsLocalDir = join(base, "tests", "controllers");
@@ -133,12 +118,6 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
     const logger = new TerminalLogger();
 
     logger.success(`${join(controllersLocalDir, name)}Controller.ts created successfully`, undefined, {
-      showTimestamp: false,
-      showArrow: false,
-      useSymbol: true,
-    });
-
-    logger.success(`${join(routeTypesLocalDir, routeTypeFileName)}.ts created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

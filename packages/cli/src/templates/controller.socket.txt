@@ -2,7 +2,21 @@ import type { ContextType } from "@ooneex/socket";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
-import type { {{TYPE_NAME}}RouteType } from "../types/routes/{{TYPE_NAME_FILE}}";
+
+export type {{TYPE_NAME}}RouteType = {
+  params: {
+
+  },
+  payload: {
+
+  },
+  queries: {
+
+  },
+  response: {
+
+  },
+};
 
 @Route.socket("{{ROUTE_PATH}}", {
   name: "{{ROUTE_NAME}}",

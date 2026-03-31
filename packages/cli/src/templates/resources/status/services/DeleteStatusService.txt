@@ -1,0 +1,21 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { StatusRepository } from "../repositories/StatusRepository";
+
+type ServiceDataType = {
+  id: string;
+};
+
+@decorator.service()
+export class DeleteStatusService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(StatusRepository) private readonly repository: StatusRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<void> {
+    if (!data) return;
+
+    await this.repository.delete({ id: data.id });
+  }
+}

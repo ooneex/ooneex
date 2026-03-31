@@ -1,0 +1,35 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetStatusService } from "../services/GetStatusService";
+
+type GetStatusRouteType = {
+  params: { id: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Get("/statuses/:id", {
+  name: "status.get",
+  version: 1,
+  description: "Get a status by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetStatusController {
+  constructor(
+    @inject(GetStatusService) private readonly service: GetStatusService,
+  ) {}
+
+  public async index(context: ContextType<GetStatusRouteType>) {
+    const { id } = context.params;
+
+    const status = await this.service.execute({ id });
+
+    return context.response.json(status);
+  }
+}

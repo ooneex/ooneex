@@ -1,0 +1,45 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateStatusService } from "../services/CreateStatusService";
+
+type CreateStatusRouteType = {
+  payload: { name: string; lang?: LocaleType; color?: string; description?: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Post("/statuses", {
+  name: "status.create",
+  version: 1,
+  description: "Create a new status",
+  payload: Assert({
+    name: "string",
+    lang: "string?",
+    color: "string?",
+    description: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    lang: "string",
+    color: "string?",
+    description: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateStatusController {
+  constructor(
+    @inject(CreateStatusService) private readonly service: CreateStatusService,
+  ) {}
+
+  public async index(context: ContextType<CreateStatusRouteType>) {
+    const { name, lang, color, description } = context.payload;
+
+    const status = await this.service.execute({ name, lang, color, description });
+
+    return context.response.json(status);
+  }
+}

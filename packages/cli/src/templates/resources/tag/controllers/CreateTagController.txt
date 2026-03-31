@@ -1,0 +1,45 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateTagService } from "../services/CreateTagService";
+
+type CreateTagRouteType = {
+  payload: { name: string; lang?: LocaleType; color?: string; description?: string };
+  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+};
+
+@Route.Post("/tags", {
+  name: "tag.create",
+  version: 1,
+  description: "Create a new tag",
+  payload: Assert({
+    name: "string",
+    lang: "string?",
+    color: "string?",
+    description: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    lang: "string",
+    color: "string?",
+    description: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateTagController {
+  constructor(
+    @inject(CreateTagService) private readonly service: CreateTagService,
+  ) {}
+
+  public async index(context: ContextType<CreateTagRouteType>) {
+    const { name, lang, color, description } = context.payload;
+
+    const tag = await this.service.execute({ name, lang, color, description });
+
+    return context.response.json(tag);
+  }
+}

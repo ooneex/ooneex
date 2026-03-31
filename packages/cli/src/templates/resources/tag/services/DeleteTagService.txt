@@ -1,0 +1,21 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { TagRepository } from "../repositories/TagRepository";
+
+type ServiceDataType = {
+  id: string;
+};
+
+@decorator.service()
+export class DeleteTagService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(TagRepository) private readonly repository: TagRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<void> {
+    if (!data) return;
+
+    await this.repository.delete({ id: data.id });
+  }
+}

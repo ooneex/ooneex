@@ -1,0 +1,36 @@
+import type { ITag } from "@ooneex/tag";
+import type { LocaleType } from "@ooneex/translation";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({
+  name: "tags",
+})
+export class TagEntity implements ITag {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.nanoid(25);
+
+  @Column({ name: "name", type: "varchar", length: 255 })
+  name: string;
+
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType | null;
+
+  @Column({ name: "color", type: "varchar", length: 50, nullable: true })
+  color?: string | null;
+
+  @Column({ name: "description", type: "text", nullable: true })
+  description?: string | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date | null;
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.0) - 2026-04-01
+
+### Added
+
+- Export optional decorator from inversify — Franck ([6f712f39](https://github.com/ooneex/ooneex/commit/6f712f39))
+
 ## [1.1.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.1.2) - 2026-03-29
 
 ### Changed

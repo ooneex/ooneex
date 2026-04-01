@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.4) - 2026-04-01
+
+### Removed
+
+- Remove injectable decorator call from package decorators — Franck ([1d9af75b](https://github.com/ooneex/ooneex/commit/1d9af75b))
+
+### Fixed
+
+- Add @optional decorator to PostHogAnalytics config parameter — Franck ([166e5079](https://github.com/ooneex/ooneex/commit/166e5079))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.3) - 2026-04-01
 
 ### Changed

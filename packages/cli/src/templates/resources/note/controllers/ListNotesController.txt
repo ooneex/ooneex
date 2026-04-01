@@ -1,0 +1,57 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListNotesService } from "../services/ListNotesService";
+
+type ListNotesRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      title?: string;
+      color?: string;
+      content?: string;
+      description?: string;
+      src?: string;
+      pageCount?: number;
+      coverImage?: string;
+      tags?: string[];
+      topics?: string[];
+      categories?: string[];
+      lang?: LocaleType;
+      status?: string;
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/notes", {
+  name: "note.list",
+  version: 1,
+  description: "List all notes",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListNotesController {
+  constructor(
+    @inject(ListNotesService) private readonly service: ListNotesService,
+  ) {}
+
+  public async index(context: ContextType<ListNotesRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

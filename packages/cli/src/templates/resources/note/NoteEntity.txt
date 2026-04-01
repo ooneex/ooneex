@@ -1,0 +1,60 @@
+import type { INote } from "@ooneex/note";
+import type { LocaleType } from "@ooneex/translation";
+import { random } from "@ooneex/utils";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
+
+@Entity({
+  name: "notes",
+})
+export class NoteEntity implements INote {
+  @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
+  id: string = random.id();
+
+  @Column({ name: "title", type: "varchar", length: 255, nullable: true })
+  title?: string | null;
+
+  @Column({ name: "color", type: "varchar", length: 50, nullable: true })
+  color?: string | null;
+
+  @Column({ name: "content", type: "text", nullable: true })
+  content?: string | null;
+
+  @Column({ name: "description", type: "text", nullable: true })
+  description?: string | null;
+
+  @Column({ name: "src", type: "varchar", length: 255, nullable: true })
+  src?: string | null;
+
+  @Column({ name: "page_count", type: "int", nullable: true })
+  pageCount?: number | null;
+
+  @Column({ name: "cover_image", type: "varchar", length: 255, nullable: true })
+  coverImage?: string | null;
+
+  @Column({ name: "tags", type: "simple-array", nullable: true })
+  tags?: string[] | null;
+
+  @Column({ name: "topics", type: "simple-array", nullable: true })
+  topics?: string[] | null;
+
+  @Column({ name: "categories", type: "simple-array", nullable: true })
+  categories?: string[] | null;
+
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType | null;
+
+  @Column({ name: "status", type: "varchar", length: 50, nullable: true })
+  status?: string | null;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt?: Date | null;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt?: Date | null;
+}

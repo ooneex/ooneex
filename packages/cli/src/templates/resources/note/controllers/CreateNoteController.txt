@@ -1,0 +1,88 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateNoteService } from "../services/CreateNoteService";
+
+type CreateNoteRouteType = {
+  payload: {
+    title?: string;
+    color?: string;
+    content?: string;
+    description?: string;
+    src?: string;
+    pageCount?: number;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+    status?: string;
+  };
+  response: {
+    id: string;
+    title?: string;
+    color?: string;
+    content?: string;
+    description?: string;
+    src?: string;
+    pageCount?: number;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+    status?: string;
+  };
+};
+
+@Route.Post("/notes", {
+  name: "note.create",
+  version: 1,
+  description: "Create a new note",
+  payload: Assert({
+    title: "string?",
+    color: "string?",
+    content: "string?",
+    description: "string?",
+    src: "string?",
+    pageCount: "number?",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+    status: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string?",
+    color: "string?",
+    content: "string?",
+    description: "string?",
+    src: "string?",
+    pageCount: "number?",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+    status: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateNoteController {
+  constructor(
+    @inject(CreateNoteService) private readonly service: CreateNoteService,
+  ) {}
+
+  public async index(context: ContextType<CreateNoteRouteType>) {
+    const { title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status } = context.payload;
+
+    const note = await this.service.execute({ title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status });
+
+    return context.response.json(note);
+  }
+}

@@ -1,0 +1,39 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { NoteEntity } from "../entities/NoteEntity";
+import { NoteRepository } from "../repositories/NoteRepository";
+
+type ServiceDataType = {
+  id: string;
+  title?: string;
+  color?: string;
+  content?: string;
+  description?: string;
+  src?: string;
+  pageCount?: number;
+  coverImage?: string;
+  tags?: string[];
+  topics?: string[];
+  categories?: string[];
+  lang?: LocaleType;
+  status?: string;
+};
+
+@decorator.service()
+export class UpdateNoteService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(NoteRepository) private readonly repository: NoteRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<NoteEntity | null> {
+    if (!data) return null;
+
+    const { id, ...fields } = data;
+
+    await this.repository.update({ id, ...fields });
+
+    return await this.repository.findOne(id);
+  }
+}

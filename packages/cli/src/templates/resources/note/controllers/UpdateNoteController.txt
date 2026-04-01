@@ -1,0 +1,93 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { UpdateNoteService } from "../services/UpdateNoteService";
+
+type UpdateNoteRouteType = {
+  params: { id: string };
+  payload: {
+    title?: string;
+    color?: string;
+    content?: string;
+    description?: string;
+    src?: string;
+    pageCount?: number;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+    status?: string;
+  };
+  response: {
+    id: string;
+    title?: string;
+    color?: string;
+    content?: string;
+    description?: string;
+    src?: string;
+    pageCount?: number;
+    coverImage?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+    status?: string;
+  };
+};
+
+@Route.Patch("/notes/:id", {
+  name: "note.update",
+  version: 1,
+  description: "Update a note",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    title: "string?",
+    color: "string?",
+    content: "string?",
+    description: "string?",
+    src: "string?",
+    pageCount: "number?",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+    status: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string?",
+    color: "string?",
+    content: "string?",
+    description: "string?",
+    src: "string?",
+    pageCount: "number?",
+    coverImage: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+    status: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateNoteController {
+  constructor(
+    @inject(UpdateNoteService) private readonly service: UpdateNoteService,
+  ) {}
+
+  public async index(context: ContextType<UpdateNoteRouteType>) {
+    const { id } = context.params;
+    const { title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status } = context.payload;
+
+    const note = await this.service.execute({ id, title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status });
+
+    return context.response.json(note);
+  }
+}

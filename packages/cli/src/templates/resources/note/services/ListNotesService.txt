@@ -1,0 +1,27 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { FilterResultType } from "@ooneex/types";
+import { NoteEntity } from "../entities/NoteEntity";
+import { NoteRepository } from "../repositories/NoteRepository";
+
+type ServiceDataType = {
+  page?: number;
+  limit?: number;
+  q?: string;
+};
+
+@decorator.service()
+export class ListNotesService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(NoteRepository) private readonly repository: NoteRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<FilterResultType<NoteEntity>> {
+    return await this.repository.find({
+      page: data?.page,
+      limit: data?.limit,
+      q: data?.q,
+    });
+  }
+}

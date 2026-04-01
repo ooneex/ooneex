@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.2) - 2026-04-01
+
+### Changed
+
+- Remove try-catch in run method and fix optional params access — Franck ([823cad61](https://github.com/ooneex/ooneex/commit/823cad61))
+- Restructure config with routing and check nested objects — Franck ([25336779](https://github.com/ooneex/ooneex/commit/25336779))
+
 ## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.1) - 2026-03-30
 
 ### Changed

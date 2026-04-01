@@ -17,7 +17,7 @@ export class {{ name }} implements IMigration {
         tags TEXT[],
         topics TEXT[],
         categories TEXT[],
-        lang VARCHAR(10) NOT NULL,
+        lang VARCHAR(10),
         status VARCHAR(50),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

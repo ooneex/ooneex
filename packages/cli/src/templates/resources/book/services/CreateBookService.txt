@@ -16,7 +16,7 @@ type ServiceDataType = {
   tags?: string[];
   topics?: string[];
   categories?: string[];
-  lang: LocaleType;
+  lang?: LocaleType;
   status?: string;
 };
 

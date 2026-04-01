@@ -34,7 +34,7 @@ type UpdateBookRouteType = {
     tags?: string[];
     topics?: string[];
     categories?: string[];
-    lang: LocaleType;
+    lang?: LocaleType;
     status?: string;
   };
 };
@@ -72,7 +72,7 @@ type UpdateBookRouteType = {
     tags: "string[]?",
     topics: "string[]?",
     categories: "string[]?",
-    lang: "string",
+    lang: "string?",
     status: "string?",
   }),
   roles: [ERole.USER],

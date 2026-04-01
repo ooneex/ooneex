@@ -46,8 +46,8 @@ export class BookEntity implements IBook {
   @Column({ name: "categories", type: "text", array: true, nullable: true })
   categories?: string[] | null;
 
-  @Column({ name: "lang", type: "varchar", length: 10 })
-  lang: LocaleType;
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType | null;
 
   @Column({ name: "status", type: "varchar", length: 50, nullable: true })
   status?: string | null;

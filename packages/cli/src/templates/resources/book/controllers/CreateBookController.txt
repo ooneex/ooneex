@@ -18,7 +18,7 @@ type CreateBookRouteType = {
     tags?: string[];
     topics?: string[];
     categories?: string[];
-    lang: LocaleType;
+    lang?: LocaleType;
     status?: string;
   };
   response: {
@@ -33,7 +33,7 @@ type CreateBookRouteType = {
     tags?: string[];
     topics?: string[];
     categories?: string[];
-    lang: LocaleType;
+    lang?: LocaleType;
     status?: string;
   };
 };
@@ -53,7 +53,7 @@ type CreateBookRouteType = {
     tags: "string[]?",
     topics: "string[]?",
     categories: "string[]?",
-    lang: "string",
+    lang: "string?",
     status: "string?",
   }),
   response: Assert({
@@ -68,7 +68,7 @@ type CreateBookRouteType = {
     tags: "string[]?",
     topics: "string[]?",
     categories: "string[]?",
-    lang: "string",
+    lang: "string?",
     status: "string?",
   }),
   roles: [ERole.USER],

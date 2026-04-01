@@ -21,7 +21,7 @@ type ListBooksRouteType = {
       tags?: string[];
       topics?: string[];
       categories?: string[];
-      lang: LocaleType;
+      lang?: LocaleType;
       status?: string;
     }[];
     total: number;

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.10.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.2) - 2026-04-01
+
+### Changed
+
+- Skip dependency install if already present in package.json — Franck ([b81b6270](https://github.com/ooneex/ooneex/commit/b81b6270))
+- Update service template and controller response types — Franck ([f4a7ec21](https://github.com/ooneex/ooneex/commit/f4a7ec21))
+
+### Fixed
+
+- Rename query to queries in list controller templates — Franck ([87e46845](https://github.com/ooneex/ooneex/commit/87e46845))
+
 ## [1.10.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.1) - 2026-04-01
 
 ### Changed

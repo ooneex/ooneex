@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.3) - 2026-04-01
+
+### Changed
+
+- Add @types/bun to tsconfig types — Franck ([8ff9d85c](https://github.com/ooneex/ooneex/commit/8ff9d85c))
+- Make RequestConfigType properties optional — Franck ([d56b6cf7](https://github.com/ooneex/ooneex/commit/d56b6cf7))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.2) - 2026-03-29
 
 ### Changed

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/http-request",
   "description": "HTTP request abstraction with URL parsing, query parameters, language detection, header management, and multipart file upload support",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "module",
   "files": [
     "dist",

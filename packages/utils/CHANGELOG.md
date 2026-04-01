@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.0) - 2026-04-01
+
+### Added
+
+- Add random.id() method for 20-char hex identifiers — Franck ([20763756](https://github.com/ooneex/ooneex/commit/20763756))
+
 ## [0.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.3.1) - 2026-03-29
 
 ### Changed

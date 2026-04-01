@@ -1,0 +1,82 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import type { TaskStatusType } from "../entities/TaskEntity";
+import { Assert } from "@ooneex/validation";
+import { UpdateTaskService } from "../services/UpdateTaskService";
+
+type UpdateTaskRouteType = {
+  params: { id: string };
+  payload: {
+    title?: string;
+    description?: string;
+    status?: TaskStatusType;
+    priority?: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+  };
+  response: {
+    id: string;
+    title: string;
+    description?: string;
+    status?: TaskStatusType;
+    priority?: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+  };
+};
+
+@Route.Patch("/tasks/:id", {
+  name: "task.update",
+  version: 1,
+  description: "Update a task",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    title: "string?",
+    description: "string?",
+    status: "string?",
+    priority: "string?",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    description: "string?",
+    status: "string?",
+    priority: "string?",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateTaskController {
+  constructor(
+    @inject(UpdateTaskService) private readonly service: UpdateTaskService,
+  ) {}
+
+  public async index(context: ContextType<UpdateTaskRouteType>) {
+    const { id } = context.params;
+    const { title, description, status, priority, icon, color, tags, categories, lang } = context.payload;
+
+    const task = await this.service.execute({ id, title, description, status, priority, icon, color, tags, categories, lang });
+
+    return context.response.json(task);
+  }
+}

@@ -1,0 +1,43 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import type { TaskStatusType } from "../entities/TaskEntity";
+import { TaskEntity } from "../entities/TaskEntity";
+import { TaskRepository } from "../repositories/TaskRepository";
+
+type ServiceDataType = {
+  title: string;
+  description?: string;
+  status?: TaskStatusType;
+  priority?: string;
+  icon?: string;
+  color?: string;
+  tags?: string[];
+  categories?: string[];
+  lang?: LocaleType;
+};
+
+@decorator.service()
+export class CreateTaskService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(TaskRepository) private readonly repository: TaskRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<TaskEntity | null> {
+    if (!data) return null;
+
+    const task = new TaskEntity();
+    task.title = data.title;
+    task.description = data.description;
+    task.status = data.status;
+    task.priority = data.priority;
+    task.icon = data.icon;
+    task.color = data.color;
+    task.tags = data.tags;
+    task.categories = data.categories;
+    task.lang = data.lang;
+
+    return await this.repository.create(task);
+  }
+}

@@ -1,0 +1,37 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { DeleteTaskService } from "../services/DeleteTaskService";
+
+type DeleteTaskRouteType = {
+  params: { id: string };
+  response: { id: string };
+};
+
+@Route.Delete("/tasks/:id", {
+  name: "task.delete",
+  version: 1,
+  description: "Delete a task",
+  params: {
+    id: Assert("string"),
+  },
+  response: Assert({
+    id: "string",
+  }),
+  roles: [ERole.USER],
+})
+export class DeleteTaskController {
+  constructor(
+    @inject(DeleteTaskService) private readonly service: DeleteTaskService,
+  ) {}
+
+  public async index(context: ContextType<DeleteTaskRouteType>) {
+    const { id } = context.params;
+
+    await this.service.execute({ id });
+
+    return context.response.json({ id });
+  }
+}

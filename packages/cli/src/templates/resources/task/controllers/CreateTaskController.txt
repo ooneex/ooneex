@@ -1,0 +1,77 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import type { TaskStatusType } from "../entities/TaskEntity";
+import { Assert } from "@ooneex/validation";
+import { CreateTaskService } from "../services/CreateTaskService";
+
+type CreateTaskRouteType = {
+  payload: {
+    title: string;
+    description?: string;
+    status?: TaskStatusType;
+    priority?: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+  };
+  response: {
+    id: string;
+    title: string;
+    description?: string;
+    status?: TaskStatusType;
+    priority?: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+  };
+};
+
+@Route.Post("/tasks", {
+  name: "task.create",
+  version: 1,
+  description: "Create a new task",
+  payload: Assert({
+    title: "string",
+    description: "string?",
+    status: "string?",
+    priority: "string?",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    description: "string?",
+    status: "string?",
+    priority: "string?",
+    icon: "string?",
+    color: "string?",
+    tags: "string[]?",
+    categories: "string[]?",
+    lang: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateTaskController {
+  constructor(
+    @inject(CreateTaskService) private readonly service: CreateTaskService,
+  ) {}
+
+  public async index(context: ContextType<CreateTaskRouteType>) {
+    const { title, description, status, priority, icon, color, tags, categories, lang } = context.payload;
+
+    const task = await this.service.execute({ title, description, status, priority, icon, color, tags, categories, lang });
+
+    return context.response.json(task);
+  }
+}

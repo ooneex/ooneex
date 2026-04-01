@@ -1,0 +1,55 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import type { TaskStatusType } from "../entities/TaskEntity";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListTasksService } from "../services/ListTasksService";
+
+type ListTasksRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      title: string;
+      description?: string;
+      status?: TaskStatusType;
+      priority?: string;
+      icon?: string;
+      color?: string;
+      tags?: string[];
+      categories?: string[];
+      lang?: LocaleType;
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/tasks", {
+  name: "task.list",
+  version: 1,
+  description: "List all tasks",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListTasksController {
+  constructor(
+    @inject(ListTasksService) private readonly service: ListTasksService,
+  ) {}
+
+  public async index(context: ContextType<ListTasksRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

@@ -1,0 +1,47 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import type { TaskStatusType } from "../entities/TaskEntity";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetTaskService } from "../services/GetTaskService";
+
+type GetTaskRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    title: string;
+    description?: string;
+    status?: TaskStatusType;
+    priority?: string;
+    icon?: string;
+    color?: string;
+    tags?: string[];
+    categories?: string[];
+    lang?: LocaleType;
+  };
+};
+
+@Route.Get("/tasks/:id", {
+  name: "task.get",
+  version: 1,
+  description: "Get a task by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetTaskController {
+  constructor(
+    @inject(GetTaskService) private readonly service: GetTaskService,
+  ) {}
+
+  public async index(context: ContextType<GetTaskRouteType>) {
+    const { id } = context.params;
+
+    const task = await this.service.execute({ id });
+
+    return context.response.json(task);
+  }
+}

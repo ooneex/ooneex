@@ -19,7 +19,7 @@ type CreateImageRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: ImageEntity | null;
+  response: ImageEntity | Record<string, never>;
 };
 
 @Route.post("/images", {
@@ -61,6 +61,6 @@ export class CreateImageController {
 
     const image = await this.service.execute({ title, src, color, description, tags, topics, categories, status, lang });
 
-    return context.response.json(image);
+    return context.response.json(image || {});
   }
 }

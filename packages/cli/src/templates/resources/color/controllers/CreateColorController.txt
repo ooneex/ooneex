@@ -9,7 +9,7 @@ import { CreateColorService } from "../services/CreateColorService";
 
 type CreateColorRouteType = {
   payload: { name: string; hex: string; description?: string; lang?: LocaleType };
-  response: ColorEntity | null;
+  response: ColorEntity | Record<string, never>;
 };
 
 @Route.post("/colors", {
@@ -41,6 +41,6 @@ export class CreateColorController {
 
     const color = await this.service.execute({ name, hex, description, lang });
 
-    return context.response.json(color);
+    return context.response.json(color || {});
   }
 }

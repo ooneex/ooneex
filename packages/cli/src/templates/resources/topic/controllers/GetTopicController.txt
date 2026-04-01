@@ -8,7 +8,7 @@ import type { TopicEntity } from "../entities/TopicEntity";
 
 type GetTopicRouteType = {
   params: { id: string };
-  response: TopicEntity | null;
+  response: TopicEntity | Record<string, never>;
 };
 
 @Route.get("/topics/:id", {
@@ -30,6 +30,6 @@ export class GetTopicController {
 
     const topic = await this.service.execute({ id });
 
-    return context.response.json(topic);
+    return context.response.json(topic || {});
   }
 }

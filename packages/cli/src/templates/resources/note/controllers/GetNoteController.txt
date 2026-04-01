@@ -8,7 +8,7 @@ import { GetNoteService } from "../services/GetNoteService";
 
 type GetNoteRouteType = {
   params: { id: string };
-  response: NoteEntity | null;
+  response: NoteEntity | Record<string, never>;
 };
 
 @Route.get("/notes/:id", {
@@ -30,6 +30,6 @@ export class GetNoteController {
 
     const note = await this.service.execute({ id });
 
-    return context.response.json(note);
+    return context.response.json(note || {});
   }
 }

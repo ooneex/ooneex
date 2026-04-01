@@ -9,7 +9,7 @@ import { CreateCategoryService } from "../services/CreateCategoryService";
 
 type CreateCategoryRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: CategoryEntity | null;
+  response: CategoryEntity | Record<string, never>;
 };
 
 @Route.post("/categories", {
@@ -41,6 +41,6 @@ export class CreateCategoryController {
 
     const category = await this.service.execute({ name, lang, color, description });
 
-    return context.response.json(category);
+    return context.response.json(category || {});
   }
 }

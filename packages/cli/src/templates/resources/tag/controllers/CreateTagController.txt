@@ -9,7 +9,7 @@ import type { TagEntity } from "../entities/TagEntity";
 
 type CreateTagRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: TagEntity | null;
+  response: TagEntity | Record<string, never>;
 };
 
 @Route.post("/tags", {
@@ -41,6 +41,6 @@ export class CreateTagController {
 
     const tag = await this.service.execute({ name, lang, color, description });
 
-    return context.response.json(tag);
+    return context.response.json(tag || {});
   }
 }

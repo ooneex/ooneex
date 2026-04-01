@@ -22,7 +22,7 @@ type CreateBookRouteType = {
     lang?: LocaleType;
     status?: string;
   };
-  response: BookEntity | null;
+  response: BookEntity | Record<string, never>;
 };
 
 @Route.post("/books", {
@@ -70,6 +70,6 @@ export class CreateBookController {
 
     const book = await this.service.execute({ title, color, description, summarize, pageCount, src, coverImage, tags, topics, categories, lang, status });
 
-    return context.response.json(book);
+    return context.response.json(book || {});
   }
 }

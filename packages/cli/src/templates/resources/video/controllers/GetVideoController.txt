@@ -8,7 +8,7 @@ import type { VideoEntity } from "../entities/VideoEntity";
 
 type GetVideoRouteType = {
   params: { id: string };
-  response: VideoEntity | null;
+  response: VideoEntity | Record<string, never>;
 };
 
 @Route.get("/videos/:id", {
@@ -30,6 +30,6 @@ export class GetVideoController {
 
     const video = await this.service.execute({ id });
 
-    return context.response.json(video);
+    return context.response.json(video || {});
   }
 }

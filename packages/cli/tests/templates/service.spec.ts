@@ -24,16 +24,22 @@ describe("service.txt", () => {
   test("should implement IService interface", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("implements IService");
+    expect(content).not.toContain("IService<");
   });
 
-  test("should have execute method", async () => {
+  test("should have execute method with ServiceDataType parameter", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("execute");
+    expect(content).toContain("execute(data?: ServiceDataType): Promise<any>");
   });
 
   test("should have ServiceDataType", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("ServiceDataType");
+  });
+
+  test("should not use generics on class", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain("{{NAME}}Service<");
   });
 });
 

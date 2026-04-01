@@ -8,7 +8,7 @@ import { GetTaskService } from "../services/GetTaskService";
 
 type GetTaskRouteType = {
   params: { id: string };
-  response: TaskEntity | null;
+  response: TaskEntity | Record<string, never>;
 };
 
 @Route.get("/tasks/:id", {
@@ -30,6 +30,6 @@ export class GetTaskController {
 
     const task = await this.service.execute({ id });
 
-    return context.response.json(task);
+    return context.response.json(task || {});
   }
 }

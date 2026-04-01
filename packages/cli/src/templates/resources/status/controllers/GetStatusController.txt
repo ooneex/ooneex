@@ -8,7 +8,7 @@ import type { StatusEntity } from "../entities/StatusEntity";
 
 type GetStatusRouteType = {
   params: { id: string };
-  response: StatusEntity | null;
+  response: StatusEntity | Record<string, never>;
 };
 
 @Route.get("/statuses/:id", {
@@ -30,6 +30,6 @@ export class GetStatusController {
 
     const status = await this.service.execute({ id });
 
-    return context.response.json(status);
+    return context.response.json(status || {});
   }
 }

@@ -8,7 +8,7 @@ import { GetBookService } from "../services/GetBookService";
 
 type GetBookRouteType = {
   params: { id: string };
-  response: BookEntity | null;
+  response: BookEntity | Record<string, never>;
 };
 
 @Route.get("/books/:id", {
@@ -30,6 +30,6 @@ export class GetBookController {
 
     const book = await this.service.execute({ id });
 
-    return context.response.json(book);
+    return context.response.json(book || {});
   }
 }

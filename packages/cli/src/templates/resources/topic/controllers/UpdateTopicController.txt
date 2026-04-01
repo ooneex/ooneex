@@ -10,7 +10,7 @@ import type { TopicEntity } from "../entities/TopicEntity";
 type UpdateTopicRouteType = {
   params: { id: string };
   payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
-  response: TopicEntity | null;
+  response: TopicEntity | Record<string, never>;
 };
 
 @Route.patch("/topics/:id", {
@@ -46,6 +46,6 @@ export class UpdateTopicController {
 
     const topic = await this.service.execute({ id, name, lang, color, description });
 
-    return context.response.json(topic);
+    return context.response.json(topic || {});
   }
 }

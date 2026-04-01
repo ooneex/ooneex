@@ -8,7 +8,7 @@ import { GetCategoryService } from "../services/GetCategoryService";
 
 type GetCategoryRouteType = {
   params: { id: string };
-  response: CategoryEntity | null;
+  response: CategoryEntity | Record<string, never>;
 };
 
 @Route.get("/categories/:id", {
@@ -30,6 +30,6 @@ export class GetCategoryController {
 
     const category = await this.service.execute({ id });
 
-    return context.response.json(category);
+    return context.response.json(category || {});
   }
 }

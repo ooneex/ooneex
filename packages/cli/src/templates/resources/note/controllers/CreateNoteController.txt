@@ -22,7 +22,7 @@ type CreateNoteRouteType = {
     lang?: LocaleType;
     status?: string;
   };
-  response: NoteEntity | null;
+  response: NoteEntity | Record<string, never>;
 };
 
 @Route.post("/notes", {
@@ -70,6 +70,6 @@ export class CreateNoteController {
 
     const note = await this.service.execute({ title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status });
 
-    return context.response.json(note);
+    return context.response.json(note || {});
   }
 }

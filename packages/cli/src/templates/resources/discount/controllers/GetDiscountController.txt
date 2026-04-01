@@ -8,7 +8,7 @@ import { GetDiscountService } from "../services/GetDiscountService";
 
 type GetDiscountRouteType = {
   params: { id: string };
-  response: DiscountEntity | null;
+  response: DiscountEntity | Record<string, never>;
 };
 
 @Route.get("/discounts/:id", {
@@ -30,6 +30,6 @@ export class GetDiscountController {
 
     const discount = await this.service.execute({ id });
 
-    return context.response.json(discount);
+    return context.response.json(discount || {});
   }
 }

@@ -21,7 +21,7 @@ type CreateCalendarEventRouteType = {
     tags?: string[];
     lang?: LocaleType;
   };
-  response: CalendarEventEntity | null;
+  response: CalendarEventEntity | Record<string, never>;
 };
 
 @Route.post("/calendar-events", {
@@ -67,6 +67,6 @@ export class CreateCalendarEventController {
 
     const calendarEvent = await this.service.execute({ title, startDate, endDate, type, icon, description, color, priority, organizer, tags, lang });
 
-    return context.response.json(calendarEvent);
+    return context.response.json(calendarEvent || {});
   }
 }

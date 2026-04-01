@@ -22,7 +22,7 @@ type UpdateCalendarEventRouteType = {
     tags?: string[];
     lang?: LocaleType;
   };
-  response: CalendarEventEntity | null;
+  response: CalendarEventEntity | Record<string, never>;
 };
 
 @Route.patch("/calendar-events/:id", {
@@ -72,6 +72,6 @@ export class UpdateCalendarEventController {
 
     const calendarEvent = await this.service.execute({ id, title, startDate, endDate, type, icon, description, color, priority, organizer, tags, lang });
 
-    return context.response.json(calendarEvent);
+    return context.response.json(calendarEvent || {});
   }
 }

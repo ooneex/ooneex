@@ -10,7 +10,7 @@ import type { StatusEntity } from "../entities/StatusEntity";
 type UpdateStatusRouteType = {
   params: { id: string };
   payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
-  response: StatusEntity | null;
+  response: StatusEntity | Record<string, never>;
 };
 
 @Route.patch("/statuses/:id", {
@@ -46,6 +46,6 @@ export class UpdateStatusController {
 
     const status = await this.service.execute({ id, name, lang, color, description });
 
-    return context.response.json(status);
+    return context.response.json(status || {});
   }
 }

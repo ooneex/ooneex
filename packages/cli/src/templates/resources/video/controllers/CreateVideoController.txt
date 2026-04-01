@@ -20,7 +20,7 @@ type CreateVideoRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: VideoEntity | null;
+  response: VideoEntity | Record<string, never>;
 };
 
 @Route.post("/videos", {
@@ -64,6 +64,6 @@ export class CreateVideoController {
 
     const video = await this.service.execute({ title, src, thumbnail, color, description, tags, topics, categories, status, lang });
 
-    return context.response.json(video);
+    return context.response.json(video || {});
   }
 }

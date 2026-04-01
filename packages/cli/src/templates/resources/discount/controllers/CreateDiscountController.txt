@@ -17,7 +17,7 @@ type CreateDiscountRouteType = {
     maxUsage?: number;
     usageCount?: number;
   };
-  response: DiscountEntity | null;
+  response: DiscountEntity | Record<string, never>;
 };
 
 @Route.post("/discounts", {
@@ -57,6 +57,6 @@ export class CreateDiscountController {
 
     const discount = await this.service.execute({ label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount });
 
-    return context.response.json(discount);
+    return context.response.json(discount || {});
   }
 }

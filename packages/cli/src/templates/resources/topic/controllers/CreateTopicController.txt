@@ -9,7 +9,7 @@ import type { TopicEntity } from "../entities/TopicEntity";
 
 type CreateTopicRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: TopicEntity | null;
+  response: TopicEntity | Record<string, never>;
 };
 
 @Route.post("/topics", {
@@ -41,6 +41,6 @@ export class CreateTopicController {
 
     const topic = await this.service.execute({ name, lang, color, description });
 
-    return context.response.json(topic);
+    return context.response.json(topic || {});
   }
 }

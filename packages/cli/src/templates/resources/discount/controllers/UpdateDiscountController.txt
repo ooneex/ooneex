@@ -18,7 +18,7 @@ type UpdateDiscountRouteType = {
     maxUsage?: number;
     usageCount?: number;
   };
-  response: DiscountEntity | null;
+  response: DiscountEntity | Record<string, never>;
 };
 
 @Route.patch("/discounts/:id", {
@@ -62,6 +62,6 @@ export class UpdateDiscountController {
 
     const discount = await this.service.execute({ id, label, code, type, creditAmount, accessDuration, accessUnit, maxUsage, usageCount });
 
-    return context.response.json(discount);
+    return context.response.json(discount || {});
   }
 }

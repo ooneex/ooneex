@@ -21,7 +21,7 @@ type UpdateVideoRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: VideoEntity | null;
+  response: VideoEntity | Record<string, never>;
 };
 
 @Route.patch("/videos/:id", {
@@ -69,6 +69,6 @@ export class UpdateVideoController {
 
     const video = await this.service.execute({ id, title, src, thumbnail, color, description, tags, topics, categories, status, lang });
 
-    return context.response.json(video);
+    return context.response.json(video || {});
   }
 }

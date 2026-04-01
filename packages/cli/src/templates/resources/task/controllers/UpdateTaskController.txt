@@ -21,7 +21,7 @@ type UpdateTaskRouteType = {
     categories?: string[];
     lang?: LocaleType;
   };
-  response: TaskEntity | null;
+  response: TaskEntity | Record<string, never>;
 };
 
 @Route.patch("/tasks/:id", {
@@ -67,6 +67,6 @@ export class UpdateTaskController {
 
     const task = await this.service.execute({ id, title, description, status, priority, icon, color, tags, categories, lang });
 
-    return context.response.json(task);
+    return context.response.json(task || {});
   }
 }

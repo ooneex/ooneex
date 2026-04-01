@@ -23,7 +23,7 @@ type UpdateNoteRouteType = {
     lang?: LocaleType;
     status?: string;
   };
-  response: NoteEntity | null;
+  response: NoteEntity | Record<string, never>;
 };
 
 @Route.patch("/notes/:id", {
@@ -75,6 +75,6 @@ export class UpdateNoteController {
 
     const note = await this.service.execute({ id, title, color, content, description, src, pageCount, coverImage, tags, topics, categories, lang, status });
 
-    return context.response.json(note);
+    return context.response.json(note || {});
   }
 }

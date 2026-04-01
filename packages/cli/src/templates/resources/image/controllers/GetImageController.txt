@@ -8,7 +8,7 @@ import { GetImageService } from "../services/GetImageService";
 
 type GetImageRouteType = {
   params: { id: string };
-  response: ImageEntity | null;
+  response: ImageEntity | Record<string, never>;
 };
 
 @Route.get("/images/:id", {
@@ -30,6 +30,6 @@ export class GetImageController {
 
     const image = await this.service.execute({ id });
 
-    return context.response.json(image);
+    return context.response.json(image || {});
   }
 }

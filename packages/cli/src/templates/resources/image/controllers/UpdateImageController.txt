@@ -20,7 +20,7 @@ type UpdateImageRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: ImageEntity | null;
+  response: ImageEntity | Record<string, never>;
 };
 
 @Route.patch("/images/:id", {
@@ -66,6 +66,6 @@ export class UpdateImageController {
 
     const image = await this.service.execute({ id, title, src, color, description, tags, topics, categories, status, lang });
 
-    return context.response.json(image);
+    return context.response.json(image || {});
   }
 }

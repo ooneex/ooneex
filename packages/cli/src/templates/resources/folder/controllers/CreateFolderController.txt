@@ -16,7 +16,7 @@ type CreateFolderRouteType = {
     categories?: string[];
     lang?: LocaleType;
   };
-  response: FolderEntity | null;
+  response: FolderEntity | Record<string, never>;
 };
 
 @Route.post("/folders", {
@@ -52,6 +52,6 @@ export class CreateFolderController {
 
     const folder = await this.service.execute({ name, icon, color, tags, categories, lang });
 
-    return context.response.json(folder);
+    return context.response.json(folder || {});
   }
 }

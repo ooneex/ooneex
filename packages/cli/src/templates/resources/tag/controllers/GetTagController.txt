@@ -8,7 +8,7 @@ import type { TagEntity } from "../entities/TagEntity";
 
 type GetTagRouteType = {
   params: { id: string };
-  response: TagEntity | null;
+  response: TagEntity | Record<string, never>;
 };
 
 @Route.get("/tags/:id", {
@@ -30,6 +30,6 @@ export class GetTagController {
 
     const tag = await this.service.execute({ id });
 
-    return context.response.json(tag);
+    return context.response.json(tag || {});
   }
 }

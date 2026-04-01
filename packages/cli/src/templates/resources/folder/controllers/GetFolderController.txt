@@ -8,7 +8,7 @@ import { GetFolderService } from "../services/GetFolderService";
 
 type GetFolderRouteType = {
   params: { id: string };
-  response: FolderEntity | null;
+  response: FolderEntity | Record<string, never>;
 };
 
 @Route.get("/folders/:id", {
@@ -30,6 +30,6 @@ export class GetFolderController {
 
     const folder = await this.service.execute({ id });
 
-    return context.response.json(folder);
+    return context.response.json(folder || {});
   }
 }

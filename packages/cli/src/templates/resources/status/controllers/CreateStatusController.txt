@@ -9,7 +9,7 @@ import type { StatusEntity } from "../entities/StatusEntity";
 
 type CreateStatusRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: StatusEntity | null;
+  response: StatusEntity | Record<string, never>;
 };
 
 @Route.post("/statuses", {
@@ -41,6 +41,6 @@ export class CreateStatusController {
 
     const status = await this.service.execute({ name, lang, color, description });
 
-    return context.response.json(status);
+    return context.response.json(status || {});
   }
 }

@@ -8,7 +8,7 @@ import { GetCalendarEventService } from "../services/GetCalendarEventService";
 
 type GetCalendarEventRouteType = {
   params: { id: string };
-  response: CalendarEventEntity | null;
+  response: CalendarEventEntity | Record<string, never>;
 };
 
 @Route.get("/calendar-events/:id", {
@@ -30,6 +30,6 @@ export class GetCalendarEventController {
 
     const calendarEvent = await this.service.execute({ id });
 
-    return context.response.json(calendarEvent);
+    return context.response.json(calendarEvent || {});
   }
 }

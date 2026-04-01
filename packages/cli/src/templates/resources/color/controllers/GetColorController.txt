@@ -8,7 +8,7 @@ import { GetColorService } from "../services/GetColorService";
 
 type GetColorRouteType = {
   params: { id: string };
-  response: ColorEntity | null;
+  response: ColorEntity | Record<string, never>;
 };
 
 @Route.get("/colors/:id", {
@@ -30,6 +30,6 @@ export class GetColorController {
 
     const color = await this.service.execute({ id });
 
-    return context.response.json(color);
+    return context.response.json(color || {});
   }
 }

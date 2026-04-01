@@ -125,7 +125,7 @@ describe("decorator.service", () => {
       action: string;
     };
 
-    class TypedService implements IService<ExecuteData> {
+    class TypedService implements IService {
       public async execute(_data?: ExecuteData): Promise<void> {
         // noop
       }

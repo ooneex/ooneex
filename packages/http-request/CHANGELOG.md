@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.4) - 2026-04-01
+
+### Changed
+
+- Disable minification in bunup configs across all packages — Franck ([29f840e1](https://github.com/ooneex/ooneex/commit/29f840e1))
+
 ## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.3) - 2026-04-01
 
 ### Changed

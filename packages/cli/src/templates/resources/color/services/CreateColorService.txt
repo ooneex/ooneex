@@ -7,7 +7,7 @@ import { ColorRepository } from "../repositories/ColorRepository";
 
 type ServiceDataType = {
   name: string;
-  hexa: string;
+  hex: string;
   description?: string;
   lang?: LocaleType;
 };
@@ -23,7 +23,7 @@ export class CreateColorService<T extends ServiceDataType = ServiceDataType> imp
 
     const color = new ColorEntity();
     color.name = data.name;
-    color.hexa = data.hexa;
+    color.hex = data.hex;
     color.description = data.description;
     color.lang = data.lang;
 

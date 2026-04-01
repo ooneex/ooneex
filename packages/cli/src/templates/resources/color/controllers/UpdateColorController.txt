@@ -8,8 +8,8 @@ import { UpdateColorService } from "../services/UpdateColorService";
 
 type UpdateColorRouteType = {
   params: { id: string };
-  payload: { name?: string; hexa?: string; description?: string; lang?: LocaleType };
-  response: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType };
+  payload: { name?: string; hex?: string; description?: string; lang?: LocaleType };
+  response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
 };
 
 @Route.Patch("/colors/:id", {
@@ -21,14 +21,14 @@ type UpdateColorRouteType = {
   },
   payload: Assert({
     name: "string?",
-    hexa: "string?",
+    hex: "string?",
     description: "string?",
     lang: "string?",
   }),
   response: Assert({
     id: "string",
     name: "string",
-    hexa: "string",
+    hex: "string",
     description: "string?",
     lang: "string?",
   }),
@@ -41,9 +41,9 @@ export class UpdateColorController {
 
   public async index(context: ContextType<UpdateColorRouteType>) {
     const { id } = context.params;
-    const { name, hexa, description, lang } = context.payload;
+    const { name, hex, description, lang } = context.payload;
 
-    const color = await this.service.execute({ id, name, hexa, description, lang });
+    const color = await this.service.execute({ id, name, hex, description, lang });
 
     return context.response.json(color);
   }

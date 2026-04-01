@@ -9,7 +9,7 @@ import { ListColorsService } from "../services/ListColorsService";
 type ListColorsRouteType = {
   query: { page?: number; limit?: number; q?: string };
   response: {
-    resources: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType }[];
+    resources: { id: string; name: string; hex: string; description?: string; lang?: LocaleType }[];
     total: number;
     totalPages: number;
     page: number;

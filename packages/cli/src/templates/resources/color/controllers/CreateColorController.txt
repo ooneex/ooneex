@@ -7,8 +7,8 @@ import { Assert } from "@ooneex/validation";
 import { CreateColorService } from "../services/CreateColorService";
 
 type CreateColorRouteType = {
-  payload: { name: string; hexa: string; description?: string; lang?: LocaleType };
-  response: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType };
+  payload: { name: string; hex: string; description?: string; lang?: LocaleType };
+  response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
 };
 
 @Route.Post("/colors", {
@@ -17,14 +17,14 @@ type CreateColorRouteType = {
   description: "Create a new color",
   payload: Assert({
     name: "string",
-    hexa: "string",
+    hex: "string",
     description: "string?",
     lang: "string?",
   }),
   response: Assert({
     id: "string",
     name: "string",
-    hexa: "string",
+    hex: "string",
     description: "string?",
     lang: "string?",
   }),
@@ -36,9 +36,9 @@ export class CreateColorController {
   ) {}
 
   public async index(context: ContextType<CreateColorRouteType>) {
-    const { name, hexa, description, lang } = context.payload;
+    const { name, hex, description, lang } = context.payload;
 
-    const color = await this.service.execute({ name, hexa, description, lang });
+    const color = await this.service.execute({ name, hex, description, lang });
 
     return context.response.json(color);
   }

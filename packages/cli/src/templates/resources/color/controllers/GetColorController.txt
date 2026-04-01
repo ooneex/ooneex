@@ -8,7 +8,7 @@ import { GetColorService } from "../services/GetColorService";
 
 type GetColorRouteType = {
   params: { id: string };
-  response: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType };
+  response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
 };
 
 @Route.Get("/colors/:id", {

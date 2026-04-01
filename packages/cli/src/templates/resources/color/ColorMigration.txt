@@ -8,7 +8,7 @@ export class {{ name }} implements IMigration {
       CREATE TABLE IF NOT EXISTS colors (
         id VARCHAR(25) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        hexa VARCHAR(50) NOT NULL,
+        hex VARCHAR(50) NOT NULL,
         description TEXT,
         lang VARCHAR(10),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -18,6 +18,10 @@ export class {{ name }} implements IMigration {
 
     await tx`
       CREATE INDEX IF NOT EXISTS idx_colors_name ON colors (name)
+    `;
+
+    await tx`
+      CREATE INDEX IF NOT EXISTS idx_colors_hex ON colors (hex)
     `;
   }
 

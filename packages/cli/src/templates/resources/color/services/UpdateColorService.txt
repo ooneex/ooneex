@@ -8,7 +8,7 @@ import { ColorRepository } from "../repositories/ColorRepository";
 type ServiceDataType = {
   id: string;
   name?: string;
-  hexa?: string;
+  hex?: string;
   description?: string;
   lang?: LocaleType;
 };

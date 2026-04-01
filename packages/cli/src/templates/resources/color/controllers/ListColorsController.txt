@@ -1,0 +1,43 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListColorsService } from "../services/ListColorsService";
+
+type ListColorsRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/colors", {
+  name: "color.list",
+  version: 1,
+  description: "List all colors",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListColorsController {
+  constructor(
+    @inject(ListColorsService) private readonly service: ListColorsService,
+  ) {}
+
+  public async index(context: ContextType<ListColorsRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

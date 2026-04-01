@@ -1,0 +1,45 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateColorService } from "../services/CreateColorService";
+
+type CreateColorRouteType = {
+  payload: { name: string; hexa: string; description?: string; lang?: LocaleType };
+  response: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType };
+};
+
+@Route.Post("/colors", {
+  name: "color.create",
+  version: 1,
+  description: "Create a new color",
+  payload: Assert({
+    name: "string",
+    hexa: "string",
+    description: "string?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    name: "string",
+    hexa: "string",
+    description: "string?",
+    lang: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateColorController {
+  constructor(
+    @inject(CreateColorService) private readonly service: CreateColorService,
+  ) {}
+
+  public async index(context: ContextType<CreateColorRouteType>) {
+    const { name, hexa, description, lang } = context.payload;
+
+    const color = await this.service.execute({ name, hexa, description, lang });
+
+    return context.response.json(color);
+  }
+}

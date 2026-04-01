@@ -1,0 +1,32 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { ColorEntity } from "../entities/ColorEntity";
+import { ColorRepository } from "../repositories/ColorRepository";
+
+type ServiceDataType = {
+  name: string;
+  hexa: string;
+  description?: string;
+  lang?: LocaleType;
+};
+
+@decorator.service()
+export class CreateColorService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(ColorRepository) private readonly repository: ColorRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<ColorEntity | null> {
+    if (!data) return null;
+
+    const color = new ColorEntity();
+    color.name = data.name;
+    color.hexa = data.hexa;
+    color.description = data.description;
+    color.lang = data.lang;
+
+    return await this.repository.create(color);
+  }
+}

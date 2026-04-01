@@ -1,0 +1,35 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetColorService } from "../services/GetColorService";
+
+type GetColorRouteType = {
+  params: { id: string };
+  response: { id: string; name: string; hexa: string; description?: string; lang?: LocaleType };
+};
+
+@Route.Get("/colors/:id", {
+  name: "color.get",
+  version: 1,
+  description: "Get a color by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetColorController {
+  constructor(
+    @inject(GetColorService) private readonly service: GetColorService,
+  ) {}
+
+  public async index(context: ContextType<GetColorRouteType>) {
+    const { id } = context.params;
+
+    const color = await this.service.execute({ id });
+
+    return context.response.json(color);
+  }
+}

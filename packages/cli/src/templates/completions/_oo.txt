@@ -32,6 +32,19 @@ _oo() {
     'make\:release:Release packages with version bump, changelog, and git tag'
     'make\:repository:Generate a new repository class'
     'make\:resource\:book:Generate book resource (entity, migration, repository)'
+    'make\:resource\:calendar-event:Generate calendar event resource (entity, migration, repository)'
+    'make\:resource\:category:Generate category resource (entity, migration, repository)'
+    'make\:resource\:color:Generate color resource (entity, migration, repository)'
+    'make\:resource\:discount:Generate discount resource (entity, migration, repository)'
+    'make\:resource\:folder:Generate folder resource (entity, migration, repository)'
+    'make\:resource\:image:Generate image resource (entity, migration, repository)'
+    'make\:resource\:note:Generate note resource (entity, migration, repository)'
+    'make\:resource\:status:Generate status resource (entity, migration, repository)'
+    'make\:resource\:tag:Generate tag resource (entity, migration, repository)'
+    'make\:resource\:task:Generate task resource (entity, migration, repository)'
+    'make\:resource\:topic:Generate topic resource (entity, migration, repository)'
+    'make\:resource\:user:Generate user resource (entity, migration, repository)'
+    'make\:resource\:video:Generate video resource (entity, migration, repository)'
     'make\:seed:Generate a new seed file'
     'make\:service:Generate a new service class'
     'make\:storage:Generate a new storage class'
@@ -104,7 +117,7 @@ _oo() {
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_oo_modules'
           ;;
-        make:release|make:resource:book|make:claude:skill|completion:zsh)
+        make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|completion:zsh)
           ;;
       esac
       ;;

@@ -1,0 +1,47 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetVideoService } from "../services/GetVideoService";
+
+type GetVideoRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    title: string;
+    src: string;
+    thumbnail: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+};
+
+@Route.Get("/videos/:id", {
+  name: "video.get",
+  version: 1,
+  description: "Get a video by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetVideoController {
+  constructor(
+    @inject(GetVideoService) private readonly service: GetVideoService,
+  ) {}
+
+  public async index(context: ContextType<GetVideoRouteType>) {
+    const { id } = context.params;
+
+    const video = await this.service.execute({ id });
+
+    return context.response.json(video);
+  }
+}

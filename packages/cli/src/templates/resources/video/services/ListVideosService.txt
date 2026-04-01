@@ -1,0 +1,27 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { FilterResultType } from "@ooneex/types";
+import { VideoEntity } from "../entities/VideoEntity";
+import { VideoRepository } from "../repositories/VideoRepository";
+
+type ServiceDataType = {
+  page?: number;
+  limit?: number;
+  q?: string;
+};
+
+@decorator.service()
+export class ListVideosService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(VideoRepository) private readonly repository: VideoRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<FilterResultType<VideoEntity>> {
+    return await this.repository.find({
+      page: data?.page,
+      limit: data?.limit,
+      q: data?.q,
+    });
+  }
+}

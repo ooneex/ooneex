@@ -1,0 +1,44 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { VideoEntity } from "../entities/VideoEntity";
+import { VideoRepository } from "../repositories/VideoRepository";
+
+type ServiceDataType = {
+  title: string;
+  src: string;
+  thumbnail: string;
+  color?: string;
+  description?: string;
+  tags?: string[];
+  topics?: string[];
+  categories?: string[];
+  status?: string;
+  lang?: LocaleType;
+};
+
+@decorator.service()
+export class CreateVideoService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(VideoRepository) private readonly repository: VideoRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<VideoEntity | null> {
+    if (!data) return null;
+
+    const video = new VideoEntity();
+    video.title = data.title;
+    video.src = data.src;
+    video.thumbnail = data.thumbnail;
+    video.color = data.color;
+    video.description = data.description;
+    video.tags = data.tags;
+    video.topics = data.topics;
+    video.categories = data.categories;
+    video.status = data.status;
+    video.lang = data.lang;
+
+    return await this.repository.create(video);
+  }
+}

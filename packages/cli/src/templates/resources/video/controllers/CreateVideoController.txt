@@ -1,0 +1,80 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { CreateVideoService } from "../services/CreateVideoService";
+
+type CreateVideoRouteType = {
+  payload: {
+    title: string;
+    src: string;
+    thumbnail: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+  response: {
+    id: string;
+    title: string;
+    src: string;
+    thumbnail: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+};
+
+@Route.Post("/videos", {
+  name: "video.create",
+  version: 1,
+  description: "Create a new video",
+  payload: Assert({
+    title: "string",
+    src: "string",
+    thumbnail: "string",
+    color: "string?",
+    description: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    status: "string?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    src: "string",
+    thumbnail: "string",
+    color: "string?",
+    description: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    status: "string?",
+    lang: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class CreateVideoController {
+  constructor(
+    @inject(CreateVideoService) private readonly service: CreateVideoService,
+  ) {}
+
+  public async index(context: ContextType<CreateVideoRouteType>) {
+    const { title, src, thumbnail, color, description, tags, topics, categories, status, lang } = context.payload;
+
+    const video = await this.service.execute({ title, src, thumbnail, color, description, tags, topics, categories, status, lang });
+
+    return context.response.json(video);
+  }
+}

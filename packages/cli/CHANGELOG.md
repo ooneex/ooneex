@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.1) - 2026-04-01
+
+### Changed
+
+- Simplify controller response types to use entity references — Franck ([0916e5bd](https://github.com/ooneex/ooneex/commit/0916e5bd))
+- Update resource templates and add module creation to book command — Franck ([a368a00b](https://github.com/ooneex/ooneex/commit/a368a00b))
+
 ## [1.10.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.0) - 2026-04-01
 
 ### Added

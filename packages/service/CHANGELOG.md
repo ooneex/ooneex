@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.4) - 2026-04-01
+
+### Changed
+
+- Remove generic parameter from IService interface — Franck ([0d00fa08](https://github.com/ooneex/ooneex/commit/0d00fa08))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.3) - 2026-04-01
 
 ### Changed

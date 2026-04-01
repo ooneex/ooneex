@@ -1,6 +1,8 @@
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type ServiceClassType = new (...args: any[]) => IService;
 
-export interface IService<T = Record<string, unknown>> {
-  execute: (data?: T) => Promise<void>;
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export interface IService<T extends Record<string, any> = Record<string, any>> {
+  // biome-ignore lint/suspicious/noExplicitAny: trust me
+  execute: (data?: T) => Promise<any> | any;
 }

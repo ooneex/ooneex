@@ -192,7 +192,7 @@ class MyRequestService {}
 
 ### Interfaces
 
-#### `IService<T>`
+#### `IService`
 
 Interface for service implementations.
 

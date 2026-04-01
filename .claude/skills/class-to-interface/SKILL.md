@@ -99,7 +99,7 @@ interface ICache {
 
 ## Additional Considerations
 
-- Preserve generic type parameters: `class Service<T>` becomes `interface IService<T>`
+- Preserve generic type parameters: `class Service<T>` becomes `interface IService`
 - Preserve JSDoc comments above methods and properties
 - Handle overloaded methods by creating multiple arrow function signatures
 - Static methods should be omitted (interfaces cannot have static members)

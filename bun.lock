@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.10.1",
+      "version": "1.10.2",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -542,14 +542,14 @@
     },
     "packages/service": {
       "name": "@ooneex/service",
-      "version": "1.1.3",
+      "version": "1.1.4",
       "dependencies": {
         "@ooneex/container": "workspace:*",
       },
     },
     "packages/socket": {
       "name": "@ooneex/socket",
-      "version": "1.2.2",
+      "version": "1.2.3",
       "devDependencies": {
         "@ooneex/controller": "workspace:*",
         "@ooneex/http-request": "workspace:*",

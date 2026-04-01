@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.7) - 2026-04-01
+
+### Changed
+
+- Disable minification in bunup configs across all packages — Franck ([29f840e1](https://github.com/ooneex/ooneex/commit/29f840e1))
+
+### Removed
+
+- Remove injectable decorator call from package decorators — Franck ([1d9af75b](https://github.com/ooneex/ooneex/commit/1d9af75b))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.6) - 2026-04-01
 
 ### Changed

@@ -21,7 +21,7 @@ export default defineConfig({
   ],
   sourcemap: "external",
   exports: true,
-  minify: true,
+  minify: false,
   dts: {
     minify: false,
   },

@@ -11,7 +11,7 @@ export default defineConfig({
     // level: "error",
   },
   exports: true,
-  minify: true,
+  minify: false,
   dts: {
     minify: false,
   },

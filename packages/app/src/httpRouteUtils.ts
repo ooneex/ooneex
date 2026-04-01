@@ -179,7 +179,7 @@ export const validateRouteAccess = async (
   // Check params
   if (route.params) {
     for (const [paramName, constraint] of Object.entries(route.params)) {
-      const error = validateConstraint(constraint, context.params[paramName]);
+      const error = validateConstraint(constraint, context.params?.[paramName]);
       if (error) {
         return {
           message: `Invalid parameter "${paramName}": ${error}`,

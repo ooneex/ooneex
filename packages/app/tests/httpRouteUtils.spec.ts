@@ -30,7 +30,7 @@ const createMockLogger = () => ({
   error: mock(() => {}),
 });
 
-const createMockContext = (overrides: Partial<ContextType> = {}): ContextType => {
+const createMockContext = (overrides: { [K in keyof ContextType]?: ContextType[K] | undefined } = {}): ContextType => {
   const response = new HttpResponse();
   return {
     logger: createMockLogger() as unknown as ContextType["logger"],

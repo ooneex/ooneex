@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.3) - 2026-04-01
+
+### Changed
+
+- Widen response type in ContextConfigType — Franck ([e9a3b0cd](https://github.com/ooneex/ooneex/commit/e9a3b0cd))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.2) - 2026-03-29
 
 ### Changed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.5) - 2026-04-01
+
+### Changed
+
+- Update README to reflect non-generic IService interface — Franck ([ec2de869](https://github.com/ooneex/ooneex/commit/ec2de869))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.4) - 2026-04-01
 
 ### Changed

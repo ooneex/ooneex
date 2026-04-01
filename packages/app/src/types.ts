@@ -10,7 +10,9 @@ import type { RateLimiterClassType } from "@ooneex/rate-limit";
 import type { StorageClassType } from "@ooneex/storage";
 
 export type AppConfigType = {
-  prefix?: string;
+  routing?: {
+    prefix: string;
+  };
   loggers: LoggerClassType[];
   onException?: LoggerClassType;
   analytics?: AnalyticsClassType;
@@ -23,5 +25,7 @@ export type AppConfigType = {
   events?: PubSubClassType[];
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;
-  healthcheckPath?: string;
+  check?: {
+    health?: string;
+  };
 };

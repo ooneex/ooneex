@@ -109,7 +109,8 @@ export class App {
     const env = container.get<IAppEnv>(AppEnv);
     let hostname = env.HOST_NAME;
 
-    const { middlewares = [], prefix } = this.config;
+    const { middlewares = [], routing } = this.config;
+    const prefix = routing?.prefix;
 
     const routes = {
       ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], prefix),
@@ -161,14 +162,14 @@ export class App {
 
     logger.info(`Server running at ${server.protocol}://${hostname}:${server.port}`);
 
-    if (this.config.healthcheckPath) {
-      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.healthcheckPath}`;
+    if (this.config.check?.health) {
+      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.check.health}`;
       const response = await fetch(healthCheckUrl);
 
       if (response.ok) {
-        logger.info(`Health check passed at ${this.config.healthcheckPath}`);
+        logger.info(`Health check passed at ${this.config.check.health}`);
       } else {
-        logger.warn(`Health check failed at ${this.config.healthcheckPath} with status ${response.status}`);
+        logger.warn(`Health check failed at ${this.config.check.health} with status ${response.status}`);
       }
     }
 

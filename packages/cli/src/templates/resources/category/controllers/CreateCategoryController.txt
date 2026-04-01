@@ -4,11 +4,12 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { CategoryEntity } from "../entities/CategoryEntity";
 import { CreateCategoryService } from "../services/CreateCategoryService";
 
 type CreateCategoryRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: CategoryEntity | null;
 };
 
 @Route.post("/categories", {

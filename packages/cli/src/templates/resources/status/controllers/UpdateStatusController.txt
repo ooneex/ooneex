@@ -5,11 +5,12 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { UpdateStatusService } from "../services/UpdateStatusService";
+import type { StatusEntity } from "../entities/StatusEntity";
 
 type UpdateStatusRouteType = {
   params: { id: string };
   payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: StatusEntity | null;
 };
 
 @Route.patch("/statuses/:id", {

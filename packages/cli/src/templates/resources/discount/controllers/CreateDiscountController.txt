@@ -3,6 +3,7 @@ import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
+import type { DiscountEntity } from "../entities/DiscountEntity";
 import { CreateDiscountService } from "../services/CreateDiscountService";
 
 type CreateDiscountRouteType = {
@@ -16,17 +17,7 @@ type CreateDiscountRouteType = {
     maxUsage?: number;
     usageCount?: number;
   };
-  response: {
-    id: string;
-    label?: string;
-    code: string;
-    type: "credit" | "access";
-    creditAmount?: number;
-    accessDuration?: number;
-    accessUnit?: "hour" | "day" | "month" | "year";
-    maxUsage?: number;
-    usageCount?: number;
-  };
+  response: DiscountEntity | null;
 };
 
 @Route.post("/discounts", {

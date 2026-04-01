@@ -1,32 +1,15 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { FilterResultType } from "@ooneex/types";
 import { Assert } from "@ooneex/validation";
 import { ListVideosService } from "../services/ListVideosService";
+import type { VideoEntity } from "../entities/VideoEntity";
 
 type ListVideosRouteType = {
   query: { page?: number; limit?: number; q?: string };
-  response: {
-    resources: {
-      id: string;
-      title: string;
-      src: string;
-      thumbnail: string;
-      color?: string;
-      description?: string;
-      tags?: string[];
-      topics?: string[];
-      categories?: string[];
-      status?: string;
-      lang?: LocaleType;
-    }[];
-    total: number;
-    totalPages: number;
-    page: number;
-    limit: number;
-  };
+  response: FilterResultType<VideoEntity>;
 };
 
 @Route.get("/videos", {

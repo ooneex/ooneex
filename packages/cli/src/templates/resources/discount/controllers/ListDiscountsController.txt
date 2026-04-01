@@ -2,28 +2,14 @@ import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { FilterResultType } from "@ooneex/types";
 import { Assert } from "@ooneex/validation";
+import type { DiscountEntity } from "../entities/DiscountEntity";
 import { ListDiscountsService } from "../services/ListDiscountsService";
 
 type ListDiscountsRouteType = {
   query: { page?: number; limit?: number; q?: string };
-  response: {
-    resources: {
-      id: string;
-      label?: string;
-      code: string;
-      type: "credit" | "access";
-      creditAmount?: number;
-      accessDuration?: number;
-      accessUnit?: "hour" | "day" | "month" | "year";
-      maxUsage?: number;
-      usageCount?: number;
-    }[];
-    total: number;
-    totalPages: number;
-    page: number;
-    limit: number;
-  };
+  response: FilterResultType<DiscountEntity>;
 };
 
 @Route.get("/discounts", {

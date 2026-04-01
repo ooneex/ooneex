@@ -1,14 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
+import type { CategoryEntity } from "../entities/CategoryEntity";
 import { GetCategoryService } from "../services/GetCategoryService";
 
 type GetCategoryRouteType = {
   params: { id: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: CategoryEntity | null;
 };
 
 @Route.get("/categories/:id", {

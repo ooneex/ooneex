@@ -4,6 +4,7 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { FolderEntity } from "../entities/FolderEntity";
 import { UpdateFolderService } from "../services/UpdateFolderService";
 
 type UpdateFolderRouteType = {
@@ -16,15 +17,7 @@ type UpdateFolderRouteType = {
     categories?: string[];
     lang?: LocaleType;
   };
-  response: {
-    id: string;
-    name: string;
-    icon?: string;
-    color?: string;
-    tags?: string[];
-    categories?: string[];
-    lang?: LocaleType;
-  };
+  response: FolderEntity | null;
 };
 
 @Route.patch("/folders/:id", {

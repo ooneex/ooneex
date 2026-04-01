@@ -1,14 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
 import { GetTagService } from "../services/GetTagService";
+import type { TagEntity } from "../entities/TagEntity";
 
 type GetTagRouteType = {
   params: { id: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TagEntity | null;
 };
 
 @Route.get("/tags/:id", {

@@ -5,6 +5,7 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import type { TaskStatusType } from "../entities/TaskEntity";
 import { Assert } from "@ooneex/validation";
+import type { TaskEntity } from "../entities/TaskEntity";
 import { UpdateTaskService } from "../services/UpdateTaskService";
 
 type UpdateTaskRouteType = {
@@ -20,18 +21,7 @@ type UpdateTaskRouteType = {
     categories?: string[];
     lang?: LocaleType;
   };
-  response: {
-    id: string;
-    title: string;
-    description?: string;
-    status?: TaskStatusType;
-    priority?: string;
-    icon?: string;
-    color?: string;
-    tags?: string[];
-    categories?: string[];
-    lang?: LocaleType;
-  };
+  response: TaskEntity | null;
 };
 
 @Route.patch("/tasks/:id", {

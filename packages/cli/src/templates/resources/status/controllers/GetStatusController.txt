@@ -1,14 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
 import { GetStatusService } from "../services/GetStatusService";
+import type { StatusEntity } from "../entities/StatusEntity";
 
 type GetStatusRouteType = {
   params: { id: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: StatusEntity | null;
 };
 
 @Route.get("/statuses/:id", {

@@ -5,11 +5,12 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { UpdateTopicService } from "../services/UpdateTopicService";
+import type { TopicEntity } from "../entities/TopicEntity";
 
 type UpdateTopicRouteType = {
   params: { id: string };
   payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TopicEntity | null;
 };
 
 @Route.patch("/topics/:id", {

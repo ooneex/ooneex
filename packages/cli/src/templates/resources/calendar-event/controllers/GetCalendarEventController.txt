@@ -1,27 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
+import type { CalendarEventEntity } from "../entities/CalendarEventEntity";
 import { GetCalendarEventService } from "../services/GetCalendarEventService";
 
 type GetCalendarEventRouteType = {
   params: { id: string };
-  response: {
-    id: string;
-    title: string;
-    startDate: Date;
-    endDate: Date;
-    type: string;
-    icon?: string;
-    description?: string;
-    color?: string;
-    priority?: string;
-    organizer?: { id: string; name: string; email?: string };
-    tags?: string[];
-    lang: LocaleType;
-  };
+  response: CalendarEventEntity | null;
 };
 
 @Route.get("/calendar-events/:id", {

@@ -5,10 +5,11 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { CreateTagService } from "../services/CreateTagService";
+import type { TagEntity } from "../entities/TagEntity";
 
 type CreateTagRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TagEntity | null;
 };
 
 @Route.post("/tags", {

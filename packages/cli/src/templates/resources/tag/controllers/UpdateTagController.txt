@@ -5,11 +5,12 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { UpdateTagService } from "../services/UpdateTagService";
+import type { TagEntity } from "../entities/TagEntity";
 
 type UpdateTagRouteType = {
   params: { id: string };
   payload: { name?: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TagEntity | null;
 };
 
 @Route.patch("/tags/:id", {

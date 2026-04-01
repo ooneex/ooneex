@@ -1,14 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
+import type { ColorEntity } from "../entities/ColorEntity";
 import { GetColorService } from "../services/GetColorService";
 
 type GetColorRouteType = {
   params: { id: string };
-  response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
+  response: ColorEntity | null;
 };
 
 @Route.get("/colors/:id", {

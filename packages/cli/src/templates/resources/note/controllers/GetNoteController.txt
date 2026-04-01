@@ -1,28 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
+import type { NoteEntity } from "../entities/NoteEntity";
 import { GetNoteService } from "../services/GetNoteService";
 
 type GetNoteRouteType = {
   params: { id: string };
-  response: {
-    id: string;
-    title?: string;
-    color?: string;
-    content?: string;
-    description?: string;
-    src?: string;
-    pageCount?: number;
-    coverImage?: string;
-    tags?: string[];
-    topics?: string[];
-    categories?: string[];
-    lang?: LocaleType;
-    status?: string;
-  };
+  response: NoteEntity | null;
 };
 
 @Route.get("/notes/:id", {

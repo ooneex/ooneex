@@ -1,20 +1,15 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { FilterResultType } from "@ooneex/types";
 import { Assert } from "@ooneex/validation";
 import { ListTopicsService } from "../services/ListTopicsService";
+import type { TopicEntity } from "../entities/TopicEntity";
 
 type ListTopicsRouteType = {
   query: { page?: number; limit?: number; q?: string };
-  response: {
-    resources: { id: string; name: string; lang: LocaleType; color?: string; description?: string }[];
-    total: number;
-    totalPages: number;
-    page: number;
-    limit: number;
-  };
+  response: FilterResultType<TopicEntity>;
 };
 
 @Route.get("/topics", {

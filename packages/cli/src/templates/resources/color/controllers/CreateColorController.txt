@@ -4,11 +4,12 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { ColorEntity } from "../entities/ColorEntity";
 import { CreateColorService } from "../services/CreateColorService";
 
 type CreateColorRouteType = {
   payload: { name: string; hex: string; description?: string; lang?: LocaleType };
-  response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
+  response: ColorEntity | null;
 };
 
 @Route.post("/colors", {

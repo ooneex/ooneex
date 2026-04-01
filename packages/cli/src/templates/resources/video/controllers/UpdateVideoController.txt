@@ -5,6 +5,7 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { UpdateVideoService } from "../services/UpdateVideoService";
+import type { VideoEntity } from "../entities/VideoEntity";
 
 type UpdateVideoRouteType = {
   params: { id: string };
@@ -20,19 +21,7 @@ type UpdateVideoRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: {
-    id: string;
-    title: string;
-    src: string;
-    thumbnail: string;
-    color?: string;
-    description?: string;
-    tags?: string[];
-    topics?: string[];
-    categories?: string[];
-    status?: string;
-    lang?: LocaleType;
-  };
+  response: VideoEntity | null;
 };
 
 @Route.patch("/videos/:id", {

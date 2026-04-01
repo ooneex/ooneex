@@ -4,6 +4,7 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { ImageEntity } from "../entities/ImageEntity";
 import { UpdateImageService } from "../services/UpdateImageService";
 
 type UpdateImageRouteType = {
@@ -19,18 +20,7 @@ type UpdateImageRouteType = {
     status?: string;
     lang?: LocaleType;
   };
-  response: {
-    id: string;
-    title: string;
-    src: string;
-    color?: string;
-    description?: string;
-    tags?: string[];
-    topics?: string[];
-    categories?: string[];
-    status?: string;
-    lang?: LocaleType;
-  };
+  response: ImageEntity | null;
 };
 
 @Route.patch("/images/:id", {

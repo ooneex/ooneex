@@ -2,21 +2,13 @@ import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
-import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { FolderEntity } from "../entities/FolderEntity";
 import { GetFolderService } from "../services/GetFolderService";
 
 type GetFolderRouteType = {
   params: { id: string };
-  response: {
-    id: string;
-    name: string;
-    icon?: string;
-    color?: string;
-    tags?: string[];
-    categories?: string[];
-    lang?: LocaleType;
-  };
+  response: FolderEntity | null;
 };
 
 @Route.get("/folders/:id", {

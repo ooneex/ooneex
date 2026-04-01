@@ -5,10 +5,11 @@ import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { CreateTopicService } from "../services/CreateTopicService";
+import type { TopicEntity } from "../entities/TopicEntity";
 
 type CreateTopicRouteType = {
   payload: { name: string; lang?: LocaleType; color?: string; description?: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TopicEntity | null;
 };
 
 @Route.post("/topics", {

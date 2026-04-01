@@ -1,20 +1,15 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { FilterResultType } from "@ooneex/types";
 import { Assert } from "@ooneex/validation";
+import type { ColorEntity } from "../entities/ColorEntity";
 import { ListColorsService } from "../services/ListColorsService";
 
 type ListColorsRouteType = {
   query: { page?: number; limit?: number; q?: string };
-  response: {
-    resources: { id: string; name: string; hex: string; description?: string; lang?: LocaleType }[];
-    total: number;
-    totalPages: number;
-    page: number;
-    limit: number;
-  };
+  response: FilterResultType<ColorEntity>;
 };
 
 @Route.get("/colors", {

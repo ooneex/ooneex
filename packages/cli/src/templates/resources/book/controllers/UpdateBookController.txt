@@ -4,6 +4,7 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { BookEntity } from "../entities/BookEntity";
 import { UpdateBookService } from "../services/UpdateBookService";
 
 type UpdateBookRouteType = {
@@ -22,21 +23,7 @@ type UpdateBookRouteType = {
     lang?: LocaleType;
     status?: string;
   };
-  response: {
-    id: string;
-    title: string;
-    color?: string;
-    description?: string;
-    summarize?: string;
-    pageCount?: number;
-    src: string;
-    coverImage?: string;
-    tags?: string[];
-    topics?: string[];
-    categories?: string[];
-    lang?: LocaleType;
-    status?: string;
-  };
+  response: BookEntity | null;
 };
 
 @Route.patch("/books/:id", {

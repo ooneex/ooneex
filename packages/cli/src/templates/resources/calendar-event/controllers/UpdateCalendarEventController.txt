@@ -4,6 +4,7 @@ import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
+import type { CalendarEventEntity } from "../entities/CalendarEventEntity";
 import { UpdateCalendarEventService } from "../services/UpdateCalendarEventService";
 
 type UpdateCalendarEventRouteType = {
@@ -21,20 +22,7 @@ type UpdateCalendarEventRouteType = {
     tags?: string[];
     lang?: LocaleType;
   };
-  response: {
-    id: string;
-    title: string;
-    startDate: Date;
-    endDate: Date;
-    type: string;
-    icon?: string;
-    description?: string;
-    color?: string;
-    priority?: string;
-    organizer?: { id: string; name: string; email?: string };
-    tags?: string[];
-    lang: LocaleType;
-  };
+  response: CalendarEventEntity | null;
 };
 
 @Route.patch("/calendar-events/:id", {

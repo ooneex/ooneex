@@ -1,14 +1,14 @@
 import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
-import type { LocaleType } from "@ooneex/translation";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
 import { Assert } from "@ooneex/validation";
 import { GetTopicService } from "../services/GetTopicService";
+import type { TopicEntity } from "../entities/TopicEntity";
 
 type GetTopicRouteType = {
   params: { id: string };
-  response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
+  response: TopicEntity | null;
 };
 
 @Route.get("/topics/:id", {

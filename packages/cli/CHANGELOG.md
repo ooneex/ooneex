@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.1) - 2026-04-01
+
+### Fixed
+
+- Use @module/app filter in package.json template scripts — Franck ([9e17a9a3](https://github.com/ooneex/ooneex/commit/9e17a9a3))
+
 ## [1.11.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.0) - 2026-04-01
 
 ### Added

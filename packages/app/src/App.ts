@@ -1,7 +1,7 @@
 import { AppEnv, type IAppEnv } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import type { ICron } from "@ooneex/cron";
-import { Exception } from "@ooneex/exception";
+import { Exception, type IException } from "@ooneex/exception";
 import { HttpStatus } from "@ooneex/http-status";
 import { type ILogger, type LogsEntity, TerminalLogger } from "@ooneex/logger";
 import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/middleware";
@@ -99,14 +99,12 @@ export class App {
   public async run(): Promise<App> {
     const logger = new TerminalLogger();
 
-    await this.init();
-
-    // try {
-
-    // } catch (error: unknown) {
-    //   logger.error(error as IException);
-    //   process.exit(1);
-    // }
+    try {
+      await this.init();
+    } catch (error: unknown) {
+      logger.error(error as IException);
+      process.exit(1);
+    }
 
     const env = container.get<IAppEnv>(AppEnv);
     let hostname = env.HOST_NAME;

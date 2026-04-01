@@ -11,7 +11,7 @@ type CreateTagRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Post("/tags", {
+@Route.post("/tags", {
   name: "tag.create",
   version: 1,
   description: "Create a new tag",

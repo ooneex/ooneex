@@ -10,7 +10,7 @@ type DeleteDiscountRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/discounts/:id", {
+@Route.delete("/discounts/:id", {
   name: "discount.delete",
   version: 1,
   description: "Delete a discount",

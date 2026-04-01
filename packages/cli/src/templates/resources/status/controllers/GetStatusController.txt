@@ -11,7 +11,7 @@ type GetStatusRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Get("/statuses/:id", {
+@Route.get("/statuses/:id", {
   name: "status.get",
   version: 1,
   description: "Get a status by id",

@@ -10,7 +10,7 @@ type DeleteTopicRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/topics/:id", {
+@Route.delete("/topics/:id", {
   name: "topic.delete",
   version: 1,
   description: "Delete a topic",

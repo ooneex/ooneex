@@ -11,7 +11,7 @@ type CreateStatusRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Post("/statuses", {
+@Route.post("/statuses", {
   name: "status.create",
   version: 1,
   description: "Create a new status",

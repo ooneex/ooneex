@@ -17,7 +17,7 @@ type ListCategoriesRouteType = {
   };
 };
 
-@Route.Get("/categories", {
+@Route.get("/categories", {
   name: "category.list",
   version: 1,
   description: "List all categories",

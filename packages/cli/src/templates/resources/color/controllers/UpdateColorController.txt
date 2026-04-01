@@ -12,7 +12,7 @@ type UpdateColorRouteType = {
   response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
 };
 
-@Route.Patch("/colors/:id", {
+@Route.patch("/colors/:id", {
   name: "color.update",
   version: 1,
   description: "Update a color",

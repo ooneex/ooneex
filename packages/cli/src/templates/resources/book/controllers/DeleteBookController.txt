@@ -10,7 +10,7 @@ type DeleteBookRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/books/:id", {
+@Route.delete("/books/:id", {
   name: "book.delete",
   version: 1,
   description: "Delete a book",

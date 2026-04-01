@@ -11,7 +11,7 @@ type UpdateUserProfileRouteType = {
   response: { id: string; lastName: string; firstName: string };
 };
 
-@Route.Patch("/users/:id/profile", {
+@Route.patch("/users/:id/profile", {
   name: "user.profile.update",
   version: 1,
   description: "Update a user profile",

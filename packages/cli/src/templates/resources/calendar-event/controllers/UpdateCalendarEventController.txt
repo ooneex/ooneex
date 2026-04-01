@@ -37,7 +37,7 @@ type UpdateCalendarEventRouteType = {
   };
 };
 
-@Route.Patch("/calendar-events/:id", {
+@Route.patch("/calendar-events/:id", {
   name: "calendar-event.update",
   version: 1,
   description: "Update a calendar event",

@@ -23,7 +23,7 @@ type GetTaskRouteType = {
   };
 };
 
-@Route.Get("/tasks/:id", {
+@Route.get("/tasks/:id", {
   name: "task.get",
   version: 1,
   description: "Get a task by id",

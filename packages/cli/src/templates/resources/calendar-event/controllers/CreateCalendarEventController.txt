@@ -36,7 +36,7 @@ type CreateCalendarEventRouteType = {
   };
 };
 
-@Route.Post("/calendar-events", {
+@Route.post("/calendar-events", {
   name: "calendar-event.create",
   version: 1,
   description: "Create a new calendar event",

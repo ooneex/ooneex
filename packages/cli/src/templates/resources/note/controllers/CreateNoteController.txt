@@ -38,7 +38,7 @@ type CreateNoteRouteType = {
   };
 };
 
-@Route.Post("/notes", {
+@Route.post("/notes", {
   name: "note.create",
   version: 1,
   description: "Create a new note",

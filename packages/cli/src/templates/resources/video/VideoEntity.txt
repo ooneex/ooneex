@@ -1,4 +1,3 @@
-import type { IVideo } from "@ooneex/video";
 import type { LocaleType } from "@ooneex/translation";
 import { random } from "@ooneex/utils";
 import {
@@ -12,7 +11,7 @@ import {
 @Entity({
   name: "videos",
 })
-export class VideoEntity implements IVideo {
+export class VideoEntity {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
   id: string = random.id();
 

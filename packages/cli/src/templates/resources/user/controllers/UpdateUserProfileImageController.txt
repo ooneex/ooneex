@@ -11,7 +11,7 @@ type UpdateUserProfileImageRouteType = {
   response: { id: string; avatar: string };
 };
 
-@Route.Patch("/users/:id/profile/image", {
+@Route.patch("/users/:id/profile/image", {
   name: "user.profile.image.update",
   version: 1,
   description: "Update a user profile image",

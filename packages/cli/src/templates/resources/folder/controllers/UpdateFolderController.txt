@@ -27,7 +27,7 @@ type UpdateFolderRouteType = {
   };
 };
 
-@Route.Patch("/folders/:id", {
+@Route.patch("/folders/:id", {
   name: "folder.update",
   version: 1,
   description: "Update a folder",

@@ -31,7 +31,7 @@ type ListNotesRouteType = {
   };
 };
 
-@Route.Get("/notes", {
+@Route.get("/notes", {
   name: "note.list",
   version: 1,
   description: "List all notes",

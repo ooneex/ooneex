@@ -10,7 +10,7 @@ type DeleteVideoRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/videos/:id", {
+@Route.delete("/videos/:id", {
   name: "video.delete",
   version: 1,
   description: "Delete a video",

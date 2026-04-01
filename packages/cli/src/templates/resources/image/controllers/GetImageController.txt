@@ -22,7 +22,7 @@ type GetImageRouteType = {
   };
 };
 
-@Route.Get("/images/:id", {
+@Route.get("/images/:id", {
   name: "image.get",
   version: 1,
   description: "Get an image by id",

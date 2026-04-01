@@ -26,7 +26,7 @@ type CreateFolderRouteType = {
   };
 };
 
-@Route.Post("/folders", {
+@Route.post("/folders", {
   name: "folder.create",
   version: 1,
   description: "Create a new folder",

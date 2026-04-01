@@ -10,7 +10,7 @@ type DeleteUserProfileImageRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/users/:id/profile/image", {
+@Route.delete("/users/:id/profile/image", {
   name: "user.profile.image.delete",
   version: 1,
   description: "Delete a user profile image",

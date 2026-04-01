@@ -39,7 +39,7 @@ type UpdateNoteRouteType = {
   };
 };
 
-@Route.Patch("/notes/:id", {
+@Route.patch("/notes/:id", {
   name: "note.update",
   version: 1,
   description: "Update a note",

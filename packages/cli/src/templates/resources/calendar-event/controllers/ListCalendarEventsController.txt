@@ -30,7 +30,7 @@ type ListCalendarEventsRouteType = {
   };
 };
 
-@Route.Get("/calendar-events", {
+@Route.get("/calendar-events", {
   name: "calendar-event.list",
   version: 1,
   description: "List all calendar events",

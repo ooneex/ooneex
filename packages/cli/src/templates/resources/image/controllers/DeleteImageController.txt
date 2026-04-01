@@ -10,7 +10,7 @@ type DeleteImageRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/images/:id", {
+@Route.delete("/images/:id", {
   name: "image.delete",
   version: 1,
   description: "Delete an image",

@@ -10,7 +10,7 @@ type DeleteFolderRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/folders/:id", {
+@Route.delete("/folders/:id", {
   name: "folder.delete",
   version: 1,
   description: "Delete a folder",

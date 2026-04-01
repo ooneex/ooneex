@@ -10,7 +10,7 @@ type DeleteColorRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/colors/:id", {
+@Route.delete("/colors/:id", {
   name: "color.delete",
   version: 1,
   description: "Delete a color",

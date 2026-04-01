@@ -12,7 +12,7 @@ type UpdateTopicRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Patch("/topics/:id", {
+@Route.patch("/topics/:id", {
   name: "topic.update",
   version: 1,
   description: "Update a topic",

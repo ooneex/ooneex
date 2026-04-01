@@ -34,7 +34,7 @@ type UpdateTaskRouteType = {
   };
 };
 
-@Route.Patch("/tasks/:id", {
+@Route.patch("/tasks/:id", {
   name: "task.update",
   version: 1,
   description: "Update a task",

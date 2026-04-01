@@ -17,7 +17,7 @@ type ListStatusesRouteType = {
   };
 };
 
-@Route.Get("/statuses", {
+@Route.get("/statuses", {
   name: "status.list",
   version: 1,
   description: "List all statuses",

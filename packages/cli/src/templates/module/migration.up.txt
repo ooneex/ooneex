@@ -4,6 +4,6 @@ import { migrationUp } from "@ooneex/migrations";
 import "@/migrations/migrations";
 
 await migrationUp({
-  databaseUrl: Bun.env.DATABASE_URL || ":memory:",
+  databaseUrl: Bun.env.DATABASE_URL,
   tableName: "migrations",
 });

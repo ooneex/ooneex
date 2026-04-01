@@ -12,7 +12,7 @@ type UpdateTagRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Patch("/tags/:id", {
+@Route.patch("/tags/:id", {
   name: "tag.update",
   version: 1,
   description: "Update a tag",

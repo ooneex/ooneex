@@ -29,7 +29,7 @@ type ListVideosRouteType = {
   };
 };
 
-@Route.Get("/videos", {
+@Route.get("/videos", {
   name: "video.list",
   version: 1,
   description: "List all videos",

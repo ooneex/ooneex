@@ -23,7 +23,7 @@ type GetVideoRouteType = {
   };
 };
 
-@Route.Get("/videos/:id", {
+@Route.get("/videos/:id", {
   name: "video.get",
   version: 1,
   description: "Get a video by id",

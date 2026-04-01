@@ -30,7 +30,7 @@ type UpdateDiscountRouteType = {
   };
 };
 
-@Route.Patch("/discounts/:id", {
+@Route.patch("/discounts/:id", {
   name: "discount.update",
   version: 1,
   description: "Update a discount",

@@ -12,7 +12,7 @@ type UpdateUserRolesRouteType = {
   response: { id: string; roles: ERole[] };
 };
 
-@Route.Patch("/users/:id/roles", {
+@Route.patch("/users/:id/roles", {
   name: "user.roles.update",
   version: 1,
   description: "Update a user roles",

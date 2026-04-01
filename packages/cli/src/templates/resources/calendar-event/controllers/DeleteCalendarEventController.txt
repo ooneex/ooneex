@@ -10,7 +10,7 @@ type DeleteCalendarEventRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/calendar-events/:id", {
+@Route.delete("/calendar-events/:id", {
   name: "calendar-event.delete",
   version: 1,
   description: "Delete a calendar event",

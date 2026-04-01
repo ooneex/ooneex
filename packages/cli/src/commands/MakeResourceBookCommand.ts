@@ -18,6 +18,7 @@ import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";
+import { MakeModuleCommand } from "./MakeModuleCommand";
 import { MakeRepositoryCommand } from "./MakeRepositoryCommand";
 import { MakeServiceCommand } from "./MakeServiceCommand";
 
@@ -34,6 +35,10 @@ export class MakeResourceBookCommand implements ICommand {
   public async run(): Promise<void> {
     const module = "book";
     const base = join("modules", module);
+
+    // Create module first
+    const makeModuleCommand = new MakeModuleCommand();
+    await makeModuleCommand.run({ name: module, silent: true, skipMigrations: false, skipSeeds: true });
 
     const makeEntityCommand = new MakeEntityCommand();
     await makeEntityCommand.run({ name: "Book", module, tableName: "books" });

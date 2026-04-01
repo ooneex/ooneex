@@ -39,7 +39,7 @@ type UpdateBookRouteType = {
   };
 };
 
-@Route.Patch("/books/:id", {
+@Route.patch("/books/:id", {
   name: "book.update",
   version: 1,
   description: "Update a book",

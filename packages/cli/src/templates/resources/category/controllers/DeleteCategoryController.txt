@@ -10,7 +10,7 @@ type DeleteCategoryRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/categories/:id", {
+@Route.delete("/categories/:id", {
   name: "category.delete",
   version: 1,
   description: "Delete a category",

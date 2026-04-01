@@ -11,7 +11,7 @@ type GetCategoryRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Get("/categories/:id", {
+@Route.get("/categories/:id", {
   name: "category.get",
   version: 1,
   description: "Get a category by id",

@@ -29,7 +29,7 @@ type ListTasksRouteType = {
   };
 };
 
-@Route.Get("/tasks", {
+@Route.get("/tasks", {
   name: "task.list",
   version: 1,
   description: "List all tasks",

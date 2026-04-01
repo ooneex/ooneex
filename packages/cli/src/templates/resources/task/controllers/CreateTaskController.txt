@@ -33,7 +33,7 @@ type CreateTaskRouteType = {
   };
 };
 
-@Route.Post("/tasks", {
+@Route.post("/tasks", {
   name: "task.create",
   version: 1,
   description: "Create a new task",

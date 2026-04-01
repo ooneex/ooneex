@@ -10,7 +10,7 @@ type DeleteNoteRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/notes/:id", {
+@Route.delete("/notes/:id", {
   name: "note.delete",
   version: 1,
   description: "Delete a note",

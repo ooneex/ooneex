@@ -11,7 +11,7 @@ type GetTopicRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Get("/topics/:id", {
+@Route.get("/topics/:id", {
   name: "topic.get",
   version: 1,
   description: "Get a topic by id",

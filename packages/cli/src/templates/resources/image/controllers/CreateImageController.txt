@@ -32,7 +32,7 @@ type CreateImageRouteType = {
   };
 };
 
-@Route.Post("/images", {
+@Route.post("/images", {
   name: "image.create",
   version: 1,
   description: "Create a new image",

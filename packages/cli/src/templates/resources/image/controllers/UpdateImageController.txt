@@ -33,7 +33,7 @@ type UpdateImageRouteType = {
   };
 };
 
-@Route.Patch("/images/:id", {
+@Route.patch("/images/:id", {
   name: "image.update",
   version: 1,
   description: "Update an image",

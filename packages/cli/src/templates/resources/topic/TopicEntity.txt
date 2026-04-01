@@ -1,4 +1,3 @@
-import type { ITopic } from "@ooneex/topic";
 import type { LocaleType } from "@ooneex/translation";
 import { random } from "@ooneex/utils";
 import {
@@ -12,7 +11,7 @@ import {
 @Entity({
   name: "topics",
 })
-export class TopicEntity implements ITopic {
+export class TopicEntity {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
   id: string = random.id();
 

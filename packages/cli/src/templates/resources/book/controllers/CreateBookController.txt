@@ -38,7 +38,7 @@ type CreateBookRouteType = {
   };
 };
 
-@Route.Post("/books", {
+@Route.post("/books", {
   name: "book.create",
   version: 1,
   description: "Create a new book",

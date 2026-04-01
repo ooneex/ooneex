@@ -11,7 +11,7 @@ type BanUserRouteType = {
   response: { id: string; banned: boolean };
 };
 
-@Route.Patch("/users/:id/ban", {
+@Route.patch("/users/:id/ban", {
   name: "user.ban",
   version: 1,
   description: "Ban or unban a user",

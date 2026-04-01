@@ -11,7 +11,7 @@ type CreateTopicRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Post("/topics", {
+@Route.post("/topics", {
   name: "topic.create",
   version: 1,
   description: "Create a new topic",

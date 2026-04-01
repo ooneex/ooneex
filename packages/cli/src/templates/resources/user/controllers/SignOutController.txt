@@ -10,7 +10,7 @@ type SignOutRouteType = {
   response: { sessionId: string };
 };
 
-@Route.Post("/users/sign-out", {
+@Route.post("/users/sign-out", {
   name: "user.sign-out",
   version: 1,
   description: "Sign out a user session",

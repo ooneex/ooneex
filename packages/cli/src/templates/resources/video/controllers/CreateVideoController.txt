@@ -34,7 +34,7 @@ type CreateVideoRouteType = {
   };
 };
 
-@Route.Post("/videos", {
+@Route.post("/videos", {
   name: "video.create",
   version: 1,
   description: "Create a new video",

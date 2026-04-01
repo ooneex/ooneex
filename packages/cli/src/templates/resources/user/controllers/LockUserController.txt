@@ -11,7 +11,7 @@ type LockUserRouteType = {
   response: { id: string; locked: boolean };
 };
 
-@Route.Patch("/users/:id/lock", {
+@Route.patch("/users/:id/lock", {
   name: "user.lock",
   version: 1,
   description: "Lock or unlock a user",

@@ -1,4 +1,3 @@
-import type { ITask } from "@ooneex/task";
 import type { LocaleType } from "@ooneex/translation";
 
 import { random } from "@ooneex/utils";
@@ -15,7 +14,7 @@ export type TaskStatusType = "Inbox" | "Todo" | "In Progress" | "Completed";
 @Entity({
   name: "tasks",
 })
-export class TaskEntity implements ITask {
+export class TaskEntity {
   @PrimaryColumn({ name: "id", type: "varchar", length: 25 })
   id: string = random.id();
 

@@ -11,7 +11,7 @@ type GetTagRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Get("/tags/:id", {
+@Route.get("/tags/:id", {
   name: "tag.get",
   version: 1,
   description: "Get a tag by id",

@@ -12,7 +12,7 @@ type UpdateStatusRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Patch("/statuses/:id", {
+@Route.patch("/statuses/:id", {
   name: "status.update",
   version: 1,
   description: "Update a status",

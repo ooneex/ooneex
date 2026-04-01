@@ -10,7 +10,7 @@ type DeleteStatusRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/statuses/:id", {
+@Route.delete("/statuses/:id", {
   name: "status.delete",
   version: 1,
   description: "Delete a status",

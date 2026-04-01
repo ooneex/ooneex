@@ -31,7 +31,7 @@ type ListBooksRouteType = {
   };
 };
 
-@Route.Get("/books", {
+@Route.get("/books", {
   name: "book.list",
   version: 1,
   description: "List all books",

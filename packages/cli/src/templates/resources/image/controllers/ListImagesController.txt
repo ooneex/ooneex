@@ -28,7 +28,7 @@ type ListImagesRouteType = {
   };
 };
 
-@Route.Get("/images", {
+@Route.get("/images", {
   name: "image.list",
   version: 1,
   description: "List all images",

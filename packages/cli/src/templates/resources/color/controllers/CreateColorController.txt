@@ -11,7 +11,7 @@ type CreateColorRouteType = {
   response: { id: string; name: string; hex: string; description?: string; lang?: LocaleType };
 };
 
-@Route.Post("/colors", {
+@Route.post("/colors", {
   name: "color.create",
   version: 1,
   description: "Create a new color",

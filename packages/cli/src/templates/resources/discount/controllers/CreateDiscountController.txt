@@ -29,7 +29,7 @@ type CreateDiscountRouteType = {
   };
 };
 
-@Route.Post("/discounts", {
+@Route.post("/discounts", {
   name: "discount.create",
   version: 1,
   description: "Create a new discount",

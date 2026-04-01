@@ -20,7 +20,7 @@ type GetDiscountRouteType = {
   };
 };
 
-@Route.Get("/discounts/:id", {
+@Route.get("/discounts/:id", {
   name: "discount.get",
   version: 1,
   description: "Get a discount by id",

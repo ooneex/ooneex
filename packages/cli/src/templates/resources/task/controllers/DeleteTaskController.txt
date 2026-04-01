@@ -10,7 +10,7 @@ type DeleteTaskRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/tasks/:id", {
+@Route.delete("/tasks/:id", {
   name: "task.delete",
   version: 1,
   description: "Delete a task",

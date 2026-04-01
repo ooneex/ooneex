@@ -17,7 +17,7 @@ type ListColorsRouteType = {
   };
 };
 
-@Route.Get("/colors", {
+@Route.get("/colors", {
   name: "color.list",
   version: 1,
   description: "List all colors",

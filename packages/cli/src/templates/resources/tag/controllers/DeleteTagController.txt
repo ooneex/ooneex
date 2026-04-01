@@ -10,7 +10,7 @@ type DeleteTagRouteType = {
   response: { id: string };
 };
 
-@Route.Delete("/tags/:id", {
+@Route.delete("/tags/:id", {
   name: "tag.delete",
   version: 1,
   description: "Delete a tag",

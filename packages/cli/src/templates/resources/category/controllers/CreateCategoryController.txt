@@ -11,7 +11,7 @@ type CreateCategoryRouteType = {
   response: { id: string; name: string; lang: LocaleType; color?: string; description?: string };
 };
 
-@Route.Post("/categories", {
+@Route.post("/categories", {
   name: "category.create",
   version: 1,
   description: "Create a new category",

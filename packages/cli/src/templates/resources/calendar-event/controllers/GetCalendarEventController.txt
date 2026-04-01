@@ -24,7 +24,7 @@ type GetCalendarEventRouteType = {
   };
 };
 
-@Route.Get("/calendar-events/:id", {
+@Route.get("/calendar-events/:id", {
   name: "calendar-event.get",
   version: 1,
   description: "Get a calendar event by id",

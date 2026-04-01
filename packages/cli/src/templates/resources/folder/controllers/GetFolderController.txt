@@ -19,7 +19,7 @@ type GetFolderRouteType = {
   };
 };
 
-@Route.Get("/folders/:id", {
+@Route.get("/folders/:id", {
   name: "folder.get",
   version: 1,
   description: "Get a folder by id",

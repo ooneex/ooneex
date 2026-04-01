@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.3) - 2026-04-01
+
+### Fixed
+
+- Restore try-catch error handling in run method — Franck ([c83b1a43](https://github.com/ooneex/ooneex/commit/c83b1a43))
+
 ## [1.3.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.2) - 2026-04-01
 
 ### Changed

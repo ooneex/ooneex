@@ -1,9 +1,6 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/tag/TagEntity.txt";
-import migrationTemplate from "../templates/resources/tag/TagMigration.txt";
-import repositoryTemplate from "../templates/resources/tag/TagRepository.txt";
 import createTagControllerTemplate from "../templates/resources/tag/controllers/CreateTagController.txt";
 import deleteTagControllerTemplate from "../templates/resources/tag/controllers/DeleteTagController.txt";
 import getTagControllerTemplate from "../templates/resources/tag/controllers/GetTagController.txt";
@@ -14,6 +11,9 @@ import deleteTagServiceTemplate from "../templates/resources/tag/services/Delete
 import getTagServiceTemplate from "../templates/resources/tag/services/GetTagService.txt";
 import listTagsServiceTemplate from "../templates/resources/tag/services/ListTagsService.txt";
 import updateTagServiceTemplate from "../templates/resources/tag/services/UpdateTagService.txt";
+import entityTemplate from "../templates/resources/tag/TagEntity.txt";
+import migrationTemplate from "../templates/resources/tag/TagMigration.txt";
+import repositoryTemplate from "../templates/resources/tag/TagRepository.txt";
 import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";

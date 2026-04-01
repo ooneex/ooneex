@@ -1,9 +1,6 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/task/TaskEntity.txt";
-import migrationTemplate from "../templates/resources/task/TaskMigration.txt";
-import repositoryTemplate from "../templates/resources/task/TaskRepository.txt";
 import createTaskControllerTemplate from "../templates/resources/task/controllers/CreateTaskController.txt";
 import deleteTaskControllerTemplate from "../templates/resources/task/controllers/DeleteTaskController.txt";
 import getTaskControllerTemplate from "../templates/resources/task/controllers/GetTaskController.txt";
@@ -14,6 +11,9 @@ import deleteTaskServiceTemplate from "../templates/resources/task/services/Dele
 import getTaskServiceTemplate from "../templates/resources/task/services/GetTaskService.txt";
 import listTasksServiceTemplate from "../templates/resources/task/services/ListTasksService.txt";
 import updateTaskServiceTemplate from "../templates/resources/task/services/UpdateTaskService.txt";
+import entityTemplate from "../templates/resources/task/TaskEntity.txt";
+import migrationTemplate from "../templates/resources/task/TaskMigration.txt";
+import repositoryTemplate from "../templates/resources/task/TaskRepository.txt";
 import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";

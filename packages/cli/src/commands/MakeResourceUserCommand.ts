@@ -1,9 +1,6 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/user/UserEntity.txt";
-import migrationTemplate from "../templates/resources/user/UserMigration.txt";
-import repositoryTemplate from "../templates/resources/user/UserRepository.txt";
 import banUserControllerTemplate from "../templates/resources/user/controllers/BanUserController.txt";
 import deleteUserProfileImageControllerTemplate from "../templates/resources/user/controllers/DeleteUserProfileImageController.txt";
 import lockUserControllerTemplate from "../templates/resources/user/controllers/LockUserController.txt";
@@ -18,6 +15,9 @@ import signOutServiceTemplate from "../templates/resources/user/services/SignOut
 import updateUserProfileImageServiceTemplate from "../templates/resources/user/services/UpdateUserProfileImageService.txt";
 import updateUserProfileServiceTemplate from "../templates/resources/user/services/UpdateUserProfileService.txt";
 import updateUserRolesServiceTemplate from "../templates/resources/user/services/UpdateUserRolesService.txt";
+import entityTemplate from "../templates/resources/user/UserEntity.txt";
+import migrationTemplate from "../templates/resources/user/UserMigration.txt";
+import repositoryTemplate from "../templates/resources/user/UserRepository.txt";
 import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import entityTemplate from "@/templates/resources/discount/DiscountEntity.txt";
-import repositoryTemplate from "@/templates/resources/discount/DiscountRepository.txt";
 import createDiscountControllerTemplate from "@/templates/resources/discount/controllers/CreateDiscountController.txt";
 import deleteDiscountControllerTemplate from "@/templates/resources/discount/controllers/DeleteDiscountController.txt";
 import getDiscountControllerTemplate from "@/templates/resources/discount/controllers/GetDiscountController.txt";
 import listDiscountsControllerTemplate from "@/templates/resources/discount/controllers/ListDiscountsController.txt";
 import updateDiscountControllerTemplate from "@/templates/resources/discount/controllers/UpdateDiscountController.txt";
+import entityTemplate from "@/templates/resources/discount/DiscountEntity.txt";
+import repositoryTemplate from "@/templates/resources/discount/DiscountRepository.txt";
 import createDiscountServiceTemplate from "@/templates/resources/discount/services/CreateDiscountService.txt";
 import deleteDiscountServiceTemplate from "@/templates/resources/discount/services/DeleteDiscountService.txt";
 import getDiscountServiceTemplate from "@/templates/resources/discount/services/GetDiscountService.txt";

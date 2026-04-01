@@ -216,7 +216,9 @@ describe("_oo.txt", () => {
 
     test("completion:zsh and make:claude:skill should have no options", async () => {
       const content = await Bun.file(templatePath).text();
-      const match = content.match(/make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|completion:zsh\)\s*;;/);
+      const match = content.match(
+        /make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|completion:zsh\)\s*;;/,
+      );
       expect(match).not.toBeNull();
     });
   });

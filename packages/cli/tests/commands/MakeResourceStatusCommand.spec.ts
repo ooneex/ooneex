@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import entityTemplate from "@/templates/resources/status/StatusEntity.txt";
-import repositoryTemplate from "@/templates/resources/status/StatusRepository.txt";
 import createStatusControllerTemplate from "@/templates/resources/status/controllers/CreateStatusController.txt";
 import deleteStatusControllerTemplate from "@/templates/resources/status/controllers/DeleteStatusController.txt";
 import getStatusControllerTemplate from "@/templates/resources/status/controllers/GetStatusController.txt";
 import listStatusesControllerTemplate from "@/templates/resources/status/controllers/ListStatusesController.txt";
 import updateStatusControllerTemplate from "@/templates/resources/status/controllers/UpdateStatusController.txt";
+import entityTemplate from "@/templates/resources/status/StatusEntity.txt";
+import repositoryTemplate from "@/templates/resources/status/StatusRepository.txt";
 import statusSeedTemplate from "@/templates/resources/status/seeds/StatusSeed.txt";
 import createStatusServiceTemplate from "@/templates/resources/status/services/CreateStatusService.txt";
 import deleteStatusServiceTemplate from "@/templates/resources/status/services/DeleteStatusService.txt";

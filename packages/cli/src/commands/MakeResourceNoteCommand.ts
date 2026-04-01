@@ -1,14 +1,14 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/note/NoteEntity.txt";
-import migrationTemplate from "../templates/resources/note/NoteMigration.txt";
-import repositoryTemplate from "../templates/resources/note/NoteRepository.txt";
 import createNoteControllerTemplate from "../templates/resources/note/controllers/CreateNoteController.txt";
 import deleteNoteControllerTemplate from "../templates/resources/note/controllers/DeleteNoteController.txt";
 import getNoteControllerTemplate from "../templates/resources/note/controllers/GetNoteController.txt";
 import listNotesControllerTemplate from "../templates/resources/note/controllers/ListNotesController.txt";
 import updateNoteControllerTemplate from "../templates/resources/note/controllers/UpdateNoteController.txt";
+import entityTemplate from "../templates/resources/note/NoteEntity.txt";
+import migrationTemplate from "../templates/resources/note/NoteMigration.txt";
+import repositoryTemplate from "../templates/resources/note/NoteRepository.txt";
 import createNoteServiceTemplate from "../templates/resources/note/services/CreateNoteService.txt";
 import deleteNoteServiceTemplate from "../templates/resources/note/services/DeleteNoteService.txt";
 import getNoteServiceTemplate from "../templates/resources/note/services/GetNoteService.txt";

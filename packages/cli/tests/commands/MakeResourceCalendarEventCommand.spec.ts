@@ -88,14 +88,7 @@ describe("MakeResourceCalendarEventCommand", () => {
     test("should generate repository file with calendar event template content", async () => {
       await command.run();
 
-      const repoPath = join(
-        testDir,
-        "modules",
-        "calendar-event",
-        "src",
-        "repositories",
-        "CalendarEventRepository.ts",
-      );
+      const repoPath = join(testDir, "modules", "calendar-event", "src", "repositories", "CalendarEventRepository.ts");
       expect(await exists(repoPath)).toBe(true);
 
       const content = await Bun.file(repoPath).text();
@@ -202,14 +195,7 @@ describe("MakeResourceCalendarEventCommand", () => {
     test("should generate repository content with CalendarEventRepository class", async () => {
       await command.run();
 
-      const repoPath = join(
-        testDir,
-        "modules",
-        "calendar-event",
-        "src",
-        "repositories",
-        "CalendarEventRepository.ts",
-      );
+      const repoPath = join(testDir, "modules", "calendar-event", "src", "repositories", "CalendarEventRepository.ts");
       const content = await Bun.file(repoPath).text();
       expect(content).toContain("export class CalendarEventRepository");
       expect(content).toContain("CalendarEventEntity");

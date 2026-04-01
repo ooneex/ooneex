@@ -1,14 +1,14 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/image/ImageEntity.txt";
-import migrationTemplate from "../templates/resources/image/ImageMigration.txt";
-import repositoryTemplate from "../templates/resources/image/ImageRepository.txt";
 import createImageControllerTemplate from "../templates/resources/image/controllers/CreateImageController.txt";
 import deleteImageControllerTemplate from "../templates/resources/image/controllers/DeleteImageController.txt";
 import getImageControllerTemplate from "../templates/resources/image/controllers/GetImageController.txt";
 import listImagesControllerTemplate from "../templates/resources/image/controllers/ListImagesController.txt";
 import updateImageControllerTemplate from "../templates/resources/image/controllers/UpdateImageController.txt";
+import entityTemplate from "../templates/resources/image/ImageEntity.txt";
+import migrationTemplate from "../templates/resources/image/ImageMigration.txt";
+import repositoryTemplate from "../templates/resources/image/ImageRepository.txt";
 import createImageServiceTemplate from "../templates/resources/image/services/CreateImageService.txt";
 import deleteImageServiceTemplate from "../templates/resources/image/services/DeleteImageService.txt";
 import getImageServiceTemplate from "../templates/resources/image/services/GetImageService.txt";

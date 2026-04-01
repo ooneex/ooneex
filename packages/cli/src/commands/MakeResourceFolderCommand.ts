@@ -1,14 +1,14 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/folder/FolderEntity.txt";
-import migrationTemplate from "../templates/resources/folder/FolderMigration.txt";
-import repositoryTemplate from "../templates/resources/folder/FolderRepository.txt";
 import createFolderControllerTemplate from "../templates/resources/folder/controllers/CreateFolderController.txt";
 import deleteFolderControllerTemplate from "../templates/resources/folder/controllers/DeleteFolderController.txt";
 import getFolderControllerTemplate from "../templates/resources/folder/controllers/GetFolderController.txt";
 import listFoldersControllerTemplate from "../templates/resources/folder/controllers/ListFoldersController.txt";
 import updateFolderControllerTemplate from "../templates/resources/folder/controllers/UpdateFolderController.txt";
+import entityTemplate from "../templates/resources/folder/FolderEntity.txt";
+import migrationTemplate from "../templates/resources/folder/FolderMigration.txt";
+import repositoryTemplate from "../templates/resources/folder/FolderRepository.txt";
 import createFolderServiceTemplate from "../templates/resources/folder/services/CreateFolderService.txt";
 import deleteFolderServiceTemplate from "../templates/resources/folder/services/DeleteFolderService.txt";
 import getFolderServiceTemplate from "../templates/resources/folder/services/GetFolderService.txt";

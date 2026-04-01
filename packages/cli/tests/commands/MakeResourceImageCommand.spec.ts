@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import entityTemplate from "@/templates/resources/image/ImageEntity.txt";
-import repositoryTemplate from "@/templates/resources/image/ImageRepository.txt";
 import createImageControllerTemplate from "@/templates/resources/image/controllers/CreateImageController.txt";
 import deleteImageControllerTemplate from "@/templates/resources/image/controllers/DeleteImageController.txt";
 import getImageControllerTemplate from "@/templates/resources/image/controllers/GetImageController.txt";
 import listImagesControllerTemplate from "@/templates/resources/image/controllers/ListImagesController.txt";
 import updateImageControllerTemplate from "@/templates/resources/image/controllers/UpdateImageController.txt";
+import entityTemplate from "@/templates/resources/image/ImageEntity.txt";
+import repositoryTemplate from "@/templates/resources/image/ImageRepository.txt";
 import createImageServiceTemplate from "@/templates/resources/image/services/CreateImageService.txt";
 import deleteImageServiceTemplate from "@/templates/resources/image/services/DeleteImageService.txt";
 import getImageServiceTemplate from "@/templates/resources/image/services/GetImageService.txt";

@@ -150,14 +150,10 @@ describe("MakeResourceUserCommand", () => {
         const profileContent = await Bun.file(join(controllersDir, "UpdateUserProfileController.ts")).text();
         expect(profileContent).toBe(updateUserProfileControllerTemplate);
 
-        const profileImageContent = await Bun.file(
-          join(controllersDir, "UpdateUserProfileImageController.ts"),
-        ).text();
+        const profileImageContent = await Bun.file(join(controllersDir, "UpdateUserProfileImageController.ts")).text();
         expect(profileImageContent).toBe(updateUserProfileImageControllerTemplate);
 
-        const deleteImageContent = await Bun.file(
-          join(controllersDir, "DeleteUserProfileImageController.ts"),
-        ).text();
+        const deleteImageContent = await Bun.file(join(controllersDir, "DeleteUserProfileImageController.ts")).text();
         expect(deleteImageContent).toBe(deleteUserProfileImageControllerTemplate);
 
         const rolesContent = await Bun.file(join(controllersDir, "UpdateUserRolesController.ts")).text();

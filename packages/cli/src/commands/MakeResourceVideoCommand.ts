@@ -1,9 +1,6 @@
 import { join } from "node:path";
 import { Glob } from "bun";
 import { decorator } from "../decorators";
-import entityTemplate from "../templates/resources/video/VideoEntity.txt";
-import migrationTemplate from "../templates/resources/video/VideoMigration.txt";
-import repositoryTemplate from "../templates/resources/video/VideoRepository.txt";
 import createVideoControllerTemplate from "../templates/resources/video/controllers/CreateVideoController.txt";
 import deleteVideoControllerTemplate from "../templates/resources/video/controllers/DeleteVideoController.txt";
 import getVideoControllerTemplate from "../templates/resources/video/controllers/GetVideoController.txt";
@@ -14,6 +11,9 @@ import deleteVideoServiceTemplate from "../templates/resources/video/services/De
 import getVideoServiceTemplate from "../templates/resources/video/services/GetVideoService.txt";
 import listVideosServiceTemplate from "../templates/resources/video/services/ListVideosService.txt";
 import updateVideoServiceTemplate from "../templates/resources/video/services/UpdateVideoService.txt";
+import entityTemplate from "../templates/resources/video/VideoEntity.txt";
+import migrationTemplate from "../templates/resources/video/VideoMigration.txt";
+import repositoryTemplate from "../templates/resources/video/VideoRepository.txt";
 import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";

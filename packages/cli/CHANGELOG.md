@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.0) - 2026-04-01
+
+### Added
+
+- Register book resource command and update completions — Franck ([41b3db9f](https://github.com/ooneex/ooneex/commit/41b3db9f))
+
 ## [1.9.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.9.0) - 2026-04-01
 
 ### Added

@@ -1,6 +1,7 @@
 import { inject } from "@ooneex/container";
 import { decorator } from "@ooneex/service";
 import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
 import { FolderEntity } from "../entities/FolderEntity";
 import { FolderRepository } from "../repositories/FolderRepository";
 
@@ -11,6 +12,7 @@ type ServiceDataType = {
   color?: string;
   tags?: string[];
   categories?: string[];
+  lang?: LocaleType;
 };
 
 @decorator.service()

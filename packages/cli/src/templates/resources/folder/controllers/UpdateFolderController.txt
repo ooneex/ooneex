@@ -2,6 +2,7 @@ import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { UpdateFolderService } from "../services/UpdateFolderService";
 
@@ -13,6 +14,7 @@ type UpdateFolderRouteType = {
     color?: string;
     tags?: string[];
     categories?: string[];
+    lang?: LocaleType;
   };
   response: {
     id: string;
@@ -21,6 +23,7 @@ type UpdateFolderRouteType = {
     color?: string;
     tags?: string[];
     categories?: string[];
+    lang?: LocaleType;
   };
 };
 
@@ -37,6 +40,7 @@ type UpdateFolderRouteType = {
     color: "string?",
     tags: "string[]?",
     categories: "string[]?",
+    lang: "string?",
   }),
   response: Assert({
     id: "string",
@@ -45,6 +49,7 @@ type UpdateFolderRouteType = {
     color: "string?",
     tags: "string[]?",
     categories: "string[]?",
+    lang: "string?",
   }),
   roles: [ERole.USER],
 })
@@ -55,9 +60,9 @@ export class UpdateFolderController {
 
   public async index(context: ContextType<UpdateFolderRouteType>) {
     const { id } = context.params;
-    const { name, icon, color, tags, categories } = context.payload;
+    const { name, icon, color, tags, categories, lang } = context.payload;
 
-    const folder = await this.service.execute({ id, name, icon, color, tags, categories });
+    const folder = await this.service.execute({ id, name, icon, color, tags, categories, lang });
 
     return context.response.json(folder);
   }

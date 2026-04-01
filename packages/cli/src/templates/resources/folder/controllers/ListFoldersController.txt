@@ -2,6 +2,7 @@ import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { ListFoldersService } from "../services/ListFoldersService";
 
@@ -15,6 +16,7 @@ type ListFoldersRouteType = {
       color?: string;
       tags?: string[];
       categories?: string[];
+      lang?: LocaleType;
     }[];
     total: number;
     totalPages: number;

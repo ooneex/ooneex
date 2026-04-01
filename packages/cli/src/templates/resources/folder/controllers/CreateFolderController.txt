@@ -2,6 +2,7 @@ import type { ContextType } from "@ooneex/controller";
 import { inject } from "@ooneex/container";
 import { ERole } from "@ooneex/role";
 import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
 import { Assert } from "@ooneex/validation";
 import { CreateFolderService } from "../services/CreateFolderService";
 
@@ -12,6 +13,7 @@ type CreateFolderRouteType = {
     color?: string;
     tags?: string[];
     categories?: string[];
+    lang?: LocaleType;
   };
   response: {
     id: string;
@@ -20,6 +22,7 @@ type CreateFolderRouteType = {
     color?: string;
     tags?: string[];
     categories?: string[];
+    lang?: LocaleType;
   };
 };
 
@@ -33,6 +36,7 @@ type CreateFolderRouteType = {
     color: "string?",
     tags: "string[]?",
     categories: "string[]?",
+    lang: "string?",
   }),
   response: Assert({
     id: "string",
@@ -41,6 +45,7 @@ type CreateFolderRouteType = {
     color: "string?",
     tags: "string[]?",
     categories: "string[]?",
+    lang: "string?",
   }),
   roles: [ERole.USER],
 })
@@ -50,9 +55,9 @@ export class CreateFolderController {
   ) {}
 
   public async index(context: ContextType<CreateFolderRouteType>) {
-    const { name, icon, color, tags, categories } = context.payload;
+    const { name, icon, color, tags, categories, lang } = context.payload;
 
-    const folder = await this.service.execute({ name, icon, color, tags, categories });
+    const folder = await this.service.execute({ name, icon, color, tags, categories, lang });
 
     return context.response.json(folder);
   }

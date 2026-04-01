@@ -12,6 +12,7 @@ export class {{ name }} implements IMigration {
         color VARCHAR(50),
         tags TEXT[],
         categories TEXT[],
+        lang VARCHAR(10),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )

@@ -1,6 +1,7 @@
 import { inject } from "@ooneex/container";
 import { decorator } from "@ooneex/service";
 import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
 import { FolderEntity } from "../entities/FolderEntity";
 import { FolderRepository } from "../repositories/FolderRepository";
 
@@ -10,6 +11,7 @@ type ServiceDataType = {
   color?: string;
   tags?: string[];
   categories?: string[];
+  lang?: LocaleType;
 };
 
 @decorator.service()
@@ -27,6 +29,7 @@ export class CreateFolderService<T extends ServiceDataType = ServiceDataType> im
     folder.color = data.color;
     folder.tags = data.tags;
     folder.categories = data.categories;
+    folder.lang = data.lang;
 
     return await this.repository.create(folder);
   }

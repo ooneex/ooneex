@@ -1,4 +1,5 @@
 import type { IFolder } from "@ooneex/folder";
+import type { LocaleType } from "@ooneex/translation";
 import { random } from "@ooneex/utils";
 import {
   Column,
@@ -29,6 +30,9 @@ export class FolderEntity implements IFolder {
 
   @Column({ name: "categories", type: "text", array: true, nullable: true })
   categories?: string[] | null;
+
+  @Column({ name: "lang", type: "varchar", length: 10, nullable: true })
+  lang?: LocaleType | null;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt?: Date | null;

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.1) - 2026-04-01
+
+### Changed
+
+- Format ClerkAuth test mock for readability — Franck ([696bf1dc](https://github.com/ooneex/ooneex/commit/696bf1dc))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.0) - 2026-04-01
 
 ### Added

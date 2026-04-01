@@ -1,8 +1,8 @@
 {
   "name": "{{NAME}}",
   "scripts": {
-    "dev": "bun run --filter app dev",
-    "build": "bun run --filter app build",
+    "dev": "bun run --filter @module/app dev",
+    "build": "bun run --filter @module/app build",
     "fmt": "bunx biome check --write",
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",

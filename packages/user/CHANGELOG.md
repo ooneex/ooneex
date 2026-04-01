@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/user@1.2.0) - 2026-04-01
+
+### Added
+
+- Add isBanned, bannedAt and banReason to user types — Franck ([b6a0b8f1](https://github.com/ooneex/ooneex/commit/b6a0b8f1))
+
 ## [1.1.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/user@1.1.2) - 2026-03-29
 
 ### Changed

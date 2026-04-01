@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.4) - 2026-04-01
+
+### Fixed
+
+- Guard container.add calls with has check to prevent duplicates — Franck ([f697729d](https://github.com/ooneex/ooneex/commit/f697729d))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.3) - 2026-04-01
 
 ### Fixed

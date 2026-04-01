@@ -34,17 +34,44 @@ class MockMailer {
   send = mock(() => Promise.resolve());
 }
 
+class MockDatabase {
+  connect = mock(() => Promise.resolve());
+}
+
+class MockRateLimiter {
+  check = mock(() => true);
+}
+
+class MockOnException {
+  init = mock(() => {});
+  info = mock(() => {});
+  error = mock(() => {});
+  warn = mock(() => {});
+  debug = mock(() => {});
+  log = mock(() => {});
+  success = mock(() => {});
+}
+
+class MockEvent {
+  subscribe = mock(() => {});
+}
+
 // Register mock classes with the container before tests run
 container.add(MockLogger);
 container.add(MockAnalytics);
 container.add(MockCache);
 container.add(MockStorage);
 container.add(MockMailer);
+container.add(MockDatabase);
+container.add(MockRateLimiter);
+container.add(MockOnException);
+container.add(MockEvent);
 
 const createMockConfig = (overrides: Record<string, unknown> = {}): AppConfigType => {
   const base = {
     modules: [],
     loggers: [MockLogger as unknown as AppConfigType["loggers"][0]],
+    database: MockDatabase as unknown as AppConfigType["database"],
   };
   return { ...base, ...overrides } as unknown as AppConfigType;
 };
@@ -132,6 +159,73 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockMailer)).toBe(true);
+    });
+
+    test("adds database to container", () => {
+      const config = createMockConfig();
+
+      new App(config);
+
+      expect(container.has(MockDatabase)).toBe(true);
+    });
+
+    test("adds rateLimiter to container when provided", () => {
+      const config = createMockConfig({
+        rateLimiter: MockRateLimiter as unknown as AppConfigType["rateLimiter"],
+      });
+
+      new App(config);
+
+      expect(container.has(MockRateLimiter)).toBe(true);
+    });
+
+    test("adds onException to container when provided", () => {
+      const config = createMockConfig({
+        onException: MockOnException as unknown as AppConfigType["onException"],
+      });
+
+      new App(config);
+
+      expect(container.has(MockOnException)).toBe(true);
+    });
+
+    test("subscribes events when provided", () => {
+      const config = createMockConfig({
+        events: [MockEvent as unknown as AppConfigType["events"] extends (infer T)[] | undefined ? T : never],
+      });
+
+      new App(config);
+
+      expect(container.has(MockEvent)).toBe(true);
+      const event = container.get(MockEvent) as MockEvent;
+      expect(event.subscribe).toHaveBeenCalled();
+    });
+
+    test("processes multiple events", () => {
+      const subscribe1 = mock(() => {});
+      const subscribe2 = mock(() => {});
+
+      class Event1 {
+        subscribe = subscribe1;
+      }
+      class Event2 {
+        subscribe = subscribe2;
+      }
+
+      container.add(Event1);
+      container.add(Event2);
+
+      const config = createMockConfig({
+        events: [
+          Event1 as unknown as AppConfigType["events"] extends (infer T)[] | undefined ? T : never,
+          Event2 as unknown as AppConfigType["events"] extends (infer T)[] | undefined ? T : never,
+        ],
+      });
+
+      new App(config);
+
+      expect(subscribe1).toHaveBeenCalled();
+      expect(subscribe2).toHaveBeenCalled();
     });
 
     test("handles config without optional dependencies", () => {

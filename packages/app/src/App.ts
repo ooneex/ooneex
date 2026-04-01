@@ -21,43 +21,73 @@ export class App {
       this.config;
 
     loggers.forEach((log) => {
+      if (!container.has(log)) {
+        container.add(log);
+      }
       const logger = container.get<ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>>(log);
       logger.init();
     });
     container.addConstant("logger", loggerFunc(loggers, container));
 
+    if (!container.has(database)) {
+      container.add(database);
+    }
     container.addAlias("database", database);
 
     if (onException) {
+      if (!container.has(onException)) {
+        container.add(onException);
+      }
       container.addConstant("exception.logger", onException);
     }
 
     if (analytics) {
+      if (!container.has(analytics)) {
+        container.add(analytics);
+      }
       container.addAlias("analytics", analytics);
     }
 
     if (cache) {
+      if (!container.has(cache)) {
+        container.add(cache);
+      }
       container.addAlias("cache", cache);
     }
 
     if (storage) {
+      if (!container.has(storage)) {
+        container.add(storage);
+      }
       container.addAlias("storage", storage);
     }
 
     if (mailer) {
+      if (!container.has(mailer)) {
+        container.add(mailer);
+      }
       container.addAlias("mailer", mailer);
     }
 
     if (rateLimiter) {
+      if (!container.has(rateLimiter)) {
+        container.add(rateLimiter);
+      }
       container.addAlias("rateLimiter", rateLimiter);
     }
 
     cronJobs?.forEach((cronJob) => {
+      if (!container.has(cronJob)) {
+        container.add(cronJob);
+      }
       const cron = container.get<ICron>(cronJob);
       cron.start();
     });
 
     events?.forEach((event) => {
+      if (!container.has(event)) {
+        container.add(event);
+      }
       const e = container.get<IPubSub>(event);
       e.subscribe();
     });

@@ -10,7 +10,8 @@ export interface IController<T extends ContextConfigType = ContextConfigType> {
 }
 
 export type ContextConfigType = {
-  response: Record<string, unknown>;
+  // biome-ignore lint/suspicious/noExplicitAny: trust me
+  response: Record<string, any>;
 } & RequestConfigType;
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = ControllerContextType<T> & {

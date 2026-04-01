@@ -8,7 +8,7 @@ import type { CalendarEventEntity } from "../entities/CalendarEventEntity";
 import { ListCalendarEventsService } from "../services/ListCalendarEventsService";
 
 type ListCalendarEventsRouteType = {
-  query: { page?: number; limit?: number; q?: string };
+  queries: { page?: number; limit?: number; q?: string };
   response: FilterResultType<CalendarEventEntity>;
 };
 
@@ -16,7 +16,7 @@ type ListCalendarEventsRouteType = {
   name: "calendar-event.list",
   version: 1,
   description: "List all calendar events",
-  query: Assert({
+  queries: Assert({
     page: "number?",
     limit: "number?",
     q: "string?",
@@ -29,7 +29,7 @@ export class ListCalendarEventsController {
   ) {}
 
   public async index(context: ContextType<ListCalendarEventsRouteType>) {
-    const { page, limit, q } = context.query;
+    const { page, limit, q } = context.queries;
 
     const result = await this.service.execute({ page, limit, q });
 

@@ -8,7 +8,7 @@ import type { NoteEntity } from "../entities/NoteEntity";
 import { ListNotesService } from "../services/ListNotesService";
 
 type ListNotesRouteType = {
-  query: { page?: number; limit?: number; q?: string };
+  queries: { page?: number; limit?: number; q?: string };
   response: FilterResultType<NoteEntity>;
 };
 
@@ -16,7 +16,7 @@ type ListNotesRouteType = {
   name: "note.list",
   version: 1,
   description: "List all notes",
-  query: Assert({
+  queries: Assert({
     page: "number?",
     limit: "number?",
     q: "string?",
@@ -29,7 +29,7 @@ export class ListNotesController {
   ) {}
 
   public async index(context: ContextType<ListNotesRouteType>) {
-    const { page, limit, q } = context.query;
+    const { page, limit, q } = context.queries;
 
     const result = await this.service.execute({ page, limit, q });
 

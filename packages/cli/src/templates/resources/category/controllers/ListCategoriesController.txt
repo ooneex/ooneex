@@ -8,7 +8,7 @@ import type { CategoryEntity } from "../entities/CategoryEntity";
 import { ListCategoriesService } from "../services/ListCategoriesService";
 
 type ListCategoriesRouteType = {
-  query: { page?: number; limit?: number; q?: string };
+  queries: { page?: number; limit?: number; q?: string };
   response: FilterResultType<CategoryEntity>;
 };
 
@@ -16,7 +16,7 @@ type ListCategoriesRouteType = {
   name: "category.list",
   version: 1,
   description: "List all categories",
-  query: Assert({
+  queries: Assert({
     page: "number?",
     limit: "number?",
     q: "string?",
@@ -29,7 +29,7 @@ export class ListCategoriesController {
   ) {}
 
   public async index(context: ContextType<ListCategoriesRouteType>) {
-    const { page, limit, q } = context.query;
+    const { page, limit, q } = context.queries;
 
     const result = await this.service.execute({ page, limit, q });
 

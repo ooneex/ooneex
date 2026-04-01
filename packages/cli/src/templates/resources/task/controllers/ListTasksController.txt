@@ -8,7 +8,7 @@ import type { TaskEntity } from "../entities/TaskEntity";
 import { ListTasksService } from "../services/ListTasksService";
 
 type ListTasksRouteType = {
-  query: { page?: number; limit?: number; q?: string };
+  queries: { page?: number; limit?: number; q?: string };
   response: FilterResultType<TaskEntity>;
 };
 
@@ -16,7 +16,7 @@ type ListTasksRouteType = {
   name: "task.list",
   version: 1,
   description: "List all tasks",
-  query: Assert({
+  queries: Assert({
     page: "number?",
     limit: "number?",
     q: "string?",
@@ -29,7 +29,7 @@ export class ListTasksController {
   ) {}
 
   public async index(context: ContextType<ListTasksRouteType>) {
-    const { page, limit, q } = context.query;
+    const { page, limit, q } = context.queries;
 
     const result = await this.service.execute({ page, limit, q });
 

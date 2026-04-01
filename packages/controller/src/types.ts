@@ -24,7 +24,7 @@ export interface IController<T extends ContextConfigType = ContextConfigType> {
 
 export type ContextConfigType = {
   response: Record<string, unknown>;
-} & RequestConfigType;
+} & Partial<RequestConfigType>;
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   logger: ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
@@ -44,7 +44,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   } | null;
   env: IAppEnv;
   response: IResponse<T["response"]>;
-  request: IRequest<{ params: T["params"]; payload: T["payload"]; queries: T["queries"] }>;
+  request: IRequest<Omit<RequestConfigType, "response">>;
   params: T["params"];
   payload: T["payload"];
   queries: T["queries"];

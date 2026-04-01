@@ -12,7 +12,16 @@ const mockCreateClerkClient = mock(() => ({
   users: {
     banUser: mock(() => Promise.resolve({ id: "user_1" })),
     unbanUser: mock(() => Promise.resolve({ id: "user_1" })),
-    getUser: mock(() => Promise.resolve({ id: "user_1", banned: false, locked: false, publicMetadata: {}, privateMetadata: {}, unsafeMetadata: {} })),
+    getUser: mock(() =>
+      Promise.resolve({
+        id: "user_1",
+        banned: false,
+        locked: false,
+        publicMetadata: {},
+        privateMetadata: {},
+        unsafeMetadata: {},
+      }),
+    ),
     lockUser: mock(() => Promise.resolve({ id: "user_1" })),
     unlockUser: mock(() => Promise.resolve({ id: "user_1" })),
     updateUser: mock(() => Promise.resolve({ id: "user_1" })),

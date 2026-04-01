@@ -1,0 +1,36 @@
+import { resolve } from "@ooneex/container";
+import { decorator, type ISeed, type SeedClassType } from "@ooneex/seeds";
+import { StatusEntity } from "../entities/StatusEntity";
+import { StatusRepository } from "../repositories/StatusRepository";
+import data from "./data.yml";
+
+@decorator.seed()
+export class StatusSeed implements ISeed {
+  public async run<T>(): Promise<T> {
+    const repository = resolve(StatusRepository);
+
+    const entities = (data as Record<string, string>[]).map((item) => {
+      const entity = new StatusEntity();
+      entity.id = item.id;
+      entity.name = item.name;
+      entity.color = item.color ?? null;
+      entity.description = item.description ?? null;
+      entity.lang = item.lang ?? null;
+
+      return entity;
+    });
+
+    const result = await repository.createMany(entities);
+    await repository.close();
+
+    return result as T;
+  }
+
+  public isActive(): boolean {
+    return true;
+  }
+
+  public async getDependencies(): Promise<SeedClassType[]> {
+    return [];
+  }
+}

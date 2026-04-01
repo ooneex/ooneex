@@ -1,0 +1,219 @@
+# Draft/Pending
+- id: 19370a07c4137b8587fb
+  name: draft
+  color: "#6B7280"
+  description: Initial state, not yet submitted or reviewed
+  lang: en
+
+- id: cc0ed480a5ec281ac239
+  name: pending
+  color: "#F59E0B"
+  description: Awaiting processing or approval
+  lang: en
+
+- id: cc64e575330db0b3d778
+  name: submitted
+  color: "#3B82F6"
+  description: Formally sent for processing or review
+  lang: en
+
+# Review
+- id: 98a5fee7f4b0937099fa
+  name: inReview
+  color: "#8B5CF6"
+  description: Currently under review and awaiting feedback
+  lang: en
+
+- id: c0d4fcbfc06aa71e0aae
+  name: reviewed
+  color: "#6366F1"
+  description: Review has been completed and feedback provided
+  lang: en
+
+# Processing
+- id: 59d5e9450c61ab91ffdf
+  name: processing
+  color: "#3B82F6"
+  description: Currently being processed by the system
+  lang: en
+
+- id: 78ec743ba28ed7da4ed6
+  name: processed
+  color: "#10B981"
+  description: Processing has been completed successfully
+  lang: en
+
+- id: 2daa6e14d09e2195f26c
+  name: queued
+  color: "#F59E0B"
+  description: Waiting in a queue to be processed
+  lang: en
+
+- id: de2850c6c84ce376e66b
+  name: ready
+  color: "#14B8A6"
+  description: Prepared and available for the next step
+  lang: en
+
+- id: 116cd80e4a794da247d6
+  name: scheduled
+  color: "#6366F1"
+  description: Planned for execution at a future date or time
+  lang: en
+
+# Approval
+- id: b720bb250ac3ad60bf8b
+  name: approved
+  color: "#10B981"
+  description: Reviewed and approved, ready to proceed
+  lang: en
+
+- id: d8ef1c6a8b6d32ec4795
+  name: rejected
+  color: "#EF4444"
+  description: Reviewed and declined, requires changes
+  lang: en
+
+# Completion
+- id: 236c522dbf4bbd0c985a
+  name: done
+  color: "#22C55E"
+  description: Task or process has been finished
+  lang: en
+
+- id: 28c2b3f0eee26967c9a9
+  name: completed
+  color: "#22C55E"
+  description: Successfully finished and closed
+  lang: en
+
+- id: 359b3403e311d8748eb8
+  name: success
+  color: "#10B981"
+  description: Operation completed without errors
+  lang: en
+
+# Error
+- id: b0f3eac4afe9833befc2
+  name: failed
+  color: "#EF4444"
+  description: Attempted but did not complete successfully
+  lang: en
+
+- id: 7ced0369532b3cbb455f
+  name: error
+  color: "#EF4444"
+  description: An unexpected error occurred during execution
+  lang: en
+
+- id: 892b0e59911c9d378a65
+  name: cancelled
+  color: "#78716C"
+  description: Intentionally stopped before completion
+  lang: en
+
+- id: 16d2cee346fc4c785940
+  name: timeout
+  color: "#F97316"
+  description: Operation exceeded the allowed time limit
+  lang: en
+
+# Archive
+- id: da382ef8170dd50d006c
+  name: archived
+  color: "#6B7280"
+  description: No longer active, preserved for reference
+  lang: en
+
+- id: b1f4d6d9c4731a833e08
+  name: delete
+  color: "#EF4444"
+  description: Marked for deletion but not yet removed
+  lang: en
+
+- id: 04f68d6258818e752734
+  name: deleted
+  color: "#78716C"
+  description: Permanently removed from the system
+  lang: en
+
+# Activity
+- id: 99241bc22eba298cbcb8
+  name: active
+  color: "#14B8A6"
+  description: Currently enabled and operational
+  lang: en
+
+- id: 6102430e65c747500e5a
+  name: inactive
+  color: "#78716C"
+  description: Disabled or dormant, not currently in use
+  lang: en
+
+- id: 053cebd7dbb3ca3fea12
+  name: disabled
+  color: "#78716C"
+  description: Explicitly turned off and non-functional
+  lang: en
+
+- id: 0562dbaefe60ed20b110
+  name: enabled
+  color: "#10B981"
+  description: Turned on and ready to operate
+  lang: en
+
+- id: f2743147444d8db5125a
+  name: suspended
+  color: "#F97316"
+  description: Temporarily restricted due to a policy or issue
+  lang: en
+
+- id: c4fe0a69cb17bca324bf
+  name: paused
+  color: "#F59E0B"
+  description: Temporarily stopped, can be resumed at any time
+  lang: en
+
+- id: 13a82a3024635d53365a
+  name: onHold
+  color: "#F97316"
+  description: Temporarily paused, waiting for external input
+  lang: en
+
+# Messages
+- id: 4aa0ac556311a9e702cb
+  name: sent
+  color: "#3B82F6"
+  description: Message has been dispatched to the recipient
+  lang: en
+
+- id: 401301bf6e91759afeac
+  name: delivered
+  color: "#10B981"
+  description: Message has been successfully received by the recipient
+  lang: en
+
+- id: 81a798642f25e918657a
+  name: read
+  color: "#22C55E"
+  description: Message has been opened and viewed by the recipient
+  lang: en
+
+# Validation
+- id: 40463a364cf4654a9fbf
+  name: valid
+  color: "#10B981"
+  description: Passes all validation rules and is considered correct
+  lang: en
+
+- id: 4c57d0556757f319feeb
+  name: invalid
+  color: "#EF4444"
+  description: Does not meet validation requirements
+  lang: en
+
+- id: 222182aa92e951d17c10
+  name: expired
+  color: "#6B7280"
+  description: Past its validity period and no longer effective
+  lang: en

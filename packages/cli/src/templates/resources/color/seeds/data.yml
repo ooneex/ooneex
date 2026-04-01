@@ -1,0 +1,155 @@
+- id: e15acdcdc02bd8d3947a
+  name: Blue
+  hex: "#3B82F6"
+  description: A calm and trustworthy color often used for links, buttons, and primary actions
+  lang: en
+
+- id: 88ee351a85c50c7626c1
+  name: Green
+  hex: "#10B981"
+  description: A natural and balanced color symbolizing success, growth, and positive feedback
+  lang: en
+
+- id: 6e11eb832388d1708d5f
+  name: Purple
+  hex: "#8B5CF6"
+  description: A rich and creative color associated with luxury, wisdom, and imagination
+  lang: en
+
+- id: f167815a82d39c33d715
+  name: Yellow
+  hex: "#F59E0B"
+  description: A warm and energetic color used for warnings, highlights, and attention-grabbing elements
+  lang: en
+
+- id: 0ae99755c73152fc2abe
+  name: Pink
+  hex: "#EC4899"
+  description: A vibrant and playful color conveying warmth, compassion, and modern femininity
+  lang: en
+
+- id: e3cecfb85b9c0329f776
+  name: Orange
+  hex: "#F97316"
+  description: A bold and enthusiastic color representing energy, creativity, and call-to-action elements
+  lang: en
+
+- id: 72fd24da73a7d1839698
+  name: Gray
+  hex: "#6B7280"
+  description: A neutral and versatile color ideal for text, borders, and subtle UI backgrounds
+  lang: en
+
+- id: 173c665d2be12acc7805
+  name: Red
+  hex: "#EF4444"
+  description: A powerful and urgent color used for errors, alerts, and destructive actions
+  lang: en
+
+- id: c1645c6ea00d26fa9a47
+  name: Teal
+  hex: "#14B8A6"
+  description: A refreshing blend of blue and green evoking clarity, balance, and sophistication
+  lang: en
+
+- id: f21381a1ced278046ced
+  name: Indigo
+  hex: "#6366F1"
+  description: A deep and intense color conveying depth, integrity, and focused concentration
+  lang: en
+
+- id: acdb18d725bb58056f60
+  name: Lime
+  hex: "#84CC16"
+  description: A bright and lively color suggesting freshness, vitality, and new beginnings
+  lang: en
+
+- id: da5bb28477632a888202
+  name: Cyan
+  hex: "#06B6D4"
+  description: A cool and electric color associated with technology, clarity, and open skies
+  lang: en
+
+- id: 21415e74464d66515337
+  name: Violet
+  hex: "#A855F7"
+  description: A soft and mystical color blending the calm of blue with the energy of red
+  lang: en
+
+- id: 0839135f093e9257d939
+  name: Rose
+  hex: "#F43F5E"
+  description: A warm and elegant color combining the intensity of red with the softness of pink
+  lang: en
+
+- id: a369b8c402119aaf2eee
+  name: Stone
+  hex: "#78716C"
+  description: A warm neutral color reminiscent of earth and rock, perfect for grounded designs
+  lang: en
+
+- id: c6defb941e2ed0b508aa
+  name: Sky
+  hex: "#0EA5E9"
+  description: A light and airy blue inspired by clear skies, evoking openness and freedom
+  lang: en
+
+- id: 723e22ae073ebe865384
+  name: Emerald
+  hex: "#22C55E"
+  description: A deep and vivid green symbolizing prosperity, harmony, and natural elegance
+  lang: en
+
+- id: ba0555897c3746ab099b
+  name: Amber
+  hex: "#FACC15"
+  description: A golden and radiant color representing caution, warmth, and precious value
+  lang: en
+
+- id: 97070e8e92248d1efe3b
+  name: Fuchsia
+  hex: "#E879F9"
+  description: A striking and bold color full of confidence, fun, and creative expression
+  lang: en
+
+- id: 6344dbdeed2135072813
+  name: Mint
+  hex: "#2DD4BF"
+  description: A cool and soothing color evoking freshness, cleanliness, and gentle relaxation
+  lang: en
+
+- id: dd98d5498210372a94a0
+  name: Tangerine
+  hex: "#FB923C"
+  description: A cheerful and appetizing color radiating warmth, friendliness, and playful energy
+  lang: en
+
+- id: 392657362fd85fd3cedf
+  name: Periwinkle
+  hex: "#818CF8"
+  description: A gentle and dreamy color blending lavender and blue for a serene, calming effect
+  lang: en
+
+- id: 7d66240dfe0995936c45
+  name: Coral
+  hex: "#F472B6"
+  description: A lively and tropical color combining pink and orange for a warm, inviting feel
+  lang: en
+
+- id: 8f48fb6cb384076144a7
+  name: Spring
+  hex: "#4ADE80"
+  description: A bright and optimistic green capturing the renewal and energy of the spring season
+  lang: en
+
+- id: d111ae5971315612c38a
+  name: Black
+  hex: "#000000"
+  description: The deepest neutral color representing power, elegance, and strong contrast
+  lang: en
+
+- id: 30e3e175137a6c9b3f3e
+  name: White
+  hex: "#FFFFFF"
+  description: The purest and lightest color symbolizing simplicity, clarity, and clean design
+  lang: en

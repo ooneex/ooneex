@@ -1,5 +1,5 @@
 import { AppEnv } from "@ooneex/app-env";
-import { inject } from "@ooneex/container";
+import { inject, optional } from "@ooneex/container";
 import { PostHog } from "posthog-node";
 import { AnalyticsException } from "./AnalyticsException";
 import { decorator } from "./decorators";
@@ -13,7 +13,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
-    config?: PostHogConfigType,
+    @optional() config?: PostHogConfigType,
   ) {
     const apiKey = config?.apiKey || this.env.ANALYTICS_POSTHOG_API_KEY?.trim();
 

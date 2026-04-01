@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.5) - 2026-04-01
+
+### Changed
+
+- Add injectable decorator call in all package decorators — Franck ([e07aa5f1](https://github.com/ooneex/ooneex/commit/e07aa5f1))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.4) - 2026-03-31
 
 ### Fixed

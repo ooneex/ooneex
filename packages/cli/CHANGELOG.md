@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.0) - 2026-04-01
+
+### Added
+
+- Add react and react-dom to app scaffold dependencies — Franck ([4c96aab4](https://github.com/ooneex/ooneex/commit/4c96aab4))
+- Add resource generation commands for all resource types — Franck ([e073b459](https://github.com/ooneex/ooneex/commit/e073b459))
+
+### Changed
+
+- Update app template to use new routing and check config structure — Franck ([f7bd2041](https://github.com/ooneex/ooneex/commit/f7bd2041))
+- Remove generics from service templates and add bin to tsconfig — Franck ([cd67dc62](https://github.com/ooneex/ooneex/commit/cd67dc62))
+
 ## [1.10.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.10.2) - 2026-04-01
 
 ### Changed

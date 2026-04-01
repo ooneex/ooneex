@@ -1,6 +1,6 @@
 {
   "name": "@ooneex/cli",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "module": "./dist/index.js",
   "exports": {
     ".": {

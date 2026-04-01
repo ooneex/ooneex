@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.1) - 2026-04-01
+
+### Changed
+
+- Make RequestConfigType partial in context types — Franck ([d48730b0](https://github.com/ooneex/ooneex/commit/d48730b0))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.0) - 2026-03-30
 
 ### Added

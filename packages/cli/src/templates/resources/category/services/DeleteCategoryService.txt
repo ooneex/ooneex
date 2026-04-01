@@ -8,12 +8,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class DeleteCategoryService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class DeleteCategoryService implements IService {
   constructor(
     @inject(CategoryRepository) private readonly repository: CategoryRepository,
   ) {}
 
-  public async execute(data?: T): Promise<void> {
+  public async execute(data?: ServiceDataType): Promise<void> {
     if (!data) return;
 
     await this.repository.delete({ id: data.id });

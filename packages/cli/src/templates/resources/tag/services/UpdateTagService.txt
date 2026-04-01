@@ -14,12 +14,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class UpdateTagService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class UpdateTagService implements IService {
   constructor(
     @inject(TagRepository) private readonly repository: TagRepository,
   ) {}
 
-  public async execute(data?: T): Promise<TagEntity | null> {
+  public async execute(data?: ServiceDataType): Promise<TagEntity | null> {
     if (!data) return null;
 
     const { id, ...fields } = data;

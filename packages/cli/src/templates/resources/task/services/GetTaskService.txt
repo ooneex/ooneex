@@ -9,12 +9,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class GetTaskService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class GetTaskService implements IService {
   constructor(
     @inject(TaskRepository) private readonly repository: TaskRepository,
   ) {}
 
-  public async execute(data?: T): Promise<TaskEntity | null> {
+  public async execute(data?: ServiceDataType): Promise<TaskEntity | null> {
     if (!data) return null;
 
     return await this.repository.findOne(data.id);

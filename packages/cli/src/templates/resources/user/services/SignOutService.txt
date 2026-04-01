@@ -8,10 +8,10 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class SignOutService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class SignOutService implements IService {
   constructor(@inject(ClerkAuth) private readonly auth: ClerkAuth) {}
 
-  public async execute(data?: T): Promise<void> {
+  public async execute(data?: ServiceDataType): Promise<void> {
     if (!data) return;
 
     await this.auth.signOut(data.sessionId);

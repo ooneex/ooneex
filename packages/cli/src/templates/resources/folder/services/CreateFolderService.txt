@@ -15,12 +15,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class CreateFolderService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class CreateFolderService implements IService {
   constructor(
     @inject(FolderRepository) private readonly repository: FolderRepository,
   ) {}
 
-  public async execute(data?: T): Promise<FolderEntity | null> {
+  public async execute(data?: ServiceDataType): Promise<FolderEntity | null> {
     if (!data) return null;
 
     const folder = new FolderEntity();

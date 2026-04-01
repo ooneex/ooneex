@@ -12,12 +12,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class ListNotesService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class ListNotesService implements IService {
   constructor(
     @inject(NoteRepository) private readonly repository: NoteRepository,
   ) {}
 
-  public async execute(data?: T): Promise<FilterResultType<NoteEntity>> {
+  public async execute(data?: ServiceDataType): Promise<FilterResultType<NoteEntity>> {
     return await this.repository.find({
       page: data?.page,
       limit: data?.limit,

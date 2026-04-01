@@ -10,13 +10,13 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class BanUserService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class BanUserService implements IService {
   constructor(
     @inject(ClerkAuth) private readonly auth: ClerkAuth,
     @inject(UserRepository) private readonly repository: UserRepository,
   ) {}
 
-  public async execute(data?: T): Promise<void> {
+  public async execute(data?: ServiceDataType): Promise<void> {
     if (!data) return;
 
     if (data.ban) {

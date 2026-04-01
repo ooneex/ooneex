@@ -50,8 +50,8 @@ import type { IService } from "@ooneex/service";
 type ServiceDataType = Record<string, unknown>;
 
 @decorator.service()
-export class <Name>Service<T extends ServiceDataType = ServiceDataType> implements IService<T> {
-  public async execute(data?: T): Promise<void> {
+export class <Name>Service implements IService {
+  public async execute(data?: ServiceDataType): Promise<void> {
     // TODO: Implement service logic
   }
 }

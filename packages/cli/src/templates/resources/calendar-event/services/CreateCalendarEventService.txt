@@ -20,12 +20,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class CreateCalendarEventService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class CreateCalendarEventService implements IService {
   constructor(
     @inject(CalendarEventRepository) private readonly repository: CalendarEventRepository,
   ) {}
 
-  public async execute(data?: T): Promise<CalendarEventEntity | null> {
+  public async execute(data?: ServiceDataType): Promise<CalendarEventEntity | null> {
     if (!data) return null;
 
     const calendarEvent = new CalendarEventEntity();

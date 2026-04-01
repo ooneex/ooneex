@@ -22,12 +22,12 @@ type ServiceDataType = {
 };
 
 @decorator.service()
-export class UpdateBookService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+export class UpdateBookService implements IService {
   constructor(
     @inject(BookRepository) private readonly repository: BookRepository,
   ) {}
 
-  public async execute(data?: T): Promise<BookEntity | null> {
+  public async execute(data?: ServiceDataType): Promise<BookEntity | null> {
     if (!data) return null;
 
     const { id, ...fields } = data;

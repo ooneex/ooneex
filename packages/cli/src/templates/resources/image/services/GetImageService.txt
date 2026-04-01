@@ -1,0 +1,22 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import { ImageEntity } from "../entities/ImageEntity";
+import { ImageRepository } from "../repositories/ImageRepository";
+
+type ServiceDataType = {
+  id: string;
+};
+
+@decorator.service()
+export class GetImageService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(ImageRepository) private readonly repository: ImageRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<ImageEntity | null> {
+    if (!data) return null;
+
+    return await this.repository.findOne(data.id);
+  }
+}

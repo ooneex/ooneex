@@ -1,0 +1,36 @@
+import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/service";
+import type { IService } from "@ooneex/service";
+import type { LocaleType } from "@ooneex/translation";
+import { ImageEntity } from "../entities/ImageEntity";
+import { ImageRepository } from "../repositories/ImageRepository";
+
+type ServiceDataType = {
+  id: string;
+  title?: string;
+  src?: string;
+  color?: string;
+  description?: string;
+  tags?: string[];
+  topics?: string[];
+  categories?: string[];
+  status?: string;
+  lang?: LocaleType;
+};
+
+@decorator.service()
+export class UpdateImageService<T extends ServiceDataType = ServiceDataType> implements IService<T> {
+  constructor(
+    @inject(ImageRepository) private readonly repository: ImageRepository,
+  ) {}
+
+  public async execute(data?: T): Promise<ImageEntity | null> {
+    if (!data) return null;
+
+    const { id, ...fields } = data;
+
+    await this.repository.update({ id, ...fields });
+
+    return await this.repository.findOne(id);
+  }
+}

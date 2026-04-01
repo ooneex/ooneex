@@ -1,0 +1,46 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { GetImageService } from "../services/GetImageService";
+
+type GetImageRouteType = {
+  params: { id: string };
+  response: {
+    id: string;
+    title: string;
+    src: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+};
+
+@Route.Get("/images/:id", {
+  name: "image.get",
+  version: 1,
+  description: "Get an image by id",
+  params: {
+    id: Assert("string"),
+  },
+  roles: [ERole.USER],
+})
+export class GetImageController {
+  constructor(
+    @inject(GetImageService) private readonly service: GetImageService,
+  ) {}
+
+  public async index(context: ContextType<GetImageRouteType>) {
+    const { id } = context.params;
+
+    const image = await this.service.execute({ id });
+
+    return context.response.json(image);
+  }
+}

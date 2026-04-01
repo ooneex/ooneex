@@ -1,0 +1,81 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import type { LocaleType } from "@ooneex/translation";
+import { Assert } from "@ooneex/validation";
+import { UpdateImageService } from "../services/UpdateImageService";
+
+type UpdateImageRouteType = {
+  params: { id: string };
+  payload: {
+    title?: string;
+    src?: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+  response: {
+    id: string;
+    title: string;
+    src: string;
+    color?: string;
+    description?: string;
+    tags?: string[];
+    topics?: string[];
+    categories?: string[];
+    status?: string;
+    lang?: LocaleType;
+  };
+};
+
+@Route.Patch("/images/:id", {
+  name: "image.update",
+  version: 1,
+  description: "Update an image",
+  params: {
+    id: Assert("string"),
+  },
+  payload: Assert({
+    title: "string?",
+    src: "string?",
+    color: "string?",
+    description: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    status: "string?",
+    lang: "string?",
+  }),
+  response: Assert({
+    id: "string",
+    title: "string",
+    src: "string",
+    color: "string?",
+    description: "string?",
+    tags: "string[]?",
+    topics: "string[]?",
+    categories: "string[]?",
+    status: "string?",
+    lang: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class UpdateImageController {
+  constructor(
+    @inject(UpdateImageService) private readonly service: UpdateImageService,
+  ) {}
+
+  public async index(context: ContextType<UpdateImageRouteType>) {
+    const { id } = context.params;
+    const { title, src, color, description, tags, topics, categories, status, lang } = context.payload;
+
+    const image = await this.service.execute({ id, title, src, color, description, tags, topics, categories, status, lang });
+
+    return context.response.json(image);
+  }
+}

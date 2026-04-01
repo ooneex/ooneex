@@ -1,0 +1,54 @@
+import type { ContextType } from "@ooneex/controller";
+import { inject } from "@ooneex/container";
+import type { LocaleType } from "@ooneex/translation";
+import { ERole } from "@ooneex/role";
+import { Route } from "@ooneex/routing";
+import { Assert } from "@ooneex/validation";
+import { ListImagesService } from "../services/ListImagesService";
+
+type ListImagesRouteType = {
+  query: { page?: number; limit?: number; q?: string };
+  response: {
+    resources: {
+      id: string;
+      title: string;
+      src: string;
+      color?: string;
+      description?: string;
+      tags?: string[];
+      topics?: string[];
+      categories?: string[];
+      status?: string;
+      lang?: LocaleType;
+    }[];
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  };
+};
+
+@Route.Get("/images", {
+  name: "image.list",
+  version: 1,
+  description: "List all images",
+  query: Assert({
+    page: "number?",
+    limit: "number?",
+    q: "string?",
+  }),
+  roles: [ERole.USER],
+})
+export class ListImagesController {
+  constructor(
+    @inject(ListImagesService) private readonly service: ListImagesService,
+  ) {}
+
+  public async index(context: ContextType<ListImagesRouteType>) {
+    const { page, limit, q } = context.query;
+
+    const result = await this.service.execute({ page, limit, q });
+
+    return context.response.json(result);
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.1) - 2026-04-01
+
+### Changed
+
+- Disable minification in bunup configs across all packages — Franck ([29f840e1](https://github.com/ooneex/ooneex/commit/29f840e1))
+
 ## [0.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.0) - 2026-04-01
 
 ### Added

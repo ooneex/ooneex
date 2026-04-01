@@ -64,6 +64,7 @@ describe("MakeControllerCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -151,6 +152,7 @@ describe("MakeControllerCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -196,6 +198,7 @@ describe("MakeControllerCommand", () => {
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "src", "controllers", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -227,6 +230,7 @@ describe("MakeControllerCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "controllers", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

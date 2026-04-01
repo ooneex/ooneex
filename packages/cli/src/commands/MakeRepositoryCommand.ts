@@ -62,12 +62,19 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
       useSymbol: true,
     });
 
-    // Install @ooneex/repository dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/repository"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/repository dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/repository"] && !devDeps["@ooneex/repository"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/repository"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

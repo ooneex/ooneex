@@ -92,12 +92,19 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
       useSymbol: true,
     });
 
-    // Install @ooneex/pub-sub dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/pub-sub"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/pub-sub dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/pub-sub"] && !devDeps["@ooneex/pub-sub"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/pub-sub"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

@@ -54,6 +54,7 @@ describe("MakePubSubCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "events", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "events", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -154,6 +155,7 @@ describe("MakePubSubCommand", () => {
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "src", "events", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "events", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -183,6 +185,7 @@ describe("MakePubSubCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "events", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "events", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

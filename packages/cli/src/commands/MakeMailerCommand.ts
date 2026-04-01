@@ -81,12 +81,19 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
       useSymbol: true,
     });
 
-    // Install @ooneex/mailer dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/mailer"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/mailer dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/mailer"] && !devDeps["@ooneex/mailer"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/mailer"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

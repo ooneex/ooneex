@@ -53,6 +53,7 @@ describe("MakeServiceCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "services", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "services", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

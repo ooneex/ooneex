@@ -53,6 +53,7 @@ describe("MakeRepositoryCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "repositories", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "repositories", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

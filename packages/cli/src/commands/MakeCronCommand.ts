@@ -87,12 +87,19 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
       useSymbol: true,
     });
 
-    // Install @ooneex/cron dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/cron"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/cron dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/cron"] && !devDeps["@ooneex/cron"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/cron"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

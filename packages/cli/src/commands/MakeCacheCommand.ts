@@ -60,12 +60,19 @@ export class MakeCacheCommand<T extends CommandOptionsType = CommandOptionsType>
       useSymbol: true,
     });
 
-    // Install @ooneex/cache dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/cache"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/cache dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/cache"] && !devDeps["@ooneex/cache"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/cache"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

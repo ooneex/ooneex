@@ -53,6 +53,7 @@ describe("MakeLoggerCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "loggers", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "loggers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

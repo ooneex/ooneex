@@ -53,6 +53,7 @@ describe("MakeStorageCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "storage", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "storage", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

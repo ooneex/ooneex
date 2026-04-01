@@ -62,12 +62,19 @@ export class MakeDatabaseCommand<T extends CommandOptionsType = CommandOptionsTy
       useSymbol: true,
     });
 
-    // Install @ooneex/database dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/database"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/database dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/database"] && !devDeps["@ooneex/database"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/database"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

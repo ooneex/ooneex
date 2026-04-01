@@ -62,12 +62,18 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       showLevel: false,
     });
 
-    // Install @ooneex/seeds dev dependency
-    const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/seeds dev dependency if not already installed
+    const pkgJson = await Bun.file(packageJsonPath).json();
+    const deps = pkgJson.dependencies ?? {};
+    const devDeps = pkgJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/seeds"] && !devDeps["@ooneex/seeds"]) {
+      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

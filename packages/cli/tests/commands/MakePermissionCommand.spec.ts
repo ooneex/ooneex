@@ -53,6 +53,7 @@ describe("MakePermissionCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "permissions", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "permissions", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

@@ -54,6 +54,7 @@ describe("MakeMiddlewareCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "middlewares", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -123,6 +124,7 @@ describe("MakeMiddlewareCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "middlewares", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -156,6 +158,7 @@ describe("MakeMiddlewareCommand", () => {
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "src", "middlewares", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -185,6 +188,7 @@ describe("MakeMiddlewareCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "middlewares", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

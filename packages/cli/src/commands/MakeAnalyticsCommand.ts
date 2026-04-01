@@ -60,12 +60,19 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
       useSymbol: true,
     });
 
-    // Install @ooneex/analytics dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/analytics"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/analytics dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/analytics"] && !devDeps["@ooneex/analytics"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/analytics"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

@@ -53,6 +53,7 @@ describe("MakeAnalyticsCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "analytics", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "analytics", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

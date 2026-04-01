@@ -60,12 +60,19 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
       useSymbol: true,
     });
 
-    // Install @ooneex/logger dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/logger"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/logger dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/logger"] && !devDeps["@ooneex/logger"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/logger"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

@@ -95,12 +95,19 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
       useSymbol: true,
     });
 
-    // Install @ooneex/middleware dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/middleware"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/middleware dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/middleware"] && !devDeps["@ooneex/middleware"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/middleware"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

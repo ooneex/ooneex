@@ -60,12 +60,19 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
       useSymbol: true,
     });
 
-    // Install @ooneex/service dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/service"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/service dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/service"] && !devDeps["@ooneex/service"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/service"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

@@ -55,12 +55,18 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       showLevel: false,
     });
 
-    // Install @ooneex/migrations dev dependency
-    const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/migrations dev dependency if not already installed
+    const pkgJson = await Bun.file(packageJsonPath).json();
+    const deps = pkgJson.dependencies ?? {};
+    const devDeps = pkgJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/migrations"] && !devDeps["@ooneex/migrations"]) {
+      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

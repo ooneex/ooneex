@@ -141,12 +141,19 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       });
     }
 
-    // Install @ooneex/module dependency
-    const install = Bun.spawn(["bun", "add", "@ooneex/module"], {
-      cwd: process.cwd(),
-      stdout: "ignore",
-      stderr: "inherit",
-    });
-    await install.exited;
+    // Install @ooneex/module dependency if not already installed
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJson = await Bun.file(packageJsonPath).json();
+    const deps = packageJson.dependencies ?? {};
+    const devDeps = packageJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/module"] && !devDeps["@ooneex/module"]) {
+      const install = Bun.spawn(["bun", "add", "@ooneex/module"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

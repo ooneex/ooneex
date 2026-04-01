@@ -54,6 +54,7 @@ describe("MakeCronCommand", () => {
     beforeEach(async () => {
       await Bun.write(join(testDir, "src", "cron", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -126,6 +127,7 @@ describe("MakeCronCommand", () => {
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "src", "cron", ".gitkeep"), "");
       await Bun.write(join(testDir, "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 
@@ -155,6 +157,7 @@ describe("MakeCronCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "cron", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
 

@@ -72,6 +72,7 @@ describe("index.ts.txt", () => {
 
   test("should configure app with required options", async () => {
     const content = await Bun.file(templatePath).text();
+    expect(content).toContain("routing: {");
     expect(content).toContain('prefix: "api"');
     expect(content).toContain("loggers: [LogtailLogger, TerminalLogger]");
     expect(content).toContain("onException: ExceptionLogger");
@@ -86,7 +87,9 @@ describe("index.ts.txt", () => {
     expect(content).toContain("cronJobs: AppModule.cronJobs");
     expect(content).toContain("events: AppModule.events");
     expect(content).toContain("database: AppDatabase");
-    expect(content).toContain('healthcheckPath: "/api/v1/healthcheck"');
+    expect(content).toContain("check: {");
+    expect(content).toContain('health: "/api/v1/healthcheck"');
+    expect(content).not.toContain("healthcheckPath");
     expect(content).not.toContain("generateRouteDoc");
   });
 

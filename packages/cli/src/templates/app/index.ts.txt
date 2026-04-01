@@ -10,8 +10,12 @@ import { AppModule } from "./AppModule";
 import { AppDatabase } from "./databases/AppDatabase";
 
 const app = new App({
-  prefix: "api",
-  healthcheckPath: "/api/v1/healthcheck",
+  routing: {
+    prefix: "api",
+  },
+  check: {
+    health: "/api/v1/healthcheck",
+  },
   loggers: [LogtailLogger, TerminalLogger],
   onException: ExceptionLogger,
   analytics: PostHogAnalytics,

@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.9.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.9.0) - 2026-04-01
+
+### Added
+
+- Add book resource generation command — Franck ([2d62af22](https://github.com/ooneex/ooneex/commit/2d62af22))
+- Add seed resource templates for color and status — Franck ([1d16e4c8](https://github.com/ooneex/ooneex/commit/1d16e4c8))
+- Add color resource templates — Franck ([43476767](https://github.com/ooneex/ooneex/commit/43476767))
+- Add video resource templates — Franck ([15b3f67b](https://github.com/ooneex/ooneex/commit/15b3f67b))
+- Add task resource templates — Franck ([ae8ff7f1](https://github.com/ooneex/ooneex/commit/ae8ff7f1))
+- Add note resource templates — Franck ([6828b89f](https://github.com/ooneex/ooneex/commit/6828b89f))
+- Add image resource templates — Franck ([c9b521c8](https://github.com/ooneex/ooneex/commit/c9b521c8))
+- Add lang field to folder resource templates — Franck ([95f8fd2b](https://github.com/ooneex/ooneex/commit/95f8fd2b))
+- Add folder resource templates — Franck ([f1897efc](https://github.com/ooneex/ooneex/commit/f1897efc))
+- Add discount resource templates — Franck ([7cb886da](https://github.com/ooneex/ooneex/commit/7cb886da))
+- Add book resource templates — Franck ([bb496e64](https://github.com/ooneex/ooneex/commit/bb496e64))
+- Add status resource templates — Franck ([6a1510b4](https://github.com/ooneex/ooneex/commit/6a1510b4))
+- Add indexes to migration templates and fix default role — Franck ([28a50be5](https://github.com/ooneex/ooneex/commit/28a50be5))
+- Add calendar-event resource templates — Franck ([1215f2dd](https://github.com/ooneex/ooneex/commit/1215f2dd))
+- Add category resource templates and use random.id() — Franck ([c93f19e8](https://github.com/ooneex/ooneex/commit/c93f19e8))
+- Add topic resource templates — Franck ([e0977d40](https://github.com/ooneex/ooneex/commit/e0977d40))
+- Add tag resource templates — Franck ([ecbc501a](https://github.com/ooneex/ooneex/commit/ecbc501a))
+- Update user templates with repository sync and nullable entity types — Franck ([93692924](https://github.com/ooneex/ooneex/commit/93692924))
+
+### Changed
+
+- Inline route type into controller template — Franck ([5228a63b](https://github.com/ooneex/ooneex/commit/5228a63b))
+- Update entity and repository templates — Franck ([fe4f92bb](https://github.com/ooneex/ooneex/commit/fe4f92bb))
+
+### Fixed
+
+- Rename hexa to hex in color resource templates — Franck ([3c409db3](https://github.com/ooneex/ooneex/commit/3c409db3))
+- Make lang field nullable in book resource templates — Franck ([f4769f5c](https://github.com/ooneex/ooneex/commit/f4769f5c))
+
 ## [1.8.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.8.4) - 2026-03-31
 
 ### Changed

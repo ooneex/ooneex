@@ -320,15 +320,15 @@ describe("HttpRequest Integration Tests", () => {
       const request = new HttpRequest(queryRequest, { params });
 
       // Check query parsing
-      expect(request.queries.string).toBe("hello");
-      expect(request.queries.number).toBe(42);
-      expect(request.queries.boolean).toBe(true);
+      expect(request.queries?.string).toBe("hello");
+      expect(request.queries?.number).toBe(42);
+      expect(request.queries?.boolean).toBe(true);
 
       // Check params
-      expect(request.params.stringParam).toBe("test");
-      expect(request.params.numberParam).toBe(123);
-      expect(request.params.bigintParam).toBe(BigInt(456));
-      expect(request.params.booleanParam).toBe(false);
+      expect(request.params?.stringParam).toBe("test");
+      expect(request.params?.numberParam).toBe(123);
+      expect(request.params?.bigintParam).toBe(BigInt(456));
+      expect(request.params?.booleanParam).toBe(false);
     });
 
     test("should handle HttpMethodType correctly", () => {
@@ -432,7 +432,7 @@ describe("HttpRequest Integration Tests", () => {
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(50);
-      expect(Object.keys(request.queries)).toHaveLength(50);
+      expect(Object.keys(request.queries ?? {})).toHaveLength(50);
     });
   });
 });

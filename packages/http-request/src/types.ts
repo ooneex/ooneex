@@ -15,9 +15,9 @@ export type RequestQueriesType = Record<string, ScalarType> & {
 };
 
 export type RequestConfigType = {
-  params: Record<string, ScalarType>;
-  payload: Record<string, unknown>;
-  queries: RequestQueriesType;
+  params?: Record<string, ScalarType>;
+  payload?: Record<string, unknown>;
+  queries?: RequestQueriesType;
 };
 
 export interface IRequest<Config extends RequestConfigType = RequestConfigType> {

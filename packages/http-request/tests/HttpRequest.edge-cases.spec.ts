@@ -57,8 +57,8 @@ describe("HttpRequest Edge Cases", () => {
       } as Request;
 
       const request = new HttpRequest(encodedRequest);
-      expect(request.queries.q).toBe("hello world");
-      expect(request.queries.tags).toBe('["tag1","tag2"]');
+      expect(request.queries?.q).toBe("hello world");
+      expect(request.queries?.tags).toBe('["tag1","tag2"]');
     });
 
     test("should handle URL with numeric domain", () => {
@@ -90,8 +90,8 @@ describe("HttpRequest Edge Cases", () => {
       } as Request;
 
       const request = new HttpRequest(longQueryRequest);
-      expect(Object.keys(request.queries)).toHaveLength(1000);
-      expect(request.queries.param999).toBe(999);
+      expect(Object.keys(request.queries ?? {})).toHaveLength(1000);
+      expect(request.queries?.param999).toBe(999);
     });
 
     test("should handle URL with no protocol specified", () => {
@@ -283,8 +283,8 @@ describe("HttpRequest Edge Cases", () => {
       }
 
       const request = new HttpRequest(mockRequest, { params: largeParams });
-      expect(Object.keys(request.params)).toHaveLength(1000);
-      expect(request.params.param999).toBe("value999");
+      expect(Object.keys(request.params ?? {})).toHaveLength(1000);
+      expect(request.params?.param999).toBe("value999");
     });
 
     test("should handle nested payload objects", () => {
@@ -336,7 +336,7 @@ describe("HttpRequest Edge Cases", () => {
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(100);
-      expect(Object.keys(request.queries)).toHaveLength(5000);
+      expect(Object.keys(request.queries ?? {})).toHaveLength(5000);
     });
 
     test("should handle deeply nested form data structure", () => {
@@ -410,10 +410,10 @@ describe("HttpRequest Edge Cases", () => {
 
       const request = new HttpRequest(mockRequest, { params: mixedParams });
 
-      expect(request.params.stringParam).toBe("hello");
-      expect(request.params.numberParam).toBe(42);
-      expect(request.params.bigintParam).toBe(BigInt(999_999_999_999_999));
-      expect(request.params.booleanParam).toBe(true);
+      expect(request.params?.stringParam).toBe("hello");
+      expect(request.params?.numberParam).toBe(42);
+      expect(request.params?.bigintParam).toBe(BigInt(999_999_999_999_999));
+      expect(request.params?.booleanParam).toBe(true);
     });
 
     test("should handle edge cases in query parameter parsing", () => {
@@ -424,10 +424,10 @@ describe("HttpRequest Edge Cases", () => {
 
       const request = new HttpRequest(edgeCaseRequest);
 
-      expect(request.queries.zero).toBe("0"); // Should remain string due to leading zero
-      expect(request.queries.emptyString).toBe("");
-      expect(request.queries.nullValue).toBe("null"); // Should remain string
-      expect(request.queries.undefinedValue).toBe("undefined"); // Should remain string
+      expect(request.queries?.zero).toBe("0"); // Should remain string due to leading zero
+      expect(request.queries?.emptyString).toBe("");
+      expect(request.queries?.nullValue).toBe("null"); // Should remain string
+      expect(request.queries?.undefinedValue).toBe("undefined"); // Should remain string
     });
   });
 
@@ -499,9 +499,9 @@ describe("HttpRequest Edge Cases", () => {
       // Should handle maximum complexity efficiently
       expect(endTime - startTime).toBeLessThan(100);
 
-      expect(Object.keys(request.queries)).toHaveLength(500);
-      expect(Object.keys(request.params)).toHaveLength(200);
-      expect(Object.keys(request.payload)).toHaveLength(200);
+      expect(Object.keys(request.queries ?? {})).toHaveLength(500);
+      expect(Object.keys(request.params ?? {})).toHaveLength(200);
+      expect(Object.keys(request.payload ?? {})).toHaveLength(200);
       expect(Object.keys(request.files)).toHaveLength(10);
       expect(request.ip).toBe("192.168.1.100");
     });

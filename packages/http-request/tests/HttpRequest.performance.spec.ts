@@ -138,7 +138,7 @@ describe("HttpRequest Performance Tests", () => {
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(25);
-      expect(Object.keys(request.queries)).toHaveLength(100);
+      expect(Object.keys(request.queries ?? {})).toHaveLength(100);
     });
 
     test("should handle deeply nested paths efficiently", () => {
@@ -293,8 +293,8 @@ describe("HttpRequest Performance Tests", () => {
 
       // Verify each request was processed correctly
       results.forEach((request, index) => {
-        expect(request.params.id).toBe(index.toString());
-        expect(request.payload.index).toBe(index);
+        expect(request.params?.id).toBe(index.toString());
+        expect(request.payload?.index).toBe(index);
       });
     });
   });

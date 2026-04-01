@@ -18,6 +18,7 @@ export { MakePermissionCommand } from "./MakePermissionCommand";
 export { MakePubSubCommand } from "./MakePubSubCommand";
 export { MakeReleaseCommand } from "./MakeReleaseCommand";
 export { MakeRepositoryCommand } from "./MakeRepositoryCommand";
+export { MakeResourceBookCommand } from "./MakeResourceBookCommand";
 export { MakeSeedCommand } from "./MakeSeedCommand";
 export { MakeServiceCommand } from "./MakeServiceCommand";
 export { MakeStorageCommand } from "./MakeStorageCommand";

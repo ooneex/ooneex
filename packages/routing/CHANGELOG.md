@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.1) - 2026-04-01
+
+### Changed
+
+- Disable minification in bunup configs across all packages — Franck ([29f840e1](https://github.com/ooneex/ooneex/commit/29f840e1))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.0) - 2026-03-30
 
 ### Added

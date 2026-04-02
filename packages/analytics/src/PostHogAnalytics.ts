@@ -12,11 +12,11 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
   private client: PostHog | null = null;
 
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
-    const apiKey = this.env.ANALYTICS_POSTHOG_API_KEY?.trim();
+    const apiKey = this.env.ANALYTICS_POSTHOG_PROJECT_TOKEN?.trim();
 
     if (!apiKey) {
       throw new AnalyticsException(
-        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_PROJECT_TOKEN environment variable.",
       );
     }
 

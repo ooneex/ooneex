@@ -101,7 +101,7 @@ analytics.capture({
 ```
 
 **Environment Variables:**
-- `ANALYTICS_POSTHOG_API_KEY` - Your PostHog API key
+- `ANALYTICS_POSTHOG_PROJECT_TOKEN` - Your PostHog API key
 - `ANALYTICS_POSTHOG_HOST` - PostHog host URL (default: `https://eu.i.posthog.com`)
 
 ## API Reference

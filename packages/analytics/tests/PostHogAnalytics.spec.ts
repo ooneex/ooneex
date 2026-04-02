@@ -23,11 +23,11 @@ class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptio
   private client: typeof mockPostHogInstance | null = null;
 
   constructor() {
-    const apiKey = Bun.env.ANALYTICS_POSTHOG_API_KEY?.trim();
+    const apiKey = Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN?.trim();
 
     if (!apiKey) {
       throw new AnalyticsException(
-        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_PROJECT_TOKEN environment variable.",
       );
     }
 
@@ -56,12 +56,12 @@ describe("PostHogAnalytics", () => {
   beforeEach(() => {
     // Store original environment variables
     originalEnv = {
-      ANALYTICS_POSTHOG_API_KEY: Bun.env.ANALYTICS_POSTHOG_API_KEY,
+      ANALYTICS_POSTHOG_PROJECT_TOKEN: Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN,
       ANALYTICS_POSTHOG_HOST: Bun.env.ANALYTICS_POSTHOG_HOST,
     };
 
     // Set default API key for tests
-    Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+    Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "test-api-key";
     delete Bun.env.ANALYTICS_POSTHOG_HOST;
 
     // Reset all mocks
@@ -77,10 +77,10 @@ describe("PostHogAnalytics", () => {
 
   afterEach(() => {
     // Restore original environment variables
-    if (originalEnv.ANALYTICS_POSTHOG_API_KEY !== undefined) {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = originalEnv.ANALYTICS_POSTHOG_API_KEY;
+    if (originalEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN !== undefined) {
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = originalEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN;
     } else {
-      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
     }
 
     if (originalEnv.ANALYTICS_POSTHOG_HOST !== undefined) {
@@ -92,28 +92,28 @@ describe("PostHogAnalytics", () => {
 
   describe("Constructor", () => {
     test("should throw AnalyticsException when no API key is provided", () => {
-      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
 
       expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
       expect(() => new PostHogAnalytics()).toThrow(
-        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_PROJECT_TOKEN environment variable.",
       );
     });
 
     test("should throw AnalyticsException when empty API key is provided via env", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "";
 
       expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
     });
 
     test("should throw AnalyticsException when whitespace API key is provided via env", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "   ";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "   ";
 
       expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
     });
 
     test("should create instance successfully with API key from environment", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "test-api-key";
 
       const analytics = new PostHogAnalytics();
 
@@ -123,7 +123,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should use default host when none provided", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "test-api-key";
       delete Bun.env.ANALYTICS_POSTHOG_HOST;
 
       new PostHogAnalytics();
@@ -134,7 +134,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should use host from environment when provided", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "test-api-key";
       Bun.env.ANALYTICS_POSTHOG_HOST = "https://env.posthog.com";
 
       new PostHogAnalytics();
@@ -145,7 +145,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should initialize PostHog client with environment API key", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "env-api-key";
 
       new PostHogAnalytics();
 
@@ -323,7 +323,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should capture events when initialized with environment API key", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "env-key";
       const analyticsWithEnvKey = new PostHogAnalytics();
 
       const captureData: PostHogCaptureOptionsType = {

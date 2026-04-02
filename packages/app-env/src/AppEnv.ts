@@ -37,7 +37,7 @@ export class AppEnv implements IAppEnv {
   public readonly BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST: string | undefined;
 
   // Analytics
-  public readonly ANALYTICS_POSTHOG_API_KEY: string | undefined;
+  public readonly ANALYTICS_POSTHOG_PROJECT_TOKEN: string | undefined;
   public readonly ANALYTICS_POSTHOG_HOST: string | undefined;
 
   // Cache
@@ -114,7 +114,7 @@ export class AppEnv implements IAppEnv {
 
   public constructor() {
     // App
-    this.APP_ENV = (Bun.env.APP_ENV || "production") as EnvironmentNameType;
+    this.APP_ENV = (Bun.env.APP_ENV?.trim() || "production") as EnvironmentNameType;
     this.isLocal = this.APP_ENV === "local";
     this.isDevelopment = this.APP_ENV === "development";
     this.isStaging = this.APP_ENV === "staging";
@@ -130,8 +130,8 @@ export class AppEnv implements IAppEnv {
     this.isCanary = this.APP_ENV === "canary";
     this.isHotfix = this.APP_ENV === "hotfix";
     this.isProduction = this.APP_ENV === "production";
-    this.PORT = Bun.env.PORT ? parseString<number>(Bun.env.PORT) : 3000;
-    this.HOST_NAME = Bun.env.HOST_NAME || "0.0.0.0";
+    this.PORT = Bun.env.PORT ? parseString<number>(Bun.env.PORT.trim()) : 3000;
+    this.HOST_NAME = Bun.env.HOST_NAME?.trim() || "0.0.0.0";
 
     // API
     this.INTERNAL_API_URLS = (Bun.env.INTERNAL_API_URLS || "")
@@ -144,69 +144,69 @@ export class AppEnv implements IAppEnv {
       .filter(Boolean);
 
     // Logs
-    this.LOGS_DATABASE_URL = Bun.env.LOGS_DATABASE_URL;
-    this.BETTERSTACK_LOGGER_SOURCE_TOKEN = Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
-    this.BETTERSTACK_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
-    this.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN;
-    this.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST;
+    this.LOGS_DATABASE_URL = Bun.env.LOGS_DATABASE_URL?.trim();
+    this.BETTERSTACK_LOGGER_SOURCE_TOKEN = Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN?.trim();
+    this.BETTERSTACK_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST?.trim();
+    this.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN?.trim();
+    this.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST?.trim();
 
     // Analytics
-    this.ANALYTICS_POSTHOG_API_KEY = Bun.env.ANALYTICS_POSTHOG_API_KEY;
-    this.ANALYTICS_POSTHOG_HOST = Bun.env.ANALYTICS_POSTHOG_HOST;
+    this.ANALYTICS_POSTHOG_PROJECT_TOKEN = Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN?.trim();
+    this.ANALYTICS_POSTHOG_HOST = Bun.env.ANALYTICS_POSTHOG_HOST?.trim();
 
     // Cache
-    this.CACHE_REDIS_URL = Bun.env.CACHE_REDIS_URL;
+    this.CACHE_REDIS_URL = Bun.env.CACHE_REDIS_URL?.trim();
 
     // Pub/Sub
-    this.PUBSUB_REDIS_URL = Bun.env.PUBSUB_REDIS_URL;
+    this.PUBSUB_REDIS_URL = Bun.env.PUBSUB_REDIS_URL?.trim();
 
     // Rate limit
-    this.RATE_LIMIT_REDIS_URL = Bun.env.RATE_LIMIT_REDIS_URL;
+    this.RATE_LIMIT_REDIS_URL = Bun.env.RATE_LIMIT_REDIS_URL?.trim();
 
     // CORS
-    this.CORS_ORIGINS = Bun.env.CORS_ORIGINS;
-    this.CORS_METHODS = Bun.env.CORS_METHODS;
-    this.CORS_HEADERS = Bun.env.CORS_HEADERS;
-    this.CORS_EXPOSED_HEADERS = Bun.env.CORS_EXPOSED_HEADERS;
-    this.CORS_CREDENTIALS = Bun.env.CORS_CREDENTIALS;
-    this.CORS_MAX_AGE = Bun.env.CORS_MAX_AGE;
+    this.CORS_ORIGINS = Bun.env.CORS_ORIGINS?.trim();
+    this.CORS_METHODS = Bun.env.CORS_METHODS?.trim();
+    this.CORS_HEADERS = Bun.env.CORS_HEADERS?.trim();
+    this.CORS_EXPOSED_HEADERS = Bun.env.CORS_EXPOSED_HEADERS?.trim();
+    this.CORS_CREDENTIALS = Bun.env.CORS_CREDENTIALS?.trim();
+    this.CORS_MAX_AGE = Bun.env.CORS_MAX_AGE?.trim();
 
     // Storage
-    this.STORAGE_CLOUDFLARE_ACCESS_KEY = Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY;
-    this.STORAGE_CLOUDFLARE_SECRET_KEY = Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY;
-    this.STORAGE_CLOUDFLARE_ENDPOINT = Bun.env.STORAGE_CLOUDFLARE_ENDPOINT;
-    this.STORAGE_CLOUDFLARE_REGION = Bun.env.STORAGE_CLOUDFLARE_REGION;
-    this.STORAGE_BUNNY_ACCESS_KEY = Bun.env.STORAGE_BUNNY_ACCESS_KEY;
-    this.STORAGE_BUNNY_STORAGE_ZONE = Bun.env.STORAGE_BUNNY_STORAGE_ZONE;
-    this.STORAGE_BUNNY_REGION = Bun.env.STORAGE_BUNNY_REGION;
-    this.FILESYSTEM_STORAGE_PATH = Bun.env.FILESYSTEM_STORAGE_PATH;
+    this.STORAGE_CLOUDFLARE_ACCESS_KEY = Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY?.trim();
+    this.STORAGE_CLOUDFLARE_SECRET_KEY = Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY?.trim();
+    this.STORAGE_CLOUDFLARE_ENDPOINT = Bun.env.STORAGE_CLOUDFLARE_ENDPOINT?.trim();
+    this.STORAGE_CLOUDFLARE_REGION = Bun.env.STORAGE_CLOUDFLARE_REGION?.trim();
+    this.STORAGE_BUNNY_ACCESS_KEY = Bun.env.STORAGE_BUNNY_ACCESS_KEY?.trim();
+    this.STORAGE_BUNNY_STORAGE_ZONE = Bun.env.STORAGE_BUNNY_STORAGE_ZONE?.trim();
+    this.STORAGE_BUNNY_REGION = Bun.env.STORAGE_BUNNY_REGION?.trim();
+    this.FILESYSTEM_STORAGE_PATH = Bun.env.FILESYSTEM_STORAGE_PATH?.trim();
 
     // Database
-    this.DATABASE_URL = Bun.env.DATABASE_URL;
-    this.DATABASE_REDIS_URL = Bun.env.DATABASE_REDIS_URL;
-    this.SQLITE_DATABASE_PATH = Bun.env.SQLITE_DATABASE_PATH;
+    this.DATABASE_URL = Bun.env.DATABASE_URL?.trim();
+    this.DATABASE_REDIS_URL = Bun.env.DATABASE_REDIS_URL?.trim();
+    this.SQLITE_DATABASE_PATH = Bun.env.SQLITE_DATABASE_PATH?.trim();
 
     // Mailer
-    this.MAILER_SENDER_NAME = Bun.env.MAILER_SENDER_NAME;
-    this.MAILER_SENDER_ADDRESS = Bun.env.MAILER_SENDER_ADDRESS;
-    this.RESEND_API_KEY = Bun.env.RESEND_API_KEY;
+    this.MAILER_SENDER_NAME = Bun.env.MAILER_SENDER_NAME?.trim();
+    this.MAILER_SENDER_ADDRESS = Bun.env.MAILER_SENDER_ADDRESS?.trim();
+    this.RESEND_API_KEY = Bun.env.RESEND_API_KEY?.trim();
 
     // JWT
-    this.JWT_SECRET = Bun.env.JWT_SECRET;
+    this.JWT_SECRET = Bun.env.JWT_SECRET?.trim();
 
     // AI
-    this.OPENAI_API_KEY = Bun.env.OPENAI_API_KEY;
-    this.ANTHROPIC_API_KEY = Bun.env.ANTHROPIC_API_KEY;
-    this.GEMINI_API_KEY = Bun.env.GEMINI_API_KEY;
-    this.GROQ_API_KEY = Bun.env.GROQ_API_KEY;
-    this.OLLAMA_HOST = Bun.env.OLLAMA_HOST;
+    this.OPENAI_API_KEY = Bun.env.OPENAI_API_KEY?.trim();
+    this.ANTHROPIC_API_KEY = Bun.env.ANTHROPIC_API_KEY?.trim();
+    this.GEMINI_API_KEY = Bun.env.GEMINI_API_KEY?.trim();
+    this.GROQ_API_KEY = Bun.env.GROQ_API_KEY?.trim();
+    this.OLLAMA_HOST = Bun.env.OLLAMA_HOST?.trim();
 
     // Payment
-    this.POLAR_ACCESS_TOKEN = Bun.env.POLAR_ACCESS_TOKEN;
-    this.POLAR_ENVIRONMENT = Bun.env.POLAR_ENVIRONMENT;
+    this.POLAR_ACCESS_TOKEN = Bun.env.POLAR_ACCESS_TOKEN?.trim();
+    this.POLAR_ENVIRONMENT = Bun.env.POLAR_ENVIRONMENT?.trim();
 
     // Authentication
-    this.CLERK_SECRET_KEY = Bun.env.CLERK_SECRET_KEY;
+    this.CLERK_SECRET_KEY = Bun.env.CLERK_SECRET_KEY?.trim();
 
     // Allowed Users
     this.DEVELOPMENT_ALLOWED_USERS = (Bun.env.DEVELOPMENT_ALLOWED_USERS || "")

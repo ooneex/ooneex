@@ -54,7 +54,7 @@ export interface IAppEnv {
   readonly BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST: string | undefined;
 
   // Analytics
-  readonly ANALYTICS_POSTHOG_API_KEY: string | undefined;
+  readonly ANALYTICS_POSTHOG_PROJECT_TOKEN: string | undefined;
   readonly ANALYTICS_POSTHOG_HOST: string | undefined;
 
   // Cache

@@ -589,7 +589,7 @@ describe("AppEnv", () => {
       delete Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
       delete Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN;
       delete Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST;
-      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+      delete Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
       delete Bun.env.ANALYTICS_POSTHOG_HOST;
       delete Bun.env.CACHE_REDIS_URL;
       delete Bun.env.PUBSUB_REDIS_URL;
@@ -659,7 +659,7 @@ describe("AppEnv", () => {
       expect(appEnv.BETTERSTACK_LOGGER_INGESTING_HOST).toBeUndefined();
       expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN).toBeUndefined();
       expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST).toBeUndefined();
-      expect(appEnv.ANALYTICS_POSTHOG_API_KEY).toBeUndefined();
+      expect(appEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN).toBeUndefined();
       expect(appEnv.ANALYTICS_POSTHOG_HOST).toBeUndefined();
       expect(appEnv.CACHE_REDIS_URL).toBeUndefined();
       expect(appEnv.PUBSUB_REDIS_URL).toBeUndefined();
@@ -844,12 +844,12 @@ describe("AppEnv", () => {
     });
 
     test("should read analytics env vars", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "ph-key";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "ph-key";
       Bun.env.ANALYTICS_POSTHOG_HOST = "https://posthog.com";
 
       const appEnv = new AppEnv();
 
-      expect(appEnv.ANALYTICS_POSTHOG_API_KEY).toBe("ph-key");
+      expect(appEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN).toBe("ph-key");
       expect(appEnv.ANALYTICS_POSTHOG_HOST).toBe("https://posthog.com");
     });
 
@@ -887,6 +887,173 @@ describe("AppEnv", () => {
       const appEnv = new AppEnv();
 
       expect(appEnv.BETA_ALLOWED_USERS).toEqual(["user1@test.com", "user2@test.com"]);
+    });
+
+    test("should trim APP_ENV value", () => {
+      setEnv("  production  ");
+      const appEnv = new AppEnv();
+
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.isProduction).toBe(true);
+    });
+
+    test("should default to production when APP_ENV is whitespace only", () => {
+      setEnv("   ");
+      const appEnv = new AppEnv();
+
+      expect(appEnv.APP_ENV).toBe("production");
+      expect(appEnv.isProduction).toBe(true);
+    });
+
+    test("should trim PORT value", () => {
+      Bun.env.PORT = "  8080  ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.PORT).toBe(8080);
+    });
+
+    test("should trim HOST_NAME value", () => {
+      Bun.env.HOST_NAME = "  example.com  ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.HOST_NAME).toBe("example.com");
+    });
+
+    test("should default HOST_NAME when value is whitespace only", () => {
+      Bun.env.HOST_NAME = "   ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.HOST_NAME).toBe("0.0.0.0");
+    });
+
+    test("should trim string env vars", () => {
+      Bun.env.LOGS_DATABASE_URL = "  postgres://logs  ";
+      Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN = "  lt-token  ";
+      Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST = "  https://logtail.com  ";
+      Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN = "  bs-token  ";
+      Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST = "  https://bs.com  ";
+      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "  ph-key  ";
+      Bun.env.ANALYTICS_POSTHOG_HOST = "  https://posthog.com  ";
+      Bun.env.CACHE_REDIS_URL = "  redis://cache  ";
+      Bun.env.PUBSUB_REDIS_URL = "  redis://pubsub  ";
+      Bun.env.RATE_LIMIT_REDIS_URL = "  redis://ratelimit  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.LOGS_DATABASE_URL).toBe("postgres://logs");
+      expect(appEnv.BETTERSTACK_LOGGER_SOURCE_TOKEN).toBe("lt-token");
+      expect(appEnv.BETTERSTACK_LOGGER_INGESTING_HOST).toBe("https://logtail.com");
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN).toBe("bs-token");
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST).toBe("https://bs.com");
+      expect(appEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN).toBe("ph-key");
+      expect(appEnv.ANALYTICS_POSTHOG_HOST).toBe("https://posthog.com");
+      expect(appEnv.CACHE_REDIS_URL).toBe("redis://cache");
+      expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
+      expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
+    });
+
+    test("should trim CORS env vars", () => {
+      Bun.env.CORS_ORIGINS = "  https://example.com  ";
+      Bun.env.CORS_METHODS = "  GET,POST  ";
+      Bun.env.CORS_HEADERS = "  Content-Type  ";
+      Bun.env.CORS_EXPOSED_HEADERS = "  X-Custom  ";
+      Bun.env.CORS_CREDENTIALS = "  true  ";
+      Bun.env.CORS_MAX_AGE = "  3600  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.CORS_ORIGINS).toBe("https://example.com");
+      expect(appEnv.CORS_METHODS).toBe("GET,POST");
+      expect(appEnv.CORS_HEADERS).toBe("Content-Type");
+      expect(appEnv.CORS_EXPOSED_HEADERS).toBe("X-Custom");
+      expect(appEnv.CORS_CREDENTIALS).toBe("true");
+      expect(appEnv.CORS_MAX_AGE).toBe("3600");
+    });
+
+    test("should trim storage env vars", () => {
+      Bun.env.STORAGE_CLOUDFLARE_ACCESS_KEY = "  cf-key  ";
+      Bun.env.STORAGE_CLOUDFLARE_SECRET_KEY = "  cf-secret  ";
+      Bun.env.STORAGE_CLOUDFLARE_ENDPOINT = "  https://cf.endpoint  ";
+      Bun.env.STORAGE_CLOUDFLARE_REGION = "  auto  ";
+      Bun.env.STORAGE_BUNNY_ACCESS_KEY = "  bunny-key  ";
+      Bun.env.STORAGE_BUNNY_STORAGE_ZONE = "  zone1  ";
+      Bun.env.STORAGE_BUNNY_REGION = "  eu  ";
+      Bun.env.FILESYSTEM_STORAGE_PATH = "  /tmp/storage  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.STORAGE_CLOUDFLARE_ACCESS_KEY).toBe("cf-key");
+      expect(appEnv.STORAGE_CLOUDFLARE_SECRET_KEY).toBe("cf-secret");
+      expect(appEnv.STORAGE_CLOUDFLARE_ENDPOINT).toBe("https://cf.endpoint");
+      expect(appEnv.STORAGE_CLOUDFLARE_REGION).toBe("auto");
+      expect(appEnv.STORAGE_BUNNY_ACCESS_KEY).toBe("bunny-key");
+      expect(appEnv.STORAGE_BUNNY_STORAGE_ZONE).toBe("zone1");
+      expect(appEnv.STORAGE_BUNNY_REGION).toBe("eu");
+      expect(appEnv.FILESYSTEM_STORAGE_PATH).toBe("/tmp/storage");
+    });
+
+    test("should trim database env vars", () => {
+      Bun.env.DATABASE_URL = "  postgres://localhost/mydb  ";
+      Bun.env.DATABASE_REDIS_URL = "  redis://localhost:6379  ";
+      Bun.env.SQLITE_DATABASE_PATH = "  /data/app.db  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.DATABASE_URL).toBe("postgres://localhost/mydb");
+      expect(appEnv.DATABASE_REDIS_URL).toBe("redis://localhost:6379");
+      expect(appEnv.SQLITE_DATABASE_PATH).toBe("/data/app.db");
+    });
+
+    test("should trim mailer env vars", () => {
+      Bun.env.MAILER_SENDER_NAME = "  Ooneex  ";
+      Bun.env.MAILER_SENDER_ADDRESS = "  noreply@ooneex.com  ";
+      Bun.env.RESEND_API_KEY = "  re_123  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.MAILER_SENDER_NAME).toBe("Ooneex");
+      expect(appEnv.MAILER_SENDER_ADDRESS).toBe("noreply@ooneex.com");
+      expect(appEnv.RESEND_API_KEY).toBe("re_123");
+    });
+
+    test("should trim JWT env var", () => {
+      Bun.env.JWT_SECRET = "  secret123  ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.JWT_SECRET).toBe("secret123");
+    });
+
+    test("should trim AI env vars", () => {
+      Bun.env.OPENAI_API_KEY = "  sk-openai  ";
+      Bun.env.ANTHROPIC_API_KEY = "  sk-ant  ";
+      Bun.env.GEMINI_API_KEY = "  gemini-key  ";
+      Bun.env.GROQ_API_KEY = "  groq-key  ";
+      Bun.env.OLLAMA_HOST = "  http://localhost:11434  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.OPENAI_API_KEY).toBe("sk-openai");
+      expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant");
+      expect(appEnv.GEMINI_API_KEY).toBe("gemini-key");
+      expect(appEnv.GROQ_API_KEY).toBe("groq-key");
+      expect(appEnv.OLLAMA_HOST).toBe("http://localhost:11434");
+    });
+
+    test("should trim payment env vars", () => {
+      Bun.env.POLAR_ACCESS_TOKEN = "  polar-token  ";
+      Bun.env.POLAR_ENVIRONMENT = "  sandbox  ";
+
+      const appEnv = new AppEnv();
+
+      expect(appEnv.POLAR_ACCESS_TOKEN).toBe("polar-token");
+      expect(appEnv.POLAR_ENVIRONMENT).toBe("sandbox");
+    });
+
+    test("should trim authentication env var", () => {
+      Bun.env.CLERK_SECRET_KEY = "  sk_clerk_123  ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
     });
   });
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.6) - 2026-04-02
+
+### Fixed
+
+- Use getConstant for exception logger and fix env property name — Franck ([7c1193b2](https://github.com/ooneex/ooneex/commit/7c1193b2))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.5) - 2026-04-01
 
 ### Changed

@@ -46,7 +46,7 @@ const createMockContext = (overrides: { [K in keyof ContextType]?: ContextType[K
       version: "v1" as const,
       description: "Test route",
     },
-    env: { env: Environment.DEVELOPMENT } as unknown as ContextType["env"],
+    env: { APP_ENV: Environment.DEVELOPMENT } as unknown as ContextType["env"],
     response,
     request: {} as ContextType["request"],
     params: {},
@@ -627,7 +627,7 @@ describe("httpRouteUtils", () => {
       expect(body.message).toContain("Invalid response");
     });
 
-    test("uses PRODUCTION environment as default when app.env.env is undefined", async () => {
+    test("uses PRODUCTION environment as default when APP_ENV is undefined", async () => {
       class TestEnvController {
         index(): IResponse {
           return new HttpResponse().json({ ok: true });
@@ -636,7 +636,7 @@ describe("httpRouteUtils", () => {
       container.add(TestEnvController);
 
       const context = createMockContext({
-        env: { env: undefined } as unknown as ContextType["env"],
+        env: { APP_ENV: undefined } as unknown as ContextType["env"],
       });
       const route = createMockRoute({
         controller: TestEnvController,

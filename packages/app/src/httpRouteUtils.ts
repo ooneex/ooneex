@@ -124,7 +124,9 @@ export const buildHttpContext = async (ctx: {
     }
   };
 
-  const exceptionLogger = tryGet<ILogger>("exception.logger");
+  const exceptionLogger = container.hasConstant("exception.logger")
+    ? container.getConstant<ILogger>("exception.logger")
+    : undefined;
   const analytics = tryGet<IAnalytics>("analytics");
   const cache = tryGet<ICache>("cache");
   const storage = tryGet<IStorage>("storage");

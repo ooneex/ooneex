@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.5) - 2026-04-02
+
+### Changed
+
+- Remove constructor config and use env vars only — Franck ([eb92dd7e](https://github.com/ooneex/ooneex/commit/eb92dd7e))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.4) - 2026-04-01
 
 ### Removed

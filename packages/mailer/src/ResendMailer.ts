@@ -12,11 +12,11 @@ export class ResendMailer implements IMailer {
   private from?: { name: string; address: string };
 
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
-    this.apiKey = this.env.RESEND_API_KEY?.trim() as string;
+    this.apiKey = this.env.RESEND_API_KEY as string;
 
     this.from = {
-      name: this.env.MAILER_SENDER_NAME?.trim() || "",
-      address: this.env.MAILER_SENDER_ADDRESS?.trim() || "",
+      name: this.env.MAILER_SENDER_NAME || "",
+      address: this.env.MAILER_SENDER_ADDRESS || "",
     };
 
     if (!this.apiKey) {

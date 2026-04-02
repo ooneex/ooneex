@@ -8,19 +8,19 @@ import { LoggerException } from "./LoggerException";
 import type { ILogger } from "./types";
 
 @decorator.logger()
-export class ExceptionLogger implements ILogger {
+export class BetterstackExceptionLogger implements ILogger {
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
-    const applicationToken = this.env.BETTERSTACK_APPLICATION_TOKEN;
+    const applicationToken = this.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN;
     if (!applicationToken) {
       throw new LoggerException(
-        "Better Stack application token is required. Please set the BETTERSTACK_APPLICATION_TOKEN environment variable.",
+        "Better Stack application token is required. Please set the BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN environment variable.",
       );
     }
 
-    const ingestingHost = this.env.BETTERSTACK_INGESTING_HOST;
+    const ingestingHost = this.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST;
     if (!ingestingHost) {
       throw new LoggerException(
-        "Better Stack ingesting host is required. Please set the BETTERSTACK_INGESTING_HOST environment variable.",
+        "Better Stack ingesting host is required. Please set the BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST environment variable.",
       );
     }
 

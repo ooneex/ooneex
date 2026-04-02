@@ -1,6 +1,6 @@
 import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
-import { RedisCache } from "@ooneex/cache";
+import { UpstashRedisCache } from "@ooneex/cache";
 import { BetterstackLogger, BetterstackExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
 import { CorsMiddleware } from "@ooneex/middleware";
@@ -19,7 +19,7 @@ const app = new App({
   loggers: [BetterstackLogger, TerminalLogger],
   onException: BetterstackExceptionLogger,
   analytics: PostHogAnalytics,
-  cache: RedisCache,
+  cache: UpstashRedisCache,
   storage: BunnyStorage,
   mailer: ResendMailer,
   rateLimiter: RedisRateLimiter,

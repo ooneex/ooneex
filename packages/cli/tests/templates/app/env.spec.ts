@@ -47,6 +47,8 @@ describe("env.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Cache");
     expect(content).toContain("CACHE_REDIS_URL=");
+    expect(content).toContain("CACHE_UPSTASH_REDIS_REST_URL=");
+    expect(content).toContain("CACHE_UPSTASH_REDIS_REST_TOKEN=");
   });
 
   test("should contain Pub/Sub section", async () => {

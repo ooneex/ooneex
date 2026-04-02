@@ -22,9 +22,9 @@ describe("index.ts.txt", () => {
     expect(content).toContain('import { PostHogAnalytics } from "@ooneex/analytics"');
   });
 
-  test("should import RedisCache from @ooneex/cache", async () => {
+  test("should import UpstashRedisCache from @ooneex/cache", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain('import { RedisCache } from "@ooneex/cache"');
+    expect(content).toContain('import { UpstashRedisCache } from "@ooneex/cache"');
   });
 
   test("should import loggers from @ooneex/logger", async () => {
@@ -77,7 +77,7 @@ describe("index.ts.txt", () => {
     expect(content).toContain("loggers: [BetterstackLogger, TerminalLogger]");
     expect(content).toContain("onException: BetterstackExceptionLogger");
     expect(content).toContain("analytics: PostHogAnalytics");
-    expect(content).toContain("cache: RedisCache");
+    expect(content).toContain("cache: UpstashRedisCache");
     expect(content).toContain("storage: BunnyStorage");
     expect(content).toContain("mailer: ResendMailer");
     expect(content).toContain("rateLimiter: RedisRateLimiter");

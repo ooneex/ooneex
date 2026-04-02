@@ -194,10 +194,10 @@ export class App {
       hostname = "localhost";
     }
 
-    logger.info(`Server running at ${server.protocol}://${hostname}:${server.port}`);
+    logger.info(`Server running at ${server.protocol}//${hostname}:${server.port}`);
 
     if (this.config.check?.health) {
-      const healthCheckUrl = `${server.protocol}://${hostname}:${server.port}${prefix ?? ""}${this.config.check.health}`;
+      const healthCheckUrl = `${server.protocol}//${hostname}:${server.port}${prefix ?? ""}${this.config.check.health}`;
       const response = await fetch(healthCheckUrl);
 
       if (response.ok) {

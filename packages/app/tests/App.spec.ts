@@ -69,7 +69,6 @@ container.add(MockEvent);
 
 const createMockConfig = (overrides: Record<string, unknown> = {}): AppConfigType => {
   const base = {
-    modules: [],
     loggers: [MockLogger as unknown as AppConfigType["loggers"][0]],
     database: MockDatabase as unknown as AppConfigType["database"],
   };
@@ -101,6 +100,24 @@ describe("App", () => {
       expect(container.has(MockLogger)).toBe(true);
     });
 
+    test("calls init on each logger", () => {
+      const config = createMockConfig();
+
+      new App(config);
+
+      const logger = container.get(MockLogger) as MockLogger;
+      expect(logger.init).toHaveBeenCalled();
+    });
+
+    test("registers AppEnv in container if not already present", () => {
+      container.remove(AppEnv);
+
+      const config = createMockConfig();
+      new App(config);
+
+      expect(container.has(AppEnv)).toBe(true);
+    });
+
     test("initializes and starts cron jobs when provided", () => {
       const startMock = mock(() => {});
       class TestCronJob {
@@ -121,7 +138,7 @@ describe("App", () => {
       expect(startMock).toHaveBeenCalled();
     });
 
-    test("adds analytics to container when provided", () => {
+    test("adds analytics to container and registers alias when provided", () => {
       const config = createMockConfig({
         analytics: MockAnalytics as unknown as AppConfigType["analytics"],
       });
@@ -129,9 +146,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockAnalytics)).toBe(true);
+      expect(container.has("analytics")).toBe(true);
     });
 
-    test("adds cache to container when provided", () => {
+    test("adds cache to container and registers alias when provided", () => {
       const config = createMockConfig({
         cache: MockCache as unknown as AppConfigType["cache"],
       });
@@ -139,9 +157,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockCache)).toBe(true);
+      expect(container.has("cache")).toBe(true);
     });
 
-    test("adds storage to container when provided", () => {
+    test("adds storage to container and registers alias when provided", () => {
       const config = createMockConfig({
         storage: MockStorage as unknown as AppConfigType["storage"],
       });
@@ -149,9 +168,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockStorage)).toBe(true);
+      expect(container.has("storage")).toBe(true);
     });
 
-    test("adds mailer to container when provided", () => {
+    test("adds mailer to container and registers alias when provided", () => {
       const config = createMockConfig({
         mailer: MockMailer as unknown as AppConfigType["mailer"],
       });
@@ -159,17 +179,19 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockMailer)).toBe(true);
+      expect(container.has("mailer")).toBe(true);
     });
 
-    test("adds database to container", () => {
+    test("adds database to container and registers alias", () => {
       const config = createMockConfig();
 
       new App(config);
 
       expect(container.has(MockDatabase)).toBe(true);
+      expect(container.has("database")).toBe(true);
     });
 
-    test("adds rateLimiter to container when provided", () => {
+    test("adds rateLimiter to container and registers alias when provided", () => {
       const config = createMockConfig({
         rateLimiter: MockRateLimiter as unknown as AppConfigType["rateLimiter"],
       });
@@ -177,9 +199,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockRateLimiter)).toBe(true);
+      expect(container.has("rateLimiter")).toBe(true);
     });
 
-    test("adds onException to container when provided", () => {
+    test("adds onException to container and registers exception.logger constant when provided", () => {
       const config = createMockConfig({
         onException: MockOnException as unknown as AppConfigType["onException"],
       });
@@ -187,6 +210,15 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockOnException)).toBe(true);
+      expect(container.hasConstant("exception.logger")).toBe(true);
+    });
+
+    test("registers logger constant", () => {
+      const config = createMockConfig();
+
+      new App(config);
+
+      expect(container.hasConstant("logger")).toBe(true);
     });
 
     test("subscribes events when provided", () => {
@@ -236,7 +268,7 @@ describe("App", () => {
       expect(app).toBeInstanceOf(App);
     });
 
-    test("processes multiple loggers", () => {
+    test("processes multiple loggers and calls init on each", () => {
       class Logger1 {
         init = mock(() => {});
         info = mock(() => {});
@@ -268,6 +300,10 @@ describe("App", () => {
 
       expect(container.has(Logger1)).toBe(true);
       expect(container.has(Logger2)).toBe(true);
+      const logger1 = container.get(Logger1) as Logger1;
+      const logger2 = container.get(Logger2) as Logger2;
+      expect(logger1.init).toHaveBeenCalled();
+      expect(logger2.init).toHaveBeenCalled();
     });
 
     test("processes multiple cron jobs", () => {

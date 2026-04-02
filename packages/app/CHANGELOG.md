@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.8) - 2026-04-02
+
+### Fixed
+
+- Fix server URL protocol format and improve test coverage — Franck ([83bed600](https://github.com/ooneex/ooneex/commit/83bed600))
+
 ## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.7) - 2026-04-02
 
 ### Fixed

@@ -20,6 +20,10 @@ export class App {
     const { loggers, cronJobs, events, analytics, cache, database, storage, mailer, rateLimiter, onException } =
       this.config;
 
+    if (!container.has(AppEnv)) {
+      container.add(AppEnv);
+    }
+
     loggers.forEach((log) => {
       if (!container.has(log)) {
         container.add(log);

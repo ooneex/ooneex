@@ -592,6 +592,8 @@ describe("AppEnv", () => {
       delete Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
       delete Bun.env.ANALYTICS_POSTHOG_HOST;
       delete Bun.env.CACHE_REDIS_URL;
+      delete Bun.env.CACHE_UPSTASH_REDIS_REST_URL;
+      delete Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN;
       delete Bun.env.PUBSUB_REDIS_URL;
       delete Bun.env.RATE_LIMIT_REDIS_URL;
       delete Bun.env.CORS_ORIGINS;
@@ -662,6 +664,8 @@ describe("AppEnv", () => {
       expect(appEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN).toBeUndefined();
       expect(appEnv.ANALYTICS_POSTHOG_HOST).toBeUndefined();
       expect(appEnv.CACHE_REDIS_URL).toBeUndefined();
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_URL).toBeUndefined();
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBeUndefined();
       expect(appEnv.PUBSUB_REDIS_URL).toBeUndefined();
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBeUndefined();
       expect(appEnv.CORS_ORIGINS).toBeUndefined();
@@ -714,6 +718,8 @@ describe("AppEnv", () => {
     test("should read all env vars when set", () => {
       Bun.env.LOGS_DATABASE_URL = "postgres://logs";
       Bun.env.CACHE_REDIS_URL = "redis://cache";
+      Bun.env.CACHE_UPSTASH_REDIS_REST_URL = "https://upstash.io";
+      Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN = "upstash-token";
       Bun.env.DATABASE_URL = "postgres://db";
       Bun.env.JWT_SECRET = "secret123";
       Bun.env.ANTHROPIC_API_KEY = "sk-ant-123";
@@ -723,6 +729,8 @@ describe("AppEnv", () => {
 
       expect(appEnv.LOGS_DATABASE_URL).toBe("postgres://logs");
       expect(appEnv.CACHE_REDIS_URL).toBe("redis://cache");
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_URL).toBe("https://upstash.io");
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBe("upstash-token");
       expect(appEnv.DATABASE_URL).toBe("postgres://db");
       expect(appEnv.JWT_SECRET).toBe("secret123");
       expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant-123");
@@ -935,6 +943,8 @@ describe("AppEnv", () => {
       Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "  ph-key  ";
       Bun.env.ANALYTICS_POSTHOG_HOST = "  https://posthog.com  ";
       Bun.env.CACHE_REDIS_URL = "  redis://cache  ";
+      Bun.env.CACHE_UPSTASH_REDIS_REST_URL = "  https://upstash.io  ";
+      Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN = "  upstash-token  ";
       Bun.env.PUBSUB_REDIS_URL = "  redis://pubsub  ";
       Bun.env.RATE_LIMIT_REDIS_URL = "  redis://ratelimit  ";
 
@@ -948,6 +958,8 @@ describe("AppEnv", () => {
       expect(appEnv.ANALYTICS_POSTHOG_PROJECT_TOKEN).toBe("ph-key");
       expect(appEnv.ANALYTICS_POSTHOG_HOST).toBe("https://posthog.com");
       expect(appEnv.CACHE_REDIS_URL).toBe("redis://cache");
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_URL).toBe("https://upstash.io");
+      expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBe("upstash-token");
       expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
     });

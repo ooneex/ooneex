@@ -59,6 +59,8 @@ export interface IAppEnv {
 
   // Cache
   readonly CACHE_REDIS_URL: string | undefined;
+  readonly CACHE_UPSTASH_REDIS_REST_URL: string | undefined;
+  readonly CACHE_UPSTASH_REDIS_REST_TOKEN: string | undefined;
 
   // Pub/Sub
   readonly PUBSUB_REDIS_URL: string | undefined;

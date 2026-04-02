@@ -42,6 +42,8 @@ export class AppEnv implements IAppEnv {
 
   // Cache
   public readonly CACHE_REDIS_URL: string | undefined;
+  public readonly CACHE_UPSTASH_REDIS_REST_URL: string | undefined;
+  public readonly CACHE_UPSTASH_REDIS_REST_TOKEN: string | undefined;
 
   // Pub/Sub
   public readonly PUBSUB_REDIS_URL: string | undefined;
@@ -147,7 +149,8 @@ export class AppEnv implements IAppEnv {
     this.LOGS_DATABASE_URL = Bun.env.LOGS_DATABASE_URL?.trim();
     this.BETTERSTACK_LOGGER_SOURCE_TOKEN = Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN?.trim();
     this.BETTERSTACK_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST?.trim();
-    this.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN?.trim();
+    this.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN =
+      Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN?.trim();
     this.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST?.trim();
 
     // Analytics
@@ -156,6 +159,8 @@ export class AppEnv implements IAppEnv {
 
     // Cache
     this.CACHE_REDIS_URL = Bun.env.CACHE_REDIS_URL?.trim();
+    this.CACHE_UPSTASH_REDIS_REST_URL = Bun.env.CACHE_UPSTASH_REDIS_REST_URL?.trim();
+    this.CACHE_UPSTASH_REDIS_REST_TOKEN = Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN?.trim();
 
     // Pub/Sub
     this.PUBSUB_REDIS_URL = Bun.env.PUBSUB_REDIS_URL?.trim();

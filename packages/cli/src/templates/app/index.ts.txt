@@ -1,7 +1,7 @@
 import { PostHogAnalytics } from "@ooneex/analytics";
 import { App } from "@ooneex/app";
 import { RedisCache } from "@ooneex/cache";
-import { LogtailLogger, ExceptionLogger, TerminalLogger } from "@ooneex/logger";
+import { LogtailLogger, BetterstackExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
 import { CorsMiddleware } from "@ooneex/middleware";
 import { RedisRateLimiter } from "@ooneex/rate-limit";
@@ -17,7 +17,7 @@ const app = new App({
     health: "/api/v1/healthcheck",
   },
   loggers: [LogtailLogger, TerminalLogger],
-  onException: ExceptionLogger,
+  onException: BetterstackExceptionLogger,
   analytics: PostHogAnalytics,
   cache: RedisCache,
   storage: BunnyStorage,

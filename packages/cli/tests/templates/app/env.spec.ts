@@ -32,8 +32,8 @@ describe("env.txt", () => {
     expect(content).toContain("LOGS_DATABASE_URL=");
     expect(content).toContain("BETTERSTACK_LOGGER_SOURCE_TOKEN=");
     expect(content).toContain("BETTERSTACK_LOGGER_INGESTING_HOST=");
-    expect(content).toContain("BETTERSTACK_APPLICATION_TOKEN=");
-    expect(content).toContain("BETTERSTACK_INGESTING_HOST=");
+    expect(content).toContain("BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN=");
+    expect(content).toContain("BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST=");
   });
 
   test("should contain Analytics section", async () => {

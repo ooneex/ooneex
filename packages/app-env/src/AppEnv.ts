@@ -31,8 +31,8 @@ export class AppEnv implements IAppEnv {
 
   // Logs
   public readonly LOGS_DATABASE_URL: string | undefined;
-  public readonly LOGTAIL_SOURCE_TOKEN: string | undefined;
-  public readonly LOGTAIL_ENDPOINT: string | undefined;
+  public readonly BETTERSTACK_LOGGER_SOURCE_TOKEN: string | undefined;
+  public readonly BETTERSTACK_LOGGER_INGESTING_HOST: string | undefined;
   public readonly BETTERSTACK_APPLICATION_TOKEN: string | undefined;
   public readonly BETTERSTACK_INGESTING_HOST: string | undefined;
 
@@ -145,8 +145,8 @@ export class AppEnv implements IAppEnv {
 
     // Logs
     this.LOGS_DATABASE_URL = Bun.env.LOGS_DATABASE_URL;
-    this.LOGTAIL_SOURCE_TOKEN = Bun.env.LOGTAIL_SOURCE_TOKEN;
-    this.LOGTAIL_ENDPOINT = Bun.env.LOGTAIL_ENDPOINT;
+    this.BETTERSTACK_LOGGER_SOURCE_TOKEN = Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
+    this.BETTERSTACK_LOGGER_INGESTING_HOST = Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
     this.BETTERSTACK_APPLICATION_TOKEN = Bun.env.BETTERSTACK_APPLICATION_TOKEN;
     this.BETTERSTACK_INGESTING_HOST = Bun.env.BETTERSTACK_INGESTING_HOST;
 

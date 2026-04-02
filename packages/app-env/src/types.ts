@@ -48,8 +48,8 @@ export interface IAppEnv {
 
   // Logs
   readonly LOGS_DATABASE_URL: string | undefined;
-  readonly LOGTAIL_SOURCE_TOKEN: string | undefined;
-  readonly LOGTAIL_ENDPOINT: string | undefined;
+  readonly BETTERSTACK_LOGGER_SOURCE_TOKEN: string | undefined;
+  readonly BETTERSTACK_LOGGER_INGESTING_HOST: string | undefined;
   readonly BETTERSTACK_APPLICATION_TOKEN: string | undefined;
   readonly BETTERSTACK_INGESTING_HOST: string | undefined;
 

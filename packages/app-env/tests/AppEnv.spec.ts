@@ -587,8 +587,8 @@ describe("AppEnv", () => {
       delete Bun.env.LOGS_DATABASE_URL;
       delete Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
       delete Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
-      delete Bun.env.BETTERSTACK_APPLICATION_TOKEN;
-      delete Bun.env.BETTERSTACK_INGESTING_HOST;
+      delete Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN;
+      delete Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST;
       delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
       delete Bun.env.ANALYTICS_POSTHOG_HOST;
       delete Bun.env.CACHE_REDIS_URL;
@@ -657,8 +657,8 @@ describe("AppEnv", () => {
       expect(appEnv.LOGS_DATABASE_URL).toBeUndefined();
       expect(appEnv.BETTERSTACK_LOGGER_SOURCE_TOKEN).toBeUndefined();
       expect(appEnv.BETTERSTACK_LOGGER_INGESTING_HOST).toBeUndefined();
-      expect(appEnv.BETTERSTACK_APPLICATION_TOKEN).toBeUndefined();
-      expect(appEnv.BETTERSTACK_INGESTING_HOST).toBeUndefined();
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN).toBeUndefined();
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST).toBeUndefined();
       expect(appEnv.ANALYTICS_POSTHOG_API_KEY).toBeUndefined();
       expect(appEnv.ANALYTICS_POSTHOG_HOST).toBeUndefined();
       expect(appEnv.CACHE_REDIS_URL).toBeUndefined();
@@ -832,15 +832,15 @@ describe("AppEnv", () => {
     test("should read logs env vars", () => {
       Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN = "lt-token";
       Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST = "https://logtail.com";
-      Bun.env.BETTERSTACK_APPLICATION_TOKEN = "bs-token";
-      Bun.env.BETTERSTACK_INGESTING_HOST = "https://bs.com";
+      Bun.env.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN = "bs-token";
+      Bun.env.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST = "https://bs.com";
 
       const appEnv = new AppEnv();
 
       expect(appEnv.BETTERSTACK_LOGGER_SOURCE_TOKEN).toBe("lt-token");
       expect(appEnv.BETTERSTACK_LOGGER_INGESTING_HOST).toBe("https://logtail.com");
-      expect(appEnv.BETTERSTACK_APPLICATION_TOKEN).toBe("bs-token");
-      expect(appEnv.BETTERSTACK_INGESTING_HOST).toBe("https://bs.com");
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN).toBe("bs-token");
+      expect(appEnv.BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST).toBe("https://bs.com");
     });
 
     test("should read analytics env vars", () => {

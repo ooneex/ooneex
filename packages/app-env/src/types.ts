@@ -50,8 +50,8 @@ export interface IAppEnv {
   readonly LOGS_DATABASE_URL: string | undefined;
   readonly BETTERSTACK_LOGGER_SOURCE_TOKEN: string | undefined;
   readonly BETTERSTACK_LOGGER_INGESTING_HOST: string | undefined;
-  readonly BETTERSTACK_APPLICATION_TOKEN: string | undefined;
-  readonly BETTERSTACK_INGESTING_HOST: string | undefined;
+  readonly BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN: string | undefined;
+  readonly BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST: string | undefined;
 
   // Analytics
   readonly ANALYTICS_POSTHOG_API_KEY: string | undefined;

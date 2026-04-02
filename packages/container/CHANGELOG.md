@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.1) - 2026-04-02
+
+### Removed
+
+- Remove optional export from inversify — Franck ([1b23f645](https://github.com/ooneex/ooneex/commit/1b23f645))
+
 ## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.0) - 2026-04-01
 
 ### Added

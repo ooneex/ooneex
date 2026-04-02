@@ -29,7 +29,7 @@ describe("index.ts.txt", () => {
 
   test("should import loggers from @ooneex/logger", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("LogtailLogger");
+    expect(content).toContain("BetterstackLogger");
     expect(content).toContain("BetterstackExceptionLogger");
     expect(content).toContain("TerminalLogger");
     expect(content).toContain("@ooneex/logger");
@@ -74,7 +74,7 @@ describe("index.ts.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("routing: {");
     expect(content).toContain('prefix: "api"');
-    expect(content).toContain("loggers: [LogtailLogger, TerminalLogger]");
+    expect(content).toContain("loggers: [BetterstackLogger, TerminalLogger]");
     expect(content).toContain("onException: BetterstackExceptionLogger");
     expect(content).toContain("analytics: PostHogAnalytics");
     expect(content).toContain("cache: RedisCache");

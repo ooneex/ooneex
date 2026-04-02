@@ -39,7 +39,7 @@ describe("env.txt", () => {
   test("should contain Analytics section", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Analytics");
-    expect(content).toContain("ANALYTICS_POSTHOG_API_KEY=");
+    expect(content).toContain("ANALYTICS_POSTHOG_PROJECT_TOKEN=");
     expect(content).toContain("ANALYTICS_POSTHOG_HOST=");
   });
 

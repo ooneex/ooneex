@@ -8,25 +8,25 @@ import { LoggerException } from "./LoggerException";
 import type { ILogger } from "./types";
 
 @decorator.logger()
-export class LogtailLogger implements ILogger {
-  private logtail!: Logtail;
+export class BetterstackLogger implements ILogger {
+  private logtail: Logtail;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv) {}
-
-  public init(): void {
-    const sourceToken = this.env.LOGTAIL_SOURCE_TOKEN;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const sourceToken = this.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
     if (!sourceToken) {
       throw new LoggerException(
-        "Logtail source token is required. Please set the LOGTAIL_SOURCE_TOKEN environment variable.",
+        "Logtail source token is required. Please set the BETTERSTACK_LOGGER_SOURCE_TOKEN environment variable.",
       );
     }
 
-    const endpoint = this.env.LOGTAIL_ENDPOINT;
+    const endpoint = this.env.BETTERSTACK_LOGGER_INGESTING_HOST;
 
     this.logtail = new Logtail(sourceToken, {
       ...(endpoint && { endpoint }),
     });
   }
+
+  public init(): void {}
 
   public error(message: string | IException, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, mock, test } from "bun:test";
 import { AppEnv } from "@ooneex/app-env";
 import type { IException } from "@ooneex/exception";
+import { BetterstackLogger } from "@/BetterstackLogger";
 import { LoggerException } from "@/LoggerException";
-import { LogtailLogger } from "@/LogtailLogger";
 
 const mockError = mock((_message: string, _data?: Record<string, unknown>) => {});
 const mockWarn = mock((_message: string, _data?: Record<string, unknown>) => {});
@@ -20,25 +20,25 @@ mock.module("@logtail/node", () => ({
   })),
 }));
 
-describe("LogtailLogger", () => {
+describe("BetterstackLogger", () => {
   beforeEach(() => {
     mockError.mockClear();
     mockWarn.mockClear();
     mockInfo.mockClear();
     mockDebug.mockClear();
     mockFlush.mockClear();
-    Bun.env.LOGTAIL_SOURCE_TOKEN = "test-token";
-    delete Bun.env.LOGTAIL_ENDPOINT;
+    Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN = "test-token";
+    delete Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
   });
 
   describe("constructor", () => {
-    test("should create an instance of LogtailLogger", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      expect(logger).toBeInstanceOf(LogtailLogger);
+    test("should create an instance of BetterstackLogger", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+      expect(logger).toBeInstanceOf(BetterstackLogger);
     });
 
     test("should implement ILogger interface", () => {
-      const logger = new LogtailLogger(new AppEnv());
+      const logger = new BetterstackLogger(new AppEnv());
       expect(typeof logger.init).toBe("function");
       expect(typeof logger.error).toBe("function");
       expect(typeof logger.warn).toBe("function");
@@ -48,49 +48,50 @@ describe("LogtailLogger", () => {
       expect(typeof logger.success).toBe("function");
       expect(typeof logger.flush).toBe("function");
     });
-  });
 
-  describe("init", () => {
-    test("should initialize logtail with source token", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      expect(() => logger.init()).not.toThrow();
+    test("should create Logtail instance with source token", () => {
+      expect(() => new BetterstackLogger(new AppEnv())).not.toThrow();
     });
 
-    test("should throw LoggerException when LOGTAIL_SOURCE_TOKEN is missing", () => {
-      delete Bun.env.LOGTAIL_SOURCE_TOKEN;
-      const logger = new LogtailLogger(new AppEnv());
-      expect(() => logger.init()).toThrow(LoggerException);
-      expect(() => logger.init()).toThrow(
-        "Logtail source token is required. Please set the LOGTAIL_SOURCE_TOKEN environment variable.",
+    test("should throw LoggerException when BETTERSTACK_LOGGER_SOURCE_TOKEN is missing", () => {
+      delete Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
+      expect(() => new BetterstackLogger(new AppEnv())).toThrow(LoggerException);
+      expect(() => new BetterstackLogger(new AppEnv())).toThrow(
+        "Logtail source token is required. Please set the BETTERSTACK_LOGGER_SOURCE_TOKEN environment variable.",
       );
     });
 
-    test("should initialize with custom endpoint when LOGTAIL_ENDPOINT is set", () => {
-      Bun.env.LOGTAIL_ENDPOINT = "https://custom-endpoint.example.com";
-      const logger = new LogtailLogger(new AppEnv());
+    test("should create Logtail instance with custom endpoint when BETTERSTACK_LOGGER_INGESTING_HOST is set", () => {
+      Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST = "https://custom-endpoint.example.com";
+      expect(() => new BetterstackLogger(new AppEnv())).not.toThrow();
+    });
+  });
+
+  describe("init", () => {
+    test("should be callable without error", () => {
+      const logger = new BetterstackLogger(new AppEnv());
       expect(() => logger.init()).not.toThrow();
     });
   });
 
   describe("error", () => {
-    test("should call logtail.error with string message", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log error with string message", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.error("Something went wrong");
       expect(mockError).toHaveBeenCalledWith("Something went wrong", undefined);
     });
 
-    test("should call logtail.error with string message and data", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log error with string message and data", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       const data = { userId: "user-123" };
       logger.error("Something went wrong", data);
       expect(mockError).toHaveBeenCalledWith("Something went wrong", data);
     });
 
-    test("should call logtail.error with exception message", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log error with exception message", () => {
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: "Exception occurred",
@@ -108,8 +109,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should use 'Unknown error' when exception message is undefined", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: undefined,
@@ -126,8 +126,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should include exceptionName in data when exception has name", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: "Error",
@@ -145,8 +144,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should include status in data when exception has status", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: "Error",
@@ -164,8 +162,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should include stackTrace in data when exception has stack", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const stackTrace = [{ file: "app.ts", line: 10, column: 5, functionName: "main" }];
 
@@ -185,8 +182,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should not include stackTrace when stackToJson returns null", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: "Error",
@@ -204,8 +200,7 @@ describe("LogtailLogger", () => {
     });
 
     test("should merge data with exception data", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
         message: "Error",
@@ -225,16 +220,16 @@ describe("LogtailLogger", () => {
   });
 
   describe("warn", () => {
-    test("should call logtail.warn with message", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log warning with message", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.warn("This is a warning");
       expect(mockWarn).toHaveBeenCalledWith("This is a warning", undefined);
     });
 
-    test("should call logtail.warn with message and data", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log warning with message and data", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       const data = { disk: "low" };
       logger.warn("Low disk space", data);
       expect(mockWarn).toHaveBeenCalledWith("Low disk space", data);
@@ -242,16 +237,16 @@ describe("LogtailLogger", () => {
   });
 
   describe("info", () => {
-    test("should call logtail.info with message", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log info with message", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.info("User logged in");
       expect(mockInfo).toHaveBeenCalledWith("User logged in", undefined);
     });
 
-    test("should call logtail.info with message and data", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log info with message and data", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       const data = { userId: "user-456" };
       logger.info("User logged in", data);
       expect(mockInfo).toHaveBeenCalledWith("User logged in", data);
@@ -259,16 +254,16 @@ describe("LogtailLogger", () => {
   });
 
   describe("debug", () => {
-    test("should call logtail.debug with message", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log debug with message", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.debug("Debug output");
       expect(mockDebug).toHaveBeenCalledWith("Debug output", undefined);
     });
 
-    test("should call logtail.debug with message and data", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log debug with message and data", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       const data = { query: "SELECT *" };
       logger.debug("Query executed", data);
       expect(mockDebug).toHaveBeenCalledWith("Query executed", data);
@@ -276,41 +271,41 @@ describe("LogtailLogger", () => {
   });
 
   describe("log", () => {
-    test("should call logtail.info with LOG level", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log with LOG level", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.log("General log");
       expect(mockInfo).toHaveBeenCalledWith("General log", { level: "LOG" });
     });
 
     test("should merge data with LOG level", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.log("General log", { key: "value" });
       expect(mockInfo).toHaveBeenCalledWith("General log", { key: "value", level: "LOG" });
     });
   });
 
   describe("success", () => {
-    test("should call logtail.info with SUCCESS level", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should log with SUCCESS level", () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.success("Operation completed");
       expect(mockInfo).toHaveBeenCalledWith("Operation completed", { level: "SUCCESS" });
     });
 
     test("should merge data with SUCCESS level", () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+      const logger = new BetterstackLogger(new AppEnv());
+
       logger.success("Done", { count: 5 });
       expect(mockInfo).toHaveBeenCalledWith("Done", { count: 5, level: "SUCCESS" });
     });
   });
 
   describe("flush", () => {
-    test("should call logtail.flush", async () => {
-      const logger = new LogtailLogger(new AppEnv());
-      logger.init();
+    test("should flush pending logs", async () => {
+      const logger = new BetterstackLogger(new AppEnv());
+
       await logger.flush();
       expect(mockFlush).toHaveBeenCalledTimes(1);
     });

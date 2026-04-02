@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { AnalyticsException } from "@/AnalyticsException";
-import type { IAnalytics, PostHogCaptureOptionsType, PostHogConfigType } from "@/types";
+import type { IAnalytics, PostHogCaptureOptionsType } from "@/types";
 
 // Create mock PostHog instance
 const mockPostHogInstance = {
@@ -22,17 +22,17 @@ mock.module("posthog-node", () => ({
 class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptionsType> implements IAnalytics<T> {
   private client: typeof mockPostHogInstance | null = null;
 
-  constructor(config?: PostHogConfigType) {
-    const apiKey = config?.apiKey || Bun.env.ANALYTICS_POSTHOG_API_KEY;
+  constructor() {
+    const apiKey = Bun.env.ANALYTICS_POSTHOG_API_KEY?.trim();
 
     if (!apiKey) {
       throw new AnalyticsException(
-        "PostHog API key is required. Please provide an API key either through the constructor options or set the ANALYTICS_POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_API_KEY environment variable.",
       );
     }
 
     this.client = MockPostHog(apiKey, {
-      host: config?.host || Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
+      host: Bun.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
     });
   }
 
@@ -59,6 +59,10 @@ describe("PostHogAnalytics", () => {
       ANALYTICS_POSTHOG_API_KEY: Bun.env.ANALYTICS_POSTHOG_API_KEY,
       ANALYTICS_POSTHOG_HOST: Bun.env.ANALYTICS_POSTHOG_HOST,
     };
+
+    // Set default API key for tests
+    Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+    delete Bun.env.ANALYTICS_POSTHOG_HOST;
 
     // Reset all mocks
     mockPostHogInstance.capture.mockClear();
@@ -92,20 +96,20 @@ describe("PostHogAnalytics", () => {
 
       expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
       expect(() => new PostHogAnalytics()).toThrow(
-        "PostHog API key is required. Please provide an API key either through the constructor options or set the ANALYTICS_POSTHOG_API_KEY environment variable.",
+        "PostHog API key is required. Please set the ANALYTICS_POSTHOG_API_KEY environment variable.",
       );
     });
 
-    test("should throw AnalyticsException when empty API key is provided via options", () => {
-      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+    test("should throw AnalyticsException when empty API key is provided via env", () => {
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "";
 
-      expect(() => new PostHogAnalytics({ apiKey: "" })).toThrow(AnalyticsException);
+      expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
     });
 
-    test("should throw AnalyticsException when undefined API key is provided via options", () => {
-      delete Bun.env.ANALYTICS_POSTHOG_API_KEY;
+    test("should throw AnalyticsException when whitespace API key is provided via env", () => {
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "   ";
 
-      expect(() => new PostHogAnalytics({})).toThrow(AnalyticsException);
+      expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
     });
 
     test("should create instance successfully with API key from environment", () => {
@@ -118,61 +122,29 @@ describe("PostHogAnalytics", () => {
       expect(typeof analytics.capture).toBe("function");
     });
 
-    test("should create instance successfully with API key from options", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
-
-      expect(analytics).toBeInstanceOf(PostHogAnalytics);
-      expect(analytics).toHaveProperty("capture");
-    });
-
-    test("should prioritize options API key over environment variable", () => {
-      Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
-
-      new PostHogAnalytics({ apiKey: "options-api-key" });
-
-      expect(MockPostHog).toHaveBeenCalledWith("options-api-key", expect.any(Object));
-    });
-
     test("should use default host when none provided", () => {
-      new PostHogAnalytics({ apiKey: "test-api-key" });
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
+      delete Bun.env.ANALYTICS_POSTHOG_HOST;
+
+      new PostHogAnalytics();
 
       expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
         host: "https://eu.i.posthog.com",
       });
     });
 
-    test("should use host from options when provided", () => {
-      const customHost = "https://custom.posthog.com";
-
-      new PostHogAnalytics({ apiKey: "test-api-key", host: customHost });
-
-      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
-        host: customHost,
-      });
-    });
-
-    test("should use host from environment when no options host provided", () => {
+    test("should use host from environment when provided", () => {
+      Bun.env.ANALYTICS_POSTHOG_API_KEY = "test-api-key";
       Bun.env.ANALYTICS_POSTHOG_HOST = "https://env.posthog.com";
 
-      new PostHogAnalytics({ apiKey: "test-api-key" });
+      new PostHogAnalytics();
 
       expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
         host: "https://env.posthog.com",
       });
     });
 
-    test("should prioritize options host over environment host", () => {
-      Bun.env.ANALYTICS_POSTHOG_HOST = "https://env.posthog.com";
-      const optionsHost = "https://options.posthog.com";
-
-      new PostHogAnalytics({ apiKey: "test-api-key", host: optionsHost });
-
-      expect(MockPostHog).toHaveBeenCalledWith("test-api-key", {
-        host: optionsHost,
-      });
-    });
-
-    test("should initialize PostHog client when API key comes from environment", () => {
+    test("should initialize PostHog client with environment API key", () => {
       Bun.env.ANALYTICS_POSTHOG_API_KEY = "env-api-key";
 
       new PostHogAnalytics();
@@ -187,7 +159,7 @@ describe("PostHogAnalytics", () => {
     let analytics: InstanceType<typeof PostHogAnalytics>;
 
     beforeEach(() => {
-      analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      analytics = new PostHogAnalytics();
     });
 
     test("should call PostHog capture with correct parameters", () => {
@@ -395,14 +367,14 @@ describe("PostHogAnalytics", () => {
 
   describe("IAnalytics interface compliance", () => {
     test("should implement IAnalytics interface correctly", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       expect(analytics).toHaveProperty("capture");
       expect(typeof analytics.capture).toBe("function");
     });
 
     test("should accept generic capture type", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       interface CustomCaptureType extends PostHogCaptureOptionsType {
         customProperty: string;
@@ -421,7 +393,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Error scenarios", () => {
     test("should handle PostHog capture errors gracefully", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       // Create a fresh mock for this test to avoid affecting others
       const errorMock = mock(() => {
@@ -438,7 +410,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle PostHog shutdown errors gracefully", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       // Reset capture to default behavior and only mock shutdown to throw
       mockPostHogInstance.capture.mockImplementation(() => {});
@@ -457,7 +429,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Multiple capture calls", () => {
     test("should handle multiple sequential capture calls", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const captureData1: PostHogCaptureOptionsType = {
         id: "user-1",
@@ -495,7 +467,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Real-world usage scenarios", () => {
     test("should handle user signup event", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const signupData: PostHogCaptureOptionsType = {
         id: "new-user-123",
@@ -525,7 +497,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle e-commerce purchase event", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const purchaseData: PostHogCaptureOptionsType = {
         id: "customer-456",
@@ -559,7 +531,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle feature usage tracking", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const featureData: PostHogCaptureOptionsType = {
         id: "power-user-789",
@@ -593,7 +565,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Edge cases", () => {
     test("should handle very long user IDs", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
       const longId = `user-${"x".repeat(1000)}`;
 
       const captureData: PostHogCaptureOptionsType = {
@@ -610,7 +582,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle very long event names", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
       const longEventName = `event_${"x".repeat(500)}`;
 
       const captureData: PostHogCaptureOptionsType = {
@@ -627,7 +599,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle large property objects", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
       const largeProperties: Record<string, unknown> = {};
 
       // Create a large properties object
@@ -652,7 +624,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle deeply nested property values", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const nestedProperties = {
         level1: {
@@ -686,7 +658,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Performance and reliability", () => {
     test("should handle rapid successive capture calls", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       // Simulate rapid successive calls
       for (let i = 0; i < 10; i++) {
@@ -701,7 +673,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle capture calls with varying data sizes", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       // Small data
       analytics.capture({
@@ -736,7 +708,7 @@ describe("PostHogAnalytics", () => {
 
   describe("Data integrity", () => {
     test("should preserve all property types correctly", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const mixedData: PostHogCaptureOptionsType = {
         id: "user-mixed",
@@ -773,7 +745,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should handle special numeric values", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       const numericData: PostHogCaptureOptionsType = {
         id: "user-numeric",
@@ -802,7 +774,7 @@ describe("PostHogAnalytics", () => {
     });
 
     test("should maintain timestamp precision", () => {
-      const analytics = new PostHogAnalytics({ apiKey: "test-api-key" });
+      const analytics = new PostHogAnalytics();
 
       analytics.capture({
         id: "user-timestamp-precision",

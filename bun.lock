@@ -59,7 +59,7 @@
     },
     "packages/analytics": {
       "name": "@ooneex/analytics",
-      "version": "1.1.4",
+      "version": "1.1.5",
       "dependencies": {
         "@ooneex/app-env": "workspace:*",
         "@ooneex/container": "workspace:*",
@@ -176,7 +176,7 @@
     },
     "packages/container": {
       "name": "@ooneex/container",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",

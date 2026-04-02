@@ -9,9 +9,11 @@ import type { ILogger } from "./types";
 
 @decorator.logger()
 export class LogtailLogger implements ILogger {
-  private logtail: Logtail;
+  private logtail!: Logtail;
 
-  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {}
+
+  public init(): void {
     const sourceToken = this.env.LOGTAIL_SOURCE_TOKEN;
     if (!sourceToken) {
       throw new LoggerException(
@@ -25,8 +27,6 @@ export class LogtailLogger implements ILogger {
       ...(endpoint && { endpoint }),
     });
   }
-
-  public init(): void {}
 
   public error(message: string | IException, data?: Record<string, ScalarType>): void {
     if (typeof message === "string") {

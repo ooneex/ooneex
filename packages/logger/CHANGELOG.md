@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.5) - 2026-04-02
+
+### Changed
+
+- Move Logtail initialization from constructor to init method — Franck ([c71e17dc](https://github.com/ooneex/ooneex/commit/c71e17dc))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.4) - 2026-04-01
 
 ### Changed

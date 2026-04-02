@@ -23,6 +23,16 @@ describe("package.json.txt", () => {
     expect(content).toContain('"workspaces"');
   });
 
+  test("should use nx run-many for dev and build scripts", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain(
+      '"dev": "bunx nx run-many -t dev --output-style=stream --verbose"',
+    );
+    expect(content).toContain(
+      '"build": "bunx nx run-many -t build --output-style=stream --verbose"',
+    );
+  });
+
   test("should not contain husky prepare script", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).not.toContain('"prepare"');

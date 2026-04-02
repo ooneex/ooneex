@@ -30,8 +30,8 @@ describe("env.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Logs");
     expect(content).toContain("LOGS_DATABASE_URL=");
-    expect(content).toContain("LOGTAIL_SOURCE_TOKEN=");
-    expect(content).toContain("LOGTAIL_ENDPOINT=");
+    expect(content).toContain("BETTERSTACK_LOGGER_SOURCE_TOKEN=");
+    expect(content).toContain("BETTERSTACK_LOGGER_INGESTING_HOST=");
     expect(content).toContain("BETTERSTACK_APPLICATION_TOKEN=");
     expect(content).toContain("BETTERSTACK_INGESTING_HOST=");
   });

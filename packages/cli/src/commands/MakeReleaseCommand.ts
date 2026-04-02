@@ -123,7 +123,7 @@ export class MakeReleaseCommand implements ICommand {
 
     logger.success(`${releasedCount} package(s) released`, undefined, logOptions);
 
-    const shouldPush = await askConfirm({ message: "Push commits and tags to remote?" });
+    const shouldPush = await askConfirm({ message: "Push commits and tags to remote?", initial: true });
 
     if (shouldPush) {
       try {

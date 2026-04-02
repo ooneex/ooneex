@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.7) - 2026-04-02
+
+### Fixed
+
+- Register AppEnv in container if not already present — Franck ([b99fdc67](https://github.com/ooneex/ooneex/commit/b99fdc67))
+
 ## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.6) - 2026-04-02
 
 ### Fixed

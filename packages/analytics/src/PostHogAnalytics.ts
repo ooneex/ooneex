@@ -12,7 +12,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
   private client: PostHog | null = null;
 
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
-    const apiKey = this.env.ANALYTICS_POSTHOG_PROJECT_TOKEN?.trim();
+    const apiKey = this.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -21,7 +21,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
     }
 
     this.client = new PostHog(apiKey, {
-      host: this.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
+      host: this.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
     });
   }
 

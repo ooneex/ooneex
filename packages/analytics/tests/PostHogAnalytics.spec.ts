@@ -23,7 +23,7 @@ class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptio
   private client: typeof mockPostHogInstance | null = null;
 
   constructor() {
-    const apiKey = Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN?.trim();
+    const apiKey = Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN;
 
     if (!apiKey) {
       throw new AnalyticsException(
@@ -32,7 +32,7 @@ class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptureOptio
     }
 
     this.client = MockPostHog(apiKey, {
-      host: Bun.env.ANALYTICS_POSTHOG_HOST?.trim() || "https://eu.i.posthog.com",
+      host: Bun.env.ANALYTICS_POSTHOG_HOST || "https://eu.i.posthog.com",
     });
   }
 
@@ -102,12 +102,6 @@ describe("PostHogAnalytics", () => {
 
     test("should throw AnalyticsException when empty API key is provided via env", () => {
       Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "";
-
-      expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
-    });
-
-    test("should throw AnalyticsException when whitespace API key is provided via env", () => {
-      Bun.env.ANALYTICS_POSTHOG_PROJECT_TOKEN = "   ";
 
       expect(() => new PostHogAnalytics()).toThrow(AnalyticsException);
     });

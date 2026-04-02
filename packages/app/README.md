@@ -101,7 +101,7 @@ OPENAI_API_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
 CACHE_REDIS_URL=redis://localhost:6379
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
-ANALYTICS_POSTHOG_API_KEY=your_posthog_key
+ANALYTICS_POSTHOG_PROJECT_TOKEN=your_posthog_key
 ```
 
 ### Creating a Module

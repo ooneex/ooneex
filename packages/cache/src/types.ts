@@ -12,6 +12,11 @@ export type RedisCacheOptionsType = {
   tls?: boolean | object;
 };
 
+export type UpstashRedisCacheOptionsType = {
+  url?: string;
+  token?: string;
+};
+
 export type FilesystemCacheOptionsType = {
   cacheDir?: string;
   maxFileSize?: number;

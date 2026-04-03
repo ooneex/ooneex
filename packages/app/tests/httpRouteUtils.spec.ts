@@ -566,6 +566,48 @@ describe("httpRouteUtils", () => {
       expect(body.message).toBe("Controller error");
     });
 
+    test("propagates exception key when controller throws Exception with key", async () => {
+      class ThrowingWithKeyController {
+        index(): IResponse {
+          throw new Exception("Controller error", { key: "controller.error.key", status: HttpStatus.Code.BadRequest });
+        }
+      }
+      container.add(ThrowingWithKeyController);
+
+      const context = createMockContext();
+      const route = createMockRoute({
+        controller: ThrowingWithKeyController,
+      } as Partial<RouteConfigType>);
+
+      const response = await httpRouteHandler({ context, route });
+
+      expect(response.status).toBe(HttpStatus.Code.BadRequest);
+      const body = await response.json();
+      expect(body.message).toBe("Controller error");
+      expect(body.key).toBe("controller.error.key");
+    });
+
+    test("does not include key when controller throws Exception without key", async () => {
+      class ThrowingNoKeyController {
+        index(): IResponse {
+          throw new Exception("No key error", { status: HttpStatus.Code.BadRequest });
+        }
+      }
+      container.add(ThrowingNoKeyController);
+
+      const context = createMockContext();
+      const route = createMockRoute({
+        controller: ThrowingNoKeyController,
+      } as Partial<RouteConfigType>);
+
+      const response = await httpRouteHandler({ context, route });
+
+      expect(response.status).toBe(HttpStatus.Code.BadRequest);
+      const body = await response.json();
+      expect(body.message).toBe("No key error");
+      expect(body.key).toBeNull();
+    });
+
     test("returns InternalServerError when controller throws regular Error", async () => {
       class ErrorController {
         index(): IResponse {

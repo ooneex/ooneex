@@ -170,8 +170,8 @@ export const buildHttpContext = async (ctx: {
   return context;
 };
 
-type ControllerError = { message: string; status: StatusCodeType };
-type RouteValidationError = { message: string; status: StatusCodeType };
+type ControllerError = { message: string; status: StatusCodeType; key?: string | null };
+type RouteValidationError = { message: string; status: StatusCodeType; key?: string | null };
 
 export const validateRouteAccess = async (
   context: ContextType,
@@ -280,8 +280,9 @@ const buildExceptionResponse = (
   message: string,
   status: StatusCodeType,
   env: EnvironmentNameType,
+  key?: string | null,
 ): Response => {
-  return context.response.exception(message, { status }).get(env);
+  return context.response.exception(message, { status, ...(key ? { key } : {}) }).get(env);
 };
 
 export const logRequest = (context: ContextType): void => {
@@ -342,7 +343,7 @@ const executeController = async (
     return [response, null];
   } catch (error: unknown) {
     if (error instanceof Exception) {
-      return [null, { message: error.message, status: error.status as StatusCodeType }];
+      return [null, { message: error.message, status: error.status as StatusCodeType, key: error.key }];
     }
     if (error instanceof Error) {
       return [null, { message: error.message, status: HttpStatus.Code.InternalServerError }];
@@ -370,7 +371,13 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
 
   const [response, controllerError] = await executeController(controller, context);
   if (controllerError) {
-    const httpResponse = buildExceptionResponse(context, controllerError.message, controllerError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(
+      context,
+      controllerError.message,
+      controllerError.status,
+      currentEnv,
+      controllerError.key,
+    );
     logRequest(context);
     return httpResponse;
   }
@@ -431,7 +438,8 @@ export const formatHttpRoutes = (
           const status = (
             error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError
           ) as StatusCodeType;
-          const httpResponse = buildExceptionResponse(context, (error as Error).message, status, env);
+          const key = error instanceof Exception ? error.key : null;
+          const httpResponse = buildExceptionResponse(context, (error as Error).message, status, env, key);
           logRequest(context);
           return httpResponse;
         }

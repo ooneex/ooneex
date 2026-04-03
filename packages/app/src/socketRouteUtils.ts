@@ -46,8 +46,13 @@ const runMiddlewares = async (context: ContextType, middlewares: SocketMiddlewar
   return currentContext;
 };
 
-const sendException = (context: ContextType, message: string, status: StatusCodeType): Promise<void> => {
-  context.response.exception(message, { status });
+const sendException = (
+  context: ContextType,
+  message: string,
+  status: StatusCodeType,
+  key?: string | null,
+): Promise<void> => {
+  context.response.exception(message, { status, ...(key ? { key } : {}) });
   return context.channel.send(context.response);
 };
 
@@ -147,8 +152,9 @@ export const socketRouteHandler = async ({
     context = await runMiddlewares(context, middlewares);
   } catch (error: unknown) {
     const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+    const key = error instanceof Exception ? error.key : null;
     logSocketRequest(context, status, route.path);
-    return sendException(context, (error as Error).message, status as StatusCodeType);
+    return sendException(context, (error as Error).message, status as StatusCodeType, key);
   }
 
   // Check allowed users
@@ -175,9 +181,10 @@ export const socketRouteHandler = async ({
     context.response = await controller.index(context);
   } catch (error: unknown) {
     const status = (error instanceof Exception ? error.status : HttpStatus.Code.InternalServerError) as number;
+    const key = error instanceof Exception ? error.key : null;
     const message = error instanceof Error ? error.message : "An unknown error occurred";
     logSocketRequest(context, status, route.path);
-    return sendException(context, message, status as StatusCodeType);
+    return sendException(context, message, status as StatusCodeType, key);
   }
 
   const responseValidationError = validateResponse(route, context.response.getData());

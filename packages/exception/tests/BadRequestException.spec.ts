@@ -76,7 +76,7 @@ describe("BadRequestException", () => {
       const exception = new BadRequestException(message, "BAD_REQUEST_TEST", data);
 
       // Properties from Exception
-      expect(exception.key).toBeNull();
+      expect(exception.key).toBe("BAD_REQUEST_TEST");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.BadRequest);
       expect(exception.data).toEqual(data);

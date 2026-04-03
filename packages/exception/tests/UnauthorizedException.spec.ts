@@ -76,7 +76,7 @@ describe("UnauthorizedException", () => {
       const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST", data);
 
       // Properties from Exception
-      expect(exception.key).toBeNull();
+      expect(exception.key).toBe("UNAUTHORIZED_TEST");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual(data);

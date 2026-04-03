@@ -76,7 +76,7 @@ describe("MethodNotAllowedException", () => {
       const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST", data);
 
       // Properties from Exception
-      expect(exception.key).toBeNull();
+      expect(exception.key).toBe("METHOD_NOT_ALLOWED_TEST");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual(data);

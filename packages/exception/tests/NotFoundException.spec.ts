@@ -76,7 +76,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException(message, "NOT_FOUND_TEST", data);
 
       // Properties from Exception
-      expect(exception.key).toBeNull();
+      expect(exception.key).toBe("NOT_FOUND_TEST");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);

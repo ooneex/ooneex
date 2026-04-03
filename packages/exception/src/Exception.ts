@@ -2,14 +2,19 @@ import type { StatusCodeType } from "@ooneex/http-status";
 import type { ExceptionStackFrameType, IException } from "./types";
 
 export class Exception extends Error implements IException {
+  public readonly key: string | null;
   public readonly date: Date = new Date();
   public readonly status: StatusCodeType;
   public readonly data: Record<string, unknown>;
   public readonly native?: Error;
 
-  constructor(message: string | Error, options?: { status?: StatusCodeType; data?: Record<string, unknown> }) {
+  constructor(
+    message: string | Error,
+    options?: { key?: string | null; status?: StatusCodeType; data?: Record<string, unknown> },
+  ) {
     super(message instanceof Error ? (message as Error).message : message);
 
+    this.key = options?.key ?? null;
     this.status = options?.status || 500;
     this.data = options?.data || {};
 

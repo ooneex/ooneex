@@ -74,6 +74,7 @@ describe("NotFoundException", () => {
       const exception = new NotFoundException(message, data);
 
       // Properties from Exception
+      expect(exception.key).toBeNull();
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);

@@ -31,6 +31,7 @@ describe("Exception", () => {
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
       expect(exception.name).toBe("Exception");
+      expect(exception.key).toBeNull();
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(500);
       expect(exception.data).toEqual({});
@@ -93,6 +94,24 @@ describe("Exception", () => {
   });
 
   describe("Inheritance and Properties", () => {
+    test("should have null key by default", () => {
+      const exception = new Exception("Test");
+
+      expect(exception.key).toBeNull();
+    });
+
+    test("should accept custom key via options", () => {
+      const exception = new Exception("Test", { key: "custom-key" });
+
+      expect(exception.key).toBe("custom-key");
+    });
+
+    test("should accept null key via options", () => {
+      const exception = new Exception("Test", { key: null });
+
+      expect(exception.key).toBeNull();
+    });
+
     test("should have readonly date property", () => {
       const beforeDate = Date.now();
       const exception = new Exception("Test");

@@ -9,6 +9,7 @@ export type ExceptionStackFrameType = {
 };
 
 export interface IException {
+  readonly key: string | null;
   readonly date: Date;
   readonly status: StatusCodeType;
   readonly data: Readonly<Record<string, unknown>>;

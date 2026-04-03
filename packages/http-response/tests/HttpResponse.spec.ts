@@ -38,6 +38,7 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -61,6 +62,7 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -79,7 +81,7 @@ describe("HttpResponse", () => {
 
     test("should reset other properties when setting JSON", () => {
       // First set as exception
-      response.exception("Error occurred");
+      response.exception("Error occurred", { key: crypto.randomUUID() });
 
       // Then set as JSON
       const data = { success: true };
@@ -88,6 +90,7 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.OK);
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -114,6 +117,7 @@ describe("HttpResponse", () => {
       response.json(data);
       const webResponse = response.get();
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -133,8 +137,9 @@ describe("HttpResponse", () => {
 
   describe("exception method", () => {
     test("should set exception with default status 500", () => {
+      const key = crypto.randomUUID();
       const message = "Internal Server Error";
-      const result = response.exception(message);
+      const result = response.exception(message, { key });
 
       expect(result).toBe(response); // Should return this for chaining
       expect(response.header.get("Content-Type")).toBe("application/json");
@@ -143,6 +148,7 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.InternalServerError);
 
       expect(webResponse.json()).resolves.toEqual({
+        key,
         app: {
           env: "production",
         },
@@ -160,19 +166,21 @@ describe("HttpResponse", () => {
     });
 
     test("should set exception with custom status and data", () => {
+      const key = crypto.randomUUID();
       const message = "Bad Request Error";
       const data = { field: "email", reason: "invalid format" };
-      const config = {
+
+      response.exception(message, {
+        key,
         status: HttpStatus.Code.BadRequest,
         data,
-      };
-
-      response.exception(message, config);
+      });
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
 
       expect(webResponse.json()).resolves.toEqual({
+        key,
         app: {
           env: "production",
         },
@@ -194,7 +202,7 @@ describe("HttpResponse", () => {
       response.redirect("https://example.com");
 
       // Then set as exception
-      response.exception("Error occurred");
+      response.exception("Error occurred", { key: crypto.randomUUID() });
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.InternalServerError);
@@ -204,8 +212,9 @@ describe("HttpResponse", () => {
 
   describe("notFound method", () => {
     test("should set not found exception with default status 404", () => {
+      const key = crypto.randomUUID();
       const message = "Resource not found";
-      const result = response.notFound(message);
+      const result = response.notFound(message, { key });
 
       expect(result).toBe(response); // Should return this for chaining
       expect(response.header.get("Content-Type")).toBe("application/json");
@@ -214,6 +223,7 @@ describe("HttpResponse", () => {
       expect(webResponse.status).toBe(HttpStatus.Code.NotFound);
 
       expect(webResponse.json()).resolves.toEqual({
+        key,
         app: {
           env: "production",
         },
@@ -231,19 +241,21 @@ describe("HttpResponse", () => {
     });
 
     test("should set not found with custom status and data", () => {
+      const key = crypto.randomUUID();
       const message = "User not found";
       const data = { userId: 123 };
-      const config = {
+
+      response.notFound(message, {
+        key,
         status: HttpStatus.Code.Gone,
         data,
-      };
-
-      response.notFound(message, config);
+      });
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.Gone);
 
       expect(webResponse.json()).resolves.toEqual({
+        key,
         app: {
           env: "production",
         },
@@ -320,6 +332,7 @@ describe("HttpResponse", () => {
 
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -348,9 +361,11 @@ describe("HttpResponse", () => {
     });
 
     test("should return Web API Response for exception", async () => {
+      const key = crypto.randomUUID();
       const message = "Test error";
       const data = { code: "ERR001" };
       response.exception(message, {
+        key,
         status: HttpStatus.Code.UnprocessableEntity,
         data,
       });
@@ -362,6 +377,7 @@ describe("HttpResponse", () => {
 
       const responseData = await webResponse.json();
       expect(responseData).toEqual({
+        key,
         app: {
           env: "production",
         },
@@ -397,6 +413,7 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.Created);
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -416,6 +433,7 @@ describe("HttpResponse", () => {
     test("should support method chaining for exception", () => {
       const message = "Chaining error";
       const result = response.exception(message, {
+        key: crypto.randomUUID(),
         status: HttpStatus.Code.BadRequest,
       });
 
@@ -427,7 +445,7 @@ describe("HttpResponse", () => {
 
     test("should support method chaining for notFound", () => {
       const message = "Not found chaining";
-      const result = response.notFound(message, { status: HttpStatus.Code.Gone });
+      const result = response.notFound(message, { key: crypto.randomUUID(), status: HttpStatus.Code.Gone });
 
       expect(result).toBe(response);
 
@@ -453,7 +471,7 @@ describe("HttpResponse", () => {
       response.json({ message: "initial" }, HttpStatus.Code.OK);
 
       // Switch to exception
-      response.exception("Error occurred", { status: HttpStatus.Code.BadRequest });
+      response.exception("Error occurred", { key: crypto.randomUUID(), status: HttpStatus.Code.BadRequest });
 
       const webResponse = response.get();
       expect(webResponse.status).toBe(HttpStatus.Code.BadRequest);
@@ -465,7 +483,7 @@ describe("HttpResponse", () => {
 
     test("should properly transition from exception to json", async () => {
       // Start with exception
-      response.exception("Initial error");
+      response.exception("Initial error", { key: crypto.randomUUID() });
 
       // Switch to JSON
       response.json({ success: true }, HttpStatus.Code.OK);
@@ -475,6 +493,7 @@ describe("HttpResponse", () => {
 
       const data = await webResponse.json();
       expect(data).toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -504,6 +523,7 @@ describe("HttpResponse", () => {
 
       const data = await webResponse.json();
       expect(data).toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -540,6 +560,7 @@ describe("HttpResponse", () => {
 
       const webResponse = userResponse.get();
       expect(webResponse.json()).resolves.toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -568,7 +589,7 @@ describe("HttpResponse", () => {
         code: "INVALID_FORMAT",
       };
 
-      errorResponse.exception("Validation failed", { data: errorData });
+      errorResponse.exception("Validation failed", { key: crypto.randomUUID(), data: errorData });
 
       const webResponse = errorResponse.get();
       const responseData = await webResponse.json();
@@ -592,7 +613,7 @@ describe("HttpResponse", () => {
 
   describe("edge cases", () => {
     test("should handle empty string message in exception", async () => {
-      response.exception("");
+      response.exception("", { key: crypto.randomUUID() });
 
       const webResponse = response.get();
       const data = await webResponse.json();
@@ -600,7 +621,7 @@ describe("HttpResponse", () => {
     });
 
     test("should handle empty string message in notFound", async () => {
-      response.notFound("");
+      response.notFound("", { key: crypto.randomUUID() });
 
       const webResponse = response.get();
       const data = await webResponse.json();
@@ -614,6 +635,7 @@ describe("HttpResponse", () => {
       const webResponse = response.get();
       const data = await webResponse.json();
       expect(data).toEqual({
+        key: null,
         app: {
           env: "production",
         },
@@ -650,7 +672,7 @@ describe("HttpResponse", () => {
 
     test("should preserve custom headers set before exception", () => {
       response.header.set("X-Request-ID", "12345");
-      response.exception("Error occurred");
+      response.exception("Error occurred", { key: crypto.randomUUID() });
 
       const webResponse = response.get();
       expect(webResponse.headers.get("X-Request-ID")).toBe("12345");
@@ -681,20 +703,20 @@ describe("HttpResponse", () => {
 
     test("should return data after exception is called with data", () => {
       const data = { field: "email", code: "INVALID" };
-      response.exception("Validation error", { data });
+      response.exception("Validation error", { key: crypto.randomUUID(), data });
 
       expect(response.getData()).toEqual(data);
     });
 
     test("should return null after exception is called without data", () => {
-      response.exception("Error occurred");
+      response.exception("Error occurred", { key: crypto.randomUUID() });
 
       expect(response.getData()).toBeNull();
     });
 
     test("should return data after notFound is called with data", () => {
       const data = { resourceId: 123 };
-      response.notFound("Resource not found", { data });
+      response.notFound("Resource not found", { key: crypto.randomUUID(), data });
 
       expect(response.getData()).toEqual(data);
     });
@@ -719,19 +741,19 @@ describe("HttpResponse", () => {
     });
 
     test("should return status after exception is called", () => {
-      response.exception("Error occurred");
+      response.exception("Error occurred", { key: crypto.randomUUID() });
 
       expect(response.getStatus()).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("should return custom status after exception is called with config", () => {
-      response.exception("Bad request", { status: HttpStatus.Code.BadRequest });
+      response.exception("Bad request", { key: crypto.randomUUID(), status: HttpStatus.Code.BadRequest });
 
       expect(response.getStatus()).toBe(HttpStatus.Code.BadRequest);
     });
 
     test("should return status after notFound is called", () => {
-      response.notFound("Not found");
+      response.notFound("Not found", { key: crypto.randomUUID() });
 
       expect(response.getStatus()).toBe(HttpStatus.Code.NotFound);
     });

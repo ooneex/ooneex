@@ -9,6 +9,7 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
   exception: (
     message: string,
     config?: {
+      key?: string;
       data?: DataType;
       status?: StatusCodeType;
     },
@@ -16,6 +17,7 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
   notFound: (
     message: string,
     config?: {
+      key?: string;
       data?: DataType;
       status?: StatusCodeType;
     },
@@ -27,6 +29,7 @@ export interface IResponse<DataType extends Record<string, unknown> = Record<str
 }
 
 export type ResponseDataType<Data extends Record<string, unknown>> = {
+  key: string | null;
   data: Data;
   message: string | null;
   success: boolean;

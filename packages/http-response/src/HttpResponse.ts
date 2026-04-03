@@ -5,6 +5,7 @@ import type { IResponse, ResponseDataType } from "./types";
 
 export class HttpResponse<Data extends Record<string, unknown> = Record<string, unknown>> implements IResponse<Data> {
   public readonly header: IHeader;
+  private key: string | null = null;
   private data: Data | null = null;
   private status: StatusCodeType = HttpStatus.Code.OK;
   private redirectUrl: string | URL | null = null;
@@ -16,6 +17,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
   }
 
   public json(data: Data, status: StatusCodeType = HttpStatus.Code.OK): IResponse<Data> {
+    this.key = null;
     this.data = data;
     this.status = status;
     this.header.setJson();
@@ -29,10 +31,12 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
   public exception(
     message: string,
     config?: {
+      key?: string;
       data?: Data;
       status?: StatusCodeType;
     },
   ): IResponse<Data> {
+    this.key = config?.key || null;
     this.message = message;
     this.status = config?.status ?? HttpStatus.Code.InternalServerError;
     this.data = config?.data || null;
@@ -46,10 +50,12 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
   public notFound(
     message: string,
     config?: {
+      key?: string;
       data?: Data;
       status?: StatusCodeType;
     },
   ): IResponse<Data> {
+    this.key = config?.key || null;
     this.message = message;
     this.status = config?.status || HttpStatus.Code.NotFound;
     this.data = config?.data || null;
@@ -61,6 +67,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
   }
 
   public redirect(url: string | URL, status: StatusCodeType = HttpStatus.Code.Found): IResponse<Data> {
+    this.key = null;
     this.redirectUrl = url;
     this.status = status;
     this.header.setLocation(url.toString());
@@ -89,6 +96,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
     const status = new HttpStatus();
 
     const responseData: ResponseDataType<Data> = {
+      key: this.key,
       data: this.data || ({} as Data),
       message: this.message,
       success: status.isSuccessful(this.status),

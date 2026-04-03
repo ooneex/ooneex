@@ -55,7 +55,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
       status?: StatusCodeType;
     },
   ): IResponse<Data> {
-    this.key = config?.key || null;
+    this.key = config?.key || "NOT_FOUND";
     this.message = message;
     this.status = config?.status || HttpStatus.Code.NotFound;
     this.data = config?.data || null;
@@ -96,7 +96,7 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
     const status = new HttpStatus();
 
     const responseData: ResponseDataType<Data> = {
-      key: this.key,
+      key: this.key || null,
       data: this.data || ({} as Data),
       message: this.message,
       success: status.isSuccessful(this.status),

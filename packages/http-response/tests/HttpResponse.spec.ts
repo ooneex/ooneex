@@ -240,6 +240,31 @@ describe("HttpResponse", () => {
       });
     });
 
+    test("should set not found with default key NOT_FOUND", () => {
+      const message = "Resource not found";
+      response.notFound(message);
+
+      const webResponse = response.get();
+      expect(webResponse.status).toBe(HttpStatus.Code.NotFound);
+
+      expect(webResponse.json()).resolves.toEqual({
+        key: "NOT_FOUND",
+        app: {
+          env: "production",
+        },
+        data: {},
+        done: false,
+        isClientError: true,
+        isForbidden: false,
+        isNotFound: false,
+        isServerError: false,
+        isUnauthorized: false,
+        message,
+        status: HttpStatus.Code.NotFound,
+        success: false,
+      });
+    });
+
     test("should set not found with custom status and data", () => {
       const key = crypto.randomUUID();
       const message = "User not found";

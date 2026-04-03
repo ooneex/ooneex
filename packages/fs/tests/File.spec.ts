@@ -517,23 +517,23 @@ describe("File", () => {
 
 describe("FileException", () => {
   test("should have correct name", () => {
-    const exception = new FileException("Test error");
+    const exception = new FileException("Test error", "test_error");
     expect(exception.name).toBe("FileException");
   });
 
   test("should have correct message", () => {
-    const exception = new FileException("Test error message");
+    const exception = new FileException("Test error message", "test_error_message");
     expect(exception.message).toBe("Test error message");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new FileException("Test", data);
+    const exception = new FileException("Test", "test_key", data);
     expect(Object.isFrozen(exception.data)).toBe(true);
   });
 
   test("should have default status 500", () => {
-    const exception = new FileException("Test");
+    const exception = new FileException("Test", "test_key");
     expect(exception.status).toBe(500);
   });
 });

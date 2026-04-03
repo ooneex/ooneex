@@ -527,23 +527,23 @@ describe("Directory", () => {
 
 describe("DirectoryException", () => {
   test("should have correct name", () => {
-    const exception = new DirectoryException("Test error");
+    const exception = new DirectoryException("Test error", "test_error");
     expect(exception.name).toBe("DirectoryException");
   });
 
   test("should have correct message", () => {
-    const exception = new DirectoryException("Test error message");
+    const exception = new DirectoryException("Test error message", "test_error_message");
     expect(exception.message).toBe("Test error message");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new DirectoryException("Test", data);
+    const exception = new DirectoryException("Test", "test_key", data);
     expect(Object.isFrozen(exception.data)).toBe(true);
   });
 
   test("should have default status 500", () => {
-    const exception = new DirectoryException("Test");
+    const exception = new DirectoryException("Test", "test_key");
     expect(exception.status).toBe(500);
   });
 });

@@ -46,7 +46,9 @@ export class RedisRateLimiter implements IRateLimiter {
     return `ratelimit:${key}`;
   }
 
-  public async check(key: string, limit = 120, windowSeconds = 60): Promise<RateLimitResultType> {
+  public async check(key: string): Promise<RateLimitResultType> {
+    const limit = 120;
+    const windowSeconds = 60;
     try {
       await this.connect();
 
@@ -75,8 +77,8 @@ export class RedisRateLimiter implements IRateLimiter {
     }
   }
 
-  public async isLimited(key: string, limit = 120, windowSeconds = 60): Promise<boolean> {
-    const result = await this.check(key, limit, windowSeconds);
+  public async isLimited(key: string): Promise<boolean> {
+    const result = await this.check(key);
 
     return result.limited;
   }

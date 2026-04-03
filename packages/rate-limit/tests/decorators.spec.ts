@@ -184,10 +184,10 @@ describe("decorator.rateLimit", () => {
 
   test("should work with RateLimiter class that has custom check parameters", () => {
     class CustomRateLimiter implements IRateLimiter {
-      public async check(_key: string, _limit?: number, _windowSeconds?: number): Promise<RateLimitResultType> {
+      public async check(_key: string): Promise<RateLimitResultType> {
         return { limited: false, remaining: 0, total: 0, resetAt: new Date() };
       }
-      public async isLimited(_key: string, _limit?: number, _windowSeconds?: number): Promise<boolean> {
+      public async isLimited(_key: string): Promise<boolean> {
         return false;
       }
       public async reset(_key: string): Promise<boolean> {

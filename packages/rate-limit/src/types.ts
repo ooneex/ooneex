@@ -35,8 +35,8 @@ export type RateLimitResultType = {
 };
 
 export interface IRateLimiter {
-  check: (key: string, limit?: number, windowSeconds?: number) => Promise<RateLimitResultType>;
-  isLimited: (key: string, limit?: number, windowSeconds?: number) => Promise<boolean>;
+  check: (key: string) => Promise<RateLimitResultType>;
+  isLimited: (key: string) => Promise<boolean>;
   reset: (key: string) => Promise<boolean>;
   getCount: (key: string) => Promise<number>;
 }

@@ -1,3 +1,5 @@
+import type { Duration } from "@upstash/ratelimit";
+
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type RateLimiterClassType = new (...args: any[]) => IRateLimiter;
 
@@ -10,6 +12,19 @@ export type RedisRateLimiterOptionsType = {
   enableOfflineQueue?: boolean;
   enableAutoPipelining?: boolean;
   tls?: boolean | object;
+};
+
+export type UpstashAlgorithmType =
+  | { type: "fixedWindow"; limit: number; window: Duration }
+  | { type: "slidingWindow"; limit: number; window: Duration }
+  | { type: "tokenBucket"; refillRate: number; interval: Duration; maxTokens: number };
+
+export type UpstashRedisRateLimiterOptionsType = {
+  url?: string;
+  token?: string;
+  algorithm?: UpstashAlgorithmType;
+  prefix?: string;
+  analytics?: boolean;
 };
 
 export type RateLimitResultType = {

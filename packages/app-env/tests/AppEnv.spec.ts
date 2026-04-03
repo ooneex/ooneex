@@ -596,6 +596,8 @@ describe("AppEnv", () => {
       delete Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN;
       delete Bun.env.PUBSUB_REDIS_URL;
       delete Bun.env.RATE_LIMIT_REDIS_URL;
+      delete Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL;
+      delete Bun.env.RATE_LIMIT_UPSTASH_REDIS_TOKEN;
       delete Bun.env.CORS_ORIGINS;
       delete Bun.env.CORS_METHODS;
       delete Bun.env.CORS_HEADERS;
@@ -668,6 +670,8 @@ describe("AppEnv", () => {
       expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBeUndefined();
       expect(appEnv.PUBSUB_REDIS_URL).toBeUndefined();
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBeUndefined();
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_URL).toBeUndefined();
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_TOKEN).toBeUndefined();
       expect(appEnv.CORS_ORIGINS).toBeUndefined();
       expect(appEnv.CORS_METHODS).toBeUndefined();
       expect(appEnv.CORS_HEADERS).toBeUndefined();
@@ -864,11 +868,15 @@ describe("AppEnv", () => {
     test("should read pub/sub and rate limit env vars", () => {
       Bun.env.PUBSUB_REDIS_URL = "redis://pubsub";
       Bun.env.RATE_LIMIT_REDIS_URL = "redis://ratelimit";
+      Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL = "https://upstash-ratelimit.io";
+      Bun.env.RATE_LIMIT_UPSTASH_REDIS_TOKEN = "upstash-ratelimit-token";
 
       const appEnv = new AppEnv();
 
       expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_URL).toBe("https://upstash-ratelimit.io");
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_TOKEN).toBe("upstash-ratelimit-token");
     });
 
     test("should read allowed users env vars and split by comma", () => {
@@ -947,6 +955,8 @@ describe("AppEnv", () => {
       Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN = "  upstash-token  ";
       Bun.env.PUBSUB_REDIS_URL = "  redis://pubsub  ";
       Bun.env.RATE_LIMIT_REDIS_URL = "  redis://ratelimit  ";
+      Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL = "  https://upstash-ratelimit.io  ";
+      Bun.env.RATE_LIMIT_UPSTASH_REDIS_TOKEN = "  upstash-ratelimit-token  ";
 
       const appEnv = new AppEnv();
 
@@ -962,6 +972,8 @@ describe("AppEnv", () => {
       expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBe("upstash-token");
       expect(appEnv.PUBSUB_REDIS_URL).toBe("redis://pubsub");
       expect(appEnv.RATE_LIMIT_REDIS_URL).toBe("redis://ratelimit");
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_URL).toBe("https://upstash-ratelimit.io");
+      expect(appEnv.RATE_LIMIT_UPSTASH_REDIS_TOKEN).toBe("upstash-ratelimit-token");
     });
 
     test("should trim CORS env vars", () => {

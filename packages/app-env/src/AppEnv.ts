@@ -50,6 +50,8 @@ export class AppEnv implements IAppEnv {
 
   // Rate limit
   public readonly RATE_LIMIT_REDIS_URL: string | undefined;
+  public readonly RATE_LIMIT_UPSTASH_REDIS_URL: string | undefined;
+  public readonly RATE_LIMIT_UPSTASH_REDIS_TOKEN: string | undefined;
 
   // CORS
   public readonly CORS_ORIGINS: string | undefined;
@@ -167,6 +169,8 @@ export class AppEnv implements IAppEnv {
 
     // Rate limit
     this.RATE_LIMIT_REDIS_URL = Bun.env.RATE_LIMIT_REDIS_URL?.trim();
+    this.RATE_LIMIT_UPSTASH_REDIS_URL = Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL?.trim();
+    this.RATE_LIMIT_UPSTASH_REDIS_TOKEN = Bun.env.RATE_LIMIT_UPSTASH_REDIS_TOKEN?.trim();
 
     // CORS
     this.CORS_ORIGINS = Bun.env.CORS_ORIGINS?.trim();

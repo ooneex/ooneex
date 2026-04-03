@@ -67,6 +67,8 @@ export interface IAppEnv {
 
   // Rate limit
   readonly RATE_LIMIT_REDIS_URL: string | undefined;
+  readonly RATE_LIMIT_UPSTASH_REDIS_URL: string | undefined;
+  readonly RATE_LIMIT_UPSTASH_REDIS_TOKEN: string | undefined;
 
   // CORS
   readonly CORS_ORIGINS: string | undefined;

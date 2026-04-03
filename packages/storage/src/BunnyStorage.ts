@@ -142,7 +142,11 @@ export class BunnyStorage implements IStorage {
     const filePath = this.buildFilePath(key);
 
     try {
-      await BunnyStorageSDK.file.upload(this.storageZone, filePath, stream as unknown as NodeReadableStream<Uint8Array>);
+      await BunnyStorageSDK.file.upload(
+        this.storageZone,
+        filePath,
+        stream as unknown as NodeReadableStream<Uint8Array>,
+      );
     } catch (error) {
       throw new StorageException(`Failed to upload file: ${error instanceof Error ? error.message : String(error)}`, {
         key,
@@ -191,7 +195,8 @@ export class BunnyStorage implements IStorage {
 
     const { readable, writable } = new TransformStream();
 
-    BunnyStorageSDK.file.download(this.storageZone, filePath)
+    BunnyStorageSDK.file
+      .download(this.storageZone, filePath)
       .then(({ stream }) => {
         (stream as unknown as ReadableStream).pipeTo(writable);
       })

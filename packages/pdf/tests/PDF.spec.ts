@@ -641,7 +641,7 @@ describe("PDF", () => {
 describe("PDFException", () => {
   describe("Constructor", () => {
     test("should create PDFException with message", () => {
-      const exception = new PDFException("Test error");
+      const exception = new PDFException("Test error", "TEST_ERROR");
 
       expect(exception).toBeInstanceOf(PDFException);
       expect(exception.message).toBe("Test error");
@@ -652,7 +652,7 @@ describe("PDFException", () => {
 
     test("should create PDFException with message and data", () => {
       const data = { pageNumber: 1, totalPages: 10 };
-      const exception = new PDFException("Page not found", data);
+      const exception = new PDFException("Page not found", "PAGE_NOT_FOUND", data);
 
       expect(exception.message).toBe("Page not found");
       expect(exception.data).toEqual(data);
@@ -660,7 +660,7 @@ describe("PDFException", () => {
 
     test("should have immutable data property", () => {
       const data = { key: "value" };
-      const exception = new PDFException("Test", data);
+      const exception = new PDFException("Test", "TEST_KEY", data);
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
@@ -669,14 +669,14 @@ describe("PDFException", () => {
     });
 
     test("should have correct HTTP status code", () => {
-      const exception = new PDFException("Internal error");
+      const exception = new PDFException("Internal error", "INTERNAL_ERROR");
 
       expect(exception.status).toBe(500);
     });
 
     test("should have date property", () => {
       const beforeDate = Date.now();
-      const exception = new PDFException("Test");
+      const exception = new PDFException("Test", "TEST_KEY");
       const afterDate = Date.now();
 
       expect(exception.date).toBeInstanceOf(Date);
@@ -685,14 +685,14 @@ describe("PDFException", () => {
     });
 
     test("should have stack trace", () => {
-      const exception = new PDFException("Test");
+      const exception = new PDFException("Test", "TEST_KEY");
 
       expect(exception.stack).toBeDefined();
       expect(typeof exception.stack).toBe("string");
     });
 
     test("should support stackToJson method", () => {
-      const exception = new PDFException("JSON stack test");
+      const exception = new PDFException("JSON stack test", "JSON_STACK_TEST");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -705,14 +705,14 @@ describe("PDFException", () => {
 
   describe("Inheritance", () => {
     test("should inherit from Error", () => {
-      const exception = new PDFException("Test");
+      const exception = new PDFException("Test", "TEST_KEY");
 
       expect(exception).toBeInstanceOf(Error);
     });
 
     test("should be catchable as Error", () => {
       try {
-        throw new PDFException("Test error");
+        throw new PDFException("Test error", "TEST_ERROR");
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
         expect(error).toBeInstanceOf(PDFException);
@@ -722,7 +722,7 @@ describe("PDFException", () => {
 
   describe("Serialization", () => {
     test("should be JSON serializable", () => {
-      const exception = new PDFException("Serialization test", {
+      const exception = new PDFException("Serialization test", "SERIALIZATION_TEST", {
         source: "test.pdf",
         pageNumber: 5,
       });
@@ -744,7 +744,7 @@ describe("PDFException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new PDFException("ToString test");
+      const exception = new PDFException("ToString test", "TO_STRING_TEST");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("PDFException");

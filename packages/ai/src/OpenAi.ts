@@ -31,6 +31,7 @@ export class OpenAi extends BaseAi<OpenAiConfigType> {
     if (!apiKey) {
       throw new AiException(
         "OpenAI API key is required. Provide an API key through config options or set the OPENAI_API_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 

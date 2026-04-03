@@ -36,11 +36,13 @@ export class BunnyStorage implements IStorage {
     if (!accessKey) {
       throw new StorageException(
         "Bunny access key is required. Please provide an access key either through the constructor options or set the STORAGE_BUNNY_ACCESS_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
     if (!storageZone) {
       throw new StorageException(
         "Bunny storage zone is required. Please provide a storage zone either through the constructor options or set the STORAGE_BUNNY_STORAGE_ZONE environment variable.",
+        "STORAGE_ZONE_REQUIRED",
       );
     }
 
@@ -66,7 +68,7 @@ export class BunnyStorage implements IStorage {
 
       return files.filter((file) => !file.isDirectory).map((file) => file.objectName);
     } catch (error) {
-      throw new StorageException(`Failed to list files: ${error instanceof Error ? error.message : String(error)}`, {
+      throw new StorageException(`Failed to list files: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_LIST_FAILED", {
         path,
       });
     }
@@ -148,7 +150,7 @@ export class BunnyStorage implements IStorage {
         stream as unknown as NodeReadableStream<Uint8Array>,
       );
     } catch (error) {
-      throw new StorageException(`Failed to upload file: ${error instanceof Error ? error.message : String(error)}`, {
+      throw new StorageException(`Failed to upload file: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_UPLOAD_FAILED", {
         key,
       });
     }
@@ -172,6 +174,7 @@ export class BunnyStorage implements IStorage {
     } catch (error) {
       throw new StorageException(
         `Failed to get file as JSON: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
         { key },
       );
     }
@@ -185,6 +188,7 @@ export class BunnyStorage implements IStorage {
     } catch (error) {
       throw new StorageException(
         `Failed to get file as ArrayBuffer: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
         { key },
       );
     }
@@ -204,6 +208,7 @@ export class BunnyStorage implements IStorage {
         writable.abort(
           new StorageException(
             `Failed to get file as stream: ${error instanceof Error ? error.message : String(error)}`,
+            "STORAGE_DOWNLOAD_FAILED",
             { key },
           ),
         );
@@ -255,6 +260,6 @@ export class BunnyStorage implements IStorage {
       return { stream: new Blob([arrayBuffer]).stream(), length: arrayBuffer.byteLength };
     }
 
-    throw new StorageException("Unsupported content type for upload");
+    throw new StorageException("Unsupported content type for upload", "STORAGE_UNSUPPORTED_CONTENT_TYPE");
   }
 }

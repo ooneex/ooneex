@@ -19,6 +19,7 @@ export class GroqAi extends BaseAi<GroqConfigType> {
     if (!apiKey) {
       throw new AiException(
         "Groq API key is required. Provide an API key through config options or set the GROQ_API_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 
@@ -64,7 +65,7 @@ export class GroqAi extends BaseAi<GroqConfigType> {
 
     if (!response.ok) {
       const error = await response.text();
-      throw new AiException(`Groq TTS request failed (${response.status}): ${error}`);
+      throw new AiException(`Groq TTS request failed (${response.status}): ${error}`, "TTS_FAILED");
     }
 
     const arrayBuffer = await response.arrayBuffer();

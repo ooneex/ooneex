@@ -20,7 +20,7 @@ export class ResendMailer implements IMailer {
     };
 
     if (!this.apiKey) {
-      throw new MailerException("Resend API key is required. Please set the RESEND_API_KEY environment variable.");
+      throw new MailerException("Resend API key is required. Please set the RESEND_API_KEY environment variable.", "API_KEY_REQUIRED");
     }
   }
 
@@ -36,12 +36,14 @@ export class ResendMailer implements IMailer {
     if (!senderName) {
       throw new MailerException(
         "Mailer sender name is required. Please provide a sender name either through the send options or set the MAILER_SENDER_NAME environment variable.",
+        "EMAIL_SEND_FAILED",
       );
     }
 
     if (!senderAddress) {
       throw new MailerException(
         "Mailer sender address is required. Please provide a sender address either through the send options or set the MAILER_SENDER_ADDRESS environment variable.",
+        "EMAIL_OPERATION_FAILED",
       );
     }
 

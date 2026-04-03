@@ -433,7 +433,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     if (config?.output) {
       const validation = config.output(parsed);
       if (validation instanceof type.errors) {
-        throw new AiException(`Output validation failed: ${validation.summary}`);
+        throw new AiException(`Output validation failed: ${validation.summary}`, "AI_OUTPUT_VALIDATION_FAILED");
       }
     }
 

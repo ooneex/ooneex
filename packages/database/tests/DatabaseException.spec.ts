@@ -5,13 +5,13 @@ import { DatabaseException } from "../src";
 
 describe("DatabaseException", () => {
   test("should have correct exception name", () => {
-    const exception = new DatabaseException("Test message");
+    const exception = new DatabaseException("Test message", "CONNECTION_FAILED");
     expect(exception.name).toBe("DatabaseException");
   });
 
   test("should create DatabaseException with message only", () => {
     const message = "Database connection failed";
-    const exception = new DatabaseException(message);
+    const exception = new DatabaseException(message, "CONNECTION_FAILED");
 
     expect(exception).toBeInstanceOf(DatabaseException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("DatabaseException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("CONNECTION_FAILED");
   });
 
   test("should create DatabaseException with message and data", () => {
     const message = "Query execution failed";
     const data = { queryId: "SELECT_USER_001", reason: "Connection timeout" };
-    const exception = new DatabaseException(message, data);
+    const exception = new DatabaseException(message, "OPERATION_FAILED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("OPERATION_FAILED");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new DatabaseException("Test message", data);
+    const exception = new DatabaseException("Test message", "CONNECTION_FAILED", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("DatabaseException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Database error";
     const data = { table: "users" };
-    const exception = new DatabaseException(message, data);
+    const exception = new DatabaseException(message, "CONNECTION_FAILED", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("DatabaseException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwDatabaseException() {
-      throw new DatabaseException("Stack trace test");
+      throw new DatabaseException("Stack trace test", "CONNECTION_FAILED");
     }
 
     try {

@@ -15,7 +15,7 @@ export class ClerkAuthMiddleware implements IMiddleware {
     const token = context.header.getBearerToken();
 
     if (!token) {
-      throw new AuthException("Authentication required: Missing bearer token", {
+      throw new AuthException("Authentication required: Missing bearer token", "MISSING_BEARER_TOKEN", {
         status: HttpStatus.Code.Unauthorized,
       });
     }
@@ -23,7 +23,7 @@ export class ClerkAuthMiddleware implements IMiddleware {
     const clerkUser = await this.clerkAuth.getCurrentUser(token);
 
     if (!clerkUser) {
-      throw new AuthException("Authentication failed: Invalid or expired token", {
+      throw new AuthException("Authentication failed: Invalid or expired token", "INVALID_TOKEN", {
         status: HttpStatus.Code.Unauthorized,
       });
     }
@@ -31,7 +31,7 @@ export class ClerkAuthMiddleware implements IMiddleware {
     const primaryEmail = clerkUser.emailAddresses.find((e) => e.id === clerkUser.primaryEmailAddressId);
 
     if (!primaryEmail) {
-      throw new AuthException("User has no primary email", {
+      throw new AuthException("User has no primary email", "NO_PRIMARY_EMAIL", {
         status: HttpStatus.Code.Unauthorized,
       });
     }

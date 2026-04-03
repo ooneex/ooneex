@@ -21,12 +21,14 @@ export class UpstashRedisCache extends AbstractCache {
     if (!url) {
       throw new CacheException(
         "Upstash Redis REST URL is required. Please provide a URL either through the constructor options or set the CACHE_UPSTASH_REDIS_REST_URL environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
 
     if (!token) {
       throw new CacheException(
         "Upstash Redis REST token is required. Please provide a token either through the constructor options or set the CACHE_UPSTASH_REDIS_REST_TOKEN environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
 

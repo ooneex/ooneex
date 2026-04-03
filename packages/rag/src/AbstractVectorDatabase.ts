@@ -29,7 +29,7 @@ export abstract class AbstractVectorDatabase<DataType extends Record<string, Sca
 
   public getDatabase(): lancedb.Connection {
     if (!this.db) {
-      throw new VectorDatabaseException("Database not connected. Call connect() first.");
+      throw new VectorDatabaseException("Database not connected. Call connect() first.", "VECTOR_DB_NOT_CONNECTED");
     }
 
     return this.db;

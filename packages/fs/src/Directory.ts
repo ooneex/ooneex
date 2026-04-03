@@ -159,7 +159,7 @@ export class Directory implements IDirectory {
         mode: options?.mode,
       });
     } catch (error) {
-      throw new DirectoryException(`Failed to create directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to create directory: ${this.path}`, "DIR_CREATE_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -195,7 +195,7 @@ export class Directory implements IDirectory {
         force: options?.force ?? false,
       });
     } catch (error) {
-      throw new DirectoryException(`Failed to delete directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to delete directory: ${this.path}`, "DIR_DELETE_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -230,7 +230,7 @@ export class Directory implements IDirectory {
       });
       return entries as string[];
     } catch (error) {
-      throw new DirectoryException(`Failed to list directory contents: ${this.path}`, {
+      throw new DirectoryException(`Failed to list directory contents: ${this.path}`, "DIR_LIST_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -268,7 +268,7 @@ export class Directory implements IDirectory {
         recursive: options?.recursive ?? false,
       });
     } catch (error) {
-      throw new DirectoryException(`Failed to list directory contents with types: ${this.path}`, {
+      throw new DirectoryException(`Failed to list directory contents with types: ${this.path}`, "DIR_LIST_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -305,7 +305,7 @@ export class Directory implements IDirectory {
         force: options?.overwrite ?? false,
       });
     } catch (error) {
-      throw new DirectoryException(`Failed to copy directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to copy directory: ${this.path}`, "DIR_COPY_FAILED", {
         path: this.path,
         destination,
         error: error instanceof Error ? error.message : String(error),
@@ -334,7 +334,7 @@ export class Directory implements IDirectory {
     try {
       await rename(this.path, destination);
     } catch (error) {
-      throw new DirectoryException(`Failed to move directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to move directory: ${this.path}`, "DIR_MOVE_FAILED", {
         path: this.path,
         destination,
         error: error instanceof Error ? error.message : String(error),
@@ -363,7 +363,7 @@ export class Directory implements IDirectory {
     try {
       return await Bun.file(this.path).stat();
     } catch (error) {
-      throw new DirectoryException(`Failed to get directory stats: ${this.path}`, {
+      throw new DirectoryException(`Failed to get directory stats: ${this.path}`, "DIR_STATS_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -430,7 +430,7 @@ export class Directory implements IDirectory {
       const entries = await readdir(this.path);
       return entries.length === 0;
     } catch (error) {
-      throw new DirectoryException(`Failed to check if directory is empty: ${this.path}`, {
+      throw new DirectoryException(`Failed to check if directory is empty: ${this.path}`, "DIR_EMPTY_CHECK_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -457,7 +457,7 @@ export class Directory implements IDirectory {
     try {
       return await this.calculateSize(this.path);
     } catch (error) {
-      throw new DirectoryException(`Failed to calculate directory size: ${this.path}`, {
+      throw new DirectoryException(`Failed to calculate directory size: ${this.path}`, "DIR_SIZE_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -516,7 +516,7 @@ export class Directory implements IDirectory {
         yield new File(join(this.path, filePath));
       }
     } catch (error) {
-      throw new DirectoryException(`Failed to get files from directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to get files from directory: ${this.path}`, "DIR_GET_FILES_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -575,7 +575,7 @@ export class Directory implements IDirectory {
         yield new Directory(join(this.path, dirPath));
       }
     } catch (error) {
-      throw new DirectoryException(`Failed to get directories from directory: ${this.path}`, {
+      throw new DirectoryException(`Failed to get directories from directory: ${this.path}`, "DIR_GET_DIRS_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });

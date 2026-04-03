@@ -31,6 +31,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
     if (!url || !token) {
       throw new RateLimitException(
         "Upstash Redis URL and token are required. Please provide them through the constructor options or set the RATE_LIMIT_UPSTASH_REDIS_URL and RATE_LIMIT_UPSTASH_REDIS_TOKEN environment variables.",
+        "RATE_LIMIT_CONNECTION_FAILED",
       );
     }
 
@@ -67,7 +68,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
         resetAt: new Date(result.reset),
       };
     } catch (error) {
-      throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`, "RATE_LIMIT_CHECK_FAILED");
     }
   }
 
@@ -83,7 +84,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
 
       return true;
     } catch (error) {
-      throw new RateLimitException(`Failed to reset rate limit for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to reset rate limit for key "${key}": ${error}`, "RATE_LIMIT_RESET_FAILED");
     }
   }
 
@@ -93,7 +94,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
 
       return remaining;
     } catch (error) {
-      throw new RateLimitException(`Failed to get count for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to get count for key "${key}": ${error}`, "RATE_LIMIT_COUNT_FAILED");
     }
   }
 }

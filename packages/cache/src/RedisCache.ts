@@ -19,6 +19,7 @@ export class RedisCache extends AbstractCache {
     if (!connectionString) {
       throw new CacheException(
         "Redis connection string is required. Please provide a connection string either through the constructor options or set the CACHE_REDIS_URL environment variable.",
+        "URL_REQUIRED",
       );
     }
 

@@ -5,13 +5,13 @@ import { JwtException } from "@/index";
 
 describe("JwtException", () => {
   test("should have correct exception name", () => {
-    const exception = new JwtException("Test message");
+    const exception = new JwtException("Test message", "TEST_NAME");
     expect(exception.name).toBe("JwtException");
   });
 
   test("should create JwtException with message only", () => {
     const message = "JWT verification failed";
-    const exception = new JwtException(message);
+    const exception = new JwtException(message, "JWT_VERIFY_FAILED");
 
     expect(exception).toBeInstanceOf(JwtException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("JwtException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("JWT_VERIFY_FAILED");
   });
 
   test("should create JwtException with message and data", () => {
     const message = "Token expired";
     const data = { algorithm: "HS256", tokenExpired: true };
-    const exception = new JwtException(message, data);
+    const exception = new JwtException(message, "JWT_TOKEN_EXPIRED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("JWT_TOKEN_EXPIRED");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new JwtException("Test message", data);
+    const exception = new JwtException("Test message", "TEST_IMMUTABLE", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("JwtException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "JWT error";
     const data = { issuer: "auth-service" };
-    const exception = new JwtException(message, data);
+    const exception = new JwtException(message, "JWT_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("JwtException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwJwtException() {
-      throw new JwtException("Stack trace test");
+      throw new JwtException("Stack trace test", "JWT_STACK_TRACE");
     }
 
     try {

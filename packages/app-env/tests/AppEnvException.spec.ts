@@ -5,13 +5,13 @@ import { AppEnvException } from "@/index";
 
 describe("AppEnvException", () => {
   test("should have correct exception name", () => {
-    const exception = new AppEnvException("Test message");
+    const exception = new AppEnvException("Test message", "TEST");
     expect(exception.name).toBe("AppEnvException");
   });
 
   test("should create AppEnvException with message only", () => {
     const message = "App environment loading failed";
-    const exception = new AppEnvException(message);
+    const exception = new AppEnvException(message, "APP_ENV_LOADING_FAILED");
 
     expect(exception).toBeInstanceOf(AppEnvException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("AppEnvException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("APP_ENV_LOADING_FAILED");
   });
 
   test("should create AppEnvException with message and data", () => {
     const message = "Environment variable missing";
     const data = { variable: "DATABASE_URL", required: true };
-    const exception = new AppEnvException(message, data);
+    const exception = new AppEnvException(message, "ENV_VARIABLE_MISSING", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("ENV_VARIABLE_MISSING");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new AppEnvException("Test message", data);
+    const exception = new AppEnvException("Test message", "TEST", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("AppEnvException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "AppEnv error";
     const data = { environment: "production" };
-    const exception = new AppEnvException(message, data);
+    const exception = new AppEnvException(message, "APP_ENV_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("AppEnvException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwAppEnvException() {
-      throw new AppEnvException("Stack trace test");
+      throw new AppEnvException("Stack trace test", "STACK_TRACE_TEST");
     }
 
     try {

@@ -18,6 +18,7 @@ export class AnthropicAi extends BaseAi<AnthropicConfigType> {
     if (!apiKey) {
       throw new AiException(
         "Anthropic API key is required. Provide an API key through config options or set the ANTHROPIC_API_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 

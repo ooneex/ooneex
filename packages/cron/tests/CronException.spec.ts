@@ -5,13 +5,13 @@ import { CronException } from "@/index";
 
 describe("CronException", () => {
   test("should have correct exception name", () => {
-    const exception = new CronException("Test message");
+    const exception = new CronException("Test message", "CRON_START_FAILED");
     expect(exception.name).toBe("CronException");
   });
 
   test("should create CronException with message only", () => {
     const message = "Cron job execution failed";
-    const exception = new CronException(message);
+    const exception = new CronException(message, "CRON_START_FAILED");
 
     expect(exception).toBeInstanceOf(CronException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("CronException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("CRON_START_FAILED");
   });
 
   test("should create CronException with message and data", () => {
     const message = "Job scheduling failed";
     const data = { jobName: "cleanup", expression: "0 * * * *" };
-    const exception = new CronException(message, data);
+    const exception = new CronException(message, "CRON_START_FAILED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("CRON_START_FAILED");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new CronException("Test message", data);
+    const exception = new CronException("Test message", "INVALID_CRON_FORMAT", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("CronException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Cron error";
     const data = { schedule: "daily" };
-    const exception = new CronException(message, data);
+    const exception = new CronException(message, "INVALID_CRON_VALUE", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("CronException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwCronException() {
-      throw new CronException("Stack trace test");
+      throw new CronException("Stack trace test", "CRON_START_FAILED");
     }
 
     try {

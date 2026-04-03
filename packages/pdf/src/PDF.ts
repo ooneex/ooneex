@@ -98,7 +98,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to create PDF document", {
+      throw new PDFException("Failed to create PDF document", "PDF_CREATE_FAILED", {
         source: this.source,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -174,7 +174,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to add page to PDF", {
+      throw new PDFException("Failed to add page to PDF", "PDF_ADD_PAGE_FAILED", {
         source: this.source,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -219,7 +219,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to get PDF metadata", {
+      throw new PDFException("Failed to get PDF metadata", "PDF_METADATA_GET_FAILED", {
         source: this.source,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -285,7 +285,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to update PDF metadata", {
+      throw new PDFException("Failed to update PDF metadata", "PDF_METADATA_UPDATE_FAILED", {
         source: this.source,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -304,7 +304,7 @@ export class PDF implements IPDF {
       });
       return pdfDoc.getPageCount();
     } catch (error) {
-      throw new PDFException("Failed to get page count", {
+      throw new PDFException("Failed to get page count", "PDF_PAGE_COUNT_FAILED", {
         source: this.source,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -331,7 +331,7 @@ export class PDF implements IPDF {
    */
   public async getPageContent(pageNumber: number): Promise<string> {
     if (pageNumber < 1 || !Number.isInteger(pageNumber)) {
-      throw new PDFException("Page number must be a positive integer", {
+      throw new PDFException("Page number must be a positive integer", "PDF_INVALID_PAGE_NUMBER", {
         pageNumber,
       });
     }
@@ -342,7 +342,7 @@ export class PDF implements IPDF {
       const totalPages = document.numPages;
 
       if (pageNumber > totalPages) {
-        throw new PDFException("Page number exceeds total pages", {
+        throw new PDFException("Page number exceeds total pages", "PDF_PAGE_OUT_OF_RANGE", {
           pageNumber,
           totalPages,
         });
@@ -360,7 +360,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to get page content", {
+      throw new PDFException("Failed to get page content", "PDF_PAGE_CONTENT_FAILED", {
         source: this.source,
         pageNumber,
         error: error instanceof Error ? error.message : String(error),
@@ -392,7 +392,7 @@ export class PDF implements IPDF {
     const { pageNumber } = options;
 
     if (pageNumber !== undefined && (pageNumber < 1 || !Number.isInteger(pageNumber))) {
-      throw new PDFException("Page number must be a positive integer", {
+      throw new PDFException("Page number must be a positive integer", "PDF_INVALID_PAGE_NUMBER", {
         pageNumber,
       });
     }
@@ -406,7 +406,7 @@ export class PDF implements IPDF {
       const totalPages = document.numPages;
 
       if (pageNumber !== undefined && pageNumber > totalPages) {
-        throw new PDFException("Page number exceeds total pages", {
+        throw new PDFException("Page number exceeds total pages", "PDF_PAGE_OUT_OF_RANGE", {
           pageNumber,
           totalPages,
         });
@@ -454,7 +454,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to extract images from PDF", {
+      throw new PDFException("Failed to extract images from PDF", "PDF_EXTRACT_IMAGES_FAILED", {
         source: this.source,
         outputDir: normalizedOutputDir,
         pageNumber,
@@ -494,7 +494,7 @@ export class PDF implements IPDF {
       (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
     } catch (error) {
       (globalThis as Record<string, unknown>).pdfjsWorker = savedWorker;
-      throw new PDFException("Failed to convert PDF to images", {
+      throw new PDFException("Failed to convert PDF to images", "PDF_CONVERT_IMAGES_FAILED", {
         source: this.source,
         outputDir: normalizedOutputDir,
         error: error instanceof Error ? error.message : String(error),
@@ -510,7 +510,7 @@ export class PDF implements IPDF {
    */
   public async pageToImage(pageNumber: number, options: PDFToImagesOptionsType): Promise<PDFPageImageResultType> {
     if (pageNumber < 1 || !Number.isInteger(pageNumber)) {
-      throw new PDFException("Page number must be a positive integer", {
+      throw new PDFException("Page number must be a positive integer", "PDF_INVALID_PAGE_NUMBER", {
         pageNumber,
       });
     }
@@ -524,7 +524,7 @@ export class PDF implements IPDF {
       const document = await pdf(this.source, this.options);
 
       if (pageNumber > document.length) {
-        throw new PDFException("Page number exceeds total pages", {
+        throw new PDFException("Page number exceeds total pages", "PDF_PAGE_OUT_OF_RANGE", {
           pageNumber,
           totalPages: document.length,
         });
@@ -548,7 +548,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to get page image", {
+      throw new PDFException("Failed to get page image", "PDF_PAGE_IMAGE_FAILED", {
         source: this.source,
         pageNumber,
         outputDir: normalizedOutputDir,
@@ -576,7 +576,7 @@ export class PDF implements IPDF {
       const totalPages = sourcePdf.getPageCount();
 
       if (totalPages === 0) {
-        throw new PDFException("PDF has no pages", {
+        throw new PDFException("PDF has no pages", "PDF_NO_PAGES", {
           source: this.source,
         });
       }
@@ -586,7 +586,7 @@ export class PDF implements IPDF {
       // Validate all ranges first
       for (const { start, end } of ranges) {
         if (start < 1 || end > totalPages || start > end) {
-          throw new PDFException("Invalid page range", {
+          throw new PDFException("Invalid page range", "PDF_INVALID_PAGE_RANGE", {
             start,
             end,
             totalPages,
@@ -619,7 +619,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to split PDF", {
+      throw new PDFException("Failed to split PDF", "PDF_SPLIT_FAILED", {
         source: this.source,
         outputDir: normalizedOutputDir,
         error: error instanceof Error ? error.message : String(error),
@@ -663,7 +663,7 @@ export class PDF implements IPDF {
       const totalPages = pdfDoc.getPageCount();
 
       if (totalPages === 0) {
-        throw new PDFException("PDF has no pages", {
+        throw new PDFException("PDF has no pages", "PDF_NO_PAGES", {
           source: this.source,
         });
       }
@@ -672,13 +672,13 @@ export class PDF implements IPDF {
       const pagesToRemove = this.normalizePageNumbers(pages, totalPages);
 
       if (pagesToRemove.length === 0) {
-        throw new PDFException("No valid pages specified for removal", {
+        throw new PDFException("No valid pages specified for removal", "PDF_NO_VALID_PAGES", {
           pages,
         });
       }
 
       if (pagesToRemove.length >= totalPages) {
-        throw new PDFException("Cannot remove all pages from PDF", {
+        throw new PDFException("Cannot remove all pages from PDF", "PDF_CANNOT_REMOVE_ALL_PAGES", {
           pagesToRemove,
           totalPages,
         });
@@ -701,7 +701,7 @@ export class PDF implements IPDF {
       if (error instanceof PDFException) {
         throw error;
       }
-      throw new PDFException("Failed to remove pages from PDF", {
+      throw new PDFException("Failed to remove pages from PDF", "PDF_REMOVE_PAGES_FAILED", {
         source: this.source,
         pages,
         error: error instanceof Error ? error.message : String(error),

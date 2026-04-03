@@ -11,6 +11,7 @@ export class TypeormPgDatabase extends TypeormDatabase {
     if (!url) {
       throw new DatabaseException(
         "Database URL is required. Please provide a URL either through the constructor options or set the DATABASE_URL environment variable.",
+        "CONNECTION_FAILED",
       );
     }
 

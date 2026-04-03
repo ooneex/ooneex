@@ -16,6 +16,7 @@ export class BetterstackLogger implements ILogger {
     if (!sourceToken) {
       throw new LoggerException(
         "Logtail source token is required. Please set the BETTERSTACK_LOGGER_SOURCE_TOKEN environment variable.",
+        "LOG_FAILED",
       );
     }
 

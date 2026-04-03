@@ -22,6 +22,7 @@ export class FilesystemStorage extends Storage {
     if (!basePath) {
       throw new StorageException(
         "Base path is required. Please provide a base path either through the constructor options or set the FILESYSTEM_STORAGE_PATH environment variable.",
+        "STORAGE_ROOT_DIR_REQUIRED",
       );
     }
 
@@ -34,6 +35,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to create base storage directory at ${basePath}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_CONFIG_REQUIRED",
       );
     }
   }
@@ -50,7 +52,7 @@ export class FilesystemStorage extends Storage {
 
   private getBucketPath(): string {
     if (!this.bucket) {
-      throw new StorageException("Bucket name is required. Please call setBucket() first.");
+      throw new StorageException("Bucket name is required. Please call setBucket() first.", "STORAGE_BUCKET_REQUIRED");
     }
     return join(this.storagePath, this.bucket);
   }
@@ -70,6 +72,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to create bucket directory at ${bucketPath}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_UPLOAD_FAILED",
       );
     }
 
@@ -89,6 +92,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to list files in bucket: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_LIST_FAILED",
       );
     }
   }
@@ -122,7 +126,7 @@ export class FilesystemStorage extends Storage {
       await rm(bucketPath, { recursive: true });
       await mkdir(bucketPath, { recursive: true });
     } catch (error) {
-      throw new StorageException(`Failed to clear bucket: ${error instanceof Error ? error.message : String(error)}`);
+      throw new StorageException(`Failed to clear bucket: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_CLEAR_FAILED");
     }
 
     return this;
@@ -164,6 +168,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to delete file ${key}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DELETE_FAILED",
       );
     }
   }
@@ -187,6 +192,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to create directory ${dir}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_UPLOAD_FAILED",
       );
     }
 
@@ -218,6 +224,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to write file ${key}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_UPLOAD_FAILED",
       );
     }
   }
@@ -227,7 +234,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`);
+      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
     }
 
     const filename = options.filename ?? basename(key);
@@ -241,6 +248,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to create directory ${dir}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
       );
     }
 
@@ -249,6 +257,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to save file ${key} to ${localPath}: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
       );
     }
   }
@@ -258,7 +267,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`);
+      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
     }
 
     try {
@@ -266,6 +275,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to read file ${key} as JSON: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
       );
     }
   }
@@ -275,7 +285,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`);
+      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
     }
 
     try {
@@ -283,6 +293,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to read file ${key} as ArrayBuffer: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
       );
     }
   }
@@ -291,7 +302,7 @@ export class FilesystemStorage extends Storage {
     const filePath = this.getFilePath(key);
 
     if (!existsSync(filePath)) {
-      throw new StorageException(`File ${key} does not exist`);
+      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
     }
 
     const file = Bun.file(filePath);
@@ -301,6 +312,7 @@ export class FilesystemStorage extends Storage {
     } catch (error) {
       throw new StorageException(
         `Failed to read file ${key} as stream: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_DOWNLOAD_FAILED",
       );
     }
   }

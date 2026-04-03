@@ -14,6 +14,7 @@ export class BetterstackExceptionLogger implements ILogger {
     if (!applicationToken) {
       throw new LoggerException(
         "Better Stack application token is required. Please set the BETTERSTACK_EXCEPTION_LOGGER_APPLICATION_TOKEN environment variable.",
+        "TOKEN_REQUIRED",
       );
     }
 
@@ -21,6 +22,7 @@ export class BetterstackExceptionLogger implements ILogger {
     if (!ingestingHost) {
       throw new LoggerException(
         "Better Stack ingesting host is required. Please set the BETTERSTACK_EXCEPTION_LOGGER_INGESTING_HOST environment variable.",
+        "EXCEPTION_LOG_FAILED",
       );
     }
 

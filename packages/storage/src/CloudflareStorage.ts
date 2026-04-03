@@ -23,16 +23,19 @@ export class CloudflareStorage extends Storage {
     if (!accessKey) {
       throw new StorageException(
         "Cloudflare access key is required. Please provide an access key either through the constructor options or set the STORAGE_CLOUDFLARE_ACCESS_KEY environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
     if (!secretKey) {
       throw new StorageException(
         "Cloudflare secret key is required. Please provide a secret key either through the constructor options or set the STORAGE_CLOUDFLARE_SECRET_KEY environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
     if (!endpoint) {
       throw new StorageException(
         "Cloudflare endpoint is required. Please provide an endpoint either through the constructor options or set the STORAGE_CLOUDFLARE_ENDPOINT environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
 

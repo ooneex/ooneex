@@ -5,13 +5,13 @@ import { LoggerException } from "../src";
 
 describe("LoggerException", () => {
   test("should have correct exception name", () => {
-    const exception = new LoggerException("Test message");
+    const exception = new LoggerException("Test message", "TEST_NAME");
     expect(exception.name).toBe("LoggerException");
   });
 
   test("should create LoggerException with message only", () => {
     const message = "Logger initialization failed";
-    const exception = new LoggerException(message);
+    const exception = new LoggerException(message, "LOGGER_INIT_FAILED");
 
     expect(exception).toBeInstanceOf(LoggerException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("LoggerException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("LOGGER_INIT_FAILED");
   });
 
   test("should create LoggerException with message and data", () => {
     const message = "Log write failed";
     const data = { logger: "DatabaseLogger", reason: "Connection timeout" };
-    const exception = new LoggerException(message, data);
+    const exception = new LoggerException(message, "LOG_WRITE_FAILED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("LOG_WRITE_FAILED");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new LoggerException("Test message", data);
+    const exception = new LoggerException("Test message", "TEST_IMMUTABLE", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("LoggerException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Logger error";
     const data = { transport: "logtail" };
-    const exception = new LoggerException(message, data);
+    const exception = new LoggerException(message, "LOGGER_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("LoggerException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwLoggerException() {
-      throw new LoggerException("Stack trace test");
+      throw new LoggerException("Stack trace test", "LOGGER_STACK_TRACE");
     }
 
     try {

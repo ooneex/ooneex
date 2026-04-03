@@ -18,6 +18,7 @@ export class ClerkAuth {
     if (!secretKey) {
       throw new AuthException(
         "Clerk secret key is required. Provide a secret key through config options or set the CLERK_SECRET_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 

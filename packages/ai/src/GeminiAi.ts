@@ -25,6 +25,7 @@ export class GeminiAi extends BaseAi<GeminiConfigType> {
     if (!apiKey) {
       throw new AiException(
         "Gemini API key is required. Provide an API key through config options or set the GEMINI_API_KEY environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 

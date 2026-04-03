@@ -5,13 +5,13 @@ import { PaymentException } from "@/index";
 
 describe("PaymentException", () => {
   test("should have correct exception name", () => {
-    const exception = new PaymentException("Test message");
+    const exception = new PaymentException("Test message", "TEST_KEY");
     expect(exception.name).toBe("PaymentException");
   });
 
   test("should create PaymentException with message only", () => {
     const message = "Payment operation failed";
-    const exception = new PaymentException(message);
+    const exception = new PaymentException(message, "PAYMENT_OPERATION_FAILED");
 
     expect(exception).toBeInstanceOf(PaymentException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,21 +19,23 @@ describe("PaymentException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
+    expect(exception.key).toBe("PAYMENT_OPERATION_FAILED");
   });
 
   test("should create PaymentException with message and data", () => {
     const message = "Payment failed";
     const data = { customerId: "cust_123", productId: "prod_456" };
-    const exception = new PaymentException(message, data);
+    const exception = new PaymentException(message, "PAYMENT_FAILED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
+    expect(exception.key).toBe("PAYMENT_FAILED");
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new PaymentException("Test message", data);
+    const exception = new PaymentException("Test message", "TEST_KEY", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("PaymentException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Payment error";
     const data = { provider: "polar" };
-    const exception = new PaymentException(message, data);
+    const exception = new PaymentException(message, "PAYMENT_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("PaymentException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwPaymentException() {
-      throw new PaymentException("Stack trace test");
+      throw new PaymentException("Stack trace test", "STACK_TRACE_TEST");
     }
 
     try {
@@ -78,7 +80,7 @@ describe("PaymentException", () => {
         name: "John Doe",
       },
     };
-    const exception = new PaymentException("Checkout failed", data);
+    const exception = new PaymentException("Checkout failed", "CHECKOUT_FAILED", data);
 
     expect(exception.data).toEqual(data);
   });

@@ -15,6 +15,7 @@ export class LogsDatabase implements IDatabase {
     if (!this.url) {
       throw new DatabaseException(
         "No database URL provided. Please set LOGS_DATABASE_URL environment variable or provide a URL in the constructor.",
+        "LOG_DB_CONNECTION_FAILED",
       );
     }
   }
@@ -24,7 +25,7 @@ export class LogsDatabase implements IDatabase {
       try {
         this.client = new Bun.SQL(this.url);
       } catch (error) {
-        throw new DatabaseException((error as Error).message);
+        throw new DatabaseException((error as Error).message, "LOG_DB_CONNECTION_FAILED");
       }
     }
 
@@ -74,7 +75,7 @@ export class LogsDatabase implements IDatabase {
       await sql`CREATE INDEX IF NOT EXISTS idx_app_logs_level ON app_logs(level)`;
       await sql`CREATE INDEX IF NOT EXISTS idx_app_logs_user_id ON app_logs("userId")`;
     } catch (_e) {
-      throw new DatabaseException("Failed to create log tables");
+      throw new DatabaseException("Failed to create log tables", "LOG_TABLES_CREATE_FAILED");
     }
   }
 
@@ -84,7 +85,7 @@ export class LogsDatabase implements IDatabase {
     try {
       await sql`DROP TABLE IF EXISTS app_logs`;
     } catch (_e) {
-      throw new DatabaseException("Failed to drop log tables");
+      throw new DatabaseException("Failed to drop log tables", "LOG_TABLES_DROP_FAILED");
     }
   }
 
@@ -93,7 +94,7 @@ export class LogsDatabase implements IDatabase {
       await this.client?.close();
       this.client = undefined as Bun.SQL | undefined;
     } catch (_e) {
-      throw new DatabaseException("Failed to close log database connection");
+      throw new DatabaseException("Failed to close log database connection", "LOG_DB_CLOSE_FAILED");
     }
   }
 

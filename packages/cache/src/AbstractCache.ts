@@ -14,7 +14,7 @@ export abstract class AbstractCache implements ICache {
         throw error;
       }
 
-      throw new CacheException(`${errorMessage}: ${error}`);
+      throw new CacheException(`${errorMessage}: ${error}`, "CACHE_INIT_FAILED");
     }
   }
 

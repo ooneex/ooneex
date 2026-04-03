@@ -6,22 +6,24 @@ import { PubSubException } from "@/PubSubException";
 describe("PubSubException", () => {
   describe("Constructor", () => {
     test("should create exception with message only", () => {
-      const exception = new PubSubException("Test error");
+      const exception = new PubSubException("Test error", "TEST_ERROR");
 
       expect(exception).toBeInstanceOf(PubSubException);
       expect(exception.message).toBe("Test error");
+      expect(exception.key).toBe("TEST_ERROR");
     });
 
     test("should create exception with message and data", () => {
       const data = { channel: "test-channel", operation: "publish" };
-      const exception = new PubSubException("Publish failed", data);
+      const exception = new PubSubException("Publish failed", "PUBSUB_PUBLISH_FAILED", data);
 
       expect(exception.message).toBe("Publish failed");
+      expect(exception.key).toBe("PUBSUB_PUBLISH_FAILED");
       expect(exception.data).toEqual(data);
     });
 
     test("should create exception with empty data by default", () => {
-      const exception = new PubSubException("Error");
+      const exception = new PubSubException("Error", "TEST_ERROR");
 
       expect(exception.data).toEqual({});
     });
@@ -29,13 +31,13 @@ describe("PubSubException", () => {
 
   describe("Inheritance", () => {
     test("should extend Exception", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
 
       expect(exception).toBeInstanceOf(Exception);
     });
 
     test("should extend Error", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
 
       expect(exception).toBeInstanceOf(Error);
     });
@@ -43,7 +45,7 @@ describe("PubSubException", () => {
 
   describe("Name", () => {
     test("should have name 'PubSubException'", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
 
       expect(exception.name).toBe("PubSubException");
     });
@@ -51,7 +53,7 @@ describe("PubSubException", () => {
 
   describe("Status", () => {
     test("should have InternalServerError status code", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
 
       expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
       expect(exception.status).toBe(500);
@@ -61,7 +63,7 @@ describe("PubSubException", () => {
   describe("Date", () => {
     test("should have date property", () => {
       const beforeDate = Date.now();
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
       const afterDate = Date.now();
 
       expect(exception.date).toBeInstanceOf(Date);
@@ -73,13 +75,13 @@ describe("PubSubException", () => {
   describe("Data", () => {
     test("should freeze data property", () => {
       const data = { key: "value" };
-      const exception = new PubSubException("Test", data);
+      const exception = new PubSubException("Test", "TEST_KEY", data);
 
       expect(Object.isFrozen(exception.data)).toBe(true);
     });
 
     test("should not allow data modification", () => {
-      const exception = new PubSubException("Test", { key: "value" });
+      const exception = new PubSubException("Test", "TEST_KEY", { key: "value" });
 
       expect(() => {
         exception.data.key = "modified";
@@ -100,7 +102,7 @@ describe("PubSubException", () => {
           retries: 3,
         },
       };
-      const exception = new PubSubException("Connection failed", data);
+      const exception = new PubSubException("Connection failed", "PUBSUB_CONNECTION_FAILED", data);
 
       expect(exception.data).toEqual(data);
       expect(exception.data.channel).toBe("notifications");
@@ -110,14 +112,14 @@ describe("PubSubException", () => {
 
   describe("Stack trace", () => {
     test("should have stack trace", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
 
       expect(exception.stack).toBeDefined();
       expect(typeof exception.stack).toBe("string");
     });
 
     test("should support stackToJson method", () => {
-      const exception = new PubSubException("Test");
+      const exception = new PubSubException("Test", "TEST_KEY");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -129,7 +131,7 @@ describe("PubSubException", () => {
 
   describe("Error scenarios", () => {
     test("should handle publish errors", () => {
-      const exception = new PubSubException('Failed to publish message to channel "orders"', {
+      const exception = new PubSubException('Failed to publish message to channel "orders"', "PUBSUB_PUBLISH_FAILED", {
         channel: "orders",
         operation: "publish",
         messageSize: 1024,
@@ -141,7 +143,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle subscribe errors", () => {
-      const exception = new PubSubException('Failed to subscribe to channel "events"', {
+      const exception = new PubSubException('Failed to subscribe to channel "events"', "PUBSUB_SUBSCRIBE_FAILED", {
         channel: "events",
         operation: "subscribe",
         reason: "Channel does not exist",
@@ -152,7 +154,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle unsubscribe errors", () => {
-      const exception = new PubSubException('Failed to unsubscribe from channel "updates"', {
+      const exception = new PubSubException('Failed to unsubscribe from channel "updates"', "PUBSUB_UNSUBSCRIBE_FAILED", {
         channel: "updates",
         operation: "unsubscribe",
       });
@@ -162,7 +164,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle connection errors", () => {
-      const exception = new PubSubException("Redis connection string is required", {
+      const exception = new PubSubException("Redis connection string is required", "PUBSUB_CONNECTION_FAILED", {
         configKey: "PUBSUB_REDIS_URL",
       });
 
@@ -172,7 +174,7 @@ describe("PubSubException", () => {
 
   describe("Serialization", () => {
     test("should be JSON serializable", () => {
-      const exception = new PubSubException("Test error", { key: "value" });
+      const exception = new PubSubException("Test error", "TEST_KEY", { key: "value" });
 
       const serialized = JSON.stringify({
         message: exception.message,
@@ -190,7 +192,7 @@ describe("PubSubException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new PubSubException("Test error");
+      const exception = new PubSubException("Test error", "TEST_KEY");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("PubSubException");
@@ -200,14 +202,14 @@ describe("PubSubException", () => {
 
   describe("Edge cases", () => {
     test("should handle empty message", () => {
-      const exception = new PubSubException("");
+      const exception = new PubSubException("", "TEST_KEY");
 
       expect(exception.message).toBe("");
     });
 
     test("should handle very long messages", () => {
       const longMessage = "x".repeat(1000);
-      const exception = new PubSubException(longMessage);
+      const exception = new PubSubException(longMessage, "TEST_KEY");
 
       expect(exception.message).toBe(longMessage);
       expect(exception.message.length).toBe(1000);
@@ -215,7 +217,7 @@ describe("PubSubException", () => {
 
     test("should handle special characters in message", () => {
       const specialMessage = "Error: 特殊文字 ⚠️ with émojis and ñumbers 123!@#$%^&*()";
-      const exception = new PubSubException(specialMessage);
+      const exception = new PubSubException(specialMessage, "TEST_KEY");
 
       expect(exception.message).toBe(specialMessage);
     });
@@ -225,7 +227,7 @@ describe("PubSubException", () => {
         nullValue: null,
         undefinedValue: undefined,
       };
-      const exception = new PubSubException("Test", data);
+      const exception = new PubSubException("Test", "TEST_KEY", data);
 
       expect(exception.data.nullValue).toBeNull();
       expect(exception.data.undefinedValue).toBeUndefined();
@@ -236,7 +238,7 @@ describe("PubSubException", () => {
         channels: ["ch1", "ch2", "ch3"],
         errorCodes: [100, 200, 300],
       };
-      const exception = new PubSubException("Test", data);
+      const exception = new PubSubException("Test", "TEST_KEY", data);
 
       expect(exception.data.channels).toEqual(["ch1", "ch2", "ch3"]);
       expect(exception.data.errorCodes).toEqual([100, 200, 300]);

@@ -18,6 +18,7 @@ export class Jwt implements IJwt {
     if (!secret) {
       throw new JwtException(
         "JWT secret is required. Please provide a secret either through the constructor options or set the JWT_SECRET environment variable.",
+        "JWT_SECRET_REQUIRED",
       );
     }
 

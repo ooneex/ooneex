@@ -15,6 +15,7 @@ export class TypeormSqliteDatabase extends TypeormDatabase {
     if (!database) {
       throw new DatabaseException(
         "SQLite database path is required. Please provide a database path either through the constructor options or set the SQLITE_DATABASE_PATH environment variable.",
+        "CONNECTION_FAILED",
       );
     }
 

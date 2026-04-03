@@ -17,6 +17,7 @@ export class RedisRateLimiter implements IRateLimiter {
     if (!connectionString) {
       throw new RateLimitException(
         "Redis connection string is required. Please provide a connection string either through the constructor options or set the RATE_LIMIT_REDIS_URL environment variable.",
+        "RATE_LIMIT_CONNECTION_FAILED",
       );
     }
 
@@ -73,7 +74,7 @@ export class RedisRateLimiter implements IRateLimiter {
         resetAt,
       };
     } catch (error: unknown) {
-      throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`, "RATE_LIMIT_CHECK_FAILED");
     }
   }
 
@@ -92,7 +93,7 @@ export class RedisRateLimiter implements IRateLimiter {
 
       return result > 0;
     } catch (error: unknown) {
-      throw new RateLimitException(`Failed to reset rate limit for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to reset rate limit for key "${key}": ${error}`, "RATE_LIMIT_RESET_FAILED");
     }
   }
 
@@ -109,7 +110,7 @@ export class RedisRateLimiter implements IRateLimiter {
 
       return Number.parseInt(value, 10);
     } catch (error: unknown) {
-      throw new RateLimitException(`Failed to get count for key "${key}": ${error}`);
+      throw new RateLimitException(`Failed to get count for key "${key}": ${error}`, "RATE_LIMIT_COUNT_FAILED");
     }
   }
 }

@@ -12,18 +12,18 @@ export class Router implements IRouter {
       const existingRoute = item[1].find((r) => r.name === name);
 
       if (existingRoute) {
-        throw new RouterException(`Route with name '${name}' already exists`, route);
+        throw new RouterException(`Route with name '${name}' already exists`, "ROUTE_NAME_EXISTS", route);
       }
     }
 
     const routes = this.routes.get(route.path) ?? [];
 
     if (route.isSocket && routes.find((r) => r.isSocket)) {
-      throw new RouterException(`Socket route with path '${route.path}' already exists`, route);
+      throw new RouterException(`Socket route with path '${route.path}' already exists`, "SOCKET_PATH_EXISTS", route);
     }
 
     if (!route.isSocket && routes.find((r) => !r.isSocket && r.method === route.method)) {
-      throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, route);
+      throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, "ROUTE_PATH_EXISTS", route);
     }
 
     routes.push(route);
@@ -86,7 +86,7 @@ export class Router implements IRouter {
     const route = this.findRouteByName(name);
 
     if (!route) {
-      throw new RouterException(`Route with name '${name}' not found`);
+      throw new RouterException(`Route with name '${name}' not found`, "ROUTE_NOT_FOUND");
     }
 
     let path: string = route.path;
@@ -94,13 +94,13 @@ export class Router implements IRouter {
 
     if (paramMatches.length > 0) {
       if (!params || typeof params !== "object" || params === null) {
-        throw new RouterException(`Route '${name}' requires parameters, but none were provided`);
+        throw new RouterException(`Route '${name}' requires parameters, but none were provided`, "ROUTE_PARAMS_REQUIRED");
       }
 
       for (const match of paramMatches) {
         const paramName = match.substring(1);
         if (!(paramName in params)) {
-          throw new RouterException(`Missing required parameter '${paramName}' for route '${name}'`);
+          throw new RouterException(`Missing required parameter '${paramName}' for route '${name}'`, "ROUTE_PARAM_MISSING");
         }
 
         path = path.replace(match, String(params[paramName]));

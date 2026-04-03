@@ -24,6 +24,7 @@ export class PolarCustomer {
     if (!accessToken) {
       throw new PaymentException(
         "Polar access token is required. Please set the POLAR_ACCESS_TOKEN environment variable.",
+        "TOKEN_REQUIRED",
       );
     }
 

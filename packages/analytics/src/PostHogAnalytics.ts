@@ -17,6 +17,7 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
     if (!apiKey) {
       throw new AnalyticsException(
         "PostHog API key is required. Please set the ANALYTICS_POSTHOG_PROJECT_TOKEN environment variable.",
+        "API_KEY_REQUIRED",
       );
     }
 

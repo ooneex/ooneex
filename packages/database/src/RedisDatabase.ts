@@ -17,6 +17,7 @@ export class RedisDatabase implements IRedisDatabase {
     if (!this.connectionUrl) {
       throw new DatabaseException(
         "Redis connection URL is required. Please provide a connection URL either through the constructor options or set the DATABASE_REDIS_URL environment variable.",
+        "CONNECTION_FAILED",
       );
     }
 
@@ -46,6 +47,7 @@ export class RedisDatabase implements IRedisDatabase {
     } catch (error) {
       throw new DatabaseException(
         `Failed to open Redis connection: ${error instanceof Error ? error.message : String(error)}`,
+        "OPERATION_FAILED",
         {
           connectionUrl: this.connectionUrl,
           options: this.options,
@@ -63,6 +65,7 @@ export class RedisDatabase implements IRedisDatabase {
     } catch (error) {
       throw new DatabaseException(
         `Failed to close Redis connection: ${error instanceof Error ? error.message : String(error)}`,
+        "OPERATION_FAILED",
         {
           connectionUrl: this.connectionUrl,
           error,
@@ -82,6 +85,7 @@ export class RedisDatabase implements IRedisDatabase {
     } catch (error) {
       throw new DatabaseException(
         `Failed to drop Redis database: ${error instanceof Error ? error.message : String(error)}`,
+        "OPERATION_FAILED",
         {
           connectionUrl: this.connectionUrl,
           error,

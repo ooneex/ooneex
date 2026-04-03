@@ -6,18 +6,19 @@ const { StorageException } = await import("@/StorageException");
 
 describe("StorageException", () => {
   test("should have correct exception name", () => {
-    const exception = new StorageException("Test message");
+    const exception = new StorageException("Test message", "TEST_KEY");
     expect(exception.name).toBe("StorageException");
   });
 
   test("should create StorageException with message only", () => {
     const message = "Storage operation failed";
-    const exception = new StorageException(message);
+    const exception = new StorageException(message, "STORAGE_OPERATION_FAILED");
 
     expect(exception).toBeInstanceOf(StorageException);
     expect(exception).toBeInstanceOf(Exception);
     expect(exception).toBeInstanceOf(Error);
     expect(exception.message).toBe(message);
+    expect(exception.key).toBe("STORAGE_OPERATION_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
   });
@@ -25,16 +26,17 @@ describe("StorageException", () => {
   test("should create StorageException with message and data", () => {
     const message = "File upload failed";
     const data = { filename: "document.pdf", size: 1024 };
-    const exception = new StorageException(message, data);
+    const exception = new StorageException(message, "STORAGE_UPLOAD_FAILED", data);
 
     expect(exception.message).toBe(message);
+    expect(exception.key).toBe("STORAGE_UPLOAD_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new StorageException("Test message", data);
+    const exception = new StorageException("Test message", "TEST_KEY", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -45,7 +47,7 @@ describe("StorageException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Storage error";
     const data = { bucket: "uploads", path: "/images" };
-    const exception = new StorageException(message, data);
+    const exception = new StorageException(message, "STORAGE_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -55,7 +57,7 @@ describe("StorageException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwStorageException() {
-      throw new StorageException("Stack trace test");
+      throw new StorageException("Stack trace test", "STACK_TRACE_TEST");
     }
 
     try {

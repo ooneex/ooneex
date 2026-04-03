@@ -37,7 +37,7 @@ export class Container implements IContainer {
       const aliasedTarget = this.alias[target];
       if (!aliasedTarget) {
         if (throwOnMissing) {
-          throw new ContainerException(`Failed to resolve alias: ${target}`);
+          throw new ContainerException(`Failed to resolve alias: ${target}`, "ALIAS_RESOLVE_FAILED");
         }
         return null;
       }
@@ -58,6 +58,7 @@ export class Container implements IContainer {
     } catch (_e) {
       throw new ContainerException(
         `Failed to resolve dependency: ${typeof target === "string" ? target : target.name}`,
+        "SERVICE_RESOLVE_FAILED",
       );
     }
   }
@@ -89,7 +90,7 @@ export class Container implements IContainer {
     try {
       return sharedDI.get<T>(identifier);
     } catch (_e) {
-      throw new ContainerException(`Failed to resolve constant: ${identifier.toString()}`);
+      throw new ContainerException(`Failed to resolve constant: ${identifier.toString()}`, "CONSTANT_RESOLVE_FAILED");
     }
   }
 

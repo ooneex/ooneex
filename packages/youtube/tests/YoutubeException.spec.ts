@@ -5,18 +5,19 @@ import { YoutubeException } from "@/index";
 
 describe("YoutubeException", () => {
   test("should have correct exception name", () => {
-    const exception = new YoutubeException("Test message");
+    const exception = new YoutubeException("Test message", "TEST_KEY");
     expect(exception.name).toBe("YoutubeException");
   });
 
   test("should create YoutubeException with message only", () => {
     const message = "Youtube processing failed";
-    const exception = new YoutubeException(message);
+    const exception = new YoutubeException(message, "YOUTUBE_PROCESSING_FAILED");
 
     expect(exception).toBeInstanceOf(YoutubeException);
     expect(exception).toBeInstanceOf(Exception);
     expect(exception).toBeInstanceOf(Error);
     expect(exception.message).toBe(message);
+    expect(exception.key).toBe("YOUTUBE_PROCESSING_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
   });
@@ -24,16 +25,17 @@ describe("YoutubeException", () => {
   test("should create YoutubeException with message and data", () => {
     const message = "Video fetch failed";
     const data = { videoId: "abc123", reason: "not found" };
-    const exception = new YoutubeException(message, data);
+    const exception = new YoutubeException(message, "VIDEO_FETCH_FAILED", data);
 
     expect(exception.message).toBe(message);
+    expect(exception.key).toBe("VIDEO_FETCH_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
   });
 
   test("should have immutable data property", () => {
     const data = { key: "value" };
-    const exception = new YoutubeException("Test message", data);
+    const exception = new YoutubeException("Test message", "TEST_KEY", data);
 
     expect(Object.isFrozen(exception.data)).toBe(true);
     expect(() => {
@@ -44,7 +46,7 @@ describe("YoutubeException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Youtube error";
     const data = { channel: "test-channel" };
-    const exception = new YoutubeException(message, data);
+    const exception = new YoutubeException(message, "YOUTUBE_ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);
@@ -54,7 +56,7 @@ describe("YoutubeException", () => {
 
   test("should maintain proper stack trace", () => {
     function throwYoutubeException() {
-      throw new YoutubeException("Stack trace test");
+      throw new YoutubeException("Stack trace test", "STACK_TRACE_TEST");
     }
 
     try {

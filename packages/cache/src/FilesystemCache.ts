@@ -28,10 +28,10 @@ export class FilesystemCache extends AbstractCache {
 
       const stats = await stat(this.cacheDir);
       if (!stats.isDirectory()) {
-        throw new CacheException("Failed to create cache directory");
+        throw new CacheException("Failed to create cache directory", "CACHE_DIR_CREATE_FAILED");
       }
     } catch (error) {
-      throw new CacheException(`Failed to initialize filesystem cache: ${error}`);
+      throw new CacheException(`Failed to initialize filesystem cache: ${error}`, "CACHE_INIT_FAILED");
     }
   }
 
@@ -125,7 +125,7 @@ export class FilesystemCache extends AbstractCache {
     const content = JSON.stringify(entry);
 
     if (Buffer.byteLength(content, "utf-8") > this.maxFileSize) {
-      throw new CacheException(`Cache entry exceeds maximum file size of ${this.maxFileSize} bytes`);
+      throw new CacheException(`Cache entry exceeds maximum file size of ${this.maxFileSize} bytes`, "CACHE_MAX_SIZE_EXCEEDED");
     }
 
     await Bun.write(this.getFilePath(key), content);

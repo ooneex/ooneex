@@ -35,7 +35,7 @@ export class Html implements IHtml {
       this.$ = await cheerio.fromURL(urlString);
       return this;
     } catch (error) {
-      throw new HtmlException(`Failed to fetch URL: ${urlString}`, {
+      throw new HtmlException(`Failed to fetch URL: ${urlString}`, "HTML_FETCH_FAILED", {
         status: 500,
         data: {
           url: urlString,

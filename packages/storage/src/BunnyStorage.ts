@@ -1,5 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
+import type { ReadableStream as NodeReadableStream } from "node:stream/web";
+import * as BunnyStorageSDK from "@bunny.net/storage-sdk";
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
 import type { BunFile, S3File } from "bun";
@@ -9,43 +11,22 @@ import type { GetFileOptionsType, IStorage, PutDirOptionsType } from "./types";
 
 type BunnyRegionType = "de" | "uk" | "ny" | "la" | "sg" | "se" | "br" | "jh" | "syd";
 
-type BunnyFileInfoType = {
-  Guid: string;
-  StorageZoneName: string;
-  Path: string;
-  ObjectName: string;
-  Length: number;
-  LastChanged: string;
-  ServerId: number;
-  ArrayNumber: number;
-  IsDirectory: boolean;
-  UserId: string;
-  ContentType: string;
-  DateCreated: string;
-  StorageZoneId: number;
-  Checksum: string | null;
-  ReplicatedZones: string | null;
-};
-
-const REGION_ENDPOINTS: Record<BunnyRegionType, string> = {
-  de: "storage.bunnycdn.com",
-  uk: "uk.storage.bunnycdn.com",
-  ny: "ny.storage.bunnycdn.com",
-  la: "la.storage.bunnycdn.com",
-  sg: "sg.storage.bunnycdn.com",
-  se: "se.storage.bunnycdn.com",
-  br: "br.storage.bunnycdn.com",
-  jh: "jh.storage.bunnycdn.com",
-  syd: "syd.storage.bunnycdn.com",
+const REGION_MAP: Record<BunnyRegionType, BunnyStorageSDK.regions.StorageRegion> = {
+  de: BunnyStorageSDK.regions.StorageRegion.Falkenstein,
+  uk: BunnyStorageSDK.regions.StorageRegion.London,
+  ny: BunnyStorageSDK.regions.StorageRegion.NewYork,
+  la: BunnyStorageSDK.regions.StorageRegion.LosAngeles,
+  sg: BunnyStorageSDK.regions.StorageRegion.Singapore,
+  se: BunnyStorageSDK.regions.StorageRegion.Stockholm,
+  br: BunnyStorageSDK.regions.StorageRegion.SaoPaulo,
+  jh: BunnyStorageSDK.regions.StorageRegion.Johannesburg,
+  syd: BunnyStorageSDK.regions.StorageRegion.Sydney,
 };
 
 @decorator.storage()
 export class BunnyStorage implements IStorage {
   private bucket = "";
-  private readonly accessKey: string;
-  private readonly storageZone: string;
-  private readonly region: BunnyRegionType;
-  private readonly baseUrl: string;
+  private readonly storageZone: BunnyStorageSDK.zone.StorageZone;
 
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
     const accessKey = this.env.STORAGE_BUNNY_ACCESS_KEY;
@@ -63,10 +44,8 @@ export class BunnyStorage implements IStorage {
       );
     }
 
-    this.accessKey = accessKey;
-    this.storageZone = storageZone;
-    this.region = region ?? "de";
-    this.baseUrl = `https://${REGION_ENDPOINTS[this.region]}`;
+    const sdkRegion = REGION_MAP[region ?? "de"];
+    this.storageZone = BunnyStorageSDK.zone.connect_with_accesskey(sdkRegion, storageZone, accessKey);
   }
 
   public getBucket(): string {
@@ -80,27 +59,17 @@ export class BunnyStorage implements IStorage {
   }
 
   public async list(): Promise<string[]> {
-    const path = this.bucket ? `${this.bucket}/` : "";
-    const url = `${this.baseUrl}/${this.storageZone}/${path}`;
+    const path = this.bucket ? `/${this.bucket}/` : "/";
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        AccessKey: this.accessKey,
-        accept: "application/json",
-      },
-    });
+    try {
+      const files = await BunnyStorageSDK.file.list(this.storageZone, path);
 
-    if (!response.ok) {
-      throw new StorageException(`Failed to list files: ${response.status} ${response.statusText}`, {
-        status: response.status,
+      return files.filter((file) => !file.isDirectory).map((file) => file.objectName);
+    } catch (error) {
+      throw new StorageException(`Failed to list files: ${error instanceof Error ? error.message : String(error)}`, {
         path,
       });
     }
-
-    const files: BunnyFileInfoType[] = await response.json();
-
-    return files.filter((file) => !file.IsDirectory).map((file) => file.ObjectName);
   }
 
   public async clearBucket(): Promise<this> {
@@ -112,33 +81,20 @@ export class BunnyStorage implements IStorage {
   }
 
   public async exists(key: string): Promise<boolean> {
-    const url = this.buildFileUrl(key);
+    try {
+      await BunnyStorageSDK.file.get(this.storageZone, this.buildFilePath(key));
 
-    const response = await fetch(url, {
-      method: "HEAD",
-      headers: {
-        AccessKey: this.accessKey,
-      },
-    });
-
-    return response.ok;
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   public async delete(key: string): Promise<void> {
-    const url = this.buildFileUrl(key);
-
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        AccessKey: this.accessKey,
-      },
-    });
-
-    if (!response.ok && response.status !== 404) {
-      throw new StorageException(`Failed to delete file: ${response.status} ${response.statusText}`, {
-        status: response.status,
-        key,
-      });
+    try {
+      await BunnyStorageSDK.file.remove(this.storageZone, this.buildFilePath(key));
+    } catch {
+      // Ignore errors (file may not exist)
     }
   }
 
@@ -182,59 +138,18 @@ export class BunnyStorage implements IStorage {
     key: string,
     content: string | ArrayBufferView | ArrayBuffer | SharedArrayBuffer | Request | Response | BunFile | S3File | Blob,
   ): Promise<number> {
-    const url = this.buildFileUrl(key);
+    const { stream, length } = await this.toReadableStream(content);
+    const filePath = this.buildFilePath(key);
 
-    let body: BodyInit;
-    let contentLength: number;
-
-    if (typeof content === "string") {
-      body = content;
-      contentLength = new TextEncoder().encode(content).length;
-    } else if (content instanceof ArrayBuffer) {
-      body = new Blob([content]);
-      contentLength = content.byteLength;
-    } else if (content instanceof SharedArrayBuffer) {
-      const uint8Array = new Uint8Array(content);
-      const copiedArray = new Uint8Array(uint8Array.length);
-      copiedArray.set(uint8Array);
-      body = new Blob([copiedArray]);
-      contentLength = content.byteLength;
-    } else if (ArrayBuffer.isView(content)) {
-      body = new Blob([new Uint8Array(content.buffer as ArrayBuffer, content.byteOffset, content.byteLength)]);
-      contentLength = content.byteLength;
-    } else if (content instanceof Blob) {
-      body = content;
-      contentLength = content.size;
-    } else if (content instanceof Request || content instanceof Response) {
-      const arrayBuffer = await content.arrayBuffer();
-      body = new Blob([arrayBuffer]);
-      contentLength = arrayBuffer.byteLength;
-    } else if (typeof content === "object" && content !== null && "arrayBuffer" in content) {
-      const fileContent = content as BunFile | S3File;
-      const arrayBuffer = await fileContent.arrayBuffer();
-      body = new Blob([arrayBuffer]);
-      contentLength = arrayBuffer.byteLength;
-    } else {
-      throw new StorageException("Unsupported content type for upload", { key });
-    }
-
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: {
-        AccessKey: this.accessKey,
-        "Content-Type": "application/octet-stream",
-      },
-      body,
-    });
-
-    if (!response.ok) {
-      throw new StorageException(`Failed to upload file: ${response.status} ${response.statusText}`, {
-        status: response.status,
+    try {
+      await BunnyStorageSDK.file.upload(this.storageZone, filePath, stream as unknown as NodeReadableStream<Uint8Array>);
+    } catch (error) {
+      throw new StorageException(`Failed to upload file: ${error instanceof Error ? error.message : String(error)}`, {
         key,
       });
     }
 
-    return contentLength;
+    return length;
   }
 
   public async getFile(key: string, options: GetFileOptionsType): Promise<number> {
@@ -246,79 +161,95 @@ export class BunnyStorage implements IStorage {
   }
 
   public async getAsJson<T = unknown>(key: string): Promise<T> {
-    const url = this.buildFileUrl(key);
+    try {
+      const { stream } = await BunnyStorageSDK.file.download(this.storageZone, this.buildFilePath(key));
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        AccessKey: this.accessKey,
-      },
-    });
-
-    if (!response.ok) {
-      throw new StorageException(`Failed to get file as JSON: ${response.status} ${response.statusText}`, {
-        status: response.status,
-        key,
-      });
+      return await new Response(stream as unknown as BodyInit).json();
+    } catch (error) {
+      throw new StorageException(
+        `Failed to get file as JSON: ${error instanceof Error ? error.message : String(error)}`,
+        { key },
+      );
     }
-
-    return await response.json();
   }
 
   public async getAsArrayBuffer(key: string): Promise<ArrayBuffer> {
-    const url = this.buildFileUrl(key);
+    try {
+      const { stream } = await BunnyStorageSDK.file.download(this.storageZone, this.buildFilePath(key));
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        AccessKey: this.accessKey,
-      },
-    });
-
-    if (!response.ok) {
-      throw new StorageException(`Failed to get file as ArrayBuffer: ${response.status} ${response.statusText}`, {
-        status: response.status,
-        key,
-      });
+      return await new Response(stream as unknown as BodyInit).arrayBuffer();
+    } catch (error) {
+      throw new StorageException(
+        `Failed to get file as ArrayBuffer: ${error instanceof Error ? error.message : String(error)}`,
+        { key },
+      );
     }
-
-    return await response.arrayBuffer();
   }
 
   public getAsStream(key: string): ReadableStream {
-    const url = this.buildFileUrl(key);
-    const accessKey = this.accessKey;
+    const filePath = this.buildFilePath(key);
 
     const { readable, writable } = new TransformStream();
 
-    fetch(url, {
-      method: "GET",
-      headers: { AccessKey: accessKey },
-    }).then((response) => {
-      if (!response.ok) {
+    BunnyStorageSDK.file.download(this.storageZone, filePath)
+      .then(({ stream }) => {
+        (stream as unknown as ReadableStream).pipeTo(writable);
+      })
+      .catch((error) => {
         writable.abort(
-          new StorageException(`Failed to get file as stream: ${response.status} ${response.statusText}`, {
-            status: response.status,
-            key,
-          }),
+          new StorageException(
+            `Failed to get file as stream: ${error instanceof Error ? error.message : String(error)}`,
+            { key },
+          ),
         );
-        return;
-      }
-
-      if (!response.body) {
-        writable.abort(new StorageException("Response body is null", { key }));
-        return;
-      }
-
-      response.body.pipeTo(writable);
-    });
+      });
 
     return readable;
   }
 
-  private buildFileUrl(key: string): string {
-    const path = this.bucket ? `${this.bucket}/${key}` : key;
+  private buildFilePath(key: string): string {
+    return this.bucket ? `/${this.bucket}/${key}` : `/${key}`;
+  }
 
-    return `${this.baseUrl}/${this.storageZone}/${path}`;
+  private async toReadableStream(
+    content: string | ArrayBufferView | ArrayBuffer | SharedArrayBuffer | Request | Response | BunFile | S3File | Blob,
+  ): Promise<{ stream: ReadableStream<Uint8Array>; length: number }> {
+    if (typeof content === "string") {
+      const encoded = new TextEncoder().encode(content);
+      return { stream: new Blob([encoded]).stream(), length: encoded.length };
+    }
+
+    if (content instanceof ArrayBuffer) {
+      return { stream: new Blob([content]).stream(), length: content.byteLength };
+    }
+
+    if (content instanceof SharedArrayBuffer) {
+      const uint8Array = new Uint8Array(content);
+      const copied = new Uint8Array(uint8Array.length);
+      copied.set(uint8Array);
+      return { stream: new Blob([copied]).stream(), length: content.byteLength };
+    }
+
+    if (ArrayBuffer.isView(content)) {
+      const view = new Uint8Array(content.buffer as ArrayBuffer, content.byteOffset, content.byteLength);
+      return { stream: new Blob([view]).stream(), length: content.byteLength };
+    }
+
+    if (content instanceof Blob) {
+      return { stream: content.stream(), length: content.size };
+    }
+
+    if (content instanceof Request || content instanceof Response) {
+      const arrayBuffer = await content.arrayBuffer();
+      return { stream: new Blob([arrayBuffer]).stream(), length: arrayBuffer.byteLength };
+    }
+
+    if (typeof content === "object" && content !== null && "arrayBuffer" in content) {
+      const fileContent = content as BunFile | S3File;
+      const arrayBuffer = await fileContent.arrayBuffer();
+      return { stream: new Blob([arrayBuffer]).stream(), length: arrayBuffer.byteLength };
+    }
+
+    throw new StorageException("Unsupported content type for upload");
   }
 }

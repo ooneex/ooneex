@@ -45,9 +45,9 @@ describe("index.ts.txt", () => {
     expect(content).toContain('import { CorsMiddleware } from "@ooneex/middleware"');
   });
 
-  test("should import RedisRateLimiter from @ooneex/rate-limit", async () => {
+  test("should import UpstashRedisRateLimiter from @ooneex/rate-limit", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain('import { RedisRateLimiter } from "@ooneex/rate-limit"');
+    expect(content).toContain('import { UpstashRedisRateLimiter } from "@ooneex/rate-limit"');
   });
 
   test("should import BunnyStorage from @ooneex/storage", async () => {
@@ -80,7 +80,7 @@ describe("index.ts.txt", () => {
     expect(content).toContain("cache: UpstashRedisCache");
     expect(content).toContain("storage: BunnyStorage");
     expect(content).toContain("mailer: ResendMailer");
-    expect(content).toContain("rateLimiter: RedisRateLimiter");
+    expect(content).toContain("rateLimiter: UpstashRedisRateLimiter");
     expect(content).toContain("middlewares: AppModule.middlewares");
     expect(content).toContain("cors: CorsMiddleware");
     expect(content).not.toContain("permissions");

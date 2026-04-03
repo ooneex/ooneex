@@ -4,7 +4,7 @@ import { UpstashRedisCache } from "@ooneex/cache";
 import { BetterstackLogger, BetterstackExceptionLogger, TerminalLogger } from "@ooneex/logger";
 import { ResendMailer } from "@ooneex/mailer";
 import { CorsMiddleware } from "@ooneex/middleware";
-import { RedisRateLimiter } from "@ooneex/rate-limit";
+import { UpstashRedisRateLimiter } from "@ooneex/rate-limit";
 import { BunnyStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
 import { AppDatabase } from "./databases/AppDatabase";
@@ -22,7 +22,7 @@ const app = new App({
   cache: UpstashRedisCache,
   storage: BunnyStorage,
   mailer: ResendMailer,
-  rateLimiter: RedisRateLimiter,
+  rateLimiter: UpstashRedisRateLimiter,
   middlewares: AppModule.middlewares,
   cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,

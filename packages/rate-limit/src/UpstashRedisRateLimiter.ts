@@ -55,7 +55,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
     }
   }
 
-  public async check(key: string, _limit: number, _windowSeconds: number): Promise<RateLimitResultType> {
+  public async check(key: string): Promise<RateLimitResultType> {
     try {
       const result = await this.ratelimit.limit(key);
 
@@ -68,6 +68,12 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
     } catch (error) {
       throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`);
     }
+  }
+
+  public async isLimited(key: string): Promise<boolean> {
+    const result = await this.check(key);
+
+    return result.limited;
   }
 
   public async reset(key: string): Promise<boolean> {

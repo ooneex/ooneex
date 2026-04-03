@@ -45,7 +45,7 @@ export class RedisRateLimiter implements IRateLimiter {
     return `ratelimit:${key}`;
   }
 
-  public async check(key: string, limit: number, windowSeconds: number): Promise<RateLimitResultType> {
+  public async check(key: string, limit = 120, windowSeconds = 60): Promise<RateLimitResultType> {
     try {
       await this.connect();
 
@@ -69,9 +69,15 @@ export class RedisRateLimiter implements IRateLimiter {
         total: limit,
         resetAt,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       throw new RateLimitException(`Failed to check rate limit for key "${key}": ${error}`);
     }
+  }
+
+  public async isLimited(key: string, limit = 120, windowSeconds = 60): Promise<boolean> {
+    const result = await this.check(key, limit, windowSeconds);
+
+    return result.limited;
   }
 
   public async reset(key: string): Promise<boolean> {
@@ -82,7 +88,7 @@ export class RedisRateLimiter implements IRateLimiter {
       const result = await this.client.del(rateLimitKey);
 
       return result > 0;
-    } catch (error) {
+    } catch (error: unknown) {
       throw new RateLimitException(`Failed to reset rate limit for key "${key}": ${error}`);
     }
   }
@@ -99,7 +105,7 @@ export class RedisRateLimiter implements IRateLimiter {
       }
 
       return Number.parseInt(value, 10);
-    } catch (error) {
+    } catch (error: unknown) {
       throw new RateLimitException(`Failed to get count for key "${key}": ${error}`);
     }
   }

@@ -61,6 +61,8 @@ describe("env.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Rate limit");
     expect(content).toContain("RATE_LIMIT_REDIS_URL=");
+    expect(content).toContain("RATE_LIMIT_UPSTASH_REDIS_URL=");
+    expect(content).toContain("RATE_LIMIT_UPSTASH_REDIS_TOKEN=");
   });
 
   test("should contain CORS section", async () => {

@@ -730,7 +730,7 @@ describe("Html", () => {
 describe("HtmlException", () => {
   describe("Constructor", () => {
     test("should create HtmlException with message", () => {
-      const exception = new HtmlException("Test error");
+      const exception = new HtmlException("Test error", "test_error");
 
       expect(exception).toBeInstanceOf(HtmlException);
       expect(exception.message).toBe("Test error");
@@ -740,21 +740,21 @@ describe("HtmlException", () => {
 
     test("should create HtmlException with message and data", () => {
       const data = { url: "https://example.com", error: "Not found" };
-      const exception = new HtmlException("Failed to fetch", data);
+      const exception = new HtmlException("Failed to fetch", "fetch_failed", data);
 
       expect(exception.message).toBe("Failed to fetch");
       expect(exception.data).toEqual(data);
     });
 
     test("should have correct HTTP status code", () => {
-      const exception = new HtmlException("Internal error");
+      const exception = new HtmlException("Internal error", "internal_error");
 
       expect(exception.status).toBe(500);
     });
 
     test("should have date property", () => {
       const beforeDate = Date.now();
-      const exception = new HtmlException("Test");
+      const exception = new HtmlException("Test", "test");
       const afterDate = Date.now();
 
       expect(exception.date).toBeInstanceOf(Date);
@@ -763,14 +763,14 @@ describe("HtmlException", () => {
     });
 
     test("should have stack trace", () => {
-      const exception = new HtmlException("Test");
+      const exception = new HtmlException("Test", "test");
 
       expect(exception.stack).toBeDefined();
       expect(typeof exception.stack).toBe("string");
     });
 
     test("should support stackToJson method", () => {
-      const exception = new HtmlException("JSON stack test");
+      const exception = new HtmlException("JSON stack test", "json_stack_test");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -783,14 +783,14 @@ describe("HtmlException", () => {
 
   describe("Inheritance", () => {
     test("should inherit from Error", () => {
-      const exception = new HtmlException("Test");
+      const exception = new HtmlException("Test", "test");
 
       expect(exception).toBeInstanceOf(Error);
     });
 
     test("should be catchable as Error", () => {
       try {
-        throw new HtmlException("Test error");
+        throw new HtmlException("Test error", "test_error");
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
         expect(error).toBeInstanceOf(HtmlException);
@@ -800,7 +800,7 @@ describe("HtmlException", () => {
 
   describe("Serialization", () => {
     test("should be JSON serializable", () => {
-      const exception = new HtmlException("Serialization test", {
+      const exception = new HtmlException("Serialization test", "serialization_test", {
         url: "https://example.com",
         statusCode: 404,
       });
@@ -822,7 +822,7 @@ describe("HtmlException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new HtmlException("ToString test");
+      const exception = new HtmlException("ToString test", "to_string_test");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("HtmlException");

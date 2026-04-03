@@ -1,9 +1,10 @@
 import { AppEnv } from "@ooneex/app-env";
-import { inject, injectable } from "@ooneex/container";
+import { inject } from "@ooneex/container";
+import { decorator } from "./decorators";
 import { RateLimitException } from "./RateLimitException";
 import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } from "./types";
 
-@injectable()
+@decorator.rateLimit()
 export class RedisRateLimiter implements IRateLimiter {
   private client: Bun.RedisClient;
 

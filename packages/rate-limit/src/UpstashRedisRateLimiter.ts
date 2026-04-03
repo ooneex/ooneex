@@ -1,7 +1,8 @@
 import { AppEnv } from "@ooneex/app-env";
-import { inject, injectable } from "@ooneex/container";
+import { inject } from "@ooneex/container";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { decorator } from "./decorators";
 import { RateLimitException } from "./RateLimitException";
 import type {
   IRateLimiter,
@@ -10,7 +11,7 @@ import type {
   UpstashRedisRateLimiterOptionsType,
 } from "./types";
 
-@injectable()
+@decorator.rateLimit()
 export class UpstashRedisRateLimiter implements IRateLimiter {
   private ratelimit: Ratelimit;
   // Default: 120 requests per 60-second sliding window (high traffic)

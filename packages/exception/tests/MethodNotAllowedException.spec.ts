@@ -6,7 +6,7 @@ import { MethodNotAllowedException } from "@/MethodNotAllowedException";
 describe("MethodNotAllowedException", () => {
   describe("Name", () => {
     test("should have correct exception name", () => {
-      const exception = new MethodNotAllowedException("Test message");
+      const exception = new MethodNotAllowedException("Test message", "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception.name).toBe("MethodNotAllowedException");
     });
@@ -15,7 +15,7 @@ describe("MethodNotAllowedException", () => {
   describe("Immutable Data", () => {
     test("should have immutable data property", () => {
       const data = { key: "value", count: 42 };
-      const exception = new MethodNotAllowedException("Test message", data);
+      const exception = new MethodNotAllowedException("Test message", "METHOD_NOT_ALLOWED_TEST", data);
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
@@ -27,12 +27,13 @@ describe("MethodNotAllowedException", () => {
   describe("Constructor", () => {
     test("should create MethodNotAllowedException with message only", () => {
       const message = "Method POST not allowed";
-      const exception = new MethodNotAllowedException(message);
+      const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception).toBeInstanceOf(MethodNotAllowedException);
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
+      expect(exception.key).toBe("METHOD_NOT_ALLOWED_TEST");
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual({});
     });
@@ -40,9 +41,10 @@ describe("MethodNotAllowedException", () => {
     test("should create MethodNotAllowedException with message and data", () => {
       const message = "HTTP method not supported";
       const data = { method: "DELETE", allowedMethods: "GET, POST, PUT" };
-      const exception = new MethodNotAllowedException(message, data);
+      const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST", data);
 
       expect(exception.message).toBe(message);
+      expect(exception.key).toBe("METHOD_NOT_ALLOWED_TEST");
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
       expect(exception.data).toEqual(data);
     });
@@ -50,7 +52,7 @@ describe("MethodNotAllowedException", () => {
     test("should create MethodNotAllowedException with empty data object", () => {
       const message = "Empty data test";
       const data = {};
-      const exception = new MethodNotAllowedException(message, data);
+      const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST", data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
@@ -59,7 +61,7 @@ describe("MethodNotAllowedException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Null data test";
-      const exception = new MethodNotAllowedException(message);
+      const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
@@ -71,7 +73,7 @@ describe("MethodNotAllowedException", () => {
     test("should inherit all properties from Exception", () => {
       const message = "Method not allowed error";
       const data = { method: "PATCH", endpoint: "/api/users" };
-      const exception = new MethodNotAllowedException(message, data);
+      const exception = new MethodNotAllowedException(message, "METHOD_NOT_ALLOWED_TEST", data);
 
       // Properties from Exception
       expect(exception.key).toBeNull();
@@ -87,8 +89,8 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should always set status to MethodNotAllowed", () => {
-      const exception1 = new MethodNotAllowedException("Error 1");
-      const exception2 = new MethodNotAllowedException("Error 2", {
+      const exception1 = new MethodNotAllowedException("Error 1", "METHOD_NOT_ALLOWED_TEST");
+      const exception2 = new MethodNotAllowedException("Error 2", "METHOD_NOT_ALLOWED_TEST", {
         key: "value",
       });
 
@@ -100,7 +102,7 @@ describe("MethodNotAllowedException", () => {
 
     test("should have readonly data property", () => {
       const data = { method: "DELETE" };
-      const exception = new MethodNotAllowedException("Test", data);
+      const exception = new MethodNotAllowedException("Test", "METHOD_NOT_ALLOWED_TEST", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
@@ -128,7 +130,7 @@ describe("MethodNotAllowedException", () => {
         },
       };
 
-      const exception = new MethodNotAllowedException("Method not supported", errorData);
+      const exception = new MethodNotAllowedException("Method not supported", "METHOD_NOT_ALLOWED_TEST", errorData);
 
       expect(exception.data).toEqual(errorData);
       expect((exception.data?.deleteError as MethodError)?.method).toBe("DELETE");
@@ -142,7 +144,7 @@ describe("MethodNotAllowedException", () => {
         endpoint: "/api/health",
       };
 
-      const exception = new MethodNotAllowedException("String data test", stringData);
+      const exception = new MethodNotAllowedException("String data test", "METHOD_NOT_ALLOWED_TEST", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.method).toBe("string");
@@ -155,7 +157,7 @@ describe("MethodNotAllowedException", () => {
         allowedMethodsCount: 3,
       };
 
-      const exception = new MethodNotAllowedException("Number data test", numberData);
+      const exception = new MethodNotAllowedException("Number data test", "METHOD_NOT_ALLOWED_TEST", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.statusCode).toBe("number");
@@ -164,7 +166,7 @@ describe("MethodNotAllowedException", () => {
 
   describe("Error Handling Scenarios", () => {
     test("should handle HTTP method restrictions", () => {
-      const exception = new MethodNotAllowedException("HTTP method not allowed", {
+      const exception = new MethodNotAllowedException("HTTP method not allowed", "METHOD_NOT_ALLOWED_TEST", {
         requestedMethod: "DELETE",
         allowedMethods: ["GET", "POST", "PUT"],
         resource: "/api/users/123",
@@ -177,7 +179,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle REST endpoint method restrictions", () => {
-      const exception = new MethodNotAllowedException("REST method not supported", {
+      const exception = new MethodNotAllowedException("REST method not supported", "METHOD_NOT_ALLOWED_TEST", {
         endpoint: "/api/v1/products",
         method: "PATCH",
         supportedMethods: ["GET", "POST", "PUT", "DELETE"],
@@ -190,7 +192,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle resource-specific method restrictions", () => {
-      const exception = new MethodNotAllowedException("Resource method not allowed", {
+      const exception = new MethodNotAllowedException("Resource method not allowed", "METHOD_NOT_ALLOWED_TEST", {
         resourceType: "readonly",
         resourceId: "config_123",
         attemptedOperation: "UPDATE",
@@ -203,7 +205,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle API versioning method restrictions", () => {
-      const exception = new MethodNotAllowedException("Method deprecated in API version", {
+      const exception = new MethodNotAllowedException("Method deprecated in API version", "METHOD_NOT_ALLOWED_TEST", {
         method: "HEAD",
         apiVersion: "v2",
         deprecatedIn: "v2.0",
@@ -220,7 +222,7 @@ describe("MethodNotAllowedException", () => {
   describe("Stack Trace and Debugging", () => {
     test("should maintain proper stack trace", () => {
       function throwMethodNotAllowedException() {
-        throw new MethodNotAllowedException("Stack trace test");
+        throw new MethodNotAllowedException("Stack trace test", "METHOD_NOT_ALLOWED_TEST");
       }
 
       try {
@@ -235,7 +237,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should support stackToJson method from parent Exception", () => {
-      const exception = new MethodNotAllowedException("JSON stack test");
+      const exception = new MethodNotAllowedException("JSON stack test", "METHOD_NOT_ALLOWED_TEST");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -249,7 +251,7 @@ describe("MethodNotAllowedException", () => {
 
   describe("Serialization and Inspection", () => {
     test("should be JSON serializable", () => {
-      const exception = new MethodNotAllowedException("Serialization test", {
+      const exception = new MethodNotAllowedException("Serialization test", "METHOD_NOT_ALLOWED_TEST", {
         component: "api-router",
         version: "3.1.0",
         strictMode: true,
@@ -275,7 +277,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new MethodNotAllowedException("ToString test");
+      const exception = new MethodNotAllowedException("ToString test", "METHOD_NOT_ALLOWED_TEST");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("MethodNotAllowedException");
@@ -285,7 +287,7 @@ describe("MethodNotAllowedException", () => {
 
   describe("Edge Cases", () => {
     test("should handle empty message", () => {
-      const exception = new MethodNotAllowedException("");
+      const exception = new MethodNotAllowedException("", "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception.message).toBe("");
       expect(exception.status).toBe(HttpStatus.Code.MethodNotAllowed);
@@ -293,7 +295,7 @@ describe("MethodNotAllowedException", () => {
 
     test("should handle very long messages", () => {
       const longMessage = "x".repeat(1000);
-      const exception = new MethodNotAllowedException(longMessage);
+      const exception = new MethodNotAllowedException(longMessage, "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception.message).toBe(longMessage);
       expect(exception.message.length).toBe(1000);
@@ -301,7 +303,7 @@ describe("MethodNotAllowedException", () => {
 
     test("should handle special characters in message", () => {
       const specialMessage = "Method Not Allowed: 特殊文字 🚫 with émojis and ñumbers 123!@#$%^&*()";
-      const exception = new MethodNotAllowedException(specialMessage);
+      const exception = new MethodNotAllowedException(specialMessage, "METHOD_NOT_ALLOWED_TEST");
 
       expect(exception.message).toBe(specialMessage);
     });
@@ -330,7 +332,7 @@ describe("MethodNotAllowedException", () => {
         },
       };
 
-      const exception = new MethodNotAllowedException("Complex data test", complexData);
+      const exception = new MethodNotAllowedException("Complex data test", "METHOD_NOT_ALLOWED_TEST", complexData);
 
       expect(exception.data).toEqual(complexData);
       expect((exception.data?.request as { method: string })?.method).toBe("TRACE");
@@ -360,6 +362,7 @@ describe("MethodNotAllowedException", () => {
 
       const exception = new MethodNotAllowedException(
         "HTTP method analysis failed",
+        "METHOD_NOT_ALLOWED_TEST",
         methodData as unknown as Record<string, unknown>,
       );
 
@@ -372,7 +375,7 @@ describe("MethodNotAllowedException", () => {
 
   describe("HTTP Method-Specific Scenarios", () => {
     test("should handle common HTTP method restrictions", () => {
-      const exception = new MethodNotAllowedException("Standard HTTP method not allowed", {
+      const exception = new MethodNotAllowedException("Standard HTTP method not allowed", "METHOD_NOT_ALLOWED_TEST", {
         requestedMethod: "OPTIONS",
         endpoint: "/api/v1/users",
         allowedMethods: ["GET", "POST", "PUT", "DELETE"],
@@ -388,7 +391,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle custom HTTP method restrictions", () => {
-      const exception = new MethodNotAllowedException("Custom HTTP method not supported", {
+      const exception = new MethodNotAllowedException("Custom HTTP method not supported", "METHOD_NOT_ALLOWED_TEST", {
         customMethod: "PURGE",
         standardMethods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
         serverCapabilities: ["standard-http", "rest-api"],
@@ -403,7 +406,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle safe vs unsafe method restrictions", () => {
-      const exception = new MethodNotAllowedException("Unsafe method not allowed", {
+      const exception = new MethodNotAllowedException("Unsafe method not allowed", "METHOD_NOT_ALLOWED_TEST", {
         method: "POST",
         methodType: "unsafe",
         safeMethodsOnly: true,
@@ -419,7 +422,7 @@ describe("MethodNotAllowedException", () => {
     });
 
     test("should handle idempotent method requirements", () => {
-      const exception = new MethodNotAllowedException("Non-idempotent method not allowed", {
+      const exception = new MethodNotAllowedException("Non-idempotent method not allowed", "METHOD_NOT_ALLOWED_TEST", {
         method: "POST",
         requiresIdempotency: true,
         idempotentMethods: ["GET", "PUT", "DELETE", "HEAD", "OPTIONS"],

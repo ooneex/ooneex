@@ -6,7 +6,7 @@ import { UnauthorizedException } from "@/UnauthorizedException";
 describe("UnauthorizedException", () => {
   describe("Name", () => {
     test("should have correct exception name", () => {
-      const exception = new UnauthorizedException("Test message");
+      const exception = new UnauthorizedException("Test message", "UNAUTHORIZED_TEST");
 
       expect(exception.name).toBe("UnauthorizedException");
     });
@@ -15,7 +15,7 @@ describe("UnauthorizedException", () => {
   describe("Immutable Data", () => {
     test("should have immutable data property", () => {
       const data = { key: "value", count: 42 };
-      const exception = new UnauthorizedException("Test message", data);
+      const exception = new UnauthorizedException("Test message", "UNAUTHORIZED_TEST", data);
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
@@ -27,12 +27,13 @@ describe("UnauthorizedException", () => {
   describe("Constructor", () => {
     test("should create UnauthorizedException with message only", () => {
       const message = "Access denied";
-      const exception = new UnauthorizedException(message);
+      const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST");
 
       expect(exception).toBeInstanceOf(UnauthorizedException);
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
+      expect(exception.key).toBe("UNAUTHORIZED_TEST");
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual({});
     });
@@ -40,9 +41,10 @@ describe("UnauthorizedException", () => {
     test("should create UnauthorizedException with message and data", () => {
       const message = "Invalid authentication credentials";
       const data = { token: "expired_token", userId: "user-123" };
-      const exception = new UnauthorizedException(message, data);
+      const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST", data);
 
       expect(exception.message).toBe(message);
+      expect(exception.key).toBe("UNAUTHORIZED_TEST");
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception.data).toEqual(data);
     });
@@ -50,7 +52,7 @@ describe("UnauthorizedException", () => {
     test("should create UnauthorizedException with empty data object", () => {
       const message = "Empty data test";
       const data = {};
-      const exception = new UnauthorizedException(message, data);
+      const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST", data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
@@ -59,7 +61,7 @@ describe("UnauthorizedException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Null data test";
-      const exception = new UnauthorizedException(message);
+      const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST");
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
@@ -71,7 +73,7 @@ describe("UnauthorizedException", () => {
     test("should inherit all properties from Exception", () => {
       const message = "Authentication failed";
       const data = { token: "invalid_token", realm: "api" };
-      const exception = new UnauthorizedException(message, data);
+      const exception = new UnauthorizedException(message, "UNAUTHORIZED_TEST", data);
 
       // Properties from Exception
       expect(exception.key).toBeNull();
@@ -87,8 +89,8 @@ describe("UnauthorizedException", () => {
     });
 
     test("should always set status to Unauthorized", () => {
-      const exception1 = new UnauthorizedException("Error 1");
-      const exception2 = new UnauthorizedException("Error 2", { key: "value" });
+      const exception1 = new UnauthorizedException("Error 1", "UNAUTHORIZED_TEST");
+      const exception2 = new UnauthorizedException("Error 2", "UNAUTHORIZED_TEST", { key: "value" });
 
       expect(exception1.status).toBe(HttpStatus.Code.Unauthorized);
       expect(exception2.status).toBe(HttpStatus.Code.Unauthorized);
@@ -98,7 +100,7 @@ describe("UnauthorizedException", () => {
 
     test("should have readonly data property", () => {
       const data = { token: "test_token" };
-      const exception = new UnauthorizedException("Test", data);
+      const exception = new UnauthorizedException("Test", "UNAUTHORIZED_TEST", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
@@ -126,7 +128,7 @@ describe("UnauthorizedException", () => {
         },
       };
 
-      const exception = new UnauthorizedException("Authentication failed", errorData);
+      const exception = new UnauthorizedException("Authentication failed", "UNAUTHORIZED_TEST", errorData);
 
       expect(exception.data).toEqual(errorData);
       expect((exception.data?.tokenError as AuthenticationError)?.token).toBe("expired_jwt");
@@ -140,7 +142,7 @@ describe("UnauthorizedException", () => {
         realm: "secure_api",
       };
 
-      const exception = new UnauthorizedException("String data test", stringData);
+      const exception = new UnauthorizedException("String data test", "UNAUTHORIZED_TEST", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.token).toBe("string");
@@ -153,7 +155,7 @@ describe("UnauthorizedException", () => {
         maxAttempts: 5,
       };
 
-      const exception = new UnauthorizedException("Number data test", numberData);
+      const exception = new UnauthorizedException("Number data test", "UNAUTHORIZED_TEST", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.userId).toBe("number");
@@ -162,7 +164,7 @@ describe("UnauthorizedException", () => {
 
   describe("Error Handling Scenarios", () => {
     test("should handle authentication token failures", () => {
-      const exception = new UnauthorizedException("Authentication token invalid", {
+      const exception = new UnauthorizedException("Authentication token invalid", "UNAUTHORIZED_TEST", {
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
         tokenType: "Bearer",
         reason: "Token signature verification failed",
@@ -175,7 +177,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle session expiration", () => {
-      const exception = new UnauthorizedException("Session expired", {
+      const exception = new UnauthorizedException("Session expired", "UNAUTHORIZED_TEST", {
         sessionId: "sess_abc123",
         expiresAt: "2024-01-15T09:00:00Z",
         currentTime: "2024-01-15T10:30:00Z",
@@ -189,7 +191,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle invalid credentials", () => {
-      const exception = new UnauthorizedException("Invalid login credentials", {
+      const exception = new UnauthorizedException("Invalid login credentials", "UNAUTHORIZED_TEST", {
         username: "john.doe",
         passwordProvided: true,
         failedAttempts: 2,
@@ -205,7 +207,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle permission denied scenarios", () => {
-      const exception = new UnauthorizedException("Insufficient permissions", {
+      const exception = new UnauthorizedException("Insufficient permissions", "UNAUTHORIZED_TEST", {
         userId: "user-789",
         requiredRole: "admin",
         userRoles: ["user", "moderator"],
@@ -223,7 +225,7 @@ describe("UnauthorizedException", () => {
   describe("Stack Trace and Debugging", () => {
     test("should maintain proper stack trace", () => {
       function throwUnauthorizedException() {
-        throw new UnauthorizedException("Stack trace test");
+        throw new UnauthorizedException("Stack trace test", "UNAUTHORIZED_TEST");
       }
 
       try {
@@ -238,7 +240,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should support stackToJson method from parent Exception", () => {
-      const exception = new UnauthorizedException("JSON stack test");
+      const exception = new UnauthorizedException("JSON stack test", "UNAUTHORIZED_TEST");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -252,7 +254,7 @@ describe("UnauthorizedException", () => {
 
   describe("Serialization and Inspection", () => {
     test("should be JSON serializable", () => {
-      const exception = new UnauthorizedException("Serialization test", {
+      const exception = new UnauthorizedException("Serialization test", "UNAUTHORIZED_TEST", {
         component: "auth-service",
         version: "5.1.0",
         secureMode: true,
@@ -278,7 +280,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new UnauthorizedException("ToString test");
+      const exception = new UnauthorizedException("ToString test", "UNAUTHORIZED_TEST");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("UnauthorizedException");
@@ -288,7 +290,7 @@ describe("UnauthorizedException", () => {
 
   describe("Edge Cases", () => {
     test("should handle empty message", () => {
-      const exception = new UnauthorizedException("");
+      const exception = new UnauthorizedException("", "UNAUTHORIZED_TEST");
 
       expect(exception.message).toBe("");
       expect(exception.status).toBe(HttpStatus.Code.Unauthorized);
@@ -296,7 +298,7 @@ describe("UnauthorizedException", () => {
 
     test("should handle very long messages", () => {
       const longMessage = "x".repeat(1000);
-      const exception = new UnauthorizedException(longMessage);
+      const exception = new UnauthorizedException(longMessage, "UNAUTHORIZED_TEST");
 
       expect(exception.message).toBe(longMessage);
       expect(exception.message.length).toBe(1000);
@@ -304,7 +306,7 @@ describe("UnauthorizedException", () => {
 
     test("should handle special characters in message", () => {
       const specialMessage = "Unauthorized Access: 特殊文字 🔒 with émojis and ñumbers 123!@#$%^&*()";
-      const exception = new UnauthorizedException(specialMessage);
+      const exception = new UnauthorizedException(specialMessage, "UNAUTHORIZED_TEST");
 
       expect(exception.message).toBe(specialMessage);
     });
@@ -338,7 +340,7 @@ describe("UnauthorizedException", () => {
         },
       };
 
-      const exception = new UnauthorizedException("Complex data test", complexData);
+      const exception = new UnauthorizedException("Complex data test", "UNAUTHORIZED_TEST", complexData);
 
       expect(exception.data).toEqual(complexData);
       expect((exception.data?.authentication as { method: string })?.method).toBe("jwt");
@@ -392,6 +394,7 @@ describe("UnauthorizedException", () => {
 
       const exception = new UnauthorizedException(
         "Authentication context failed",
+        "UNAUTHORIZED_TEST",
         authData as unknown as Record<string, unknown>,
       );
 
@@ -405,7 +408,7 @@ describe("UnauthorizedException", () => {
 
   describe("Authentication-Specific Scenarios", () => {
     test("should handle OAuth authentication failures", () => {
-      const exception = new UnauthorizedException("OAuth authentication failed", {
+      const exception = new UnauthorizedException("OAuth authentication failed", "UNAUTHORIZED_TEST", {
         provider: "google",
         clientId: "client_123456",
         scope: "openid profile email",
@@ -422,7 +425,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle API key validation failures", () => {
-      const exception = new UnauthorizedException("API key validation failed", {
+      const exception = new UnauthorizedException("API key validation failed", "UNAUTHORIZED_TEST", {
         apiKey: "ak_test_1234567890abcdef",
         keyValid: false,
         keyExpired: true,
@@ -443,7 +446,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle multi-factor authentication failures", () => {
-      const exception = new UnauthorizedException("Multi-factor authentication required", {
+      const exception = new UnauthorizedException("Multi-factor authentication required", "UNAUTHORIZED_TEST", {
         mfaRequired: true,
         mfaStep: "totp_verification",
         mfaProvided: false,
@@ -461,7 +464,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle rate limiting scenarios", () => {
-      const exception = new UnauthorizedException("Authentication rate limit exceeded", {
+      const exception = new UnauthorizedException("Authentication rate limit exceeded", "UNAUTHORIZED_TEST", {
         rateLimitType: "login_attempts",
         attemptsRemaining: 0,
         maxAttempts: 5,
@@ -482,7 +485,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle token refresh scenarios", () => {
-      const exception = new UnauthorizedException("Token refresh failed", {
+      const exception = new UnauthorizedException("Token refresh failed", "UNAUTHORIZED_TEST", {
         refreshToken: "rt_abcdef123456",
         accessToken: "at_expired_789",
         tokenType: "Bearer",
@@ -500,7 +503,7 @@ describe("UnauthorizedException", () => {
     });
 
     test("should handle role-based access control failures", () => {
-      const exception = new UnauthorizedException("Role-based access denied", {
+      const exception = new UnauthorizedException("Role-based access denied", "UNAUTHORIZED_TEST", {
         userId: "user-567",
         userRoles: ["user", "editor"],
         requiredRoles: ["admin", "super_admin"],

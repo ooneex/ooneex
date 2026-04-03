@@ -11,7 +11,7 @@ describe("PaymentException", () => {
 
   test("should create PaymentException with message only", () => {
     const message = "Payment operation failed";
-    const exception = new PaymentException(message, "PAYMENT_OPERATION_FAILED");
+    const exception = new PaymentException(message, "OPERATION_FAILED");
 
     expect(exception).toBeInstanceOf(PaymentException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,18 +19,18 @@ describe("PaymentException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
-    expect(exception.key).toBe("PAYMENT_OPERATION_FAILED");
+    expect(exception.key).toBe("OPERATION_FAILED");
   });
 
   test("should create PaymentException with message and data", () => {
     const message = "Payment failed";
     const data = { customerId: "cust_123", productId: "prod_456" };
-    const exception = new PaymentException(message, "PAYMENT_FAILED", data);
+    const exception = new PaymentException(message, "FAILED", data);
 
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
-    expect(exception.key).toBe("PAYMENT_FAILED");
+    expect(exception.key).toBe("FAILED");
   });
 
   test("should have immutable data property", () => {
@@ -46,7 +46,7 @@ describe("PaymentException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Payment error";
     const data = { provider: "polar" };
-    const exception = new PaymentException(message, "PAYMENT_ERROR", data);
+    const exception = new PaymentException(message, "ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);

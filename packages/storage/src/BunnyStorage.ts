@@ -260,6 +260,6 @@ export class BunnyStorage implements IStorage {
       return { stream: new Blob([arrayBuffer]).stream(), length: arrayBuffer.byteLength };
     }
 
-    throw new StorageException("Unsupported content type for upload", "STORAGE_UNSUPPORTED_CONTENT_TYPE");
+    throw new StorageException("Unsupported content type for upload", "UNSUPPORTED_CONTENT_TYPE");
   }
 }

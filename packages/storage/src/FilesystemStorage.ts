@@ -234,7 +234,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
+      throw new StorageException(`File ${key} does not exist`, "FILE_NOT_FOUND");
     }
 
     const filename = options.filename ?? basename(key);
@@ -267,7 +267,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
+      throw new StorageException(`File ${key} does not exist`, "FILE_NOT_FOUND");
     }
 
     try {
@@ -285,7 +285,7 @@ export class FilesystemStorage extends Storage {
     const file = Bun.file(filePath);
 
     if (!(await file.exists())) {
-      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
+      throw new StorageException(`File ${key} does not exist`, "FILE_NOT_FOUND");
     }
 
     try {
@@ -302,7 +302,7 @@ export class FilesystemStorage extends Storage {
     const filePath = this.getFilePath(key);
 
     if (!existsSync(filePath)) {
-      throw new StorageException(`File ${key} does not exist`, "STORAGE_FILE_NOT_FOUND");
+      throw new StorageException(`File ${key} does not exist`, "FILE_NOT_FOUND");
     }
 
     const file = Bun.file(filePath);

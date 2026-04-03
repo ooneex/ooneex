@@ -11,13 +11,13 @@ describe("YoutubeException", () => {
 
   test("should create YoutubeException with message only", () => {
     const message = "Youtube processing failed";
-    const exception = new YoutubeException(message, "YOUTUBE_PROCESSING_FAILED");
+    const exception = new YoutubeException(message, "PROCESSING_FAILED");
 
     expect(exception).toBeInstanceOf(YoutubeException);
     expect(exception).toBeInstanceOf(Exception);
     expect(exception).toBeInstanceOf(Error);
     expect(exception.message).toBe(message);
-    expect(exception.key).toBe("YOUTUBE_PROCESSING_FAILED");
+    expect(exception.key).toBe("PROCESSING_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
   });
@@ -46,7 +46,7 @@ describe("YoutubeException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Youtube error";
     const data = { channel: "test-channel" };
-    const exception = new YoutubeException(message, "YOUTUBE_ERROR", data);
+    const exception = new YoutubeException(message, "ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);

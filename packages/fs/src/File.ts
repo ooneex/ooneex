@@ -206,7 +206,7 @@ export class File implements IFile {
     try {
       return await this.getBunFile().text();
     } catch (error) {
-      throw new FileException(`Failed to read file as text: ${this.path}`, "FILE_READ_TEXT_FAILED", {
+      throw new FileException(`Failed to read file as text: ${this.path}`, "READ_TEXT_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -236,7 +236,7 @@ export class File implements IFile {
     try {
       return (await this.getBunFile().json()) as T;
     } catch (error) {
-      throw new FileException(`Failed to read file as JSON: ${this.path}`, "FILE_READ_JSON_FAILED", {
+      throw new FileException(`Failed to read file as JSON: ${this.path}`, "READ_JSON_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -261,7 +261,7 @@ export class File implements IFile {
     try {
       return await this.getBunFile().arrayBuffer();
     } catch (error) {
-      throw new FileException(`Failed to read file as ArrayBuffer: ${this.path}`, "FILE_READ_BUFFER_FAILED", {
+      throw new FileException(`Failed to read file as ArrayBuffer: ${this.path}`, "READ_BUFFER_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -286,7 +286,7 @@ export class File implements IFile {
     try {
       return await this.getBunFile().bytes();
     } catch (error) {
-      throw new FileException(`Failed to read file as Uint8Array: ${this.path}`, "FILE_READ_BYTES_FAILED", {
+      throw new FileException(`Failed to read file as Uint8Array: ${this.path}`, "READ_BYTES_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -457,7 +457,7 @@ export class File implements IFile {
     try {
       return await Bun.write(this.path, data as Parameters<typeof Bun.write>[1]);
     } catch (error) {
-      throw new FileException(`Failed to write to file: ${this.path}`, "FILE_WRITE_FAILED", {
+      throw new FileException(`Failed to write to file: ${this.path}`, "WRITE_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -496,7 +496,7 @@ export class File implements IFile {
 
       return await Bun.write(this.path, combined);
     } catch (error) {
-      throw new FileException(`Failed to append to file: ${this.path}`, "FILE_APPEND_FAILED", {
+      throw new FileException(`Failed to append to file: ${this.path}`, "APPEND_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -526,7 +526,7 @@ export class File implements IFile {
       await Bun.write(destination, this.getBunFile());
       return new File(destination);
     } catch (error) {
-      throw new FileException(`Failed to copy file: ${this.path}`, "FILE_COPY_FAILED", {
+      throw new FileException(`Failed to copy file: ${this.path}`, "COPY_FAILED", {
         path: this.path,
         destination,
         error: error instanceof Error ? error.message : String(error),
@@ -553,7 +553,7 @@ export class File implements IFile {
     try {
       await this.getBunFile().delete();
     } catch (error) {
-      throw new FileException(`Failed to delete file: ${this.path}`, "FILE_DELETE_FAILED", {
+      throw new FileException(`Failed to delete file: ${this.path}`, "DELETE_FAILED", {
         path: this.path,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -565,7 +565,7 @@ export class File implements IFile {
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new FileException(`HTTP error: ${response.status} ${response.statusText}`, "FILE_DOWNLOAD_HTTP_ERROR");
+        throw new FileException(`HTTP error: ${response.status} ${response.statusText}`, "DOWNLOAD_HTTP_ERROR");
       }
 
       await Bun.write(out, response);

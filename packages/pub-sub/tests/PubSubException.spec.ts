@@ -15,10 +15,10 @@ describe("PubSubException", () => {
 
     test("should create exception with message and data", () => {
       const data = { channel: "test-channel", operation: "publish" };
-      const exception = new PubSubException("Publish failed", "PUBSUB_PUBLISH_FAILED", data);
+      const exception = new PubSubException("Publish failed", "PUBLISH_FAILED", data);
 
       expect(exception.message).toBe("Publish failed");
-      expect(exception.key).toBe("PUBSUB_PUBLISH_FAILED");
+      expect(exception.key).toBe("PUBLISH_FAILED");
       expect(exception.data).toEqual(data);
     });
 
@@ -102,7 +102,7 @@ describe("PubSubException", () => {
           retries: 3,
         },
       };
-      const exception = new PubSubException("Connection failed", "PUBSUB_CONNECTION_FAILED", data);
+      const exception = new PubSubException("Connection failed", "CONNECTION_FAILED", data);
 
       expect(exception.data).toEqual(data);
       expect(exception.data.channel).toBe("notifications");
@@ -131,7 +131,7 @@ describe("PubSubException", () => {
 
   describe("Error scenarios", () => {
     test("should handle publish errors", () => {
-      const exception = new PubSubException('Failed to publish message to channel "orders"', "PUBSUB_PUBLISH_FAILED", {
+      const exception = new PubSubException('Failed to publish message to channel "orders"', "PUBLISH_FAILED", {
         channel: "orders",
         operation: "publish",
         messageSize: 1024,
@@ -143,7 +143,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle subscribe errors", () => {
-      const exception = new PubSubException('Failed to subscribe to channel "events"', "PUBSUB_SUBSCRIBE_FAILED", {
+      const exception = new PubSubException('Failed to subscribe to channel "events"', "SUBSCRIBE_FAILED", {
         channel: "events",
         operation: "subscribe",
         reason: "Channel does not exist",
@@ -154,7 +154,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle unsubscribe errors", () => {
-      const exception = new PubSubException('Failed to unsubscribe from channel "updates"', "PUBSUB_UNSUBSCRIBE_FAILED", {
+      const exception = new PubSubException('Failed to unsubscribe from channel "updates"', "UNSUBSCRIBE_FAILED", {
         channel: "updates",
         operation: "unsubscribe",
       });
@@ -164,7 +164,7 @@ describe("PubSubException", () => {
     });
 
     test("should handle connection errors", () => {
-      const exception = new PubSubException("Redis connection string is required", "PUBSUB_CONNECTION_FAILED", {
+      const exception = new PubSubException("Redis connection string is required", "CONNECTION_FAILED", {
         configKey: "PUBSUB_REDIS_URL",
       });
 

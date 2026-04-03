@@ -6,7 +6,7 @@ import { NotFoundException } from "@/NotFoundException";
 describe("NotFoundException", () => {
   describe("Name", () => {
     test("should have correct exception name", () => {
-      const exception = new NotFoundException("Test message", "NOT_FOUND_TEST");
+      const exception = new NotFoundException("Test message", "TEST");
 
       expect(exception.name).toBe("NotFoundException");
     });
@@ -15,7 +15,7 @@ describe("NotFoundException", () => {
   describe("Immutable Data", () => {
     test("should have immutable data property", () => {
       const data = { key: "value", count: 42 };
-      const exception = new NotFoundException("Test message", "NOT_FOUND_TEST", data);
+      const exception = new NotFoundException("Test message", "TEST", data);
 
       expect(Object.isFrozen(exception.data)).toBe(true);
       expect(() => {
@@ -27,13 +27,13 @@ describe("NotFoundException", () => {
   describe("Constructor", () => {
     test("should create NotFoundException with message only", () => {
       const message = "Resource not found";
-      const exception = new NotFoundException(message, "NOT_FOUND_TEST");
+      const exception = new NotFoundException(message, "TEST");
 
       expect(exception).toBeInstanceOf(NotFoundException);
       expect(exception).toBeInstanceOf(Exception);
       expect(exception).toBeInstanceOf(Error);
       expect(exception.message).toBe(message);
-      expect(exception.key).toBe("NOT_FOUND_TEST");
+      expect(exception.key).toBe("TEST");
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual({});
     });
@@ -41,10 +41,10 @@ describe("NotFoundException", () => {
     test("should create NotFoundException with message and data", () => {
       const message = "User not found";
       const data = { id: "user-123", resource: "users" };
-      const exception = new NotFoundException(message, "NOT_FOUND_TEST", data);
+      const exception = new NotFoundException(message, "TEST", data);
 
       expect(exception.message).toBe(message);
-      expect(exception.key).toBe("NOT_FOUND_TEST");
+      expect(exception.key).toBe("TEST");
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
     });
@@ -52,7 +52,7 @@ describe("NotFoundException", () => {
     test("should create NotFoundException with empty data object", () => {
       const message = "Empty data test";
       const data = {};
-      const exception = new NotFoundException(message, "NOT_FOUND_TEST", data);
+      const exception = new NotFoundException(message, "TEST", data);
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
@@ -61,7 +61,7 @@ describe("NotFoundException", () => {
 
     test("should handle null data gracefully", () => {
       const message = "Null data test";
-      const exception = new NotFoundException(message, "NOT_FOUND_TEST");
+      const exception = new NotFoundException(message, "TEST");
 
       expect(exception.message).toBe(message);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
@@ -73,10 +73,10 @@ describe("NotFoundException", () => {
     test("should inherit all properties from Exception", () => {
       const message = "Resource not found error";
       const data = { resourceId: "item-123", resourceType: "product" };
-      const exception = new NotFoundException(message, "NOT_FOUND_TEST", data);
+      const exception = new NotFoundException(message, "TEST", data);
 
       // Properties from Exception
-      expect(exception.key).toBe("NOT_FOUND_TEST");
+      expect(exception.key).toBe("TEST");
       expect(exception.date).toBeInstanceOf(Date);
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
       expect(exception.data).toEqual(data);
@@ -89,8 +89,8 @@ describe("NotFoundException", () => {
     });
 
     test("should always set status to NotFound", () => {
-      const exception1 = new NotFoundException("Error 1", "NOT_FOUND_TEST");
-      const exception2 = new NotFoundException("Error 2", "NOT_FOUND_TEST", { key: "value" });
+      const exception1 = new NotFoundException("Error 1", "TEST");
+      const exception2 = new NotFoundException("Error 2", "TEST", { key: "value" });
 
       expect(exception1.status).toBe(HttpStatus.Code.NotFound);
       expect(exception2.status).toBe(HttpStatus.Code.NotFound);
@@ -100,7 +100,7 @@ describe("NotFoundException", () => {
 
     test("should have readonly data property", () => {
       const data = { resourceId: "test-123" };
-      const exception = new NotFoundException("Test", "NOT_FOUND_TEST", data);
+      const exception = new NotFoundException("Test", "TEST", data);
 
       expect(exception.data).toEqual(data);
       expect(Object.isFrozen(exception.data)).toBe(true);
@@ -128,7 +128,7 @@ describe("NotFoundException", () => {
         },
       };
 
-      const exception = new NotFoundException("Resource not found", "NOT_FOUND_TEST", errorData);
+      const exception = new NotFoundException("Resource not found", "TEST", errorData);
 
       expect(exception.data).toEqual(errorData);
       expect((exception.data?.userError as ResourceError)?.id).toBe("user-456");
@@ -143,7 +143,7 @@ describe("NotFoundException", () => {
         endpoint: "/api/users",
       };
 
-      const exception = new NotFoundException("String data test", "NOT_FOUND_TEST", stringData);
+      const exception = new NotFoundException("String data test", "TEST", stringData);
 
       expect(exception.data).toEqual(stringData);
       expect(typeof exception.data?.path).toBe("string");
@@ -156,7 +156,7 @@ describe("NotFoundException", () => {
         lastFoundTimestamp: 1_640_995_200,
       };
 
-      const exception = new NotFoundException("Number data test", "NOT_FOUND_TEST", numberData);
+      const exception = new NotFoundException("Number data test", "TEST", numberData);
 
       expect(exception.data).toEqual(numberData);
       expect(typeof exception.data?.userId).toBe("number");
@@ -165,7 +165,7 @@ describe("NotFoundException", () => {
 
   describe("Error Handling Scenarios", () => {
     test("should handle resource lookup failures", () => {
-      const exception = new NotFoundException("Resource lookup failed", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Resource lookup failed", "TEST", {
         resourceId: "product-789",
         resourceType: "product",
         searchCriteria: "sku",
@@ -179,7 +179,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle API endpoint not found", () => {
-      const exception = new NotFoundException("API endpoint not found", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("API endpoint not found", "TEST", {
         path: "/api/v2/deprecated-endpoint",
         method: "GET",
         availableEndpoints: ["/api/v3/users", "/api/v3/products"],
@@ -192,7 +192,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle file system resource not found", () => {
-      const exception = new NotFoundException("File not found", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("File not found", "TEST", {
         filePath: "/uploads/documents/report.pdf",
         fileType: "pdf",
         directory: "/uploads/documents",
@@ -206,7 +206,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle database record not found", () => {
-      const exception = new NotFoundException("Database record not found", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Database record not found", "TEST", {
         table: "orders",
         primaryKey: "id",
         value: 99_999,
@@ -223,7 +223,7 @@ describe("NotFoundException", () => {
   describe("Stack Trace and Debugging", () => {
     test("should maintain proper stack trace", () => {
       function throwNotFoundException() {
-        throw new NotFoundException("Stack trace test", "NOT_FOUND_TEST");
+        throw new NotFoundException("Stack trace test", "TEST");
       }
 
       try {
@@ -238,7 +238,7 @@ describe("NotFoundException", () => {
     });
 
     test("should support stackToJson method from parent Exception", () => {
-      const exception = new NotFoundException("JSON stack test", "NOT_FOUND_TEST");
+      const exception = new NotFoundException("JSON stack test", "TEST");
       const stackJson = exception.stackToJson();
 
       expect(stackJson).toBeDefined();
@@ -252,7 +252,7 @@ describe("NotFoundException", () => {
 
   describe("Serialization and Inspection", () => {
     test("should be JSON serializable", () => {
-      const exception = new NotFoundException("Serialization test", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Serialization test", "TEST", {
         component: "resource-finder",
         version: "4.2.0",
         cacheEnabled: false,
@@ -278,7 +278,7 @@ describe("NotFoundException", () => {
     });
 
     test("should have correct toString representation", () => {
-      const exception = new NotFoundException("ToString test", "NOT_FOUND_TEST");
+      const exception = new NotFoundException("ToString test", "TEST");
       const stringRep = exception.toString();
 
       expect(stringRep).toContain("NotFoundException");
@@ -288,7 +288,7 @@ describe("NotFoundException", () => {
 
   describe("Edge Cases", () => {
     test("should handle empty message", () => {
-      const exception = new NotFoundException("", "NOT_FOUND_TEST");
+      const exception = new NotFoundException("", "TEST");
 
       expect(exception.message).toBe("");
       expect(exception.status).toBe(HttpStatus.Code.NotFound);
@@ -296,7 +296,7 @@ describe("NotFoundException", () => {
 
     test("should handle very long messages", () => {
       const longMessage = "x".repeat(1000);
-      const exception = new NotFoundException(longMessage, "NOT_FOUND_TEST");
+      const exception = new NotFoundException(longMessage, "TEST");
 
       expect(exception.message).toBe(longMessage);
       expect(exception.message.length).toBe(1000);
@@ -304,7 +304,7 @@ describe("NotFoundException", () => {
 
     test("should handle special characters in message", () => {
       const specialMessage = "Resource Not Found: 特殊文字 🔍 with émojis and ñumbers 123!@#$%^&*()";
-      const exception = new NotFoundException(specialMessage, "NOT_FOUND_TEST");
+      const exception = new NotFoundException(specialMessage, "TEST");
 
       expect(exception.message).toBe(specialMessage);
     });
@@ -332,7 +332,7 @@ describe("NotFoundException", () => {
         },
       };
 
-      const exception = new NotFoundException("Complex data test", "NOT_FOUND_TEST", complexData);
+      const exception = new NotFoundException("Complex data test", "TEST", complexData);
 
       expect(exception.data).toEqual(complexData);
       expect((exception.data?.search as { results: number })?.results).toBe(0);
@@ -375,7 +375,7 @@ describe("NotFoundException", () => {
 
       const exception = new NotFoundException(
         "Resource search failed",
-        "NOT_FOUND_TEST",
+        "TEST",
         resourceData as unknown as Record<string, unknown>,
       );
 
@@ -388,7 +388,7 @@ describe("NotFoundException", () => {
 
   describe("Resource-Specific Scenarios", () => {
     test("should handle user account lookup failures", () => {
-      const exception = new NotFoundException("User account not found", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("User account not found", "TEST", {
         lookupMethod: "email",
         emailAddress: "nonexistent@example.com",
         searchedTables: ["users", "user_profiles", "archived_users"],
@@ -404,7 +404,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle inventory item not found", () => {
-      const exception = new NotFoundException("Inventory item not found", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Inventory item not found", "TEST", {
         sku: "PROD-404-XYZ",
         category: "electronics",
         warehouse: "main",
@@ -420,7 +420,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle document retrieval failures", () => {
-      const exception = new NotFoundException("Document not accessible", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Document not accessible", "TEST", {
         documentId: "DOC-MISSING-001",
         documentType: "contract",
         storage: "cloud",
@@ -440,7 +440,7 @@ describe("NotFoundException", () => {
     });
 
     test("should handle search result pagination", () => {
-      const exception = new NotFoundException("Page not found in search results", "NOT_FOUND_TEST", {
+      const exception = new NotFoundException("Page not found in search results", "TEST", {
         searchTerm: "javascript tutorials",
         requestedPage: 50,
         totalPages: 25,

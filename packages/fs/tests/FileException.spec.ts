@@ -4,17 +4,17 @@ import { FileException } from "@/index";
 describe("FileException", () => {
   describe("constructor", () => {
     test("should create an instance with message only", () => {
-      const exception = new FileException("File not found", "FILE_NOT_FOUND");
+      const exception = new FileException("File not found", "NOT_FOUND");
       expect(exception).toBeInstanceOf(FileException);
       expect(exception).toBeInstanceOf(Error);
-      expect(exception.key).toBe("FILE_NOT_FOUND");
+      expect(exception.key).toBe("NOT_FOUND");
     });
 
     test("should create an instance with message and data", () => {
       const data = { path: "/tmp/file.txt", operation: "read" };
-      const exception = new FileException("Failed to read file", "FILE_READ_FAILED", data);
+      const exception = new FileException("Failed to read file", "READ_FAILED", data);
       expect(exception).toBeInstanceOf(FileException);
-      expect(exception.key).toBe("FILE_READ_FAILED");
+      expect(exception.key).toBe("READ_FAILED");
     });
   });
 

@@ -44,7 +44,7 @@ export abstract class Cron implements ICron {
 
       this.cronJob = CronJob.from(cronParams);
     } catch (error) {
-      throw new CronException("Failed to start cron job", "CRON_START_FAILED", {
+      throw new CronException("Failed to start cron job", "START_FAILED", {
         time: this.getTime(),
         cronExpression,
         error: error instanceof Error ? error.message : String(error),

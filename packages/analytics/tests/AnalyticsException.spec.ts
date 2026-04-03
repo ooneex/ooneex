@@ -11,7 +11,7 @@ describe("AnalyticsException", () => {
 
   test("should create AnalyticsException with message only", () => {
     const message = "Analytics tracking failed";
-    const exception = new AnalyticsException(message, "ANALYTICS_TRACKING_FAILED");
+    const exception = new AnalyticsException(message, "TRACKING_FAILED");
 
     expect(exception).toBeInstanceOf(AnalyticsException);
     expect(exception).toBeInstanceOf(Exception);
@@ -19,7 +19,7 @@ describe("AnalyticsException", () => {
     expect(exception.message).toBe(message);
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
-    expect(exception.key).toBe("ANALYTICS_TRACKING_FAILED");
+    expect(exception.key).toBe("TRACKING_FAILED");
   });
 
   test("should create AnalyticsException with message and data", () => {
@@ -46,7 +46,7 @@ describe("AnalyticsException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Analytics error";
     const data = { provider: "google_analytics" };
-    const exception = new AnalyticsException(message, "ANALYTICS_ERROR", data);
+    const exception = new AnalyticsException(message, "ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);

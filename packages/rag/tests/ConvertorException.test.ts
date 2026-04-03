@@ -25,10 +25,10 @@ describe("ConvertorException", () => {
   test("should create ConvertorException with message and data", () => {
     const message = "PDF conversion failed";
     const data = { file: "document.pdf", page: 3 };
-    const exception = new ConvertorException(message, "CONVERTOR_PDF_FAILED", data);
+    const exception = new ConvertorException(message, "PDF_FAILED", data);
 
     expect(exception.message).toBe(message);
-    expect(exception.key).toBe("CONVERTOR_PDF_FAILED");
+    expect(exception.key).toBe("PDF_FAILED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual(data);
   });
@@ -46,7 +46,7 @@ describe("ConvertorException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Convertor error";
     const data = { format: "pdf" };
-    const exception = new ConvertorException(message, "CONVERTOR_ERROR", data);
+    const exception = new ConvertorException(message, "ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);

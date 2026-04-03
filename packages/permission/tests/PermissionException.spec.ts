@@ -11,13 +11,13 @@ describe("PermissionException", () => {
 
   test("should create PermissionException with message only", () => {
     const message = "Permission denied";
-    const exception = new PermissionException(message, "PERMISSION_DENIED");
+    const exception = new PermissionException(message, "DENIED");
 
     expect(exception).toBeInstanceOf(PermissionException);
     expect(exception).toBeInstanceOf(Exception);
     expect(exception).toBeInstanceOf(Error);
     expect(exception.message).toBe(message);
-    expect(exception.key).toBe("PERMISSION_DENIED");
+    expect(exception.key).toBe("DENIED");
     expect(exception.status).toBe(HttpStatus.Code.InternalServerError);
     expect(exception.data).toEqual({});
   });
@@ -46,7 +46,7 @@ describe("PermissionException", () => {
   test("should inherit all properties from Exception", () => {
     const message = "Permission error";
     const data = { role: "user" };
-    const exception = new PermissionException(message, "PERMISSION_ERROR", data);
+    const exception = new PermissionException(message, "ERROR", data);
 
     expect(exception.date).toBeInstanceOf(Date);
     expect(exception.status).toBe(500);

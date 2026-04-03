@@ -4,17 +4,17 @@ import { DirectoryException } from "@/index";
 describe("DirectoryException", () => {
   describe("constructor", () => {
     test("should create an instance with message only", () => {
-      const exception = new DirectoryException("Directory not found", "DIR_NOT_FOUND");
+      const exception = new DirectoryException("Directory not found", "NOT_FOUND");
       expect(exception).toBeInstanceOf(DirectoryException);
       expect(exception).toBeInstanceOf(Error);
-      expect(exception.key).toBe("DIR_NOT_FOUND");
+      expect(exception.key).toBe("NOT_FOUND");
     });
 
     test("should create an instance with message and data", () => {
       const data = { path: "/tmp/dir", operation: "mkdir" };
-      const exception = new DirectoryException("Failed to create directory", "DIR_CREATE_FAILED", data);
+      const exception = new DirectoryException("Failed to create directory", "CREATE_FAILED", data);
       expect(exception).toBeInstanceOf(DirectoryException);
-      expect(exception.key).toBe("DIR_CREATE_FAILED");
+      expect(exception.key).toBe("CREATE_FAILED");
     });
   });
 

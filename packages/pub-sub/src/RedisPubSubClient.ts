@@ -18,7 +18,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
     if (!connectionString) {
       throw new PubSubException(
         "Redis connection string is required. Please provide a connection string either through the constructor options or set the PUBSUB_REDIS_URL environment variable.",
-        "PUBSUB_CONNECTION_FAILED",
+        "CONNECTION_FAILED",
       );
     }
 
@@ -60,7 +60,10 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
       const message = JSON.stringify(config.data);
       await this.client.publish(config.channel, message);
     } catch (error) {
-      throw new PubSubException(`Failed to publish message to channel "${config.channel}": ${error}`, "PUBSUB_PUBLISH_FAILED");
+      throw new PubSubException(
+        `Failed to publish message to channel "${config.channel}": ${error}`,
+        "PUBLISH_FAILED",
+      );
     } finally {
       this.client.close();
     }
@@ -74,7 +77,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
         handler({ data, channel: ch });
       });
     } catch (error) {
-      throw new PubSubException(`Failed to subscribe to channel "${channel}": ${error}`, "PUBSUB_SUBSCRIBE_FAILED");
+      throw new PubSubException(`Failed to subscribe to channel "${channel}": ${error}`, "SUBSCRIBE_FAILED");
     }
   }
 
@@ -86,7 +89,10 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
 
       await this.subscriber.unsubscribe(channel);
     } catch (error) {
-      throw new PubSubException(`Failed to unsubscribe from channel "${channel}": ${error}`, "PUBSUB_UNSUBSCRIBE_FAILED");
+      throw new PubSubException(
+        `Failed to unsubscribe from channel "${channel}": ${error}`,
+        "UNSUBSCRIBE_FAILED",
+      );
     }
   }
 
@@ -98,7 +104,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
 
       await this.subscriber.unsubscribe();
     } catch (error) {
-      throw new PubSubException(`Failed to unsubscribe from all channels: ${error}`, "PUBSUB_UNSUBSCRIBE_ALL_FAILED");
+      throw new PubSubException(`Failed to unsubscribe from all channels: ${error}`, "UNSUBSCRIBE_ALL_FAILED");
     }
   }
 }

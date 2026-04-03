@@ -21,14 +21,14 @@ export abstract class Permission<A extends string = string, S extends string = s
 
   public can(action: PermissionActionType | A, subject: Subjects | S, field?: string): boolean {
     if (!this.builtAbility) {
-      throw new PermissionException("Permission must be built before checking abilities", "PERMISSION_NOT_BUILT");
+      throw new PermissionException("Permission must be built before checking abilities", "NOT_BUILT");
     }
     return this.builtAbility.can(action as string, subject as string, field);
   }
 
   public cannot(action: PermissionActionType | A, subject: Subjects | S, field?: string): boolean {
     if (!this.builtAbility) {
-      throw new PermissionException("Permission must be built before checking abilities", "PERMISSION_NOT_BUILT");
+      throw new PermissionException("Permission must be built before checking abilities", "NOT_BUILT");
     }
     return this.builtAbility.cannot(action as string, subject as string, field);
   }

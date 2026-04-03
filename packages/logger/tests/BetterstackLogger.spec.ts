@@ -94,6 +94,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -112,6 +113,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: undefined,
         name: "NoMessageException",
         status: 500,
@@ -129,6 +131,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "ValidationException",
         status: 422,
@@ -147,6 +150,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "ServerError",
         status: 503,
@@ -167,6 +171,7 @@ describe("BetterstackLogger", () => {
       const stackTrace = [{ file: "app.ts", line: 10, column: 5, functionName: "main" }];
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error with stack",
         name: "StackError",
         status: 500,
@@ -185,6 +190,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "NoStackError",
         status: 500,
@@ -203,6 +209,7 @@ describe("BetterstackLogger", () => {
       const logger = new BetterstackLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "TestError",
         status: 400,

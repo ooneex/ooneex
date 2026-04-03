@@ -146,6 +146,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -163,6 +164,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -183,6 +185,7 @@ describe("BetterstackExceptionLogger", () => {
       const date = new Date("2026-01-15T10:00:00Z");
       const stack = [{ file: "test.ts", line: 42, column: 10, functionName: "testFunc" }];
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -205,6 +208,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -230,6 +234,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: undefined,
         name: "NoMessageException",
         status: 500,
@@ -249,6 +254,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "TestError",
         status: 400,
@@ -267,6 +273,7 @@ describe("BetterstackExceptionLogger", () => {
       const logger = new BetterstackExceptionLogger(new AppEnv());
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error",
         name: "TestError",
         status: 400,

@@ -114,6 +114,7 @@ describe("DatabaseLogger", () => {
 
     test("should accept an IException as message parameter", () => {
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Exception occurred",
         name: "TestException",
         status: 500,
@@ -156,6 +157,7 @@ describe("DatabaseLogger", () => {
       globalThis.Bun.SQL = mock(() => mockSQLInstance);
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Database connection failed",
         name: "DatabaseError",
         status: 503,
@@ -302,6 +304,7 @@ describe("DatabaseLogger", () => {
       const exceptionDate = new Date("2026-06-15T12:00:00Z");
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error with date",
         name: "DateError",
         status: 400,
@@ -317,6 +320,7 @@ describe("DatabaseLogger", () => {
 
     test("should set exceptionName from exception", () => {
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Named error",
         name: "ValidationException",
         status: 422,
@@ -337,6 +341,7 @@ describe("DatabaseLogger", () => {
       ];
 
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error with stack",
         name: "StackError",
         status: 500,
@@ -352,6 +357,7 @@ describe("DatabaseLogger", () => {
 
     test("should handle exception with null stack trace", () => {
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error without stack",
         name: "NoStackError",
         status: 500,
@@ -367,6 +373,7 @@ describe("DatabaseLogger", () => {
 
     test("should use exception status over data status", () => {
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Error with status",
         name: "StatusError",
         status: 503,
@@ -518,6 +525,7 @@ describe("DatabaseLogger", () => {
 
     test("should handle exception from middleware", () => {
       const mockException: IException = {
+        key: crypto.randomUUID(),
         message: "Unauthorized access attempt",
         name: "AuthorizationException",
         status: 403,

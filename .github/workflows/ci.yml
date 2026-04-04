@@ -7,7 +7,8 @@ on:
   pull_request:
   schedule:
     - cron: "0 2 * * 1" # Run Renovate every Monday at 2am UTC
-  workflow_dispatch: # Allow manual triggering of Renovate
+  workflow_dispatch:
+    # Allow manual triggering of Renovate
 
 permissions:
   actions: read

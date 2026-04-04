@@ -1,48 +1,39 @@
 import type { TimeZoneType } from "@ooneex/country";
-import { CronJob } from "cron";
 import { CronException } from "./CronException";
 import { convertToCrontab } from "./helper";
 import type { CronTimeType, ICron } from "./types";
 
+interface BunCronJob {
+  readonly cron: string;
+  stop(): BunCronJob;
+  ref(): BunCronJob;
+  unref(): BunCronJob;
+}
+
+declare namespace Bun {
+  function cron(schedule: string, handler: () => unknown): BunCronJob;
+}
+
 export abstract class Cron implements ICron {
-  private cronJob: CronJob | null = null;
+  private cronJob: BunCronJob | null = null;
+  private active = false;
 
   public abstract getTime(): CronTimeType;
   public abstract handler(): Promise<void>;
   public abstract getTimeZone(): TimeZoneType | null;
 
   public async start(): Promise<void> {
-    if (this.isActive()) {
-      return;
-    }
-
-    if (this.cronJob) {
-      this.cronJob.start();
+    if (this.active) {
       return;
     }
 
     const cronExpression = convertToCrontab(this.getTime());
 
     try {
-      const cronParams: {
-        cronTime: string;
-        onTick: () => Promise<void>;
-        start: boolean;
-        timeZone?: string;
-      } = {
-        cronTime: cronExpression,
-        onTick: async () => {
-          await this.handler();
-        },
-        start: true,
-      };
-
-      const timeZone = this.getTimeZone();
-      if (timeZone !== null) {
-        cronParams.timeZone = timeZone;
-      }
-
-      this.cronJob = CronJob.from(cronParams);
+      this.cronJob = Bun.cron(cronExpression, async () => {
+        await this.handler();
+      });
+      this.active = true;
     } catch (error) {
       throw new CronException("Failed to start cron job", "START_FAILED", {
         time: this.getTime(),
@@ -55,14 +46,12 @@ export abstract class Cron implements ICron {
   public async stop(): Promise<void> {
     if (this.cronJob) {
       this.cronJob.stop();
+      this.cronJob = null;
     }
+    this.active = false;
   }
 
   public isActive(): boolean {
-    if (!this.cronJob) {
-      return false;
-    }
-
-    return this.cronJob.isActive;
+    return this.active;
   }
 }

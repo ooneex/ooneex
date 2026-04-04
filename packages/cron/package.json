@@ -30,8 +30,7 @@
   "dependencies": {
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "cron": "^4.4.0"
+    "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {
     "@ooneex/country": "workspace:*"

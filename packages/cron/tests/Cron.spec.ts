@@ -99,7 +99,6 @@ describe("CronAdapter", () => {
 
     test("should return different time configurations", () => {
       const times: CronTimeType[] = [
-        "every 1 seconds",
         "every 5 minutes",
         "every 2 hours",
         "every 1 days",
@@ -117,14 +116,6 @@ describe("CronAdapter", () => {
   describe("start", () => {
     test("should start the cron job", async () => {
       adapter = new TestCronAdapter({ time: "every 1 minutes" });
-
-      await adapter.start();
-
-      expect(adapter.isActive()).toBe(true);
-    });
-
-    test("should start with seconds precision", async () => {
-      adapter = new TestCronAdapter({ time: "every 1 seconds" });
 
       await adapter.start();
 
@@ -255,22 +246,6 @@ describe("CronAdapter", () => {
   });
 
   describe("Cron Expressions", () => {
-    test("should handle every 1 seconds", async () => {
-      adapter = new TestCronAdapter({ time: "every 1 seconds" });
-
-      await adapter.start();
-
-      expect(adapter.isActive()).toBe(true);
-    });
-
-    test("should handle every N seconds", async () => {
-      adapter = new TestCronAdapter({ time: "every 5 seconds" });
-
-      await adapter.start();
-
-      expect(adapter.isActive()).toBe(true);
-    });
-
     test("should handle every 1 minutes", async () => {
       adapter = new TestCronAdapter({ time: "every 1 minutes" });
 

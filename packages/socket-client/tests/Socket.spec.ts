@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
 import { Environment } from "@ooneex/app-env";
 import type { ResponseDataType } from "@ooneex/http-response";
-import { type RequestDataType, Socket } from "@/";
+import { type RequestDataType, Socket } from "@/index";
 
 // Type-safe interface for testing private members
 interface SocketPrivate {
@@ -257,6 +257,7 @@ describe("Socket", () => {
       socket.onMessage(messageHandler);
 
       const testResponse: ResponseDataType<{ result: string }> = {
+        key: null,
         data: { result: "success" },
         message: "Test message",
         success: true,
@@ -404,6 +405,7 @@ describe("Socket", () => {
       // No handlers set, should not throw
       expect(() => {
         ws.simulateMessage({
+          key: null,
           data: { test: "data" },
           message: null,
           success: true,

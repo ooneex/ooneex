@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/html@1.1.4) - 2026-04-05
+
+### Changed
+
+- Add key parameter to HtmlException constructors in tests — Franck ([b5595b5d](https://github.com/ooneex/ooneex/commit/b5595b5d))
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/html@1.1.3) - 2026-04-01
 
 ### Changed

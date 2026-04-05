@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.1.5) - 2026-04-05
+
+### Changed
+
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.1.4) - 2026-04-01
 
 ### Changed

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.6) - 2026-04-05
+
+### Changed
+
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+- Add key property to mock IException objects in tests — Franck ([487b60f9](https://github.com/ooneex/ooneex/commit/487b60f9))
+- Replace ExceptionLogger with BetterstackExceptionLogger — Franck ([3cf3c94b](https://github.com/ooneex/ooneex/commit/3cf3c94b))
+- Replace LogtailLogger with BetterstackLogger — Franck ([f80d3d03](https://github.com/ooneex/ooneex/commit/f80d3d03))
+
 ## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.5) - 2026-04-02
 
 ### Changed

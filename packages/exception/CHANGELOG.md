@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.2.0) - 2026-04-05
+
+### Added
+
+- Add required key parameter to exception constructors — Franck ([d2d78953](https://github.com/ooneex/ooneex/commit/d2d78953))
+- Add key property to IException interface — Franck ([4a6a0483](https://github.com/ooneex/ooneex/commit/4a6a0483))
+
+### Changed
+
+- Simplify exception key names across all packages — Franck ([a621c033](https://github.com/ooneex/ooneex/commit/a621c033))
+- Fix key assertion in exception tests — Franck ([e1f190dd](https://github.com/ooneex/ooneex/commit/e1f190dd))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.1.3) - 2026-04-01
 
 ### Changed

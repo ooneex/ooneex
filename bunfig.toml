@@ -5,27 +5,3 @@ pathIgnorePatterns = [
   "packages/utils/src/sleep.ts",
   "packages/**/*.js",
 ]
-
-[workspace]
-packages = ["packages/*"]
-
-[install]
-hoistPattern = [
-  "@ooneex/*",
-  "@biomejs/biome",
-  "@nx/js",
-  "@swc-node/register",
-  "@swc/core",
-  "@swc/helpers",
-  "@types/bun",
-  "husky",
-  "nx",
-  "arktype",
-  "typescript",
-  "undici-types",
-]
-external = false
-buildDependencies = [
-  "@swc/core",
-  "nx",
-]

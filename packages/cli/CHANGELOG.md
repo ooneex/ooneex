@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.3) - 2026-04-05
+
+### Changed
+
+- Simplify bunfig.toml template to test config only — Franck ([66b749db](https://github.com/ooneex/ooneex/commit/66b749db))
+- Update postgres image to 18.3-alpine3.23 in docker template — Franck ([86c7fe24](https://github.com/ooneex/ooneex/commit/86c7fe24))
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+- Use UpstashRedisRateLimiter in app template — Franck ([2ad5cfa7](https://github.com/ooneex/ooneex/commit/2ad5cfa7))
+- Add Upstash Redis rate limit env vars to app template — Franck ([ac13f6e4](https://github.com/ooneex/ooneex/commit/ac13f6e4))
+- Use UpstashRedisCache in app template — Franck ([c40eb596](https://github.com/ooneex/ooneex/commit/c40eb596))
+- Update env template with ANALYTICS_POSTHOG_PROJECT_TOKEN — Franck ([8a0532c5](https://github.com/ooneex/ooneex/commit/8a0532c5))
+- Update templates to use BetterstackExceptionLogger — Franck ([d5dfa6ae](https://github.com/ooneex/ooneex/commit/d5dfa6ae))
+- Update env template vars and default confirm for release push — Franck ([48c367ff](https://github.com/ooneex/ooneex/commit/48c367ff))
+
 ## [1.11.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.2) - 2026-04-01
 
 ### Changed

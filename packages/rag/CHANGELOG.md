@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.5) - 2026-04-05
+
+### Changed
+
+- Simplify exception key names across all packages — Franck ([a621c033](https://github.com/ooneex/ooneex/commit/a621c033))
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.4) - 2026-04-01
 
 ### Changed

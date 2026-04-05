@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.7) - 2026-04-05
+
+### Changed
+
+- Use nanoid for GroqAi request id fallback — Franck ([998aa916](https://github.com/ooneex/ooneex/commit/998aa916))
+- Simplify exception key names across all packages — Franck ([a621c033](https://github.com/ooneex/ooneex/commit/a621c033))
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.6) - 2026-04-01
 
 ### Changed

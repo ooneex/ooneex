@@ -14,6 +14,6 @@ describe("bunfig.toml.txt", () => {
   test("should contain bun configuration", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("[test]");
-    expect(content).toContain("[workspace]");
+    expect(content).not.toContain("[workspace]");
   });
 });

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.21](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.21) - 2026-04-05
+
+### Changed
+
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.1.20](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.20) - 2026-04-01
 
 ### Changed

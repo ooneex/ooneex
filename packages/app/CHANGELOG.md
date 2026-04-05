@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.4.0) - 2026-04-05
+
+### Added
+
+- Propagate exception key through route error handling — Franck ([e4658ea5](https://github.com/ooneex/ooneex/commit/e4658ea5))
+
+### Changed
+
+- Update postgres image to 18.3-alpine3.23 in docker template — Franck ([86c7fe24](https://github.com/ooneex/ooneex/commit/86c7fe24))
+- Rename PostHog API key env var in example and docs — Franck ([8923b79a](https://github.com/ooneex/ooneex/commit/8923b79a))
+
 ## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.3.8) - 2026-04-02
 
 ### Fixed

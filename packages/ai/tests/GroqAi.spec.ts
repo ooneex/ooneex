@@ -14,6 +14,10 @@ mock.module("@tanstack/ai-groq", () => ({
   createGroqText: mock(() => ({ type: "groq-adapter" })),
 }));
 
+mock.module("@ooneex/utils", () => ({
+  random: { nanoid: () => "mock-nanoid" },
+}));
+
 const mockFetch = mock(
   // biome-ignore lint/suspicious/noExplicitAny: Mock requires flexible typing
   (): any =>
@@ -678,6 +682,21 @@ describe("GroqAi", () => {
         expect(error).toBeInstanceOf(AiException);
         expect((error as AiException).message).toContain("Groq TTS request failed (401)");
       }
+    });
+
+    test("should use nanoid as fallback when x-request-id header is missing", async () => {
+      mockFetch.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          headers: new Headers(),
+          arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+          text: () => Promise.resolve(""),
+        }),
+      );
+
+      const result = await ai.textToSpeech("Hello");
+
+      expect(result.id).toBe("mock-nanoid");
     });
 
     test("should use API key from options", async () => {

@@ -1,5 +1,6 @@
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
+import { random } from "@ooneex/utils";
 import type { TTSResult } from "@tanstack/ai";
 import { createGroqText } from "@tanstack/ai-groq";
 import { AiException } from "./AiException";
@@ -72,7 +73,7 @@ export class GroqAi extends BaseAi<GroqConfigType> {
     const audio = Buffer.from(arrayBuffer).toString("base64");
 
     return {
-      id: response.headers.get("x-request-id") ?? crypto.randomUUID(),
+      id: response.headers.get("x-request-id") ?? random.nanoid(),
       model,
       audio,
       format,

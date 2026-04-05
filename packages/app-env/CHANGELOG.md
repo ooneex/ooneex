@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.3.0) - 2026-04-05
+
+### Added
+
+- Add Upstash Redis rate limit env vars — Franck ([3c6838c1](https://github.com/ooneex/ooneex/commit/3c6838c1))
+- Add Upstash Redis cache env vars — Franck ([03359ae2](https://github.com/ooneex/ooneex/commit/03359ae2))
+
+### Changed
+
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+- Rename ANALYTICS_POSTHOG_API_KEY to PROJECT_TOKEN — Franck ([439b5170](https://github.com/ooneex/ooneex/commit/439b5170))
+- Rename Betterstack env vars to exception logger prefix — Franck ([61bed44f](https://github.com/ooneex/ooneex/commit/61bed44f))
+- Rename Logtail env vars to Betterstack Logger — Franck ([41f35911](https://github.com/ooneex/ooneex/commit/41f35911))
+
 ## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.2.1) - 2026-04-01
 
 ### Changed

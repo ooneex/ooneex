@@ -27,7 +27,7 @@ describe("docker-compose.yml.txt", () => {
   test("should contain postgres service", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("postgres:");
-    expect(content).toContain("image: postgres:17-alpine");
+    expect(content).toContain("image: postgres:18.3-alpine3.23");
     expect(content).toContain("container_name: {{NAME}}_db");
     expect(content).toContain("POSTGRES_DATABASE=ooneex");
     expect(content).toContain("POSTGRES_USER=ooneex");

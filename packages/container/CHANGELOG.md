@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.2) - 2026-04-05
+
+### Changed
+
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+
 ## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.1) - 2026-04-02
 
 ### Removed

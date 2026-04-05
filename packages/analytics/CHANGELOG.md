@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.6) - 2026-04-05
+
+### Changed
+
+- Simplify exception key names across all packages — Franck ([a621c033](https://github.com/ooneex/ooneex/commit/a621c033))
+- Add exception key parameter across all packages — Franck ([b7c45c0c](https://github.com/ooneex/ooneex/commit/b7c45c0c))
+- Remove unnecessary trim calls on env vars — Franck ([6c9d467f](https://github.com/ooneex/ooneex/commit/6c9d467f))
+- Use ANALYTICS_POSTHOG_PROJECT_TOKEN env var — Franck ([17f4176d](https://github.com/ooneex/ooneex/commit/17f4176d))
+
 ## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.5) - 2026-04-02
 
 ### Changed

@@ -95,9 +95,7 @@ describe("UpstashRedisRateLimiter", () => {
       const originalUrl = Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL;
       delete Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL;
 
-      expect(() => new UpstashRedisRateLimiter(createMockEnv(), { token: "test-token" })).toThrow(
-        RateLimitException,
-      );
+      expect(() => new UpstashRedisRateLimiter(createMockEnv(), { token: "test-token" })).toThrow(RateLimitException);
       expect(() => new UpstashRedisRateLimiter(createMockEnv(), { token: "test-token" })).toThrow(
         "Upstash Redis URL and token are required",
       );
@@ -375,11 +373,7 @@ describe("UpstashRedisRateLimiter", () => {
         };
       });
 
-      const results = await Promise.all([
-        limiter.check(testKey),
-        limiter.check(testKey),
-        limiter.check(testKey),
-      ]);
+      const results = await Promise.all([limiter.check(testKey), limiter.check(testKey), limiter.check(testKey)]);
 
       expect(results.every((r) => r.limited === false)).toBe(true);
       expect(mockRatelimitInstance.limit).toHaveBeenCalledTimes(3);

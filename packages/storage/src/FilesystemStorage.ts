@@ -126,7 +126,10 @@ export class FilesystemStorage extends Storage {
       await rm(bucketPath, { recursive: true });
       await mkdir(bucketPath, { recursive: true });
     } catch (error) {
-      throw new StorageException(`Failed to clear bucket: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_CLEAR_FAILED");
+      throw new StorageException(
+        `Failed to clear bucket: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_CLEAR_FAILED",
+      );
     }
 
     return this;

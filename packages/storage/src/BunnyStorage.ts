@@ -68,9 +68,13 @@ export class BunnyStorage implements IStorage {
 
       return files.filter((file) => !file.isDirectory).map((file) => file.objectName);
     } catch (error) {
-      throw new StorageException(`Failed to list files: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_LIST_FAILED", {
-        path,
-      });
+      throw new StorageException(
+        `Failed to list files: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_LIST_FAILED",
+        {
+          path,
+        },
+      );
     }
   }
 
@@ -150,9 +154,13 @@ export class BunnyStorage implements IStorage {
         stream as unknown as NodeReadableStream<Uint8Array>,
       );
     } catch (error) {
-      throw new StorageException(`Failed to upload file: ${error instanceof Error ? error.message : String(error)}`, "STORAGE_UPLOAD_FAILED", {
-        key,
-      });
+      throw new StorageException(
+        `Failed to upload file: ${error instanceof Error ? error.message : String(error)}`,
+        "STORAGE_UPLOAD_FAILED",
+        {
+          key,
+        },
+      );
     }
 
     return length;

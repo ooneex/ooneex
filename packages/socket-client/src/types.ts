@@ -4,7 +4,7 @@ import type { LocaleInfoType } from "@ooneex/translation";
 export type RequestDataType = {
   payload?: Record<string, unknown>;
   queries?: Record<string, boolean | number | bigint | string>;
-  language?: LocaleInfoType;
+  lang?: LocaleInfoType;
 };
 
 export interface ISocket<

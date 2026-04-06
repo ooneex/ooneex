@@ -20,7 +20,10 @@ export class ResendMailer implements IMailer {
     };
 
     if (!this.apiKey) {
-      throw new MailerException("Resend API key is required. Please set the RESEND_API_KEY environment variable.", "API_KEY_REQUIRED");
+      throw new MailerException(
+        "Resend API key is required. Please set the RESEND_API_KEY environment variable.",
+        "API_KEY_REQUIRED",
+      );
     }
   }
 

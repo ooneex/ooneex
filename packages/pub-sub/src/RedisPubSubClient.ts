@@ -60,10 +60,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
       const message = JSON.stringify(config.data);
       await this.client.publish(config.channel, message);
     } catch (error) {
-      throw new PubSubException(
-        `Failed to publish message to channel "${config.channel}": ${error}`,
-        "PUBLISH_FAILED",
-      );
+      throw new PubSubException(`Failed to publish message to channel "${config.channel}": ${error}`, "PUBLISH_FAILED");
     } finally {
       this.client.close();
     }
@@ -89,10 +86,7 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
 
       await this.subscriber.unsubscribe(channel);
     } catch (error) {
-      throw new PubSubException(
-        `Failed to unsubscribe from channel "${channel}": ${error}`,
-        "UNSUBSCRIBE_FAILED",
-      );
+      throw new PubSubException(`Failed to unsubscribe from channel "${channel}": ${error}`, "UNSUBSCRIBE_FAILED");
     }
   }
 

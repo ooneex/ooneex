@@ -164,7 +164,7 @@ export const buildHttpContext = async (ctx: {
     files: request.files,
     ip: request.ip,
     host: request.host,
-    language: request.language,
+    lang: request.lang,
     user: null,
   };
 

@@ -31,8 +31,7 @@
     "@ooneex/app-env": "workspace:*",
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@upstash/redis": "^1.37.0"
+    "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {},
   "keywords": [

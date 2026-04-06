@@ -161,13 +161,13 @@ export const socketRouteHandler = async ({
   const allowedUsersError = checkAllowedUsers(context);
   if (allowedUsersError) {
     logSocketRequest(context, allowedUsersError.status, route.path);
-    return sendException(context, allowedUsersError.message, allowedUsersError.status);
+    return sendException(context, allowedUsersError.message, allowedUsersError.status, allowedUsersError.key);
   }
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
     logSocketRequest(context, validationError.status, route.path);
-    return sendException(context, validationError.message, validationError.status);
+    return sendException(context, validationError.message, validationError.status, validationError.key);
   }
 
   if (route.permission) {
@@ -190,7 +190,7 @@ export const socketRouteHandler = async ({
   const responseValidationError = validateResponse(route, context.response.getData());
   if (responseValidationError) {
     logSocketRequest(context, responseValidationError.status, route.path);
-    return sendException(context, responseValidationError.message, responseValidationError.status);
+    return sendException(context, responseValidationError.message, responseValidationError.status, responseValidationError.key);
   }
 
   logSocketRequest(context, HttpStatus.Code.OK, route.path);

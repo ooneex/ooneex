@@ -187,6 +187,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.BadRequest);
         expect(result?.message).toContain('Invalid parameter "id"');
+        expect(result?.key).toBe("INVALID_PARAMETER");
       });
     });
 
@@ -213,6 +214,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.BadRequest);
         expect(result?.message).toContain("Invalid query parameters");
+        expect(result?.key).toBe("INVALID_QUERY");
       });
     });
 
@@ -239,6 +241,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.BadRequest);
         expect(result?.message).toContain("Invalid payload");
+        expect(result?.key).toBe("INVALID_PAYLOAD");
       });
     });
 
@@ -266,6 +269,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
         expect(result?.message).toContain('Route "api.test.list" is not available in "development" environment');
+        expect(result?.key).toBe("ROUTE_ENV_NOT_ALLOWED");
       });
 
       test("returns null when env array is empty", async () => {
@@ -302,6 +306,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
         expect(result?.message).toContain('Route "api.test.list" is not available for IP "192.168.1.100"');
+        expect(result?.key).toBe("ROUTE_IP_NOT_ALLOWED");
       });
 
       test("returns error when context IP is null", async () => {
@@ -315,6 +320,7 @@ describe("httpRouteUtils", () => {
 
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
+        expect(result?.key).toBe("ROUTE_IP_NOT_ALLOWED");
       });
 
       test("returns null when IP array is empty", async () => {
@@ -351,6 +357,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
         expect(result?.message).toContain('Route "api.test.list" is not available for host "evil.com"');
+        expect(result?.key).toBe("ROUTE_HOST_NOT_ALLOWED");
       });
 
       test("returns null when host array is empty", async () => {
@@ -376,6 +383,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.Forbidden);
         expect(result?.message).toContain('Route "api.test.list" requires authentication');
+        expect(result?.key).toBe("AUTHENTICATION_REQUIRED");
       });
 
       test("returns error when user has no roles", async () => {
@@ -392,6 +400,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.Forbidden);
         expect(result?.message).toContain('Route "api.test.list" requires authentication');
+        expect(result?.key).toBe("AUTHENTICATION_REQUIRED");
       });
 
       test("returns null when user has required role", async () => {
@@ -421,6 +430,7 @@ describe("httpRouteUtils", () => {
         expect(result).not.toBeNull();
         expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
         expect(result?.message).toContain('Route "api.test.list" is not accessible for user roles');
+        expect(result?.key).toBe("ROLE_NOT_ALLOWED");
       });
 
       test("returns null when roles array is empty", async () => {
@@ -463,6 +473,7 @@ describe("httpRouteUtils", () => {
       expect(result).not.toBeNull();
       expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
       expect(result?.message).toContain("Invalid response");
+      expect(result?.key).toBe("INVALID_RESPONSE");
     });
 
     test("returns error for missing required fields", () => {
@@ -474,6 +485,7 @@ describe("httpRouteUtils", () => {
 
       expect(result).not.toBeNull();
       expect(result?.status).toBe(HttpStatus.Code.NotAcceptable);
+      expect(result?.key).toBe("INVALID_RESPONSE");
     });
 
     test("works with IAssert constraint", () => {
@@ -503,6 +515,7 @@ describe("httpRouteUtils", () => {
 
       expect(result).not.toBeNull();
       expect(result?.message).toContain("Response validation failed");
+      expect(result?.key).toBe("INVALID_RESPONSE");
     });
   });
 
@@ -626,6 +639,7 @@ describe("httpRouteUtils", () => {
       expect(response.status).toBe(HttpStatus.Code.InternalServerError);
       const body = await response.json();
       expect(body.message).toBe("Unexpected error");
+      expect(body.key).toBe("INTERNAL_ERROR");
     });
 
     test("returns InternalServerError when controller throws unknown error", async () => {
@@ -646,6 +660,7 @@ describe("httpRouteUtils", () => {
       expect(response.status).toBe(HttpStatus.Code.InternalServerError);
       const body = await response.json();
       expect(body.message).toBe("An unknown error occurred");
+      expect(body.key).toBe("UNKNOWN_ERROR");
     });
 
     test("returns error when response validation fails", async () => {
@@ -667,6 +682,7 @@ describe("httpRouteUtils", () => {
       expect(response.status).toBe(HttpStatus.Code.NotAcceptable);
       const body = await response.json();
       expect(body.message).toContain("Invalid response");
+      expect(body.key).toBe("INVALID_RESPONSE");
     });
 
     test("uses PRODUCTION environment as default when APP_ENV is undefined", async () => {
@@ -782,6 +798,7 @@ describe("httpRouteUtils", () => {
       expect(result?.status).toBe(HttpStatus.Code.Forbidden);
       expect(result?.message).toContain("notallowed@test.com");
       expect(result?.message).toContain("staging");
+      expect(result?.key).toBe("USER_NOT_ALLOWED");
     });
 
     test("returns null when user is in allowed users list", () => {
@@ -839,6 +856,7 @@ describe("httpRouteUtils", () => {
 
       expect(result).not.toBeNull();
       expect(result?.status).toBe(HttpStatus.Code.Forbidden);
+      expect(result?.key).toBe("USER_NOT_ALLOWED");
     });
 
     test("adds SYSTEM role when user is in SYSTEM_USERS", () => {

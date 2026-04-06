@@ -385,11 +385,7 @@ describe("RedisRateLimiter", () => {
       mockRedisClient.incr.mockImplementation(async () => ++counter);
       mockRedisClient.ttl.mockResolvedValue(60);
 
-      const results = await Promise.all([
-        limiter.check(testKey),
-        limiter.check(testKey),
-        limiter.check(testKey),
-      ]);
+      const results = await Promise.all([limiter.check(testKey), limiter.check(testKey), limiter.check(testKey)]);
 
       expect(results.every((r) => r.limited === false)).toBe(true);
       expect(mockRedisClient.incr).toHaveBeenCalledTimes(3);

@@ -84,7 +84,13 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    const { cwd = process.cwd(), silent = false, skipMigrations = false, skipSeeds = false, skipCommands = false } = options;
+    const {
+      cwd = process.cwd(),
+      silent = false,
+      skipMigrations = false,
+      skipSeeds = false,
+      skipCommands = false,
+    } = options;
     let { name } = options;
 
     if (!name) {

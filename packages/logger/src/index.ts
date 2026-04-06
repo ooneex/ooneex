@@ -1,7 +1,10 @@
+export {
+  BetterstackExceptionLogger,
+  BetterstackExceptionLogger as ExceptionLogger,
+} from "./BetterstackExceptionLogger";
 export { BetterstackLogger as LogtailLogger } from "./BetterstackLogger";
 export { DatabaseLogger } from "./DatabaseLogger";
 export { decorator } from "./decorators";
-export { BetterstackExceptionLogger, BetterstackExceptionLogger as ExceptionLogger } from "./BetterstackExceptionLogger";
 export { LoggerException } from "./LoggerException";
 export { LogsDatabase } from "./LogsDatabase";
 export { LogsEntity } from "./LogsEntity";

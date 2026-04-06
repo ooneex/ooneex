@@ -245,9 +245,7 @@ describe("BetterstackExceptionLogger", () => {
       } as unknown as IException;
 
       logger.error(mockException);
-      expect(mockAddBreadcrumb).toHaveBeenCalledWith(
-        expect.objectContaining({ message: "Unknown error" }),
-      );
+      expect(mockAddBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({ message: "Unknown error" }));
     });
 
     test("should set extras for exception with data", () => {

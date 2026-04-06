@@ -54,7 +54,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
   files: Record<string, IRequestFile>;
   ip: string | null;
   host: string;
-  language: LocaleInfoType;
+  lang: LocaleInfoType;
   user: IUser | null;
   permission?: IPermission;
 };

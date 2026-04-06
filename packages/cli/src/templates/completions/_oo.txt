@@ -17,6 +17,7 @@ _oo() {
     'make\:app:Generate a new application'
     'make\:cache:Generate a new cache class'
     'make\:claude\:skill:Generate Claude skills from templates'
+    'make\:command:Generate a new command class'
     'make\:controller:Generate a new controller class'
     'make\:cron:Generate a new cron class'
     'make\:database:Generate a new database class'
@@ -112,7 +113,7 @@ _oo() {
             '--name=[Name of the resource]:name' \
             '--destination=[Destination path]:destination:_files -/'
           ;;
-        make:ai|make:analytics|make:cache|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
+        make:ai|make:analytics|make:cache|make:command|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
           _arguments -s \
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_oo_modules'

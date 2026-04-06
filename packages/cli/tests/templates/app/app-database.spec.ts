@@ -65,6 +65,7 @@ describe("app-database.txt", () => {
     const content = await file.text();
     expect(content).toContain("throw new DatabaseException");
     expect(content).toContain("DATABASE_URL");
+    expect(content).toContain('"CONNECTION_FAILED"');
   });
 
   test("should import AppModule", async () => {

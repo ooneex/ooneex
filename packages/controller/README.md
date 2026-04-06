@@ -118,7 +118,7 @@ class ProductCreateController implements IController {
       files,        // Uploaded files
       ip,           // Client IP address
       host,         // Request host
-      language,     // Detected language
+      lang,         // Detected language
       user,         // Authenticated user (if any)
       app           // Application environment
     } = context;
@@ -208,7 +208,7 @@ type ContextType<T extends ContextConfigType = ContextConfigType> = {
   files: Record<string, IRequestFile>;
   ip: string | null;
   host: string;
-  language: LocaleInfoType;
+  lang: LocaleInfoType;
   user: IUser | null;
 };
 ```
@@ -319,14 +319,14 @@ class GreetingController implements IController {
   };
 
   public async index(context: ContextType): Promise<IResponse> {
-    const { language } = context;
+    const { lang } = context;
     
-    const greeting = this.greetings[language.code] || this.greetings.en;
+    const greeting = this.greetings[lang.code] || this.greetings.en;
     
     return context.response.json({
       greeting,
-      language: language.code,
-      region: language.region
+      language: lang.code,
+      region: lang.region
     });
   }
 }

@@ -57,7 +57,7 @@ const createMockSocketContext = (overrides: Record<string, unknown> = {}): Conte
     files: {},
     ip: "127.0.0.1",
     host: "localhost",
-    language: {} as ContextType["language"],
+    lang: {} as ContextType["lang"],
     user: null,
     channel: {
       send: mock(() => Promise.resolve()),
@@ -177,7 +177,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: { test: "data" },
         queries: { page: "1" },
-        language: { locale: "en" },
+        lang: { locale: "en" },
       });
 
       await socketRouteHandler({
@@ -210,7 +210,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -246,7 +246,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -278,7 +278,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -315,7 +315,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -352,7 +352,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -389,7 +389,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -430,7 +430,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: { userId: 123, action: "test" },
         queries: { page: "2", limit: "10" },
-        language: { locale: "fr", region: "FR" },
+        lang: { locale: "fr", region: "FR" },
       });
 
       await socketRouteHandler({
@@ -443,8 +443,8 @@ describe("socketRouteUtils", () => {
       const ctx = capturedContext as unknown as ContextType;
       expect(ctx.payload).toEqual({ userId: 123, action: "test" });
       expect(ctx.queries).toEqual({ page: "2", limit: "10" } as unknown as ContextType["queries"]);
-      expect((ctx.language as Record<string, unknown>).locale).toBe("fr");
-      expect((ctx.language as Record<string, unknown>).region).toBe("FR");
+      expect((ctx.lang as Record<string, unknown>).locale).toBe("fr");
+      expect((ctx.lang as Record<string, unknown>).region).toBe("FR");
     });
 
     test("uses PRODUCTION environment as default when app.env.env is undefined", async () => {
@@ -472,7 +472,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -528,7 +528,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -587,7 +587,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -625,7 +625,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -679,7 +679,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -724,7 +724,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -768,7 +768,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -811,7 +811,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -854,7 +854,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -897,7 +897,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -938,7 +938,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -979,7 +979,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({
@@ -1022,7 +1022,7 @@ describe("socketRouteUtils", () => {
       const message = JSON.stringify({
         payload: {},
         queries: {},
-        language: {},
+        lang: {},
       });
 
       await socketRouteHandler({

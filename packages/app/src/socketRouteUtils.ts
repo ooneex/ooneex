@@ -146,7 +146,7 @@ export const socketRouteHandler = async ({
   const requestData = JSON.parse(message) as RequestDataType;
   context.queries = requestData.queries as Record<string, ScalarType>;
   context.payload = requestData.payload as Record<string, ScalarType>;
-  context.language = requestData.language as LocaleInfoType;
+  context.lang = requestData.lang as LocaleInfoType;
 
   try {
     context = await runMiddlewares(context, middlewares);
@@ -190,7 +190,12 @@ export const socketRouteHandler = async ({
   const responseValidationError = validateResponse(route, context.response.getData());
   if (responseValidationError) {
     logSocketRequest(context, responseValidationError.status, route.path);
-    return sendException(context, responseValidationError.message, responseValidationError.status, responseValidationError.key);
+    return sendException(
+      context,
+      responseValidationError.message,
+      responseValidationError.status,
+      responseValidationError.key,
+    );
   }
 
   logSocketRequest(context, HttpStatus.Code.OK, route.path);

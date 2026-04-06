@@ -21,6 +21,43 @@ export interface IBase {
   language?: LocaleType;
 }
 
+export type StatusType =
+  | "draft"
+  | "pending"
+  | "submitted"
+  | "in review"
+  | "reviewed"
+  | "processing"
+  | "processed"
+  | "queued"
+  | "ready"
+  | "scheduled"
+  | "approved"
+  | "rejected"
+  | "done"
+  | "completed"
+  | "success"
+  | "failed"
+  | "error"
+  | "cancelled"
+  | "timeout"
+  | "archived"
+  | "delete"
+  | "deleted"
+  | "active"
+  | "inactive"
+  | "disabled"
+  | "enabled"
+  | "suspended"
+  | "paused"
+  | "on hold"
+  | "sent"
+  | "delivered"
+  | "read"
+  | "valid"
+  | "invalid"
+  | "expired";
+
 export type FilterResultType<T> = {
   resources: T[];
   total: number;

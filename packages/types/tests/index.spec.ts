@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { type FilterResultType, HTTP_METHODS, type IBase } from "../src/index";
+import { type FilterResultType, HTTP_METHODS, type IBase, type StatusType } from "../src/index";
 
 describe("@ooneex/types - HTTP_METHODS", () => {
   test("should expose standard HTTP methods", () => {
@@ -49,6 +49,60 @@ describe("@ooneex/types - IBase", () => {
     expect(base.updatedAt).toBe(now);
     expect(base.isBlocked).toBe(true);
     expect(base.blockReason).toBe("violation");
+  });
+});
+
+describe("@ooneex/types - StatusType", () => {
+  test("should accept all valid status values", () => {
+    const statuses: StatusType[] = [
+      "draft",
+      "pending",
+      "submitted",
+      "in review",
+      "reviewed",
+      "processing",
+      "processed",
+      "queued",
+      "ready",
+      "scheduled",
+      "approved",
+      "rejected",
+      "done",
+      "completed",
+      "success",
+      "failed",
+      "error",
+      "cancelled",
+      "timeout",
+      "archived",
+      "delete",
+      "deleted",
+      "active",
+      "inactive",
+      "disabled",
+      "enabled",
+      "suspended",
+      "paused",
+      "on hold",
+      "sent",
+      "delivered",
+      "read",
+      "valid",
+      "invalid",
+      "expired",
+    ];
+
+    expect(statuses).toHaveLength(35);
+
+    for (const status of statuses) {
+      expect(typeof status).toBe("string");
+      expect(status.length).toBeGreaterThan(0);
+    }
+  });
+
+  test("should work as a type for variables", () => {
+    const status: StatusType = "active";
+    expect(status).toBe("active");
   });
 });
 

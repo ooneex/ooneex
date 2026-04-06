@@ -23,7 +23,11 @@ export class Router implements IRouter {
     }
 
     if (!route.isSocket && routes.find((r) => !r.isSocket && r.method === route.method)) {
-      throw new RouterException(`Route with path '${route.path}' and method '${route.method}' already exists`, "ROUTE_PATH_EXISTS", route);
+      throw new RouterException(
+        `Route with path '${route.path}' and method '${route.method}' already exists`,
+        "ROUTE_PATH_EXISTS",
+        route,
+      );
     }
 
     routes.push(route);
@@ -94,13 +98,19 @@ export class Router implements IRouter {
 
     if (paramMatches.length > 0) {
       if (!params || typeof params !== "object" || params === null) {
-        throw new RouterException(`Route '${name}' requires parameters, but none were provided`, "ROUTE_PARAMS_REQUIRED");
+        throw new RouterException(
+          `Route '${name}' requires parameters, but none were provided`,
+          "ROUTE_PARAMS_REQUIRED",
+        );
       }
 
       for (const match of paramMatches) {
         const paramName = match.substring(1);
         if (!(paramName in params)) {
-          throw new RouterException(`Missing required parameter '${paramName}' for route '${name}'`, "ROUTE_PARAM_MISSING");
+          throw new RouterException(
+            `Missing required parameter '${paramName}' for route '${name}'`,
+            "ROUTE_PARAM_MISSING",
+          );
         }
 
         path = path.replace(match, String(params[paramName]));

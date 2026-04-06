@@ -121,6 +121,12 @@ describe("env.txt", () => {
     expect(content).toContain("OLLAMA_HOST=");
   });
 
+  test("should contain YouTube section", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("# YouTube");
+    expect(content).toContain("YOUTUBE_TRANSCRIPT_API_KEY=");
+  });
+
   test("should contain Payment section", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Payment");

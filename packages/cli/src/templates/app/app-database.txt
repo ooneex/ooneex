@@ -16,6 +16,7 @@ export class AppDatabase extends TypeormDatabase {
     if (!url) {
       throw new DatabaseException(
         "Database URL is required. Please set the DATABASE_URL environment variable.",
+        "CONNECTION_FAILED",
       );
     }
 

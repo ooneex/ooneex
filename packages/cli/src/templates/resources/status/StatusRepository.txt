@@ -22,11 +22,11 @@ export class StatusRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<StatusEntity> & { page?: number; limit?: number; q?: string },
+    criteria: FindManyOptions<StatusEntity> & { page?: number; limit?: number; order?: "ASC" | "DESC"; orderBy?: string; q?: string },
   ): Promise<FilterResultType<StatusEntity>> {
     const repository = await this.open();
 
-    const { page = 1, limit = 100, q, ...rest } = criteria;
+    const { page = 1, limit = 100, order, orderBy, q, ...rest } = criteria;
 
     let skip: number | undefined;
     const take = limit === 0 ? 100 : limit;
@@ -35,7 +35,12 @@ export class StatusRepository {
       skip = (page - 1) * take;
     }
 
-    let findOptions = { ...rest, take, ...(skip !== undefined && { skip }) };
+    let findOptions = {
+      ...rest,
+      take,
+      ...(skip !== undefined && { skip }),
+      ...(orderBy && { order: { [orderBy]: order ?? "ASC" } }),
+    };
     if (q) {
       findOptions = {
         ...findOptions,

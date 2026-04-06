@@ -19,7 +19,7 @@
 
 # Review
 - id: 98a5fee7f4b0937099fa
-  name: inReview
+  name: in review
   color: "#8B5CF6"
   description: Currently under review and awaiting feedback
   lang: en
@@ -175,7 +175,7 @@
   lang: en
 
 - id: 13a82a3024635d53365a
-  name: onHold
+  name: on hold
   color: "#F97316"
   description: Temporarily paused, waiting for external input
   lang: en

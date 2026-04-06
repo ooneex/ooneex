@@ -42,8 +42,8 @@ export class Youtube implements IYoutube {
     const data = await response.json();
 
     return {
-      videoId: data.video_id,
-      language: data.language,
+      id: data.video_id,
+      lang: data.language,
       transcript: data.transcript,
       metadata: {
         title: data.metadata.title,

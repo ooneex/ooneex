@@ -44,8 +44,8 @@ export type YoutubeTranscriptMetadataType = {
 };
 
 export type YoutubeTranscriptResponseType = {
-  videoId: string;
-  language: string;
+  id: string;
+  lang: string;
   transcript: YoutubeTranscriptSegmentType[];
   metadata: YoutubeTranscriptMetadataType;
 };

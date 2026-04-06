@@ -155,16 +155,16 @@ describe("HttpRequest Edge Cases", () => {
       } as Request;
 
       const request = new HttpRequest(invalidLangRequest);
-      expect(request.language.code).toBe("invalid-lang-code" as LocaleType); // HttpRequest doesn't validate locale codes
-      expect(request.language.region).toBe(null);
+      expect(request.lang.code).toBe("invalid-lang-code" as LocaleType); // HttpRequest doesn't validate locale codes
+      expect(request.lang.region).toBe(null);
     });
 
     test("should handle language codes with extra segments", () => {
       mockHeaders.set("Accept-Language", "zh-Hans-CN,zh;q=0.9");
 
       const request = new HttpRequest(mockRequest);
-      expect(request.language.code).toBeDefined();
-      expect(request.language.region).toBeDefined();
+      expect(request.lang.code).toBeDefined();
+      expect(request.lang.region).toBeDefined();
     });
 
     test("should handle conflicting language preferences", () => {
@@ -178,7 +178,7 @@ describe("HttpRequest Edge Cases", () => {
 
       const request = new HttpRequest(conflictRequest, {});
       // Should prioritize query param 'lang'
-      expect(request.language.code).toBe("de");
+      expect(request.lang.code).toBe("de");
     });
 
     test("should handle malformed Accept-Language headers", () => {
@@ -447,7 +447,7 @@ describe("HttpRequest Edge Cases", () => {
       expect(request.params).toEqual({});
       expect(request.payload).toEqual({});
       expect(request.files).toEqual({});
-      expect(request.language).toBeDefined();
+      expect(request.lang).toBeDefined();
     });
 
     test("should handle maximum reasonable complexity", () => {

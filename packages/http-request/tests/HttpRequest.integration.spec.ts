@@ -174,7 +174,7 @@ describe("HttpRequest Integration Tests", () => {
       const request = new HttpRequest(mockRequest);
 
       expect(mockParser.parse).toHaveBeenCalledWith("fr-FR,fr;q=0.9");
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "fr",
         region: "FR",
       });
@@ -188,7 +188,7 @@ describe("HttpRequest Integration Tests", () => {
       expect(mockParser.parse).toHaveBeenCalledWith("invalid-format");
       // Should fall back to default when parser returns empty array
       // This is testing edge case behavior where parser returns empty array
-      expect(request.language.region).toBe(null);
+      expect(request.lang.region).toBe(null);
       // Note: code will be undefined but cast as LocaleType in implementation
     });
 
@@ -197,7 +197,7 @@ describe("HttpRequest Integration Tests", () => {
 
       const request = new HttpRequest(mockRequest);
 
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "es",
         region: null,
       });
@@ -207,7 +207,7 @@ describe("HttpRequest Integration Tests", () => {
       const request = new HttpRequest(mockRequest);
 
       expect(mockParser.parse).toHaveBeenCalledWith("en-US");
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "en",
         region: "US",
       });
@@ -355,7 +355,7 @@ describe("HttpRequest Integration Tests", () => {
         } as Request;
 
         const request = new HttpRequest(reqWithLocale);
-        expect(request.language.code).toBe(locale as LocaleType);
+        expect(request.lang.code).toBe(locale as LocaleType);
       });
     });
   });

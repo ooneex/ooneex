@@ -1,6 +1,7 @@
 {
   "name": "ooneex",
   "dependencies": {
+    "@upstash/redis": "^1.37.0",
     "arktype": "^2.1.29",
     "enquirer": "^2.4.1",
     "pluralize": "^8.0.0",

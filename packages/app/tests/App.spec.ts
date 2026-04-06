@@ -371,6 +371,7 @@ describe("App", () => {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).status).toBe(HttpStatus.Code.InternalServerError);
         expect((error as Exception).message).toContain("Invalid APP_ENV");
+        expect((error as Exception).key).toBe("INVALID_APP_ENV");
       }
     });
 
@@ -387,6 +388,7 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).message).toContain("Invalid PORT");
+        expect((error as Exception).key).toBe("INVALID_PORT");
       }
     });
 
@@ -403,6 +405,7 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).message).toContain("Invalid PORT");
+        expect((error as Exception).key).toBe("INVALID_PORT");
       }
     });
 
@@ -420,6 +423,7 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).message).toContain("Invalid HOST_NAME");
+        expect((error as Exception).key).toBe("INVALID_HOST_NAME");
       }
     });
 

@@ -53,6 +53,7 @@ export const checkAllowedUsers = (context: ContextType): RouteValidationError | 
     return {
       message: `User "${context.user.email}" is not allowed in "${context.env.APP_ENV}" environment`,
       status: HttpStatus.Code.Forbidden,
+      key: "USER_NOT_ALLOWED",
     };
   }
 
@@ -186,6 +187,7 @@ export const validateRouteAccess = async (
         return {
           message: `Invalid parameter "${paramName}": ${error}`,
           status: HttpStatus.Code.BadRequest,
+          key: "INVALID_PARAMETER",
         };
       }
     }
@@ -198,6 +200,7 @@ export const validateRouteAccess = async (
       return {
         message: `Invalid query parameters: ${error}`,
         status: HttpStatus.Code.BadRequest,
+        key: "INVALID_QUERY",
       };
     }
   }
@@ -209,6 +212,7 @@ export const validateRouteAccess = async (
       return {
         message: `Invalid payload: ${error}`,
         status: HttpStatus.Code.BadRequest,
+        key: "INVALID_PAYLOAD",
       };
     }
   }
@@ -218,6 +222,7 @@ export const validateRouteAccess = async (
     return {
       message: `Route "${route.name}" is not available in "${currentEnv}" environment`,
       status: HttpStatus.Code.NotAcceptable,
+      key: "ROUTE_ENV_NOT_ALLOWED",
     };
   }
 
@@ -226,6 +231,7 @@ export const validateRouteAccess = async (
     return {
       message: `Route "${route.name}" is not available for IP "${context.ip}"`,
       status: HttpStatus.Code.NotAcceptable,
+      key: "ROUTE_IP_NOT_ALLOWED",
     };
   }
 
@@ -234,6 +240,7 @@ export const validateRouteAccess = async (
     return {
       message: `Route "${route.name}" is not available for host "${context.host}"`,
       status: HttpStatus.Code.NotAcceptable,
+      key: "ROUTE_HOST_NOT_ALLOWED",
     };
   }
 
@@ -243,6 +250,7 @@ export const validateRouteAccess = async (
       return {
         message: `Route "${route.name}" requires authentication`,
         status: HttpStatus.Code.Forbidden,
+        key: "AUTHENTICATION_REQUIRED",
       };
     }
 
@@ -255,6 +263,7 @@ export const validateRouteAccess = async (
       return {
         message: `Route "${route.name}" is not accessible for user roles`,
         status: HttpStatus.Code.NotAcceptable,
+        key: "ROLE_NOT_ALLOWED",
       };
     }
   }
@@ -269,6 +278,7 @@ export const validateResponse = (route: RouteConfigType, data: unknown): RouteVa
       return {
         message: `Invalid response: ${error}`,
         status: HttpStatus.Code.NotAcceptable,
+        key: "INVALID_RESPONSE",
       };
     }
   }
@@ -346,9 +356,12 @@ const executeController = async (
       return [null, { message: error.message, status: error.status as StatusCodeType, key: error.key }];
     }
     if (error instanceof Error) {
-      return [null, { message: error.message, status: HttpStatus.Code.InternalServerError }];
+      return [null, { message: error.message, status: HttpStatus.Code.InternalServerError, key: "INTERNAL_ERROR" }];
     }
-    return [null, { message: "An unknown error occurred", status: HttpStatus.Code.InternalServerError }];
+    return [
+      null,
+      { message: "An unknown error occurred", status: HttpStatus.Code.InternalServerError, key: "UNKNOWN_ERROR" },
+    ];
   }
 };
 
@@ -362,7 +375,13 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
 
   const validationError = await validateRouteAccess(context, route, currentEnv);
   if (validationError) {
-    const httpResponse = buildExceptionResponse(context, validationError.message, validationError.status, currentEnv);
+    const httpResponse = buildExceptionResponse(
+      context,
+      validationError.message,
+      validationError.status,
+      currentEnv,
+      validationError.key,
+    );
     logRequest(context);
     return httpResponse;
   }
@@ -389,6 +408,7 @@ export const httpRouteHandler = async ({ context, route }: HttpRouteHandlerOptio
       responseValidationError.message,
       responseValidationError.status,
       currentEnv,
+      responseValidationError.key,
     );
     logRequest(context);
     return httpResponse;
@@ -452,6 +472,7 @@ export const formatHttpRoutes = (
             allowedUsersError.message,
             allowedUsersError.status,
             context.env.APP_ENV,
+            allowedUsersError.key,
           );
           logRequest(context);
           return httpResponse;

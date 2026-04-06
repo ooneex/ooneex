@@ -221,6 +221,8 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.Unauthorized);
     });
 
     test("sends exception when middleware throws regular Error", async () => {
@@ -255,6 +257,8 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.InternalServerError);
     });
 
     test("sends exception when route validation fails", async () => {
@@ -284,6 +288,9 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.NotAcceptable);
+      expect(sentData.key).toBe("ROUTE_ENV_NOT_ALLOWED");
     });
 
     test("sends exception when controller throws Exception", async () => {
@@ -318,6 +325,9 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.BadRequest);
+      expect(sentData.message).toBe("Controller exception");
     });
 
     test("sends exception when controller throws regular Error", async () => {
@@ -352,6 +362,9 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(sentData.message).toBe("Controller error");
     });
 
     test("sends exception when controller throws unknown error", async () => {
@@ -386,6 +399,9 @@ describe("socketRouteUtils", () => {
       });
 
       expect(wsSendMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.InternalServerError);
+      expect(sentData.message).toBe("An unknown error occurred");
     });
 
     test("parses message and sets context properties", async () => {
@@ -720,6 +736,7 @@ describe("socketRouteUtils", () => {
       expect(wsSendMock).toHaveBeenCalled();
       const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
       expect(sentData.status).toBe(HttpStatus.Code.Forbidden);
+      expect(sentData.key).toBe("USER_NOT_ALLOWED");
     });
 
     test("allows user when email is in allowed users list", async () => {

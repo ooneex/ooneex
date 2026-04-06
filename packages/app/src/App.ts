@@ -104,6 +104,7 @@ export class App {
     const appEnvResult = appEnvValidator.validate(env.APP_ENV);
     if (!appEnvResult.isValid) {
       throw new Exception(`Invalid APP_ENV: ${appEnvResult.message}`, {
+        key: "INVALID_APP_ENV",
         status: HttpStatus.Code.InternalServerError,
         data: { appEnv: env.APP_ENV },
       });
@@ -113,6 +114,7 @@ export class App {
     const portResult = portValidator.validate(env.PORT);
     if (!portResult.isValid) {
       throw new Exception(`Invalid PORT: ${portResult.message}`, {
+        key: "INVALID_PORT",
         status: HttpStatus.Code.InternalServerError,
         data: { port: env.PORT },
       });
@@ -122,6 +124,7 @@ export class App {
     const hostnameResult = hostnameValidator.validate(env.HOST_NAME);
     if (!hostnameResult.isValid) {
       throw new Exception(`Invalid HOST_NAME: ${hostnameResult.message}`, {
+        key: "INVALID_HOST_NAME",
         status: HttpStatus.Code.InternalServerError,
         data: { hostname: env.HOST_NAME },
       });

@@ -125,7 +125,10 @@ export class FilesystemCache extends AbstractCache {
     const content = JSON.stringify(entry);
 
     if (Buffer.byteLength(content, "utf-8") > this.maxFileSize) {
-      throw new CacheException(`Cache entry exceeds maximum file size of ${this.maxFileSize} bytes`, "MAX_SIZE_EXCEEDED");
+      throw new CacheException(
+        `Cache entry exceeds maximum file size of ${this.maxFileSize} bytes`,
+        "MAX_SIZE_EXCEEDED",
+      );
     }
 
     await Bun.write(this.getFilePath(key), content);

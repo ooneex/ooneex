@@ -26,8 +26,30 @@ export type YoutubeVideoQualityType =
 
 export type YoutubeAudioQualityType = "highest" | "lowest";
 
+export type YoutubeTranscriptSegmentType = {
+  text: string;
+  start: number;
+  duration: number;
+};
+
+export type YoutubeTranscriptAuthorType = {
+  name: string;
+  url: string;
+};
+
+export type YoutubeTranscriptMetadataType = {
+  title: string;
+  author: YoutubeTranscriptAuthorType;
+  thumbnail: string;
+};
+
+export type YoutubeTranscriptResponseType = {
+  videoId: string;
+  language: string;
+  transcript: YoutubeTranscriptSegmentType[];
+  metadata: YoutubeTranscriptMetadataType;
+};
+
 export interface IYoutube {
-  getWatchId(url: string): string | null;
-  getEmbedUrl(urlOrId: string): string | null;
-  getWatchUrl(urlOrId: string): string | null;
+  transcript(videoId: string): Promise<YoutubeTranscriptResponseType>;
 }

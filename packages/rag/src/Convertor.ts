@@ -40,11 +40,15 @@ export class Convertor implements IConvertor {
       }
 
       if (!jsonFile) {
-        throw new ConvertorException("No JSON output file found after conversion", "NO_JSON_OUTPUT", { source: this.source });
+        throw new ConvertorException("No JSON output file found after conversion", "NO_JSON_OUTPUT", {
+          source: this.source,
+        });
       }
 
       if (!mdFile) {
-        throw new ConvertorException("No Markdown output file found after conversion", "NO_MARKDOWN_OUTPUT", { source: this.source });
+        throw new ConvertorException("No Markdown output file found after conversion", "NO_MARKDOWN_OUTPUT", {
+          source: this.source,
+        });
       }
 
       const jsonPath = path.join(outputDir, jsonFile);
@@ -70,9 +74,13 @@ export class Convertor implements IConvertor {
       };
     } catch (error) {
       if (error instanceof ConvertorException) throw error;
-      throw new ConvertorException(error instanceof Error ? error.message : "PDF conversion with chunking failed", "CHUNKING_FAILED", {
-        source: this.source,
-      });
+      throw new ConvertorException(
+        error instanceof Error ? error.message : "PDF conversion with chunking failed",
+        "CHUNKING_FAILED",
+        {
+          source: this.source,
+        },
+      );
     }
   }
 

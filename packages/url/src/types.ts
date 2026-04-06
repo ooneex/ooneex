@@ -1,6 +1,15 @@
 import type { LocaleType } from "@ooneex/translation";
 import type { ScalarType } from "@ooneex/types";
 
+export type UrlQueriesType = Record<string, ScalarType> & {
+  lang?: LocaleType;
+  page?: number;
+  limit?: number;
+  order?: "ASC" | "DESC";
+  orderBy?: string;
+  q?: string;
+};
+
 export interface IReadonlyUrl {
   getNative: () => URL;
   getProtocol: () => string;
@@ -9,7 +18,7 @@ export interface IReadonlyUrl {
   getHostname: () => string;
   getPort: () => number;
   getPath: () => string;
-  getQueries: () => Record<string, ScalarType>;
+  getQueries: () => UrlQueriesType;
   getFragment: () => string;
   getBase: () => string;
   getOrigin: () => string;
@@ -30,7 +39,7 @@ export interface IUrl extends IReadonlyUrl {
   setPath: (path: string) => IUrl;
   setFragment: (fragment: string) => IUrl;
   addQuery: (key: string, value: ScalarType) => IUrl;
-  setQueries: (queries: Record<string, ScalarType>) => IUrl;
+  setQueries: (queries: UrlQueriesType) => IUrl;
   removeQuery: (key: string) => IUrl;
   clearQueries: () => IUrl;
 }

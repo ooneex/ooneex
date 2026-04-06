@@ -231,7 +231,7 @@ describe("HttpRequest Performance Tests", () => {
         // Access properties to ensure they're initialized
         request.path;
         request.queries;
-        request.language;
+        request.lang;
       }
 
       // Force garbage collection if available
@@ -343,7 +343,7 @@ describe("HttpRequest Performance Tests", () => {
         request.method;
         request.path;
         request.host;
-        request.language;
+        request.lang;
         request.userAgent;
         Object.keys(request.files).length;
       }

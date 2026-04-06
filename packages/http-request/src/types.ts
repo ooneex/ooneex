@@ -1,23 +1,13 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: trust me */
 import type { Header, IUserAgent } from "@ooneex/http-header";
 import type { IRequestFile } from "@ooneex/http-request-file";
-import type { LocaleInfoType, LocaleType } from "@ooneex/translation";
+import type { LocaleInfoType } from "@ooneex/translation";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
-import type { IUrl } from "@ooneex/url";
-
-export type RequestQueriesType = Record<string, ScalarType> & {
-  lang?: LocaleType;
-  page?: number;
-  limit?: number;
-  order?: "ASC" | "DESC";
-  orderBy?: string;
-  q?: string;
-};
+import type { IUrl, UrlQueriesType } from "@ooneex/url";
 
 export type RequestConfigType = {
   params?: Record<string, ScalarType>;
   payload?: Record<string, unknown>;
-  queries?: RequestQueriesType;
+  queries?: UrlQueriesType;
 };
 
 export interface IRequest<Config extends RequestConfigType = RequestConfigType> {
@@ -34,5 +24,5 @@ export interface IRequest<Config extends RequestConfigType = RequestConfigType> 
   readonly files: Record<string, IRequestFile>;
   readonly ip: string | null;
   readonly host: string;
-  readonly language: LocaleInfoType;
+  readonly lang: LocaleInfoType;
 }

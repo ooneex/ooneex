@@ -19,7 +19,7 @@ export class HttpRequest<Config extends RequestConfigType = RequestConfigType> i
   public readonly files: Record<string, IRequestFile> = {};
   public readonly ip: string | null;
   public readonly host: string;
-  public readonly language: LocaleInfoType;
+  public readonly lang: LocaleInfoType;
 
   constructor(
     public readonly native: Readonly<Request>,
@@ -53,14 +53,14 @@ export class HttpRequest<Config extends RequestConfigType = RequestConfigType> i
 
     const customLang = this.url.getQuery("lang") || this.url.getQuery("locale") || this.header.get("X-Custom-Lang");
     if (customLang) {
-      this.language = {
+      this.lang = {
         code: customLang as LocaleType,
         region: null,
       };
     } else {
       const languages = parser.parse(this.header.get("Accept-Language") ?? "en-US");
       const language = languages[0];
-      this.language = {
+      this.lang = {
         code: language?.code as LocaleType,
         region: language?.region ?? null,
       };

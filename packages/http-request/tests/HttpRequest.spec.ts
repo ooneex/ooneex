@@ -128,7 +128,7 @@ describe("HttpRequest", () => {
       } as Request;
 
       const request = new HttpRequest(reqWithLang);
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "fr",
         region: null,
       });
@@ -141,7 +141,7 @@ describe("HttpRequest", () => {
       } as Request;
 
       const request = new HttpRequest(reqWithLocale);
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "es",
         region: null,
       });
@@ -151,7 +151,7 @@ describe("HttpRequest", () => {
       mockHeaders.set("X-Custom-Lang", "de");
       const request = new HttpRequest(mockRequest);
 
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "de",
         region: null,
       });
@@ -161,7 +161,7 @@ describe("HttpRequest", () => {
       mockHeaders.set("Accept-Language", "en-US,en;q=0.9,fr;q=0.8");
       const request = new HttpRequest(mockRequest);
 
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "en",
         region: "US",
       });
@@ -170,7 +170,7 @@ describe("HttpRequest", () => {
     test("should default to en-US when no language info is available", () => {
       const request = new HttpRequest(mockRequest);
 
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "en",
         region: "US",
       });
@@ -180,7 +180,7 @@ describe("HttpRequest", () => {
       mockHeaders.set("Accept-Language", "");
       const request = new HttpRequest(mockRequest);
 
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "en",
         region: "US",
       });
@@ -196,7 +196,7 @@ describe("HttpRequest", () => {
       } as Request;
 
       const request = new HttpRequest(reqWithLang);
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "ja",
         region: null,
       });
@@ -342,7 +342,7 @@ describe("HttpRequest", () => {
       const request = new HttpRequest(mockRequest);
 
       // Falls back to default when parser doesn't handle complex format
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "en",
         region: "US",
       });
@@ -392,7 +392,7 @@ describe("HttpRequest", () => {
       expect(request.ip).toBe("192.168.1.100");
 
       // Language should prioritize query param
-      expect(request.language).toEqual({
+      expect(request.lang).toEqual({
         code: "fr",
         region: null,
       });

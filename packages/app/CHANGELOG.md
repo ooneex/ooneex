@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.6.0) - 2026-04-07
+
+### Added
+
+- Add error keys to all exception and validation error responses — Franck ([48db6b65](https://github.com/ooneex/ooneex/commit/48db6b65))
+
+### Changed
+
+- @ooneex/app@1.5.0 — Franck ([1bc660e0](https://github.com/ooneex/ooneex/commit/1bc660e0))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Update module example with all required fields — Franck ([321d2de9](https://github.com/ooneex/ooneex/commit/321d2de9))
+- Rename language to lang in context and request data — Franck ([be549cb4](https://github.com/ooneex/ooneex/commit/be549cb4))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.5.0) - 2026-04-07
 
 ### Added

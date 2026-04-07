@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.3) - 2026-04-07
+
+### Changed
+
+- Reorder exports alphabetically in command index — Franck ([d2d391ad](https://github.com/ooneex/ooneex/commit/d2d391ad))
+
 ## [0.1.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.2) - 2026-04-07
 
 ### Changed

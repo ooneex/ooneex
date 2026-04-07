@@ -114,7 +114,10 @@ import type { ModuleType } from '@ooneex/module';
 
 export const UserModule: ModuleType = {
   controllers: [UserController],
-  entities: [UserEntity]
+  entities: [UserEntity],
+  middlewares: [],
+  cronJobs: [],
+  events: [],
 };
 ```
 

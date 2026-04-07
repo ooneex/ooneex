@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.1.7) - 2026-04-07
+
+### Changed
+
+- @ooneex/pub-sub@1.1.6 — Franck ([65820595](https://github.com/ooneex/ooneex/commit/65820595))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Format RedisPubSubClient exception throws — Franck ([bc8997ed](https://github.com/ooneex/ooneex/commit/bc8997ed))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.1.6) - 2026-04-07
 
 ### Changed

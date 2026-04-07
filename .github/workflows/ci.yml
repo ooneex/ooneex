@@ -40,8 +40,8 @@ jobs:
 
       - run: bun install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v4
-      - run: bunx nx affected -t lint
-      - run: bunx nx affected -t test
+      - run: bun run lint
+      - run: bun run test
 
   renovate-config-validator:
     runs-on: ubuntu-latest

@@ -205,6 +205,7 @@
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
         "@ooneex/cache": "workspace:*",
+        "@ooneex/database": "workspace:*",
         "@ooneex/http-header": "workspace:*",
         "@ooneex/http-request": "workspace:*",
         "@ooneex/http-request-file": "workspace:*",

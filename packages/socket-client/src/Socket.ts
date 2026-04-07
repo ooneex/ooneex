@@ -11,7 +11,7 @@ export class Socket<
   private openHandler?: (event: Event) => void;
   private errorHandler?: (event: Event, response?: ResponseDataType<Response>) => void;
   private closeHandler?: (event: CloseEvent) => void;
-  private queuedMessages: (string | ArrayBufferLike | Blob | ArrayBufferView)[] = [];
+  private queuedMessages: (string | Blob | BufferSource)[] = [];
 
   constructor(private readonly url: string) {
     const fullURL = this.buildURL(this.url);
@@ -28,7 +28,7 @@ export class Socket<
     this.sendRaw(text);
   }
 
-  private sendRaw(payload: string | ArrayBufferLike | Blob | ArrayBufferView): void {
+  private sendRaw(payload: string | Blob | BufferSource): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(payload);
     } else {

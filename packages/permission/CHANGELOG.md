@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.7) - 2026-04-07
+
+### Changed
+
+- @ooneex/permission@1.1.6 — Franck ([875c435f](https://github.com/ooneex/ooneex/commit/875c435f))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.6) - 2026-04-07
 
 ### Changed

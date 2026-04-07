@@ -17,6 +17,7 @@ export default defineConfig({
     "@ooneex/container",
     "@ooneex/utils",
     "@ooneex/routing",
+    "@ooneex/command",
     "@ooneex/logger",
   ],
   sourcemap: "external",

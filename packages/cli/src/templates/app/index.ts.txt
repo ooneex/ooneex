@@ -14,7 +14,7 @@ const app = new App({
     prefix: "api",
   },
   check: {
-    health: "/api/v1/health-check",
+    health: "/v1/health-check",
   },
   loggers: [BetterstackLogger, TerminalLogger],
   onException: BetterstackExceptionLogger,

@@ -5,6 +5,7 @@ import { TerminalLogger } from "@ooneex/logger";
 import { seedCreate } from "@ooneex/seeds";
 import { askName } from "../prompts/askName";
 import seedRunTemplate from "../templates/module/seed.run.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -26,6 +27,10 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     if (!name) {
       name = await askName({ message: "Enter seed name" });
+    }
+
+    if (module) {
+      await ensureModule(module);
     }
 
     const base = module ? join("modules", module) : ".";

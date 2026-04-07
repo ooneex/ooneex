@@ -8,6 +8,7 @@ import mailerTestTemplate from "../templates/mailer/mailer.test.txt";
 import mailerTemplate from "../templates/mailer/mailer.txt";
 import mailerTemplateTestTemplate from "../templates/mailer/mailer-template.test.txt";
 import mailerTemplateTemplate from "../templates/mailer/mailer-template.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -35,6 +36,10 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
 
     const mailerContent = mailerTemplate.replace(/{{NAME}}/g, name);
     const templateContent = mailerTemplateTemplate.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const mailerLocalDir = join(base, "src", "mailers");

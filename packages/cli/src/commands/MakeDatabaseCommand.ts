@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/database.test.txt";
 import template from "../templates/database.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -34,6 +35,10 @@ export class MakeDatabaseCommand<T extends CommandOptionsType = CommandOptionsTy
       .replace(/Database$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const databaseLocalDir = join(base, "src", "databases");

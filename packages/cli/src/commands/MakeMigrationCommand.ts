@@ -4,6 +4,7 @@ import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { migrationCreate } from "@ooneex/migrations";
 import migrationUpTemplate from "../templates/module/migration.up.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   module?: string;
@@ -21,6 +22,11 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
 
   public async run(options: T): Promise<void> {
     const { module } = options;
+
+    if (module) {
+      await ensureModule(module);
+    }
+
     const base = module ? join("modules", module) : ".";
     const { migrationPath: filePath } = await migrationCreate({
       migrationsDir: join(base, "src", "migrations"),

@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/repository.test.txt";
 import template from "../templates/repository.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -33,6 +34,10 @@ export class MakeRepositoryCommand<T extends CommandOptionsType = CommandOptions
     name = toPascalCase(name).replace(/Repository$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const repositoriesLocalDir = join(base, "src", "repositories");

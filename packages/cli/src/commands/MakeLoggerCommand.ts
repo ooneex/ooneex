@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/logger.test.txt";
 import template from "../templates/logger.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -32,6 +33,10 @@ export class MakeLoggerCommand<T extends CommandOptionsType = CommandOptionsType
     name = toPascalCase(name).replace(/Logger$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const loggerLocalDir = join(base, "src", "loggers");

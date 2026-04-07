@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/permission.test.txt";
 import template from "../templates/permission.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -32,6 +33,10 @@ export class MakePermissionCommand<T extends CommandOptionsType = CommandOptions
     name = toPascalCase(name).replace(/Permission$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const permissionLocalDir = join(base, "src", "permissions");

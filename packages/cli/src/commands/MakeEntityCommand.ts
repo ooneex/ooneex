@@ -7,6 +7,7 @@ import pluralize from "pluralize";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/entity.test.txt";
 import template from "../templates/entity.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -58,6 +59,10 @@ export class MakeEntityCommand<T extends CommandOptionsType = CommandOptionsType
     }
 
     const content = template.replace(/{{NAME}}/g, name).replace(/{{TABLE_NAME}}/g, tableName);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const entitiesLocalDir = join(base, "src", "entities");

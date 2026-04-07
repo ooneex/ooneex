@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/cron.test.txt";
 import template from "../templates/cron.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -52,6 +53,10 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
     name = toPascalCase(name).replace(/Cron$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const cronLocalDir = join(base, "src", "crons");

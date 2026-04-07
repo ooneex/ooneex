@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/vector-database.test.txt";
 import template from "../templates/vector-database.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -34,6 +35,10 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
       .replace(/Database$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const vectorDatabaseLocalDir = join(base, "src", "databases");

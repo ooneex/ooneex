@@ -6,6 +6,7 @@ import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/pubsub.test.txt";
 import template from "../templates/pubsub.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -57,6 +58,10 @@ export class MakePubSubCommand<T extends CommandOptionsType = CommandOptionsType
     }
 
     const content = template.replace(/{{NAME}}/g, name).replace(/{{CHANNEL}}/g, channel);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const pubSubLocalDir = join(base, "src", "events");

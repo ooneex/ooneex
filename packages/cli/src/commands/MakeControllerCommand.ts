@@ -12,6 +12,7 @@ import { askRoutePath } from "../prompts/askRoutePath";
 import socketTemplate from "../templates/controller.socket.txt";
 import testTemplate from "../templates/controller.test.txt";
 import template from "../templates/controller.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -94,6 +95,10 @@ export class MakeControllerCommand<T extends CommandOptionsType = CommandOptions
 
     if (!isSocket && route.method) {
       content = content.replaceAll("{{ROUTE_METHOD}}", route.method.toLowerCase());
+    }
+
+    if (module) {
+      await ensureModule(module);
     }
 
     const base = module ? join("modules", module) : ".";

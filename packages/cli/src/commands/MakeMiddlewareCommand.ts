@@ -8,6 +8,7 @@ import { askName } from "../prompts/askName";
 import socketTemplate from "../templates/middleware.socket.txt";
 import testTemplate from "../templates/middleware.test.txt";
 import template from "../templates/middleware.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -60,6 +61,10 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
 
     const selectedTemplate = isSocket ? socketTemplate : template;
     const content = selectedTemplate.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const middlewareLocalDir = join(base, "src", "middlewares");

@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/analytics.test.txt";
 import template from "../templates/analytics.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -32,6 +33,10 @@ export class MakeAnalyticsCommand<T extends CommandOptionsType = CommandOptionsT
     name = toPascalCase(name).replace(/Analytics$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const analyticsLocalDir = join(base, "src", "analytics");

@@ -4,6 +4,7 @@ import { commandCreate, decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { askName } from "../prompts/askName";
 import commandRunTemplate from "../templates/module/command.run.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -25,6 +26,10 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
 
     if (!name) {
       name = await askName({ message: "Enter name" });
+    }
+
+    if (module) {
+      await ensureModule(module);
     }
 
     const base = module ? join("modules", module) : ".";

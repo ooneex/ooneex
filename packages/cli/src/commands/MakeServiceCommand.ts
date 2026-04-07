@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/service.test.txt";
 import template from "../templates/service.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -32,6 +33,10 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
     name = toPascalCase(name).replace(/Service$/, "");
 
     const content = template.replace(/{{NAME}}/g, name);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const serviceLocalDir = join(base, "src", "services");

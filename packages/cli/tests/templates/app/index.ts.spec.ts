@@ -88,7 +88,7 @@ describe("index.ts.txt", () => {
     expect(content).toContain("events: AppModule.events");
     expect(content).toContain("database: AppDatabase");
     expect(content).toContain("check: {");
-    expect(content).toContain('health: "/api/v1/health-check"');
+    expect(content).toContain('health: "/v1/health-check"');
     expect(content).not.toContain("healthcheckPath");
     expect(content).not.toContain("generateRouteDoc");
   });

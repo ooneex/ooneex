@@ -151,6 +151,7 @@ describe("MakeCommandCommand", () => {
     test("should generate commands root export file in module directory", async () => {
       await Bun.write(join(testDir, "modules", "auth", "src", "commands", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "auth", "tests", "commands", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "auth", "package.json"), JSON.stringify({ name: "@module/auth" }, null, 2));
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
 
       await command.run({ name: "Login", module: "auth" });
@@ -217,6 +218,7 @@ describe("MakeCommandCommand", () => {
     test("should generate in module directory when module option is provided", async () => {
       await Bun.write(join(testDir, "modules", "auth", "src", "commands", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "auth", "tests", "commands", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "auth", "package.json"), JSON.stringify({ name: "@module/auth" }, null, 2));
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
 
       await command.run({ name: "Login", module: "auth" });

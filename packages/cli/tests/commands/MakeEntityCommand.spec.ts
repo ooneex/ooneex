@@ -171,6 +171,7 @@ describe("MakeEntityCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "entities", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "entities", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "package.json"), JSON.stringify({ name: "@module/blog" }, null, 2));
       process.chdir(testDir);
     });
 

@@ -6,6 +6,7 @@ import { toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/ai.test.txt";
 import template from "../templates/ai.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -30,6 +31,10 @@ export class MakeAiCommand<T extends CommandOptionsType = CommandOptionsType> im
     }
 
     name = toPascalCase(name).replace(/Ai$/, "");
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const content = template.replace(/{{NAME}}/g, name);
 

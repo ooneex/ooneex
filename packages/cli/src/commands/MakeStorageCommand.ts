@@ -6,6 +6,7 @@ import { toPascalCase, toSnakeCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/storage.test.txt";
 import template from "../templates/storage.txt";
+import { ensureModule } from "../utils";
 
 type CommandOptionsType = {
   name?: string;
@@ -32,6 +33,10 @@ export class MakeStorageCommand<T extends CommandOptionsType = CommandOptionsTyp
     name = toPascalCase(name).replace(/Storage$/, "");
     const nameUpper = toSnakeCase(name).toUpperCase();
     const content = template.replace(/{{NAME}}/g, name).replace(/{{NAME_UPPER}}/g, nameUpper);
+
+    if (module) {
+      await ensureModule(module);
+    }
 
     const base = module ? join("modules", module) : ".";
     const storageLocalDir = join(base, "src", "storage");

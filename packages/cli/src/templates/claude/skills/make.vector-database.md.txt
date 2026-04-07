@@ -45,8 +45,7 @@ Edit `src/databases/<Name>VectorDatabase.ts` to complete the implementation:
 The generated class structure follows this pattern:
 
 ```typescript
-import { VectorDatabase, decorator } from "@ooneex/rag";
-import type { EmbeddingModelType, EmbeddingProviderType, FieldValueType } from "@ooneex/rag";
+import { type EmbeddingModelType, type EmbeddingProviderType, type FieldValueType, VectorDatabase, decorator } from "@ooneex/rag";
 import { Utf8 } from "apache-arrow";
 
 type DataType = {

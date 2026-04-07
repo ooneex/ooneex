@@ -47,8 +47,7 @@ Edit `src/cache/<Name>Cache.ts` to complete the implementation:
 The generated class structure follows this pattern:
 
 ```typescript
-import { CacheException, decorator } from "@ooneex/cache";
-import type { ICache } from "@ooneex/cache";
+import { CacheException, type ICache, decorator } from "@ooneex/cache";
 
 @decorator.cache()
 export class <Name>Cache implements ICache {

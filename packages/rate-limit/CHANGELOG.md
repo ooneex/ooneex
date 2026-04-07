@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.2.1) - 2026-04-07
+
+### Changed
+
+- Format test assertions — Franck ([f91b0e1b](https://github.com/ooneex/ooneex/commit/f91b0e1b))
+
 ## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.2.0) - 2026-04-05
 
 ### Added

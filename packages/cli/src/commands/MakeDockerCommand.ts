@@ -10,17 +10,17 @@ type CommandOptionsType = {
   name?: DockerServiceType;
 };
 
-interface DockerComposeConfig {
+type DockerComposeConfigType = {
   services?: Record<string, unknown>;
   volumes?: Record<string, unknown>;
   networks?: Record<string, unknown>;
-}
+};
 
 /**
  * Extracts the service block (including comments) from a template string.
  * Returns the content between "services:" and "volumes:" (or end of services section).
  */
-function extractServiceBlock(template: string): string {
+const extractServiceBlock = (template: string): string => {
   const lines = template.split("\n");
   const result: string[] = [];
   let inServices = false;
@@ -40,15 +40,15 @@ function extractServiceBlock(template: string): string {
   }
 
   return result.join("\n");
-}
+};
 
 /**
  * Extracts volume names from a template string.
  */
-function extractVolumeNames(template: string): string[] {
-  const config = YAML.parse(template) as DockerComposeConfig;
+const extractVolumeNames = (template: string): string[] => {
+  const config = YAML.parse(template) as DockerComposeConfigType;
   return config.volumes ? Object.keys(config.volumes) : [];
-}
+};
 
 @decorator.command()
 export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
@@ -75,7 +75,7 @@ export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType
 
     if (await composeFile.exists()) {
       const existingContent = await composeFile.text();
-      const existingConfig = YAML.parse(existingContent) as DockerComposeConfig;
+      const existingConfig = YAML.parse(existingContent) as DockerComposeConfigType;
 
       // Check if service already exists
       if (existingConfig.services && name in existingConfig.services) {

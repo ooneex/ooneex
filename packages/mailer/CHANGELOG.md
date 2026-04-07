@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.7) - 2026-04-07
+
+### Changed
+
+- @ooneex/mailer@1.1.6 — Franck ([3328214d](https://github.com/ooneex/ooneex/commit/3328214d))
+- Format ResendMailer exception throw — Franck ([0f0da913](https://github.com/ooneex/ooneex/commit/0f0da913))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.6) - 2026-04-07
 
 ### Changed

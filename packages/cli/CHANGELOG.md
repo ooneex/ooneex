@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.15.2) - 2026-04-07
+
+### Changed
+
+- Update templates and fix CLI option syntax in skills — Franck ([1332aaa9](https://github.com/ooneex/ooneex/commit/1332aaa9))
+- Bump version to 1.15.1 — Franck ([7f02aabf](https://github.com/ooneex/ooneex/commit/7f02aabf))
+
 ## [1.15.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.15.0) - 2026-04-07
 
 ### Added

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.0) - 2026-04-07
+
+### Added
+
+- Add health check URL logging — Franck ([dedd1a55](https://github.com/ooneex/ooneex/commit/dedd1a55))
+
 ## [1.6.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.6.1) - 2026-04-07
 
 ### Changed

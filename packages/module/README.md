@@ -16,8 +16,6 @@ Module system for organizing application features into cohesive units -- groups 
 
 ✅ **Middleware Scoping** - Attach middleware to specific modules
 
-✅ **Permission Support** - Optional per-module permission classes
-
 ✅ **Cron Jobs** - Optional cron job classes scoped to a module
 
 ✅ **Event Handling** - Optional pub/sub event classes per module
@@ -42,12 +40,14 @@ const UserModule: ModuleType = {
   controllers: [UserCreateController, UserListController],
   entities: [UserEntity],
   middlewares: [AuthMiddleware],
+  cronJobs: [],
+  events: [],
 };
 
 export { UserModule };
 ```
 
-### Module with All Options
+### Full Example
 
 ```typescript
 import type { ModuleType } from '@ooneex/module';
@@ -55,7 +55,6 @@ import type { ModuleType } from '@ooneex/module';
 const OrderModule: ModuleType = {
   controllers: [OrderCreateController, OrderListController],
   entities: [OrderEntity, OrderItemEntity],
-  permissions: [OrderPermission],
   middlewares: [OrderValidationMiddleware],
   cronJobs: [OrderCleanupCron],
   events: [OrderCreatedEvent, OrderShippedEvent],
@@ -72,19 +71,15 @@ const OrderModule: ModuleType = {
 type ModuleType = {
   controllers: ControllerClassType[];
   entities: EntityClassType[];
-  permissions?: PermissionClassType[];
-  middlewares?: MiddlewareClassType[];
-  cronJobs?: CronClassType[];
-  events?: PubSubClassType[];
+  middlewares: MiddlewareClassType[];
+  cronJobs: CronClassType[];
+  events: PubSubClassType[];
 };
 ```
 
-**Required fields:**
+**Fields:**
 - `controllers` - Array of controller classes belonging to this module
 - `entities` - Array of entity classes belonging to this module
-
-**Optional fields:**
-- `permissions` - Permission classes for access control
 - `middlewares` - Middleware classes to apply to this module
 - `cronJobs` - Cron job classes scoped to this module
 - `events` - Pub/sub event classes for this module

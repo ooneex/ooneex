@@ -1,11 +1,11 @@
 ---
 name: make:seed
-description: Generate a new database seed file, then complete the generated code. Use when creating seed data for populating the database using @ooneex/seeds.
+description: Generate a new database seed file with its test file, then complete the generated code. Use when creating seed data for populating the database using @ooneex/seeds.
 ---
 
 # Make Seed
 
-Generate a new seed file using the `make:seed` CLI command, then complete the generated code with proper implementation.
+Generate a new seed file and its test file using the `make:seed` CLI command, then complete the generated code with proper implementation.
 
 ## Coding Conventions
 
@@ -19,33 +19,72 @@ Generate a new seed file using the `make:seed` CLI command, then complete the ge
 
 ### 1. Run the generator
 
-Run the following command to scaffold the seed file:
+Run the following command to scaffold the seed file and test files:
 
 ```bash
 bunx @ooneex/cli@latest make:seed --name <name> --module <module>
 ```
 
-Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, the seed file is generated under `modules/<module>/src/seeds/` instead of `src/seeds/`. The command will:
-- Generate a seed file in `src/seeds/` (or `modules/<module>/src/seeds/` with `--module`)
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/seeds/<Name>Seed.ts` - The seed class file (or `modules/<module>/src/seeds/<Name>Seed.ts` with `--module`)
+- `tests/seeds/<Name>Seed.spec.ts` - The test file (or `modules/<module>/tests/seeds/<Name>Seed.spec.ts` with `--module`)
+
+It will also:
+- Generate a `seeds.ts` root export file in the seeds directory
 - Add a `seed:run` script to `package.json` if not already present
 
-### 2. Read the generated file
+### 2. Read the generated files
 
-Read the generated seed file in `src/seeds/` to understand the scaffolded code.
+Read both generated files to understand the scaffolded code.
 
 ### 3. Complete the seed
 
-Edit the generated seed file to implement:
+Edit `src/seeds/<Name>Seed.ts` to implement:
 
 - Import the relevant entity classes
 - Create seed data with hardcoded nanoid values for `id` fields (generate via `bun -e "import { random } from '@ooneex/utils'; console.log(random.nanoid())"`)
 - Do NOT use sequential IDs like `"item-1"`, `"item-2"`
 - Ensure the same entity uses the same ID everywhere it appears
 
-### 4. Lint and format
+### 4. Complete the test file
 
-Run linting and formatting on the generated file:
+Edit `tests/seeds/<Name>Seed.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, run, isActive, getDependencies methods)
+- Add tests relevant to the specific seed behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Seed } from "@/seeds/<Name>Seed";
+
+describe("<Name>Seed", () => {
+  test("should have class name ending with 'Seed'", () => {
+    expect(<Name>Seed.name.endsWith("Seed")).toBe(true);
+  });
+
+  test("should have 'run' method", () => {
+    expect(<Name>Seed.prototype.run).toBeDefined();
+    expect(typeof <Name>Seed.prototype.run).toBe("function");
+  });
+
+  test("should have 'isActive' method", () => {
+    expect(<Name>Seed.prototype.isActive).toBeDefined();
+    expect(typeof <Name>Seed.prototype.isActive).toBe("function");
+  });
+
+  test("should have 'getDependencies' method", () => {
+    expect(<Name>Seed.prototype.getDependencies).toBeDefined();
+    expect(typeof <Name>Seed.prototype.getDependencies).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
 
 ```bash
-bunx biome check --fix src/seeds/
+bunx biome check --fix src/seeds/<Name>Seed.ts tests/seeds/<Name>Seed.spec.ts
 ```

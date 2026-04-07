@@ -29,7 +29,11 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     }
 
     const base = module ? join("modules", module) : ".";
-    const filePath = await seedCreate({ name, dir: join(base, "src", "seeds") });
+    const { seedPath: filePath } = await seedCreate({
+      name,
+      seedsDir: join(base, "src", "seeds"),
+      testsDir: join(base, "tests", "seeds"),
+    });
 
     // Create bin/seed/run.ts if it doesn't exist
     const binSeedRunPath = join(process.cwd(), base, "bin", "seed", "run.ts");

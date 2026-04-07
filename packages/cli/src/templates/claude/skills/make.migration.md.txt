@@ -1,11 +1,11 @@
 ---
 name: make:migration
-description: Generate a new database migration file, then complete the generated code. Use when creating a new database migration for schema changes using @ooneex/migrations.
+description: Generate a new database migration file with its test file, then complete the generated code. Use when creating a new database migration for schema changes using @ooneex/migrations.
 ---
 
 # Make Migration
 
-Generate a new migration file using the `make:migration` CLI command, then complete the generated code with proper implementation.
+Generate a new migration file and its test file using the `make:migration` CLI command, then complete the generated code with proper implementation.
 
 ## Coding Conventions
 
@@ -19,31 +19,75 @@ Generate a new migration file using the `make:migration` CLI command, then compl
 
 ### 1. Run the generator
 
-Run the following command to scaffold the migration file:
+Run the following command to scaffold the migration file and test files:
 
 ```bash
 bunx @ooneex/cli@latest make:migration --module <module>
 ```
 
-The `--module` option is optional — if provided, the migration file is generated under `modules/<module>/src/migrations/` instead of `src/migrations/`. The command will:
-- Generate a timestamped migration file in `src/migrations/` (or `modules/<module>/src/migrations/` with `--module`)
+The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/migrations/Migration<version>.ts` - The migration class file (or `modules/<module>/src/migrations/Migration<version>.ts` with `--module`)
+- `tests/migrations/Migration<version>.spec.ts` - The test file (or `modules/<module>/tests/migrations/Migration<version>.spec.ts` with `--module`)
+
+It will also:
+- Generate a `migrations.ts` root export file in the migrations directory
 - Add a `migration:up` script to `package.json` if not already present
 
-### 2. Read the generated file
+### 2. Read the generated files
 
-Read the generated migration file in `src/migrations/` to understand the scaffolded code.
+Read both generated files to understand the scaffolded code.
 
 ### 3. Complete the migration
 
-Edit the generated migration file to implement:
+Edit `src/migrations/Migration<version>.ts` to implement:
 
 - The `up` method with the schema changes (create tables, add columns, create indexes, etc.)
 - The `down` method with the reverse operations to undo the migration
 
-### 4. Lint and format
+### 4. Complete the test file
 
-Run linting and formatting on the generated file:
+Edit `tests/migrations/Migration<version>.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, up, down, getVersion, getDependencies methods)
+- Add tests relevant to the specific migration behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { Migration<version> } from "@/migrations/Migration<version>";
+
+describe("Migration<version>", () => {
+  test("should have class name starting with 'Migration'", () => {
+    expect(Migration<version>.name.startsWith("Migration")).toBe(true);
+  });
+
+  test("should have 'up' method", () => {
+    expect(Migration<version>.prototype.up).toBeDefined();
+    expect(typeof Migration<version>.prototype.up).toBe("function");
+  });
+
+  test("should have 'down' method", () => {
+    expect(Migration<version>.prototype.down).toBeDefined();
+    expect(typeof Migration<version>.prototype.down).toBe("function");
+  });
+
+  test("should have 'getVersion' method", () => {
+    expect(Migration<version>.prototype.getVersion).toBeDefined();
+    expect(typeof Migration<version>.prototype.getVersion).toBe("function");
+  });
+
+  test("should have 'getDependencies' method", () => {
+    expect(Migration<version>.prototype.getDependencies).toBeDefined();
+    expect(typeof Migration<version>.prototype.getDependencies).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
 
 ```bash
-bunx biome check --fix src/migrations/
+bunx biome check --fix src/migrations/Migration<version>.ts tests/migrations/Migration<version>.spec.ts
 ```

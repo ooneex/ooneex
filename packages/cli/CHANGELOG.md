@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.14.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.14.0) - 2026-04-07
+
+### Added
+
+- Add command module generation to MakeAppCommand — Franck ([47fc16f9](https://github.com/ooneex/ooneex/commit/47fc16f9))
+
 ## [1.13.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.3) - 2026-04-07
 
 ### Changed

@@ -16,6 +16,6 @@ describe("command.run.txt", () => {
     expect(content).toContain("#!/usr/bin/env bun");
     expect(content).toContain('@ooneex/command');
     expect(content).toContain('@/commands/commands');
-    expect(content).toContain("commandRun");
+    expect(content).toContain("run");
   });
 });

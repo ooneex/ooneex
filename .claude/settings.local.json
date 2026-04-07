@@ -30,7 +30,10 @@
       "Bash(sed -n '43,50p' packages/ai/tests/GroqAi.spec.ts)",
       "Bash(sed -n '31,38p' packages/ai/tests/OllamaAi.spec.ts)",
       "Bash(sed -n '49,56p' packages/ai/tests/OpenAi.spec.ts)",
-      "Bash(sed -n '43,50p' packages/ai/tests/GeminiAi.spec.ts)"
+      "Bash(sed -n '43,50p' packages/ai/tests/GeminiAi.spec.ts)",
+      "Bash(do git:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)"
     ]
   }
 }

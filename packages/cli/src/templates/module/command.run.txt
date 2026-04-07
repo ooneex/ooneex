@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { commandRun } from "@ooneex/cli";
+import { commandRun } from "@ooneex/command";
 import "@/commands/commands";
 
 await commandRun();

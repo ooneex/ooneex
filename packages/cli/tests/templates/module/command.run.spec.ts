@@ -13,6 +13,9 @@ describe("command.run.txt", () => {
 
   test("should contain command logic", async () => {
     const content = await Bun.file(templatePath).text();
+    expect(content).toContain("#!/usr/bin/env bun");
+    expect(content).toContain('@ooneex/command');
+    expect(content).toContain('@/commands/commands');
     expect(content).toContain("commandRun");
   });
 });

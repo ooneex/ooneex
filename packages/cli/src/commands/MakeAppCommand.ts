@@ -155,6 +155,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
         "bun",
         "add",
         "-D",
+        "@ooneex/command",
         "@biomejs/biome",
         "@commitlint/cli",
         "@commitlint/config-conventional",

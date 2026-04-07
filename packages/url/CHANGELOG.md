@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/url@1.2.5) - 2026-04-07
+
+### Changed
+
+- @ooneex/url@1.2.4 — Franck ([90c9d494](https://github.com/ooneex/ooneex/commit/90c9d494))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Add UrlQueriesType and use it in IUrl interface — Franck ([8a9e2572](https://github.com/ooneex/ooneex/commit/8a9e2572))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/url@1.2.4) - 2026-04-07
 
 ### Changed

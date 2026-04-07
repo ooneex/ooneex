@@ -114,7 +114,6 @@ import { <Name>Cron } from "./cron/<Name>Cron";
 export const <PascalModuleName>Module: ModuleType = {
   controllers: [],
   entities: [],
-  permissions: [],
   middlewares: [],
   cronJobs: [<Name>Cron],
   events: [],

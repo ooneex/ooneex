@@ -220,7 +220,6 @@ import { <Name>Controller } from "./controllers/<Name>Controller";
 export const <PascalModuleName>Module: ModuleType = {
   controllers: [<Name>Controller],
   entities: [],
-  permissions: [],
   middlewares: [],
   cronJobs: [],
   events: [],

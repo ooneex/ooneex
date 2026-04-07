@@ -144,7 +144,6 @@ import { <Name>Entity } from "./entities/<Name>Entity";
 export const <PascalModuleName>Module: ModuleType = {
   controllers: [],
   entities: [<Name>Entity],
-  permissions: [],
   middlewares: [],
   cronJobs: [],
   events: [],

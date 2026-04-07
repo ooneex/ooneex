@@ -39,21 +39,24 @@ describe("MakeDockerCommand", () => {
 
   describe("run()", () => {
     beforeEach(async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test", scripts: {} }, null, 2));
+      await Bun.write(
+        join(testDir, "modules", "app", "package.json"),
+        JSON.stringify({ name: "test", scripts: {} }, null, 2),
+      );
       process.chdir(testDir);
     });
 
     test("should create docker-compose.yml if it does not exist", async () => {
       await command.run({ name: "postgres" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       expect(existsSync(composePath)).toBe(true);
     });
 
     test("should add postgres service to docker-compose.yml", async () => {
       await command.run({ name: "postgres" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       const content = await Bun.file(composePath).text();
       expect(content).toContain("postgres");
     });
@@ -61,7 +64,7 @@ describe("MakeDockerCommand", () => {
     test("should add redis service to docker-compose.yml", async () => {
       await command.run({ name: "redis" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       const content = await Bun.file(composePath).text();
       expect(content).toContain("redis");
     });
@@ -69,7 +72,7 @@ describe("MakeDockerCommand", () => {
     test("should add mongodb service to docker-compose.yml", async () => {
       await command.run({ name: "mongodb" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       const content = await Bun.file(composePath).text();
       expect(content).toContain("mongodb");
     });
@@ -77,7 +80,7 @@ describe("MakeDockerCommand", () => {
     test("should add mysql service to docker-compose.yml", async () => {
       await command.run({ name: "mysql" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       const content = await Bun.file(composePath).text();
       expect(content).toContain("mysql");
     });
@@ -85,7 +88,7 @@ describe("MakeDockerCommand", () => {
     test("should update package.json with docker script", async () => {
       await command.run({ name: "postgres" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts.docker).toBe("docker compose up -d");
     });
 
@@ -93,7 +96,7 @@ describe("MakeDockerCommand", () => {
       await command.run({ name: "postgres" });
       await command.run({ name: "redis" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       const content = await Bun.file(composePath).text();
       expect(content).toContain("postgres");
       expect(content).toContain("redis");
@@ -104,29 +107,29 @@ describe("MakeDockerCommand", () => {
       // Running again should not throw and should warn (handled internally by command)
       await command.run({ name: "postgres" });
 
-      const composePath = join(testDir, "docker-compose.yml");
+      const composePath = join(testDir, "modules", "app", "docker-compose.yml");
       expect(existsSync(composePath)).toBe(true);
     });
 
     test("should preserve existing scripts in package.json", async () => {
       await Bun.write(
-        join(testDir, "package.json"),
+        join(testDir, "modules", "app", "package.json"),
         JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
       );
 
       await command.run({ name: "postgres" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts.build).toBe("bun build");
       expect(packageJson.scripts.docker).toBe("docker compose up -d");
     });
 
     test("should create scripts object if it does not exist", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+      await Bun.write(join(testDir, "modules", "app", "package.json"), JSON.stringify({ name: "test" }, null, 2));
 
       await command.run({ name: "postgres" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts).toBeDefined();
       expect(packageJson.scripts.docker).toBe("docker compose up -d");
     });

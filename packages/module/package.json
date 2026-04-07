@@ -29,7 +29,6 @@
   "devDependencies": {
     "@ooneex/middleware": "workspace:*",
     "@ooneex/controller": "workspace:*",
-    "@ooneex/permission": "workspace:*",
     "@ooneex/pub-sub": "workspace:*",
     "@ooneex/cron": "workspace:*",
     "@ooneex/entity": "workspace:*"

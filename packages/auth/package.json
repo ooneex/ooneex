@@ -32,6 +32,7 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/controller": "workspace:*",
     "@ooneex/exception": "workspace:*",
+    "@ooneex/role": "workspace:*",
     "@ooneex/http-status": "workspace:*"
   },
   "devDependencies": {

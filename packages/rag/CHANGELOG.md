@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.7) - 2026-04-07
+
+### Changed
+
+- @ooneex/rag@1.2.6 — Franck ([adf69096](https://github.com/ooneex/ooneex/commit/adf69096))
+- Format Convertor exception throws — Franck ([f2961f2f](https://github.com/ooneex/ooneex/commit/f2961f2f))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.6) - 2026-04-07
 
 ### Changed

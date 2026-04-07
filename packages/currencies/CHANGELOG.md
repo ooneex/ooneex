@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.5) - 2026-04-07
+
+### Changed
+
+- @ooneex/currencies@1.1.4 — Franck ([d9bb13cc](https://github.com/ooneex/ooneex/commit/d9bb13cc))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.4) - 2026-04-07
 
 ### Changed

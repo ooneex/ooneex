@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.2.2) - 2026-04-07
+
+### Changed
+
+- @ooneex/cache@1.2.1 — Franck ([bce711ca](https://github.com/ooneex/ooneex/commit/bce711ca))
+- Move @upstash/redis dependency to root and format code — Franck ([d036eb98](https://github.com/ooneex/ooneex/commit/d036eb98))
+
 ## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.2.1) - 2026-04-07
 
 ### Changed

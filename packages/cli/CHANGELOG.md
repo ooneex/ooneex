@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.12.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.12.0) - 2026-04-07
+
+### Added
+
+- Add make:command generator, export decorators/types, and fix completions — Franck ([54d433f6](https://github.com/ooneex/ooneex/commit/54d433f6))
+- Add MakeCommandCommand and refactor CLI entry point — Franck ([80f6cb69](https://github.com/ooneex/ooneex/commit/80f6cb69))
+- Add order/orderBy support to repository templates and fix status seed names — Franck ([7df2d062](https://github.com/ooneex/ooneex/commit/7df2d062))
+- Add YouTube transcript API key to env template — Franck ([dea77e87](https://github.com/ooneex/ooneex/commit/dea77e87))
+
+### Changed
+
+- Apply coding conventions to MakeDockerCommand — Franck ([af5885e2](https://github.com/ooneex/ooneex/commit/af5885e2))
+- Move dev script to docker command and remove @nx/js from app template — Franck ([0f3a066e](https://github.com/ooneex/ooneex/commit/0f3a066e))
+- Add @types/bun to tsconfig types across all packages — Franck ([afd2c522](https://github.com/ooneex/ooneex/commit/afd2c522))
+- Rename cron dir to crons, use colon-separated command names, and update paths — Franck ([c31c16f0](https://github.com/ooneex/ooneex/commit/c31c16f0))
+- Move docker-compose to modules/app and remove permissions from templates — Franck ([aecc6666](https://github.com/ooneex/ooneex/commit/aecc6666))
+- Format MakeModuleCommand destructuring — Franck ([d9ec6504](https://github.com/ooneex/ooneex/commit/d9ec6504))
+- Add YouTube env section test — Franck ([0691d20d](https://github.com/ooneex/ooneex/commit/0691d20d))
+
 ## [1.11.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.11.3) - 2026-04-05
 
 ### Changed

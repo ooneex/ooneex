@@ -68,7 +68,8 @@ export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType
     }
 
     const templateContent = templates[name];
-    const composePath = join(process.cwd(), "docker-compose.yml");
+    const base = join("modules", "app");
+    const composePath = join(process.cwd(), base, "docker-compose.yml");
     const logger = new TerminalLogger();
     const composeFile = Bun.file(composePath);
 
@@ -136,7 +137,7 @@ export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType
     }
 
     // Update package.json with docker script
-    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonPath = join(process.cwd(), base, "package.json");
     const packageJsonFile = Bun.file(packageJsonPath);
     if (await packageJsonFile.exists()) {
       const packageJson = await packageJsonFile.json();

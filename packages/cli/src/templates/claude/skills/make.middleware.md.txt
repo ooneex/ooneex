@@ -111,7 +111,6 @@ import { <Name>Middleware } from "./middlewares/<Name>Middleware";
 export const <PascalModuleName>Module: ModuleType = {
   controllers: [],
   entities: [],
-  permissions: [],
   middlewares: [<Name>Middleware],
   cronJobs: [],
   events: [],

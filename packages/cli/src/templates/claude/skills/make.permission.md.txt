@@ -123,25 +123,7 @@ describe("<Name>Permission", () => {
 
 ### 5. Register the permission in the module
 
-Add the new permission to the module's `permissions` array in `src/<PascalModuleName>Module.ts` (e.g., `src/BookModule.ts` for the `book` module):
-
-```typescript
-import type { ModuleType } from "@ooneex/module";
-import { <Name>Permission } from "./permissions/<Name>Permission";
-
-export const <PascalModuleName>Module: ModuleType = {
-  controllers: [],
-  entities: [],
-  permissions: [<Name>Permission],
-  middlewares: [],
-  cronJobs: [],
-  events: [],
-};
-```
-
-The module file uses PascalCase naming: `<PascalModuleName>Module.ts` with export `<PascalModuleName>Module`.
-
-If the module already has other permissions registered, append the new permission to the existing `permissions` array and add the import alongside existing imports.
+The permission class is standalone and does not need to be registered in a module.
 
 ### 6. Lint and format
 

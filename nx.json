@@ -20,16 +20,6 @@
   "tui": {
     "autoExit": true
   },
-  "plugins": [
-    {
-      "plugin": "@nx/js/typescript",
-      "projectsAffectedByDependencyUpdates": "auto"
-    }
-  ],
   "packageManager": "bun",
-  "namedInputs": {
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"],
-    "default": ["sharedGlobals"]
-  },
   "analytics": false
 }

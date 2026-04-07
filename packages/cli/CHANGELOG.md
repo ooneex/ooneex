@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.13.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.1) - 2026-04-07
+
+### Changed
+
+- Add @ooneex/command to external dependencies in bunup config — Franck ([ee7413fb](https://github.com/ooneex/ooneex/commit/ee7413fb))
+
 ## [1.13.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.0) - 2026-04-07
 
 ### Added

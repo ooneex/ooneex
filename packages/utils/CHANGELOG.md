@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.2) - 2026-04-07
+
+### Changed
+
+- Add @types/bun to tsconfig types across all packages — Franck ([afd2c522](https://github.com/ooneex/ooneex/commit/afd2c522))
+
 ## [0.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.1) - 2026-04-01
 
 ### Changed

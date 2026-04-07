@@ -49,7 +49,7 @@ _ooneex() {
     'make\:seed:Generate a new seed file'
     'make\:service:Generate a new service class'
     'make\:storage:Generate a new storage class'
-    'make\:vector-database:Generate a new vector database class'
+    'make\:vector\:database:Generate a new vector database class'
   )
 
   _arguments -s \
@@ -113,7 +113,7 @@ _ooneex() {
             '--name=[Name of the resource]:name' \
             '--destination=[Destination path]:destination:_files -/'
           ;;
-        make:ai|make:analytics|make:cache|make:command|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector-database)
+        make:ai|make:analytics|make:cache|make:command|make:cron|make:database|make:logger|make:mailer|make:permission|make:repository|make:service|make:storage|make:vector:database)
           _arguments -s \
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_ooneex_modules'

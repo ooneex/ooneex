@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
+import { Glob } from "bun";
 import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/command.test.txt";
@@ -32,7 +33,7 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
 
     name = toPascalCase(name).replace(/Command$/, "");
 
-    const commandName = toKebabCase(name); // TODO: split by `:`
+    const commandName = toKebabCase(name).replace(/-/g, ":");
     const content = template
       .replace(/{{NAME}}/g, name)
       .replace(/{{COMMAND_NAME}}/g, commandName)
@@ -51,20 +52,29 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
     const testFilePath = join(testsDir, `${name}Command.spec.ts`);
     await Bun.write(testFilePath, testContent);
 
+    // Generate commands root export file
+    const imports: string[] = [];
+    const glob = new Glob("**/*Command.ts");
+    for await (const file of glob.scan(commandDir)) {
+      const commandClassName = file.replace(/\.ts$/, "");
+      imports.push(`export { ${commandClassName} } from './${commandClassName}';`);
+    }
+    await Bun.write(join(commandDir, "commands.ts"), `${imports.sort().join("\n")}\n`);
+
     // Create bin/command/run.ts if it doesn't exist
-    const binCommandRunPath = join(process.cwd(), base, "bin", "command", "run.ts");
+    const binCommandRunPath = join(process.cwd(), "modules", "app", "bin", "command", "run.ts");
     const binCommandRunFile = Bun.file(binCommandRunPath);
     if (!(await binCommandRunFile.exists())) {
       await Bun.write(binCommandRunPath, commandRunTemplate);
     }
 
     // Update package.json with command script
-    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonPath = join(process.cwd(), "modules", "app", "package.json");
     const packageJsonFile = Bun.file(packageJsonPath);
     if (await packageJsonFile.exists()) {
       const packageJson = await packageJsonFile.json();
       packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts["command:run"] = "bun ./bin/command/run.ts";
+      packageJson.scripts.command = "bun ./bin/command/run.ts";
       await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 
@@ -82,7 +92,7 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
       useSymbol: true,
     });
 
-    logger.info("Run 'bun run command:run' to execute commands", undefined, {
+    logger.info("Run 'bun run command' to execute commands", undefined, {
       showTimestamp: false,
       showArrow: true,
       showLevel: false,

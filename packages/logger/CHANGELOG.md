@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.9) - 2026-04-07
+
+### Changed
+
+- Remove legacy export aliases for BetterstackLogger — Franck ([e5636022](https://github.com/ooneex/ooneex/commit/e5636022))
+
 ## [1.2.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.8) - 2026-04-07
 
 ### Changed

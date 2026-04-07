@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.15.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.15.0) - 2026-04-07
+
+### Added
+
+- Add ensureModule utility to auto-create modules in Make commands — Franck ([2fc2dc63](https://github.com/ooneex/ooneex/commit/2fc2dc63))
+
+### Changed
+
+- Rename commandRun to run and fix health-check URL — Franck ([9f0685a5](https://github.com/ooneex/ooneex/commit/9f0685a5))
+
 ## [1.14.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.14.0) - 2026-04-07
 
 ### Added

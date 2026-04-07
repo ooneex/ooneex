@@ -8,6 +8,7 @@ import type { MiddlewareClassType, SocketMiddlewareClassType } from "@ooneex/mid
 import type { IPubSub } from "@ooneex/pub-sub";
 import { router } from "@ooneex/routing";
 import type { ScalarType } from "@ooneex/types";
+import { trim } from "@ooneex/utils";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
 import { buildHttpContext, formatHttpRoutes, logRequest, runMiddlewares } from "./httpRouteUtils";
@@ -147,7 +148,7 @@ export class App {
     let hostname = env.HOST_NAME;
 
     const { middlewares = [], routing } = this.config;
-    const prefix = routing?.prefix;
+    const prefix = trim(routing.prefix, "/");
 
     const routes = {
       ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], prefix),
@@ -197,12 +198,11 @@ export class App {
       hostname = "localhost";
     }
 
-    logger.info(`Server running at ${server.protocol}//${hostname}:${server.port}`);
+    const baseUrl = `${server.protocol}://${hostname}:${server.port}`;
+    logger.info(`Server running at ${baseUrl}`);
 
     if (this.config.check?.health) {
-      const healthCheckUrl = `${server.protocol}//${hostname}:${server.port}${prefix ?? ""}${this.config.check.health}`;
-      logger.info(`Health check URL: ${healthCheckUrl}`);
-
+      const healthCheckUrl = `${baseUrl}/${prefix}${this.config.check.health}`;
       const response = await fetch(healthCheckUrl);
 
       if (response.ok) {

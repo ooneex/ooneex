@@ -69,6 +69,7 @@ container.add(MockEvent);
 
 const createMockConfig = (overrides: Record<string, unknown> = {}): AppConfigType => {
   const base = {
+    routing: { prefix: "/api/v1" },
     loggers: [MockLogger as unknown as AppConfigType["loggers"][0]],
     database: MockDatabase as unknown as AppConfigType["database"],
   };

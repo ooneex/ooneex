@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fs@1.1.6) - 2026-04-07
+
+### Changed
+
+- @ooneex/fs@1.1.5 — Franck ([78c76b63](https://github.com/ooneex/ooneex/commit/78c76b63))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fs@1.1.5) - 2026-04-07
 
 ### Changed

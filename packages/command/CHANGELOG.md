@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.1) - 2026-04-07
+
+### Changed
+
+- Add @ooneex/types dev dependency to command package — Franck ([a40c7a2b](https://github.com/ooneex/ooneex/commit/a40c7a2b))
+
 ## [0.1.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.0) - 2026-04-07
 
 ### Added

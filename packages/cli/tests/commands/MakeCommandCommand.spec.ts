@@ -108,26 +108,69 @@ describe("MakeCommandCommand", () => {
       expect(content).toContain("Deploy");
     });
 
-    test("should set kebab-case command name", async () => {
+    test("should set colon-separated command name", async () => {
       await command.run({ name: "RunMigrations" });
 
       const filePath = join(testDir, "src", "commands", "RunMigrationsCommand.ts");
       const content = await Bun.file(filePath).text();
 
-      expect(content).toContain("run-migrations");
+      expect(content).toContain("run:migrations");
+    });
+
+    test("should generate commands root export file", async () => {
+      await command.run({ name: "Deploy" });
+
+      const commandsFile = join(testDir, "src", "commands", "commands.ts");
+      expect(existsSync(commandsFile)).toBe(true);
+
+      const content = await Bun.file(commandsFile).text();
+      expect(content).toContain("export { DeployCommand } from './DeployCommand';");
+    });
+
+    test("should include all commands in root export file", async () => {
+      await command.run({ name: "Deploy" });
+      await command.run({ name: "Build" });
+
+      const commandsFile = join(testDir, "src", "commands", "commands.ts");
+      const content = await Bun.file(commandsFile).text();
+      expect(content).toContain("export { BuildCommand } from './BuildCommand';");
+      expect(content).toContain("export { DeployCommand } from './DeployCommand';");
+    });
+
+    test("should sort exports in root export file", async () => {
+      await command.run({ name: "Deploy" });
+      await command.run({ name: "Build" });
+
+      const commandsFile = join(testDir, "src", "commands", "commands.ts");
+      const content = await Bun.file(commandsFile).text();
+      const lines = content.trim().split("\n");
+      expect(lines[0]).toContain("BuildCommand");
+      expect(lines[1]).toContain("DeployCommand");
+    });
+
+    test("should generate commands root export file in module directory", async () => {
+      await Bun.write(join(testDir, "modules", "auth", "src", "commands", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "auth", "tests", "commands", ".gitkeep"), "");
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+
+      await command.run({ name: "Login", module: "auth" });
+
+      const commandsFile = join(testDir, "modules", "auth", "src", "commands", "commands.ts");
+      expect(existsSync(commandsFile)).toBe(true);
+
+      const content = await Bun.file(commandsFile).text();
+      expect(content).toContain("export { LoginCommand } from './LoginCommand';");
     });
 
     test("should create bin/command/run.ts if it does not exist", async () => {
       await command.run({ name: "Deploy" });
 
-      const binFile = join(testDir, "bin", "command", "run.ts");
+      const binFile = join(testDir, "modules", "app", "bin", "command", "run.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
-      const content = await Bun.file(binFile).text();
-      expect(content).toContain("@/commands/commands");
     });
 
     test("should not overwrite bin/command/run.ts if it already exists", async () => {
-      const binFile = join(testDir, "bin", "command", "run.ts");
+      const binFile = join(testDir, "modules", "app", "bin", "command", "run.ts");
       await Bun.write(binFile, "// custom content");
 
       await command.run({ name: "Deploy" });
@@ -136,34 +179,42 @@ describe("MakeCommandCommand", () => {
       expect(content).toBe("// custom content");
     });
 
-    test("should update package.json with command:run script", async () => {
+    test("should update package.json with command script", async () => {
+      await Bun.write(
+        join(testDir, "modules", "app", "package.json"),
+        JSON.stringify({ name: "test", scripts: {} }, null, 2),
+      );
+
       await command.run({ name: "Deploy" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts["command:run"]).toBe("bun ./bin/command/run.ts");
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
+      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
     });
 
     test("should preserve existing scripts in package.json", async () => {
       await Bun.write(
-        join(testDir, "package.json"),
+        join(testDir, "modules", "app", "package.json"),
         JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
       );
 
       await command.run({ name: "Deploy" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts.build).toBe("bun build");
-      expect(packageJson.scripts["command:run"]).toBe("bun ./bin/command/run.ts");
+      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
     });
 
     test("should create scripts object if it does not exist", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+      await Bun.write(
+        join(testDir, "modules", "app", "package.json"),
+        JSON.stringify({ name: "test" }, null, 2),
+      );
 
       await command.run({ name: "Deploy" });
 
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
+      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts).toBeDefined();
-      expect(packageJson.scripts["command:run"]).toBe("bun ./bin/command/run.ts");
+      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
     });
 
     test("should generate in module directory when module option is provided", async () => {

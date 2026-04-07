@@ -52,8 +52,8 @@ describe("MakeCronCommand", () => {
 
   describe("run()", () => {
     beforeEach(async () => {
-      await Bun.write(join(testDir, "src", "cron", ".gitkeep"), "");
-      await Bun.write(join(testDir, "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "src", "crons", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "crons", ".gitkeep"), "");
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
@@ -61,7 +61,7 @@ describe("MakeCronCommand", () => {
     test("should generate cron file with correct name", async () => {
       await command.run({ name: "Cleanup" });
 
-      const filePath = join(testDir, "src", "cron", "CleanupCron.ts");
+      const filePath = join(testDir, "src", "crons", "CleanupCron.ts");
       expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
@@ -71,7 +71,7 @@ describe("MakeCronCommand", () => {
     test("should generate test file for cron", async () => {
       await command.run({ name: "Cleanup" });
 
-      const testFilePath = join(testDir, "tests", "cron", "CleanupCron.spec.ts");
+      const testFilePath = join(testDir, "tests", "crons", "CleanupCron.spec.ts");
       expect(await exists(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();
@@ -81,14 +81,14 @@ describe("MakeCronCommand", () => {
     test("should normalize name with toPascalCase", async () => {
       await command.run({ name: "daily-report" });
 
-      const filePath = join(testDir, "src", "cron", "DailyReportCron.ts");
+      const filePath = join(testDir, "src", "crons", "DailyReportCron.ts");
       expect(await exists(filePath)).toBe(true);
     });
 
     test("should remove Cron suffix if provided", async () => {
       await command.run({ name: "CleanupCron" });
 
-      const filePath = join(testDir, "src", "cron", "CleanupCron.ts");
+      const filePath = join(testDir, "src", "crons", "CleanupCron.ts");
       expect(await exists(filePath)).toBe(true);
 
       const content = await Bun.file(filePath).text();
@@ -98,21 +98,21 @@ describe("MakeCronCommand", () => {
     test("should handle lowercase input", async () => {
       await command.run({ name: "backup" });
 
-      const filePath = join(testDir, "src", "cron", "BackupCron.ts");
+      const filePath = join(testDir, "src", "crons", "BackupCron.ts");
       expect(await exists(filePath)).toBe(true);
     });
 
     test("should handle snake_case input", async () => {
       await command.run({ name: "send_newsletter" });
 
-      const filePath = join(testDir, "src", "cron", "SendNewsletterCron.ts");
+      const filePath = join(testDir, "src", "crons", "SendNewsletterCron.ts");
       expect(await exists(filePath)).toBe(true);
     });
 
     test("should replace template placeholders correctly", async () => {
       await command.run({ name: "Sync" });
 
-      const filePath = join(testDir, "src", "cron", "SyncCron.ts");
+      const filePath = join(testDir, "src", "crons", "SyncCron.ts");
       const content = await Bun.file(filePath).text();
 
       expect(content).not.toContain("{{NAME}}");
@@ -125,8 +125,8 @@ describe("MakeCronCommand", () => {
       testDir = join(originalCwd, ".temp", "blog");
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
       await Bun.write(join(testDir, "src", "BlogModule.ts"), moduleContent);
-      await Bun.write(join(testDir, "src", "cron", ".gitkeep"), "");
-      await Bun.write(join(testDir, "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "src", "crons", ".gitkeep"), "");
+      await Bun.write(join(testDir, "tests", "crons", ".gitkeep"), "");
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
@@ -135,7 +135,7 @@ describe("MakeCronCommand", () => {
       await command.run({ name: "Cleanup" });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
+      expect(content).toContain('import { CleanupCron } from "./crons/CleanupCron"');
       expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*\]/s);
     });
 
@@ -144,8 +144,8 @@ describe("MakeCronCommand", () => {
       await command.run({ name: "Backup" });
 
       const content = await Bun.file(join(testDir, "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
-      expect(content).toContain('import { BackupCron } from "./cron/BackupCron"');
+      expect(content).toContain('import { CleanupCron } from "./crons/CleanupCron"');
+      expect(content).toContain('import { BackupCron } from "./crons/BackupCron"');
       expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*BackupCron.*\]/s);
     });
   });
@@ -155,8 +155,8 @@ describe("MakeCronCommand", () => {
       testDir = join(originalCwd, ".temp", `cron-module-${Date.now()}`);
       const moduleContent = moduleTemplate.replace(/{{NAME}}/g, "Blog");
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
-      await Bun.write(join(testDir, "modules", "blog", "src", "cron", ".gitkeep"), "");
-      await Bun.write(join(testDir, "modules", "blog", "tests", "cron", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "src", "crons", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "blog", "tests", "crons", ".gitkeep"), "");
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });
@@ -164,10 +164,10 @@ describe("MakeCronCommand", () => {
     test("should generate files under modules directory", async () => {
       await command.run({ name: "Cleanup", module: "blog" });
 
-      const cronPath = join(testDir, "modules", "blog", "src", "cron", "CleanupCron.ts");
+      const cronPath = join(testDir, "modules", "blog", "src", "crons", "CleanupCron.ts");
       expect(await exists(cronPath)).toBe(true);
 
-      const testFilePath = join(testDir, "modules", "blog", "tests", "cron", "CleanupCron.spec.ts");
+      const testFilePath = join(testDir, "modules", "blog", "tests", "crons", "CleanupCron.spec.ts");
       expect(await exists(testFilePath)).toBe(true);
     });
 
@@ -175,7 +175,7 @@ describe("MakeCronCommand", () => {
       await command.run({ name: "Cleanup", module: "blog" });
 
       const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
+      expect(content).toContain('import { CleanupCron } from "./crons/CleanupCron"');
       expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*\]/s);
     });
 
@@ -184,8 +184,8 @@ describe("MakeCronCommand", () => {
       await command.run({ name: "Backup", module: "blog" });
 
       const content = await Bun.file(join(testDir, "modules", "blog", "src", "BlogModule.ts")).text();
-      expect(content).toContain('import { CleanupCron } from "./cron/CleanupCron"');
-      expect(content).toContain('import { BackupCron } from "./cron/BackupCron"');
+      expect(content).toContain('import { CleanupCron } from "./crons/CleanupCron"');
+      expect(content).toContain('import { BackupCron } from "./crons/BackupCron"');
       expect(content).toMatch(/cronJobs:\s*\[.*CleanupCron.*BackupCron.*\]/s);
     });
   });

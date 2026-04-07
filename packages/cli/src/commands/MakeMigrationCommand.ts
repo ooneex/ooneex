@@ -22,7 +22,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
   public async run(options: T): Promise<void> {
     const { module } = options;
     const base = module ? join("modules", module) : ".";
-    const filePath = await migrationCreate({ dir: join(base, "src/migrations") });
+    const filePath = await migrationCreate({ dir: join(base, "src", "migrations") });
 
     // Create bin/migration/up.ts if it doesn't exist
     const binMigrationUpPath = join(process.cwd(), base, "bin", "migration", "up.ts");

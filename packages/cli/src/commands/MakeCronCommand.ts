@@ -25,7 +25,7 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
   private async addToModule(modulePath: string, cronName: string): Promise<void> {
     let content = await Bun.file(modulePath).text();
     const className = `${cronName}Cron`;
-    const importLine = `import { ${className} } from "./cron/${className}";\n`;
+    const importLine = `import { ${className} } from "./crons/${className}";\n`;
 
     const lastImportIndex = content.lastIndexOf("import ");
     const lineEnd = content.indexOf("\n", lastImportIndex);
@@ -54,14 +54,14 @@ export class MakeCronCommand<T extends CommandOptionsType = CommandOptionsType> 
     const content = template.replace(/{{NAME}}/g, name);
 
     const base = module ? join("modules", module) : ".";
-    const cronLocalDir = join(base, "src", "cron");
+    const cronLocalDir = join(base, "src", "crons");
     const cronDir = join(process.cwd(), cronLocalDir);
     const filePath = join(cronDir, `${name}Cron.ts`);
     await Bun.write(filePath, content);
 
     // Generate test file
     const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join(base, "tests", "cron");
+    const testsLocalDir = join(base, "tests", "crons");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Cron.spec.ts`);
     await Bun.write(testFilePath, testContent);

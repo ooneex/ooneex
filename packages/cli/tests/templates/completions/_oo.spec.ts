@@ -78,7 +78,7 @@ describe("_oo.txt", () => {
       "make\\:seed",
       "make\\:service",
       "make\\:storage",
-      "make\\:vector-database",
+      "make\\:vector\\:database",
     ];
 
     test.each(expectedCommands)("should include %s command", async (cmd) => {
@@ -181,12 +181,12 @@ describe("_oo.txt", () => {
         "make:repository",
         "make:service",
         "make:storage",
-        "make:vector-database",
+        "make:vector:database",
       ];
 
       test("should have name and module options", async () => {
         const content = await Bun.file(templatePath).text();
-        const pattern = groupedCommands.map((c) => c.replace(":", "\\:")).join("|");
+        const pattern = groupedCommands.map((c) => c.replaceAll(":", "\\:")).join("|");
         const regex = new RegExp(`(${pattern})\\)(.*?);;`, "s");
         const match = content.match(regex);
         expect(match).not.toBeNull();

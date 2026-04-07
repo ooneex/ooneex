@@ -1,12 +1,8 @@
 import { join } from "node:path";
 import type { ICommand } from "@ooneex/command";
-import { decorator } from "@ooneex/command";
+import { commandCreate, decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
-import { toKebabCase, toPascalCase } from "@ooneex/utils";
-import { Glob } from "bun";
 import { askName } from "../prompts/askName";
-import testTemplate from "../templates/command.test.txt";
-import template from "../templates/command.txt";
 import commandRunTemplate from "../templates/module/command.run.txt";
 
 type CommandOptionsType = {
@@ -31,35 +27,12 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
       name = await askName({ message: "Enter name" });
     }
 
-    name = toPascalCase(name).replace(/Command$/, "");
-
-    const commandName = toKebabCase(name).replace(/-/g, ":");
-    const content = template
-      .replace(/{{NAME}}/g, name)
-      .replace(/{{COMMAND_NAME}}/g, commandName)
-      .replace(/{{COMMAND_DESCRIPTION}}/g, `Execute ${commandName} command`);
-
     const base = module ? join("modules", module) : ".";
-    const commandLocalDir = join(base, "src", "commands");
-    const commandDir = join(process.cwd(), commandLocalDir);
-    const filePath = join(commandDir, `${name}Command.ts`);
-    await Bun.write(filePath, content);
-
-    // Generate test file
-    const testContent = testTemplate.replace(/{{NAME}}/g, name);
-    const testsLocalDir = join(base, "tests", "commands");
-    const testsDir = join(process.cwd(), testsLocalDir);
-    const testFilePath = join(testsDir, `${name}Command.spec.ts`);
-    await Bun.write(testFilePath, testContent);
-
-    // Generate commands root export file
-    const imports: string[] = [];
-    const glob = new Glob("**/*Command.ts");
-    for await (const file of glob.scan(commandDir)) {
-      const commandClassName = file.replace(/\.ts$/, "");
-      imports.push(`export { ${commandClassName} } from './${commandClassName}';`);
-    }
-    await Bun.write(join(commandDir, "commands.ts"), `${imports.sort().join("\n")}\n`);
+    const { commandPath, testPath } = await commandCreate({
+      name,
+      commandDir: join(base, "src", "commands"),
+      testsDir: join(base, "tests", "commands"),
+    });
 
     // Import commands root file in app root file
     if (module && module !== "app") {
@@ -96,13 +69,13 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
 
     const logger = new TerminalLogger();
 
-    logger.success(`${join(commandLocalDir, name)}Command.ts created successfully`, undefined, {
+    logger.success(`${commandPath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
     });
 
-    logger.success(`${join(testsLocalDir, name)}Command.spec.ts created successfully`, undefined, {
+    logger.success(`${testPath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

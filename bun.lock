@@ -409,7 +409,6 @@
         "@ooneex/cron": "workspace:*",
         "@ooneex/entity": "workspace:*",
         "@ooneex/middleware": "workspace:*",
-        "@ooneex/permission": "workspace:*",
         "@ooneex/pub-sub": "workspace:*",
       },
     },

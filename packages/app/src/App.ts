@@ -201,6 +201,8 @@ export class App {
 
     if (this.config.check?.health) {
       const healthCheckUrl = `${server.protocol}//${hostname}:${server.port}${prefix ?? ""}${this.config.check.health}`;
+      logger.info(`Health check URL: ${healthCheckUrl}`);
+
       const response = await fetch(healthCheckUrl);
 
       if (response.ok) {

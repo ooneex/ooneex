@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/module@1.2.5) - 2026-04-07
+
+### Changed
+
+- @ooneex/module@1.2.4 — Franck ([a616f66a](https://github.com/ooneex/ooneex/commit/a616f66a))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Remove permissions from ModuleType and make all fields required — Franck ([a0bc5c3d](https://github.com/ooneex/ooneex/commit/a0bc5c3d))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/module@1.2.4) - 2026-04-07
 
 ### Changed

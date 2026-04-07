@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.2.0) - 2026-04-07
+
+### Added
+
+- Add StatusType union type — Franck ([b6249bc5](https://github.com/ooneex/ooneex/commit/b6249bc5))
+
+### Changed
+
+- Add @types/bun to tsconfig types across all packages — Franck ([afd2c522](https://github.com/ooneex/ooneex/commit/afd2c522))
+
 ## [1.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.1.3) - 2026-04-01
 
 ### Changed

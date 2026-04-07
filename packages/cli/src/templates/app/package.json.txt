@@ -16,8 +16,7 @@
   ],
   "lint-staged": {
     "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
-      "biome check --files-ignore-unknown=true",
-      "tsgo --noEmit"
+      "biome check --files-ignore-unknown=true"
     ]
   }
 }

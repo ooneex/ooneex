@@ -34,4 +34,9 @@ describe("package.json.txt", () => {
     expect(content).not.toContain('"prepare"');
     expect(content).not.toContain("husky");
   });
+
+  test("should not contain tsgo in lint-staged", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain("tsgo");
+  });
 });

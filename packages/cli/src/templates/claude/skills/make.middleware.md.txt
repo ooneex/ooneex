@@ -22,7 +22,7 @@ Generate a new middleware class and its test file using the `make:middleware` CL
 Run the following command to scaffold the middleware class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:middleware --name <name> --module <module> --is-socket <true|false>
+bunx @ooneex/cli@latest make:middleware --name=<name> --module=<module> --is-socket=<true|false>
 ```
 
 Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The `--is-socket` option determines whether to generate an HTTP middleware or a WebSocket middleware (defaults to `false` if omitted). The command will generate:

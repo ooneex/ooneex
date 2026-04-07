@@ -22,7 +22,7 @@ Generate a new entity class and its test file using the `make:entity` CLI comman
 Run the following command to scaffold the entity class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:entity --name <name> --module <module> --table-name <table_name>
+bunx @ooneex/cli@latest make:entity --name=<name> --module=<module> --table-name=<table_name>
 ```
 
 Where `<name>` is the name provided by the user. The `--table-name` option is optional — if omitted, it defaults to the snake_case pluralized form of the name (e.g., `UserProfile` becomes `user_profiles`). The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
@@ -199,7 +199,7 @@ After creating the entity, generate a repository to handle database operations f
 Run the generator:
 
 ```bash
-bunx @ooneex/cli@latest make:repository --name <name>
+bunx @ooneex/cli@latest make:repository --name=<name>
 ```
 
 Where `<name>` is the same name used for the entity. The command will generate:

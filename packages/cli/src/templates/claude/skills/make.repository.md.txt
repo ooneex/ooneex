@@ -22,7 +22,7 @@ Generate a new repository class and its test file using the `make:repository` CL
 Run the following command to scaffold the repository class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:repository --name <name> --module <module>
+bunx @ooneex/cli@latest make:repository --name=<name> --module=<module>
 ```
 
 Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:

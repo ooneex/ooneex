@@ -22,7 +22,7 @@ Generate a new migration file and its test file using the `make:migration` CLI c
 Run the following command to scaffold the migration file and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:migration --module <module>
+bunx @ooneex/cli@latest make:migration --module=<module>
 ```
 
 The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:

@@ -22,16 +22,16 @@ Generate a new controller class, its route type, and test file using the `make:c
 Run the following command to scaffold the controller class and related files:
 
 ```bash
-bunx @ooneex/cli@latest make:controller --name <name> --module <module> --is-socket <true|false> --route.name <route.name> --route.path <route.path> --route.method <route.method>
+bunx @ooneex/cli@latest make:controller --name=<name> --module=<module> --is-socket=<true|false> --route-name=<route.name> --route-path=<route.path> --route-method=<route.method>
 ```
 
 Where:
 - `<name>` is the controller name provided by the user
 - `--module` is optional — if provided, files are generated under `modules/<module>/` instead of the project root
 - `--is-socket` determines HTTP vs WebSocket controller (defaults to `false`)
-- `--route.name` is the route name using dot notation: `<resource>.<action>` (e.g., `user.create`, `book.list`, `flashcard.delete`)
-- `--route.path` is the route path (e.g., `/api/users`)
-- `--route.method` is the HTTP method (e.g., `get`, `post`, `put`, `patch`, `delete`) — only for HTTP controllers
+- `--route-name` is the route name using dot notation: `<resource>.<action>` (e.g., `user.create`, `book.list`, `flashcard.delete`)
+- `--route-path` is the route path (e.g., `/api/users`)
+- `--route-method` is the HTTP method (e.g., `get`, `post`, `put`, `patch`, `delete`) — only for HTTP controllers
 
 The command will generate (paths prefixed with `modules/<module>/` when `--module` is provided):
 - `src/controllers/<Name>Controller.ts` - The controller class file
@@ -243,7 +243,7 @@ bunx biome check --fix src/controllers/<Name>Controller.ts tests/controllers/<Na
 After the controller is created, generate a service class for the controller's business logic using the `make:service` skill:
 
 ```
-/make:service --name <Name>
+/make:service --name=<Name>
 ```
 
 Where `<Name>` matches the controller name (e.g., if the controller is `CreateUserController`, the service is `CreateUserService`).
@@ -253,7 +253,7 @@ Where `<Name>` matches the controller name (e.g., if the controller is `CreateUs
 After the service is created, generate a pubsub event class for the controller's domain events using the `make:pubsub` skill:
 
 ```
-/make:pubsub --name <Name> --channel <resource>.<action>
+/make:pubsub --name=<Name> --channel=<resource>.<action>
 ```
 
 Where:

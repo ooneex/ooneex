@@ -22,7 +22,7 @@ Generate a new mailer class, its JSX template, and test files using the `make:ma
 Run the following command to scaffold the mailer class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:mailer --name <name> --module <module>
+bunx @ooneex/cli@latest make:mailer --name=<name> --module=<module>
 ```
 
 Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate (paths prefixed with `modules/<module>/` when `--module` is provided):

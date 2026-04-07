@@ -22,7 +22,7 @@ Generate a new PubSub event class and its test file using the `make:pubsub` CLI 
 Run the following command to scaffold the PubSub event class and test files:
 
 ```bash
-bunx @ooneex/cli@latest make:pubsub --name <name> --module <module> --channel <channel>
+bunx @ooneex/cli@latest make:pubsub --name=<name> --module=<module> --channel=<channel>
 ```
 
 Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The `--channel` option is optional — if omitted, it defaults to the kebab-case form of the name (e.g., `UserCreated` becomes `user-created`). The command will generate:

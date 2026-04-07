@@ -13,9 +13,6 @@ const app = new App({
   routing: {
     prefix: "api",
   },
-  check: {
-    health: "/v1/health-check",
-  },
   loggers: [BetterstackLogger, TerminalLogger],
   onException: BetterstackExceptionLogger,
   analytics: PostHogAnalytics,

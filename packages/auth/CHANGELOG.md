@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.4) - 2026-04-07
+
+### Changed
+
+- Add @ooneex/role dependency — Franck ([f7d825ff](https://github.com/ooneex/ooneex/commit/f7d825ff))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.3) - 2026-04-05
 
 ### Changed

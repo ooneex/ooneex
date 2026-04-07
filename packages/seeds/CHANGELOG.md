@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.3.0) - 2026-04-07
+
+### Added
+
+- Add test template and seedCreate tests — Franck ([c5b98f9c](https://github.com/ooneex/ooneex/commit/c5b98f9c))
+
+### Changed
+
+- @ooneex/seeds@1.2.5 — Franck ([8a7e25c1](https://github.com/ooneex/ooneex/commit/8a7e25c1))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.2.5) - 2026-04-07
 
 ### Changed

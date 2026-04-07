@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.4) - 2026-04-07
+
+### Changed
+
+- @ooneex/routing@1.3.3 — Franck ([199d4adf](https://github.com/ooneex/ooneex/commit/199d4adf))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Format Router exception throws — Franck ([7afc5055](https://github.com/ooneex/ooneex/commit/7afc5055))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.3) - 2026-04-07
 
 ### Changed

@@ -31,7 +31,8 @@
     "@ooneex/container": "workspace:*",
     "@ooneex/exception": "workspace:*",
     "@ooneex/http-status": "workspace:*",
-    "@ooneex/logger": "workspace:*"
+    "@ooneex/logger": "workspace:*",
+    "@ooneex/utils": "workspace:*"
   },
   "devDependencies": {},
   "keywords": [

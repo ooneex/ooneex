@@ -34,7 +34,9 @@
     "@ooneex/logger": "workspace:*",
     "@ooneex/utils": "workspace:*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@ooneex/types": "workspace:*"
+  },
   "keywords": [
     "bun",
     "cli",

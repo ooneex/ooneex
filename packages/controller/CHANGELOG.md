@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.4) - 2026-04-07
+
+### Changed
+
+- Add @types/bun to tsconfig types across all packages — Franck ([afd2c522](https://github.com/ooneex/ooneex/commit/afd2c522))
+- Rename language to lang in ContextType — Franck ([78fe6f67](https://github.com/ooneex/ooneex/commit/78fe6f67))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.3) - 2026-04-01
 
 ### Changed

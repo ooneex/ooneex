@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.7) - 2026-04-07
+
+### Changed
+
+- @ooneex/middleware@1.2.6 — Franck ([84d4e35e](https://github.com/ooneex/ooneex/commit/84d4e35e))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.6) - 2026-04-07
 
 ### Changed

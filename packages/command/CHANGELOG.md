@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.2) - 2026-04-07
+
+### Changed
+
+- Rename commandRun to run and fix health-check URL — Franck ([9f0685a5](https://github.com/ooneex/ooneex/commit/9f0685a5))
+
 ## [0.1.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.1) - 2026-04-07
 
 ### Changed

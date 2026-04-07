@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.13.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.0) - 2026-04-07
+
+### Added
+
+- Add make:command generator, export decorators/types, and fix completions — Franck ([a614e55a](https://github.com/ooneex/ooneex/commit/a614e55a))
+- Add MakeCommandCommand and refactor CLI entry point — Franck ([537c7d53](https://github.com/ooneex/ooneex/commit/537c7d53))
+- Add order/orderBy support to repository templates and fix status seed names — Franck ([dc794c64](https://github.com/ooneex/ooneex/commit/dc794c64))
+- Add YouTube transcript API key to env template — Franck ([9636c260](https://github.com/ooneex/ooneex/commit/9636c260))
+
+### Changed
+
+- Update MakeMigration and MakeSeed commands and skill templates — Franck ([304c5eb3](https://github.com/ooneex/ooneex/commit/304c5eb3))
+- Use commandCreate from @ooneex/command in MakeCommandCommand — Franck ([1d753e09](https://github.com/ooneex/ooneex/commit/1d753e09))
+- Extract command module into separate @ooneex/command package — Franck ([aa3788d3](https://github.com/ooneex/ooneex/commit/aa3788d3))
+- @ooneex/cli@1.12.0 — Franck ([794ac6e1](https://github.com/ooneex/ooneex/commit/794ac6e1))
+- Apply coding conventions to MakeDockerCommand — Franck ([4a07780a](https://github.com/ooneex/ooneex/commit/4a07780a))
+- Move dev script to docker command and remove @nx/js from app template — Franck ([c89b4f92](https://github.com/ooneex/ooneex/commit/c89b4f92))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Rename cron dir to crons, use colon-separated command names, and update paths — Franck ([15312860](https://github.com/ooneex/ooneex/commit/15312860))
+- Move docker-compose to modules/app and remove permissions from templates — Franck ([18a75d3d](https://github.com/ooneex/ooneex/commit/18a75d3d))
+- Format MakeModuleCommand destructuring — Franck ([6edf22a9](https://github.com/ooneex/ooneex/commit/6edf22a9))
+- Add YouTube env section test — Franck ([369cbbd7](https://github.com/ooneex/ooneex/commit/369cbbd7))
+
 ## [1.12.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.12.0) - 2026-04-07
 
 ### Added

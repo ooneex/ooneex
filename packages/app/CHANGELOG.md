@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.2) - 2026-04-07
+
+### Changed
+
+- Remove health check feature — Franck ([754fa342](https://github.com/ooneex/ooneex/commit/754fa342))
+
+### Fixed
+
+- Use getConstant for logger in HTTP context builder — Franck ([bb756c5b](https://github.com/ooneex/ooneex/commit/bb756c5b))
+
 ## [1.7.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.1) - 2026-04-07
 
 ### Changed

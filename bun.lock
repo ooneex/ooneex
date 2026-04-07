@@ -73,6 +73,7 @@
         "@ooneex/app-env": "workspace:*",
         "@ooneex/cache": "workspace:*",
         "@ooneex/container": "workspace:*",
+        "@ooneex/database": "workspace:*",
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-request": "workspace:*",
         "@ooneex/http-response": "workspace:*",
@@ -91,6 +92,7 @@
         "@ooneex/cron": "workspace:*",
         "@ooneex/middleware": "workspace:*",
         "@ooneex/module": "workspace:*",
+        "@ooneex/permission": "workspace:*",
         "@ooneex/pub-sub": "workspace:*",
         "@ooneex/socket": "workspace:*",
         "@ooneex/socket-client": "workspace:*",
@@ -182,6 +184,9 @@
         "@ooneex/http-status": "workspace:*",
         "@ooneex/logger": "workspace:*",
         "@ooneex/utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@ooneex/types": "workspace:*",
       },
     },
     "packages/container": {

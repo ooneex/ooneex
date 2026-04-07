@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.2.2) - 2026-04-07
+
+### Changed
+
+- @ooneex/exception@1.2.1 — Franck ([160bbd82](https://github.com/ooneex/ooneex/commit/160bbd82))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.2.1) - 2026-04-07
 
 ### Changed

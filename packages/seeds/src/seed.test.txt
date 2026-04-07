@@ -1,0 +1,23 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}}Seed } from "@/seeds/{{NAME}}Seed";
+
+describe("{{NAME}}Seed", () => {
+  test("should have class name ending with 'Seed'", () => {
+    expect({{NAME}}Seed.name.endsWith("Seed")).toBe(true);
+  });
+
+  test("should have 'run' method", () => {
+    expect({{NAME}}Seed.prototype.run).toBeDefined();
+    expect(typeof {{NAME}}Seed.prototype.run).toBe("function");
+  });
+
+  test("should have 'isActive' method", () => {
+    expect({{NAME}}Seed.prototype.isActive).toBeDefined();
+    expect(typeof {{NAME}}Seed.prototype.isActive).toBe("function");
+  });
+
+  test("should have 'getDependencies' method", () => {
+    expect({{NAME}}Seed.prototype.getDependencies).toBeDefined();
+    expect(typeof {{NAME}}Seed.prototype.getDependencies).toBe("function");
+  });
+});

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.1) - 2026-04-07
+
+### Changed
+
+- Improve URL building and make routing config required — Franck ([98aff1f6](https://github.com/ooneex/ooneex/commit/98aff1f6))
+
 ## [1.7.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.0) - 2026-04-07
 
 ### Added

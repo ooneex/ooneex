@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.3.0) - 2026-04-07
+
+### Added
+
+- Add transcript API and convert URL methods to static — Franck ([b3332fbb](https://github.com/ooneex/ooneex/commit/b3332fbb))
+
+### Changed
+
+- @ooneex/youtube@1.2.0 — Franck ([b885e41b](https://github.com/ooneex/ooneex/commit/b885e41b))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+- Rename transcript response fields to id and lang — Franck ([1ed46e34](https://github.com/ooneex/ooneex/commit/1ed46e34))
+
 ## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.2.0) - 2026-04-07
 
 ### Added

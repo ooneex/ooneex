@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fetcher@1.2.5) - 2026-04-07
+
+### Changed
+
+- @ooneex/fetcher@1.2.4 — Franck ([3d68354b](https://github.com/ooneex/ooneex/commit/3d68354b))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fetcher@1.2.4) - 2026-04-07
 
 ### Changed

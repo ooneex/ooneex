@@ -89,7 +89,7 @@ describe("MakeDockerCommand", () => {
       await command.run({ name: "postgres" });
 
       const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(packageJson.scripts.docker).toBe("docker compose up -d");
+      expect(packageJson.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
     });
 
     test("should append service to existing docker-compose.yml", async () => {
@@ -121,7 +121,7 @@ describe("MakeDockerCommand", () => {
 
       const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts.build).toBe("bun build");
-      expect(packageJson.scripts.docker).toBe("docker compose up -d");
+      expect(packageJson.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
     });
 
     test("should create scripts object if it does not exist", async () => {
@@ -131,7 +131,7 @@ describe("MakeDockerCommand", () => {
 
       const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(packageJson.scripts).toBeDefined();
-      expect(packageJson.scripts.docker).toBe("docker compose up -d");
+      expect(packageJson.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
     });
   });
 });

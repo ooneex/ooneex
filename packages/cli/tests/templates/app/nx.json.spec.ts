@@ -16,4 +16,19 @@ describe("nx.json.txt", () => {
     expect(content).toContain("$schema");
     expect(content).toContain("targetDefaults");
   });
+
+  test("should not contain plugins section", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).not.toContain("plugins");
+    expect(content).not.toContain("@nx/js/typescript");
+    expect(content).not.toContain("projectsAffectedByDependencyUpdates");
+  });
+
+  test("should contain tui and packageManager settings", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("tui");
+    expect(content).toContain("autoExit");
+    expect(content).toContain("packageManager");
+    expect(content).toContain("bun");
+  });
 });

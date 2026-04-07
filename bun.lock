@@ -180,6 +180,7 @@
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
         "@ooneex/logger": "workspace:*",
+        "@ooneex/utils": "workspace:*",
       },
     },
     "packages/container": {

@@ -1,8 +1,5 @@
-export {
-  BetterstackExceptionLogger,
-  BetterstackExceptionLogger as ExceptionLogger,
-} from "./BetterstackExceptionLogger";
-export { BetterstackLogger as LogtailLogger } from "./BetterstackLogger";
+export { BetterstackExceptionLogger } from "./BetterstackExceptionLogger";
+export { BetterstackLogger } from "./BetterstackLogger";
 export { DatabaseLogger } from "./DatabaseLogger";
 export { decorator } from "./decorators";
 export { LoggerException } from "./LoggerException";

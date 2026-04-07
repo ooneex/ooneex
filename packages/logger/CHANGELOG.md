@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.7) - 2026-04-07
+
+### Changed
+
+- Format exception logger exports and test — Franck ([f40ba4b7](https://github.com/ooneex/ooneex/commit/f40ba4b7))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.6) - 2026-04-05
 
 ### Changed

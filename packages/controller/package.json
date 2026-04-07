@@ -41,6 +41,7 @@
     "@ooneex/permission": "workspace:*",
     "@ooneex/translation": "workspace:*",
     "@ooneex/types": "workspace:*",
+    "@ooneex/database": "workspace:*",
     "@ooneex/user": "workspace:*"
   },
   "keywords": [

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.6.1) - 2026-04-07
+
+### Changed
+
+- Add @ooneex/database and @ooneex/permission dependencies — Franck ([a637b596](https://github.com/ooneex/ooneex/commit/a637b596))
+
 ## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.6.0) - 2026-04-07
 
 ### Added

@@ -29,6 +29,7 @@
     "dev": "bun run src/dev.ts"
   },
   "dependencies": {
+    "@ooneex/database": "workspace:*",
     "@ooneex/analytics": "workspace:*",
     "@ooneex/app-env": "workspace:*",
     "@ooneex/cache": "workspace:*",
@@ -47,6 +48,7 @@
     "@ooneex/validation": "workspace:*"
   },
   "devDependencies": {
+    "@ooneex/permission": "workspace:*",
     "@ooneex/controller": "workspace:*",
     "@ooneex/cron": "workspace:*",
     "@ooneex/pub-sub": "workspace:*",

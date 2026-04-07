@@ -1,0 +1,102 @@
+import { describe, expect, mock, test } from "bun:test";
+
+// Mock enquirer before importing commands
+mock.module("enquirer", () => ({
+  prompt: mock(() => Promise.resolve({ name: "Test" })),
+}));
+
+// Mock logger to suppress output
+mock.module("@ooneex/logger", () => ({
+  TerminalLogger: class {
+    init() {}
+    info() {}
+    error() {}
+    warn() {}
+    debug() {}
+    log() {}
+    success() {}
+  },
+  decorator: {
+    logger: () => () => {},
+  },
+}));
+
+const commands = await import("@/commands");
+
+type CommandConstructor = new () => {
+  getName: () => string;
+  getDescription: () => string;
+  run: (...args: unknown[]) => unknown;
+};
+
+describe("@ooneex/cli - index", () => {
+  const expectedCommands = [
+    "CompletionZshCommand",
+    "MakeAiCommand",
+    "MakeAnalyticsCommand",
+    "MakeAppCommand",
+    "MakeCacheCommand",
+    "MakeClaudeSkillCommand",
+    "MakeCommandCommand",
+    "MakeControllerCommand",
+    "MakeCronCommand",
+    "MakeDatabaseCommand",
+    "MakeDockerCommand",
+    "MakeEntityCommand",
+    "MakeLoggerCommand",
+    "MakeMailerCommand",
+    "MakeMiddlewareCommand",
+    "MakeMigrationCommand",
+    "MakeModuleCommand",
+    "MakePermissionCommand",
+    "MakePubSubCommand",
+    "MakeReleaseCommand",
+    "MakeRepositoryCommand",
+    "MakeResourceBookCommand",
+    "MakeSeedCommand",
+    "MakeServiceCommand",
+    "MakeStorageCommand",
+    "MakeVectorDatabaseCommand",
+  ] as const;
+
+  test("should export all command classes", () => {
+    for (const name of expectedCommands) {
+      expect(commands[name]).toBeDefined();
+      expect(typeof commands[name]).toBe("function");
+    }
+  });
+
+  test("should export exactly the expected number of commands", () => {
+    const exportedKeys = Object.keys(commands);
+    expect(exportedKeys).toHaveLength(expectedCommands.length);
+  });
+
+  test("each command should be instantiable", () => {
+    for (const name of expectedCommands) {
+      const CommandClass = commands[name] as unknown as CommandConstructor;
+      const instance = new CommandClass();
+      expect(instance).toBeDefined();
+    }
+  });
+
+  test("each command should have getName and getDescription methods", () => {
+    for (const name of expectedCommands) {
+      const CommandClass = commands[name] as unknown as CommandConstructor;
+      const instance = new CommandClass();
+      expect(typeof instance.getName).toBe("function");
+      expect(typeof instance.getDescription).toBe("function");
+      expect(typeof instance.getName()).toBe("string");
+      expect(typeof instance.getDescription()).toBe("string");
+      expect(instance.getName().length).toBeGreaterThan(0);
+      expect(instance.getDescription().length).toBeGreaterThan(0);
+    }
+  });
+
+  test("each command should have a run method", () => {
+    for (const name of expectedCommands) {
+      const CommandClass = commands[name] as unknown as CommandConstructor;
+      const instance = new CommandClass();
+      expect(typeof instance.run).toBe("function");
+    }
+  });
+});

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.6) - 2026-04-07
+
+### Changed
+
+- @ooneex/http-request@1.2.5 — Franck ([784e19b3](https://github.com/ooneex/ooneex/commit/784e19b3))
+- Rename language to lang and use UrlQueriesType — Franck ([ef2f4669](https://github.com/ooneex/ooneex/commit/ef2f4669))
+
 ## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.5) - 2026-04-07
 
 ### Changed

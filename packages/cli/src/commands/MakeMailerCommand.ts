@@ -1,13 +1,13 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
-import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import mailerTestTemplate from "../templates/mailer/mailer.test.txt";
 import mailerTemplate from "../templates/mailer/mailer.txt";
 import mailerTemplateTestTemplate from "../templates/mailer/mailer-template.test.txt";
 import mailerTemplateTemplate from "../templates/mailer/mailer-template.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;

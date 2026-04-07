@@ -1,13 +1,13 @@
 import { basename, join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { toPascalCase } from "@ooneex/utils";
-import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
 import { askName } from "../prompts/askName";
 import socketTemplate from "../templates/middleware.socket.txt";
 import testTemplate from "../templates/middleware.test.txt";
 import template from "../templates/middleware.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;

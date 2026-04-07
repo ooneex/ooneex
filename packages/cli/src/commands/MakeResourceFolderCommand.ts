@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createFolderControllerTemplate from "../templates/resources/folder/controllers/CreateFolderController.txt";
 import deleteFolderControllerTemplate from "../templates/resources/folder/controllers/DeleteFolderController.txt";
 import getFolderControllerTemplate from "../templates/resources/folder/controllers/GetFolderController.txt";
@@ -14,7 +15,6 @@ import deleteFolderServiceTemplate from "../templates/resources/folder/services/
 import getFolderServiceTemplate from "../templates/resources/folder/services/GetFolderService.txt";
 import listFoldersServiceTemplate from "../templates/resources/folder/services/ListFoldersService.txt";
 import updateFolderServiceTemplate from "../templates/resources/folder/services/UpdateFolderService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

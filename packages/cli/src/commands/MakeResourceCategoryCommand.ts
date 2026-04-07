@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import entityTemplate from "../templates/resources/category/CategoryEntity.txt";
 import migrationTemplate from "../templates/resources/category/CategoryMigration.txt";
 import repositoryTemplate from "../templates/resources/category/CategoryRepository.txt";
@@ -14,7 +15,6 @@ import deleteCategoryServiceTemplate from "../templates/resources/category/servi
 import getCategoryServiceTemplate from "../templates/resources/category/services/GetCategoryService.txt";
 import listCategoriesServiceTemplate from "../templates/resources/category/services/ListCategoriesService.txt";
 import updateCategoryServiceTemplate from "../templates/resources/category/services/UpdateCategoryService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

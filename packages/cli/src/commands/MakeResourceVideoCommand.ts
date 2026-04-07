@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createVideoControllerTemplate from "../templates/resources/video/controllers/CreateVideoController.txt";
 import deleteVideoControllerTemplate from "../templates/resources/video/controllers/DeleteVideoController.txt";
 import getVideoControllerTemplate from "../templates/resources/video/controllers/GetVideoController.txt";
@@ -14,7 +15,6 @@ import updateVideoServiceTemplate from "../templates/resources/video/services/Up
 import entityTemplate from "../templates/resources/video/VideoEntity.txt";
 import migrationTemplate from "../templates/resources/video/VideoMigration.txt";
 import repositoryTemplate from "../templates/resources/video/VideoRepository.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

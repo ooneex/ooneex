@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createStatusControllerTemplate from "../templates/resources/status/controllers/CreateStatusController.txt";
 import deleteStatusControllerTemplate from "../templates/resources/status/controllers/DeleteStatusController.txt";
 import getStatusControllerTemplate from "../templates/resources/status/controllers/GetStatusController.txt";
@@ -16,7 +17,6 @@ import deleteStatusServiceTemplate from "../templates/resources/status/services/
 import getStatusServiceTemplate from "../templates/resources/status/services/GetStatusService.txt";
 import listStatusesServiceTemplate from "../templates/resources/status/services/ListStatusesService.txt";
 import updateStatusServiceTemplate from "../templates/resources/status/services/UpdateStatusService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

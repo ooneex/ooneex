@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createTaskControllerTemplate from "../templates/resources/task/controllers/CreateTaskController.txt";
 import deleteTaskControllerTemplate from "../templates/resources/task/controllers/DeleteTaskController.txt";
 import getTaskControllerTemplate from "../templates/resources/task/controllers/GetTaskController.txt";
@@ -14,7 +15,6 @@ import updateTaskServiceTemplate from "../templates/resources/task/services/Upda
 import entityTemplate from "../templates/resources/task/TaskEntity.txt";
 import migrationTemplate from "../templates/resources/task/TaskMigration.txt";
 import repositoryTemplate from "../templates/resources/task/TaskRepository.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

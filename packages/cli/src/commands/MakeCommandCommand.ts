@@ -1,13 +1,13 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import testTemplate from "../templates/command.test.txt";
 import template from "../templates/command.txt";
 import commandRunTemplate from "../templates/module/command.run.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;

@@ -1,10 +1,10 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { seedCreate } from "@ooneex/seeds";
-import { decorator } from "../decorators";
 import { askName } from "../prompts/askName";
 import seedRunTemplate from "../templates/module/seed.run.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;

@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createTagControllerTemplate from "../templates/resources/tag/controllers/CreateTagController.txt";
 import deleteTagControllerTemplate from "../templates/resources/tag/controllers/DeleteTagController.txt";
 import getTagControllerTemplate from "../templates/resources/tag/controllers/GetTagController.txt";
@@ -14,7 +15,6 @@ import updateTagServiceTemplate from "../templates/resources/tag/services/Update
 import entityTemplate from "../templates/resources/tag/TagEntity.txt";
 import migrationTemplate from "../templates/resources/tag/TagMigration.txt";
 import repositoryTemplate from "../templates/resources/tag/TagRepository.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

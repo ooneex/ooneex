@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createTopicControllerTemplate from "../templates/resources/topic/controllers/CreateTopicController.txt";
 import deleteTopicControllerTemplate from "../templates/resources/topic/controllers/DeleteTopicController.txt";
 import getTopicControllerTemplate from "../templates/resources/topic/controllers/GetTopicController.txt";
@@ -14,7 +15,6 @@ import updateTopicServiceTemplate from "../templates/resources/topic/services/Up
 import entityTemplate from "../templates/resources/topic/TopicEntity.txt";
 import migrationTemplate from "../templates/resources/topic/TopicMigration.txt";
 import repositoryTemplate from "../templates/resources/topic/TopicRepository.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

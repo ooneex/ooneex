@@ -1,10 +1,10 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
-import { decorator } from "../decorators";
 import ooTemplate from "../templates/completions/_oo.txt";
 import ooneexTemplate from "../templates/completions/_ooneex.txt";
-import type { ICommand } from "../types";
 
 @decorator.command()
 export class CompletionZshCommand implements ICommand {

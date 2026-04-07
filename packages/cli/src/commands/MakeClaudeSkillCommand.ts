@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
-import { decorator } from "../decorators";
 import commit from "../templates/claude/skills/commit.md.txt";
 import makeAi from "../templates/claude/skills/make.ai.md.txt";
 import makeAnalytics from "../templates/claude/skills/make.analytics.md.txt";
@@ -21,7 +22,6 @@ import makeService from "../templates/claude/skills/make.service.md.txt";
 import makeStorage from "../templates/claude/skills/make.storage.md.txt";
 import makeVectorDatabase from "../templates/claude/skills/make.vector-database.md.txt";
 import optimize from "../templates/claude/skills/optimize.md.txt";
-import type { ICommand } from "../types";
 
 const skills: Record<string, string> = {
   "make.ai": makeAi,

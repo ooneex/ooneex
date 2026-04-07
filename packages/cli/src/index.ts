@@ -1,3 +1,5 @@
-export { commandRun } from "./commandRun";
-export * from "./decorators";
-export * from "./types";
+#!/usr/bin/env bun
+
+import { commandRun } from "@ooneex/command";
+
+await commandRun();

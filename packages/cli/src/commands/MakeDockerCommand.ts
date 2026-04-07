@@ -1,10 +1,10 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { YAML } from "bun";
-import { decorator } from "../decorators";
 import { askDockerService, type DockerServiceType } from "../prompts/askDockerService";
 import { templates } from "../templates/docker";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: DockerServiceType;

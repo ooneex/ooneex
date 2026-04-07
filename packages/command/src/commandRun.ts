@@ -4,9 +4,8 @@ import { Exception } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
 import type { HttpMethodType } from "@ooneex/types";
 import { getCommand } from "./getCommand";
-import "./commands";
 
-export const commandRun = async () => {
+export const commandRun = async (): Promise<void> => {
   const { values, positionals } = parseArgs({
     args: Bun.argv,
     options: {

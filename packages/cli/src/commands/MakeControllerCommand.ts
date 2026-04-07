@@ -1,8 +1,9 @@
 import { basename, join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import type { HttpMethodType } from "@ooneex/types";
 import { toKebabCase, toPascalCase, trim } from "@ooneex/utils";
-import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
 import { askName } from "../prompts/askName";
 import { askRouteMethod } from "../prompts/askRouteMethod";
@@ -11,7 +12,6 @@ import { askRoutePath } from "../prompts/askRoutePath";
 import socketTemplate from "../templates/controller.socket.txt";
 import testTemplate from "../templates/controller.test.txt";
 import template from "../templates/controller.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   name?: string;

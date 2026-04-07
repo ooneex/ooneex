@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import entityTemplate from "../templates/resources/book/BookEntity.txt";
 import migrationTemplate from "../templates/resources/book/BookMigration.txt";
 import repositoryTemplate from "../templates/resources/book/BookRepository.txt";
@@ -14,7 +15,6 @@ import deleteBookServiceTemplate from "../templates/resources/book/services/Dele
 import getBookServiceTemplate from "../templates/resources/book/services/GetBookService.txt";
 import listBooksServiceTemplate from "../templates/resources/book/services/ListBooksService.txt";
 import updateBookServiceTemplate from "../templates/resources/book/services/UpdateBookService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

@@ -1,10 +1,10 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { $ } from "bun";
-import { decorator } from "../decorators";
 import { askConfirm } from "../prompts/askConfirm";
-import type { ICommand } from "../types";
 
 type PackageJsonType = {
   name: string;

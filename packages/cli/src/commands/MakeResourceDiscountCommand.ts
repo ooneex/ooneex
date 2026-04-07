@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createDiscountControllerTemplate from "../templates/resources/discount/controllers/CreateDiscountController.txt";
 import deleteDiscountControllerTemplate from "../templates/resources/discount/controllers/DeleteDiscountController.txt";
 import getDiscountControllerTemplate from "../templates/resources/discount/controllers/GetDiscountController.txt";
@@ -14,7 +15,6 @@ import deleteDiscountServiceTemplate from "../templates/resources/discount/servi
 import getDiscountServiceTemplate from "../templates/resources/discount/services/GetDiscountService.txt";
 import listDiscountsServiceTemplate from "../templates/resources/discount/services/ListDiscountsService.txt";
 import updateDiscountServiceTemplate from "../templates/resources/discount/services/UpdateDiscountService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

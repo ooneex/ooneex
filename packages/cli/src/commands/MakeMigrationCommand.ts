@@ -1,9 +1,9 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { migrationCreate } from "@ooneex/migrations";
-import { decorator } from "../decorators";
 import migrationUpTemplate from "../templates/module/migration.up.txt";
-import type { ICommand } from "../types";
 
 type CommandOptionsType = {
   module?: string;

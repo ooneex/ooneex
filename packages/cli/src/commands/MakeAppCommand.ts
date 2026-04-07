@@ -1,7 +1,8 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toSnakeCase } from "@ooneex/utils";
-import { decorator } from "../decorators";
 import { askDestination } from "../prompts/askDestination";
 import { askName } from "../prompts/askName";
 import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
@@ -18,7 +19,6 @@ import packageTemplate from "../templates/app/package.json.txt";
 import readmeTemplate from "../templates/app/README.md.txt";
 import tsconfigTemplate from "../templates/app/tsconfig.json.txt";
 import zedSettingsTemplate from "../templates/app/zed-settings.json.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeModuleCommand } from "./MakeModuleCommand";
 

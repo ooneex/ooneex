@@ -205,10 +205,7 @@ describe("MakeCommandCommand", () => {
     });
 
     test("should create scripts object if it does not exist", async () => {
-      await Bun.write(
-        join(testDir, "modules", "app", "package.json"),
-        JSON.stringify({ name: "test" }, null, 2),
-      );
+      await Bun.write(join(testDir, "modules", "app", "package.json"), JSON.stringify({ name: "test" }, null, 2));
 
       await command.run({ name: "Deploy" });
 

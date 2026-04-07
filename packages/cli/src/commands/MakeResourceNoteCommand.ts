@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createNoteControllerTemplate from "../templates/resources/note/controllers/CreateNoteController.txt";
 import deleteNoteControllerTemplate from "../templates/resources/note/controllers/DeleteNoteController.txt";
 import getNoteControllerTemplate from "../templates/resources/note/controllers/GetNoteController.txt";
@@ -14,7 +15,6 @@ import deleteNoteServiceTemplate from "../templates/resources/note/services/Dele
 import getNoteServiceTemplate from "../templates/resources/note/services/GetNoteService.txt";
 import listNotesServiceTemplate from "../templates/resources/note/services/ListNotesService.txt";
 import updateNoteServiceTemplate from "../templates/resources/note/services/UpdateNoteService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

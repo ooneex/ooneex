@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import entityTemplate from "../templates/resources/calendar-event/CalendarEventEntity.txt";
 import migrationTemplate from "../templates/resources/calendar-event/CalendarEventMigration.txt";
 import repositoryTemplate from "../templates/resources/calendar-event/CalendarEventRepository.txt";
@@ -14,7 +15,6 @@ import deleteCalendarEventServiceTemplate from "../templates/resources/calendar-
 import getCalendarEventServiceTemplate from "../templates/resources/calendar-event/services/GetCalendarEventService.txt";
 import listCalendarEventsServiceTemplate from "../templates/resources/calendar-event/services/ListCalendarEventsService.txt";
 import updateCalendarEventServiceTemplate from "../templates/resources/calendar-event/services/UpdateCalendarEventService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

@@ -1,6 +1,7 @@
 import { join } from "node:path";
+import type { ICommand } from "@ooneex/command";
+import { decorator } from "@ooneex/command";
 import { Glob } from "bun";
-import { decorator } from "../decorators";
 import createImageControllerTemplate from "../templates/resources/image/controllers/CreateImageController.txt";
 import deleteImageControllerTemplate from "../templates/resources/image/controllers/DeleteImageController.txt";
 import getImageControllerTemplate from "../templates/resources/image/controllers/GetImageController.txt";
@@ -14,7 +15,6 @@ import deleteImageServiceTemplate from "../templates/resources/image/services/De
 import getImageServiceTemplate from "../templates/resources/image/services/GetImageService.txt";
 import listImagesServiceTemplate from "../templates/resources/image/services/ListImagesService.txt";
 import updateImageServiceTemplate from "../templates/resources/image/services/UpdateImageService.txt";
-import type { ICommand } from "../types";
 import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeEntityCommand } from "./MakeEntityCommand";
 import { MakeMigrationCommand } from "./MakeMigrationCommand";

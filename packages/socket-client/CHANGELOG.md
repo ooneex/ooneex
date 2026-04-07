@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.2.5) - 2026-04-07
+
+### Changed
+
+- Simplify WebSocket send payload types to use BufferSource — Franck ([65b153d4](https://github.com/ooneex/ooneex/commit/65b153d4))
+- Add @types/bun to tsconfig types across all packages — Franck ([afd2c522](https://github.com/ooneex/ooneex/commit/afd2c522))
+- Rename language to lang in RequestDataType — Franck ([f779587e](https://github.com/ooneex/ooneex/commit/f779587e))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.2.4) - 2026-04-05
 
 ### Changed

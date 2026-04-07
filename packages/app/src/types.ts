@@ -25,7 +25,4 @@ export type AppConfigType = {
   events?: PubSubClassType[];
   middlewares?: MiddlewareClassType[] | SocketMiddlewareClassType[];
   cors?: MiddlewareClassType;
-  check?: {
-    health?: string;
-  };
 };

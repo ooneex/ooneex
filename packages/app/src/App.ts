@@ -201,17 +201,6 @@ export class App {
     const baseUrl = `${server.protocol}://${hostname}:${server.port}`;
     logger.info(`Server running at ${baseUrl}`);
 
-    if (this.config.check?.health) {
-      const healthCheckUrl = `${baseUrl}/${prefix}${this.config.check.health}`;
-      const response = await fetch(healthCheckUrl);
-
-      if (response.ok) {
-        logger.info(`Health check passed at ${this.config.check.health}`);
-      } else {
-        logger.warn(`Health check failed at ${this.config.check.health} with status ${response.status}`);
-      }
-    }
-
     return this;
   }
 }

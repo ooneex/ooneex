@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.5) - 2026-04-07
+
+### Changed
+
+- @ooneex/validation@1.1.4 — Franck ([900e3ea3](https://github.com/ooneex/ooneex/commit/900e3ea3))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.1.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.4) - 2026-04-07
 
 ### Changed

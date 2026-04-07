@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.6) - 2026-04-07
+
+### Changed
+
+- Add @ooneex/database dependency — Franck ([175cd18e](https://github.com/ooneex/ooneex/commit/175cd18e))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.5) - 2026-04-07
 
 ### Changed

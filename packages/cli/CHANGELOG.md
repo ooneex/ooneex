@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.3) - 2026-04-07
+
+### Changed
+
+- Bump version to 1.13.2 and add index tests — Franck ([754de41b](https://github.com/ooneex/ooneex/commit/754de41b))
+- Import commands module in CLI entry point — Franck ([0d4abb0a](https://github.com/ooneex/ooneex/commit/0d4abb0a))
+
 ## [1.13.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.13.1) - 2026-04-07
 
 ### Changed

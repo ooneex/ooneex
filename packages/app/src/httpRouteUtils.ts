@@ -136,7 +136,7 @@ export const buildHttpContext = async (ctx: {
   const database: IDatabase = container.get("database");
 
   const context: ContextType = {
-    logger: container.get("logger"),
+    logger: container.getConstant("logger"),
     ...(exceptionLogger && { exceptionLogger }),
     ...(analytics && { analytics }),
     ...(cache && { cache }),

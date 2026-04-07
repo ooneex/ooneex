@@ -1,0 +1,28 @@
+import { describe, expect, test } from "bun:test";
+import { {{NAME}} } from "@/migrations/{{NAME}}";
+
+describe("{{NAME}}", () => {
+  test("should have class name starting with 'Migration'", () => {
+    expect({{NAME}}.name.startsWith("Migration")).toBe(true);
+  });
+
+  test("should have 'up' method", () => {
+    expect({{NAME}}.prototype.up).toBeDefined();
+    expect(typeof {{NAME}}.prototype.up).toBe("function");
+  });
+
+  test("should have 'down' method", () => {
+    expect({{NAME}}.prototype.down).toBeDefined();
+    expect(typeof {{NAME}}.prototype.down).toBe("function");
+  });
+
+  test("should have 'getVersion' method", () => {
+    expect({{NAME}}.prototype.getVersion).toBeDefined();
+    expect(typeof {{NAME}}.prototype.getVersion).toBe("function");
+  });
+
+  test("should have 'getDependencies' method", () => {
+    expect({{NAME}}.prototype.getDependencies).toBeDefined();
+    expect(typeof {{NAME}}.prototype.getDependencies).toBe("function");
+  });
+});

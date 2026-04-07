@@ -124,7 +124,7 @@ describe("MakeAppCommand", () => {
       await command.run({ name: "MyApp", destination: testDir });
 
       const content = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(content.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
+      expect(content.scripts.dev).toBe("bun --hot run ./src/index.ts");
       expect(content.scripts.build).toBe("bun build ./src/index.ts --outdir ./dist --target bun");
     });
 
@@ -186,6 +186,28 @@ describe("MakeAppCommand", () => {
       const content = await Bun.file(join(testDir, ".commitlintrc.ts")).text();
       expect(content).toContain('"app"');
       expect(content).toContain('"common"');
+    });
+
+    test("should not install @nx/js, @nx/workspace, @swc-node/register, @swc/core, @swc/helpers as dev dependencies", async () => {
+      const spawnCalls: string[][] = [];
+
+      Bun.spawn = ((...args: unknown[]) => {
+        const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
+        if (Array.isArray(cmd)) {
+          spawnCalls.push([...(cmd as string[])]);
+        }
+        return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
+      }) as typeof Bun.spawn;
+
+      await command.run({ name: "MyApp", destination: testDir });
+
+      const devDepsCall = spawnCalls.find((cmd) => cmd[0] === "bun" && cmd[1] === "add" && cmd[2] === "-D");
+      expect(devDepsCall).toBeDefined();
+      expect(devDepsCall).not.toContain("@nx/js");
+      expect(devDepsCall).not.toContain("@nx/workspace");
+      expect(devDepsCall).not.toContain("@swc-node/register");
+      expect(devDepsCall).not.toContain("@swc/core");
+      expect(devDepsCall).not.toContain("@swc/helpers");
     });
   });
 });

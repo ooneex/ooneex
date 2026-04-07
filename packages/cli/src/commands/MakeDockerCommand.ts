@@ -136,13 +136,13 @@ export class MakeDockerCommand<T extends CommandOptionsType = CommandOptionsType
       await Bun.write(composePath, templateContent);
     }
 
-    // Update package.json with docker script
+    // Update package.json with dev script
     const packageJsonPath = join(process.cwd(), base, "package.json");
     const packageJsonFile = Bun.file(packageJsonPath);
     if (await packageJsonFile.exists()) {
       const packageJson = await packageJsonFile.json();
       packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts.docker = "docker compose up -d";
+      packageJson.scripts.dev = "docker compose up -d && bun --hot run ./src/index.ts";
       await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 

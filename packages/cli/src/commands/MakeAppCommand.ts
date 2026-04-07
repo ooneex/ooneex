@@ -74,7 +74,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
 
     const appModulePackagePath = join(destination, "modules", "app", "package.json");
     const appModulePackageJson = await Bun.file(appModulePackagePath).json();
-    appModulePackageJson.scripts.dev = "docker compose up -d && bun --hot run ./src/index.ts";
+    appModulePackageJson.scripts.dev = "bun --hot run ./src/index.ts";
     appModulePackageJson.scripts.build = "bun build ./src/index.ts --outdir ./dist --target bun";
     await Bun.write(appModulePackagePath, JSON.stringify(appModulePackageJson, null, 2));
 
@@ -160,11 +160,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
         "@commitlint/config-conventional",
         "@commitlint/prompt-cli",
         "@commitlint/types",
-        "@nx/js",
-        "@nx/workspace",
-        "@swc-node/register",
-        "@swc/core",
-        "@swc/helpers",
         "@types/bun",
         "@types/node",
         "@types/react",

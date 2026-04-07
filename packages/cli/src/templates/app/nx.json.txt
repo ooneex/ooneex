@@ -20,11 +20,5 @@
   "tui": {
     "autoExit": true
   },
-  "plugins": [
-    {
-      "plugin": "@nx/js/typescript",
-      "projectsAffectedByDependencyUpdates": "auto"
-    }
-  ],
   "packageManager": "bun"
 }

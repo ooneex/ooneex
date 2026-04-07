@@ -67,7 +67,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "1.6.1",
+      "version": "1.7.0",
       "dependencies": {
         "@ooneex/analytics": "workspace:*",
         "@ooneex/app-env": "workspace:*",
@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.13.3",
+      "version": "1.14.0",
       "bin": {
         "ooneex": "./dist/cli.js",
         "oo": "./dist/cli.js",

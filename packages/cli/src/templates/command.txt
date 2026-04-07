@@ -1,5 +1,4 @@
-import { decorator } from "../decorators";
-import type { ICommand } from "../types";
+import { type ICommand, decorator } from "@ooneex/cli";
 
 type CommandOptionsType = {
   name?: string;

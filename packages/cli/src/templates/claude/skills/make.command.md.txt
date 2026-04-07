@@ -1,0 +1,116 @@
+---
+name: make:command
+description: Generate a new command class with its test file, then complete the generated code. Use when creating a new CLI command that implements the ICommand interface from @ooneex/cli.
+---
+
+# Make Command Class
+
+Generate a new command class and its test file using the `make:command` CLI command, then complete the generated code with proper implementation.
+
+## Coding Conventions
+
+- Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`)
+- Always use arrow functions when possible, but NOT for class methods (class methods use regular method syntax)
+- End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
+- Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
+- For Entity class, if property is optional, add `null` to its type.
+
+## Steps
+
+### 1. Run the generator
+
+Run the following command to scaffold the command class and test files:
+
+```bash
+bunx @ooneex/cli@latest make:command --name <name> --module <module>
+```
+
+Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
+- `src/commands/<Name>Command.ts` - The command class file (or `modules/<module>/src/commands/<Name>Command.ts` with `--module`)
+- `tests/commands/<Name>Command.spec.ts` - The test file (or `modules/<module>/tests/commands/<Name>Command.spec.ts` with `--module`)
+
+It will also:
+- Generate a `commands.ts` root export file in the commands directory
+- Import the commands root file in the app root file (when `--module` is not `app`)
+- Create `modules/app/bin/command/run.ts` if it doesn't exist
+- Add a `command` script to `modules/app/package.json`
+
+### 2. Read the generated files
+
+Read both generated files to understand the scaffolded code.
+
+### 3. Complete the command class
+
+Edit `src/commands/<Name>Command.ts` to complete the implementation:
+
+- Define the `CommandOptionsType` with all required and optional options for the command
+- Implement the `run()` method with the actual command logic
+- Inject any required dependencies via the constructor
+
+The generated class structure follows this pattern:
+
+```typescript
+import { type ICommand, decorator } from "@ooneex/cli";
+
+type CommandOptionsType = {
+  name?: string;
+};
+
+@decorator.command()
+export class <Name>Command<T extends CommandOptionsType = CommandOptionsType> implements ICommand<T> {
+  public getName(): string {
+    return "<command:name>";
+  }
+
+  public getDescription(): string {
+    return "Execute <command:name> command";
+  }
+
+  public async run(options: T): Promise<void> {
+    // TODO: Implement command logic
+  }
+}
+```
+
+### 4. Complete the test file
+
+Edit `tests/commands/<Name>Command.spec.ts` to add meaningful tests beyond the scaffolded ones:
+
+- Keep the existing scaffolded tests (class name, getName, getDescription, run methods)
+- Add tests relevant to the specific command behavior
+
+The generated test structure follows this pattern:
+
+```typescript
+import { describe, expect, test } from "bun:test";
+import { <Name>Command } from "@/commands/<Name>Command";
+
+describe("<Name>Command", () => {
+  test("should have class name ending with 'Command'", () => {
+    expect(<Name>Command.name.endsWith("Command")).toBe(true);
+  });
+
+  test("should have 'getName' method", () => {
+    expect(<Name>Command.prototype.getName).toBeDefined();
+    expect(typeof <Name>Command.prototype.getName).toBe("function");
+  });
+
+  test("should have 'getDescription' method", () => {
+    expect(<Name>Command.prototype.getDescription).toBeDefined();
+    expect(typeof <Name>Command.prototype.getDescription).toBe("function");
+  });
+
+  test("should have 'run' method", () => {
+    expect(<Name>Command.prototype.run).toBeDefined();
+    expect(typeof <Name>Command.prototype.run).toBe("function");
+  });
+});
+```
+
+### 5. Lint and format
+
+Run linting and formatting on the generated files:
+
+```bash
+bunx biome check --fix src/commands/<Name>Command.ts tests/commands/<Name>Command.spec.ts
+```

@@ -47,6 +47,7 @@ describe("_oo.txt", () => {
       "make\\:app",
       "make\\:cache",
       "make\\:claude\\:skill",
+      "make\\:command",
       "make\\:controller",
       "make\\:cron",
       "make\\:database",
@@ -78,7 +79,7 @@ describe("_oo.txt", () => {
       "make\\:seed",
       "make\\:service",
       "make\\:storage",
-      "make\\:vector\\:database",
+      "make\\:vector-database",
     ];
 
     test.each(expectedCommands)("should include %s command", async (cmd) => {
@@ -173,6 +174,7 @@ describe("_oo.txt", () => {
         "make:ai",
         "make:analytics",
         "make:cache",
+        "make:command",
         "make:cron",
         "make:database",
         "make:logger",

@@ -61,6 +61,22 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
     }
     await Bun.write(join(commandDir, "commands.ts"), `${imports.sort().join("\n")}\n`);
 
+    // Import commands root file in app root file
+    if (module && module !== "app") {
+      const appCommandsRootPath = join(process.cwd(), "modules", "app", "src", "commands", "commands.ts");
+      const appCommandsRootFile = Bun.file(appCommandsRootPath);
+      const importLine = `import "@${module}/commands/commands";`;
+
+      if (await appCommandsRootFile.exists()) {
+        const appCommandsContent = await appCommandsRootFile.text();
+        if (!appCommandsContent.includes(importLine)) {
+          await Bun.write(appCommandsRootPath, `${appCommandsContent.trimEnd()}\n${importLine}\n`);
+        }
+      } else {
+        await Bun.write(appCommandsRootPath, `${importLine}\n`);
+      }
+    }
+
     // Create bin/command/run.ts if it doesn't exist
     const binCommandRunPath = join(process.cwd(), "modules", "app", "bin", "command", "run.ts");
     const binCommandRunFile = Bun.file(binCommandRunPath);

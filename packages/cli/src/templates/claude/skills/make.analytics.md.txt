@@ -44,8 +44,7 @@ Edit `src/analytics/<Name>Analytics.ts` to complete the implementation:
 The generated class structure follows this pattern:
 
 ```typescript
-import { decorator } from "@ooneex/analytics";
-import type { IAnalytics } from "@ooneex/analytics";
+import { type IAnalytics, decorator } from "@ooneex/analytics";
 
 type CaptureOptionsType = Record<string, unknown>;
 

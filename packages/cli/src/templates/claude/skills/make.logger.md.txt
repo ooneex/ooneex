@@ -45,9 +45,8 @@ The generated class structure follows this pattern:
 
 ```typescript
 import type { IException } from "@ooneex/exception";
-import type { ILogger } from "@ooneex/logger";
+import { type ILogger, decorator } from "@ooneex/logger";
 import type { ScalarType } from "@ooneex/types";
-import { decorator } from "@ooneex/logger";
 
 @decorator.logger()
 export class <Name>Logger implements ILogger {

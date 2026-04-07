@@ -44,8 +44,7 @@ Edit `src/services/<Name>Service.ts` to complete the implementation:
 The generated class structure follows this pattern:
 
 ```typescript
-import { decorator } from "@ooneex/service";
-import type { IService } from "@ooneex/service";
+import { type IService, decorator } from "@ooneex/service";
 
 type ServiceDataType = Record<string, unknown>;
 

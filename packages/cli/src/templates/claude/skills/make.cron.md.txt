@@ -46,8 +46,7 @@ The generated class structure follows this pattern:
 
 ```typescript
 import type { TimeZoneType } from "@ooneex/country";
-import type { CronTimeType } from "@ooneex/cron";
-import { Cron, decorator } from "@ooneex/cron";
+import { Cron, type CronTimeType, decorator } from "@ooneex/cron";
 
 @decorator.cron()
 export class <Name>Cron extends Cron {

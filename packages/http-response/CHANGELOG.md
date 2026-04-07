@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.2) - 2026-04-07
+
+### Changed
+
+- @ooneex/http-response@1.3.1 — Franck ([ec9effe1](https://github.com/ooneex/ooneex/commit/ec9effe1))
+- Add @types/bun to tsconfig types across all packages — Franck ([6faa8fe0](https://github.com/ooneex/ooneex/commit/6faa8fe0))
+
 ## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.1) - 2026-04-07
 
 ### Changed

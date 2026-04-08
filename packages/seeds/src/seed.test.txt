@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import { {{NAME}}Seed } from "@/seeds/{{NAME}}Seed";
 
@@ -19,5 +21,10 @@ describe("{{NAME}}Seed", () => {
   test("should have 'getDependencies' method", () => {
     expect({{NAME}}Seed.prototype.getDependencies).toBeDefined();
     expect(typeof {{NAME}}Seed.prototype.getDependencies).toBe("function");
+  });
+
+  test("should have a data yml file", () => {
+    const dataFile = join(__dirname, "..", "src", "seeds", "{{DATA_FILE}}.yml");
+    expect(existsSync(dataFile)).toBe(true);
   });
 });

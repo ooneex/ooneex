@@ -1,10 +1,11 @@
 import { decorator, type ISeed, type SeedClassType } from "@ooneex/seeds";
+import data from "./{{ dataFile }}.yml";
 
 @decorator.seed()
 export class {{ name }} implements ISeed {
-  public async run<T>(data?: unknown[]): Promise<T> {
+  public async run<T>(): Promise<T> {
     // Your seed logic here
-    // console.log('{{ name }}!');
+    console.log(data);
 
     return data as T;
   }

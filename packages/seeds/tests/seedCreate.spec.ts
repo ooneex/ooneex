@@ -42,11 +42,12 @@ describe("seedCreate", () => {
     expect(content).toContain("UserSeed");
   });
 
-  test("should return seed and test paths", async () => {
+  test("should return seed, test and data paths", async () => {
     const result = await seedCreate({ name: "User" });
 
     expect(result.seedPath).toBe(join("seeds", "UserSeed.ts"));
     expect(result.testPath).toBe(join("tests", "seeds", "UserSeed.spec.ts"));
+    expect(result.dataPath).toBe(join("seeds", "user-seed.yml"));
   });
 
   test("should normalize name with toPascalCase", async () => {
@@ -137,6 +138,28 @@ describe("seedCreate", () => {
     expect(result.testPath).toBe(join(customTestsDir, "UserSeed.spec.ts"));
     expect(existsSync(join(testDir, customSeedsDir, "UserSeed.ts"))).toBe(true);
     expect(existsSync(join(testDir, customTestsDir, "UserSeed.spec.ts"))).toBe(true);
+  });
+
+  test("should create yml data file with kebab-case name", async () => {
+    await seedCreate({ name: "User" });
+
+    const dataFilePath = join(testDir, "seeds", "user-seed.yml");
+    expect(existsSync(dataFilePath)).toBe(true);
+  });
+
+  test("should create yml data file with correct kebab-case for multi-word name", async () => {
+    await seedCreate({ name: "user-role" });
+
+    const dataFilePath = join(testDir, "seeds", "user-role-seed.yml");
+    expect(existsSync(dataFilePath)).toBe(true);
+  });
+
+  test("should import data from yml file in generated seed", async () => {
+    await seedCreate({ name: "User" });
+
+    const filePath = join(testDir, "seeds", "UserSeed.ts");
+    const content = await Bun.file(filePath).text();
+    expect(content).toContain('import data from "./user-seed.yml"');
   });
 
   test("should contain seed decorator in generated file", async () => {

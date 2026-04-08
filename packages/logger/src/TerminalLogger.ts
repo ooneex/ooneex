@@ -18,9 +18,13 @@ interface WriteToConsoleConfig {
 @decorator.logger()
 export class TerminalLogger implements ILogger {
   private colorizeText(text: string, color: string): string {
-    const ansiColor = Bun.color(color, "ansi");
-    const resetAnsi = "\u001b[0m";
-    return ansiColor ? `${ansiColor}${text}${resetAnsi}` : text;
+    try {
+      const ansiColor = Bun.color(color, "ansi");
+      const resetAnsi = "\u001b[0m";
+      return ansiColor ? `${ansiColor}${text}${resetAnsi}` : text;
+    } catch {
+      return text;
+    }
   }
 
   private getLevelColor(level: string): string {

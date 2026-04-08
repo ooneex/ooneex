@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.0) - 2026-04-08
+
+### Added
+
+- Export COMMANDS_CONTAINER from command package — Franck ([bc486e92](https://github.com/ooneex/ooneex/commit/bc486e92))
+
+### Changed
+
+- Update README to reference renamed run function — Franck ([e16efdac](https://github.com/ooneex/ooneex/commit/e16efdac))
+
 ## [0.1.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.1.3) - 2026-04-07
 
 ### Changed

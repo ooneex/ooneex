@@ -169,18 +169,6 @@ describe("MakeAppCommand", () => {
       expect(await exists(join(testDir, "modules", "app", "var", ".gitkeep"))).toBe(true);
     });
 
-    test("should generate health check controller with inline route type", async () => {
-      await command.run({ name: "MyApp", destination: testDir });
-
-      const appModuleDir = join(testDir, "modules", "app");
-      const controllerPath = join(appModuleDir, "src", "controllers", "HealthCheckController.ts");
-      expect(await exists(controllerPath)).toBe(true);
-      expect(await exists(join(appModuleDir, "tests", "controllers", "HealthCheckController.spec.ts"))).toBe(true);
-
-      const content = await Bun.file(controllerPath).text();
-      expect(content).toContain("export type ApiHealthCheckRouteType");
-    });
-
     test("should add app scope to commitlint config", async () => {
       await command.run({ name: "MyApp", destination: testDir });
 

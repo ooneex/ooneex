@@ -19,7 +19,6 @@ import packageTemplate from "../templates/app/package.json.txt";
 import readmeTemplate from "../templates/app/README.md.txt";
 import tsconfigTemplate from "../templates/app/tsconfig.json.txt";
 import zedSettingsTemplate from "../templates/app/zed-settings.json.txt";
-import { MakeControllerCommand } from "./MakeControllerCommand";
 import { MakeModuleCommand } from "./MakeModuleCommand";
 
 type CommandOptionsType = {
@@ -95,19 +94,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const dockerfileContent = dockerfileTemplate.replace(/{{NAME}}/g, snakeName);
     await Bun.write(join(destination, "modules", "app", "Dockerfile"), dockerfileContent);
     await Bun.write(join(destination, "modules", "app", "var", ".gitkeep"), "");
-
-    // Create health check controller in app module
-    const makeControllerCommand = new MakeControllerCommand();
-    await makeControllerCommand.run({
-      name: "HealthCheck",
-      isSocket: false,
-      module: "app",
-      route: {
-        name: "api.health.check",
-        path: "/healthcheck",
-        method: "GET",
-      },
-    });
 
     // Initialize git repository
     const gitInit = Bun.spawn(["git", "init"], { cwd: destination, stdout: "ignore", stderr: "inherit" });

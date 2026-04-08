@@ -15,6 +15,7 @@ _ooneex() {
     'app\:start:Start the application'
     'app\:stop:Stop the application'
     'completion\:zsh:Install Zsh completion for oo command'
+    'help:Show available commands'
     'make\:ai:Generate a new AI class'
     'make\:analytics:Generate a new analytics class'
     'make\:app:Generate a new application'
@@ -123,7 +124,7 @@ _ooneex() {
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_ooneex_modules'
           ;;
-        app:build|app:start|app:stop|make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|migration:up|seed:run|completion:zsh)
+        app:build|app:start|app:stop|help|make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|migration:up|seed:run|completion:zsh)
           ;;
       esac
       ;;

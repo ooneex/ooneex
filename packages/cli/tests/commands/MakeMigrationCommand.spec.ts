@@ -72,7 +72,7 @@ describe("MakeMigrationCommand", () => {
       const binFile = join(testDir, "bin", "migration", "up.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
       const content = await Bun.file(binFile).text();
-      expect(content).toContain("migrationUp");
+      expect(content).toContain("up");
     });
 
     test("should not overwrite bin/migration/up.ts if it already exists", async () => {
@@ -102,7 +102,7 @@ describe("MakeMigrationCommand", () => {
       const binFile = join(testDir, "modules", moduleName, "bin", "migration", "up.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
       const content = await Bun.file(binFile).text();
-      expect(content).toContain("migrationUp");
+      expect(content).toContain("up");
     });
 
     test("should run bun add in module directory", async () => {

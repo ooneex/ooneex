@@ -13,6 +13,6 @@ describe("migration.up.txt", () => {
 
   test("should contain migration logic", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("migrationUp");
+    expect(content).toContain("up");
   });
 });

@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
-import { migrationUp } from "@ooneex/migrations";
+import { up } from "@ooneex/migrations";
 import "@/migrations/migrations";
 
-await migrationUp({
+await up({
   databaseUrl: Bun.env.DATABASE_URL,
   tableName: "migrations",
 });

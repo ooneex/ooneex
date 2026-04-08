@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.3.4) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.3 — Franck ([f20194bb](https://github.com/ooneex/ooneex/commit/f20194bb))
+
 ## [1.3.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.3.2) - 2026-04-08
 
 ### Changed

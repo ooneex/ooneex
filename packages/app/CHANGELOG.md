@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.6) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.7.5 — Franck ([d27717d9](https://github.com/ooneex/ooneex/commit/d27717d9))
+
 ## [1.7.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.4) - 2026-04-08
 
 ### Changed

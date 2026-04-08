@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.11) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.10 — Franck ([e2cd974b](https://github.com/ooneex/ooneex/commit/e2cd974b))
+
 ## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.9) - 2026-04-08
 
 ### Changed

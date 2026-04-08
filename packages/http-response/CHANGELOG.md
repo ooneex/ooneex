@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.6) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.5 — Franck ([207a0dc5](https://github.com/ooneex/ooneex/commit/207a0dc5))
+
 ## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.4) - 2026-04-08
 
 ### Changed

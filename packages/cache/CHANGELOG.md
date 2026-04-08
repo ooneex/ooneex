@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.2.6) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.5 — Franck ([6df76517](https://github.com/ooneex/ooneex/commit/6df76517))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.2.4) - 2026-04-08
 
 ### Changed

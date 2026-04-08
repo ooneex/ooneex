@@ -7,6 +7,11 @@ mock.module("enquirer", () => ({
   prompt: mock(() => Promise.resolve({ name: "Test" })),
 }));
 
+// Mock ensureModule to avoid creating full module structure in tests
+mock.module("@/utils", () => ({
+  ensureModule: mock(() => Promise.resolve()),
+}));
+
 const { MakeSeedCommand } = await import("@/commands/MakeSeedCommand");
 
 describe("MakeSeedCommand", () => {
@@ -103,6 +108,61 @@ describe("MakeSeedCommand", () => {
 
       const content = await Bun.file(binFile).text();
       expect(content).toBe("// custom content");
+    });
+  });
+
+  describe("run() with module option", () => {
+    const moduleName = "billing";
+
+    beforeEach(async () => {
+      const moduleDir = join(testDir, "modules", moduleName);
+      await Bun.write(join(moduleDir, "src", "seeds", ".gitkeep"), "");
+      await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "billing", scripts: {} }, null, 2));
+      process.chdir(testDir);
+    });
+
+    test("should update module package.json with seed:run script", async () => {
+      await command.run({ name: "User", module: moduleName });
+
+      const modulePackageJson = await Bun.file(join(testDir, "modules", moduleName, "package.json")).json();
+      expect(modulePackageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
+    });
+
+    test("should not update root package.json when module is specified", async () => {
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "root", scripts: {} }, null, 2));
+
+      await command.run({ name: "User", module: moduleName });
+
+      const rootPackageJson = await Bun.file(join(testDir, "package.json")).json();
+      expect(rootPackageJson.scripts["seed:run"]).toBeUndefined();
+    });
+
+    test("should create bin/seed/run.ts in module directory", async () => {
+      await command.run({ name: "User", module: moduleName });
+
+      const binFile = join(testDir, "modules", moduleName, "bin", "seed", "run.ts");
+      expect(await Bun.file(binFile).exists()).toBe(true);
+      const content = await Bun.file(binFile).text();
+      expect(content).toContain("seedRun");
+    });
+
+    test("should run bun add in module directory", async () => {
+      const spawnCalls: { cmd: string[]; cwd: string }[] = [];
+
+      Bun.spawn = ((...args: unknown[]) => {
+        const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
+        const opts = (Array.isArray(args[0]) ? args[1] : args[0]) as { cwd?: string } | undefined;
+        if (Array.isArray(cmd)) {
+          spawnCalls.push({ cmd: [...(cmd as string[])], cwd: (opts?.cwd as string) ?? "" });
+        }
+        return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
+      }) as typeof Bun.spawn;
+
+      await command.run({ name: "User", module: moduleName });
+
+      const addCall = spawnCalls.find((c) => c.cmd[0] === "bun" && c.cmd[1] === "add");
+      expect(addCall).toBeDefined();
+      expect(addCall?.cwd).toBe(join(testDir, "modules", moduleName));
     });
   });
 });

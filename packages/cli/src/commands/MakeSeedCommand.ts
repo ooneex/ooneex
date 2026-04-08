@@ -48,7 +48,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     }
 
     // Update package.json with seed script
-    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonPath = join(process.cwd(), base, "package.json");
     const packageJsonFile = Bun.file(packageJsonPath);
     if (await packageJsonFile.exists()) {
       const packageJson = await packageJsonFile.json();
@@ -78,7 +78,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     if (!deps["@ooneex/seeds"] && !devDeps["@ooneex/seeds"]) {
       const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
-        cwd: process.cwd(),
+        cwd: join(process.cwd(), base),
         stdout: "ignore",
         stderr: "inherit",
       });

@@ -41,7 +41,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
     }
 
     // Update package.json with migration script
-    const packageJsonPath = join(process.cwd(), "package.json");
+    const packageJsonPath = join(process.cwd(), base, "package.json");
     const packageJsonFile = Bun.file(packageJsonPath);
     if (await packageJsonFile.exists()) {
       const packageJson = await packageJsonFile.json();
@@ -71,7 +71,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
 
     if (!deps["@ooneex/migrations"] && !devDeps["@ooneex/migrations"]) {
       const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
-        cwd: process.cwd(),
+        cwd: join(process.cwd(), base),
         stdout: "ignore",
         stderr: "inherit",
       });

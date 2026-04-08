@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/payment@1.1.8) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.7 — Franck ([7e4d0b4f](https://github.com/ooneex/ooneex/commit/7e4d0b4f))
+
 ## [1.1.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/payment@1.1.6) - 2026-04-08
 
 ### Changed

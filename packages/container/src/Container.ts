@@ -108,14 +108,13 @@ export class Container implements IContainer {
     }
   }
 
-  public addAlias<T>(alias: string, target: new (...args: any[]) => T): void {
+  public addAlias<T>(
+    alias: string,
+    target: new (...args: any[]) => T,
+    scope: EContainerScope = EContainerScope.Singleton,
+  ): void {
     this.alias[alias] = target;
-
-    try {
-      sharedDI.unbind(alias);
-    } catch {}
-
-    sharedDI.bind(alias).toDynamicValue(() => sharedDI.get(target));
+    this.add(target, scope);
   }
 }
 

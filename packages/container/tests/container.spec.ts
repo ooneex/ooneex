@@ -891,7 +891,6 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(TestService);
       container.addAlias("testService", TestService);
 
       const service = container.get<TestService>("testService");
@@ -911,7 +910,6 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(AliasTestService);
       container.addAlias("aliasTest", AliasTestService);
 
       expect(container.has("aliasTest")).toBe(true);
@@ -925,7 +923,7 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(DirectTestService);
+      container.addAlias("directTest", DirectTestService);
       expect(container.has(DirectTestService)).toBe(true);
     });
 
@@ -936,7 +934,6 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(RemovableByAliasService);
       container.addAlias("removableAlias", RemovableByAliasService);
 
       expect(container.has("removableAlias")).toBe(true);
@@ -951,7 +948,7 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(DirectRemovableService);
+      container.addAlias("directRemovable", DirectRemovableService);
       expect(container.has(DirectRemovableService)).toBe(true);
       container.remove(DirectRemovableService);
       expect(container.has(DirectRemovableService)).toBe(false);
@@ -980,7 +977,6 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(MultiAliasService);
       container.addAlias("firstAlias", MultiAliasService);
       container.addAlias("secondAlias", MultiAliasService);
 
@@ -1012,13 +1008,32 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      container.add(TransientAliasService, EContainerScope.Transient);
-      container.addAlias("transientAlias", TransientAliasService);
+      container.addAlias("transientAlias", TransientAliasService, EContainerScope.Transient);
 
       const instance1 = container.get<TransientAliasService>("transientAlias");
       const instance2 = container.get<TransientAliasService>("transientAlias");
 
       expect(instance1.getId()).not.toBe(instance2.getId());
+    });
+
+    test("should default to singleton scope", () => {
+      class SingletonAliasService {
+        private static instanceCount = 0;
+        public readonly instanceId: number;
+
+        constructor() {
+          SingletonAliasService.instanceCount++;
+          this.instanceId = SingletonAliasService.instanceCount;
+        }
+      }
+
+      container.addAlias("singletonAlias", SingletonAliasService);
+
+      const instance1 = container.get<SingletonAliasService>("singletonAlias");
+      const instance2 = container.get<SingletonAliasService>("singletonAlias");
+
+      expect(instance1.instanceId).toBe(instance2.instanceId);
+      expect(instance1).toBe(instance2);
     });
   });
 });

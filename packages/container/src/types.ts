@@ -15,5 +15,5 @@ export interface IContainer {
   getConstant: <T>(identifier: string | symbol) => T;
   hasConstant: (identifier: string | symbol) => boolean;
   removeConstant(identifier: string | symbol): void;
-  addAlias<T>(alias: string, target: new (...args: any[]) => T): void;
+  addAlias<T>(alias: string, target: new (...args: any[]) => T, scope?: EContainerScope): void;
 }

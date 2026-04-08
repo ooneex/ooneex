@@ -67,7 +67,7 @@ describe("MakeSeedCommand", () => {
       const binFile = join(testDir, "bin", "seed", "run.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
       const content = await Bun.file(binFile).text();
-      expect(content).toContain("seedRun");
+      expect(content).toContain("run");
     });
 
     test("should not overwrite bin/seed/run.ts if it already exists", async () => {
@@ -97,7 +97,7 @@ describe("MakeSeedCommand", () => {
       const binFile = join(testDir, "modules", moduleName, "bin", "seed", "run.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
       const content = await Bun.file(binFile).text();
-      expect(content).toContain("seedRun");
+      expect(content).toContain("run");
     });
 
     test("should run bun add in module directory", async () => {

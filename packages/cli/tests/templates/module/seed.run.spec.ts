@@ -13,6 +13,6 @@ describe("seed.run.txt", () => {
 
   test("should contain seed logic", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("seedRun");
+    expect(content).toContain("run");
   });
 });

@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.17.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.0) - 2026-04-08
+
+### Added
+
+- Add help command and update MakeAppCommand scripts — Franck ([28b8fcd6](https://github.com/ooneex/ooneex/commit/28b8fcd6))
+- Add app:build and app:stop commands — Franck ([d95f6460](https://github.com/ooneex/ooneex/commit/d95f6460))
+- Add app:start command to start application across modules — Franck ([4cc48951](https://github.com/ooneex/ooneex/commit/4cc48951))
+- Add seed:run command to run seeds across all modules — Franck ([f742f7b0](https://github.com/ooneex/ooneex/commit/f742f7b0))
+- Add migration:up command to run migrations across all modules — Franck ([716097f8](https://github.com/ooneex/ooneex/commit/716097f8))
+- Add inject usage examples to skill templates and rename stop script — Franck ([abcc4338](https://github.com/ooneex/ooneex/commit/abcc4338))
+
+### Changed
+
+- Update seed templates to use renamed run function — Franck ([c38ef272](https://github.com/ooneex/ooneex/commit/c38ef272))
+- Update migration templates to use renamed up function — Franck ([ef5ead65](https://github.com/ooneex/ooneex/commit/ef5ead65))
+- Remove auto package.json script updates from Make commands — Franck ([c1a20f4a](https://github.com/ooneex/ooneex/commit/c1a20f4a))
+
 ## [1.16.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.16.0) - 2026-04-08
 
 ### Added

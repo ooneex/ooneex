@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.4) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.4 — Franck ([0c6007ec](https://github.com/ooneex/ooneex/commit/0c6007ec))
+
 ## [0.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.2) - 2026-04-08
 
 ### Changed

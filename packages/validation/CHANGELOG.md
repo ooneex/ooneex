@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.9) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.8 — Franck ([3b022f6a](https://github.com/ooneex/ooneex/commit/3b022f6a))
+
 ## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.7) - 2026-04-08
 
 ### Changed

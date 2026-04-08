@@ -14,6 +14,7 @@ Generate a new entity class and its test file using the `make:entity` CLI comman
 - End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
 - Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
 - For Entity class, if property is optional, add `null` to its type.
+- Avoid non-null assertions (`!`). For example, `public name!: string;` should be `public name: string;`
 
 ## Steps
 

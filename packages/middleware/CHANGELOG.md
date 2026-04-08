@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.11) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.10 — Franck ([e9f1ed10](https://github.com/ooneex/ooneex/commit/e9f1ed10))
+
 ## [1.2.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.9) - 2026-04-08
 
 ### Changed

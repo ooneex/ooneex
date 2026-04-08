@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.8) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.7 — Franck ([a954c04b](https://github.com/ooneex/ooneex/commit/a954c04b))
+
 ## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.6) - 2026-04-08
 
 ### Changed

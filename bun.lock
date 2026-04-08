@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.17.6",
+      "version": "1.17.7",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -345,7 +345,7 @@
     },
     "packages/logger": {
       "name": "@ooneex/logger",
-      "version": "1.2.13",
+      "version": "1.2.14",
       "dependencies": {
         "@logtail/node": "^0.5.8",
         "@ooneex/app-env": "workspace:*",

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/rate-limit",
   "description": "API rate limiting middleware with configurable throttling strategies, sliding window counters, and per-client request quota enforcement",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "type": "module",
   "files": [
     "dist",

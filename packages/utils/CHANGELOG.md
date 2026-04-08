@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.7) - 2026-04-08
+
+### Changed
+
+- Bump version to 0.4.6 — Franck ([d770f054](https://github.com/ooneex/ooneex/commit/d770f054))
+
 ## [0.4.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.5) - 2026-04-08
 
 ### Changed

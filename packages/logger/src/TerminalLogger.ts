@@ -80,7 +80,10 @@ export class TerminalLogger implements ILogger {
 
     if (data && Object.keys(data).length > 0) {
       const dataEntries = Object.entries(data)
-        .filter(([key, value]) => key !== "stackTrace" && value != null) // Exclude stackTrace and null/undefined values
+        .filter(
+          ([key, value]) =>
+            key !== "stackTrace" && value != null && (typeof value === "string" || typeof value === "number" || typeof value === "boolean" || typeof value === "bigint"),
+        )
         .map(([key, value]) => {
           const valueColor = typeof value === "string" ? "#69E502" : typeof value === "number" ? "#FFE809" : "#D3D3D3";
           const colorizedValue = this.colorizeText(String(value), valueColor);

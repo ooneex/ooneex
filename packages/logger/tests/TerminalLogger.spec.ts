@@ -231,6 +231,20 @@ describe("TerminalLogger", () => {
       const data = { message: "test", stackTrace: "should-be-excluded" };
       expect(() => logger.info("Test", data)).not.toThrow();
     });
+
+    test("should filter out non-scalar values like Date, objects, and arrays", () => {
+      const logger = new TerminalLogger();
+      const data = {
+        status: 200,
+        method: "GET",
+        date: new Date(),
+        params: { id: "123" },
+        payload: { name: "test", nested: { deep: true } },
+        queries: { page: "1" },
+        items: [1, 2, 3],
+      } as unknown as Record<string, string>;
+      expect(() => logger.success("Request completed", data)).not.toThrow();
+    });
   });
 
   describe("level normalization", () => {

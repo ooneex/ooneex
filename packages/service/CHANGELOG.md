@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.13) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.12 — Franck ([d71341fc](https://github.com/ooneex/ooneex/commit/d71341fc))
+
 ## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.11) - 2026-04-08
 
 ### Changed

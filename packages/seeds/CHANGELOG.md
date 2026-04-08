@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.0) - 2026-04-08
+
+### Added
+
+- Add YAML data file generation for seed scaffolding — Franck ([94ca29ee](https://github.com/ooneex/ooneex/commit/94ca29ee))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.3.0) - 2026-04-07
 
 ### Added

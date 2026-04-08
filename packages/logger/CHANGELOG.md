@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.13) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.12 — Franck ([ec437218](https://github.com/ooneex/ooneex/commit/ec437218))
+
+### Fixed
+
+- Filter out null and undefined values from data display — Franck ([d766a061](https://github.com/ooneex/ooneex/commit/d766a061))
+
 ## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.11) - 2026-04-08
 
 ### Changed

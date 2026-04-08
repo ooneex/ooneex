@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/logger",
   "description": "Structured logging service with multiple output targets, log level filtering, contextual metadata, and dependency injection integration",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "type": "module",
   "files": [
     "dist",

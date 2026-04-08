@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.5) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.4 — Franck ([65fc66a6](https://github.com/ooneex/ooneex/commit/65fc66a6))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.3) - 2026-04-08
 
 ### Changed

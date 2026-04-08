@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-header@1.2.9) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.8 — Franck ([8bdef045](https://github.com/ooneex/ooneex/commit/8bdef045))
+
 ## [1.2.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-header@1.2.7) - 2026-04-08
 
 ### Changed

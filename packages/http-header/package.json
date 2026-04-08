@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/http-header",
   "description": "HTTP header parser with user agent detection, browser fingerprinting, device identification, and content negotiation utilities",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "type": "module",
   "files": [
     "dist",

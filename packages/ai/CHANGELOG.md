@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.11) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.10 — Franck ([45a30106](https://github.com/ooneex/ooneex/commit/45a30106))
+
 ## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.9) - 2026-04-08
 
 ### Changed

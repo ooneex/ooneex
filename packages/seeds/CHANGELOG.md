@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.5) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.4.4 — Franck ([1fb3459d](https://github.com/ooneex/ooneex/commit/1fb3459d))
+
 ## [1.4.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.3) - 2026-04-08
 
 ### Changed

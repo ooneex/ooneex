@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.2.6) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.5 — Franck ([f0a51fd4](https://github.com/ooneex/ooneex/commit/f0a51fd4))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.2.4) - 2026-04-08
 
 ### Changed

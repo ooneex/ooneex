@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fs@1.1.10) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.9 — Franck ([adc41b60](https://github.com/ooneex/ooneex/commit/adc41b60))
+
 ## [1.1.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/fs@1.1.8) - 2026-04-08
 
 ### Changed

@@ -59,9 +59,9 @@ export class Container implements IContainer {
 
     try {
       return sharedDI.get<T>(resolvedTarget as new (...args: any[]) => T);
-    } catch (_e) {
+    } catch (e) {
       throw new ContainerException(
-        `Failed to resolve dependency: ${typeof target === "string" ? target : target.name}`,
+        `Failed to resolve dependency: ${typeof target === "string" ? target : target.name}. ${e instanceof Error ? e.message : String(e)}`,
         "SERVICE_RESOLVE_FAILED",
       );
     }

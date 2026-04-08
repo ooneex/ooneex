@@ -131,7 +131,26 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      expect(() => container.get(UnregisteredService)).toThrow();
+      expect(() => container.get(UnregisteredService)).toThrow(
+        /Failed to resolve dependency: UnregisteredService\./,
+      );
+    });
+
+    test("should forward original error message for unregistered service", () => {
+      class MissingService {
+        public getValue(): string {
+          return "missing";
+        }
+      }
+
+      try {
+        container.get(MissingService);
+        expect(true).toBe(false); // Should not reach here
+      } catch (error) {
+        const message = (error as Error).message;
+        expect(message).toContain("Failed to resolve dependency: MissingService");
+        expect(message).toContain("No bindings found");
+      }
     });
 
     test("should handle service registration and retrieval correctly", () => {

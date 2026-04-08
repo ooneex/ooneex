@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.3.1) - 2026-04-08
+
+### Fixed
+
+- Include original error message in dependency resolution failures — Franck ([3f75f893](https://github.com/ooneex/ooneex/commit/3f75f893))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.3.0) - 2026-04-08
 
 ### Added

@@ -345,7 +345,7 @@
     },
     "packages/logger": {
       "name": "@ooneex/logger",
-      "version": "1.2.14",
+      "version": "1.2.15",
       "dependencies": {
         "@logtail/node": "^0.5.8",
         "@ooneex/app-env": "workspace:*",

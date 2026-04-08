@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/cache",
   "description": "High-performance caching layer with filesystem and Redis backends — features TTL expiration, auto-serialization, configurable size limits, and dependency injection integration",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "type": "module",
   "files": [
     "dist",

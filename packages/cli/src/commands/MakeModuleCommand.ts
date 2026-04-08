@@ -4,7 +4,6 @@ import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
 import { toKebabCase, toPascalCase } from "@ooneex/utils";
 import { askName } from "../prompts/askName";
-import commandRunTemplate from "../templates/module/command.run.txt";
 import moduleTemplate from "../templates/module/module.txt";
 import packageTemplate from "../templates/module/package.txt";
 import testTemplate from "../templates/module/test.txt";
@@ -117,13 +116,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     }
     if (!skipCommands) {
       await Bun.write(join(srcDir, "commands", "commands.ts"), "");
-
-      // Create bin/command/run.ts if it doesn't exist
-      const binCommandRunPath = join(moduleDir, "bin", "command", "run.ts");
-      const binCommandRunFile = Bun.file(binCommandRunPath);
-      if (!(await binCommandRunFile.exists())) {
-        await Bun.write(binCommandRunPath, commandRunTemplate);
-      }
     }
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);

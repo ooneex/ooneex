@@ -7,20 +7,37 @@ mock.module("enquirer", () => ({
   prompt: mock(() => Promise.resolve({ name: "Test" })),
 }));
 
+// Mock ensureModule to avoid creating full module structure in tests
+mock.module("@/utils", () => ({
+  ensureModule: mock(() => Promise.resolve()),
+}));
+
 const { MakeCommandCommand } = await import("@/commands/MakeCommandCommand");
 
 describe("MakeCommandCommand", () => {
   let command: InstanceType<typeof MakeCommandCommand>;
   let testDir: string;
   let originalCwd: string;
+  let originalSpawn: typeof Bun.spawn;
 
   beforeEach(() => {
     command = new MakeCommandCommand();
     originalCwd = process.cwd();
     testDir = join(originalCwd, ".temp", `command-${Date.now()}`);
+
+    // Mock Bun.spawn to avoid running bun add in tests
+    originalSpawn = Bun.spawn;
+    Bun.spawn = ((...args: unknown[]) => {
+      const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
+      if (Array.isArray(cmd) && cmd[0] === "bun" && cmd[1] === "add") {
+        return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
+      }
+      return originalSpawn.apply(Bun, args as Parameters<typeof Bun.spawn>);
+    }) as typeof Bun.spawn;
   });
 
   afterEach(() => {
+    Bun.spawn = originalSpawn;
     process.chdir(originalCwd);
     if (existsSync(testDir)) {
       rmSync(testDir, { recursive: true, force: true });
@@ -148,33 +165,17 @@ describe("MakeCommandCommand", () => {
       expect(lines[1]).toContain("DeployCommand");
     });
 
-    test("should generate commands root export file in module directory", async () => {
-      await Bun.write(join(testDir, "modules", "auth", "src", "commands", ".gitkeep"), "");
-      await Bun.write(join(testDir, "modules", "auth", "tests", "commands", ".gitkeep"), "");
-      await Bun.write(
-        join(testDir, "modules", "auth", "package.json"),
-        JSON.stringify({ name: "@module/auth" }, null, 2),
-      );
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
-
-      await command.run({ name: "Login", module: "auth" });
-
-      const commandsFile = join(testDir, "modules", "auth", "src", "commands", "commands.ts");
-      expect(existsSync(commandsFile)).toBe(true);
-
-      const content = await Bun.file(commandsFile).text();
-      expect(content).toContain("export { LoginCommand } from './LoginCommand';");
-    });
-
     test("should create bin/command/run.ts if it does not exist", async () => {
       await command.run({ name: "Deploy" });
 
-      const binFile = join(testDir, "modules", "app", "bin", "command", "run.ts");
+      const binFile = join(testDir, "bin", "command", "run.ts");
       expect(await Bun.file(binFile).exists()).toBe(true);
+      const content = await Bun.file(binFile).text();
+      expect(content).toContain("run");
     });
 
     test("should not overwrite bin/command/run.ts if it already exists", async () => {
-      const binFile = join(testDir, "modules", "app", "bin", "command", "run.ts");
+      const binFile = join(testDir, "bin", "command", "run.ts");
       await Bun.write(binFile, "// custom content");
 
       await command.run({ name: "Deploy" });
@@ -182,58 +183,66 @@ describe("MakeCommandCommand", () => {
       const content = await Bun.file(binFile).text();
       expect(content).toBe("// custom content");
     });
+  });
 
-    test("should update package.json with command script", async () => {
-      await Bun.write(
-        join(testDir, "modules", "app", "package.json"),
-        JSON.stringify({ name: "test", scripts: {} }, null, 2),
-      );
+  describe("run() with module option", () => {
+    const moduleName = "auth";
 
-      await command.run({ name: "Deploy" });
-
-      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
-    });
-
-    test("should preserve existing scripts in package.json", async () => {
-      await Bun.write(
-        join(testDir, "modules", "app", "package.json"),
-        JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
-      );
-
-      await command.run({ name: "Deploy" });
-
-      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(packageJson.scripts.build).toBe("bun build");
-      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
-    });
-
-    test("should create scripts object if it does not exist", async () => {
-      await Bun.write(join(testDir, "modules", "app", "package.json"), JSON.stringify({ name: "test" }, null, 2));
-
-      await command.run({ name: "Deploy" });
-
-      const packageJson = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(packageJson.scripts).toBeDefined();
-      expect(packageJson.scripts.command).toBe("bun ./bin/command/run.ts");
+    beforeEach(async () => {
+      const moduleDir = join(testDir, "modules", moduleName);
+      await Bun.write(join(moduleDir, "src", "commands", ".gitkeep"), "");
+      await Bun.write(join(moduleDir, "tests", "commands", ".gitkeep"), "");
+      await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@module/auth", scripts: {} }, null, 2));
+      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+      process.chdir(testDir);
     });
 
     test("should generate in module directory when module option is provided", async () => {
-      await Bun.write(join(testDir, "modules", "auth", "src", "commands", ".gitkeep"), "");
-      await Bun.write(join(testDir, "modules", "auth", "tests", "commands", ".gitkeep"), "");
-      await Bun.write(
-        join(testDir, "modules", "auth", "package.json"),
-        JSON.stringify({ name: "@module/auth" }, null, 2),
-      );
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
+      await command.run({ name: "Login", module: moduleName });
 
-      await command.run({ name: "Login", module: "auth" });
-
-      const filePath = join(testDir, "modules", "auth", "src", "commands", "LoginCommand.ts");
+      const filePath = join(testDir, "modules", moduleName, "src", "commands", "LoginCommand.ts");
       expect(existsSync(filePath)).toBe(true);
 
-      const testFilePath = join(testDir, "modules", "auth", "tests", "commands", "LoginCommand.spec.ts");
+      const testFilePath = join(testDir, "modules", moduleName, "tests", "commands", "LoginCommand.spec.ts");
       expect(existsSync(testFilePath)).toBe(true);
+    });
+
+    test("should generate commands root export file in module directory", async () => {
+      await command.run({ name: "Login", module: moduleName });
+
+      const commandsFile = join(testDir, "modules", moduleName, "src", "commands", "commands.ts");
+      expect(existsSync(commandsFile)).toBe(true);
+
+      const content = await Bun.file(commandsFile).text();
+      expect(content).toContain("export { LoginCommand } from './LoginCommand';");
+    });
+
+    test("should create bin/command/run.ts in module directory", async () => {
+      await command.run({ name: "Login", module: moduleName });
+
+      const binFile = join(testDir, "modules", moduleName, "bin", "command", "run.ts");
+      expect(await Bun.file(binFile).exists()).toBe(true);
+      const content = await Bun.file(binFile).text();
+      expect(content).toContain("run");
+    });
+
+    test("should run bun add in current working directory", async () => {
+      const spawnCalls: { cmd: string[]; cwd: string }[] = [];
+
+      Bun.spawn = ((...args: unknown[]) => {
+        const cmd = Array.isArray(args[0]) ? args[0] : (args[0] as { cmd?: string[] })?.cmd;
+        const opts = (Array.isArray(args[0]) ? args[1] : args[0]) as { cwd?: string } | undefined;
+        if (Array.isArray(cmd)) {
+          spawnCalls.push({ cmd: [...(cmd as string[])], cwd: (opts?.cwd as string) ?? "" });
+        }
+        return { exited: Promise.resolve(0) } as unknown as ReturnType<typeof Bun.spawn>;
+      }) as typeof Bun.spawn;
+
+      await command.run({ name: "Login", module: moduleName });
+
+      const addCall = spawnCalls.find((c) => c.cmd[0] === "bun" && c.cmd[1] === "add");
+      expect(addCall).toBeDefined();
+      expect(addCall?.cwd).toBe(testDir);
     });
   });
 });

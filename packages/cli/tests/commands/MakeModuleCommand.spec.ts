@@ -132,34 +132,11 @@ describe("MakeModuleCommand", () => {
       expect(await exists(commandsFile)).toBe(true);
     });
 
-    test("should generate bin/command/run.ts by default", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const binFile = join(testDir, "modules", "user", "bin", "command", "run.ts");
-      expect(await exists(binFile)).toBe(true);
-
-      const content = await Bun.file(binFile).text();
-      expect(content).toContain("@/commands/commands");
-    });
-
     test("should skip commands when skipCommands is true", async () => {
       await command.run({ name: "User", cwd: testDir, silent: true, skipCommands: true });
 
       const commandsFile = join(testDir, "modules", "user", "src", "commands", "commands.ts");
       expect(await exists(commandsFile)).toBe(false);
-
-      const binFile = join(testDir, "modules", "user", "bin", "command", "run.ts");
-      expect(await exists(binFile)).toBe(false);
-    });
-
-    test("should not overwrite bin/command/run.ts if it already exists", async () => {
-      const binFile = join(testDir, "modules", "user", "bin", "command", "run.ts");
-      await Bun.write(binFile, "// custom content");
-
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const content = await Bun.file(binFile).text();
-      expect(content).toBe("// custom content");
     });
 
     test("should normalize name to kebab-case for directory", async () => {

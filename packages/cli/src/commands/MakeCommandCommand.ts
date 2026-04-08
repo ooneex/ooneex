@@ -25,7 +25,7 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
     let { name, module } = options;
 
     if (!name) {
-      name = await askName({ message: "Enter name" });
+      name = await askName({ message: "Enter command name" });
     }
 
     if (module) {
@@ -39,38 +39,14 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
       testsDir: join(base, "tests", "commands"),
     });
 
-    // Import commands root file in app root file
-    if (module && module !== "app") {
-      const appCommandsRootPath = join(process.cwd(), "modules", "app", "src", "commands", "commands.ts");
-      const appCommandsRootFile = Bun.file(appCommandsRootPath);
-      const importLine = `import "@${module}/commands/commands";`;
-
-      if (await appCommandsRootFile.exists()) {
-        const appCommandsContent = await appCommandsRootFile.text();
-        if (!appCommandsContent.includes(importLine)) {
-          await Bun.write(appCommandsRootPath, `${appCommandsContent.trimEnd()}\n${importLine}\n`);
-        }
-      } else {
-        await Bun.write(appCommandsRootPath, `${importLine}\n`);
-      }
-    }
-
     // Create bin/command/run.ts if it doesn't exist
-    const binCommandRunPath = join(process.cwd(), "modules", "app", "bin", "command", "run.ts");
+    const binCommandRunPath = join(process.cwd(), base, "bin", "command", "run.ts");
     const binCommandRunFile = Bun.file(binCommandRunPath);
     if (!(await binCommandRunFile.exists())) {
       await Bun.write(binCommandRunPath, commandRunTemplate);
     }
 
-    // Update package.json with command script
-    const packageJsonPath = join(process.cwd(), "modules", "app", "package.json");
-    const packageJsonFile = Bun.file(packageJsonPath);
-    if (await packageJsonFile.exists()) {
-      const packageJson = await packageJsonFile.json();
-      packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts.command = "bun ./bin/command/run.ts";
-      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    }
+    const packageJsonPath = join(process.cwd(), base, "package.json");
 
     const logger = new TerminalLogger();
 
@@ -86,10 +62,18 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
       useSymbol: true,
     });
 
-    logger.info("Run 'bun run command' to execute commands", undefined, {
-      showTimestamp: false,
-      showArrow: true,
-      showLevel: false,
-    });
+    // Install @ooneex/command dev dependency if not already installed
+    const pkgJson = await Bun.file(packageJsonPath).json();
+    const deps = pkgJson.dependencies ?? {};
+    const devDeps = pkgJson.devDependencies ?? {};
+
+    if (!deps["@ooneex/command"] && !devDeps["@ooneex/command"]) {
+      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/command"], {
+        cwd: process.cwd(),
+        stdout: "ignore",
+        stderr: "inherit",
+      });
+      await install.exited;
+    }
   }
 }

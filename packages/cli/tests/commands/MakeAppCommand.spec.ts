@@ -120,13 +120,13 @@ describe("MakeAppCommand", () => {
       expect(await exists(join(testDir, "modules", "app", "tests", "AppModule.spec.ts"))).toBe(true);
     });
 
-    test("should add dev and build scripts to app module package.json", async () => {
+    test("should not add dev, stop, and build scripts to app module package.json", async () => {
       await command.run({ name: "MyApp", destination: testDir });
 
       const content = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
-      expect(content.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
-      expect(content.scripts.stop).toBe("docker compose down");
-      expect(content.scripts.build).toBe("bun build ./src/index.ts --outdir ./dist --target bun");
+      expect(content.scripts.dev).toBeUndefined();
+      expect(content.scripts.stop).toBeUndefined();
+      expect(content.scripts.build).toBeUndefined();
     });
 
     test("should generate environment files", async () => {

@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.0) - 2026-04-08
+
+### Added
+
+- Register alias bindings in the DI container — Franck ([a9a3e358](https://github.com/ooneex/ooneex/commit/a9a3e358))
+
+### Changed
+
+- Bump version to 1.3.4 — Franck ([0c6007ec](https://github.com/ooneex/ooneex/commit/0c6007ec))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.3.3) - 2026-04-08
 
 ### Changed

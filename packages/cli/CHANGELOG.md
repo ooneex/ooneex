@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.17.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.2) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.17.1 — Franck ([e2726060](https://github.com/ooneex/ooneex/commit/e2726060))
+
 ## [1.17.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.0) - 2026-04-08
 
 ### Added

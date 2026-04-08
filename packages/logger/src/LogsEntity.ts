@@ -17,6 +17,7 @@ export class LogsEntity {
   ip?: string;
   method?: HttpMethodType;
   path?: string;
+  version?: number;
   userAgent?: string;
   referer?: string;
   params?: Record<string, ScalarType>;

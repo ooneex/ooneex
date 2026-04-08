@@ -827,6 +827,7 @@ describe("LogsEntity", () => {
       entity.method = "POST";
       entity.path = "/test";
       entity.userAgent = "Test Agent";
+      entity.version = 1;
       entity.referer = "http://test.com";
       entity.params = { param: "value" };
       entity.payload = { data: "test" };

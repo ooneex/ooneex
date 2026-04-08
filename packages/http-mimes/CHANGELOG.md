@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-mimes@1.1.7) - 2026-04-08
+
+### Changed
+
+- Bump all package versions — Franck ([3444f39f](https://github.com/ooneex/ooneex/commit/3444f39f))
+
 ## [1.1.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-mimes@1.1.5) - 2026-04-07
 
 ### Changed

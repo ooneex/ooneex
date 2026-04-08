@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/module",
   "description": "Module system for organizing application features into cohesive units — groups controllers, entities, services, and middleware by domain",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "type": "module",
   "files": [
     "dist",

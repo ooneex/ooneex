@@ -11,7 +11,7 @@ import type { ScalarType } from "@ooneex/types";
 import { trim } from "@ooneex/utils";
 import { AssertAppEnv, AssertHostname, AssertPort } from "@ooneex/validation/constraints";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
-import { buildHttpContext, formatHttpRoutes, logRequest, runMiddlewares } from "./httpRouteUtils";
+import { buildHttpContext, formatHttpRoutes, logRequest, type RouteInfoType, runMiddlewares } from "./httpRouteUtils";
 import { logger as loggerFunc } from "./logger";
 import { formatSocketRoutes, socketRouteHandler } from "./socketRouteUtils";
 import type { AppConfigType } from "./types";
@@ -164,7 +164,15 @@ export class App {
       routes: {
         ...routes,
         "/*": async (req: BunRequest, server: Server<unknown>) => {
-          let context = await buildHttpContext({ req, server });
+          const url = new URL(req.url);
+          const route = {
+            name: "",
+            path: url.pathname as `/${string}`,
+            method: req.method as RouteInfoType["method"],
+            version: 0,
+            description: "Not Found",
+          };
+          let context = await buildHttpContext({ req, server, route });
           context.response.notFound("Not Found");
 
           if (this.config.cors) {
@@ -173,7 +181,7 @@ export class App {
 
           logRequest(context);
 
-          return context.response.get();
+          return context.response.get(context.env.APP_ENV);
         },
       },
       websocket: {

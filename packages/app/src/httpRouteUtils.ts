@@ -85,10 +85,12 @@ export const validateConstraint = (constraint: AssertType | IAssert, value: unkn
   return null;
 };
 
+export type RouteInfoType = Pick<RouteConfigType, "name" | "path" | "method" | "version" | "description">;
+
 export const buildHttpContext = async (ctx: {
   req: BunRequest;
   server: Server<unknown>;
-  route?: RouteConfigType;
+  route?: RouteInfoType;
 }): Promise<ContextType> => {
   const { req, server, route } = ctx;
 
@@ -314,6 +316,7 @@ export const logRequest = (context: ContextType): void => {
   logData.status = status;
   logData.method = context.method;
   logData.path = path;
+  if (context.route?.version) logData.version = context.route.version;
   logData.params = context.params as Record<string, ScalarType>;
   logData.payload = context.payload as Record<string, unknown>;
   logData.queries = context.queries as Record<string, ScalarType>;

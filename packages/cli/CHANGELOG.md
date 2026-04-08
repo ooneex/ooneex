@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.16.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.16.0) - 2026-04-08
+
+### Added
+
+- Log data file path in MakeSeedCommand and update skill template — Franck ([b91e2804](https://github.com/ooneex/ooneex/commit/b91e2804))
+
+### Changed
+
+- Clean up dependencies and format test files — Franck ([4060669c](https://github.com/ooneex/ooneex/commit/4060669c))
+- Add non-null assertion guideline to entity skill template — Franck ([9e494c86](https://github.com/ooneex/ooneex/commit/9e494c86))
+
+### Fixed
+
+- Use module directory for package.json and dependency install paths — Franck ([13959dbb](https://github.com/ooneex/ooneex/commit/13959dbb))
+
 ## [1.15.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.15.2) - 2026-04-07
 
 ### Changed

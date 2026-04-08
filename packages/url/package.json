@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/url",
   "description": "URL parsing and manipulation library with query string handling, path normalization, and route parameter extraction for web applications",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "type": "module",
   "files": [
     "dist",

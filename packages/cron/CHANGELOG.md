@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cron@1.1.11) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.10 — Franck ([9eb1b875](https://github.com/ooneex/ooneex/commit/9eb1b875))
+
 ## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cron@1.1.9) - 2026-04-08
 
 ### Changed

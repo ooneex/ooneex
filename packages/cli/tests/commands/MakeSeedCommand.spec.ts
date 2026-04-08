@@ -61,36 +61,6 @@ describe("MakeSeedCommand", () => {
       process.chdir(testDir);
     });
 
-    test("should update package.json with seed:run script", async () => {
-      await command.run({ name: "User" });
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
-    });
-
-    test("should preserve existing scripts in package.json", async () => {
-      await Bun.write(
-        join(testDir, "package.json"),
-        JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
-      );
-
-      await command.run({ name: "User" });
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts.build).toBe("bun build");
-      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
-    });
-
-    test("should create scripts object if it does not exist", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
-
-      await command.run({ name: "User" });
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts).toBeDefined();
-      expect(packageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
-    });
-
     test("should create bin/seed/run.ts if it does not exist", async () => {
       await command.run({ name: "User" });
 
@@ -119,22 +89,6 @@ describe("MakeSeedCommand", () => {
       await Bun.write(join(moduleDir, "src", "seeds", ".gitkeep"), "");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "billing", scripts: {} }, null, 2));
       process.chdir(testDir);
-    });
-
-    test("should update module package.json with seed:run script", async () => {
-      await command.run({ name: "User", module: moduleName });
-
-      const modulePackageJson = await Bun.file(join(testDir, "modules", moduleName, "package.json")).json();
-      expect(modulePackageJson.scripts["seed:run"]).toBe("bun ./bin/seed/run.ts");
-    });
-
-    test("should not update root package.json when module is specified", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "root", scripts: {} }, null, 2));
-
-      await command.run({ name: "User", module: moduleName });
-
-      const rootPackageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(rootPackageJson.scripts["seed:run"]).toBeUndefined();
     });
 
     test("should create bin/seed/run.ts in module directory", async () => {

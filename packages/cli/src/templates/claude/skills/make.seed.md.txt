@@ -46,7 +46,6 @@ Where `<name>` is the name provided by the user. The `--module` option is option
 
 It will also:
 - Generate a `seeds.ts` root export file in the seeds directory
-- Add a `seed:run` script to `package.json` if not already present
 
 ### 2. Read the generated files
 

@@ -40,15 +40,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       await Bun.write(binMigrationUpPath, migrationUpTemplate);
     }
 
-    // Update package.json with migration script
     const packageJsonPath = join(process.cwd(), base, "package.json");
-    const packageJsonFile = Bun.file(packageJsonPath);
-    if (await packageJsonFile.exists()) {
-      const packageJson = await packageJsonFile.json();
-      packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts["migration:up"] = "bun ./bin/migration/up.ts";
-      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    }
 
     const logger = new TerminalLogger();
 
@@ -56,12 +48,6 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
-    });
-
-    logger.info("Run 'bun run migration:up' to execute migrations", undefined, {
-      showTimestamp: false,
-      showArrow: true,
-      showLevel: false,
     });
 
     // Install @ooneex/migrations dev dependency if not already installed

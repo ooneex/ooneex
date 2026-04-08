@@ -47,15 +47,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       await Bun.write(binSeedRunPath, seedRunTemplate);
     }
 
-    // Update package.json with seed script
     const packageJsonPath = join(process.cwd(), base, "package.json");
-    const packageJsonFile = Bun.file(packageJsonPath);
-    if (await packageJsonFile.exists()) {
-      const packageJson = await packageJsonFile.json();
-      packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts["seed:run"] = "bun ./bin/seed/run.ts";
-      await Bun.write(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    }
 
     const logger = new TerminalLogger();
 
@@ -69,12 +61,6 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
-    });
-
-    logger.info("Run 'bun run seed:run' to execute seeds", undefined, {
-      showTimestamp: false,
-      showArrow: true,
-      showLevel: false,
     });
 
     // Install @ooneex/seeds dev dependency if not already installed

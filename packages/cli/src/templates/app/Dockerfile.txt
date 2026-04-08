@@ -27,10 +27,6 @@ FROM base AS prerelease
 COPY --from=build /temp/dev/node_modules node_modules
 COPY . .
 
-# run migrations and seed
-RUN bun run migration:up
-RUN bun run seed:run
-
 # build
 ENV NODE_ENV=production
 RUN bun run build

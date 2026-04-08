@@ -66,36 +66,6 @@ describe("MakeMigrationCommand", () => {
       process.chdir(testDir);
     });
 
-    test("should update package.json with migration:up script", async () => {
-      await command.run({});
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
-    });
-
-    test("should preserve existing scripts in package.json", async () => {
-      await Bun.write(
-        join(testDir, "package.json"),
-        JSON.stringify({ name: "test", scripts: { build: "bun build" } }, null, 2),
-      );
-
-      await command.run({});
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts.build).toBe("bun build");
-      expect(packageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
-    });
-
-    test("should create scripts object if it does not exist", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
-
-      await command.run({});
-
-      const packageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(packageJson.scripts).toBeDefined();
-      expect(packageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
-    });
-
     test("should create bin/migration/up.ts if it does not exist", async () => {
       await command.run({});
 
@@ -124,22 +94,6 @@ describe("MakeMigrationCommand", () => {
       await Bun.write(join(moduleDir, "src", "migrations", ".gitkeep"), "");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "billing", scripts: {} }, null, 2));
       process.chdir(testDir);
-    });
-
-    test("should update module package.json with migration:up script", async () => {
-      await command.run({ module: moduleName });
-
-      const modulePackageJson = await Bun.file(join(testDir, "modules", moduleName, "package.json")).json();
-      expect(modulePackageJson.scripts["migration:up"]).toBe("bun ./bin/migration/up.ts");
-    });
-
-    test("should not update root package.json when module is specified", async () => {
-      await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "root", scripts: {} }, null, 2));
-
-      await command.run({ module: moduleName });
-
-      const rootPackageJson = await Bun.file(join(testDir, "package.json")).json();
-      expect(rootPackageJson.scripts["migration:up"]).toBeUndefined();
     });
 
     test("should create bin/migration/up.ts in module directory", async () => {

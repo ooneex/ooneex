@@ -23,14 +23,7 @@ cp modules/app/.env.example modules/app/.env
 
 Edit `modules/app/.env` with your configuration values.
 
-### 3. Run migrations and seeds
-
-```bash
-bun run migration:up
-bun run seed:run
-```
-
-### 4. Start the development server
+### 3. Start the development server
 
 ```bash
 bun run dev
@@ -47,8 +40,6 @@ The server starts on `http://localhost:3000` by default.
 | `bun run test`         | Run all tests                        |
 | `bun run lint`         | Run TypeScript check + Biome linting |
 | `bun run fmt`          | Format code with Biome               |
-| `bun run migration:up` | Execute pending database migrations  |
-| `bun run seed:run`     | Populate database with seed data     |
 | `bun run stop`  | Stop all Docker containers           |
 | `bun run commit`       | Interactive conventional commit      |
 

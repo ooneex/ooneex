@@ -30,12 +30,10 @@ describe("Dockerfile.txt", () => {
     expect(content).toContain("bun install --frozen-lockfile --production");
   });
 
-  test("should contain prerelease stage with migrations and seed", async () => {
+  test("should contain prerelease stage", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("FROM base AS prerelease");
     expect(content).toContain("COPY --from=build /temp/dev/node_modules node_modules");
-    expect(content).toContain("RUN bun run migration:up");
-    expect(content).toContain("RUN bun run seed:run");
     expect(content).toContain("ENV NODE_ENV=production");
     expect(content).toContain("RUN bun run build");
   });

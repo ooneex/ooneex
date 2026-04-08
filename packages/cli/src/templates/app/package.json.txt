@@ -7,8 +7,6 @@
     "lint": "bunx nx run-many -t lint --output-style=stream --verbose",
     "test": "bunx nx run-many -t test --output-style=stream --verbose",
     "stop": "bunx nx run-many -t stop --output-style=stream --verbose",
-    "migration:up": "bunx nx run-many -t migration:up --output-style=stream --verbose",
-    "seed:run": "bunx nx run-many -t seed:run --output-style=stream --verbose",
     "commit": "bunx commit"
   },
   "workspaces": [

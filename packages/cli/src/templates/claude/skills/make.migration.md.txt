@@ -45,7 +45,6 @@ The `--module` option is optional — if provided, files are generated under `mo
 
 It will also:
 - Generate a `migrations.ts` root export file in the migrations directory
-- Add a `migration:up` script to `package.json` if not already present
 
 ### 2. Read the generated files
 

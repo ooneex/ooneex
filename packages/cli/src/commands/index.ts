@@ -1,4 +1,6 @@
+export { AppBuildCommand } from "./AppBuildCommand";
 export { AppStartCommand } from "./AppStartCommand";
+export { AppStopCommand } from "./AppStopCommand";
 export { CompletionZshCommand } from "./CompletionZshCommand";
 export { MakeAiCommand } from "./MakeAiCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";

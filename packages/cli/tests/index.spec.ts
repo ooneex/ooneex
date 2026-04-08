@@ -31,7 +31,9 @@ type CommandConstructor = new () => {
 
 describe("@ooneex/cli - index", () => {
   const expectedCommands = [
+    "AppBuildCommand",
     "AppStartCommand",
+    "AppStopCommand",
     "CompletionZshCommand",
     "MakeAiCommand",
     "MakeAnalyticsCommand",

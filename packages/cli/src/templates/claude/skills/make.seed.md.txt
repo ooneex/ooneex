@@ -27,6 +27,7 @@ bunx @ooneex/cli@latest make:seed --name=<name> --module=<module>
 
 Where `<name>` is the name provided by the user. The `--module` option is optional — if provided, files are generated under `modules/<module>/` instead of the project root. The command will generate:
 - `src/seeds/<Name>Seed.ts` - The seed class file (or `modules/<module>/src/seeds/<Name>Seed.ts` with `--module`)
+- `src/seeds/<name-seed>.yml` - The seed data file in kebab-case (or `modules/<module>/src/seeds/<name-seed>.yml` with `--module`)
 - `tests/seeds/<Name>Seed.spec.ts` - The test file (or `modules/<module>/tests/seeds/<Name>Seed.spec.ts` with `--module`)
 
 It will also:
@@ -35,27 +36,36 @@ It will also:
 
 ### 2. Read the generated files
 
-Read both generated files to understand the scaffolded code.
+Read all generated files to understand the scaffolded code.
 
-### 3. Complete the seed
+### 3. Complete the seed data
 
-Edit `src/seeds/<Name>Seed.ts` to implement:
+Edit `src/seeds/<name-seed>.yml` to add the seed data entries. Each entry should have hardcoded nanoid values for `id` fields (generate via `bun -e "import { random } from '@ooneex/utils'; console.log(random.nanoid())"`)
 
-- Import the relevant entity classes
-- Create seed data with hardcoded nanoid values for `id` fields (generate via `bun -e "import { random } from '@ooneex/utils'; console.log(random.nanoid())"`)
 - Do NOT use sequential IDs like `"item-1"`, `"item-2"`
 - Ensure the same entity uses the same ID everywhere it appears
 
-### 4. Complete the test file
+### 4. Complete the seed class
+
+Edit `src/seeds/<Name>Seed.ts` to implement:
+
+- Import the relevant entity classes and repository
+- Use `resolve()` from `@ooneex/container` to get the repository instance
+- Map the imported YAML data to entity instances
+- Use the repository to persist the entities
+
+### 5. Complete the test file
 
 Edit `tests/seeds/<Name>Seed.spec.ts` to add meaningful tests beyond the scaffolded ones:
 
-- Keep the existing scaffolded tests (class name, run, isActive, getDependencies methods)
+- Keep the existing scaffolded tests (class name, run, isActive, getDependencies, data yml file)
 - Add tests relevant to the specific seed behavior
 
 The generated test structure follows this pattern:
 
 ```typescript
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 import { <Name>Seed } from "@/seeds/<Name>Seed";
 
@@ -78,13 +88,18 @@ describe("<Name>Seed", () => {
     expect(<Name>Seed.prototype.getDependencies).toBeDefined();
     expect(typeof <Name>Seed.prototype.getDependencies).toBe("function");
   });
+
+  test("should have a data yml file", () => {
+    const dataFile = join(__dirname, "..", "src", "seeds", "<name-seed>.yml");
+    expect(existsSync(dataFile)).toBe(true);
+  });
 });
 ```
 
-### 5. Lint and format
+### 6. Lint and format
 
 Run linting and formatting on the generated files:
 
 ```bash
-bunx biome check --fix src/seeds/<Name>Seed.ts tests/seeds/<Name>Seed.spec.ts
+bunx biome check --fix src/seeds/<Name>Seed.ts src/seeds/<name-seed>.yml tests/seeds/<Name>Seed.spec.ts
 ```

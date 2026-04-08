@@ -34,7 +34,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     }
 
     const base = module ? join("modules", module) : ".";
-    const { seedPath: filePath } = await seedCreate({
+    const { seedPath: filePath, dataPath } = await seedCreate({
       name,
       seedsDir: join(base, "src", "seeds"),
       testsDir: join(base, "tests", "seeds"),
@@ -60,6 +60,12 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     const logger = new TerminalLogger();
 
     logger.success(`${filePath} created successfully`, undefined, {
+      showTimestamp: false,
+      showArrow: false,
+      useSymbol: true,
+    });
+
+    logger.success(`${dataPath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/youtube",
   "description": "YouTube video downloader and metadata extraction library for fetching video information, thumbnails, and media streams",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "type": "module",
   "files": [
     "dist",

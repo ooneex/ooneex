@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.17.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.7) - 2026-04-08
+
+### Fixed
+
+- Fix cwd for bun add and commit bun.lock in release flow — Franck ([5ef56ceb](https://github.com/ooneex/ooneex/commit/5ef56ceb))
+
 ## [1.17.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.6) - 2026-04-08
 
 ### Changed

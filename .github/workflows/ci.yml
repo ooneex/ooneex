@@ -39,7 +39,7 @@ jobs:
             bun-cache-${{ runner.os }}-
 
       - run: bun install --frozen-lockfile
-      - uses: nrwl/nx-set-shas@v4
+      - uses: nrwl/nx-set-shas@v5
       - run: bun run lint
       - run: bun run test
 

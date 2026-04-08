@@ -812,6 +812,58 @@ describe("Container - Dependency Injection", () => {
     });
   });
 
+  describe("Auto-injectable", () => {
+    test("should automatically apply @injectable() to classes without it", () => {
+      // Plain class without @injectable() decorator
+      class PlainController {
+        public handle(): string {
+          return "handled";
+        }
+      }
+
+      container.add(PlainController);
+      const instance = container.get(PlainController);
+      expect(instance).toBeInstanceOf(PlainController);
+      expect(instance.handle()).toBe("handled");
+    });
+
+    test("should handle classes that are already decorated with @injectable()", () => {
+      const { injectable } = require("inversify");
+
+      @injectable()
+      class DecoratedService {
+        public run(): string {
+          return "running";
+        }
+      }
+
+      // Should not throw even though @injectable() is already applied
+      container.add(DecoratedService);
+      const instance = container.get(DecoratedService);
+      expect(instance).toBeInstanceOf(DecoratedService);
+      expect(instance.run()).toBe("running");
+    });
+
+    test("should auto-inject across all scopes", () => {
+      class ScopedPlainClass {
+        private static count = 0;
+        public readonly id: number;
+
+        constructor() {
+          ScopedPlainClass.count++;
+          this.id = ScopedPlainClass.count;
+        }
+      }
+
+      // Transient scope with auto-injectable
+      container.add(ScopedPlainClass, EContainerScope.Transient);
+      const instance1 = container.get(ScopedPlainClass);
+      const instance2 = container.get(ScopedPlainClass);
+      expect(instance1).not.toBe(instance2);
+      expect(instance1.id).not.toBe(instance2.id);
+    });
+  });
+
   describe("Alias functionality", () => {
     test("should add and retrieve service by alias", () => {
       class TestService {

@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: trust me */
 
-import { Container as InversifyContainer } from "inversify";
+import { Container as InversifyContainer, injectable } from "inversify";
 import { ContainerException } from "./ContainerException";
 import { EContainerScope, type IContainer } from "./types";
 
@@ -13,6 +13,10 @@ export class Container implements IContainer {
   public add(target: new (...args: any[]) => any, scope: EContainerScope = EContainerScope.Singleton): void {
     try {
       sharedDI.unbind(target);
+    } catch {}
+
+    try {
+      injectable()(target);
     } catch {}
 
     const binding = sharedDI.bind(target).toSelf();

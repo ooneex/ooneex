@@ -14,6 +14,7 @@ export { MakeLoggerCommand } from "./MakeLoggerCommand";
 export { MakeMailerCommand } from "./MakeMailerCommand";
 export { MakeMiddlewareCommand } from "./MakeMiddlewareCommand";
 export { MakeMigrationCommand } from "./MakeMigrationCommand";
+export { MigrationUpCommand } from "./MigrationUpCommand";
 export { MakeModuleCommand } from "./MakeModuleCommand";
 export { MakePermissionCommand } from "./MakePermissionCommand";
 export { MakePubSubCommand } from "./MakePubSubCommand";

@@ -27,6 +27,7 @@ _oo() {
     'make\:mailer:Generate a new mailer class'
     'make\:middleware:Generate a new middleware class'
     'make\:migration:Generate a new migration file'
+    'migration\:up:Run migrations for all modules'
     'make\:module:Generate a new module'
     'make\:permission:Generate a new permission class'
     'make\:pubsub:Generate a new PubSub event class'
@@ -118,7 +119,7 @@ _oo() {
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_oo_modules'
           ;;
-        make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|completion:zsh)
+        make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|migration:up|completion:zsh)
           ;;
       esac
       ;;

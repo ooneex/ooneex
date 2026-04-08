@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.8) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.7 — Franck ([3434bdcf](https://github.com/ooneex/ooneex/commit/3434bdcf))
+
 ## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.6) - 2026-04-08
 
 ### Changed

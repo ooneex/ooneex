@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.10) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.3.9 — Franck ([d1ae0615](https://github.com/ooneex/ooneex/commit/d1ae0615))
+
 ## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.8) - 2026-04-08
 
 ### Changed

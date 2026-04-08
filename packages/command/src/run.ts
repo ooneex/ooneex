@@ -46,12 +46,7 @@ export const run = async (): Promise<void> => {
 
   const logger = new TerminalLogger();
 
-  const commandName = positionals[2];
-
-  if (!commandName) {
-    logger.error("Command name is required\n");
-    process.exit(1);
-  }
+  const commandName = positionals[2] ?? "help";
 
   const command = getCommand(commandName);
 

@@ -127,6 +127,10 @@ export class MakeReleaseCommand implements ICommand {
 
     if (shouldPush) {
       try {
+        await $`bun install`;
+        await this.gitAdd("bun.lock");
+        await this.gitCommit("chore(common): Update bun.lock");
+        logger.success("Updated and committed bun.lock", undefined, logOptions);
         await $`git push && git push --tags`;
         logger.success("Pushed commits and tags to remote", undefined, logOptions);
       } catch {

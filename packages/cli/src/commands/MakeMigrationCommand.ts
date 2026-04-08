@@ -57,7 +57,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
 
     if (!deps["@ooneex/migrations"] && !devDeps["@ooneex/migrations"]) {
       const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
-        cwd: join(process.cwd(), base),
+        cwd: process.cwd(),
         stdout: "ignore",
         stderr: "inherit",
       });

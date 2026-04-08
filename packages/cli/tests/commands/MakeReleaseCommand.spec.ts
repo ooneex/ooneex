@@ -3,8 +3,9 @@ import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 // Mock enquirer before importing command (askConfirm uses prompt from enquirer)
+const mockPrompt = mock(() => Promise.resolve({ confirm: false }));
 mock.module("enquirer", () => ({
-  prompt: mock(() => Promise.resolve({ confirm: false })),
+  prompt: mockPrompt,
 }));
 
 const { MakeReleaseCommand } = await import("@/commands/MakeReleaseCommand");
@@ -289,6 +290,54 @@ describe("MakeReleaseCommand", () => {
       process.chdir(testDir);
 
       await command.run();
+    });
+
+    test("should commit bun.lock before pushing", async () => {
+      const calls: string[] = [];
+
+      // Mock confirm to accept push
+      mockPrompt.mockImplementationOnce(() => Promise.resolve({ confirm: true }));
+
+      // Mock git methods to track calls and simulate a releasable package
+      // @ts-expect-error accessing private method for testing
+      command.getLastTag = mock(() => Promise.resolve(null));
+      // @ts-expect-error accessing private method for testing
+      command.getCommitsSinceTag = mock(() =>
+        Promise.resolve([
+          { hash: "abc12345", type: "feat", scope: "test", subject: "Add feature", author: "Test" },
+        ]),
+      );
+      // @ts-expect-error accessing private method for testing
+      command.gitAdd = mock((...files: string[]) => {
+        calls.push(`gitAdd:${files.join(",")}`);
+        return Promise.resolve();
+      });
+      // @ts-expect-error accessing private method for testing
+      command.gitCommit = mock((message: string) => {
+        calls.push(`gitCommit:${message}`);
+        return Promise.resolve();
+      });
+      // @ts-expect-error accessing private method for testing
+      command.gitTag = mock(() => Promise.resolve());
+
+      // Create test package directory with package.json
+      const pkgDir = join(testDir, "packages", "test-pkg");
+      await Bun.write(join(pkgDir, "package.json"), JSON.stringify({ name: "@ooneex/test-pkg", version: "1.0.0" }));
+
+      process.chdir(testDir);
+      await command.run();
+
+      // Verify bun.lock was staged and committed before push
+      const releaseCommitIndex = calls.findIndex((c) => c.startsWith("gitCommit:chore(release):"));
+      const bunLockAddIndex = calls.findIndex((c) => c === "gitAdd:bun.lock");
+      const bunLockCommitIndex = calls.findIndex((c) => c === "gitCommit:chore(common): Update bun.lock");
+
+      expect(releaseCommitIndex).toBeGreaterThan(-1);
+      expect(bunLockAddIndex).toBeGreaterThan(-1);
+      expect(bunLockCommitIndex).toBeGreaterThan(-1);
+      // bun.lock commit must come after the release commit
+      expect(bunLockAddIndex).toBeGreaterThan(releaseCommitIndex);
+      expect(bunLockCommitIndex).toBeGreaterThan(bunLockAddIndex);
     });
   });
 });

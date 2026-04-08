@@ -70,7 +70,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
 
     if (!deps["@ooneex/seeds"] && !devDeps["@ooneex/seeds"]) {
       const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
-        cwd: join(process.cwd(), base),
+        cwd: process.cwd(),
         stdout: "ignore",
         stderr: "inherit",
       });

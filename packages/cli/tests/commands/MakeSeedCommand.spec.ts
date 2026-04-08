@@ -100,7 +100,7 @@ describe("MakeSeedCommand", () => {
       expect(content).toContain("run");
     });
 
-    test("should run bun add in module directory", async () => {
+    test("should run bun add in current working directory", async () => {
       const spawnCalls: { cmd: string[]; cwd: string }[] = [];
 
       Bun.spawn = ((...args: unknown[]) => {
@@ -116,7 +116,7 @@ describe("MakeSeedCommand", () => {
 
       const addCall = spawnCalls.find((c) => c.cmd[0] === "bun" && c.cmd[1] === "add");
       expect(addCall).toBeDefined();
-      expect(addCall?.cwd).toBe(join(testDir, "modules", moduleName));
+      expect(addCall?.cwd).toBe(testDir);
     });
   });
 });

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/translation@1.1.10) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.9 — Franck ([46cfeddf](https://github.com/ooneex/ooneex/commit/46cfeddf))
+
 ## [1.1.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/translation@1.1.8) - 2026-04-08
 
 ### Changed

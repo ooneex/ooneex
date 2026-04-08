@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/html@1.1.10) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.1.9 — Franck ([0f6fde1c](https://github.com/ooneex/ooneex/commit/0f6fde1c))
+
 ## [1.1.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/html@1.1.8) - 2026-04-08
 
 ### Changed

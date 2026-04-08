@@ -188,7 +188,10 @@ describe("MakeMiddlewareCommand", () => {
       await Bun.write(join(testDir, "modules", "blog", "src", "BlogModule.ts"), moduleContent);
       await Bun.write(join(testDir, "modules", "blog", "src", "middlewares", ".gitkeep"), "");
       await Bun.write(join(testDir, "modules", "blog", "tests", "middlewares", ".gitkeep"), "");
-      await Bun.write(join(testDir, "modules", "blog", "package.json"), JSON.stringify({ name: "@module/blog" }, null, 2));
+      await Bun.write(
+        join(testDir, "modules", "blog", "package.json"),
+        JSON.stringify({ name: "@module/blog" }, null, 2),
+      );
       await Bun.write(join(testDir, "package.json"), JSON.stringify({ name: "test" }, null, 2));
       process.chdir(testDir);
     });

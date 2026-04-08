@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.15](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.15) - 2026-04-08
+
+### Fixed
+
+- Filter non-scalar values from data display — Franck ([5b05af73](https://github.com/ooneex/ooneex/commit/5b05af73))
+
 ## [1.2.14](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.14) - 2026-04-08
 
 ### Fixed

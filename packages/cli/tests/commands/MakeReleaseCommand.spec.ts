@@ -319,6 +319,10 @@ describe("MakeReleaseCommand", () => {
       });
       // @ts-expect-error accessing private method for testing
       command.gitTag = mock(() => Promise.resolve());
+      // @ts-expect-error accessing private method for testing
+      command.bunInstall = mock(() => Promise.resolve());
+      // @ts-expect-error accessing private method for testing
+      command.gitPush = mock(() => Promise.resolve());
 
       // Create test package directory with package.json
       const pkgDir = join(testDir, "packages", "test-pkg");

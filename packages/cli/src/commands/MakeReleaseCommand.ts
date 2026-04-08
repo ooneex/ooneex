@@ -127,11 +127,11 @@ export class MakeReleaseCommand implements ICommand {
 
     if (shouldPush) {
       try {
-        await $`bun install`;
+        await this.bunInstall();
         await this.gitAdd("bun.lock");
         await this.gitCommit("chore(common): Update bun.lock");
         logger.success("Updated and committed bun.lock", undefined, logOptions);
-        await $`git push && git push --tags`;
+        await this.gitPush();
         logger.success("Pushed commits and tags to remote", undefined, logOptions);
       } catch {
         logger.error("Failed to push to remote", undefined, logOptions);
@@ -293,5 +293,13 @@ ${section}
 
   private async gitTag(tag: string, message: string): Promise<void> {
     await $`git tag -a ${tag} -m ${message}`;
+  }
+
+  private async bunInstall(): Promise<void> {
+    await $`bun install`;
+  }
+
+  private async gitPush(): Promise<void> {
+    await $`git push && git push --tags`;
   }
 }

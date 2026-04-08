@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.14](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.14) - 2026-04-08
+
+### Fixed
+
+- Add try-catch to colorizeText for invalid color values — Franck ([79080c70](https://github.com/ooneex/ooneex/commit/79080c70))
+
 ## [1.2.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.13) - 2026-04-08
 
 ### Changed

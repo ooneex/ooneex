@@ -110,6 +110,12 @@ export class Container implements IContainer {
 
   public addAlias<T>(alias: string, target: new (...args: any[]) => T): void {
     this.alias[alias] = target;
+
+    try {
+      sharedDI.unbind(alias);
+    } catch {}
+
+    sharedDI.bind(alias).toDynamicValue(() => sharedDI.get(target));
   }
 }
 

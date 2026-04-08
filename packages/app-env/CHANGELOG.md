@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.3.2) - 2026-04-08
+
+### Changed
+
+- Bump all package versions — Franck ([3444f39f](https://github.com/ooneex/ooneex/commit/3444f39f))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.3.0) - 2026-04-05
 
 ### Added

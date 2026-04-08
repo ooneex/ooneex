@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.1) - 2026-04-08
+
+### Changed
+
+- Rename migrationUp to up — Franck ([793e2220](https://github.com/ooneex/ooneex/commit/793e2220))
+
 ## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.0) - 2026-04-07
 
 ### Added

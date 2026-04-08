@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.8) - 2026-04-08
+
+### Changed
+
+- Bump all package versions — Franck ([3444f39f](https://github.com/ooneex/ooneex/commit/3444f39f))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.6) - 2026-04-07
 
 ### Changed

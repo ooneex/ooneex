@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.1) - 2026-04-08
+
+### Changed
+
+- Rename seedRun to run — Franck ([0a22b7bc](https://github.com/ooneex/ooneex/commit/0a22b7bc))
+
 ## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.0) - 2026-04-08
 
 ### Added

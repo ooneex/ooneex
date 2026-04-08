@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.10) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.9 — Franck ([ca95a574](https://github.com/ooneex/ooneex/commit/ca95a574))
+
 ## [1.2.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.8) - 2026-04-08
 
 ### Changed

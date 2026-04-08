@@ -18,7 +18,7 @@ const run = async (migration: IMigration, tx: any, sql: SQL): Promise<void> => {
   await migration.up(tx, sql);
 };
 
-export const migrationUp = async (config?: { databaseUrl?: string; tableName?: string }): Promise<void> => {
+export const up = async (config?: { databaseUrl?: string; tableName?: string }): Promise<void> => {
   const tableName = config?.tableName || "migrations";
 
   const sql = new SQL({

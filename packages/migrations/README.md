@@ -76,13 +76,13 @@ class Migration20240115103045 implements IMigration {
 ### Running Migrations
 
 ```typescript
-import { migrationUp } from '@ooneex/migrations';
+import { up } from '@ooneex/migrations';
 
 // Uses DATABASE_URL environment variable by default
-await migrationUp();
+await up();
 
 // Or with custom config
-await migrationUp({
+await up({
   databaseUrl: 'postgres://user:pass@localhost:5432/mydb',
   tableName: 'schema_migrations',
 });
@@ -101,7 +101,7 @@ Creates a new migration file from a template.
 
 **Returns:** `Promise<string>` - Path to the created migration file
 
-#### `migrationUp(config?)`
+#### `up(config?)`
 
 Runs all pending migrations in version order.
 

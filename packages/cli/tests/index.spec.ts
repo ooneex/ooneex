@@ -55,6 +55,7 @@ describe("@ooneex/cli - index", () => {
     "MakeRepositoryCommand",
     "MakeResourceBookCommand",
     "MakeSeedCommand",
+    "SeedRunCommand",
     "MakeServiceCommand",
     "MakeStorageCommand",
     "MakeVectorDatabaseCommand",

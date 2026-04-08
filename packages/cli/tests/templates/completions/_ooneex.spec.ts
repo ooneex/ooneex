@@ -78,6 +78,7 @@ describe("_ooneex.txt", () => {
       "make\\:resource\\:user",
       "make\\:resource\\:video",
       "make\\:seed",
+      "seed\\:run",
       "make\\:service",
       "make\\:storage",
       "make\\:vector-database",
@@ -220,7 +221,7 @@ describe("_ooneex.txt", () => {
     test("completion:zsh and make:claude:skill should have no options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(
-        /make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|migration:up\|completion:zsh\)\s*;;/,
+        /make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|migration:up\|seed:run\|completion:zsh\)\s*;;/,
       );
       expect(match).not.toBeNull();
     });

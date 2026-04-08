@@ -48,6 +48,7 @@ _oo() {
     'make\:resource\:user:Generate user resource (entity, migration, repository)'
     'make\:resource\:video:Generate video resource (entity, migration, repository)'
     'make\:seed:Generate a new seed file'
+    'seed\:run:Run seeds for all modules'
     'make\:service:Generate a new service class'
     'make\:storage:Generate a new storage class'
     'make\:vector-database:Generate a new vector database class'
@@ -119,7 +120,7 @@ _oo() {
             '--name=[Name of the resource]:name' \
             '--module=[Module name]:module:_oo_modules'
           ;;
-        make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|migration:up|completion:zsh)
+        make:release|make:resource:book|make:resource:calendar-event|make:resource:category|make:resource:color|make:resource:discount|make:resource:folder|make:resource:image|make:resource:note|make:resource:status|make:resource:tag|make:resource:task|make:resource:topic|make:resource:user|make:resource:video|make:claude:skill|migration:up|seed:run|completion:zsh)
           ;;
       esac
       ;;

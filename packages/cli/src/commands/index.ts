@@ -22,6 +22,7 @@ export { MakeReleaseCommand } from "./MakeReleaseCommand";
 export { MakeRepositoryCommand } from "./MakeRepositoryCommand";
 export { MakeResourceBookCommand } from "./MakeResourceBookCommand";
 export { MakeSeedCommand } from "./MakeSeedCommand";
+export { SeedRunCommand } from "./SeedRunCommand";
 export { MakeServiceCommand } from "./MakeServiceCommand";
 export { MakeStorageCommand } from "./MakeStorageCommand";
 export { MakeVectorDatabaseCommand } from "./MakeVectorDatabaseCommand";

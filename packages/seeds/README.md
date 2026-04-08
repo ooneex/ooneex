@@ -16,7 +16,7 @@ Database seeding framework for populating initial data, fixtures, and test datas
 
 ✅ **Active/Inactive Control** - Enable or disable individual seeds via the `isActive()` method
 
-✅ **Seed Runner** - Execute all active seeds in order with terminal logging via `seedRun()`
+✅ **Seed Runner** - Execute all active seeds in order with terminal logging via `run()`
 
 ✅ **Seed Scaffolding** - Generate new seed files from a template with `seedCreate()`
 
@@ -95,9 +95,9 @@ export class UserSeed implements ISeed {
 ### Running Seeds
 
 ```typescript
-import { seedRun } from '@ooneex/seeds';
+import { run } from '@ooneex/seeds';
 
-await seedRun();
+await run();
 ```
 
 ### Creating a New Seed
@@ -136,7 +136,7 @@ interface ISeed {
 
 ### Functions
 
-#### `seedRun(): Promise<void>`
+#### `run(): Promise<void>`
 
 Execute all active seeds with dependency resolution and terminal logging.
 

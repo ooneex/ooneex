@@ -3,7 +3,7 @@ import { container } from "@ooneex/container";
 import { SEEDS_CONTAINER } from "@/container";
 import type { ISeed, SeedClassType } from "@/types";
 
-// Capture logger instances created by seedRun()
+// Capture logger instances created by run()
 const LOGGER_INSTANCES: Array<{
   info: ReturnType<typeof mock>;
   warn: ReturnType<typeof mock>;
@@ -27,9 +27,9 @@ mock.module("@ooneex/logger", () => {
 });
 
 // Ensure the module under test sees our logger mock.
-const { seedRun } = await import("@/seedRun");
+const { run } = await import("@/run");
 
-describe("seedRun", () => {
+describe("run", () => {
   let originalGet: typeof container.get;
   let originalExit: typeof process.exit;
 
@@ -54,7 +54,7 @@ describe("seedRun", () => {
   });
 
   test("should log and return when there are no seeds", async () => {
-    await seedRun();
+    await run();
 
     expect(LOGGER_INSTANCES).toHaveLength(1);
     const logger = LOGGER_INSTANCES[0];
@@ -107,7 +107,7 @@ describe("seedRun", () => {
       throw new Error("unexpected seed class");
     }) as unknown as typeof container.get;
 
-    await seedRun();
+    await run();
 
     expect(calls).toEqual(["dependency.run", "main.run"]);
   });
@@ -121,7 +121,7 @@ describe("seedRun", () => {
       }
 
       // getSeeds() filters by seed.isActive(), so we return true for the first call
-      // (so the seed is discovered) and false for the second call (seedRun's own check).
+      // (so the seed is discovered) and false for the second call (run's own check).
       isActive() {
         return this.calls++ === 0;
       }
@@ -136,7 +136,7 @@ describe("seedRun", () => {
 
     container.get = mock(() => seedInstance) as unknown as typeof container.get;
 
-    await seedRun();
+    await run();
 
     const logger = LOGGER_INSTANCES[0];
     expect(logger).toBeDefined();
@@ -166,7 +166,7 @@ describe("seedRun", () => {
 
     container.get = mock(() => seedInstance) as unknown as typeof container.get;
 
-    expect(seedRun()).rejects.toThrow("process.exit called");
+    expect(run()).rejects.toThrow("process.exit called");
 
     const logger = LOGGER_INSTANCES[0];
     expect(logger).toBeDefined();

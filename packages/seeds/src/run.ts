@@ -4,20 +4,20 @@ import { TerminalLogger } from "@ooneex/logger";
 import { getSeeds } from "./getSeeds";
 import type { ISeed } from "./types";
 
-const run = async (seed: ISeed): Promise<void> => {
+const runSeed = async (seed: ISeed): Promise<void> => {
   const data = [];
 
   const dependencies = await seed.getDependencies();
 
   for (const dependency of dependencies) {
     const dep = container.get(dependency);
-    data.push(await run(dep));
+    data.push(await runSeed(dep));
   }
 
   await seed.run(data);
 };
 
-export const seedRun = async (): Promise<void> => {
+export const run = async (): Promise<void> => {
   const seeds = getSeeds();
   const logger = new TerminalLogger();
 
@@ -49,7 +49,7 @@ export const seedRun = async (): Promise<void> => {
     }
 
     try {
-      await run(seed);
+      await runSeed(seed);
       logger.success(`Seed ${seedName} completed\n`, undefined, {
         showTimestamp: false,
         showArrow: false,

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.3.0) - 2026-04-08
+
+### Added
+
+- Auto-apply @injectable() decorator when adding classes — Franck ([119b67c8](https://github.com/ooneex/ooneex/commit/119b67c8))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.2.4) - 2026-04-07
 
 ### Changed

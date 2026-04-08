@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.11) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.10 — Franck ([26647c8f](https://github.com/ooneex/ooneex/commit/26647c8f))
+
 ## [1.2.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rag@1.2.9) - 2026-04-08
 
 ### Changed

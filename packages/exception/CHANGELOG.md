@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.2.6) - 2026-04-08
+
+### Changed
+
+- Bump version to 1.2.5 — Franck ([aff3f2c9](https://github.com/ooneex/ooneex/commit/aff3f2c9))
+
 ## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/exception@1.2.4) - 2026-04-08
 
 ### Changed

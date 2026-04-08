@@ -17,6 +17,20 @@ Apply these conventions across all files in the target module:
 - **No definite assignment assertions** — never use `!` on class properties (e.g., `email!: string`). Use a default value or make the property optional (`?`) instead.
 - Always explicitly show visibility on class methods and properties (`private`, `public`, `protected`).
 - For Entity class, if property is optional, add `null` to its type.
+- For dependencies, use `inject` from `@ooneex/container`. For example:
+
+```typescript
+import { inject } from "@ooneex/container";
+import { decorator, type ISeed } from "@ooneex/seeds";
+
+@decorator.seed()
+export class BookSeed implements ISeed {
+  constructor(
+    @inject(BookRepository)
+    private readonly repository: BookRepository,
+  ) {}
+}
+```
 
 ## Steps
 

@@ -48,7 +48,7 @@ describe("README.md.txt", () => {
     expect(content).toContain("bun run fmt");
     expect(content).toContain("bun run migration:up");
     expect(content).toContain("bun run seed:run");
-    expect(content).toContain("bun run docker:stop");
+    expect(content).toContain("bun run stop");
     expect(content).toContain("bun run commit");
   });
 

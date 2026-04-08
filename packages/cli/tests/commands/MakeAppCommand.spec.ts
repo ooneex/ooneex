@@ -125,7 +125,7 @@ describe("MakeAppCommand", () => {
 
       const content = await Bun.file(join(testDir, "modules", "app", "package.json")).json();
       expect(content.scripts.dev).toBe("docker compose up -d && bun --hot run ./src/index.ts");
-      expect(content.scripts["docker:stop"]).toBe("docker compose down");
+      expect(content.scripts.stop).toBe("docker compose down");
       expect(content.scripts.build).toBe("bun build ./src/index.ts --outdir ./dist --target bun");
     });
 

@@ -75,7 +75,7 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
     const appModulePackagePath = join(destination, "modules", "app", "package.json");
     const appModulePackageJson = await Bun.file(appModulePackagePath).json();
     appModulePackageJson.scripts.dev = "docker compose up -d && bun --hot run ./src/index.ts";
-    appModulePackageJson.scripts["docker:stop"] = "docker compose down";
+    appModulePackageJson.scripts.stop = "docker compose down";
     appModulePackageJson.scripts.build = "bun build ./src/index.ts --outdir ./dist --target bun";
     await Bun.write(appModulePackagePath, JSON.stringify(appModulePackageJson, null, 2));
 

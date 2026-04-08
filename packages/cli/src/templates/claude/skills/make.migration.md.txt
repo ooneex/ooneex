@@ -14,6 +14,20 @@ Generate a new migration file and its test file using the `make:migration` CLI c
 - End type names with the `Type` suffix (e.g., `ExceptionStackFrameType`, `ServiceDataType`)
 - Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
 - For Entity class, if property is optional, add `null` to its type.
+- For dependencies, use `inject` from `@ooneex/container`. For example:
+
+```typescript
+import { inject } from "@ooneex/container";
+import { decorator, type ISeed } from "@ooneex/seeds";
+
+@decorator.seed()
+export class BookSeed implements ISeed {
+  constructor(
+    @inject(BookRepository)
+    private readonly repository: BookRepository,
+  ) {}
+}
+```
 
 ## Steps
 

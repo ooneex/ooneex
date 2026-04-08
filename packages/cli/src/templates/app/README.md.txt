@@ -49,7 +49,7 @@ The server starts on `http://localhost:3000` by default.
 | `bun run fmt`          | Format code with Biome               |
 | `bun run migration:up` | Execute pending database migrations  |
 | `bun run seed:run`     | Populate database with seed data     |
-| `bun run docker:stop`  | Stop all Docker containers           |
+| `bun run stop`  | Stop all Docker containers           |
 | `bun run commit`       | Interactive conventional commit      |
 
 ## Module Architecture

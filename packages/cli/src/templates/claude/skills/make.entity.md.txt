@@ -15,6 +15,20 @@ Generate a new entity class and its test file using the `make:entity` CLI comman
 - Start interface names with the `I` prefix (e.g., `IException`, `IService`, `IAiChat`)
 - For Entity class, if property is optional, add `null` to its type.
 - Avoid non-null assertions (`!`). For example, `public name!: string;` should be `public name: string;`
+- For dependencies, use `inject` from `@ooneex/container`. For example:
+
+```typescript
+import { inject } from "@ooneex/container";
+import { decorator, type ISeed } from "@ooneex/seeds";
+
+@decorator.seed()
+export class BookSeed implements ISeed {
+  constructor(
+    @inject(BookRepository)
+    private readonly repository: BookRepository,
+  ) {}
+}
+```
 
 ## Steps
 

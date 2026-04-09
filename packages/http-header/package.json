@@ -31,8 +31,8 @@
     "ua-parser-js": "^2.0.6"
   },
   "devDependencies": {
-    "@ooneex/http-mimes": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/http-mimes": "workspace:^",
+    "@ooneex/types": "workspace:^"
   },
   "keywords": [
     "browser",

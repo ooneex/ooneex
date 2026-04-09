@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.8) - 2026-04-09
+
+### Changed
+
+- Remove success log from seed runner — Franck ([f0ef723c](https://github.com/ooneex/ooneex/commit/f0ef723c))
+
 ## [1.4.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.7) - 2026-04-09
 
 ### Changed

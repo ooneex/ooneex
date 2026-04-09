@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.20.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.3) - 2026-04-09
+
+### Changed
+
+- Rename seed data files and update UserRepository template — Franck ([cec1ed8b](https://github.com/ooneex/ooneex/commit/cec1ed8b))
+
 ## [1.20.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.2) - 2026-04-09
 
 ### Fixed

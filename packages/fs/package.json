@@ -28,8 +28,8 @@
     "test": "bun test tests"
   },
   "dependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "keywords": [
     "bun",

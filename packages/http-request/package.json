@@ -28,14 +28,14 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/http-header": "workspace:*",
-    "@ooneex/http-request-file": "workspace:*",
-    "@ooneex/url": "workspace:*",
+    "@ooneex/http-header": "workspace:^",
+    "@ooneex/http-request-file": "workspace:^",
+    "@ooneex/url": "workspace:^",
     "accept-language-parser": "^1.5.0"
   },
   "devDependencies": {
-    "@ooneex/translation": "workspace:*",
-    "@ooneex/types": "workspace:*",
+    "@ooneex/translation": "workspace:^",
+    "@ooneex/types": "workspace:^",
     "@types/accept-language-parser": "^1.5.8"
   },
   "keywords": [

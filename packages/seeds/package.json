@@ -28,12 +28,12 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/container": "workspace:*",
-    "@ooneex/logger": "workspace:*",
-    "@ooneex/utils": "workspace:*"
+    "@ooneex/container": "workspace:^",
+    "@ooneex/logger": "workspace:^",
+    "@ooneex/utils": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/exception": "workspace:*"
+    "@ooneex/exception": "workspace:^"
   },
   "keywords": [
     "bun",

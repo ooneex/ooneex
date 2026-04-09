@@ -39,14 +39,14 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/command": "workspace:*",
-    "@ooneex/logger": "workspace:*",
-    "@ooneex/migrations": "workspace:*",
-    "@ooneex/seeds": "workspace:*",
-    "@ooneex/utils": "workspace:*",
-    "@ooneex/validation": "workspace:*"
+    "@ooneex/command": "workspace:^",
+    "@ooneex/logger": "workspace:^",
+    "@ooneex/migrations": "workspace:^",
+    "@ooneex/seeds": "workspace:^",
+    "@ooneex/utils": "workspace:^",
+    "@ooneex/validation": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:^"
   }
 }

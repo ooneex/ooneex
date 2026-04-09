@@ -13,17 +13,13 @@ describe("tsconfig.txt", () => {
 
   test("should extend parent tsconfig", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("extends");
+    const json = JSON.parse(content);
+    expect(json.extends).toBe("../../tsconfig.json");
   });
 
-  test("should have bun types", async () => {
+  test("should only have extends property", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("@types/bun");
-  });
-
-  test("should have path alias", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("paths");
-    expect(content).toContain("@/*");
+    const json = JSON.parse(content);
+    expect(Object.keys(json)).toEqual(["extends"]);
   });
 });

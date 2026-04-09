@@ -50,6 +50,30 @@ describe("tsconfig.json.txt", () => {
     expect(opts.strictPropertyInitialization).toBe(false);
   });
 
+  test("should have correct paths mappings", async () => {
+    const content = await Bun.file(templatePath).text();
+    const opts = JSON.parse(content).compilerOptions;
+
+    expect(opts.paths).toEqual({
+      "@module/app/*": ["./modules/app/src/*"],
+      "@module/shared/*": ["./modules/shared/src/*"],
+    });
+  });
+
+  test("should have bun types", async () => {
+    const content = await Bun.file(templatePath).text();
+    const opts = JSON.parse(content).compilerOptions;
+
+    expect(opts.types).toEqual(["bun"]);
+  });
+
+  test("should have correct include paths", async () => {
+    const content = await Bun.file(templatePath).text();
+    const config = JSON.parse(content);
+
+    expect(config.include).toEqual(["modules/**/*.ts"]);
+  });
+
   test("should have correct exclude paths", async () => {
     const content = await Bun.file(templatePath).text();
     const config = JSON.parse(content);

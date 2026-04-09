@@ -147,7 +147,7 @@ describe("MakeModuleCommand", () => {
       await Bun.write(join(testDir, "modules", "app", "src", "AppModule.ts"), appModuleContent);
       await Bun.write(
         join(testDir, "modules", "app", "tsconfig.json"),
-        JSON.stringify({ compilerOptions: { paths: { "@/*": ["./src/*"] } } }, null, 2),
+        JSON.stringify({ extends: "../../tsconfig.json" }, null, 2),
       );
     });
 
@@ -190,7 +190,6 @@ describe("MakeModuleCommand", () => {
       const tsconfig = JSON.parse(content);
       expect(tsconfig.compilerOptions.paths["@module/blog/*"]).toEqual(["../blog/src/*"]);
       expect(tsconfig.compilerOptions.paths["@module/shop/*"]).toEqual(["../shop/src/*"]);
-      expect(tsconfig.compilerOptions.paths["@/*"]).toEqual(["./src/*"]);
     });
 
     test("should not add path alias when creating app module", async () => {
@@ -201,7 +200,7 @@ describe("MakeModuleCommand", () => {
 
       const content = await Bun.file(join(testDir, "modules", "app", "tsconfig.json")).text();
       const tsconfig = JSON.parse(content);
-      expect(tsconfig.compilerOptions.paths).toEqual(originalTsconfig.compilerOptions.paths);
+      expect(tsconfig.compilerOptions?.paths).toEqual(originalTsconfig.compilerOptions?.paths);
     });
 
     test("should register entities to SharedModule instead of AppModule", async () => {

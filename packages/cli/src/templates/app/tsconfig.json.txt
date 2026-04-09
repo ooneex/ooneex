@@ -23,7 +23,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictNullChecks": true,
-    "exactOptionalPropertyTypes": false
+    "exactOptionalPropertyTypes": false,
+    "paths": {
+      "@module/app/*": ["./modules/app/src/*"],
+      "@module/shared/*": ["./modules/shared/src/*"]
+    },
+    "types": ["bun"]
   },
+  "include": ["modules/**/*.ts"],
   "exclude": ["node_modules", ".github", ".husky", ".nx", ".zed", ".vscode"]
 }

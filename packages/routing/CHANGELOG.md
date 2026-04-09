@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.9) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([78c75339](https://github.com/ooneex/ooneex/commit/78c75339))
+
 ## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/routing@1.3.8) - 2026-04-08
 
 ### Changed

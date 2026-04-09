@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.10) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([ea874f12](https://github.com/ooneex/ooneex/commit/ea874f12))
+- Move dep installs to MakeApp and remove from Make commands — Franck ([d67019ef](https://github.com/ooneex/ooneex/commit/d67019ef))
+- Remove commands directory generation from MakeModuleCommand — Franck ([d06cba7a](https://github.com/ooneex/ooneex/commit/d06cba7a))
+
 ## [1.17.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.9) - 2026-04-09
 
 ### Changed

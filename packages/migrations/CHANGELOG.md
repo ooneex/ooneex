@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.6) - 2026-04-09
+
+### Changed
+
+- Add migration template tests — Franck ([d623dfbb](https://github.com/ooneex/ooneex/commit/d623dfbb))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.5) - 2026-04-08
 
 ### Changed

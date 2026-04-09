@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.3.0) - 2026-04-09
+
+### Added
+
+- Add namespace support to Redis and Upstash rate limiters — Franck ([7289f544](https://github.com/ooneex/ooneex/commit/7289f544))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.2.6) - 2026-04-08
 
 ### Changed

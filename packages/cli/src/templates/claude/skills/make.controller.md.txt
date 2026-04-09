@@ -48,7 +48,7 @@ Where:
 - `--module` is optional — if provided, files are generated under `modules/<module>/` instead of the project root
 - `--is-socket` determines HTTP vs WebSocket controller (defaults to `false`)
 - `--route-name` is the route name using dot notation: `<resource>.<action>` (e.g., `user.create`, `book.list`, `flashcard.delete`)
-- `--route-path` is the route path (e.g., `/api/users`)
+- `--route-path` is the route path (e.g., `/users`)
 - `--route-method` is the HTTP method (e.g., `get`, `post`, `put`, `patch`, `delete`) — only for HTTP controllers
 
 The command will generate (paths prefixed with `modules/<module>/` when `--module` is provided):
@@ -66,7 +66,7 @@ Read all three generated files to understand the scaffolded code.
 
 **Remove unnecessary `params`, `payload`, and `queries` — only include what the route actually needs:**
 
-- **`params`** — Include only when the route path contains dynamic segments (e.g., `/api/users/:id`). Remove entirely for routes with no URL parameters (e.g., `/api/users`).
+- **`params`** — Include only when the route path contains dynamic segments (e.g., `/users/:id`). Remove entirely for routes with no URL parameters (e.g., `/users`).
 - **`payload`** — Include only for methods that accept a request body (`post`, `put`, `patch`). Remove entirely for `get` and `delete` routes.
 - **`queries`** — Include only when the route supports query string filtering, pagination, or sorting (e.g., list/search endpoints). Remove entirely when not needed.
 - **`response`** — Always include.
@@ -74,7 +74,7 @@ Read all three generated files to understand the scaffolded code.
 The route type structure follows this pattern (remove unused sections):
 
 ```typescript
-// Example: GET /api/users (list) — no params, no payload, has queries
+// Example: GET /users (list) — no params, no payload, has queries
 type <TypeName>RouteType = {
   queries: {
 
@@ -84,7 +84,7 @@ type <TypeName>RouteType = {
   },
 };
 
-// Example: POST /api/users (create) — no params, has payload, no queries
+// Example: POST /users (create) — no params, has payload, no queries
 type <TypeName>RouteType = {
   payload: {
 
@@ -94,7 +94,7 @@ type <TypeName>RouteType = {
   },
 };
 
-// Example: GET /api/users/:id (detail) — has params, no payload, no queries
+// Example: GET /users/:id (detail) — has params, no payload, no queries
 type <TypeName>RouteType = {
   params: {
 
@@ -104,7 +104,7 @@ type <TypeName>RouteType = {
   },
 };
 
-// Example: PUT /api/users/:id (update) — has params, has payload, no queries
+// Example: PUT /users/:id (update) — has params, has payload, no queries
 type <TypeName>RouteType = {
   params: {
 
@@ -266,7 +266,9 @@ After the controller is created, generate a service class for the controller's b
 
 Where `<Name>` matches the controller name (e.g., if the controller is `CreateUserController`, the service is `CreateUserService`).
 
-### 9. Create the pubsub event
+### 9. Create the pubsub event (mutation only)
+
+**Only create a pubsub event for mutation routes** (`post`, `put`, `patch`, `delete`). Do NOT create a pubsub event for `get` routes or read-only endpoints.
 
 After the service is created, generate a pubsub event class for the controller's domain events using the `make:pubsub` skill:
 

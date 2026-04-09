@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.7) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([a6265b6a](https://github.com/ooneex/ooneex/commit/a6265b6a))
+
 ## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.6) - 2026-04-08
 
 ### Changed

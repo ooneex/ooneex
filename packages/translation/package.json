@@ -29,8 +29,8 @@
     "wuchale": "bunx wuchale"
   },
   "dependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "devDependencies": {},
   "keywords": [

@@ -358,7 +358,7 @@ import { TypeormPgDatabase, decorator } from '@ooneex/database';
 
 // Register with decorator
 @decorator.database()
-class AppDatabase extends TypeormPgDatabase {
+class SharedDatabase extends TypeormPgDatabase {
   constructor() {
     super({
       host: 'localhost',
@@ -369,7 +369,7 @@ class AppDatabase extends TypeormPgDatabase {
 }
 
 // Resolve from container
-const database = container.get(AppDatabase);
+const database = container.get(SharedDatabase);
 ```
 
 ### Error Handling

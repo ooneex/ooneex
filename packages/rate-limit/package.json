@@ -28,14 +28,14 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "peerDependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
     "@upstash/ratelimit": "^2.0.8"
   },
   "keywords": [

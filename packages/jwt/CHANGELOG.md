@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.26](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.26) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([05f8fe34](https://github.com/ooneex/ooneex/commit/05f8fe34))
+
 ## [1.1.25](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.25) - 2026-04-08
 
 ### Changed

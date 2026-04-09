@@ -29,8 +29,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@ooneex/translation": "workspace:*",
-    "@ooneex/role": "workspace:*"
+    "@ooneex/translation": "workspace:^",
+    "@ooneex/role": "workspace:^"
   },
   "keywords": [
     "account",

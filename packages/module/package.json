@@ -27,11 +27,11 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "devDependencies": {
-    "@ooneex/middleware": "workspace:*",
-    "@ooneex/controller": "workspace:*",
-    "@ooneex/pub-sub": "workspace:*",
-    "@ooneex/cron": "workspace:*",
-    "@ooneex/entity": "workspace:*"
+    "@ooneex/middleware": "workspace:^",
+    "@ooneex/controller": "workspace:^",
+    "@ooneex/pub-sub": "workspace:^",
+    "@ooneex/cron": "workspace:^",
+    "@ooneex/entity": "workspace:^"
   },
   "keywords": [
     "bun",

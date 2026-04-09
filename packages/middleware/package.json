@@ -28,13 +28,13 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/container": "workspace:*"
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/container": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/controller": "workspace:*",
-    "@ooneex/types": "workspace:*",
-    "@ooneex/socket": "workspace:*"
+    "@ooneex/controller": "workspace:^",
+    "@ooneex/types": "workspace:^",
+    "@ooneex/socket": "workspace:^"
   },
   "keywords": [
     "bun",

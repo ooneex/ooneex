@@ -7,7 +7,7 @@ import { CorsMiddleware } from "@ooneex/middleware";
 import { UpstashRedisRateLimiter } from "@ooneex/rate-limit";
 import { BunnyStorage } from "@ooneex/storage";
 import { AppModule } from "./AppModule";
-import { AppDatabase } from "./databases/AppDatabase";
+import { SharedDatabase } from "@module/shared/databases/SharedDatabase";
 
 const app = new App({
   routing: {
@@ -24,7 +24,7 @@ const app = new App({
   cors: CorsMiddleware,
   cronJobs: AppModule.cronJobs,
   events: AppModule.events,
-  database: AppDatabase,
+  database: SharedDatabase,
 });
 
 await app.run();

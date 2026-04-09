@@ -14,5 +14,9 @@ describe("seed.run.txt", () => {
   test("should contain seed logic", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("run");
+    expect(content).toContain("SharedDatabase");
+    expect(content).toContain("AppEnv");
+    expect(content).toContain("container");
+    expect(content).toContain("addConstant");
   });
 });

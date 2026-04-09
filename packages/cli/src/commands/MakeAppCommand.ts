@@ -83,8 +83,17 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       .replace(/^DATABASE_REDIS_URL=/m, 'DATABASE_REDIS_URL="redis://localhost:6379"');
     await Bun.write(join(destination, "modules", "app", ".env"), envContent);
     await Bun.write(join(destination, "modules", "app", ".env.example"), envTemplate);
-    await Bun.write(join(destination, "modules", "app", "src", "databases", "AppDatabase.ts"), databaseTemplate);
     await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);
+
+    // Create shared module
+    await makeModuleCommand.run({
+      name: "shared",
+      cwd: destination,
+      silent: true,
+      skipMigrations: true,
+      skipSeeds: true,
+    });
+    await Bun.write(join(destination, "modules", "shared", "src", "databases", "SharedDatabase.ts"), databaseTemplate);
     const snakeName = toSnakeCase(name);
     const dockerComposeContent = dockerComposeTemplate.replace(/{{NAME}}/g, snakeName);
     await Bun.write(join(destination, "modules", "app", "docker-compose.yml"), dockerComposeContent);

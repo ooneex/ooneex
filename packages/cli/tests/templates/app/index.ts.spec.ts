@@ -60,9 +60,9 @@ describe("index.ts.txt", () => {
     expect(content).toContain('import { AppModule } from "./AppModule"');
   });
 
-  test("should import AppDatabase", async () => {
+  test("should import SharedDatabase", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain('import { AppDatabase } from "./databases/AppDatabase"');
+    expect(content).toContain('import { SharedDatabase } from "@module/shared/databases/SharedDatabase"');
   });
 
   test("should create new App instance", async () => {
@@ -86,7 +86,7 @@ describe("index.ts.txt", () => {
     expect(content).not.toContain("permissions");
     expect(content).toContain("cronJobs: AppModule.cronJobs");
     expect(content).toContain("events: AppModule.events");
-    expect(content).toContain("database: AppDatabase");
+    expect(content).toContain("database: SharedDatabase");
     expect(content).not.toContain("check");
     expect(content).not.toContain("healthcheckPath");
     expect(content).not.toContain("generateRouteDoc");

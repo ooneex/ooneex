@@ -156,11 +156,19 @@ describe("MakeAppCommand", () => {
       expect(compose).not.toContain("{{NAME}}");
     });
 
-    test("should generate database and index files", async () => {
+    test("should generate index file in app module", async () => {
       await command.run({ name: "MyApp", destination: testDir });
 
-      expect(await exists(join(testDir, "modules", "app", "src", "databases", "AppDatabase.ts"))).toBe(true);
       expect(await exists(join(testDir, "modules", "app", "src", "index.ts"))).toBe(true);
+    });
+
+    test("should generate shared module with database file", async () => {
+      await command.run({ name: "MyApp", destination: testDir });
+
+      expect(await exists(join(testDir, "modules", "shared", "src", "SharedModule.ts"))).toBe(true);
+      expect(await exists(join(testDir, "modules", "shared", "package.json"))).toBe(true);
+      expect(await exists(join(testDir, "modules", "shared", "tsconfig.json"))).toBe(true);
+      expect(await exists(join(testDir, "modules", "shared", "src", "databases", "SharedDatabase.ts"))).toBe(true);
     });
 
     test("should generate var directory with .gitkeep", async () => {

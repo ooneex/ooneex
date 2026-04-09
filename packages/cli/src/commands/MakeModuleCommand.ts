@@ -76,18 +76,13 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
 
     tsconfig.compilerOptions ??= {};
     tsconfig.compilerOptions.paths ??= {};
-    tsconfig.compilerOptions.paths[`@${kebabName}/*`] = [`../${kebabName}/src/*`];
+    tsconfig.compilerOptions.paths[`@module/${kebabName}/*`] = [`../${kebabName}/src/*`];
 
     await Bun.write(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
   }
 
   public async run(options: T): Promise<void> {
-    const {
-      cwd = process.cwd(),
-      silent = false,
-      skipMigrations = false,
-      skipSeeds = false,
-    } = options;
+    const { cwd = process.cwd(), silent = false, skipMigrations = false, skipSeeds = false } = options;
     let { name } = options;
 
     if (!name) {
@@ -127,6 +122,15 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       const appTsconfigPath = join(cwd, "modules", "app", "tsconfig.json");
       if (await Bun.file(appTsconfigPath).exists()) {
         await this.addPathAlias(appTsconfigPath, kebabName);
+      }
+    }
+
+    // Add shared module path alias to the new module's tsconfig
+    if (kebabName !== "app" && kebabName !== "shared") {
+      const sharedModulePath = join(cwd, "modules", "shared");
+      if (await Bun.file(join(sharedModulePath, "tsconfig.json")).exists()) {
+        const moduleTsconfigPath = join(moduleDir, "tsconfig.json");
+        await this.addPathAlias(moduleTsconfigPath, "shared");
       }
     }
 

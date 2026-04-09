@@ -1,6 +1,17 @@
 #!/usr/bin/env bun
 
+import { SharedDatabase } from "@module/shared/databases/SharedDatabase";
+import { AppEnv } from "@ooneex/app-env";
+import { container } from "@ooneex/container";
 import { run } from "@ooneex/seeds";
 import "@/seeds/seeds";
+
+if (!container.has(AppEnv)) {
+  container.add(AppEnv);
+}
+if (!container.has(SharedDatabase)) {
+  container.add(SharedDatabase);
+}
+container.addConstant("database", container.get(SharedDatabase));
 
 await run();

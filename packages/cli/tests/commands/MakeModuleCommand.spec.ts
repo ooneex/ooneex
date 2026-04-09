@@ -151,13 +151,13 @@ describe("MakeModuleCommand", () => {
       );
     });
 
-    test("should add import and spread into AppModule", async () => {
+    test("should add import and spread into AppModule without entities", async () => {
       await command.run({ name: "Blog", cwd: testDir, silent: true });
 
       const content = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
       expect(content).toContain('import { BlogModule } from "@module/blog/BlogModule"');
       expect(content).toContain("...BlogModule.controllers");
-      expect(content).toContain("...BlogModule.entities");
+      expect(content).not.toContain("...BlogModule.entities");
       expect(content).toContain("...BlogModule.middlewares");
       expect(content).toContain("...BlogModule.cronJobs");
       expect(content).toContain("...BlogModule.events");
@@ -202,6 +202,38 @@ describe("MakeModuleCommand", () => {
       const content = await Bun.file(join(testDir, "modules", "app", "tsconfig.json")).text();
       const tsconfig = JSON.parse(content);
       expect(tsconfig.compilerOptions.paths).toEqual(originalTsconfig.compilerOptions.paths);
+    });
+
+    test("should register entities to SharedModule instead of AppModule", async () => {
+      // Create shared module first
+      await command.run({ name: "Shared", cwd: testDir, silent: true });
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      const sharedContent = await Bun.file(join(testDir, "modules", "shared", "src", "SharedModule.ts")).text();
+      expect(sharedContent).toContain('import { BlogModule } from "@module/blog/BlogModule"');
+      expect(sharedContent).toContain("...BlogModule.entities");
+
+      const appContent = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
+      expect(appContent).not.toContain("...BlogModule.entities");
+    });
+
+    test("should add path alias to shared module tsconfig", async () => {
+      await command.run({ name: "Shared", cwd: testDir, silent: true });
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, "modules", "shared", "tsconfig.json")).text();
+      const tsconfig = JSON.parse(content);
+      expect(tsconfig.compilerOptions.paths["@module/blog/*"]).toEqual(["../blog/src/*"]);
+    });
+
+    test("should accumulate entities from multiple modules in SharedModule", async () => {
+      await command.run({ name: "Shared", cwd: testDir, silent: true });
+      await command.run({ name: "Blog", cwd: testDir, silent: true });
+      await command.run({ name: "Shop", cwd: testDir, silent: true });
+
+      const content = await Bun.file(join(testDir, "modules", "shared", "src", "SharedModule.ts")).text();
+      expect(content).toContain("...BlogModule.entities");
+      expect(content).toContain("...ShopModule.entities");
     });
 
     test("should add shared path alias to new module tsconfig", async () => {

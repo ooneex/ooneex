@@ -85,6 +85,5 @@ describe("MakeSeedCommand", () => {
       const content = await Bun.file(binFile).text();
       expect(content).toContain("run");
     });
-
   });
 });

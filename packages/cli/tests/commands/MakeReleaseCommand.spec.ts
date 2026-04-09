@@ -303,9 +303,7 @@ describe("MakeReleaseCommand", () => {
       command.getLastTag = mock(() => Promise.resolve(null));
       // @ts-expect-error accessing private method for testing
       command.getCommitsSinceTag = mock(() =>
-        Promise.resolve([
-          { hash: "abc12345", type: "feat", scope: "test", subject: "Add feature", author: "Test" },
-        ]),
+        Promise.resolve([{ hash: "abc12345", type: "feat", scope: "test", subject: "Add feature", author: "Test" }]),
       );
       // @ts-expect-error accessing private method for testing
       command.gitAdd = mock((...files: string[]) => {

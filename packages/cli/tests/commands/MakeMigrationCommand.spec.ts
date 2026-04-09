@@ -90,6 +90,5 @@ describe("MakeMigrationCommand", () => {
       const content = await Bun.file(binFile).text();
       expect(content).toContain("up");
     });
-
   });
 });

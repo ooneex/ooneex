@@ -38,8 +38,8 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const lineEnd = content.indexOf("\n", lastImportIndex);
     content = `${content.slice(0, lineEnd + 1)}${importLine}${content.slice(lineEnd + 1)}`;
 
-    // Spread new module arrays into each AppModule field
-    const fields = ["controllers", "entities", "middlewares", "cronJobs", "events"] as const;
+    // Spread new module arrays into each AppModule field (entities go to SharedModule)
+    const fields = ["controllers", "middlewares", "cronJobs", "events"] as const;
     for (const field of fields) {
       const regex = new RegExp(`(${field}:\\s*\\[)([^\\]]*)`, "s");
       const match = content.match(regex);
@@ -52,6 +52,30 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     }
 
     await Bun.write(appModulePath, content);
+  }
+
+  private async addToSharedModule(sharedModulePath: string, pascalName: string, kebabName: string): Promise<void> {
+    let content = await Bun.file(sharedModulePath).text();
+    const moduleName = `${pascalName}Module`;
+    const importPath = `@module/${kebabName}/${moduleName}`;
+    const importLine = `import { ${moduleName} } from "${importPath}";\n`;
+
+    // Add import after the last import statement
+    const lastImportIndex = content.lastIndexOf("import ");
+    const lineEnd = content.indexOf("\n", lastImportIndex);
+    content = `${content.slice(0, lineEnd + 1)}${importLine}${content.slice(lineEnd + 1)}`;
+
+    // Spread new module entities into SharedModule
+    const regex = /(entities:\s*\[)([^\]]*)/s;
+    const match = content.match(regex);
+    if (match) {
+      const existing = match[2]?.trim();
+      const spread = `...${moduleName}.entities`;
+      const newValue = existing ? `${existing}, ${spread}` : spread;
+      content = content.replace(regex, `$1${newValue}`);
+    }
+
+    await Bun.write(sharedModulePath, content);
   }
 
   private async addModuleScope(commitlintPath: string, kebabName: string): Promise<void> {
@@ -125,10 +149,22 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       }
     }
 
-    // Add shared module path alias to the new module's tsconfig
+    // Register entities to SharedModule and add path aliases
     if (kebabName !== "app" && kebabName !== "shared") {
-      const sharedModulePath = join(cwd, "modules", "shared");
-      if (await Bun.file(join(sharedModulePath, "tsconfig.json")).exists()) {
+      const sharedModuleDir = join(cwd, "modules", "shared");
+
+      // Add entities to SharedModule
+      const sharedModuleFilePath = join(sharedModuleDir, "src", "SharedModule.ts");
+      if (await Bun.file(sharedModuleFilePath).exists()) {
+        await this.addToSharedModule(sharedModuleFilePath, pascalName, kebabName);
+      }
+
+      // Add path alias in shared module tsconfig
+      const sharedTsconfigPath = join(sharedModuleDir, "tsconfig.json");
+      if (await Bun.file(sharedTsconfigPath).exists()) {
+        await this.addPathAlias(sharedTsconfigPath, kebabName);
+
+        // Add shared module path alias to the new module's tsconfig
         const moduleTsconfigPath = join(moduleDir, "tsconfig.json");
         await this.addPathAlias(moduleTsconfigPath, "shared");
       }

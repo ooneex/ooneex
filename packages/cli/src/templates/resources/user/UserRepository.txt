@@ -23,7 +23,13 @@ export class UserRepository {
   }
 
   public async find(
-    criteria: FindManyOptions<UserEntity> & { page?: number; limit?: number; order?: "ASC" | "DESC"; orderBy?: string; q?: string },
+    criteria: FindManyOptions<UserEntity> & {
+      page?: number;
+      limit?: number;
+      order?: "ASC" | "DESC";
+      orderBy?: string;
+      q?: string;
+    },
   ): Promise<FilterResultType<UserEntity>> {
     const repository = await this.open();
 
@@ -45,21 +51,21 @@ export class UserRepository {
     if (q) {
       findOptions = {
         ...findOptions,
-        where: {
-          ...rest.where,
-          name: ILike(`%${q}%`),
-        },
+        where: [
+          { ...rest.where, firstName: ILike(`%${q}%`) },
+          { ...rest.where, lastName: ILike(`%${q}%`) },
+        ] as FindOptionsWhere<UserEntity>[],
       };
     }
 
     const result = await repository.find(findOptions);
 
-    let countWhere = rest.where;
+    let countWhere: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[] | undefined = rest.where;
     if (q) {
-      countWhere = {
-        ...rest.where,
-        name: ILike(`%${q}%`),
-      };
+      countWhere = [
+        { ...rest.where, firstName: ILike(`%${q}%`) },
+        { ...rest.where, lastName: ILike(`%${q}%`) },
+      ] as FindOptionsWhere<UserEntity>[];
     }
 
     const total = await this.count(countWhere);
@@ -114,9 +120,7 @@ export class UserRepository {
     return await Promise.all(entities.map((entity) => repository.update(entity.id, entity)));
   }
 
-  public async delete(
-    criteria: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
-  ): Promise<UpdateResult> {
+  public async delete(criteria: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[]): Promise<UpdateResult> {
     const repository = await this.open();
 
     return await repository.softDelete(criteria);
@@ -146,7 +150,7 @@ export class UserRepository {
 
   public async updateProfile(
     userId: string,
-    profile: { lastName?: string; firstName?: string; avatar?: string; phone?: string },
+    profile: { lastName?: string; firstName?: string; avatar?: string | null; phone?: string },
   ): Promise<UpdateResult> {
     return await this.update({ id: userId, ...profile });
   }

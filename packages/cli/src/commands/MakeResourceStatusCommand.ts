@@ -10,8 +10,8 @@ import updateStatusControllerTemplate from "../templates/resources/status/contro
 import entityTemplate from "../templates/resources/status/StatusEntity.txt";
 import migrationTemplate from "../templates/resources/status/StatusMigration.txt";
 import repositoryTemplate from "../templates/resources/status/StatusRepository.txt";
-import statusSeedDataPath from "../templates/resources/status/seeds/data.yml" with { type: "file" };
 import statusSeedTemplate from "../templates/resources/status/seeds/StatusSeed.txt";
+import statusSeedDataContent from "../templates/resources/status/seeds/status-seed.yml" with { type: "text" };
 import createStatusServiceTemplate from "../templates/resources/status/services/CreateStatusService.txt";
 import deleteStatusServiceTemplate from "../templates/resources/status/services/DeleteStatusService.txt";
 import getStatusServiceTemplate from "../templates/resources/status/services/GetStatusService.txt";
@@ -131,6 +131,6 @@ export class MakeResourceStatusCommand implements ICommand {
     // Replace seed content with status template
     const seedsDir = join(process.cwd(), base, "src", "seeds");
     await Bun.write(join(seedsDir, "StatusSeed.ts"), statusSeedTemplate);
-    await Bun.write(join(seedsDir, "data.yml"), Bun.file(statusSeedDataPath));
+    await Bun.write(join(seedsDir, "status-seed.yml"), statusSeedDataContent);
   }
 }

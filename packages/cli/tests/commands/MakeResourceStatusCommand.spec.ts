@@ -195,10 +195,10 @@ describe("MakeResourceStatusCommand", () => {
         expect(content).toBe(statusSeedTemplate);
       });
 
-      test("should generate seed data.yml file", async () => {
+      test("should generate seed status-seed.yml file", async () => {
         await command.run();
 
-        const dataPath = join(testDir, "modules", "status", "src", "seeds", "data.yml");
+        const dataPath = join(testDir, "modules", "status", "src", "seeds", "status-seed.yml");
         expect(await exists(dataPath)).toBe(true);
 
         const content = await Bun.file(dataPath).text();

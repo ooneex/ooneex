@@ -195,10 +195,10 @@ describe("MakeResourceColorCommand", () => {
         expect(content).toBe(colorSeedTemplate);
       });
 
-      test("should generate seed data.yml file", async () => {
+      test("should generate seed color-seed.yml file", async () => {
         await command.run();
 
-        const dataPath = join(testDir, "modules", "color", "src", "seeds", "data.yml");
+        const dataPath = join(testDir, "modules", "color", "src", "seeds", "color-seed.yml");
         expect(await exists(dataPath)).toBe(true);
 
         const content = await Bun.file(dataPath).text();

@@ -11,7 +11,7 @@ import getColorControllerTemplate from "../templates/resources/color/controllers
 import listColorsControllerTemplate from "../templates/resources/color/controllers/ListColorsController.txt";
 import updateColorControllerTemplate from "../templates/resources/color/controllers/UpdateColorController.txt";
 import colorSeedTemplate from "../templates/resources/color/seeds/ColorSeed.txt";
-import colorSeedDataPath from "../templates/resources/color/seeds/data.yml" with { type: "file" };
+import colorSeedDataContent from "../templates/resources/color/seeds/color-seed.yml" with { type: "text" };
 import createColorServiceTemplate from "../templates/resources/color/services/CreateColorService.txt";
 import deleteColorServiceTemplate from "../templates/resources/color/services/DeleteColorService.txt";
 import getColorServiceTemplate from "../templates/resources/color/services/GetColorService.txt";
@@ -119,6 +119,6 @@ export class MakeResourceColorCommand implements ICommand {
     // Replace seed content with color template
     const seedsDir = join(process.cwd(), base, "src", "seeds");
     await Bun.write(join(seedsDir, "ColorSeed.ts"), colorSeedTemplate);
-    await Bun.write(join(seedsDir, "data.yml"), Bun.file(colorSeedDataPath));
+    await Bun.write(join(seedsDir, "color-seed.yml"), colorSeedDataContent);
   }
 }

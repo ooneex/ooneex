@@ -29,9 +29,9 @@
     "test": "bun test tests"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/http-header": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/http-header": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "devDependencies": {},
   "keywords": [

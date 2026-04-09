@@ -56,7 +56,7 @@
     },
     "packages/analytics": {
       "name": "@ooneex/analytics",
-      "version": "1.1.11",
+      "version": "1.1.12",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -67,7 +67,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "1.7.8",
+      "version": "1.7.9",
       "dependencies": {
         "@ooneex/analytics": "workspace:^",
         "@ooneex/app-env": "workspace:^",
@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.19.0",
+      "version": "1.20.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -172,7 +172,7 @@
     },
     "packages/container": {
       "name": "@ooneex/container",
-      "version": "1.4.3",
+      "version": "1.4.4",
       "dependencies": {
         "@ooneex/exception": "workspace:^",
         "@ooneex/http-status": "workspace:^",

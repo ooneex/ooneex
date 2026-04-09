@@ -28,13 +28,13 @@
     "test": "bun test tests"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:^"
   },
   "keywords": [
     "bun",

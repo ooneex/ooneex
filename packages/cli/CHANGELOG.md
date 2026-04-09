@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.19.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.19.0) - 2026-04-09
+
+### Added
+
+- Add SharedModule entity registration in MakeModuleCommand — Franck ([1b8926d3](https://github.com/ooneex/ooneex/commit/1b8926d3))
+- Add root directory instruction to skill templates and update database naming — Franck ([158a157c](https://github.com/ooneex/ooneex/commit/158a157c))
+
+### Changed
+
+- Use indexOf instead of findIndex for string comparison in test — Franck ([0aeb41ef](https://github.com/ooneex/ooneex/commit/0aeb41ef))
+
 ## [1.18.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.18.0) - 2026-04-09
 
 ### Added

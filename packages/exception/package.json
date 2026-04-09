@@ -28,7 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/http-status": "workspace:^"
   },
   "devDependencies": {},
   "keywords": [

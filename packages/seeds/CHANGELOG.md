@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.6) - 2026-04-09
+
+### Changed
+
+- Add seed template tests — Franck ([154463ac](https://github.com/ooneex/ooneex/commit/154463ac))
+
 ## [1.4.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.5) - 2026-04-08
 
 ### Changed

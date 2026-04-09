@@ -155,7 +155,7 @@ describe("MakeModuleCommand", () => {
       await command.run({ name: "Blog", cwd: testDir, silent: true });
 
       const content = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
-      expect(content).toContain('import { BlogModule } from "@blog/BlogModule"');
+      expect(content).toContain('import { BlogModule } from "@module/blog/BlogModule"');
       expect(content).toContain("...BlogModule.controllers");
       expect(content).toContain("...BlogModule.entities");
       expect(content).toContain("...BlogModule.middlewares");
@@ -176,8 +176,8 @@ describe("MakeModuleCommand", () => {
       await command.run({ name: "Shop", cwd: testDir, silent: true });
 
       const content = await Bun.file(join(testDir, "modules", "app", "src", "AppModule.ts")).text();
-      expect(content).toContain('import { BlogModule } from "@blog/BlogModule"');
-      expect(content).toContain('import { ShopModule } from "@shop/ShopModule"');
+      expect(content).toContain('import { BlogModule } from "@module/blog/BlogModule"');
+      expect(content).toContain('import { ShopModule } from "@module/shop/ShopModule"');
       expect(content).toContain("...BlogModule.controllers");
       expect(content).toContain("...ShopModule.controllers");
     });

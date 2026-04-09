@@ -32,6 +32,10 @@ export class BookSeed implements ISeed {
 }
 ```
 
+## Important
+
+All commands must be run from the root of the project (not from within a package or module directory).
+
 ## Steps
 
 ### 1. Identify the target

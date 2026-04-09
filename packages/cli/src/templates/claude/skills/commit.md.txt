@@ -7,6 +7,10 @@ description: Create commit messages grouped by module. Analyzes git changes, gro
 
 Create separate commits for each modified module, following the project's commitlint conventions.
 
+## Important
+
+All commands must be run from the root of the project (not from within a package or module directory).
+
 ## Workflow
 
 1. **Analyze staged/unstaged changes**

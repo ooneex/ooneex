@@ -30,7 +30,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
   private async addToAppModule(appModulePath: string, pascalName: string, kebabName: string): Promise<void> {
     let content = await Bun.file(appModulePath).text();
     const moduleName = `${pascalName}Module`;
-    const importPath = `@${kebabName}/${moduleName}`;
+    const importPath = `@module/${kebabName}/${moduleName}`;
     const importLine = `import { ${moduleName} } from "${importPath}";\n`;
 
     // Add import after the last import statement

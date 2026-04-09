@@ -2,7 +2,7 @@ import { inject } from "@ooneex/container";
 import { AppEnv } from "@ooneex/app-env";
 import { DataSource } from "typeorm";
 import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
-import { AppModule } from "@/AppModule";
+import { SharedModule } from "@/SharedModule";
 
 @decorator.database()
 export class SharedDatabase extends TypeormDatabase {
@@ -22,7 +22,7 @@ export class SharedDatabase extends TypeormDatabase {
 
     this.source = new DataSource({
       synchronize: false,
-      entities: AppModule.entities,
+      entities: SharedModule.entities,
       extra: {
         max: 10,
       },

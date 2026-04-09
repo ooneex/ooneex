@@ -68,10 +68,10 @@ describe("app-database.txt", () => {
     expect(content).toContain('"CONNECTION_FAILED"');
   });
 
-  test("should import AppModule", async () => {
+  test("should import SharedModule", async () => {
     const content = await file.text();
-    expect(content).toContain("AppModule");
-    expect(content).toContain("AppModule.entities");
+    expect(content).toContain("SharedModule");
+    expect(content).toContain("SharedModule.entities");
   });
 
   test("should configure connection pool", async () => {

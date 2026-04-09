@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.17.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.9) - 2026-04-09
+
+### Changed
+
+- Remove auto-install of @ooneex/module from MakeModuleCommand — Franck ([3f35456d](https://github.com/ooneex/ooneex/commit/3f35456d))
+
 ## [1.17.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.8) - 2026-04-09
 
 ### Changed

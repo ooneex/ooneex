@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.3) - 2026-04-09
+
+### Changed
+
+- Format test assertion — Franck ([36572f54](https://github.com/ooneex/ooneex/commit/36572f54))
+
 ## [1.4.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.2) - 2026-04-09
 
 ### Changed

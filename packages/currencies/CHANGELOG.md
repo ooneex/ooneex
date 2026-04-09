@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.10) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([1e0f02b1](https://github.com/ooneex/ooneex/commit/1e0f02b1))
+
 ## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.9) - 2026-04-08
 
 ### Changed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cron@1.1.12) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([628b24b7](https://github.com/ooneex/ooneex/commit/628b24b7))
+
 ## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cron@1.1.11) - 2026-04-08
 
 ### Changed

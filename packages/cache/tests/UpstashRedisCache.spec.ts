@@ -115,7 +115,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.get("non-existent-key");
       expect(result).toBeUndefined();
-      expect(mockRedisClient.get).toHaveBeenCalledWith("non-existent-key");
+      expect(mockRedisClient.get).toHaveBeenCalledWith("cache:non-existent-key");
     });
 
     test("should retrieve string value", async () => {
@@ -123,7 +123,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.get<string>(testKey);
       expect(result).toBe(testValue);
-      expect(mockRedisClient.get).toHaveBeenCalledWith(testKey);
+      expect(mockRedisClient.get).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
     test("should retrieve number value", async () => {
@@ -197,70 +197,70 @@ describe("UpstashRedisCache", () => {
     test("should store string value", async () => {
       await adapter.set(testKey, testValue);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, testValue);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, testValue);
     });
 
     test("should store number value", async () => {
       await adapter.set(testKey, 123.45);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, 123.45);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, 123.45);
     });
 
     test("should store boolean value", async () => {
       await adapter.set(testKey, false);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, false);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, false);
     });
 
     test("should store object value", async () => {
       const objectValue = { message: "hello", count: 5 };
       await adapter.set(testKey, objectValue);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, objectValue);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, objectValue);
     });
 
     test("should store array value", async () => {
       const arrayValue = ["a", "b", "c"];
       await adapter.set(testKey, arrayValue);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, arrayValue);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, arrayValue);
     });
 
     test("should store value with TTL", async () => {
       const ttlSeconds = 2;
       await adapter.set(testKey, testValue, ttlSeconds);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, testValue, { ex: ttlSeconds });
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, testValue, { ex: ttlSeconds });
     });
 
     test("should handle empty string value", async () => {
       await adapter.set(testKey, "");
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, "");
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, "");
     });
 
     test("should handle zero as value", async () => {
       await adapter.set(testKey, 0);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, 0);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, 0);
     });
 
     test("should handle null as value", async () => {
       await adapter.set(testKey, null);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, null);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, null);
     });
 
     test("should handle undefined value (should serialize as null)", async () => {
       await adapter.set(testKey, undefined);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, null);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, null);
     });
 
     test("should set value with zero TTL (should behave as no TTL)", async () => {
       await adapter.set(testKey, testValue, 0);
 
-      expect(mockRedisClient.set).toHaveBeenCalledWith(testKey, testValue);
+      expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, testValue);
     });
 
     test("should throw CacheException on error", async () => {
@@ -277,7 +277,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.delete(testKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.del).toHaveBeenCalledWith(testKey);
+      expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
     test("should return false for non-existent key", async () => {
@@ -292,7 +292,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.delete("");
       expect(result).toBe(false);
-      expect(mockRedisClient.del).toHaveBeenCalledWith("");
+      expect(mockRedisClient.del).toHaveBeenCalledWith("cache:");
     });
 
     test("should handle key with special characters", async () => {
@@ -301,7 +301,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.delete(specialKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.del).toHaveBeenCalledWith(specialKey);
+      expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${specialKey}`);
     });
 
     test("should handle very long key names", async () => {
@@ -310,7 +310,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.delete(longKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.del).toHaveBeenCalledWith(longKey);
+      expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${longKey}`);
     });
 
     test("should handle Unicode key names", async () => {
@@ -319,7 +319,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.delete(unicodeKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.del).toHaveBeenCalledWith(unicodeKey);
+      expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${unicodeKey}`);
     });
 
     test("should throw CacheException on error", async () => {
@@ -347,7 +347,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.has(testKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith(testKey);
+      expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
     test("should return false for non-existent key", async () => {
@@ -378,7 +378,7 @@ describe("UpstashRedisCache", () => {
       const result = await adapter.has(testKey);
 
       expect(result).toBe(true);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith(testKey);
+      expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
     test("should handle empty string key", async () => {
@@ -386,7 +386,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.has("");
       expect(result).toBe(false);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith("");
+      expect(mockRedisClient.exists).toHaveBeenCalledWith("cache:");
     });
 
     test("should handle key with special characters", async () => {
@@ -395,7 +395,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.has(specialKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith(specialKey);
+      expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${specialKey}`);
     });
 
     test("should handle very long key names", async () => {
@@ -404,7 +404,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.has(longKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith(longKey);
+      expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${longKey}`);
     });
 
     test("should handle Unicode key names", async () => {
@@ -413,7 +413,7 @@ describe("UpstashRedisCache", () => {
 
       const result = await adapter.has(unicodeKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.exists).toHaveBeenCalledWith(unicodeKey);
+      expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${unicodeKey}`);
     });
 
     test("should check existence of previously deleted key", async () => {
@@ -482,8 +482,8 @@ describe("UpstashRedisCache", () => {
       const key1 = "concurrent-key-1";
       const key2 = "concurrent-key-2";
 
-      mockRedisClient.exists.mockImplementation(async (key: string) => (key === key1 ? 1 : 0));
-      mockRedisClient.del.mockImplementation(async (key: string) => (key === key1 ? 1 : 0));
+      mockRedisClient.exists.mockImplementation(async (key: string) => (key === `cache:${key1}` ? 1 : 0));
+      mockRedisClient.del.mockImplementation(async (key: string) => (key === `cache:${key1}` ? 1 : 0));
 
       const [exists1, exists2, deleted1, deleted2] = await Promise.all([
         adapter.has(key1),
@@ -503,8 +503,9 @@ describe("UpstashRedisCache", () => {
       const nonExistingKeys = ["non-existing-1", "non-existing-2"];
       const allKeys = [...existingKeys, ...nonExistingKeys];
 
-      mockRedisClient.exists.mockImplementation(async (key: string) => (existingKeys.includes(key) ? 1 : 0));
-      mockRedisClient.del.mockImplementation(async (key: string) => (existingKeys.includes(key) ? 1 : 0));
+      const namespacedExistingKeys = existingKeys.map((k) => `cache:${k}`);
+      mockRedisClient.exists.mockImplementation(async (key: string) => (namespacedExistingKeys.includes(key) ? 1 : 0));
+      mockRedisClient.del.mockImplementation(async (key: string) => (namespacedExistingKeys.includes(key) ? 1 : 0));
 
       const existenceResults = await Promise.all(allKeys.map((key) => adapter.has(key)));
       const deleteResults = await Promise.all(allKeys.map((key) => adapter.delete(key)));

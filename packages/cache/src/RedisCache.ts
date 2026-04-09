@@ -8,12 +8,14 @@ import type { RedisCacheOptionsType } from "./types";
 @decorator.cache()
 export class RedisCache extends AbstractCache {
   private client: Bun.RedisClient;
+  private readonly namespace: string | null;
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
     options: RedisCacheOptionsType = {},
   ) {
     super();
+    this.namespace = options.namespace ?? "cache";
     const connectionString = options.connectionString || this.env.CACHE_REDIS_URL;
 
     if (!connectionString) {
@@ -23,7 +25,7 @@ export class RedisCache extends AbstractCache {
       );
     }
 
-    const { connectionString: _, ...userOptions } = options;
+    const { connectionString: _, namespace: __, ...userOptions } = options;
 
     const defaultOptions = {
       connectionTimeout: 10_000,
@@ -39,6 +41,10 @@ export class RedisCache extends AbstractCache {
     this.client = new Bun.RedisClient(connectionString, clientOptions);
   }
 
+  private getKey(key: string): string {
+    return this.namespace ? `${this.namespace}:${key}` : key;
+  }
+
   protected async connect(): Promise<void> {
     if (!this.client.connected) {
       await this.client.connect();
@@ -47,7 +53,7 @@ export class RedisCache extends AbstractCache {
 
   public async get<T = unknown>(key: string): Promise<T | undefined> {
     return this.withConnection(`Failed to get key "${key}"`, async () => {
-      const value = await this.client.get(key);
+      const value = await this.client.get(this.getKey(key));
 
       if (value === null) {
         return;
@@ -63,20 +69,21 @@ export class RedisCache extends AbstractCache {
 
   public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
     return this.withConnection(`Failed to set key "${key}"`, async () => {
+      const namespacedKey = this.getKey(key);
       const normalizedValue = value === undefined ? null : value;
       const serializedValue = typeof normalizedValue === "string" ? normalizedValue : JSON.stringify(normalizedValue);
 
-      await this.client.set(key, serializedValue);
+      await this.client.set(namespacedKey, serializedValue);
 
       if (ttl && ttl > 0) {
-        await this.client.expire(key, ttl);
+        await this.client.expire(namespacedKey, ttl);
       }
     });
   }
 
   public async delete(key: string): Promise<boolean> {
     return this.withConnection(`Failed to delete key "${key}"`, async () => {
-      const result = await this.client.del(key);
+      const result = await this.client.del(this.getKey(key));
 
       return result > 0;
     });
@@ -84,7 +91,7 @@ export class RedisCache extends AbstractCache {
 
   public async has(key: string): Promise<boolean> {
     return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
-      const result = await this.client.exists(key);
+      const result = await this.client.exists(this.getKey(key));
 
       return result;
     });

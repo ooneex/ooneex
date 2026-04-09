@@ -9,12 +9,14 @@ import type { UpstashRedisCacheOptionsType } from "./types";
 @decorator.cache()
 export class UpstashRedisCache extends AbstractCache {
   private client: Redis;
+  private readonly namespace: string;
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
     options: UpstashRedisCacheOptionsType = {},
   ) {
     super();
+    this.namespace = options.namespace ?? "cache";
     const url = options.url || this.env.CACHE_UPSTASH_REDIS_REST_URL;
     const token = options.token || this.env.CACHE_UPSTASH_REDIS_REST_TOKEN;
 
@@ -35,13 +37,17 @@ export class UpstashRedisCache extends AbstractCache {
     this.client = new Redis({ url, token });
   }
 
+  private getKey(key: string): string {
+    return `${this.namespace}:${key}`;
+  }
+
   protected async connect(): Promise<void> {
     // Upstash Redis uses HTTP REST API, no persistent connection needed
   }
 
   public async get<T = unknown>(key: string): Promise<T | undefined> {
     return this.withConnection(`Failed to get key "${key}"`, async () => {
-      const value = await this.client.get<T>(key);
+      const value = await this.client.get<T>(this.getKey(key));
 
       if (value === null) {
         return;
@@ -55,17 +61,19 @@ export class UpstashRedisCache extends AbstractCache {
     return this.withConnection(`Failed to set key "${key}"`, async () => {
       const normalizedValue = value === undefined ? null : value;
 
+      const namespacedKey = this.getKey(key);
+
       if (ttl && ttl > 0) {
-        await this.client.set(key, normalizedValue, { ex: ttl });
+        await this.client.set(namespacedKey, normalizedValue, { ex: ttl });
       } else {
-        await this.client.set(key, normalizedValue);
+        await this.client.set(namespacedKey, normalizedValue);
       }
     });
   }
 
   public async delete(key: string): Promise<boolean> {
     return this.withConnection(`Failed to delete key "${key}"`, async () => {
-      const result = await this.client.del(key);
+      const result = await this.client.del(this.getKey(key));
 
       return result > 0;
     });
@@ -73,7 +81,7 @@ export class UpstashRedisCache extends AbstractCache {
 
   public async has(key: string): Promise<boolean> {
     return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
-      const result = await this.client.exists(key);
+      const result = await this.client.exists(this.getKey(key));
 
       return result > 0;
     });

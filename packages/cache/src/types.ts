@@ -2,6 +2,7 @@
 export type CacheClassType = new (...args: any[]) => ICache;
 
 export type RedisCacheOptionsType = {
+  namespace?: string;
   connectionString?: string;
   connectionTimeout?: number;
   idleTimeout?: number;
@@ -13,6 +14,7 @@ export type RedisCacheOptionsType = {
 };
 
 export type UpstashRedisCacheOptionsType = {
+  namespace?: string;
   url?: string;
   token?: string;
 };

@@ -34,9 +34,9 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/currencies": "workspace:*",
-    "@ooneex/translation": "workspace:*",
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/currencies": "workspace:^",
+    "@ooneex/translation": "workspace:^",
     "arktype": "^2.1.29"
   },
   "keywords": [

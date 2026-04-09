@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.18.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.18.0) - 2026-04-09
+
+### Added
+
+- Update app templates and improve module generation options — Franck ([d7d20422](https://github.com/ooneex/ooneex/commit/d7d20422))
+
 ## [1.17.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.10) - 2026-04-09
 
 ### Changed

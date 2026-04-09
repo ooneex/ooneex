@@ -331,8 +331,8 @@ describe("MakeReleaseCommand", () => {
 
       // Verify bun.lock was staged and committed before push
       const releaseCommitIndex = calls.findIndex((c) => c.startsWith("gitCommit:chore(release):"));
-      const bunLockAddIndex = calls.findIndex((c) => c === "gitAdd:bun.lock");
-      const bunLockCommitIndex = calls.findIndex((c) => c === "gitCommit:chore(common): Update bun.lock");
+      const bunLockAddIndex = calls.indexOf("gitAdd:bun.lock");
+      const bunLockCommitIndex = calls.indexOf("gitCommit:chore(common): Update bun.lock");
 
       expect(releaseCommitIndex).toBeGreaterThan(-1);
       expect(bunLockAddIndex).toBeGreaterThan(-1);

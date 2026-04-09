@@ -29,16 +29,16 @@
   },
   "dependencies": {
     "@logtail/node": "^0.5.8",
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/database": "workspace:*",
-    "@ooneex/utils": "workspace:*",
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/container": "workspace:^",
+    "@ooneex/database": "workspace:^",
+    "@ooneex/utils": "workspace:^",
     "@sentry/node": "^10.46.0"
   },
   "devDependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
+    "@ooneex/types": "workspace:^"
   },
   "keywords": [
     "bun",

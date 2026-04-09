@@ -28,8 +28,8 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/http-mimes": "workspace:*",
-    "@ooneex/utils": "workspace:*"
+    "@ooneex/http-mimes": "workspace:^",
+    "@ooneex/utils": "workspace:^"
   },
   "devDependencies": {},
   "keywords": [

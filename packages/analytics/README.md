@@ -218,10 +218,10 @@ import { PostHogAnalytics, decorator } from '@ooneex/analytics';
 
 // Register analytics service
 container.add(PostHogAnalytics, EContainerScope.Singleton);
-container.addAlias('analytics', PostHogAnalytics);
+container.addConstant('analytics', container.get(PostHogAnalytics));
 
 // Resolve from container
-const analytics = container.get<PostHogAnalytics>('analytics');
+const analytics = container.getConstant<PostHogAnalytics>('analytics');
 
 analytics.capture({
   id: 'user-123',

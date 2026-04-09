@@ -30,14 +30,14 @@
   "keywords": [],
   "dependencies": {
     "@lancedb/lancedb": "^0.27.1",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/utils": "workspace:*",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/container": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
+    "@ooneex/utils": "workspace:^",
     "@opendataloader/pdf": "^2.0.2",
     "apache-arrow": "^21.1.0"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:^"
   }
 }

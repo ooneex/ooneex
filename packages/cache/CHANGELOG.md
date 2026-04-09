@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.0) - 2026-04-09
+
+### Added
+
+- Add namespace support to Redis and Upstash cache — Franck ([fb688a1f](https://github.com/ooneex/ooneex/commit/fb688a1f))
+
 ## [1.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.2.6) - 2026-04-08
 
 ### Changed

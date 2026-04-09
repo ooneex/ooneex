@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.2.11) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([fe6fd3e1](https://github.com/ooneex/ooneex/commit/fe6fd3e1))
+
 ## [1.2.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.2.10) - 2026-04-08
 
 ### Changed

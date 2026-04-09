@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.17.10",
+      "version": "1.18.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -232,7 +232,7 @@
     },
     "packages/database": {
       "name": "@ooneex/database",
-      "version": "1.1.10",
+      "version": "1.1.11",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -526,7 +526,7 @@
     },
     "packages/seeds": {
       "name": "@ooneex/seeds",
-      "version": "1.4.7",
+      "version": "1.4.8",
       "dependencies": {
         "@ooneex/container": "workspace:^",
         "@ooneex/logger": "workspace:^",

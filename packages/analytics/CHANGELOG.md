@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.12) - 2026-04-09
+
+### Changed
+
+- Replace alias with constant in README examples — Franck ([ccefbcf8](https://github.com/ooneex/ooneex/commit/ccefbcf8))
+
 ## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.11) - 2026-04-09
 
 ### Changed

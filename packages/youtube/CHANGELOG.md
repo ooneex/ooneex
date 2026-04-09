@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.3.5) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([2bbb57e1](https://github.com/ooneex/ooneex/commit/2bbb57e1))
+
 ## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.3.4) - 2026-04-08
 
 ### Changed

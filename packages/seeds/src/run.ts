@@ -65,10 +65,4 @@ export const run = async (): Promise<void> => {
       process.exit(1);
     }
   }
-
-  logger.success("\nAll seeds completed successfully\n", undefined, {
-    showTimestamp: false,
-    showArrow: false,
-    useSymbol: true,
-  });
 };

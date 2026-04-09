@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.7) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([cdf192a1](https://github.com/ooneex/ooneex/commit/cdf192a1))
+
 ## [1.4.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.6) - 2026-04-09
 
 ### Changed

@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { up } from "@ooneex/migrations";
-import "@/migrations/migrations";
+import "@module/{{name}}/migrations/migrations";
 
 await up({
   databaseUrl: Bun.env.DATABASE_URL,

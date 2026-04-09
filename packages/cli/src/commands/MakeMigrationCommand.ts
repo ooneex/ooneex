@@ -37,7 +37,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
     const binMigrationUpPath = join(process.cwd(), base, "bin", "migration", "up.ts");
     const binMigrationUpFile = Bun.file(binMigrationUpPath);
     if (!(await binMigrationUpFile.exists())) {
-      await Bun.write(binMigrationUpPath, migrationUpTemplate);
+      await Bun.write(binMigrationUpPath, migrationUpTemplate.replace(/{{name}}/g, module ?? ""));
     }
 
     const logger = new TerminalLogger();

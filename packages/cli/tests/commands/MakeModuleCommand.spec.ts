@@ -82,6 +82,9 @@ describe("MakeModuleCommand", () => {
 
       const filePath = join(testDir, "modules", "user", "tests", "UserModule.spec.ts");
       expect(await exists(filePath)).toBe(true);
+
+      const content = await Bun.file(filePath).text();
+      expect(content).toContain('import { UserModule } from "@module/user/UserModule"');
     });
 
     test("should generate migrations directory by default", async () => {

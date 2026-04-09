@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Module } from "@/{{NAME}}Module";
+import { {{NAME}}Module } from "@module/{{name}}/{{NAME}}Module";
 
 describe("{{NAME}}Module", () => {
   test("should have controllers array", () => {

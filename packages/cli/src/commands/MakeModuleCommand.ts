@@ -122,7 +122,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
 
     const moduleContent = moduleTemplate.replace(/{{NAME}}/g, pascalName);
     const packageContent = packageTemplate.replace(/{{NAME}}/g, kebabName);
-    const testContent = testTemplate.replace(/{{NAME}}/g, pascalName);
+    const testContent = testTemplate.replace(/{{NAME}}/g, pascalName).replace(/{{name}}/g, kebabName);
 
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
     if (!skipMigrations) {

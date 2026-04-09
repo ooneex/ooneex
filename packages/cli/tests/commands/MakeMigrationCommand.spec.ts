@@ -89,6 +89,7 @@ describe("MakeMigrationCommand", () => {
       expect(await Bun.file(binFile).exists()).toBe(true);
       const content = await Bun.file(binFile).text();
       expect(content).toContain("up");
+      expect(content).toContain(`@module/${moduleName}/migrations/migrations`);
     });
   });
 });

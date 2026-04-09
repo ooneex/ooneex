@@ -27,15 +27,15 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
     "@polar-sh/sdk": "^0.30.0"
   },
   "devDependencies": {
-    "@ooneex/currencies": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/currencies": "workspace:^",
+    "@ooneex/types": "workspace:^"
   },
   "keywords": [
     "billing",

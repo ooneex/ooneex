@@ -144,6 +144,27 @@ describe("UpstashRedisRateLimiter", () => {
 
       expect(instance).toBeInstanceOf(UpstashRedisRateLimiter);
     });
+
+    test("should accept custom namespace option", () => {
+      const instance = new UpstashRedisRateLimiter(createMockEnv(), {
+        url: "https://test.upstash.io",
+        token: "test-token",
+        namespace: "myapp",
+      });
+
+      expect(instance).toBeInstanceOf(UpstashRedisRateLimiter);
+    });
+
+    test("should use prefix over namespace when both are provided", () => {
+      const instance = new UpstashRedisRateLimiter(createMockEnv(), {
+        url: "https://test.upstash.io",
+        token: "test-token",
+        namespace: "myapp",
+        prefix: "custom-prefix",
+      });
+
+      expect(instance).toBeInstanceOf(UpstashRedisRateLimiter);
+    });
   });
 
   describe("check method", () => {

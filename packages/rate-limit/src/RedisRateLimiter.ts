@@ -7,11 +7,13 @@ import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } f
 @decorator.rateLimit()
 export class RedisRateLimiter implements IRateLimiter {
   private client: Bun.RedisClient;
+  private readonly namespace: string;
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
     options: RedisRateLimiterOptionsType = {},
   ) {
+    this.namespace = options.namespace ?? "ratelimit";
     const connectionString = options.connectionString || this.env.RATE_LIMIT_REDIS_URL;
 
     if (!connectionString) {
@@ -21,7 +23,7 @@ export class RedisRateLimiter implements IRateLimiter {
       );
     }
 
-    const { connectionString: _, ...userOptions } = options;
+    const { connectionString: _, namespace: __, ...userOptions } = options;
 
     const defaultOptions = {
       connectionTimeout: 10_000,
@@ -44,7 +46,7 @@ export class RedisRateLimiter implements IRateLimiter {
   }
 
   private getKey(key: string): string {
-    return `ratelimit:${key}`;
+    return `${this.namespace}:${key}`;
   }
 
   public async check(key: string): Promise<RateLimitResultType> {

@@ -215,13 +215,27 @@ describe("RedisRateLimiter", () => {
       expect(result.resetAt.getTime()).toBeLessThanOrEqual(expectedResetAtMax);
     });
 
-    test("should prefix key with ratelimit:", async () => {
+    test("should prefix key with default namespace", async () => {
       mockRedisClient.incr.mockResolvedValue(1);
       mockRedisClient.ttl.mockResolvedValue(60);
 
       await limiter.check("ip:192.168.1.1");
 
       expect(mockRedisClient.incr).toHaveBeenCalledWith("ratelimit:ip:192.168.1.1");
+    });
+
+    test("should prefix key with custom namespace", async () => {
+      const customLimiter = new RedisRateLimiter(createMockEnv(), {
+        connectionString: "redis://localhost:6379/1",
+        namespace: "myapp",
+      });
+      mockRedisClient.connected = false;
+      mockRedisClient.incr.mockResolvedValue(1);
+      mockRedisClient.ttl.mockResolvedValue(60);
+
+      await customLimiter.check("ip:192.168.1.1");
+
+      expect(mockRedisClient.incr).toHaveBeenCalledWith("myapp:ip:192.168.1.1");
     });
 
     test("should throw RateLimitException on Redis error", async () => {
@@ -263,12 +277,25 @@ describe("RedisRateLimiter", () => {
       expect(result).toBe(false);
     });
 
-    test("should prefix key with ratelimit:", async () => {
+    test("should prefix key with default namespace", async () => {
       mockRedisClient.del.mockResolvedValue(1);
 
       await limiter.reset("ip:192.168.1.1");
 
       expect(mockRedisClient.del).toHaveBeenCalledWith("ratelimit:ip:192.168.1.1");
+    });
+
+    test("should prefix key with custom namespace", async () => {
+      const customLimiter = new RedisRateLimiter(createMockEnv(), {
+        connectionString: "redis://localhost:6379/1",
+        namespace: "myapp",
+      });
+      mockRedisClient.connected = false;
+      mockRedisClient.del.mockResolvedValue(1);
+
+      await customLimiter.reset("ip:192.168.1.1");
+
+      expect(mockRedisClient.del).toHaveBeenCalledWith("myapp:ip:192.168.1.1");
     });
 
     test("should throw RateLimitException on Redis error", async () => {
@@ -309,12 +336,25 @@ describe("RedisRateLimiter", () => {
       expect(result).toBe(0);
     });
 
-    test("should prefix key with ratelimit:", async () => {
+    test("should prefix key with default namespace", async () => {
       mockRedisClient.get.mockResolvedValue("10");
 
       await limiter.getCount("ip:192.168.1.1");
 
       expect(mockRedisClient.get).toHaveBeenCalledWith("ratelimit:ip:192.168.1.1");
+    });
+
+    test("should prefix key with custom namespace", async () => {
+      const customLimiter = new RedisRateLimiter(createMockEnv(), {
+        connectionString: "redis://localhost:6379/1",
+        namespace: "myapp",
+      });
+      mockRedisClient.connected = false;
+      mockRedisClient.get.mockResolvedValue("10");
+
+      await customLimiter.getCount("ip:192.168.1.1");
+
+      expect(mockRedisClient.get).toHaveBeenCalledWith("myapp:ip:192.168.1.1");
     });
 
     test("should throw RateLimitException on Redis error", async () => {

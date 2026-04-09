@@ -4,6 +4,7 @@ import type { Duration } from "@upstash/ratelimit";
 export type RateLimiterClassType = new (...args: any[]) => IRateLimiter;
 
 export type RedisRateLimiterOptionsType = {
+  namespace?: string;
   connectionString?: string;
   connectionTimeout?: number;
   idleTimeout?: number;
@@ -20,6 +21,7 @@ export type UpstashAlgorithmType =
   | { type: "tokenBucket"; refillRate: number; interval: Duration; maxTokens: number };
 
 export type UpstashRedisRateLimiterOptionsType = {
+  namespace?: string;
   url?: string;
   token?: string;
   algorithm?: UpstashAlgorithmType;

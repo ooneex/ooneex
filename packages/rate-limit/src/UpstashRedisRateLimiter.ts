@@ -41,7 +41,7 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
     this.ratelimit = new Ratelimit({
       redis,
       limiter,
-      prefix: options.prefix ?? "@ooneex/ratelimit",
+      prefix: options.prefix ?? options.namespace ?? "ratelimit",
       analytics: options.analytics ?? true,
     });
   }

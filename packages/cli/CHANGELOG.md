@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.20.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.0) - 2026-04-09
+
+### Added
+
+- Add new resource generation commands — Franck ([84360165](https://github.com/ooneex/ooneex/commit/84360165))
+
+### Changed
+
+- Remove dev/build/stop scripts from app template and update controller skill — Franck ([e1fee23c](https://github.com/ooneex/ooneex/commit/e1fee23c))
+
 ## [1.19.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.19.0) - 2026-04-09
 
 ### Added

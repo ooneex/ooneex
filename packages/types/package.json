@@ -28,7 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "devDependencies": {
-    "@ooneex/translation": "workspace:*"
+    "@ooneex/translation": "workspace:^"
   },
   "keywords": [
     "bun",

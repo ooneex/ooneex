@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request-file@1.2.10) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([3775e08d](https://github.com/ooneex/ooneex/commit/3775e08d))
+
 ## [1.2.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request-file@1.2.9) - 2026-04-08
 
 ### Changed

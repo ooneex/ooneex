@@ -28,7 +28,7 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/container": "workspace:*"
+    "@ooneex/container": "workspace:^"
   },
   "devDependencies": {},
   "keywords": [

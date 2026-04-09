@@ -25,4 +25,12 @@ describe(".commitlintrc.ts.txt", () => {
     expect(content).toContain("fix");
     expect(content).toContain("chore");
   });
+
+  test("should have commit scope rules", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("scope-enum");
+    expect(content).toContain("common");
+    expect(content).toContain("shared");
+    expect(content).toContain("app");
+  });
 });

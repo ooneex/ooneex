@@ -70,7 +70,9 @@ describe("app-database.txt", () => {
 
   test("should import SharedModule", async () => {
     const content = await file.text();
-    expect(content).toContain("SharedModule");
+    expect(content).toContain(
+      'import { SharedModule } from "@module/shared/SharedModule"',
+    );
     expect(content).toContain("SharedModule.entities");
   });
 

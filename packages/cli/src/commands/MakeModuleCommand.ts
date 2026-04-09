@@ -87,7 +87,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       const existing = match[2]?.trim() ?? "";
       const newScope = `"${kebabName}"`;
       if (!existing.includes(newScope)) {
-        const newValue = existing ? `${existing}\n        ${newScope},` : `\n        ${newScope},`;
+        const newValue = existing ? `${existing}, \n        ${newScope},` : `\n        ${newScope},`;
         content = content.replace(regex, `$1${newValue}\n      $3`);
         await Bun.write(commitlintPath, content);
       }
@@ -100,7 +100,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
 
     tsconfig.compilerOptions ??= {};
     tsconfig.compilerOptions.paths ??= {};
-    tsconfig.compilerOptions.paths[`@module/${kebabName}/*`] = [`../${kebabName}/src/*`];
+    tsconfig.compilerOptions.paths[`@module/${kebabName}/*`] = [`./modules/${kebabName}/src/*`];
 
     await Bun.write(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
   }
@@ -141,12 +141,12 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       if (await Bun.file(appModulePath).exists()) {
         await this.addToAppModule(appModulePath, pascalName, kebabName);
       }
+    }
 
-      // Add path alias in app module tsconfig
-      const appTsconfigPath = join(cwd, "modules", "app", "tsconfig.json");
-      if (await Bun.file(appTsconfigPath).exists()) {
-        await this.addPathAlias(appTsconfigPath, kebabName);
-      }
+    // Add path alias in app module tsconfig
+    const appTsconfigPath = join(cwd, "tsconfig.json");
+    if (await Bun.file(appTsconfigPath).exists()) {
+      await this.addPathAlias(appTsconfigPath, kebabName);
     }
 
     // Register entities to SharedModule and add path aliases
@@ -157,16 +157,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       const sharedModuleFilePath = join(sharedModuleDir, "src", "SharedModule.ts");
       if (await Bun.file(sharedModuleFilePath).exists()) {
         await this.addToSharedModule(sharedModuleFilePath, pascalName, kebabName);
-      }
-
-      // Add path alias in shared module tsconfig
-      const sharedTsconfigPath = join(sharedModuleDir, "tsconfig.json");
-      if (await Bun.file(sharedTsconfigPath).exists()) {
-        await this.addPathAlias(sharedTsconfigPath, kebabName);
-
-        // Add shared module path alias to the new module's tsconfig
-        const moduleTsconfigPath = join(moduleDir, "tsconfig.json");
-        await this.addPathAlias(moduleTsconfigPath, "shared");
       }
     }
 

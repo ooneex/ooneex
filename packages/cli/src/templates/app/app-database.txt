@@ -2,7 +2,7 @@ import { inject } from "@ooneex/container";
 import { AppEnv } from "@ooneex/app-env";
 import { DataSource } from "typeorm";
 import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
-import { SharedModule } from "@/SharedModule";
+import { SharedModule } from "@module/shared/SharedModule";
 
 @decorator.database()
 export class SharedDatabase extends TypeormDatabase {

@@ -25,9 +25,10 @@ describe("Dockerfile.txt", () => {
   test("should contain build stage", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("FROM base AS build");
+    expect(content).toContain("ENV HUSKY=0");
     expect(content).toContain("COPY package.json bun.lock /temp/dev/");
     expect(content).toContain("bun install --frozen-lockfile");
-    expect(content).toContain("bun install --frozen-lockfile --production");
+    expect(content).toContain("bun install --frozen-lockfile --production --ignore-scripts");
   });
 
   test("should contain prerelease stage", async () => {

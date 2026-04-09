@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.7) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([de9e764e](https://github.com/ooneex/ooneex/commit/de9e764e))
+
 ## [1.3.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.6) - 2026-04-09
 
 ### Changed

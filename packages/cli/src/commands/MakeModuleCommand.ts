@@ -15,7 +15,6 @@ type CommandOptionsType = {
   silent?: boolean;
   skipMigrations?: boolean;
   skipSeeds?: boolean;
-  skipCommands?: boolean;
 };
 
 @decorator.command()
@@ -88,7 +87,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       silent = false,
       skipMigrations = false,
       skipSeeds = false,
-      skipCommands = false,
     } = options;
     let { name } = options;
 
@@ -113,9 +111,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     }
     if (!skipSeeds) {
       await Bun.write(join(srcDir, "seeds", "seeds.ts"), "");
-    }
-    if (!skipCommands) {
-      await Bun.write(join(srcDir, "commands", "commands.ts"), "");
     }
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);

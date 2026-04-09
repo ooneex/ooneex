@@ -112,20 +112,6 @@ describe("MakeModuleCommand", () => {
       expect(await exists(seedsFile)).toBe(false);
     });
 
-    test("should generate commands directory by default", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const commandsFile = join(testDir, "modules", "user", "src", "commands", "commands.ts");
-      expect(await exists(commandsFile)).toBe(true);
-    });
-
-    test("should skip commands when skipCommands is true", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true, skipCommands: true });
-
-      const commandsFile = join(testDir, "modules", "user", "src", "commands", "commands.ts");
-      expect(await exists(commandsFile)).toBe(false);
-    });
-
     test("should normalize name to kebab-case for directory", async () => {
       await command.run({ name: "UserProfile", cwd: testDir, silent: true });
 

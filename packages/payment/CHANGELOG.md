@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/payment@1.1.9) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([97e2021c](https://github.com/ooneex/ooneex/commit/97e2021c))
+
 ## [1.1.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/payment@1.1.8) - 2026-04-08
 
 ### Changed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.12) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([b77454ff](https://github.com/ooneex/ooneex/commit/b77454ff))
+
 ## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/middleware@1.2.11) - 2026-04-08
 
 ### Changed

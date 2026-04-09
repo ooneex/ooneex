@@ -28,8 +28,8 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
     "pdf-lib": "^1.17.1",
     "pdf-to-img": "^5.0.0",
     "sharp": "^0.34.0",

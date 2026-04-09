@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.5) - 2026-04-09
+
+### Changed
+
+- Default to help command when no command name provided — Franck ([ae35c7d2](https://github.com/ooneex/ooneex/commit/ae35c7d2))
+
 ## [0.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.4) - 2026-04-08
 
 ### Changed

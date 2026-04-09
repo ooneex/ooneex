@@ -85,11 +85,11 @@ Dependencies should use workspace protocol:
 ```json
 {
   "dependencies": {
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*"
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/types": "workspace:*"
+    "@ooneex/types": "workspace:^"
   }
 }
 ```
@@ -127,14 +127,14 @@ Result in `package.json`:
 ```json
 {
   "dependencies": {
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*"
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/cron": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/cron": "workspace:^",
+    "@ooneex/types": "workspace:^"
   }
 }
 ```
@@ -153,9 +153,9 @@ Result in `package.json`:
 {
   "dependencies": {},
   "devDependencies": {
-    "@ooneex/analytics": "workspace:*",
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/cache": "workspace:*"
+    "@ooneex/analytics": "workspace:^",
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/cache": "workspace:^"
   }
 }
 ```
@@ -171,7 +171,7 @@ The base package `@ooneex/validation` should be added to dependencies:
 ```json
 {
   "dependencies": {
-    "@ooneex/validation": "workspace:*"
+    "@ooneex/validation": "workspace:^"
   }
 }
 ```

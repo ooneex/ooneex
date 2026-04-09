@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.8) - 2026-04-09
+
+### Changed
+
+- Simplify MakeCommandCommand and remove auto-scripts from MakeApp — Franck ([d5b0475e](https://github.com/ooneex/ooneex/commit/d5b0475e))
+- Extract bunInstall and gitPush into private methods — Franck ([5627d00d](https://github.com/ooneex/ooneex/commit/5627d00d))
+
 ## [1.17.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.17.7) - 2026-04-08
 
 ### Fixed

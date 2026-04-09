@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.11) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([dd8d4640](https://github.com/ooneex/ooneex/commit/dd8d4640))
+
 ## [1.2.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.10) - 2026-04-08
 
 ### Changed

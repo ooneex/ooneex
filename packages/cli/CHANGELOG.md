@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.1) - 2026-04-09
+
+### Changed
+
+- Move path aliases to root tsconfig and improve Dockerfile — Franck ([7a869263](https://github.com/ooneex/ooneex/commit/7a869263))
+- Centralize tsconfig paths in root and simplify module tsconfig — Franck ([5a6b976d](https://github.com/ooneex/ooneex/commit/5a6b976d))
+
 ## [1.20.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.0) - 2026-04-09
 
 ### Added

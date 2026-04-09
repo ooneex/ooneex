@@ -139,7 +139,7 @@ describe("App", () => {
       expect(startMock).toHaveBeenCalled();
     });
 
-    test("adds analytics to container and registers alias when provided", () => {
+    test("adds analytics to container and registers constant when provided", () => {
       const config = createMockConfig({
         analytics: MockAnalytics as unknown as AppConfigType["analytics"],
       });
@@ -147,10 +147,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockAnalytics)).toBe(true);
-      expect(container.has("analytics")).toBe(true);
+      expect(container.hasConstant("analytics")).toBe(true);
     });
 
-    test("adds cache to container and registers alias when provided", () => {
+    test("adds cache to container and registers constant when provided", () => {
       const config = createMockConfig({
         cache: MockCache as unknown as AppConfigType["cache"],
       });
@@ -158,10 +158,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockCache)).toBe(true);
-      expect(container.has("cache")).toBe(true);
+      expect(container.hasConstant("cache")).toBe(true);
     });
 
-    test("adds storage to container and registers alias when provided", () => {
+    test("adds storage to container and registers constant when provided", () => {
       const config = createMockConfig({
         storage: MockStorage as unknown as AppConfigType["storage"],
       });
@@ -169,10 +169,10 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockStorage)).toBe(true);
-      expect(container.has("storage")).toBe(true);
+      expect(container.hasConstant("storage")).toBe(true);
     });
 
-    test("adds mailer to container and registers alias when provided", () => {
+    test("adds mailer to container and registers constant when provided", () => {
       const config = createMockConfig({
         mailer: MockMailer as unknown as AppConfigType["mailer"],
       });
@@ -180,19 +180,19 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockMailer)).toBe(true);
-      expect(container.has("mailer")).toBe(true);
+      expect(container.hasConstant("mailer")).toBe(true);
     });
 
-    test("adds database to container and registers alias", () => {
+    test("adds database to container and registers constant", () => {
       const config = createMockConfig();
 
       new App(config);
 
       expect(container.has(MockDatabase)).toBe(true);
-      expect(container.has("database")).toBe(true);
+      expect(container.hasConstant("database")).toBe(true);
     });
 
-    test("adds rateLimiter to container and registers alias when provided", () => {
+    test("adds rateLimiter to container and registers constant when provided", () => {
       const config = createMockConfig({
         rateLimiter: MockRateLimiter as unknown as AppConfigType["rateLimiter"],
       });
@@ -200,7 +200,7 @@ describe("App", () => {
       new App(config);
 
       expect(container.has(MockRateLimiter)).toBe(true);
-      expect(container.has("rateLimiter")).toBe(true);
+      expect(container.hasConstant("rateLimiter")).toBe(true);
     });
 
     test("adds onException to container and registers exception.logger constant when provided", () => {

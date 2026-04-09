@@ -37,7 +37,7 @@ export class App {
     if (!container.has(database)) {
       container.add(database);
     }
-    container.addAlias("database", database);
+    container.addConstant("database", container.get(database));
 
     if (onException) {
       if (!container.has(onException)) {
@@ -50,35 +50,35 @@ export class App {
       if (!container.has(analytics)) {
         container.add(analytics);
       }
-      container.addAlias("analytics", analytics);
+      container.addConstant("analytics", container.get(analytics));
     }
 
     if (cache) {
       if (!container.has(cache)) {
         container.add(cache);
       }
-      container.addAlias("cache", cache);
+      container.addConstant("cache", container.get(cache));
     }
 
     if (storage) {
       if (!container.has(storage)) {
         container.add(storage);
       }
-      container.addAlias("storage", storage);
+      container.addConstant("storage", container.get(storage));
     }
 
     if (mailer) {
       if (!container.has(mailer)) {
         container.add(mailer);
       }
-      container.addAlias("mailer", mailer);
+      container.addConstant("mailer", container.get(mailer));
     }
 
     if (rateLimiter) {
       if (!container.has(rateLimiter)) {
         container.add(rateLimiter);
       }
-      container.addAlias("rateLimiter", rateLimiter);
+      container.addConstant("rateLimiter", container.get(rateLimiter));
     }
 
     cronJobs?.forEach((cronJob) => {

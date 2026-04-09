@@ -119,9 +119,9 @@ export const buildHttpContext = async (ctx: {
     ip,
   });
 
-  const tryGet = <T>(key: string): T | undefined => {
+  const tryGetConstant = <T>(key: string): T | undefined => {
     try {
-      return container.get<T>(key);
+      return container.hasConstant(key) ? container.getConstant<T>(key) : undefined;
     } catch {
       return undefined;
     }
@@ -130,12 +130,12 @@ export const buildHttpContext = async (ctx: {
   const exceptionLogger = container.hasConstant("exception.logger")
     ? container.getConstant<ILogger>("exception.logger")
     : undefined;
-  const analytics = tryGet<IAnalytics>("analytics");
-  const cache = tryGet<ICache>("cache");
-  const storage = tryGet<IStorage>("storage");
-  const mailer = tryGet<IMailer>("mailer");
-  const rateLimiter = tryGet<IRateLimiter>("rateLimiter");
-  const database: IDatabase = container.get("database");
+  const analytics = tryGetConstant<IAnalytics>("analytics");
+  const cache = tryGetConstant<ICache>("cache");
+  const storage = tryGetConstant<IStorage>("storage");
+  const mailer = tryGetConstant<IMailer>("mailer");
+  const rateLimiter = tryGetConstant<IRateLimiter>("rateLimiter");
+  const database: IDatabase = container.getConstant("database");
 
   const context: ContextType = {
     logger: container.getConstant("logger"),

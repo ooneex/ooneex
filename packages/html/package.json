@@ -28,8 +28,8 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
     "cheerio": "^1.1.2"
   },
   "keywords": [

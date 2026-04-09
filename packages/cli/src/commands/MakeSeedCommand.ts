@@ -47,8 +47,6 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       await Bun.write(binSeedRunPath, seedRunTemplate);
     }
 
-    const packageJsonPath = join(process.cwd(), base, "package.json");
-
     const logger = new TerminalLogger();
 
     logger.success(`${filePath} created successfully`, undefined, {
@@ -62,19 +60,5 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       showArrow: false,
       useSymbol: true,
     });
-
-    // Install @ooneex/seeds dev dependency if not already installed
-    const pkgJson = await Bun.file(packageJsonPath).json();
-    const deps = pkgJson.dependencies ?? {};
-    const devDeps = pkgJson.devDependencies ?? {};
-
-    if (!deps["@ooneex/seeds"] && !devDeps["@ooneex/seeds"]) {
-      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/seeds"], {
-        cwd: process.cwd(),
-        stdout: "ignore",
-        stderr: "inherit",
-      });
-      await install.exited;
-    }
   }
 }

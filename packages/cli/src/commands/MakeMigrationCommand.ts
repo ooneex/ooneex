@@ -40,8 +40,6 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       await Bun.write(binMigrationUpPath, migrationUpTemplate);
     }
 
-    const packageJsonPath = join(process.cwd(), base, "package.json");
-
     const logger = new TerminalLogger();
 
     logger.success(`${filePath} created successfully`, undefined, {
@@ -49,19 +47,5 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
       showArrow: false,
       useSymbol: true,
     });
-
-    // Install @ooneex/migrations dev dependency if not already installed
-    const pkgJson = await Bun.file(packageJsonPath).json();
-    const deps = pkgJson.dependencies ?? {};
-    const devDeps = pkgJson.devDependencies ?? {};
-
-    if (!deps["@ooneex/migrations"] && !devDeps["@ooneex/migrations"]) {
-      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/migrations"], {
-        cwd: process.cwd(),
-        stdout: "ignore",
-        stderr: "inherit",
-      });
-      await install.exited;
-    }
   }
 }

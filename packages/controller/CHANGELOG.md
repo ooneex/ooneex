@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.11) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([187e37d7](https://github.com/ooneex/ooneex/commit/187e37d7))
+
 ## [1.3.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.10) - 2026-04-08
 
 ### Changed

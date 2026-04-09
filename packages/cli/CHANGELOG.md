@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.2) - 2026-04-09
+
+### Fixed
+
+- Use module path alias in seed run template — Franck ([73472906](https://github.com/ooneex/ooneex/commit/73472906))
+- Use module path aliases in migration and test templates — Franck ([a3e283f9](https://github.com/ooneex/ooneex/commit/a3e283f9))
+
 ## [1.20.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.1) - 2026-04-09
 
 ### Changed

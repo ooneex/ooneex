@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.4) - 2026-04-09
+
+### Changed
+
+- Remove alias system in favor of constants — Franck ([5bf937d9](https://github.com/ooneex/ooneex/commit/5bf937d9))
+
 ## [1.4.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.3) - 2026-04-09
 
 ### Changed

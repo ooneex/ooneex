@@ -197,12 +197,16 @@ describe("TerminalLogger", () => {
     test("should handle all options combined", () => {
       const logger = new TerminalLogger();
       expect(() =>
-        logger.info("All options", { key: "value" }, {
-          showArrow: false,
-          showTimestamp: false,
-          showLevel: true,
-          useSymbol: true,
-        }),
+        logger.info(
+          "All options",
+          { key: "value" },
+          {
+            showArrow: false,
+            showTimestamp: false,
+            showLevel: true,
+            useSymbol: true,
+          },
+        ),
       ).not.toThrow();
     });
   });
@@ -277,9 +281,7 @@ describe("TerminalLogger", () => {
         status: 500,
         date: new Date(),
         data: {},
-        stackToJson: mock(() => [
-          { functionName: "anonymous", lineNumber: null, columnNumber: null, fileName: null },
-        ]),
+        stackToJson: mock(() => [{ functionName: "anonymous", lineNumber: null, columnNumber: null, fileName: null }]),
         stackToString: mock(() => ""),
         toResponse: mock(() => ({})),
       } as unknown as IException;
@@ -296,9 +298,7 @@ describe("TerminalLogger", () => {
         status: 500,
         date: new Date(),
         data: {},
-        stackToJson: mock(() => [
-          { functionName: null, lineNumber: 10, columnNumber: 5, fileName: "test.ts" },
-        ]),
+        stackToJson: mock(() => [{ functionName: null, lineNumber: 10, columnNumber: 5, fileName: "test.ts" }]),
         stackToString: mock(() => ""),
         toResponse: mock(() => ({})),
       } as unknown as IException;

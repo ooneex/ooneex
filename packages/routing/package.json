@@ -28,19 +28,19 @@
     "npm:publish": "bun publish --tolerate-republish --force --production --access public"
   },
   "dependencies": {
-    "@ooneex/container": "workspace:*",
-    "@ooneex/exception": "workspace:*",
-    "@ooneex/http-status": "workspace:*",
-    "@ooneex/validation": "workspace:*"
+    "@ooneex/container": "workspace:^",
+    "@ooneex/exception": "workspace:^",
+    "@ooneex/http-status": "workspace:^",
+    "@ooneex/validation": "workspace:^"
   },
   "devDependencies": {
-    "@ooneex/app-env": "workspace:*",
-    "@ooneex/controller": "workspace:*",
-    "@ooneex/http-response": "workspace:*",
-    "@ooneex/permission": "workspace:*",
-    "@ooneex/role": "workspace:*",
-    "@ooneex/translation": "workspace:*",
-    "@ooneex/types": "workspace:*"
+    "@ooneex/app-env": "workspace:^",
+    "@ooneex/controller": "workspace:^",
+    "@ooneex/http-response": "workspace:^",
+    "@ooneex/permission": "workspace:^",
+    "@ooneex/role": "workspace:^",
+    "@ooneex/translation": "workspace:^",
+    "@ooneex/types": "workspace:^"
   },
   "keywords": [
     "bun",

@@ -49,7 +49,7 @@
     "@vvo/tzdb": "^6.198.0"
   },
   "devDependencies": {
-    "@ooneex/translation": "workspace:*"
+    "@ooneex/translation": "workspace:^"
   },
   "keywords": [
     "bun",

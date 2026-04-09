@@ -4,7 +4,7 @@ import { SharedDatabase } from "@module/shared/databases/SharedDatabase";
 import { AppEnv } from "@ooneex/app-env";
 import { container } from "@ooneex/container";
 import { run } from "@ooneex/seeds";
-import "@/seeds/seeds";
+import "@module/{{name}}/seeds/seeds";
 
 if (!container.has(AppEnv)) {
   container.add(AppEnv);

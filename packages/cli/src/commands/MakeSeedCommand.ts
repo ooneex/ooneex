@@ -44,7 +44,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
     const binSeedRunPath = join(process.cwd(), base, "bin", "seed", "run.ts");
     const binSeedRunFile = Bun.file(binSeedRunPath);
     if (!(await binSeedRunFile.exists())) {
-      await Bun.write(binSeedRunPath, seedRunTemplate);
+      await Bun.write(binSeedRunPath, seedRunTemplate.replace(/{{name}}/g, module ?? ""));
     }
 
     const logger = new TerminalLogger();

@@ -131,9 +131,7 @@ describe("Container - Dependency Injection", () => {
         }
       }
 
-      expect(() => container.get(UnregisteredService)).toThrow(
-        /Failed to resolve dependency: UnregisteredService\./,
-      );
+      expect(() => container.get(UnregisteredService)).toThrow(/Failed to resolve dependency: UnregisteredService\./);
     });
 
     test("should forward original error message for unregistered service", () => {

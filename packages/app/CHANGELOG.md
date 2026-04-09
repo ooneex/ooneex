@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.7) - 2026-04-09
+
+### Fixed
+
+- Build proper route context for 404 handler and add version to logs — Franck ([479ebb8d](https://github.com/ooneex/ooneex/commit/479ebb8d))
+
 ## [1.7.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.6) - 2026-04-08
 
 ### Changed

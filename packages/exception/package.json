@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/exception",
   "description": "Structured exception handling with HTTP status code mapping, typed error data, and JSON-formatted stack traces for consistent error reporting",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "type": "module",
   "files": [
     "dist",

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.3.0) - 2026-04-09
+
+### Added
+
+- Add version field to LogsEntity — Franck ([f6e924aa](https://github.com/ooneex/ooneex/commit/f6e924aa))
+
 ## [1.2.15](https://github.com/ooneex/ooneex/releases/tag/@ooneex/logger@1.2.15) - 2026-04-08
 
 ### Fixed

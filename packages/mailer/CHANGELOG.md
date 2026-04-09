@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.12) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([c4a10c9d](https://github.com/ooneex/ooneex/commit/c4a10c9d))
+
 ## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.11) - 2026-04-08
 
 ### Changed

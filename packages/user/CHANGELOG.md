@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/user@1.2.8) - 2026-04-09
+
+### Changed
+
+- Change workspace deps from workspace:* to workspace:^ — Franck ([1b3fb695](https://github.com/ooneex/ooneex/commit/1b3fb695))
+
 ## [1.2.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/user@1.2.7) - 2026-04-08
 
 ### Changed

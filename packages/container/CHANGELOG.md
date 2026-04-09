@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.1) - 2026-04-09
+
+### Changed
+
+- Simplify addAlias to use add with optional scope parameter — Franck ([4eabbf40](https://github.com/ooneex/ooneex/commit/4eabbf40))
+
 ## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.0) - 2026-04-08
 
 ### Added

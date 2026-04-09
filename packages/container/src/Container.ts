@@ -8,8 +8,6 @@ import { EContainerScope, type IContainer } from "./types";
 const sharedDI = new InversifyContainer();
 
 export class Container implements IContainer {
-  private alias: Record<string, any> = {};
-
   public add(target: new (...args: any[]) => any, scope: EContainerScope = EContainerScope.Singleton): void {
     try {
       sharedDI.unbind(target);
@@ -33,52 +31,24 @@ export class Container implements IContainer {
     }
   }
 
-  private resolveAlias<T>(
-    target: (new (...args: any[]) => T) | string,
-    throwOnMissing = true,
-  ): (new (...args: any[]) => T) | null {
-    if (typeof target === "string") {
-      const aliasedTarget = this.alias[target];
-      if (!aliasedTarget) {
-        if (throwOnMissing) {
-          throw new ContainerException(`Failed to resolve alias: ${target}`, "ALIAS_RESOLVE_FAILED");
-        }
-        return null;
-      }
-      return aliasedTarget as new (
-        ...args: any[]
-      ) => T;
-    }
-    return target as new (
-      ...args: any[]
-    ) => T;
-  }
-
-  public get<T>(target: (new (...args: any[]) => T) | string): T {
-    const resolvedTarget = this.resolveAlias(target, true);
-
+  public get<T>(target: new (...args: any[]) => T): T {
     try {
-      return sharedDI.get<T>(resolvedTarget as new (...args: any[]) => T);
+      return sharedDI.get<T>(target);
     } catch (e) {
       throw new ContainerException(
-        `Failed to resolve dependency: ${typeof target === "string" ? target : target.name}. ${e instanceof Error ? e.message : String(e)}`,
+        `Failed to resolve dependency: ${target.name}. ${e instanceof Error ? e.message : String(e)}`,
         "SERVICE_RESOLVE_FAILED",
       );
     }
   }
 
-  public has(target: (new (...args: any[]) => unknown) | string): boolean {
-    const resolvedTarget = this.resolveAlias(target, false);
-    if (resolvedTarget === null) {
-      return false;
-    }
-    return sharedDI.isBound(resolvedTarget);
+  public has(target: new (...args: any[]) => unknown): boolean {
+    return sharedDI.isBound(target);
   }
 
-  public remove(target: (new (...args: unknown[]) => unknown) | string): void {
-    const resolvedTarget = this.resolveAlias(target, true);
-    if (resolvedTarget && sharedDI.isBound(resolvedTarget)) {
-      sharedDI.unbind(resolvedTarget);
+  public remove(target: new (...args: any[]) => unknown): void {
+    if (sharedDI.isBound(target)) {
+      sharedDI.unbind(target);
     }
   }
 
@@ -106,15 +76,6 @@ export class Container implements IContainer {
     if (sharedDI.isBound(identifier)) {
       sharedDI.unbind(identifier);
     }
-  }
-
-  public addAlias<T>(
-    alias: string,
-    target: new (...args: any[]) => T,
-    scope: EContainerScope = EContainerScope.Singleton,
-  ): void {
-    this.alias[alias] = target;
-    this.add(target, scope);
   }
 }
 

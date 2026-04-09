@@ -881,157 +881,76 @@ describe("Container - Dependency Injection", () => {
     });
   });
 
-  describe("Alias functionality", () => {
-    test("should add and retrieve service by alias", () => {
+  describe("addConstant with resolved service", () => {
+    test("should add and retrieve service as constant", () => {
       class TestService {
         public getValue(): string {
           return "test-value";
         }
       }
 
-      container.addAlias("testService", TestService);
+      container.add(TestService);
+      container.addConstant("testService", container.get(TestService));
 
-      const service = container.get<TestService>("testService");
+      const service = container.getConstant<TestService>("testService");
       expect(service.getValue()).toBe("test-value");
     });
 
-    test("should throw error for non-existent alias", () => {
+    test("should throw error for non-existent constant", () => {
       expect(() => {
-        container.get("nonExistentAlias");
-      }).toThrow("Failed to resolve alias: nonExistentAlias");
+        container.getConstant("nonExistentConstant");
+      }).toThrow("Failed to resolve constant: nonExistentConstant");
     });
 
-    test("should check if alias exists using has method", () => {
-      class AliasTestService {
+    test("should check if constant exists using hasConstant", () => {
+      class ConstantTestService {
         public process(): string {
           return "processed";
         }
       }
 
-      container.addAlias("aliasTest", AliasTestService);
+      container.add(ConstantTestService);
+      container.addConstant("constantTest", container.get(ConstantTestService));
 
-      expect(container.has("aliasTest")).toBe(true);
-      expect(container.has("nonExistentAlias")).toBe(false);
+      expect(container.hasConstant("constantTest")).toBe(true);
+      expect(container.hasConstant("nonExistentConstant")).toBe(false);
     });
 
-    test("should check if service exists using has method with constructor", () => {
-      class DirectTestService {
-        public execute(): string {
-          return "executed";
-        }
-      }
-
-      container.addAlias("directTest", DirectTestService);
-      expect(container.has(DirectTestService)).toBe(true);
-    });
-
-    test("should remove service using alias with remove method", () => {
-      class RemovableByAliasService {
+    test("should remove constant using removeConstant", () => {
+      class RemovableConstantService {
         public getData(): string {
           return "data";
         }
       }
 
-      container.addAlias("removableAlias", RemovableByAliasService);
+      container.add(RemovableConstantService);
+      container.addConstant("removableConstant", container.get(RemovableConstantService));
 
-      expect(container.has("removableAlias")).toBe(true);
-      container.remove("removableAlias");
-      expect(container.has("removableAlias")).toBe(false);
+      expect(container.hasConstant("removableConstant")).toBe(true);
+      container.removeConstant("removableConstant");
+      expect(container.hasConstant("removableConstant")).toBe(false);
     });
 
-    test("should remove service using constructor with remove method", () => {
-      class DirectRemovableService {
-        public getInfo(): string {
-          return "info";
-        }
-      }
-
-      container.addAlias("directRemovable", DirectRemovableService);
-      expect(container.has(DirectRemovableService)).toBe(true);
-      container.remove(DirectRemovableService);
-      expect(container.has(DirectRemovableService)).toBe(false);
-    });
-
-    test("should handle alias resolution in has method for non-existent alias", () => {
-      expect(container.has("nonExistentAlias")).toBe(false);
-    });
-
-    test("should throw error when resolving non-existent alias in get method", () => {
-      expect(() => {
-        container.get("missingAlias");
-      }).toThrow("Failed to resolve alias: missingAlias");
-    });
-
-    test("should throw error when resolving non-existent alias in remove method", () => {
-      expect(() => {
-        container.remove("missingAliasForRemoval");
-      }).toThrow("Failed to resolve alias: missingAliasForRemoval");
-    });
-
-    test("should allow multiple aliases for the same service", () => {
-      class MultiAliasService {
+    test("should allow multiple constants for the same service", () => {
+      class MultiConstantService {
         public performAction(): string {
           return "action-performed";
         }
       }
 
-      container.addAlias("firstAlias", MultiAliasService);
-      container.addAlias("secondAlias", MultiAliasService);
+      container.add(MultiConstantService);
+      const instance = container.get(MultiConstantService);
+      container.addConstant("firstConstant", instance);
+      container.addConstant("secondConstant", instance);
 
-      const service1 = container.get<MultiAliasService>("firstAlias");
-      const service2 = container.get<MultiAliasService>("secondAlias");
-      const service3 = container.get<MultiAliasService>(MultiAliasService);
+      const service1 = container.getConstant<MultiConstantService>("firstConstant");
+      const service2 = container.getConstant<MultiConstantService>("secondConstant");
 
       expect(service1.performAction()).toBe("action-performed");
       expect(service2.performAction()).toBe("action-performed");
-      expect(service3.performAction()).toBe("action-performed");
 
-      // All should be the same instance (singleton scope)
+      // Both should be the same instance
       expect(service1).toBe(service2);
-      expect(service2).toBe(service3);
-    });
-
-    test("should work with different scopes through aliases", () => {
-      class TransientAliasService {
-        private static instanceCount = 0;
-        public readonly instanceId: number;
-
-        constructor() {
-          TransientAliasService.instanceCount++;
-          this.instanceId = TransientAliasService.instanceCount;
-        }
-
-        public getId(): number {
-          return this.instanceId;
-        }
-      }
-
-      container.addAlias("transientAlias", TransientAliasService, EContainerScope.Transient);
-
-      const instance1 = container.get<TransientAliasService>("transientAlias");
-      const instance2 = container.get<TransientAliasService>("transientAlias");
-
-      expect(instance1.getId()).not.toBe(instance2.getId());
-    });
-
-    test("should default to singleton scope", () => {
-      class SingletonAliasService {
-        private static instanceCount = 0;
-        public readonly instanceId: number;
-
-        constructor() {
-          SingletonAliasService.instanceCount++;
-          this.instanceId = SingletonAliasService.instanceCount;
-        }
-      }
-
-      container.addAlias("singletonAlias", SingletonAliasService);
-
-      const instance1 = container.get<SingletonAliasService>("singletonAlias");
-      const instance2 = container.get<SingletonAliasService>("singletonAlias");
-
-      expect(instance1.instanceId).toBe(instance2.instanceId);
-      expect(instance1).toBe(instance2);
     });
   });
 });

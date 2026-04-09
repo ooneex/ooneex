@@ -98,10 +98,10 @@ class EmailService {
 }
 
 container.add(EmailService);
-container.addAlias('mailer', EmailService);
+container.addConstant('mailer', container.get(EmailService));
 
-// Resolve by alias
-const mailer = container.get<EmailService>('mailer');
+// Resolve by constant
+const mailer = container.getConstant<EmailService>('mailer');
 mailer.send('user@example.com', 'Hello!');
 ```
 
@@ -273,20 +273,6 @@ Removes a registered constant.
 
 **Parameters:**
 - `identifier` - String or symbol identifier
-
-##### `addAlias<T>(alias: string, target: Constructor): void`
-
-Creates an alias for a registered service.
-
-**Parameters:**
-- `alias` - String alias name
-- `target` - The target class constructor
-
-**Example:**
-```typescript
-container.add(EmailService);
-container.addAlias('mailer', EmailService);
-```
 
 ### Enums
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.9) - 2026-04-09
+
+### Changed
+
+- Update container usage to remove alias references — Franck ([a5b08f22](https://github.com/ooneex/ooneex/commit/a5b08f22))
+
 ## [1.7.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.8) - 2026-04-09
 
 ### Changed

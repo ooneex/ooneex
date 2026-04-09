@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.1.11) - 2026-04-09
+
+### Changed
+
+- Rename AppDatabase to SharedDatabase in README examples — Franck ([1c3c5bce](https://github.com/ooneex/ooneex/commit/1c3c5bce))
+
 ## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.1.10) - 2026-04-09
 
 ### Changed

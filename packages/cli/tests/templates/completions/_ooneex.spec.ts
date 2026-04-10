@@ -222,10 +222,17 @@ describe("_ooneex.txt", () => {
       expect(match?.[1]).not.toContain("--module=");
     });
 
+    test("seed:run should have --drop option", async () => {
+      const content = await Bun.file(templatePath).text();
+      const match = content.match(/seed:run\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("--drop");
+    });
+
     test("completion:zsh and make:claude:skill should have no options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(
-        /app:build\|app:start\|app:stop\|help\|make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|migration:up\|seed:run\|completion:zsh\)\s*;;/,
+        /app:build\|app:start\|app:stop\|help\|make:release\|make:resource:book\|make:resource:calendar-event\|make:resource:category\|make:resource:color\|make:resource:discount\|make:resource:folder\|make:resource:image\|make:resource:note\|make:resource:status\|make:resource:tag\|make:resource:task\|make:resource:topic\|make:resource:user\|make:resource:video\|make:claude:skill\|migration:up\|completion:zsh\)\s*;;/,
       );
       expect(match).not.toBeNull();
     });

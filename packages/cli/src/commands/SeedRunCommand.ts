@@ -14,7 +14,7 @@ export class SeedRunCommand implements ICommand {
     return "Run seeds for all modules";
   }
 
-  public async run(): Promise<void> {
+  public async run(options: { drop?: boolean }): Promise<void> {
     const logger = new TerminalLogger();
     const modulesDir = join(process.cwd(), "modules");
 
@@ -59,7 +59,12 @@ export class SeedRunCommand implements ICommand {
         useSymbol: false,
       });
 
-      const proc = Bun.spawn(["bun", "run", seedRunPath], {
+      const args = ["bun", "run", seedRunPath];
+      if (options.drop) {
+        args.push("--drop");
+      }
+
+      const proc = Bun.spawn(args, {
         cwd: dir,
         stdout: "inherit",
         stderr: "inherit",

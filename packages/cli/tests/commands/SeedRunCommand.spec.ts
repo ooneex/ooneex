@@ -50,7 +50,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(testDir, ".gitkeep"), "");
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(0);
     });
@@ -60,7 +60,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(0);
     });
@@ -71,7 +71,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(moduleDir, "bin", "seed", "run.ts"), "// seed");
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(1);
       expect(spawnCalls[0]?.cmd).toEqual(["bun", "run", join(moduleDir, "bin", "seed", "run.ts")]);
@@ -88,7 +88,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(billingDir, "bin", "seed", "run.ts"), "// seed");
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(2);
     });
@@ -102,7 +102,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(billingDir, "package.json"), JSON.stringify({ name: "@acme/billing" }));
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(1);
       expect(spawnCalls[0]?.cwd).toBe(authDir);
@@ -114,9 +114,33 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(moduleDir, "bin", "seed", "run.ts"), "// seed");
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(1);
+    });
+
+    test("should pass --drop flag to subprocess when drop option is true", async () => {
+      const moduleDir = join(testDir, "modules", "auth");
+      await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
+      await Bun.write(join(moduleDir, "bin", "seed", "run.ts"), "// seed");
+      process.chdir(testDir);
+
+      await command.run({ drop: true });
+
+      expect(spawnCalls).toHaveLength(1);
+      expect(spawnCalls[0]?.cmd).toEqual(["bun", "run", join(moduleDir, "bin", "seed", "run.ts"), "--drop"]);
+    });
+
+    test("should not pass --drop flag when drop option is false", async () => {
+      const moduleDir = join(testDir, "modules", "auth");
+      await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
+      await Bun.write(join(moduleDir, "bin", "seed", "run.ts"), "// seed");
+      process.chdir(testDir);
+
+      await command.run({ drop: false });
+
+      expect(spawnCalls).toHaveLength(1);
+      expect(spawnCalls[0]?.cmd).toEqual(["bun", "run", join(moduleDir, "bin", "seed", "run.ts")]);
     });
 
     test("should handle seed failure", async () => {
@@ -134,7 +158,7 @@ describe("SeedRunCommand", () => {
       await Bun.write(join(moduleDir, "bin", "seed", "run.ts"), "// seed");
       process.chdir(testDir);
 
-      await command.run();
+      await command.run({});
 
       expect(spawnCalls).toHaveLength(1);
     });

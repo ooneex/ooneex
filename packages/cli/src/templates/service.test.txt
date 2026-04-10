@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Service } from "@/services/{{NAME}}Service";
+import { {{NAME}}Service } from "@module/{{MODULE}}/services/{{NAME}}Service";
 
 describe("{{NAME}}Service", () => {
   test("should have class name ending with 'Service'", () => {

@@ -45,7 +45,7 @@ export class MakeServiceCommand<T extends CommandOptionsType = CommandOptionsTyp
     await Bun.write(filePath, content);
 
     // Generate test file
-    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testContent = testTemplate.replace(/{{NAME}}/g, name).replace(/{{MODULE}}/g, module ?? "");
     const testsLocalDir = join(base, "tests", "services");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Service.spec.ts`);

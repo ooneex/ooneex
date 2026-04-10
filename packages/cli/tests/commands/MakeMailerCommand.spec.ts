@@ -146,5 +146,26 @@ describe("MakeMailerCommand", () => {
       expect(existsSync(join(testDir, "tests", "mailers", "VerifyMailer.spec.ts"))).toBe(true);
       expect(existsSync(join(testDir, "tests", "mailers", "VerifyMailerTemplate.spec.ts"))).toBe(true);
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "mailers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "mailers", ".gitkeep"), "");
+
+      await command.run({ name: "Welcome", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "mailers", "WelcomeMailer.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/mailers/WelcomeMailer");
+
+      const templateTestFilePath = join(testDir, "modules", "user-profile", "tests", "mailers", "WelcomeMailerTemplate.spec.ts");
+      expect(existsSync(templateTestFilePath)).toBe(true);
+
+      const templateContent = await Bun.file(templateTestFilePath).text();
+      expect(templateContent).not.toContain("{{MODULE}}");
+      expect(templateContent).toContain("@module/user-profile/mailers/WelcomeMailerTemplate");
+    });
   });
 });

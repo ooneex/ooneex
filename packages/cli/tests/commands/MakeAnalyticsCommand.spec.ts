@@ -117,5 +117,19 @@ describe("MakeAnalyticsCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Amplitude");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "analytics", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "analytics", ".gitkeep"), "");
+
+      await command.run({ name: "Google", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "analytics", "GoogleAnalytics.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/analytics/GoogleAnalytics");
+    });
   });
 });

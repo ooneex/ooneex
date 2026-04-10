@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}VectorDatabase } from "@/databases/{{NAME}}VectorDatabase";
+import { {{NAME}}VectorDatabase } from "@module/{{MODULE}}/databases/{{NAME}}VectorDatabase";
 
 describe("{{NAME}}VectorDatabase", () => {
   test("should have class name ending with 'VectorDatabase'", () => {

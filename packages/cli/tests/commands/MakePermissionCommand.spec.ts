@@ -117,5 +117,19 @@ describe("MakePermissionCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Editor");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "permissions", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "permissions", ".gitkeep"), "");
+
+      await command.run({ name: "Admin", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "permissions", "AdminPermission.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/permissions/AdminPermission");
+    });
   });
 });

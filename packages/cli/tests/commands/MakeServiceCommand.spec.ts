@@ -117,5 +117,19 @@ describe("MakeServiceCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Auth");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "services", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "services", ".gitkeep"), "");
+
+      await command.run({ name: "User", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "services", "UserService.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/services/UserService");
+    });
   });
 });

@@ -127,5 +127,19 @@ describe("MakeStorageCommand", () => {
 
       expect(content).toContain("DIGITAL_OCEAN");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "storage", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "storage", ".gitkeep"), "");
+
+      await command.run({ name: "S3", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "storage", "S3Storage.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/storage/S3StorageAdapter");
+    });
   });
 });

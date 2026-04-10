@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Cache } from "@/cache/{{NAME}}Cache";
+import { {{NAME}}Cache } from "@module/{{MODULE}}/cache/{{NAME}}Cache";
 
 describe("{{NAME}}Cache", () => {
   test("should have class name ending with 'Cache'", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Cron } from "@/cron/{{NAME}}Cron";
+import { {{NAME}}Cron } from "@module/{{MODULE}}/cron/{{NAME}}Cron";
 
 describe("{{NAME}}Cron", () => {
   test("should have class name ending with 'Cron'", () => {

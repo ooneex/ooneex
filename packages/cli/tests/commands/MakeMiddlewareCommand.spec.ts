@@ -118,6 +118,20 @@ describe("MakeMiddlewareCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Security");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "middlewares", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "middlewares", ".gitkeep"), "");
+
+      await command.run({ name: "Auth", module: "user-profile", isSocket: false });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "middlewares", "AuthMiddleware.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/middlewares/AuthMiddleware");
+    });
   });
 
   describe("run() with Socket middleware", () => {

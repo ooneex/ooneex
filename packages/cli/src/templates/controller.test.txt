@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Controller } from "@/controllers/{{NAME}}Controller";
+import { {{NAME}}Controller } from "@module/{{MODULE}}/controllers/{{NAME}}Controller";
 
 describe("{{NAME}}Controller", () => {
   test("should have class name ending with 'Controller'", () => {

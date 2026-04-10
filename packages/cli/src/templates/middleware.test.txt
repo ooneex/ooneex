@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Middleware } from "@/middlewares/{{NAME}}Middleware";
+import { {{NAME}}Middleware } from "@module/{{MODULE}}/middlewares/{{NAME}}Middleware";
 
 describe("{{NAME}}Middleware", () => {
   test("should have class name ending with 'Middleware'", () => {

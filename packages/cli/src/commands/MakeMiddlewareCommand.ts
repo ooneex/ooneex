@@ -73,7 +73,7 @@ export class MakeMiddlewareCommand<T extends CommandOptionsType = CommandOptions
     await Bun.write(filePath, content);
 
     // Generate test file
-    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testContent = testTemplate.replace(/{{NAME}}/g, name).replace(/{{MODULE}}/g, module ?? "");
     const testsLocalDir = join(base, "tests", "middlewares");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}Middleware.spec.ts`);

@@ -146,6 +146,20 @@ describe("MakeControllerCommand", () => {
       expect(content).toContain("api.test.index");
       expect(content).toContain("/test");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "controllers", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "controllers", ".gitkeep"), "");
+
+      await command.run({ name: "User", module: "user-profile", isSocket: false });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "controllers", "UserController.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/controllers/UserController");
+    });
   });
 
   describe("run() with Socket controller", () => {

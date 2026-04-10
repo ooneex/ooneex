@@ -61,6 +61,12 @@ describe("vector-database.test.txt", () => {
   test("should contain required placeholders", async () => {
     const content = await file.text();
     expect(content).toContain("{{NAME}}");
+    expect(content).toContain("{{MODULE}}");
+  });
+
+  test("should use @module import path", async () => {
+    const content = await file.text();
+    expect(content).toContain("@module/{{MODULE}}/databases/{{NAME}}VectorDatabase");
   });
 
   test("should contain test imports", async () => {

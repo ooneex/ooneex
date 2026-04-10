@@ -47,7 +47,7 @@ export class MakeVectorDatabaseCommand<T extends CommandOptionsType = CommandOpt
     await Bun.write(filePath, content);
 
     // Generate test file
-    const testContent = testTemplate.replace(/{{NAME}}/g, name);
+    const testContent = testTemplate.replace(/{{NAME}}/g, name).replace(/{{MODULE}}/g, module ?? "");
     const testsLocalDir = join(base, "tests", "databases");
     const testsDir = join(process.cwd(), testsLocalDir);
     const testFilePath = join(testsDir, `${name}VectorDatabase.spec.ts`);

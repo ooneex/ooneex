@@ -118,5 +118,19 @@ describe("MakeAiCommand", () => {
       expect(content).not.toContain("{{NAME}}");
       expect(content).toContain("Anthropic");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "ai", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "ai", ".gitkeep"), "");
+
+      await command.run({ name: "Google", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "ai", "GoogleAi.spec.ts");
+      expect(existsSync(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/ai/GoogleAi");
+    });
   });
 });

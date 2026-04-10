@@ -146,6 +146,20 @@ describe("MakePubSubCommand", () => {
 
       expect(content).toContain("order-payment-processed");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "events", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "events", ".gitkeep"), "");
+
+      await command.run({ name: "UserCreated", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "events", "UserCreatedEvent.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/pubsub/UserCreatedPubSub");
+    });
   });
 
   describe("Module integration (basename fallback)", () => {

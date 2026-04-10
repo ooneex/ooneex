@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}PubSub } from "@/pubsub/{{NAME}}PubSub";
+import { {{NAME}}PubSub } from "@module/{{MODULE}}/pubsub/{{NAME}}PubSub";
 
 describe("{{NAME}}PubSub", () => {
   test("should have class name ending with 'PubSub'", () => {

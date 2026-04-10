@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Entity } from "@/entities/{{NAME}}Entity";
+import { {{NAME}}Entity } from "@module/{{MODULE}}/entities/{{NAME}}Entity";
 
 describe("{{NAME}}Entity", () => {
   test("should have class name ending with 'Entity'", () => {

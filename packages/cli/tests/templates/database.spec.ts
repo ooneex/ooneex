@@ -47,6 +47,12 @@ describe("database.test.txt", () => {
   test("should contain required placeholders", async () => {
     const content = await file.text();
     expect(content).toContain("{{NAME}}");
+    expect(content).toContain("{{MODULE}}");
+  });
+
+  test("should use @module import path", async () => {
+    const content = await file.text();
+    expect(content).toContain("@module/{{MODULE}}/databases/{{NAME}}Database");
   });
 
   test("should test getSource method", async () => {

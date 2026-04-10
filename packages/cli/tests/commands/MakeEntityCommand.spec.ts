@@ -133,6 +133,20 @@ describe("MakeEntityCommand", () => {
       expect(content).not.toContain("{{TABLE_NAME}}");
       expect(content).toContain("Book");
     });
+
+    test("should replace MODULE placeholder in test file", async () => {
+      await Bun.write(join(testDir, "modules", "user-profile", "src", "entities", ".gitkeep"), "");
+      await Bun.write(join(testDir, "modules", "user-profile", "tests", "entities", ".gitkeep"), "");
+
+      await command.run({ name: "User", module: "user-profile" });
+
+      const testFilePath = join(testDir, "modules", "user-profile", "tests", "entities", "UserEntity.spec.ts");
+      expect(await exists(testFilePath)).toBe(true);
+
+      const content = await Bun.file(testFilePath).text();
+      expect(content).not.toContain("{{MODULE}}");
+      expect(content).toContain("@module/user-profile/entities/UserEntity");
+    });
   });
 
   describe("Module integration (basename fallback)", () => {

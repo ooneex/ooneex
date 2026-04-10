@@ -82,6 +82,12 @@ describe("entity.test.txt", () => {
   test("should contain required placeholders", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("{{NAME}}");
+    expect(content).toContain("{{MODULE}}");
+  });
+
+  test("should use @module import path", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@module/{{MODULE}}/entities/{{NAME}}Entity");
   });
 
   test("should import test utilities from bun:test", async () => {
@@ -91,7 +97,7 @@ describe("entity.test.txt", () => {
 
   test("should import entity class", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain('import { {{NAME}}Entity } from "@/entities/{{NAME}}Entity"');
+    expect(content).toContain('import { {{NAME}}Entity } from "@module/{{MODULE}}/entities/{{NAME}}Entity"');
   });
 
   test("should test class name ends with Entity", async () => {

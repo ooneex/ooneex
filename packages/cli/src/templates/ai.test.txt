@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Ai } from "@/ai/{{NAME}}Ai";
+import { {{NAME}}Ai } from "@module/{{MODULE}}/ai/{{NAME}}Ai";
 
 describe("{{NAME}}Ai", () => {
   test("should have class name ending with 'Ai'", () => {

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.3.0) - 2026-04-10
+
+### Added
+
+- Add --drop option to command runner — Franck ([a525a285](https://github.com/ooneex/ooneex/commit/a525a285))
+
 ## [0.2.6](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.2.6) - 2026-04-09
 
 ### Changed

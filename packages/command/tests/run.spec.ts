@@ -191,6 +191,33 @@ describe("run", () => {
       expect(args[0].tableName).toBe("users");
     });
 
+    test("should pass drop option", async () => {
+      const runFn = mock(async () => {});
+
+      class DropCommand implements ICommand {
+        public run = runFn;
+        public getName(): string {
+          return "drop-cmd";
+        }
+        public getDescription(): string {
+          return "drop command";
+        }
+      }
+
+      container.add(DropCommand);
+      COMMANDS_CONTAINER.push(DropCommand);
+
+      mockParseArgsResult = {
+        values: { drop: true },
+        positionals: ["bun", "script.ts", "drop-cmd"],
+      };
+
+      await run();
+
+      const args = runFn.mock.calls[0] as unknown as [Record<string, unknown>];
+      expect(args[0].drop).toBe(true);
+    });
+
     test("should pass channel and destination options", async () => {
       const runFn = mock(async () => {});
 
@@ -392,6 +419,7 @@ describe("run", () => {
       expect(args[0].tableName).toBeUndefined();
       expect(args[0].module).toBeUndefined();
       expect(args[0].destination).toBeUndefined();
+      expect(args[0].drop).toBeUndefined();
 
       const route = args[0].route as Record<string, unknown>;
       expect(route.name).toBeUndefined();

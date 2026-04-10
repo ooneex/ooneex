@@ -39,6 +39,9 @@ export const run = async (): Promise<void> => {
       destination: {
         type: "string",
       },
+      drop: {
+        type: "boolean",
+      },
     },
     strict: false,
     allowPositionals: true,
@@ -63,6 +66,7 @@ export const run = async (): Promise<void> => {
     tableName: values["table-name"],
     module: values.module,
     destination: values.destination,
+    drop: values.drop,
     route: {
       name: values["route-name"],
       path: values["route-path"] as `/${string}` | undefined,

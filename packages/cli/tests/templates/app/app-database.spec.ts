@@ -78,11 +78,32 @@ describe("app-database.txt", () => {
 
   test("should configure connection pool", async () => {
     const content = await file.text();
+    expect(content).toContain("poolSize: 10");
     expect(content).toContain("max: 10");
+    expect(content).toContain("min: 2");
+    expect(content).toContain("idleTimeoutMillis: 30_000");
+    expect(content).toContain("connectionTimeoutMillis: 5_000");
+    expect(content).toContain("allowExitOnIdle: false");
+    expect(content).toContain("maxLifetimeSeconds: 1_800");
   });
 
   test("should disable synchronize", async () => {
     const content = await file.text();
     expect(content).toContain("synchronize: false");
+  });
+
+  test("should cache DataSource instance", async () => {
+    const content = await file.text();
+    expect(content).toContain("if (this.source)");
+  });
+
+  test("should configure logging", async () => {
+    const content = await file.text();
+    expect(content).toContain('logging: ["error", "warn", "migration"]');
+  });
+
+  test("should configure max query execution time", async () => {
+    const content = await file.text();
+    expect(content).toContain("maxQueryExecutionTime: 1_000");
   });
 });

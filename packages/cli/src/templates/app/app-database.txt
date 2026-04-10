@@ -1,8 +1,8 @@
-import { inject } from "@ooneex/container";
-import { AppEnv } from "@ooneex/app-env";
-import { DataSource } from "typeorm";
-import { TypeormDatabase, DatabaseException, decorator } from "@ooneex/database";
 import { SharedModule } from "@module/shared/SharedModule";
+import { AppEnv } from "@ooneex/app-env";
+import { inject } from "@ooneex/container";
+import { DatabaseException, decorator, TypeormDatabase } from "@ooneex/database";
+import { DataSource } from "typeorm";
 
 @decorator.database()
 export class SharedDatabase extends TypeormDatabase {
@@ -11,6 +11,10 @@ export class SharedDatabase extends TypeormDatabase {
   }
 
   public getSource(): DataSource {
+    if (this.source) {
+      return this.source;
+    }
+
     const url = this.env.DATABASE_URL;
 
     if (!url) {
@@ -21,13 +25,21 @@ export class SharedDatabase extends TypeormDatabase {
     }
 
     this.source = new DataSource({
+      type: "postgres",
+      url,
       synchronize: false,
       entities: SharedModule.entities,
+      poolSize: 10,
       extra: {
         max: 10,
+        min: 2,
+        idleTimeoutMillis: 30_000,
+        connectionTimeoutMillis: 5_000,
+        allowExitOnIdle: false,
+        maxLifetimeSeconds: 1_800,
       },
-      url,
-      type: "postgres",
+      logging: ["error", "warn", "migration"],
+      maxQueryExecutionTime: 1_000,
     });
 
     return this.source;

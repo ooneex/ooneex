@@ -43,4 +43,5 @@ export { MakeServiceCommand } from "./MakeServiceCommand";
 export { MakeStorageCommand } from "./MakeStorageCommand";
 export { MakeVectorDatabaseCommand } from "./MakeVectorDatabaseCommand";
 export { MigrationUpCommand } from "./MigrationUpCommand";
+export { RemoveModuleCommand } from "./RemoveModuleCommand";
 export { SeedRunCommand } from "./SeedRunCommand";

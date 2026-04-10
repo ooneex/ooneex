@@ -77,6 +77,7 @@ describe("_ooneex.txt", () => {
       "make\\:migration",
       "migration\\:up",
       "make\\:module",
+      "remove\\:module",
       "make\\:permission",
       "make\\:pubsub",
       "make\\:release",
@@ -233,6 +234,14 @@ describe("_ooneex.txt", () => {
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("--name=");
       expect(match?.[1]).not.toContain("--module=");
+    });
+
+    test("remove:module should have --name with module suggestions", async () => {
+      const content = await Bun.file(templatePath).text();
+      const match = content.match(/remove:module\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("_ooneex_modules");
     });
 
     test("make:app should only have --name", async () => {

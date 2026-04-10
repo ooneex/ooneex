@@ -54,6 +54,7 @@ describe("@ooneex/cli - index", () => {
     "MakeMigrationCommand",
     "MigrationUpCommand",
     "MakeModuleCommand",
+    "RemoveModuleCommand",
     "MakePermissionCommand",
     "MakePubSubCommand",
     "MakeReleaseCommand",

@@ -42,6 +42,7 @@ _oo() {
     'make\:migration:Generate a new migration file'
     'migration\:up:Run migrations for all modules'
     'make\:module:Generate a new module'
+    'remove\:module:Remove an existing module'
     'make\:permission:Generate a new permission class'
     'make\:pubsub:Generate a new PubSub event class'
     'make\:release:Release packages with version bump, changelog, and git tag'
@@ -121,6 +122,10 @@ _oo() {
         make:module)
           _arguments -s \
             '--name=[Name of the resource]:name'
+          ;;
+        remove:module)
+          _arguments -s \
+            '--name=[Module name]:name:_oo_modules'
           ;;
         make:docker)
           _arguments -s \

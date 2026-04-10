@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.21.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.21.0) - 2026-04-10
+
+### Added
+
+- Add command:run command and zsh completions — Franck ([41096157](https://github.com/ooneex/ooneex/commit/41096157))
+- Add --drop flag to migration:up command and zsh completions — Franck ([c4aa19a1](https://github.com/ooneex/ooneex/commit/c4aa19a1))
+- Add --drop flag to seed:run command and zsh completions — Franck ([22c219c8](https://github.com/ooneex/ooneex/commit/22c219c8))
+
+### Changed
+
+- Add CommandRunCommand to index spec exports list — Franck ([b6d68dc7](https://github.com/ooneex/ooneex/commit/b6d68dc7))
+- Remove skipMigrations and skipSeeds options from make commands — Franck ([db02e0d2](https://github.com/ooneex/ooneex/commit/db02e0d2))
+- Use module path alias in command run template — Franck ([c5ac025d](https://github.com/ooneex/ooneex/commit/c5ac025d))
+- Use inject decorator and typed data in seed templates — Franck ([91b98100](https://github.com/ooneex/ooneex/commit/91b98100))
+
+### Fixed
+
+- Add type assertion for Bun.argv assignment in tests — Franck ([ff090b8d](https://github.com/ooneex/ooneex/commit/ff090b8d))
+- Deduplicate consecutive commas when adding commitlint scope — Franck ([d184301b](https://github.com/ooneex/ooneex/commit/d184301b))
+
 ## [1.20.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.20.3) - 2026-04-09
 
 ### Changed

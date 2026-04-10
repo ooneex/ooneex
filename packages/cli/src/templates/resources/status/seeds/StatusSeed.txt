@@ -1,15 +1,24 @@
-import { resolve } from "@ooneex/container";
+import { inject } from "@ooneex/container";
 import { decorator, type ISeed, type SeedClassType } from "@ooneex/seeds";
+import type { LocaleType } from "@ooneex/translation";
 import { StatusEntity } from "../entities/StatusEntity";
 import { StatusRepository } from "../repositories/StatusRepository";
-import data from "./data.yml";
+import data from "./status-seed.yml";
+
+type StatusSeedDataType = {
+  id: string;
+  name: string;
+  color?: string;
+  description?: string;
+  lang?: LocaleType;
+};
 
 @decorator.seed()
 export class StatusSeed implements ISeed {
-  public async run<T>(): Promise<T> {
-    const repository = resolve(StatusRepository);
+  constructor(@inject(StatusRepository) private readonly repository: StatusRepository) {}
 
-    const entities = (data as Record<string, string>[]).map((item) => {
+  public async run<T>(): Promise<T> {
+    const entities = (data as StatusSeedDataType[]).map((item) => {
       const entity = new StatusEntity();
       entity.id = item.id;
       entity.name = item.name;
@@ -20,8 +29,8 @@ export class StatusSeed implements ISeed {
       return entity;
     });
 
-    const result = await repository.createMany(entities);
-    await repository.close();
+    const result = await this.repository.createMany(entities);
+    await this.repository.close();
 
     return result as T;
   }

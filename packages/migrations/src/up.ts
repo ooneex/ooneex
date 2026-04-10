@@ -1,3 +1,4 @@
+import { parseArgs } from "node:util";
 import { container } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
@@ -19,6 +20,17 @@ const run = async (migration: IMigration, tx: any, sql: SQL): Promise<void> => {
 };
 
 export const up = async (config?: { databaseUrl?: string; tableName?: string }): Promise<void> => {
+  const { values } = parseArgs({
+    args: Bun.argv,
+    options: {
+      drop: {
+        type: "boolean",
+      },
+    },
+    strict: false,
+    allowPositionals: true,
+  });
+
   const tableName = config?.tableName || "migrations";
 
   const sql = new SQL({
@@ -32,6 +44,13 @@ export const up = async (config?: { databaseUrl?: string; tableName?: string }):
   });
 
   const logger = new TerminalLogger();
+
+  if (values.drop) {
+    await sql`DROP SCHEMA public CASCADE`;
+    await sql`CREATE SCHEMA public`;
+    logger.info("Database dropped\n");
+  }
+
   const migrations = getMigrations();
 
   if (migrations.length === 0) {

@@ -89,7 +89,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
       if (!existing.includes(newScope)) {
         const newValue = existing ? `${existing}, \n        ${newScope},` : `\n        ${newScope},`;
         content = content.replace(regex, `$1${newValue}\n      $3`);
-        await Bun.write(commitlintPath, content);
+        await Bun.write(commitlintPath, content.replace(/,+/g, ","));
       }
     }
   }

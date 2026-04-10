@@ -8,12 +8,21 @@ _oo_modules() {
   fi
 }
 
+_oo_custom_commands() {
+  local -a cmds
+  if [[ -d modules ]]; then
+    cmds=(${(@f)"$(command grep -rh 'return "' modules/*/src/commands/*Command.ts 2>/dev/null | sed 's/.*return "\(.*\)".*/\1/' | sort -u)"})
+    compadd -a cmds
+  fi
+}
+
 _oo() {
   local -a commands
   commands=(
     'app\:build:Build the application'
     'app\:start:Start the application'
     'app\:stop:Stop the application'
+    'command\:run:Run a custom command from a module'
     'completion\:zsh:Install Zsh completion for oo command'
     'help:Show available commands'
     'make\:ai:Generate a new AI class'
@@ -69,6 +78,10 @@ _oo() {
       ;;
     opts)
       case "$words[1]" in
+        command:run)
+          _arguments -s \
+            '1:command name:_oo_custom_commands'
+          ;;
         make:controller)
           _arguments -s \
             '--name=[Name of the resource]:name' \

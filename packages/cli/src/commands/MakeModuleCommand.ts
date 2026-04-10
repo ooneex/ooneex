@@ -13,8 +13,6 @@ type CommandOptionsType = {
   name?: string;
   cwd?: string;
   silent?: boolean;
-  skipMigrations?: boolean;
-  skipSeeds?: boolean;
 };
 
 @decorator.command()
@@ -106,7 +104,7 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
   }
 
   public async run(options: T): Promise<void> {
-    const { cwd = process.cwd(), silent = false, skipMigrations = false, skipSeeds = false } = options;
+    const { cwd = process.cwd(), silent = false } = options;
     let { name } = options;
 
     if (!name) {
@@ -125,12 +123,6 @@ export class MakeModuleCommand<T extends CommandOptionsType = CommandOptionsType
     const testContent = testTemplate.replace(/{{NAME}}/g, pascalName).replace(/{{name}}/g, kebabName);
 
     await Bun.write(join(srcDir, `${pascalName}Module.ts`), moduleContent);
-    if (!skipMigrations) {
-      await Bun.write(join(srcDir, "migrations", "migrations.ts"), "");
-    }
-    if (!skipSeeds) {
-      await Bun.write(join(srcDir, "seeds", "seeds.ts"), "");
-    }
     await Bun.write(join(moduleDir, "package.json"), packageContent);
     await Bun.write(join(moduleDir, "tsconfig.json"), tsconfigTemplate);
     await Bun.write(join(testsDir, `${pascalName}Module.spec.ts`), testContent);

@@ -39,11 +39,25 @@ describe("_oo.txt", () => {
     });
   });
 
+  describe("custom commands helper", () => {
+    test("should define _oo_custom_commands function", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("_oo_custom_commands()");
+    });
+
+    test("should grep command names from module command files", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("modules/*/src/commands/*Command.ts");
+      expect(content).toContain("compadd -a cmds");
+    });
+  });
+
   describe("commands list", () => {
     const expectedCommands = [
       "app\\:build",
       "app\\:start",
       "app\\:stop",
+      "command\\:run",
       "completion\\:zsh",
       "help",
       "make\\:ai",
@@ -95,6 +109,13 @@ describe("_oo.txt", () => {
   });
 
   describe("command options", () => {
+    test("command:run should suggest custom command names", async () => {
+      const content = await Bun.file(templatePath).text();
+      const match = content.match(/command:run\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("_oo_custom_commands");
+    });
+
     test("make:controller should have name, module, route-name, route-path, route-method, and is-socket options", async () => {
       const content = await Bun.file(templatePath).text();
       const match = content.match(/make:controller\)([\s\S]*?);;/);

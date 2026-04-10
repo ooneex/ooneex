@@ -87,34 +87,6 @@ describe("MakeModuleCommand", () => {
       expect(content).toContain('import { UserModule } from "@module/user/UserModule"');
     });
 
-    test("should generate migrations directory by default", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const migrationsFile = join(testDir, "modules", "user", "src", "migrations", "migrations.ts");
-      expect(await exists(migrationsFile)).toBe(true);
-    });
-
-    test("should skip migrations when skipMigrations is true", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true, skipMigrations: true });
-
-      const migrationsFile = join(testDir, "modules", "user", "src", "migrations", "migrations.ts");
-      expect(await exists(migrationsFile)).toBe(false);
-    });
-
-    test("should generate seeds directory by default", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true });
-
-      const seedsFile = join(testDir, "modules", "user", "src", "seeds", "seeds.ts");
-      expect(await exists(seedsFile)).toBe(true);
-    });
-
-    test("should skip seeds when skipSeeds is true", async () => {
-      await command.run({ name: "User", cwd: testDir, silent: true, skipSeeds: true });
-
-      const seedsFile = join(testDir, "modules", "user", "src", "seeds", "seeds.ts");
-      expect(await exists(seedsFile)).toBe(false);
-    });
-
     test("should normalize name to kebab-case for directory", async () => {
       await command.run({ name: "UserProfile", cwd: testDir, silent: true });
 

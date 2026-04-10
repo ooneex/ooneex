@@ -14,7 +14,7 @@ export class MigrationUpCommand implements ICommand {
     return "Run migrations for all modules";
   }
 
-  public async run(): Promise<void> {
+  public async run(options: { drop?: boolean }): Promise<void> {
     const logger = new TerminalLogger();
     const modulesDir = join(process.cwd(), "modules");
 
@@ -59,7 +59,12 @@ export class MigrationUpCommand implements ICommand {
         useSymbol: false,
       });
 
-      const proc = Bun.spawn(["bun", "run", migrationUpPath], {
+      const args = ["bun", "run", migrationUpPath];
+      if (options.drop) {
+        args.push("--drop");
+      }
+
+      const proc = Bun.spawn(args, {
         cwd: dir,
         stdout: "inherit",
         stderr: "inherit",

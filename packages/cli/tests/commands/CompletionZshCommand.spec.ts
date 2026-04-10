@@ -115,13 +115,13 @@ describe("CompletionZshCommand", () => {
       expect(content).toContain("command ls -1 modules");
     });
 
-    test("should include --drop option for seed:run command", async () => {
+    test("should include --drop option for migration:up and seed:run commands", async () => {
       await command.run();
 
       const ooContent = await Bun.file(join(completionDir, "_oo")).text();
-      const seedMatch = ooContent.match(/seed:run\)([\s\S]*?);;/);
-      expect(seedMatch).not.toBeNull();
-      expect(seedMatch?.[1]).toContain("--drop");
+      const match = ooContent.match(/migration:up\|seed:run\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("--drop");
     });
 
     test("should not include --module option for excluded commands", async () => {
@@ -131,7 +131,7 @@ describe("CompletionZshCommand", () => {
 
       // completion:zsh and make:claude:skill should have no options at all
       const noOptsMatch = ooContent.match(
-        /app:build\|app:start\|app:stop\|help\|make:release.*migration:up\|completion:zsh\)\s*;;/,
+        /app:build\|app:start\|app:stop\|help\|make:release.*completion:zsh\)\s*;;/,
       );
       expect(noOptsMatch).not.toBeNull();
 

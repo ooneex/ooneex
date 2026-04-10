@@ -3,6 +3,7 @@ import type { IException } from "@ooneex/exception";
 import { Exception } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
 import type { HttpMethodType } from "@ooneex/types";
+import { toKebabCase } from "@ooneex/utils";
 import { getCommand } from "./getCommand";
 
 export const run = async (): Promise<void> => {
@@ -64,7 +65,7 @@ export const run = async (): Promise<void> => {
     channel: values.channel,
     isSocket: values["is-socket"],
     tableName: values["table-name"],
-    module: values.module,
+    module: typeof values.module === "string" ? toKebabCase(values.module) : values.module,
     destination: values.destination,
     drop: values.drop,
     route: {

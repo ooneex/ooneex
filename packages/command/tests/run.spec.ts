@@ -103,6 +103,34 @@ describe("run", () => {
       expect(args[0].module).toBe("auth");
     });
 
+    test("should convert module to kebab-case", async () => {
+      const runFn = mock(async () => {});
+
+      class ModuleKebabCommand implements ICommand {
+        public run = runFn;
+        public getName(): string {
+          return "module-kebab-cmd";
+        }
+        public getDescription(): string {
+          return "module kebab command";
+        }
+      }
+
+      container.add(ModuleKebabCommand);
+      COMMANDS_CONTAINER.push(ModuleKebabCommand);
+
+      mockParseArgsResult = {
+        values: { module: "UserProfile" },
+        positionals: ["bun", "script.ts", "module-kebab-cmd"],
+      };
+
+      await run();
+
+      expect(runFn).toHaveBeenCalledTimes(1);
+      const args = runFn.mock.calls[0] as unknown as [Record<string, unknown>];
+      expect(args[0].module).toBe("user-profile");
+    });
+
     test("should pass route options correctly", async () => {
       const runFn = mock(async () => {});
 

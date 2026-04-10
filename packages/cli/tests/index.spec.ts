@@ -34,6 +34,7 @@ describe("@ooneex/cli - index", () => {
     "AppBuildCommand",
     "AppStartCommand",
     "AppStopCommand",
+    "CommandRunCommand",
     "CompletionZshCommand",
     "HelpCommand",
     "MakeAiCommand",

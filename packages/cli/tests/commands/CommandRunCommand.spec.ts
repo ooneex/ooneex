@@ -37,7 +37,7 @@ describe("CommandRunCommand", () => {
 
   afterEach(() => {
     Bun.spawn = originalSpawn;
-    Bun.argv = originalArgv;
+    (Bun as { argv: string[] }).argv = originalArgv;
     process.chdir(originalCwd);
     if (existsSync(testDir)) {
       rmSync(testDir, { recursive: true, force: true });
@@ -59,7 +59,7 @@ describe("CommandRunCommand", () => {
 
   describe("run()", () => {
     test("should error when no command name is provided", async () => {
-      Bun.argv = ["bun", "run", "command:run"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run"];
       await Bun.write(join(testDir, ".gitkeep"), "");
       process.chdir(testDir);
 
@@ -69,7 +69,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should warn when no modules directory exists", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
       await Bun.write(join(testDir, ".gitkeep"), "");
       process.chdir(testDir);
 
@@ -79,7 +79,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should warn when no modules have bin/command/run.ts", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
       const moduleDir = join(testDir, "modules", "auth");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
       process.chdir(testDir);
@@ -90,7 +90,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should spawn subprocess with command name", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
       const moduleDir = join(testDir, "modules", "auth");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
       await Bun.write(join(moduleDir, "bin", "command", "run.ts"), "// commands");
@@ -109,7 +109,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should pass extra args to subprocess", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create", "--name", "John"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create", "--name", "John"];
       const moduleDir = join(testDir, "modules", "auth");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
       await Bun.write(join(moduleDir, "bin", "command", "run.ts"), "// commands");
@@ -129,7 +129,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should stop at first successful module", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
 
       const authDir = join(testDir, "modules", "auth");
       await Bun.write(join(authDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
@@ -147,7 +147,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should try next module when first fails", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
       let callCount = 0;
 
       const authDir = join(testDir, "modules", "auth");
@@ -180,7 +180,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should skip modules without bin/command/run.ts", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
 
       const authDir = join(testDir, "modules", "auth");
       await Bun.write(join(authDir, "package.json"), JSON.stringify({ name: "@acme/auth" }));
@@ -197,7 +197,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should use directory name when package.json has no name", async () => {
-      Bun.argv = ["bun", "run", "command:run", "user:create"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "user:create"];
       const moduleDir = join(testDir, "modules", "auth");
       await Bun.write(join(moduleDir, "package.json"), JSON.stringify({}));
       await Bun.write(join(moduleDir, "bin", "command", "run.ts"), "// commands");
@@ -209,7 +209,7 @@ describe("CommandRunCommand", () => {
     });
 
     test("should handle all modules failing", async () => {
-      Bun.argv = ["bun", "run", "command:run", "unknown:command"];
+      (Bun as { argv: string[] }).argv = ["bun", "run", "command:run", "unknown:command"];
       mockSpawn(1);
 
       const authDir = join(testDir, "modules", "auth");

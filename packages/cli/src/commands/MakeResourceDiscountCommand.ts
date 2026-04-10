@@ -38,7 +38,7 @@ export class MakeResourceDiscountCommand implements ICommand {
 
     // Create module first
     const makeModuleCommand = new MakeModuleCommand();
-    await makeModuleCommand.run({ name: module, silent: true, skipMigrations: false, skipSeeds: true });
+    await makeModuleCommand.run({ name: module, silent: true });
 
     const makeEntityCommand = new MakeEntityCommand();
     await makeEntityCommand.run({ name: "Discount", module, tableName: "discounts" });

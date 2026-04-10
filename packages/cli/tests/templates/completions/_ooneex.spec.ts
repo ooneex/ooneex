@@ -50,6 +50,12 @@ describe("_ooneex.txt", () => {
       expect(content).toContain("modules/*/src/commands/*Command.ts");
       expect(content).toContain("compadd -a cmds");
     });
+
+    test("should only extract names from getName method", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("grep -rh -A1 'getName'");
+      expect(content).not.toContain("grep -rh 'return \"'");
+    });
   });
 
   describe("commands list", () => {

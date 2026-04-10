@@ -11,7 +11,7 @@ _ooneex_modules() {
 _ooneex_custom_commands() {
   local -a cmds
   if [[ -d modules ]]; then
-    cmds=(${(@f)"$(command grep -rh 'return "' modules/*/src/commands/*Command.ts 2>/dev/null | sed 's/.*return "\(.*\)".*/\1/' | sort -u)"})
+    cmds=(${(@f)"$(command grep -rh -A1 'getName' modules/*/src/commands/*Command.ts 2>/dev/null | sed -n 's/.*return "\(.*\)".*/\1/p' | sort -u)"})
     compadd -a cmds
   fi
 }

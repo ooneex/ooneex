@@ -33,7 +33,7 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
     }
 
     const base = module ? join("modules", module) : ".";
-    const { commandPath, testPath } = await commandCreate({
+    const { commandPath: filePath, testPath } = await commandCreate({
       name,
       commandDir: join(base, "src", "commands"),
       testsDir: join(base, "tests", "commands"),
@@ -43,14 +43,12 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
     const binCommandRunPath = join(process.cwd(), base, "bin", "command", "run.ts");
     const binCommandRunFile = Bun.file(binCommandRunPath);
     if (!(await binCommandRunFile.exists())) {
-      await Bun.write(binCommandRunPath, commandRunTemplate);
+      await Bun.write(binCommandRunPath, commandRunTemplate.replace(/{{name}}/g, module ?? ""));
     }
-
-    const packageJsonPath = join(process.cwd(), base, "package.json");
 
     const logger = new TerminalLogger();
 
-    logger.success(`${commandPath} created successfully`, undefined, {
+    logger.success(`${filePath} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
       useSymbol: true,
@@ -61,19 +59,5 @@ export class MakeCommandCommand<T extends CommandOptionsType = CommandOptionsTyp
       showArrow: false,
       useSymbol: true,
     });
-
-    // Install @ooneex/command dev dependency if not already installed
-    const pkgJson = await Bun.file(packageJsonPath).json();
-    const deps = pkgJson.dependencies ?? {};
-    const devDeps = pkgJson.devDependencies ?? {};
-
-    if (!deps["@ooneex/command"] && !devDeps["@ooneex/command"]) {
-      const install = Bun.spawn(["bun", "add", "--dev", "@ooneex/command"], {
-        cwd: process.cwd(),
-        stdout: "ignore",
-        stderr: "inherit",
-      });
-      await install.exited;
-    }
   }
 }

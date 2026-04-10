@@ -15,7 +15,7 @@ describe("command.run.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("#!/usr/bin/env bun");
     expect(content).toContain("@ooneex/command");
-    expect(content).toContain("@/commands/commands");
+    expect(content).toContain("@module/{{name}}/commands/commands");
     expect(content).toContain("run");
   });
 });

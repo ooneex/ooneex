@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.4.0) - 2026-04-10
+
+### Added
+
+- Support --drop flag to drop and recreate public schema — Franck ([0c9d69e1](https://github.com/ooneex/ooneex/commit/0c9d69e1))
+
 ## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.3.7) - 2026-04-09
 
 ### Changed

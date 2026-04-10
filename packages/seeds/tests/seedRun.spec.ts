@@ -67,6 +67,38 @@ describe("run", () => {
     });
   });
 
+  test("should close the database after all seeds complete", async () => {
+    class CloseSeed implements ISeed {
+      run<T = unknown>(_data?: unknown[]): T | Promise<T> {
+        return Promise.resolve(undefined as unknown as T);
+      }
+      isActive() {
+        return true;
+      }
+      getDependencies() {
+        return [];
+      }
+    }
+
+    const seedInstance = new CloseSeed();
+    SEEDS_CONTAINER.push(CloseSeed as unknown as SeedClassType);
+
+    container.get = mock(() => seedInstance) as unknown as typeof container.get;
+
+    const closeFn = mock(() => Promise.resolve());
+    const originalGetConstant = container.getConstant;
+    container.getConstant = mock((id: string | symbol) => {
+      if (id === "database") return { close: closeFn };
+      return originalGetConstant.call(container, id);
+    }) as typeof container.getConstant;
+
+    await run();
+
+    expect(closeFn).toHaveBeenCalledTimes(1);
+
+    container.getConstant = originalGetConstant;
+  });
+
   test("should run dependencies before running the seed", async () => {
     const calls: string[] = [];
 

@@ -1,3 +1,4 @@
+import { parseArgs } from "node:util";
 import { container } from "@ooneex/container";
 import type { IException } from "@ooneex/exception";
 import { TerminalLogger } from "@ooneex/logger";
@@ -18,6 +19,17 @@ const runSeed = async (seed: ISeed): Promise<void> => {
 };
 
 export const run = async (): Promise<void> => {
+  const { values } = parseArgs({
+    args: Bun.argv,
+    options: {
+      drop: {
+        type: "boolean",
+      },
+    },
+    strict: false,
+    allowPositionals: true,
+  });
+
   const seeds = getSeeds();
   const logger = new TerminalLogger();
 
@@ -28,6 +40,20 @@ export const run = async (): Promise<void> => {
       useSymbol: true,
     });
     return;
+  }
+
+  if (values.drop) {
+    const database = container.getConstant<{ drop: () => Promise<void> }>(
+      "database",
+    );
+    if (database) {
+      await database.drop();
+      logger.info("Database dropped\n", undefined, {
+        showTimestamp: false,
+        showArrow: false,
+        useSymbol: true,
+      });
+    }
   }
 
   logger.info(`Running ${seeds.length} seed(s)...\n`, undefined, {
@@ -64,5 +90,16 @@ export const run = async (): Promise<void> => {
       logger.error(error as IException);
       process.exit(1);
     }
+  }
+
+  try {
+    const database = container.getConstant<{ close: () => Promise<void> }>(
+      "database",
+    );
+    if (database) {
+      await database.close();
+    }
+  } catch {
+    // No database constant registered — nothing to close
   }
 };

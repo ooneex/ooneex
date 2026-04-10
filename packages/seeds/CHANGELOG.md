@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.5.0) - 2026-04-10
+
+### Added
+
+- Support --drop flag and close database after seeding — Franck ([95ecc870](https://github.com/ooneex/ooneex/commit/95ecc870))
+
 ## [1.4.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.4.8) - 2026-04-09
 
 ### Changed

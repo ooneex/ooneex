@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.4.0) - 2026-04-11
+
+### Added
+
+- Add auth decorator and IAuth interface — Franck ([79562781](https://github.com/ooneex/ooneex/commit/79562781))
+
 ## [1.3.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.3.9) - 2026-04-09
 
 ### Changed

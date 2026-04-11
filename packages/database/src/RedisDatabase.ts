@@ -1,9 +1,10 @@
 import { AppEnv } from "@ooneex/app-env";
-import { inject } from "@ooneex/container";
+import { inject, injectable } from "@ooneex/container";
 import { RedisClient } from "bun";
 import { DatabaseException } from "./DatabaseException";
 import type { IRedisDatabase, RedisConnectionOptionsType } from "./types";
 
+@injectable()
 export class RedisDatabase implements IRedisDatabase {
   private client: RedisClient;
   private connectionUrl: string;

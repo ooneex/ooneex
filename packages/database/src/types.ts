@@ -4,6 +4,9 @@ import type { EntityTarget, ObjectLiteral, Repository } from "typeorm";
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type DatabaseClassType = new (...args: any[]) => IDatabase | IRedisDatabase | ITypeormDatabase;
 
+// biome-ignore lint/suspicious/noExplicitAny: trust me
+export type RedisDatabaseClassType = new (...args: any[]) => IRedisDatabase;
+
 export type RedisConnectionOptionsType = {
   url?: string;
   connectionTimeout?: number;

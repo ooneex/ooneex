@@ -5,6 +5,3 @@ export interface IAuth {
   getCurrentUser: (token?: string) => Promise<unknown>;
 }
 
-export type ClerkAuthConfigType = {
-  secretKey?: string;
-};

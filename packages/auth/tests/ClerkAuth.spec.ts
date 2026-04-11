@@ -61,27 +61,12 @@ describe("ClerkAuth", () => {
   });
 
   describe("Secret key handling", () => {
-    test("should use secret key from config", () => {
-      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-secret-key" });
-
-      expect(auth).toBeInstanceOf(ClerkAuth);
-      expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "config-secret-key" });
-    });
-
     test("should use secret key from environment variable", () => {
       Bun.env.CLERK_SECRET_KEY = "env-secret-key";
       const auth = new ClerkAuth(createMockEnv());
 
       expect(auth).toBeInstanceOf(ClerkAuth);
       expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "env-secret-key" });
-    });
-
-    test("should prefer config secret key over environment variable", () => {
-      Bun.env.CLERK_SECRET_KEY = "env-secret-key";
-      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-secret-key" });
-
-      expect(auth).toBeInstanceOf(ClerkAuth);
-      expect(mockCreateClerkClient).toHaveBeenCalledWith({ secretKey: "config-secret-key" });
     });
 
     test("should throw AuthException when no secret key is provided", () => {
@@ -120,12 +105,6 @@ describe("ClerkAuth", () => {
       expect(user).toBeNull();
     });
 
-    test("should use config secret key for token verification", async () => {
-      const auth = new ClerkAuth(createMockEnv(), { secretKey: "config-key" });
-      await auth.getCurrentUser("token");
-
-      expect(mockVerifyToken).toHaveBeenCalledWith("token", { secretKey: "config-key" });
-    });
   });
 
   describe("getCurrentUserSession", () => {

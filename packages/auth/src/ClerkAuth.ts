@@ -3,7 +3,7 @@ import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
 import { AuthException } from "./AuthException";
 import { decorator } from "./decorators";
-import type { ClerkAuthConfigType, IAuth } from "./types";
+import type { IAuth } from "./types";
 
 @decorator.auth()
 export class ClerkAuth implements IAuth {
@@ -12,9 +12,8 @@ export class ClerkAuth implements IAuth {
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
-    config?: ClerkAuthConfigType,
   ) {
-    const secretKey = config?.secretKey || this.env.CLERK_SECRET_KEY;
+    const secretKey = this.env.CLERK_SECRET_KEY;
 
     if (!secretKey) {
       throw new AuthException(

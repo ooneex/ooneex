@@ -1,11 +1,12 @@
 import { createClerkClient, type Session, type User, verifyToken } from "@clerk/backend";
 import { AppEnv } from "@ooneex/app-env";
-import { inject, injectable } from "@ooneex/container";
+import { inject } from "@ooneex/container";
 import { AuthException } from "./AuthException";
-import type { ClerkAuthConfigType } from "./types";
+import { decorator } from "./decorators";
+import type { ClerkAuthConfigType, IAuth } from "./types";
 
-@injectable()
-export class ClerkAuth {
+@decorator.auth()
+export class ClerkAuth implements IAuth {
   private readonly client: ReturnType<typeof createClerkClient>;
   private readonly secretKey: string;
 
@@ -28,7 +29,11 @@ export class ClerkAuth {
     });
   }
 
-  public async getCurrentUser(token: string): Promise<User | null> {
+  public async getCurrentUser(token?: string): Promise<User | null> {
+    if (!token) {
+      return null;
+    }
+
     const { sub: userId } = await verifyToken(token, {
       secretKey: this.secretKey,
     });

@@ -1,4 +1,5 @@
-import { inject, injectable } from "@ooneex/container";
+import type { User } from "@clerk/backend";
+import { inject } from "@ooneex/container";
 import type { ContextConfigType, ContextType } from "@ooneex/controller";
 import { HttpStatus } from "@ooneex/http-status";
 import type { IMiddleware } from "@ooneex/middleware";
@@ -6,10 +7,16 @@ import { ERole } from "@ooneex/role";
 import type { IUser } from "@ooneex/user";
 import { AuthException } from "./AuthException";
 import { ClerkAuth } from "./ClerkAuth";
+import { decorator } from "./decorators";
+import type { IAuth } from "./types";
 
-@injectable()
-export class ClerkAuthMiddleware implements IMiddleware {
+@decorator.auth()
+export class ClerkAuthMiddleware implements IMiddleware, IAuth {
   constructor(@inject(ClerkAuth) private readonly clerkAuth: ClerkAuth) {}
+
+  public async getCurrentUser(token?: string): Promise<User | null> {
+    return await this.clerkAuth.getCurrentUser(token);
+  }
 
   public async handler<T extends ContextConfigType>(context: ContextType<T>): Promise<ContextType<T>> {
     const token = context.header.getBearerToken();

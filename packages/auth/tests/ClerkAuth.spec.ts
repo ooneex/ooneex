@@ -8,6 +8,8 @@ const createMockEnv = (): AppEnv => {
   } as unknown as AppEnv;
 };
 
+type MockClient = ReturnType<typeof mockCreateClerkClient>;
+
 const mockCreateClerkClient = mock(() => ({
   users: {
     banUser: mock(() => Promise.resolve({ id: "user_1" })),
@@ -29,10 +31,15 @@ const mockCreateClerkClient = mock(() => ({
     updateUserMetadata: mock(() => Promise.resolve({ id: "user_1" })),
     deleteUser: mock(() => Promise.resolve({ id: "user_1" })),
     deleteUserProfileImage: mock(() => Promise.resolve({ id: "user_1" })),
+    getUserList: mock(() => Promise.resolve({ data: [{ id: "user_1" }] })),
+    verifyPassword: mock(() => Promise.resolve({ verified: true })),
   },
   sessions: {
     getSession: mock(() => Promise.resolve({ id: "sess_1" })),
     revokeSession: mock(() => Promise.resolve({ id: "sess_1" })),
+  },
+  signInTokens: {
+    createSignInToken: mock(() => Promise.resolve({ id: "sit_1", token: "sign-in-token" })),
   },
 }));
 
@@ -104,7 +111,6 @@ describe("ClerkAuth", () => {
 
       expect(user).toBeNull();
     });
-
   });
 
   describe("getCurrentUserSession", () => {
@@ -200,6 +206,52 @@ describe("ClerkAuth", () => {
     });
   });
 
+  describe("signIn", () => {
+    let auth: ClerkAuth;
+
+    beforeEach(() => {
+      auth = new ClerkAuth(createMockEnv());
+      const client = mockCreateClerkClient.mock.results.at(-1)?.value as MockClient;
+      client.users.getUserList.mockImplementation(() => Promise.resolve({ data: [{ id: "user_1" }] }));
+      client.users.verifyPassword.mockImplementation(() => Promise.resolve({ verified: true }));
+      client.signInTokens.createSignInToken.mockImplementation(() =>
+        Promise.resolve({ id: "sit_1", token: "sign-in-token" }),
+      );
+    });
+
+    test("should sign in with email and password", async () => {
+      const result = await auth.signIn({ email: "test@example.com", password: "password123" });
+
+      expect(result.user).toBeDefined();
+      expect(result.token).toBeDefined();
+      expect(result.token.token).toBe("sign-in-token");
+    });
+
+    test("should use custom ttl", async () => {
+      const client = mockCreateClerkClient.mock.results.at(-1)?.value as MockClient;
+      await auth.signIn({ email: "test@example.com", password: "password123", ttl: 3600 });
+
+      expect(client.signInTokens.createSignInToken).toHaveBeenCalledWith({
+        userId: "user_1",
+        expiresInSeconds: 3600,
+      });
+    });
+
+    test("should throw when email is not found", async () => {
+      const client = mockCreateClerkClient.mock.results.at(-1)?.value as MockClient;
+      client.users.getUserList.mockImplementation(() => Promise.resolve({ data: [] }));
+
+      expect(auth.signIn({ email: "unknown@example.com", password: "password123" })).rejects.toThrow(AuthException);
+    });
+
+    test("should throw when password is invalid", async () => {
+      const client = mockCreateClerkClient.mock.results.at(-1)?.value as MockClient;
+      client.users.verifyPassword.mockImplementation(() => Promise.resolve({ verified: false }));
+
+      expect(auth.signIn({ email: "test@example.com", password: "wrong" })).rejects.toThrow(AuthException);
+    });
+  });
+
   describe("Session operations", () => {
     let auth: ClerkAuth;
 
@@ -242,6 +294,7 @@ describe("ClerkAuth", () => {
       expect(typeof auth.deleteUser).toBe("function");
       expect(typeof auth.deleteUserProfileImage).toBe("function");
       expect(typeof auth.getSession).toBe("function");
+      expect(typeof auth.signIn).toBe("function");
       expect(typeof auth.signOut).toBe("function");
     });
   });

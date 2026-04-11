@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.4.1) - 2026-04-11
+
+### Changed
+
+- Remove ClerkAuthConfigType in favor of env-only config — Franck ([76f24924](https://github.com/ooneex/ooneex/commit/76f24924))
+
 ## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.4.0) - 2026-04-11
 
 ### Added

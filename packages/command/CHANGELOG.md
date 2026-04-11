@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.4.0) - 2026-04-11
+
+### Added
+
+- Convert module argument to kebab-case in command runner — Franck ([3bf53a29](https://github.com/ooneex/ooneex/commit/3bf53a29))
+
 ## [0.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.3.0) - 2026-04-10
 
 ### Added

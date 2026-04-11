@@ -139,7 +139,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.21.0",
+      "version": "1.22.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -158,7 +158,7 @@
     },
     "packages/command": {
       "name": "@ooneex/command",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "dependencies": {
         "@ooneex/container": "workspace:^",
         "@ooneex/exception": "workspace:^",
@@ -232,7 +232,7 @@
     },
     "packages/database": {
       "name": "@ooneex/database",
-      "version": "1.1.11",
+      "version": "1.2.0",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -424,7 +424,7 @@
     },
     "packages/pdf": {
       "name": "@ooneex/pdf",
-      "version": "1.1.11",
+      "version": "1.2.0",
       "dependencies": {
         "@ooneex/exception": "workspace:^",
         "@ooneex/http-status": "workspace:^",

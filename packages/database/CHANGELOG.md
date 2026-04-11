@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.2.0) - 2026-04-11
+
+### Added
+
+- Make RedisDatabase injectable and export RedisDatabaseClassType — Franck ([fa6dff37](https://github.com/ooneex/ooneex/commit/fa6dff37))
+
 ## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.1.11) - 2026-04-09
 
 ### Changed

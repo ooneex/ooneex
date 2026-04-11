@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.5.0) - 2026-04-11
+
+### Added
+
+- Add signIn method with email and password verification — Franck ([47a448aa](https://github.com/ooneex/ooneex/commit/47a448aa))
+
 ## [1.4.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.4.1) - 2026-04-11
 
 ### Changed

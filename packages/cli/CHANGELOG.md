@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.22.0) - 2026-04-11
+
+### Added
+
+- Add RemoveModuleCommand — Franck ([28c163a0](https://github.com/ooneex/ooneex/commit/28c163a0))
+- Use module path in generated test imports — Franck ([a15fc026](https://github.com/ooneex/ooneex/commit/a15fc026))
+- Enhance app-database template with pool config and caching — Franck ([5f18c89b](https://github.com/ooneex/ooneex/commit/5f18c89b))
+
+### Fixed
+
+- Scope custom command parsing to getName method — Franck ([78c4619d](https://github.com/ooneex/ooneex/commit/78c4619d))
+
 ## [1.21.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.21.0) - 2026-04-10
 
 ### Added

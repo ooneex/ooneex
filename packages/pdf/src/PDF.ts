@@ -12,10 +12,10 @@ import type {
   PDFCreateResultType,
   PDFExtractedImageType,
   PDFGetImagesOptionsType,
-  PDFGetImagesResultType,
   PDFMetadataResultType,
   PDFOptionsType,
   PDFPageImageResultType,
+  PDFPageTextResultType,
   PDFRemovePagesResultType,
   PDFSplitOptionsType,
   PDFSplitResultType,
@@ -369,26 +369,123 @@ export class PDF implements IPDF {
   }
 
   /**
+   * Extract text content from all pages
+   * @yields Page text result with page number and text content
+   *
+   * @example
+   * ```typescript
+   * const pdf = new PDF("/path/to/document.pdf");
+   *
+   * for await (const { page, text } of pdf.pagesToText()) {
+   *   console.log(`Page ${page}: ${text}`);
+   * }
+   * ```
+   */
+  public async *pagesToText(): AsyncGenerator<PDFPageTextResultType, void, unknown> {
+    try {
+      const sourceBytes = await Bun.file(this.source).arrayBuffer();
+      const document = await getDocumentProxy(new Uint8Array(sourceBytes));
+      const totalPages = document.numPages;
+
+      for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+        const page = await document.getPage(pageNumber);
+        const textContent = await page.getTextContent();
+        const text = textContent.items
+          .filter((item) => "str" in item)
+          .map((item) => ("hasEOL" in item && item.hasEOL ? `${item.str}\n` : item.str))
+          .join("");
+
+        yield {
+          page: pageNumber,
+          text: text.trim(),
+        };
+      }
+    } catch (error) {
+      if (error instanceof PDFException) {
+        throw error;
+      }
+      throw new PDFException("Failed to extract text from PDF", "PDF_PAGES_TO_TEXT_FAILED", {
+        source: this.source,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Extract text content from a specific page
+   * @param pageNumber - Page number (1-indexed)
+   * @returns Page text result with page number and text content
+   *
+   * @example
+   * ```typescript
+   * const pdf = new PDF("/path/to/document.pdf");
+   * const { page, text } = await pdf.pageToText(1);
+   * console.log(`Page ${page}: ${text}`);
+   * ```
+   */
+  public async pageToText(pageNumber: number): Promise<PDFPageTextResultType> {
+    if (pageNumber < 1 || !Number.isInteger(pageNumber)) {
+      throw new PDFException("Page number must be a positive integer", "PDF_INVALID_PAGE_NUMBER", {
+        pageNumber,
+      });
+    }
+
+    try {
+      const sourceBytes = await Bun.file(this.source).arrayBuffer();
+      const document = await getDocumentProxy(new Uint8Array(sourceBytes));
+      const totalPages = document.numPages;
+
+      if (pageNumber > totalPages) {
+        throw new PDFException("Page number exceeds total pages", "PDF_PAGE_OUT_OF_RANGE", {
+          pageNumber,
+          totalPages,
+        });
+      }
+
+      const page = await document.getPage(pageNumber);
+      const textContent = await page.getTextContent();
+      const text = textContent.items
+        .filter((item) => "str" in item)
+        .map((item) => ("hasEOL" in item && item.hasEOL ? `${item.str}\n` : item.str))
+        .join("");
+
+      return {
+        page: pageNumber,
+        text: text.trim(),
+      };
+    } catch (error) {
+      if (error instanceof PDFException) {
+        throw error;
+      }
+      throw new PDFException("Failed to get page text", "PDF_PAGE_TEXT_FAILED", {
+        source: this.source,
+        pageNumber,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
    * Extract images from PDF pages and save to disk
    * @param options - Options including output directory, optional prefix, and optional page number
-   * @returns Result containing total pages and array of extracted images with file paths
+   * @yields Extracted image with page number, file path, and dimensions
    *
    * @example
    * ```typescript
    * const pdf = new PDF("/path/to/document.pdf");
    *
    * // Extract images from all pages
-   * const images = await pdf.getImages({ outputDir: "/output" });
-   * console.log(`Found ${images.length} images`);
+   * for await (const image of pdf.getImages({ outputDir: "/output" })) {
+   *   console.log(`Image: ${image.path}, ${image.width}x${image.height}`);
+   * }
    *
    * // Extract images from a specific page
-   * const page1Images = await pdf.getImages({ outputDir: "/output", prefix: "doc", pageNumber: 1 });
-   * for (const image of page1Images) {
-   *   console.log(`Image: ${image.path}, ${image.width}x${image.height}`);
+   * for await (const image of pdf.getImages({ outputDir: "/output", prefix: "doc", pageNumber: 1 })) {
+   *   console.log(`Page ${image.page}: ${image.path}`);
    * }
    * ```
    */
-  public async getImages(options: PDFGetImagesOptionsType): Promise<PDFGetImagesResultType> {
+  public async *getImages(options: PDFGetImagesOptionsType): AsyncGenerator<PDFExtractedImageType, void, unknown> {
     const { pageNumber } = options;
 
     if (pageNumber !== undefined && (pageNumber < 1 || !Number.isInteger(pageNumber))) {
@@ -412,16 +509,17 @@ export class PDF implements IPDF {
         });
       }
 
-      const processPage = async (page: number) => {
+      const startPage = pageNumber ?? 1;
+      const endPage = pageNumber ?? totalPages;
+
+      for (let page = startPage; page <= endPage; page++) {
         const pageImages = await extractImages(document, page);
-        const results: PDFExtractedImageType[] = [];
         let imageIndex = 0;
         for (const img of pageImages) {
           imageIndex++;
           const fileName = `${prefix}-p${page}-${imageIndex}.png`;
           const filePath = path.join(normalizedOutputDir, fileName);
 
-          // Convert raw image data to PNG using sharp
           const pngBuffer = await sharp(img.data, {
             raw: {
               width: img.width,
@@ -434,22 +532,14 @@ export class PDF implements IPDF {
 
           await Bun.write(filePath, pngBuffer);
 
-          results.push({
+          yield {
             page,
             path: filePath,
             width: img.width,
             height: img.height,
-          });
+          };
         }
-        return results;
-      };
-
-      if (pageNumber !== undefined) {
-        return await processPage(pageNumber);
       }
-
-      const allResults = await Promise.all(Array.from({ length: totalPages }, (_, i) => processPage(i + 1)));
-      return allResults.flat();
     } catch (error) {
       if (error instanceof PDFException) {
         throw error;
@@ -457,7 +547,6 @@ export class PDF implements IPDF {
       throw new PDFException("Failed to extract images from PDF", "PDF_EXTRACT_IMAGES_FAILED", {
         source: this.source,
         outputDir: normalizedOutputDir,
-        pageNumber,
         error: error instanceof Error ? error.message : String(error),
       });
     }

@@ -42,6 +42,20 @@ export interface PDFPageImageResultType {
 }
 
 /**
+ * Result of extracting text content from a PDF page
+ */
+export interface PDFPageTextResultType {
+  /**
+   * Page number (1-indexed)
+   */
+  page: number;
+  /**
+   * Extracted text content from the page
+   */
+  text: string;
+}
+
+/**
  * Options for splitting a PDF and saving to disk
  */
 export interface PDFSplitOptionsType {
@@ -268,11 +282,6 @@ export interface PDFExtractedImageType {
 }
 
 /**
- * Result of extracting images from PDF pages
- */
-export type PDFGetImagesResultType = PDFExtractedImageType[];
-
-/**
  * Interface for PDF class
  */
 export interface IPDF {
@@ -343,9 +352,22 @@ export interface IPDF {
   getPageContent(pageNumber: number): Promise<string>;
 
   /**
+   * Extract text content from all pages
+   * @yields Page text result with page number and text content
+   */
+  pagesToText(): AsyncGenerator<PDFPageTextResultType, void, unknown>;
+
+  /**
+   * Extract text content from a specific page
+   * @param pageNumber - Page number (1-indexed)
+   * @returns Page text result with page number and text content
+   */
+  pageToText(pageNumber: number): Promise<PDFPageTextResultType>;
+
+  /**
    * Extract images from PDF pages and save to disk
    * @param options - Options including output directory, optional prefix, and optional page number
    * @returns Result containing total pages and array of extracted images with file paths
    */
-  getImages(options: PDFGetImagesOptionsType): Promise<PDFGetImagesResultType>;
+  getImages(options: PDFGetImagesOptionsType): AsyncGenerator<PDFExtractedImageType, void, unknown>;
 }

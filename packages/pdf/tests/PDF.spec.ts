@@ -8,10 +8,10 @@ import type {
   PDFCreateResultType,
   PDFExtractedImageType,
   PDFGetImagesOptionsType,
-  PDFGetImagesResultType,
   PDFMetadataResultType,
   PDFOptionsType,
   PDFPageImageResultType,
+  PDFPageTextResultType,
   PDFRemovePagesResultType,
   PDFSplitOptionsType,
   PDFSplitResultType,
@@ -31,6 +31,8 @@ describe("PDF", () => {
       expect(typeof pdfInstance.updateMetadata).toBe("function");
       expect(typeof pdfInstance.getPageCount).toBe("function");
       expect(typeof pdfInstance.getPageContent).toBe("function");
+      expect(typeof pdfInstance.pagesToText).toBe("function");
+      expect(typeof pdfInstance.pageToText).toBe("function");
       expect(typeof pdfInstance.getImages).toBe("function");
       expect(typeof pdfInstance.pagesToImages).toBe("function");
       expect(typeof pdfInstance.pageToImage).toBe("function");
@@ -63,6 +65,15 @@ describe("PDF", () => {
       };
       expect(result.page).toBe(1);
       expect(result.path).toBe("/tmp/output/page-1.png");
+    });
+
+    test("should export PDFPageTextResultType", () => {
+      const result: PDFPageTextResultType = {
+        page: 1,
+        text: "Hello world",
+      };
+      expect(result.page).toBe(1);
+      expect(result.text).toBe("Hello world");
     });
 
     test("should export PDFSplitOptionsType", () => {
@@ -209,14 +220,15 @@ describe("PDF", () => {
       expect(image.height).toBe(600);
     });
 
-    test("should export PDFGetImagesResultType", () => {
-      const result: PDFGetImagesResultType = [
-        { page: 1, path: "/tmp/images/image-1-1.png", width: 800, height: 600 },
-        { page: 2, path: "/tmp/images/image-2-1.png", width: 1024, height: 768 },
-      ];
-      expect(result).toHaveLength(2);
-      expect(result[0]?.page).toBe(1);
-      expect(result[1]?.page).toBe(2);
+    test("should export PDFGetImagesOptionsType", () => {
+      const options: PDFGetImagesOptionsType = {
+        outputDir: "/tmp/images",
+        prefix: "image",
+        pageNumber: 1,
+      };
+      expect(options.outputDir).toBe("/tmp/images");
+      expect(options.prefix).toBe("image");
+      expect(options.pageNumber).toBe(1);
     });
   });
 
@@ -392,6 +404,122 @@ describe("PDF", () => {
     });
   });
 
+  describe("pagesToText", () => {
+    test("should yield text content for all pages", async () => {
+      const pdf = new PDF("tests/file-sample.pdf");
+      const results: PDFPageTextResultType[] = [];
+
+      for await (const result of pdf.pagesToText()) {
+        results.push(result);
+      }
+
+      expect(results).toHaveLength(4);
+
+      for (let i = 0; i < results.length; i++) {
+        expect(results[i]?.page).toBe(i + 1);
+        expect(typeof results[i]?.text).toBe("string");
+      }
+
+      expect(results[0]?.text).toContain("Lorem ipsum");
+    });
+
+    test("should yield pages in order", async () => {
+      const pdf = new PDF("tests/file-sample.pdf");
+      const pages: number[] = [];
+
+      for await (const { page } of pdf.pagesToText()) {
+        pages.push(page);
+      }
+
+      expect(pages).toEqual([1, 2, 3, 4]);
+    });
+
+    test("should throw PDFException when file does not exist", async () => {
+      const pdf = new PDF("nonexistent.pdf");
+
+      try {
+        for await (const _ of pdf.pagesToText()) {
+          /* noop */
+        }
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Failed to extract text from PDF");
+      }
+    });
+  });
+
+  describe("pageToText", () => {
+    test("should return text content for a specific page", async () => {
+      const pdf = new PDF("tests/file-sample.pdf");
+      const result = await pdf.pageToText(1);
+
+      expect(result.page).toBe(1);
+      expect(typeof result.text).toBe("string");
+      expect(result.text.length).toBeGreaterThan(0);
+      expect(result.text).toContain("Lorem ipsum");
+    });
+
+    test("should return correct page number", async () => {
+      const pdf = new PDF("tests/file-sample.pdf");
+      const result = await pdf.pageToText(2);
+
+      expect(result.page).toBe(2);
+      expect(typeof result.text).toBe("string");
+    });
+
+    test("should throw PDFException for page number less than 1", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.pageToText(0);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 0 });
+      }
+    });
+
+    test("should throw PDFException for non-integer page number", async () => {
+      const pdf = new PDF("test.pdf");
+
+      try {
+        await pdf.pageToText(1.5);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number must be a positive integer");
+        expect((error as PDFException).data).toEqual({ pageNumber: 1.5 });
+      }
+    });
+
+    test("should throw PDFException for page number exceeding total pages", async () => {
+      const pdf = new PDF("tests/file-sample.pdf");
+
+      try {
+        await pdf.pageToText(100);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Page number exceeds total pages");
+        expect((error as PDFException).data).toEqual({ pageNumber: 100, totalPages: 4 });
+      }
+    });
+
+    test("should throw PDFException when file does not exist", async () => {
+      const pdf = new PDF("nonexistent.pdf");
+
+      try {
+        await pdf.pageToText(1);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(PDFException);
+        expect((error as PDFException).message).toBe("Failed to get page text");
+      }
+    });
+  });
+
   describe("getImages validation", () => {
     const testOptions: PDFGetImagesOptionsType = { outputDir: "/tmp/pdf-test" };
 
@@ -399,7 +527,9 @@ describe("PDF", () => {
       const pdf = new PDF("test.pdf");
 
       try {
-        await pdf.getImages({ ...testOptions, pageNumber: 0 });
+        for await (const _ of pdf.getImages({ ...testOptions, pageNumber: 0 })) {
+          /* noop */
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);
@@ -412,7 +542,9 @@ describe("PDF", () => {
       const pdf = new PDF("test.pdf");
 
       try {
-        await pdf.getImages({ ...testOptions, pageNumber: -1 });
+        for await (const _ of pdf.getImages({ ...testOptions, pageNumber: -1 })) {
+          /* noop */
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);
@@ -425,7 +557,9 @@ describe("PDF", () => {
       const pdf = new PDF("test.pdf");
 
       try {
-        await pdf.getImages({ ...testOptions, pageNumber: 1.5 });
+        for await (const _ of pdf.getImages({ ...testOptions, pageNumber: 1.5 })) {
+          /* noop */
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);
@@ -438,7 +572,9 @@ describe("PDF", () => {
       const pdf = new PDF("nonexistent.pdf");
 
       try {
-        await pdf.getImages(testOptions);
+        for await (const _ of pdf.getImages(testOptions)) {
+          /* noop */
+        }
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(PDFException);
@@ -459,9 +595,13 @@ describe("PDF", () => {
     test("should extract images from PDF", async () => {
       const outputDir = "tests/tmp/images";
       const pdf = new PDF("tests/file-sample.pdf");
-      const images = await pdf.getImages({ outputDir });
+      const images: PDFExtractedImageType[] = [];
 
-      expect(Array.isArray(images)).toBe(true);
+      for await (const image of pdf.getImages({ outputDir })) {
+        images.push(image);
+      }
+
+      expect(images.length).toBeGreaterThanOrEqual(0);
 
       for (const image of images) {
         expect(image).toHaveProperty("page");
@@ -479,9 +619,11 @@ describe("PDF", () => {
     test("should extract images from a specific page", async () => {
       const outputDir = "tests/tmp/images-page";
       const pdf = new PDF("tests/file-sample.pdf");
-      const images = await pdf.getImages({ outputDir, pageNumber: 1 });
+      const images: PDFExtractedImageType[] = [];
 
-      expect(Array.isArray(images)).toBe(true);
+      for await (const image of pdf.getImages({ outputDir, pageNumber: 1 })) {
+        images.push(image);
+      }
 
       for (const image of images) {
         expect(image.page).toBe(1);

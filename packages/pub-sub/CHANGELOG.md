@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.2.0) - 2026-04-12
+
+### Added
+
+- Add close method and handle malformed messages — Franck ([aaf5b1c8](https://github.com/ooneex/ooneex/commit/aaf5b1c8))
+
 ## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.1.12) - 2026-04-09
 
 ### Changed

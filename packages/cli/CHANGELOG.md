@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.2) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.26.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.0) - 2026-04-12
 
 ### Added

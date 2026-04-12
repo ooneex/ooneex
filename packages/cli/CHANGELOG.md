@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.23.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.23.0) - 2026-04-12
+
+### Added
+
+- Add MakeBenchmarkCommand — Franck ([9ef87621](https://github.com/ooneex/ooneex/commit/9ef87621))
+- Add AUTH_TOKEN to env template — Franck ([4594b907](https://github.com/ooneex/ooneex/commit/4594b907))
+- Pass module option to seed create command — Franck ([16fe3111](https://github.com/ooneex/ooneex/commit/16fe3111))
+- Pass module option to migration create command — Franck ([e9ddc3f8](https://github.com/ooneex/ooneex/commit/e9ddc3f8))
+
+### Changed
+
+- Update permission template to use ContextType and add check method — Franck ([b22caa7a](https://github.com/ooneex/ooneex/commit/b22caa7a))
+
 ## [1.22.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.22.0) - 2026-04-11
 
 ### Added

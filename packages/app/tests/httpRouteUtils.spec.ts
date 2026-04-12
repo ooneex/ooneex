@@ -441,6 +441,28 @@ describe("httpRouteUtils", () => {
 
         expect(result).toBeNull();
       });
+
+      test("passes roles to context route", () => {
+        const roles = [ERole.ADMIN, ERole.USER];
+        const context = createMockContext({
+          route: {
+            name: "api.test.list",
+            path: "/test",
+            method: "GET",
+            version: 1,
+            description: "Test route",
+            roles,
+          },
+        });
+
+        expect(context.route?.roles).toEqual([ERole.ADMIN, ERole.USER]);
+      });
+
+      test("context route has no roles when not provided", () => {
+        const context = createMockContext();
+
+        expect(context.route?.roles).toBeUndefined();
+      });
     });
   });
 

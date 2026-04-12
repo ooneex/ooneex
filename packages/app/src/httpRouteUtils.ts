@@ -85,7 +85,7 @@ export const validateConstraint = (constraint: AssertType | IAssert, value: unkn
   return null;
 };
 
-export type RouteInfoType = Pick<RouteConfigType, "name" | "path" | "method" | "version" | "description">;
+export type RouteInfoType = Pick<RouteConfigType, "name" | "path" | "method" | "version" | "description" | "roles">;
 
 export const buildHttpContext = async (ctx: {
   req: BunRequest;
@@ -153,6 +153,7 @@ export const buildHttpContext = async (ctx: {
           method: route.method,
           version: route.version,
           description: route.description ?? "",
+          ...(route.roles && { roles: route.roles }),
         }
       : null,
     env: container.get<IAppEnv>(AppEnv),

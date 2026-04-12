@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.28](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.28) - 2026-04-12
+
+### Changed
+
+- Remove optional secret constructor parameter — Franck ([09bfdf25](https://github.com/ooneex/ooneex/commit/09bfdf25))
+
 ## [1.1.26](https://github.com/ooneex/ooneex/releases/tag/@ooneex/jwt@1.1.26) - 2026-04-09
 
 ### Changed

@@ -484,7 +484,7 @@ export const formatHttpRoutes = (
 
         if (route.permission) {
           const permission = container.get(route.permission);
-          context.permission = permission.allow().setUserPermissions(context.user).build();
+          context.permission = permission.allow().setUserPermissions(context).build();
         }
 
         // Cache: check for cached response

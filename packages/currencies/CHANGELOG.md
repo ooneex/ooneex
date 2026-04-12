@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.12) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/currencies@1.1.10) - 2026-04-09
 
 ### Changed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request-file@1.2.11) - 2026-04-12
+
+### Changed
+
+- Reuse shared Mime instance in RequestFile — Franck ([80527b65](https://github.com/ooneex/ooneex/commit/80527b65))
+
 ## [1.2.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request-file@1.2.10) - 2026-04-09
 
 ### Changed

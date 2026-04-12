@@ -107,7 +107,7 @@ export class MakeBenchmarkCommand<T extends CommandOptionsType = CommandOptionsT
       logger.error(`Controller not found: ${controllerFilePath}`, undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: true,
+        useSymbol: false,
       });
       return;
     }
@@ -147,7 +147,7 @@ export class MakeBenchmarkCommand<T extends CommandOptionsType = CommandOptionsT
     logger.success(`${join(controllersLocalDir, benchmarkFileName)} created successfully`, undefined, {
       showTimestamp: false,
       showArrow: false,
-      useSymbol: true,
+      useSymbol: false,
     });
   }
 }

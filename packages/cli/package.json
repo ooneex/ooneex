@@ -44,7 +44,8 @@
     "@ooneex/migrations": "workspace:^",
     "@ooneex/seeds": "workspace:^",
     "@ooneex/utils": "workspace:^",
-    "@ooneex/validation": "workspace:^"
+    "@ooneex/validation": "workspace:^",
+    "autocannon": "^8.0.0"
   },
   "devDependencies": {
     "@ooneex/types": "workspace:^"

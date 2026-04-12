@@ -1,6 +1,7 @@
 export { AppBuildCommand } from "./AppBuildCommand";
 export { AppStartCommand } from "./AppStartCommand";
 export { AppStopCommand } from "./AppStopCommand";
+export { BenchmarkRunCommand } from "./BenchmarkRunCommand";
 export { CommandRunCommand } from "./CommandRunCommand";
 export { CompletionZshCommand } from "./CompletionZshCommand";
 export { HelpCommand } from "./HelpCommand";

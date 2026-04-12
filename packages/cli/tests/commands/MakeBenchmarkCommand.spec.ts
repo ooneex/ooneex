@@ -132,9 +132,9 @@ export class ListStatusesController {
     test("should generate benchmark file from controller with params and payload", async () => {
       await Bun.write(join(testDir, "src", "controllers", "UpdateStatusController.ts"), controllerContent);
 
-      await command.run({ name: "load", target: "UpdateStatusController" });
+      await command.run({ name: "UpdateStatus", target: "UpdateStatusController" });
 
-      const filePath = join(testDir, "src", "controllers", "load.bench.json");
+      const filePath = join(testDir, "src", "controllers", "UpdateStatus.bench.json");
       expect(existsSync(filePath)).toBe(true);
 
       const content = JSON.parse(await Bun.file(filePath).text());
@@ -151,9 +151,9 @@ export class ListStatusesController {
     test("should generate benchmark file from controller with queries", async () => {
       await Bun.write(join(testDir, "src", "controllers", "ListStatusesController.ts"), listControllerContent);
 
-      await command.run({ name: "load", target: "ListStatusesController" });
+      await command.run({ name: "ListStatuses", target: "ListStatusesController" });
 
-      const filePath = join(testDir, "src", "controllers", "load.bench.json");
+      const filePath = join(testDir, "src", "controllers", "ListStatuses.bench.json");
       expect(existsSync(filePath)).toBe(true);
 
       const content = JSON.parse(await Bun.file(filePath).text());
@@ -169,9 +169,9 @@ export class ListStatusesController {
     test("should handle target without Controller suffix", async () => {
       await Bun.write(join(testDir, "src", "controllers", "UpdateStatusController.ts"), controllerContent);
 
-      await command.run({ name: "stress", target: "UpdateStatus" });
+      await command.run({ name: "UpdateStatus", target: "UpdateStatus" });
 
-      const filePath = join(testDir, "src", "controllers", "stress.bench.json");
+      const filePath = join(testDir, "src", "controllers", "UpdateStatus.bench.json");
       expect(existsSync(filePath)).toBe(true);
     });
 

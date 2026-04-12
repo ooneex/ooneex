@@ -43,6 +43,7 @@ _ooneex() {
     'help:Show available commands'
     'make\:ai:Generate a new AI class'
     'make\:analytics:Generate a new analytics class'
+    'benchmark\:run:Run a benchmark using autocannon'
     'make\:benchmark:Generate a new benchmark file'
     'make\:app:Generate a new application'
     'make\:cache:Generate a new cache class'
@@ -99,6 +100,11 @@ _ooneex() {
         command:run)
           _arguments -s \
             '1:command name:_ooneex_custom_commands'
+          ;;
+        benchmark:run)
+          _arguments -s \
+            '--module=[Module name]:module:_ooneex_modules' \
+            '--target=[Benchmark target name]:target:_ooneex_route_names'
           ;;
         make:benchmark)
           _arguments -s \

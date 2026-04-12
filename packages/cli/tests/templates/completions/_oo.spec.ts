@@ -99,6 +99,7 @@ describe("_oo.txt", () => {
       "help",
       "make\\:ai",
       "make\\:analytics",
+      "benchmark\\:run",
       "make\\:benchmark",
       "make\\:app",
       "make\\:cache",
@@ -153,6 +154,16 @@ describe("_oo.txt", () => {
       const match = content.match(/command:run\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("_oo_custom_commands");
+    });
+
+    test("benchmark:run should have module and target options", async () => {
+      const content = await Bun.file(templatePath).text();
+      const match = content.match(/benchmark:run\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_oo_modules");
+      expect(match?.[1]).toContain("--target=");
+      expect(match?.[1]).toContain("_oo_route_names");
     });
 
     test("make:benchmark should have name, module, and target options", async () => {

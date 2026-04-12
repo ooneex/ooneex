@@ -140,7 +140,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.25.0",
+      "version": "1.26.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",

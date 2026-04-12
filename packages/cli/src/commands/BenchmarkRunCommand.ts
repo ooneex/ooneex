@@ -96,7 +96,9 @@ function printResults(result: autocannon.Result): void {
   const dur = result.duration;
 
   w(`  ${dim("URL")}              ${cyan(result.url)}\n`);
+  const successCount = result["2xx"] ?? 0;
   w(`  ${dim("Total Requests")}   ${bold(green(formatNumber(totalRequests)))}\n`);
+  w(`  ${dim("Success (2xx)")}    ${successCount > 0 ? green(formatNumber(successCount)) : red("0")}\n`);
   w(`  ${dim("Total Data")}       ${formatBytes(totalData)}\n`);
   w(`  ${dim("Duration")}         ${dur.toFixed(2)}s\n`);
 
@@ -123,6 +125,96 @@ function printResults(result: autocannon.Result): void {
   }
 
   w("\n");
+
+  // Performance analysis section
+  printPerformanceAnalysis(result);
+}
+
+function printPerformanceAnalysis(result: autocannon.Result): void {
+  const w = process.stdout.write.bind(process.stdout);
+  const line = dim("  ─────────────────────────────────────────────────────");
+
+  w(`  ${bold(magenta("Performance Analysis"))}\n`);
+  w(`${line}\n`);
+
+  const avgReqPerSec = result.requests.average;
+  const connections = result.connections;
+  const avgLatencyMs = result.latency.average;
+  const p99LatencyMs = result.latency.p99;
+  const errorRate = result.requests.sent > 0 ? ((result.errors + result.non2xx) / result.requests.sent) * 100 : 0;
+  const successRate = 100 - errorRate;
+
+  // Estimated max clients: based on how many connections were used and whether latency/errors are acceptable
+  // If p99 latency < 100ms and error rate < 1%, server can likely handle more clients
+  const latencyHeadroom = p99LatencyMs < 50 ? 4 : p99LatencyMs < 100 ? 3 : p99LatencyMs < 500 ? 2 : 1;
+  const errorFactor = errorRate < 1 ? 1 : errorRate < 5 ? 0.5 : 0.2;
+  const estimatedMaxClients = Math.round(connections * latencyHeadroom * errorFactor);
+
+  // Estimated max requests per second the server can sustain
+  const estimatedMaxReqPerSec = Math.round(result.requests.max * errorFactor);
+
+  // Avg response time per request
+  const avgResponseTime = avgLatencyMs;
+  const reqPerConnection = avgReqPerSec / connections;
+
+  w(`  ${dim("Success Rate")}     ${successRate >= 99 ? green(`${successRate.toFixed(1)}%`) : successRate >= 95 ? yellow(`${successRate.toFixed(1)}%`) : red(`${successRate.toFixed(1)}%`)}\n`);
+  w(`  ${dim("Avg Resp Time")}    ${avgResponseTime < 10 ? green(formatLatency(avgResponseTime)) : avgResponseTime < 100 ? yellow(formatLatency(avgResponseTime)) : red(formatLatency(avgResponseTime))}\n`);
+  w(`  ${dim("Req/Connection")}   ${formatNumber(Math.round(reqPerConnection))} req/sec\n`);
+  w("\n");
+
+  w(`  ${dim("Est. Max Clients")} ${bold(cyan(formatNumber(estimatedMaxClients)))} concurrent\n`);
+  w(`  ${dim("Est. Max Req/Sec")} ${bold(cyan(formatNumber(estimatedMaxReqPerSec)))}\n`);
+  w("\n");
+
+  // Overall performance grade
+  const grade = getPerformanceGrade(avgLatencyMs, p99LatencyMs, errorRate, avgReqPerSec);
+  w(`  ${dim("Grade")}            ${grade.color(bold(grade.label))}\n`);
+  w(`  ${grade.color(grade.message)}\n`);
+  w("\n");
+}
+
+function getPerformanceGrade(
+  avgLatency: number,
+  p99Latency: number,
+  errorRate: number,
+  reqPerSec: number,
+): { label: string; message: string; color: (s: string) => string } {
+  // Score from 0-100 based on multiple factors
+  let score = 100;
+
+  // Latency scoring (avg)
+  if (avgLatency > 500) score -= 40;
+  else if (avgLatency > 100) score -= 25;
+  else if (avgLatency > 50) score -= 15;
+  else if (avgLatency > 10) score -= 5;
+
+  // Latency scoring (p99)
+  if (p99Latency > 1000) score -= 25;
+  else if (p99Latency > 500) score -= 15;
+  else if (p99Latency > 100) score -= 8;
+
+  // Error rate scoring
+  if (errorRate > 10) score -= 30;
+  else if (errorRate > 5) score -= 20;
+  else if (errorRate > 1) score -= 10;
+  else if (errorRate > 0) score -= 3;
+
+  // Throughput bonus (no penalty, just recognition)
+  if (reqPerSec > 10000) score = Math.min(100, score + 5);
+
+  if (score >= 90) {
+    return { label: "A  Excellent", message: "  Server handles load with low latency and high reliability", color: green };
+  }
+  if (score >= 75) {
+    return { label: "B  Good", message: "  Server performs well under load with acceptable latency", color: green };
+  }
+  if (score >= 60) {
+    return { label: "C  Fair", message: "  Server shows moderate latency or occasional errors under load", color: yellow };
+  }
+  if (score >= 40) {
+    return { label: "D  Poor", message: "  Server struggles with high latency or significant errors", color: red };
+  }
+  return { label: "F  Critical", message: "  Server cannot handle the load — consider scaling or optimization", color: red };
 }
 
 @decorator.command()

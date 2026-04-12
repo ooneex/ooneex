@@ -36,6 +36,9 @@ export class PostHogAnalytics<T extends PostHogCaptureOptionsType = PostHogCaptu
       timestamp: new Date(),
       ...(options.groups && { groups: options.groups }),
     });
-    this.client?.shutdown();
+  }
+
+  public async shutdown(): Promise<void> {
+    await this.client?.shutdown();
   }
 }

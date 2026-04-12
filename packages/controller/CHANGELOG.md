@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.4.0) - 2026-04-12
+
+### Added
+
+- Add roles to context route type — Franck ([662599b7](https://github.com/ooneex/ooneex/commit/662599b7))
+
 ## [1.3.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/controller@1.3.11) - 2026-04-09
 
 ### Changed

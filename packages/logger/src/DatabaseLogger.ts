@@ -107,6 +107,6 @@ export class DatabaseLogger implements ILogger<LogsEntity> {
     if (data?.queries !== undefined) logEntry.queries = data.queries;
 
     // Save to database asynchronously
-    this.repository.create(logEntry);
+    this.repository.create(logEntry).catch(() => {});
   }
 }

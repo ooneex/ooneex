@@ -65,8 +65,6 @@ export class LogsRepository {
       RETURNING *
     `;
 
-    await this.db.close();
-
     return newLog as LogsEntity;
   }
 
@@ -80,11 +78,10 @@ export class LogsRepository {
     `;
 
     if (!log) {
-      await this.db.close();
       return null;
     }
 
-    const result = {
+    return {
       ...log,
       date: new Date(log.date),
       stackTrace: log.stackTrace ? JSON.parse(log.stackTrace) : undefined,
@@ -92,10 +89,6 @@ export class LogsRepository {
       payload: log.payload ? JSON.parse(log.payload) : undefined,
       queries: log.queries ? JSON.parse(log.queries) : undefined,
     };
-
-    await this.db.close();
-
-    return result;
   }
 
   public async findBy(criteria: FindByCriteriaType): Promise<FindByResultType> {
@@ -175,8 +168,6 @@ export class LogsRepository {
         totalPages,
       };
 
-      await this.db.close();
-
       return result;
     }
 
@@ -224,8 +215,6 @@ export class LogsRepository {
       limit,
       totalPages,
     };
-
-    await this.db.close();
 
     return result;
   }

@@ -129,7 +129,6 @@ describe("LogsRepository", () => {
       const result = await repository.create(logEntity);
 
       expect(mockDatabase.getClient).toHaveBeenCalled();
-      expect(mockDatabase.close).toHaveBeenCalled();
       expect(result).toBeDefined();
       expect(result.id).toBeDefined();
     });
@@ -451,7 +450,6 @@ describe("LogsRepository", () => {
       const result = await repository.find("test-log-123");
 
       expect(mockDatabase.getClient).toHaveBeenCalled();
-      expect(mockDatabase.close).toHaveBeenCalled();
       expect(result).not.toBeNull();
       expect(result?.id).toBe("test-log-123");
       expect(result?.level).toBe("INFO");
@@ -463,7 +461,6 @@ describe("LogsRepository", () => {
       const result = await repository.find("non-existent-id");
 
       expect(mockDatabase.getClient).toHaveBeenCalled();
-      expect(mockDatabase.close).toHaveBeenCalled();
       expect(result).toBeNull();
     });
 
@@ -556,7 +553,6 @@ describe("LogsRepository", () => {
       const result = await repository.findBy(criteria);
 
       expect(mockDatabase.getClient).toHaveBeenCalled();
-      expect(mockDatabase.close).toHaveBeenCalled();
       expect(result.logs).toHaveLength(3);
       expect(result.total).toBe(3);
       expect(result.page).toBe(1);
@@ -732,36 +728,16 @@ describe("LogsRepository", () => {
   });
 
   describe("Database connection management", () => {
-    test("should call database close after create operation", async () => {
+    test("should not close database after each operation (connection reuse)", async () => {
       const logEntity = new LogsEntity();
       logEntity.level = "INFO";
       logEntity.date = new Date();
 
       await repository.create(logEntity);
-
-      expect(mockDatabase.close).toHaveBeenCalledTimes(1);
-    });
-
-    test("should call database close after find operation", async () => {
       await repository.find("test-id");
-
-      expect(mockDatabase.close).toHaveBeenCalledTimes(1);
-    });
-
-    test("should call database close after findBy operation", async () => {
       await repository.findBy({});
 
-      expect(mockDatabase.close).toHaveBeenCalledTimes(1);
-    });
-
-    test("should call database close even when no results found", async () => {
-      mockData.length = 0;
-
-      await repository.find("non-existent");
-      expect(mockDatabase.close).toHaveBeenCalledTimes(1);
-
-      await repository.findBy({});
-      expect(mockDatabase.close).toHaveBeenCalledTimes(2);
+      expect(mockDatabase.close).not.toHaveBeenCalled();
     });
 
     test("should get client for each operation", async () => {

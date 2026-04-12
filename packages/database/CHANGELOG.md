@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.2.1) - 2026-04-12
+
+### Fixed
+
+- Cache DataSource in TypeormSqliteDatabase — Franck ([9eccaeed](https://github.com/ooneex/ooneex/commit/9eccaeed))
+
 ## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.2.0) - 2026-04-11
 
 ### Added

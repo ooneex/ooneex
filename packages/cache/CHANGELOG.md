@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.3) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
+### Fixed
+
+- Recreate Redis client on connection loss — Franck ([f6507136](https://github.com/ooneex/ooneex/commit/f6507136))
+
 ## [1.3.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.1) - 2026-04-09
 
 ### Changed

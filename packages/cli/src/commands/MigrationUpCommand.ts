@@ -22,7 +22,7 @@ export class MigrationUpCommand implements ICommand {
       logger.warn("No modules with migrations found", undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
       return;
     }
@@ -45,7 +45,7 @@ export class MigrationUpCommand implements ICommand {
       logger.warn("No modules with migrations found", undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
       return;
     }
@@ -56,7 +56,7 @@ export class MigrationUpCommand implements ICommand {
       logger.info(`Running migrations for ${name}...`, undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
 
       const args = ["bun", "run", migrationUpPath];
@@ -76,13 +76,13 @@ export class MigrationUpCommand implements ICommand {
         logger.success(`Migrations completed for ${name}`, undefined, {
           showTimestamp: false,
           showArrow: false,
-          useSymbol: false,
+          useSymbol: true,
         });
       } else {
         logger.error(`Migrations failed for ${name} (exit code: ${exitCode})`, undefined, {
           showTimestamp: false,
           showArrow: false,
-          useSymbol: false,
+          useSymbol: true,
         });
       }
     }

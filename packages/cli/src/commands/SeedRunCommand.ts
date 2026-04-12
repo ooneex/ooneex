@@ -22,7 +22,7 @@ export class SeedRunCommand implements ICommand {
       logger.warn("No modules with seeds found", undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
       return;
     }
@@ -45,7 +45,7 @@ export class SeedRunCommand implements ICommand {
       logger.warn("No modules with seeds found", undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
       return;
     }
@@ -56,7 +56,7 @@ export class SeedRunCommand implements ICommand {
       logger.info(`Running seeds for ${name}...`, undefined, {
         showTimestamp: false,
         showArrow: false,
-        useSymbol: false,
+        useSymbol: true,
       });
 
       const args = ["bun", "run", seedRunPath];
@@ -76,13 +76,13 @@ export class SeedRunCommand implements ICommand {
         logger.success(`Seeds completed for ${name}`, undefined, {
           showTimestamp: false,
           showArrow: false,
-          useSymbol: false,
+          useSymbol: true,
         });
       } else {
         logger.error(`Seeds failed for ${name} (exit code: ${exitCode})`, undefined, {
           showTimestamp: false,
           showArrow: false,
-          useSymbol: false,
+          useSymbol: true,
         });
       }
     }

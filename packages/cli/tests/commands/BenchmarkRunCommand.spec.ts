@@ -5,21 +5,45 @@ import { join } from "node:path";
 let capturedOpts: Record<string, unknown> = {};
 
 // Mock autocannon before importing command
+const mockResult = {
+  url: "http://localhost:80/test",
+  requests: { total: 1000, average: 100, min: 80, max: 120, sent: 1000, stddev: 10, p50: 100, p90: 110, p97_5: 115, p99: 118, p99_9: 120, p99_99: 120, p99_999: 120, p2_5: 82, p0_001: 80, p0_01: 80, p0_1: 80, p1: 80, p10: 85, p25: 90, p75: 108, mean: 100 },
+  latency: { total: 1500, average: 1.5, min: 0, max: 15, stddev: 1.2, p50: 1, p90: 3, p97_5: 5, p99: 8, p99_9: 12, p99_99: 14, p99_999: 15, p2_5: 0, p0_001: 0, p0_01: 0, p0_1: 0, p1: 0, p10: 0, p25: 1, p75: 2, mean: 1.5 },
+  throughput: { total: 10485760, average: 1048576, min: 900000, max: 1200000, stddev: 50000, p50: 1048576, p90: 1100000, p97_5: 1150000, p99: 1180000, p99_9: 1200000, p99_99: 1200000, p99_999: 1200000, p2_5: 910000, p0_001: 900000, p0_01: 900000, p0_1: 900000, p1: 900000, p10: 950000, p25: 1000000, p75: 1100000, mean: 1048576 },
+  duration: 10,
+  errors: 0,
+  timeouts: 0,
+  non2xx: 0,
+  "2xx": 1000,
+  "1xx": 0,
+  "3xx": 0,
+  "4xx": 0,
+  "5xx": 0,
+  mismatches: 0,
+  resets: 0,
+  start: new Date(),
+  finish: new Date(),
+  connections: 10,
+  pipelining: 1,
+};
+
 mock.module("autocannon", () => {
   const fn = Object.assign(
-    mock((opts: Record<string, unknown>) => {
+    mock((opts: Record<string, unknown>, cb?: (err: Error | null, result: typeof mockResult) => void) => {
       capturedOpts = opts;
-      return Promise.resolve({
-        requests: { total: 1000, average: 100 },
-        latency: { average: 1.5, p99: 5 },
-        throughput: { average: 1048576 },
-        errors: 0,
-        timeouts: 0,
-        non2xx: 0,
-      });
+      const instance = {
+        on: mock(() => instance),
+        stop: mock(),
+      };
+      if (cb) {
+        queueMicrotask(() => cb(null, { ...mockResult, url: opts.url as string }));
+        return instance;
+      }
+      return Promise.resolve({ ...mockResult, url: opts.url as string });
     }),
     {
       printResult: mock(() => "benchmark results table"),
+      track: mock(() => {}),
     },
   );
   return { default: fn };

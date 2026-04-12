@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.5.0) - 2026-04-12
+
+### Added
+
+- Use module path in generated test imports — Franck ([d6b448c7](https://github.com/ooneex/ooneex/commit/d6b448c7))
+
 ## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/migrations@1.4.0) - 2026-04-10
 
 ### Added

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.0) - 2026-04-12
+
+### Added
+
+- Add performance analysis and grading to benchmark output — Franck ([4284a693](https://github.com/ooneex/ooneex/commit/4284a693))
+
 ## [1.25.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.25.0) - 2026-04-12
 
 ### Added

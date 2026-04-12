@@ -510,11 +510,15 @@ export const formatHttpRoutes = (
             headers[key] = value;
           });
 
-          await context.cache.set(cacheKey, {
-            body,
-            status: response.status,
-            headers,
-          });
+          await context.cache.set(
+            cacheKey,
+            {
+              body,
+              status: response.status,
+              headers,
+            },
+            300,
+          );
 
           return response;
         }

@@ -218,7 +218,7 @@ export const socketRouteHandler = async ({
   if (cacheKey && context.cache) {
     const data = await context.response.get(currentEnv).json();
     const serialized = JSON.stringify(data);
-    await context.cache.set(cacheKey, serialized);
+    await context.cache.set(cacheKey, serialized, 300);
     logSocketRequest(context, HttpStatus.Code.OK, route.path);
     ws.send(serialized);
     return;

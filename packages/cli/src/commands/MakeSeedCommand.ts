@@ -38,6 +38,7 @@ export class MakeSeedCommand<T extends CommandOptionsType = CommandOptionsType> 
       name,
       seedsDir: join(base, "src", "seeds"),
       testsDir: join(base, "tests", "seeds"),
+      module: module ?? "",
     });
 
     // Create bin/seed/run.ts if it doesn't exist

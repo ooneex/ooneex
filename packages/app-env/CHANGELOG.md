@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.4.0) - 2026-04-12
+
+### Added
+
+- Add AUTH_TOKEN environment variable — Franck ([17717c38](https://github.com/ooneex/ooneex/commit/17717c38))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.3.5) - 2026-04-09
 
 ### Changed

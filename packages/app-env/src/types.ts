@@ -113,6 +113,7 @@ export interface IAppEnv {
   readonly POLAR_ENVIRONMENT: string | undefined;
 
   // Authentication
+  readonly AUTH_TOKEN: string | undefined;
   readonly CLERK_SECRET_KEY: string | undefined;
 
   // Allowed Users

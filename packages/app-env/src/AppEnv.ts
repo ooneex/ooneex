@@ -96,6 +96,7 @@ export class AppEnv implements IAppEnv {
   public readonly POLAR_ENVIRONMENT: string | undefined;
 
   // Authentication
+  public readonly AUTH_TOKEN: string | undefined;
   public readonly CLERK_SECRET_KEY: string | undefined;
 
   // Allowed Users
@@ -215,6 +216,7 @@ export class AppEnv implements IAppEnv {
     this.POLAR_ENVIRONMENT = Bun.env.POLAR_ENVIRONMENT?.trim();
 
     // Authentication
+    this.AUTH_TOKEN = Bun.env.AUTH_TOKEN?.trim();
     this.CLERK_SECRET_KEY = Bun.env.CLERK_SECRET_KEY?.trim();
 
     // Allowed Users

@@ -626,6 +626,7 @@ describe("AppEnv", () => {
       delete Bun.env.OLLAMA_HOST;
       delete Bun.env.POLAR_ACCESS_TOKEN;
       delete Bun.env.POLAR_ENVIRONMENT;
+      delete Bun.env.AUTH_TOKEN;
       delete Bun.env.CLERK_SECRET_KEY;
       delete Bun.env.DEVELOPMENT_ALLOWED_USERS;
       delete Bun.env.STAGING_ALLOWED_USERS;
@@ -700,6 +701,7 @@ describe("AppEnv", () => {
       expect(appEnv.OLLAMA_HOST).toBeUndefined();
       expect(appEnv.POLAR_ACCESS_TOKEN).toBeUndefined();
       expect(appEnv.POLAR_ENVIRONMENT).toBeUndefined();
+      expect(appEnv.AUTH_TOKEN).toBeUndefined();
       expect(appEnv.CLERK_SECRET_KEY).toBeUndefined();
       expect(appEnv.DEVELOPMENT_ALLOWED_USERS).toEqual([]);
       expect(appEnv.STAGING_ALLOWED_USERS).toEqual([]);
@@ -727,6 +729,7 @@ describe("AppEnv", () => {
       Bun.env.DATABASE_URL = "postgres://db";
       Bun.env.JWT_SECRET = "secret123";
       Bun.env.ANTHROPIC_API_KEY = "sk-ant-123";
+      Bun.env.AUTH_TOKEN = "tok_abc123";
       Bun.env.CLERK_SECRET_KEY = "sk_clerk_123";
 
       const appEnv = new AppEnv();
@@ -738,6 +741,7 @@ describe("AppEnv", () => {
       expect(appEnv.DATABASE_URL).toBe("postgres://db");
       expect(appEnv.JWT_SECRET).toBe("secret123");
       expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant-123");
+      expect(appEnv.AUTH_TOKEN).toBe("tok_abc123");
       expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
     });
 
@@ -1074,9 +1078,11 @@ describe("AppEnv", () => {
     });
 
     test("should trim authentication env var", () => {
+      Bun.env.AUTH_TOKEN = "  tok_abc123  ";
       Bun.env.CLERK_SECRET_KEY = "  sk_clerk_123  ";
       const appEnv = new AppEnv();
 
+      expect(appEnv.AUTH_TOKEN).toBe("tok_abc123");
       expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
     });
   });

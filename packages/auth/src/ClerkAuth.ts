@@ -157,10 +157,6 @@ export class ClerkAuth implements IAuth {
       expiresInSeconds: ttl,
     });
 
-    await this.client.sessions.createSession({
-      userId: user.id,
-    });
-
     return { user, token: signInToken.token };
   }
 

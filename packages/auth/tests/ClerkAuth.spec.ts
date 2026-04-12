@@ -37,7 +37,6 @@ const mockCreateClerkClient = mock(() => ({
   sessions: {
     getSession: mock(() => Promise.resolve({ id: "sess_1" })),
     revokeSession: mock(() => Promise.resolve({ id: "sess_1" })),
-    createSession: mock(() => Promise.resolve({ id: "sess_2" })),
   },
   signInTokens: {
     createSignInToken: mock(() => Promise.resolve({ id: "sit_1", token: "sign-in-token" })),
@@ -218,8 +217,7 @@ describe("ClerkAuth", () => {
       client.signInTokens.createSignInToken.mockImplementation(() =>
         Promise.resolve({ id: "sit_1", token: "sign-in-token" }),
       );
-      client.sessions.createSession.mockImplementation(() => Promise.resolve({ id: "sess_2" }));
-    });
+});
 
     test("should sign in with email and password", async () => {
       const result = await auth.signIn({ email: "test@example.com", password: "password123" });

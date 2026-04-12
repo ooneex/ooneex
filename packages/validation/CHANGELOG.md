@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.11) - 2026-04-12
+
+### Fixed
+
+- Remove global flag from chat query forbidden patterns — Franck ([d27ddf6c](https://github.com/ooneex/ooneex/commit/d27ddf6c))
+
 ## [1.1.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/validation@1.1.10) - 2026-04-09
 
 ### Changed

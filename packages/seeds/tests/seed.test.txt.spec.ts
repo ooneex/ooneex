@@ -48,8 +48,13 @@ describe("seed.test.txt", () => {
     expect(content).toContain("existsSync");
   });
 
-  test("should import seed class from @/seeds path", async () => {
+  test("should contain MODULE placeholder", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("@/seeds/{{NAME}}Seed");
+    expect(content).toContain("{{MODULE}}");
+  });
+
+  test("should import seed class from @module path", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@module/{{MODULE}}/seeds/{{NAME}}Seed");
   });
 });

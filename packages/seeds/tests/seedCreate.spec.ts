@@ -188,6 +188,24 @@ describe("seedCreate", () => {
     expect(content).toContain("getDependencies");
   });
 
+  test("should replace MODULE placeholder in generated test file", async () => {
+    await seedCreate({ name: "User", module: "billing" });
+
+    const testFilePath = join(testDir, "tests", "seeds", "UserSeed.spec.ts");
+    const content = await Bun.file(testFilePath).text();
+    expect(content).toContain("@module/billing/seeds/");
+    expect(content).not.toContain("{{MODULE}}");
+  });
+
+  test("should use empty module when not provided in generated test file", async () => {
+    await seedCreate({ name: "User" });
+
+    const testFilePath = join(testDir, "tests", "seeds", "UserSeed.spec.ts");
+    const content = await Bun.file(testFilePath).text();
+    expect(content).toContain("@module//seeds/");
+    expect(content).not.toContain("{{MODULE}}");
+  });
+
   test("should have test imports in generated test file", async () => {
     await seedCreate({ name: "User" });
 

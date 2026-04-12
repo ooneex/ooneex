@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
-import { {{NAME}}Seed } from "@/seeds/{{NAME}}Seed";
+import { {{NAME}}Seed } from "@module/{{MODULE}}/seeds/{{NAME}}Seed";
 
 describe("{{NAME}}Seed", () => {
   test("should have class name ending with 'Seed'", () => {

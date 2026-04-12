@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.24.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.24.0) - 2026-04-12
+
+### Added
+
+- Add BenchmarkRunCommand — Franck ([dc1b316f](https://github.com/ooneex/ooneex/commit/dc1b316f))
+
 ## [1.23.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.23.1) - 2026-04-12
 
 ### Fixed

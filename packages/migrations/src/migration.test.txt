@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { {{NAME}} } from "@/migrations/{{NAME}}";
+import { {{NAME}} } from "@module/{{MODULE}}/migrations/{{NAME}}";
 
 describe("{{NAME}}", () => {
   test("should have class name starting with 'Migration'", () => {

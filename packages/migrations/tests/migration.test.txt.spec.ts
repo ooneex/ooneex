@@ -46,8 +46,13 @@ describe("migration.test.txt", () => {
     expect(content).toContain("prototype.getDependencies");
   });
 
-  test("should import migration class from @/migrations path", async () => {
+  test("should contain MODULE placeholder", async () => {
     const content = await Bun.file(templatePath).text();
-    expect(content).toContain("@/migrations/{{NAME}}");
+    expect(content).toContain("{{MODULE}}");
+  });
+
+  test("should import migration class from @module path", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@module/{{MODULE}}/migrations/{{NAME}}");
   });
 });

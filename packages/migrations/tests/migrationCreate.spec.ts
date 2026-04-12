@@ -132,6 +132,22 @@ describe("migrationCreate", () => {
     expect(content).toContain("getDependencies");
   });
 
+  test("should replace MODULE placeholder in generated test file", async () => {
+    const result = await migrationCreate({ module: "billing" });
+
+    const content = await Bun.file(join(testDir, result.testPath)).text();
+    expect(content).toContain("@module/billing/migrations/");
+    expect(content).not.toContain("{{MODULE}}");
+  });
+
+  test("should use empty module when not provided in generated test file", async () => {
+    const result = await migrationCreate();
+
+    const content = await Bun.file(join(testDir, result.testPath)).text();
+    expect(content).toContain("@module//migrations/");
+    expect(content).not.toContain("{{MODULE}}");
+  });
+
   test("should have test imports in generated test file", async () => {
     const result = await migrationCreate();
 

@@ -7,6 +7,7 @@ import template from "./migration.txt";
 export const migrationCreate = async (config?: {
   migrationsDir?: string;
   testsDir?: string;
+  module?: string;
 }): Promise<{ migrationPath: string; testPath: string }> => {
   const version = generateMigrationVersion();
   const name = `Migration${version}`;
@@ -18,7 +19,7 @@ export const migrationCreate = async (config?: {
     template.replaceAll("{{ name }}", name).replaceAll("{{ version }}", version),
   );
 
-  const testContent = testTemplate.replace(/\{\{NAME\}\}/g, name);
+  const testContent = testTemplate.replace(/\{\{NAME\}\}/g, name).replace(/\{\{MODULE\}\}/g, config?.module ?? "");
   await Bun.write(join(process.cwd(), testsDir, `${name}.spec.ts`), testContent);
 
   const imports: string[] = [];

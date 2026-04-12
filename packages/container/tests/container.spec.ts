@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, EContainerScope } from "@/index";
+import { Container, EContainerScope, container as sharedContainer, injectable } from "@/index";
 
 describe("Container - Dependency Injection", () => {
   let container: Container;
@@ -844,23 +844,6 @@ describe("Container - Dependency Injection", () => {
       expect(instance.handle()).toBe("handled");
     });
 
-    test("should handle classes that are already decorated with @injectable()", () => {
-      const { injectable } = require("inversify");
-
-      @injectable()
-      class DecoratedService {
-        public run(): string {
-          return "running";
-        }
-      }
-
-      // Should not throw even though @injectable() is already applied
-      container.add(DecoratedService);
-      const instance = container.get(DecoratedService);
-      expect(instance).toBeInstanceOf(DecoratedService);
-      expect(instance.run()).toBe("running");
-    });
-
     test("should auto-inject across all scopes", () => {
       class ScopedPlainClass {
         private static count = 0;
@@ -878,6 +861,57 @@ describe("Container - Dependency Injection", () => {
       const instance2 = container.get(ScopedPlainClass);
       expect(instance1).not.toBe(instance2);
       expect(instance1.id).not.toBe(instance2.id);
+    });
+  });
+
+  describe("injectable decorator", () => {
+    test("should register class in shared container with default singleton scope", () => {
+      @injectable()
+      class AutoRegisteredService {
+        public run(): string {
+          return "auto-registered";
+        }
+      }
+
+      expect(sharedContainer.has(AutoRegisteredService)).toBe(true);
+      const instance1 = sharedContainer.get(AutoRegisteredService);
+      const instance2 = sharedContainer.get(AutoRegisteredService);
+      expect(instance1).toBeInstanceOf(AutoRegisteredService);
+      expect(instance1.run()).toBe("auto-registered");
+      expect(instance1).toBe(instance2);
+    });
+
+    test("should register class with transient scope", () => {
+      @injectable(EContainerScope.Transient)
+      class TransientAutoService {
+        private static count = 0;
+        public readonly id: number;
+
+        constructor() {
+          TransientAutoService.count++;
+          this.id = TransientAutoService.count;
+        }
+      }
+
+      expect(sharedContainer.has(TransientAutoService)).toBe(true);
+      const instance1 = sharedContainer.get(TransientAutoService);
+      const instance2 = sharedContainer.get(TransientAutoService);
+      expect(instance1).not.toBe(instance2);
+      expect(instance1.id).not.toBe(instance2.id);
+    });
+
+    test("should register class with request scope", () => {
+      @injectable(EContainerScope.Request)
+      class RequestAutoService {
+        public process(): string {
+          return "request-scoped";
+        }
+      }
+
+      expect(sharedContainer.has(RequestAutoService)).toBe(true);
+      const instance = sharedContainer.get(RequestAutoService);
+      expect(instance).toBeInstanceOf(RequestAutoService);
+      expect(instance.process()).toBe("request-scoped");
     });
   });
 

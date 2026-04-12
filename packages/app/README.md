@@ -222,16 +222,6 @@ type AppConfigType = {
 };
 ```
 
-### Functions
-
-#### `generateRouteDoc()`
-
-Generates API documentation from route definitions.
-
-#### `generateRouteType()`
-
-Generates TypeScript types from route definitions for type-safe API calls.
-
 ## Advanced Usage
 
 ### Single Page Application (SPA) Mode

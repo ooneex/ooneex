@@ -33,7 +33,11 @@
       "Bash(sed -n '43,50p' packages/ai/tests/GeminiAi.spec.ts)",
       "Bash(do git:*)",
       "Bash(git push:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(python3 -c 'import json; d=json.load\\(open\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\); print\\(d.get\\('\\\\''name'\\\\'','\\\\'''\\\\''\\)\\)')",
+      "Bash(python3 -c 'import json; d=json.load\\(open\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\); print\\(d.get\\('\\\\''version'\\\\'','\\\\'''\\\\''\\)\\)')",
+      "Bash(python3 -c 'v='\\\\''__TRACKED_VAR__'\\\\''.split\\('\\\\''.'\\\\''\\); v[2]=str\\(int\\(v[2]\\)+1\\); print\\('\\\\''.'\\\\''.join\\(v\\)\\)')",
+      "Bash(python3 -c ':*)"
     ]
   }
 }

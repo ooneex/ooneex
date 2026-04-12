@@ -22,6 +22,7 @@ export interface IPubSubClient<Data extends Record<string, ScalarType> = Record<
   subscribe: (channel: string, handler: PubSubMessageHandlerType<Data>) => Promise<void>;
   unsubscribe: (channel: string) => Promise<void>;
   unsubscribeAll: () => Promise<void>;
+  close: () => void;
 }
 
 export interface IPubSub<Data extends Record<string, ScalarType> = Record<string, ScalarType>> {

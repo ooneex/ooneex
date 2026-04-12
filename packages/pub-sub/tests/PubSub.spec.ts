@@ -9,6 +9,7 @@ const createMockClient = (): IPubSubClient<TestData> => ({
   subscribe: mock(() => Promise.resolve()),
   unsubscribe: mock(() => Promise.resolve()),
   unsubscribeAll: mock(() => Promise.resolve()),
+  close: mock(() => {}),
 });
 
 class TestPubSub extends PubSub<TestData> {

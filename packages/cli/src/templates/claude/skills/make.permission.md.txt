@@ -62,8 +62,8 @@ Edit `src/permissions/<Name>Permission.ts` to complete the implementation:
 The generated class structure follows this pattern:
 
 ```typescript
+import type { ContextType } from "@ooneex/controller";
 import { decorator, Permission } from "@ooneex/permission";
-import type { IUser } from "@ooneex/user";
 
 @decorator.permission()
 export class <Name>Permission extends Permission {
@@ -75,12 +75,14 @@ export class <Name>Permission extends Permission {
     return this;
   }
 
-  public setUserPermissions(user: IUser | null): this {
-    if (!user) {
-      return this;
-    }
-
+  public setUserPermissions(context: ContextType): this {
     // Example: Grant full access to admins
+    // const { user } = context;
+    //
+    // if (!user) {
+    //   return this;
+    // }
+    //
     // const { roles } = user;
     // if (roles.includes(ERole.ADMIN)) {
     //   this.ability.can("manage", "all");
@@ -88,17 +90,25 @@ export class <Name>Permission extends Permission {
     // }
 
     // Example: Grant specific permissions based on roles
-    // for (const role of roles) {
-    //   if (role === ERole.USER) {
-    //     this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
-    //   }
+    // const { user } = context;
     //
-    //   if (role === ERole.GUEST) {
-    //     this.ability.can("read", "YourEntity", { public: true });
+    // if (user) {
+    //   for (const role of user.roles) {
+    //     if (role === ERole.USER) {
+    //       this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
+    //     }
+    //
+    //     if (role === ERole.GUEST) {
+    //       this.ability.can("read", "YourEntity", { public: true });
+    //     }
     //   }
     // }
 
     return this;
+  }
+
+  public check(context: ContextType): boolean {
+    return true;
   }
 }
 ```

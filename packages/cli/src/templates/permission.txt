@@ -1,5 +1,5 @@
+import type { ContextType } from "@ooneex/controller";
 import { decorator, Permission } from "@ooneex/permission";
-import type { IUser } from "@ooneex/user";
 
 @decorator.permission()
 export class {{NAME}}Permission extends Permission {
@@ -11,12 +11,14 @@ export class {{NAME}}Permission extends Permission {
     return this;
   }
 
-  public setUserPermissions(user: IUser | null): this {
-    if (!user) {
-      return this;
-    }
-
+  public setUserPermissions(context: ContextType): this {
     // Example: Grant full access to admins
+    // const { user } = context;
+    //
+    // if (!user) {
+    //   return this;
+    // }
+    //
     // const { roles } = user;
     // if (roles.includes(ERole.ADMIN)) {
     //   this.ability.can("manage", "all");
@@ -24,16 +26,56 @@ export class {{NAME}}Permission extends Permission {
     // }
 
     // Example: Grant specific permissions based on roles
-    // for (const role of roles) {
-    //   if (role === ERole.USER) {
-    //     this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
-    //   }
+    // const { user } = context;
     //
-    //   if (role === ERole.GUEST) {
-    //     this.ability.can("read", "YourEntity", { public: true });
+    // if (user) {
+    //   for (const role of user.roles) {
+    //     if (role === ERole.USER) {
+    //       this.ability.can(["read", "update"], "YourEntity", { userId: user.id });
+    //     }
+    //
+    //     if (role === ERole.GUEST) {
+    //       this.ability.can("read", "YourEntity", { public: true });
+    //     }
     //   }
     // }
 
     return this;
+  }
+
+  public check(context: ContextType): boolean {
+    // Example 1: Restrict access based on IP or request method
+    // const { ip, method } = context;
+    //
+    // if (!ip) {
+    //   return false;
+    // }
+    //
+    // if (method === "DELETE") {
+    //   return false;
+    // }
+
+    // Example 2: Restrict access based on route roles
+    // const { route } = context;
+    //
+    // if (route?.roles && route.roles.length > 0) {
+    //   return false;
+    // }
+
+    // Example 3: Restrict access based on request header
+    // const { header } = context;
+    //
+    // if (!header.get("Authorization")) {
+    //   return false;
+    // }
+
+    // Example 4: Restrict access based on rate limiter
+    // const { rateLimiter } = context;
+    //
+    // if (rateLimiter) {
+    //   return false;
+    // }
+
+    return true;
   }
 }

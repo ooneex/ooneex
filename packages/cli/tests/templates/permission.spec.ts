@@ -30,6 +30,7 @@ describe("permission.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("allow");
     expect(content).toContain("setUserPermissions");
+    expect(content).toContain("check");
   });
 });
 
@@ -55,5 +56,6 @@ describe("permission.test.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("allow");
     expect(content).toContain("setUserPermissions");
+    expect(content).toContain("check");
   });
 });

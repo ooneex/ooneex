@@ -22,4 +22,9 @@ describe("{{NAME}}Permission", () => {
     expect(typeof {{NAME}}Permission.prototype.setUserPermissions).toBe("function");
   });
 
+  test("should have 'check' method", () => {
+    expect({{NAME}}Permission.prototype.check).toBeDefined();
+    expect(typeof {{NAME}}Permission.prototype.check).toBe("function");
+  });
+
 });

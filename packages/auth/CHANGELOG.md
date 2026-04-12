@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.0) - 2026-04-12
+
+### Added
+
+- Skip auth for guest-only routes in middleware — Franck ([e7c7b6e5](https://github.com/ooneex/ooneex/commit/e7c7b6e5))
+
+### Changed
+
+- Return token string from signIn and create session — Franck ([7f6e3191](https://github.com/ooneex/ooneex/commit/7f6e3191))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.5.0) - 2026-04-11
 
 ### Added

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/cli",
   "description": "Interactive CLI toolkit for scaffolding Ooneex projects, modules, controllers, services, repositories, and more with customizable code generation templates",
-  "version": "1.24.0",
+  "version": "1.25.0",
   "type": "module",
   "files": [
     "dist",

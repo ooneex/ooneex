@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.25.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.25.0) - 2026-04-12
+
+### Added
+
+- Add formatted benchmark output with progress bar — Franck ([4e368bff](https://github.com/ooneex/ooneex/commit/4e368bff))
+
 ## [1.24.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.24.0) - 2026-04-12
 
 ### Added

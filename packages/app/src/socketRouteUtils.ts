@@ -175,6 +175,22 @@ export const socketRouteHandler = async ({
     context.permission = permission.allow().setUserPermissions(context.user).build();
   }
 
+  // Cache: check for cached response
+  const cacheKey =
+    route.cache && context.cache
+      ? `ws:${route.name}:${JSON.stringify(context.params ?? {})}:${JSON.stringify(context.queries ?? {})}:${JSON.stringify(context.payload ?? {})}`
+      : null;
+
+  if (cacheKey && context.cache) {
+    const cached = await context.cache.get<string>(cacheKey);
+
+    if (cached) {
+      logSocketRequest(context, HttpStatus.Code.OK, route.path);
+      ws.send(cached);
+      return;
+    }
+  }
+
   const controller = container.get(route.controller);
 
   try {
@@ -196,6 +212,16 @@ export const socketRouteHandler = async ({
       responseValidationError.status,
       responseValidationError.key,
     );
+  }
+
+  // Cache: store response before sending
+  if (cacheKey && context.cache) {
+    const data = await context.response.get(currentEnv).json();
+    const serialized = JSON.stringify(data);
+    await context.cache.set(cacheKey, serialized);
+    logSocketRequest(context, HttpStatus.Code.OK, route.path);
+    ws.send(serialized);
+    return;
   }
 
   logSocketRequest(context, HttpStatus.Code.OK, route.path);

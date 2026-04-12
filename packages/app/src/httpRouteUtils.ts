@@ -487,6 +487,38 @@ export const formatHttpRoutes = (
           context.permission = permission.allow().setUserPermissions(context.user).build();
         }
 
+        // Cache: check for cached response
+        if (route.cache && context.cache) {
+          const cacheKey = `http:${context.method}:${versionedPath}:${JSON.stringify(context.params ?? {})}:${JSON.stringify(context.queries ?? {})}`;
+          const cached = await context.cache.get<{ body: string; status: number; headers: Record<string, string> }>(
+            cacheKey,
+          );
+
+          if (cached) {
+            logRequest(context);
+            return new Response(cached.body, {
+              status: cached.status,
+              headers: cached.headers,
+            });
+          }
+
+          const response = await httpRouteHandler({ context, route });
+
+          const body = await response.clone().text();
+          const headers: Record<string, string> = {};
+          response.headers.forEach((value, key) => {
+            headers[key] = value;
+          });
+
+          await context.cache.set(cacheKey, {
+            body,
+            status: response.status,
+            headers,
+          });
+
+          return response;
+        }
+
         return httpRouteHandler({ context, route });
       };
     }

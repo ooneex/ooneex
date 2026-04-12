@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.3.7) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/types@1.3.5) - 2026-04-09
 
 ### Changed

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.2.3) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.2.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/database@1.2.1) - 2026-04-12
 
 ### Fixed

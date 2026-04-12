@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.13) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.2.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-request@1.2.11) - 2026-04-09
 
 ### Changed

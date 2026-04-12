@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/command",
   "description": "Command framework for building CLI commands with dependency injection, argument parsing, and execution logging",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "files": [
     "dist",

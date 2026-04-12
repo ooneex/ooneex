@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/validation",
-  "description": "Type-safe validation framework powered by ArkType \u2014 define schemas with built-in constraints, custom rules, and JSON Schema generation",
-  "version": "1.1.12",
+  "description": "Type-safe validation framework powered by ArkType — define schemas with built-in constraints, custom rules, and JSON Schema generation",
+  "version": "1.1.13",
   "type": "module",
   "files": [
     "dist",

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.23.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.23.1) - 2026-04-12
+
+### Fixed
+
+- Simplify benchmark file naming and add target completion — Franck ([cfbe0be5](https://github.com/ooneex/ooneex/commit/cfbe0be5))
+
 ## [1.23.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.23.0) - 2026-04-12
 
 ### Added

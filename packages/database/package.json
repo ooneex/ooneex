@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/database",
-  "description": "Database abstraction layer with TypeORM integration — provides connection pooling, query building, and migration support for relational databases",
-  "version": "1.2.1",
+  "description": "Database abstraction layer with TypeORM integration \u2014 provides connection pooling, query building, and migration support for relational databases",
+  "version": "1.2.2",
   "type": "module",
   "files": [
     "dist",

@@ -10,6 +10,7 @@ import type { ILogger, LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
 import type { IPermission } from "@ooneex/permission";
 import type { IRateLimiter } from "@ooneex/rate-limit";
+import type { ERole } from "@ooneex/role";
 import type { IStorage } from "@ooneex/storage";
 import type { LocaleInfoType } from "@ooneex/translation";
 import type { HttpMethodType, ScalarType } from "@ooneex/types";
@@ -42,6 +43,7 @@ export type ContextType<T extends ContextConfigType = ContextConfigType> = {
     method: HttpMethodType;
     version: number;
     description: string;
+    roles?: ERole[];
   } | null;
   env: IAppEnv;
   response: IResponse<T["response"]>;

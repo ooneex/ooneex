@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.13) - 2026-04-12
+
+### Changed
+
+- Accept ContextType instead of IUser in setUserPermissions — Franck ([d589e738](https://github.com/ooneex/ooneex/commit/d589e738))
+
 ## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.12) - 2026-04-09
 
 ### Changed

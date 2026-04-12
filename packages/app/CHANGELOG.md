@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.8.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.8.0) - 2026-04-12
+
+### Added
+
+- Enforce permission check and return 403 on denial — Franck ([4b0e50bd](https://github.com/ooneex/ooneex/commit/4b0e50bd))
+- Add default 300s TTL to route cache entries — Franck ([7b6cd01a](https://github.com/ooneex/ooneex/commit/7b6cd01a))
+- Add response caching for HTTP and WebSocket routes — Franck ([ecb50d08](https://github.com/ooneex/ooneex/commit/ecb50d08))
+- Pass route roles to HTTP context — Franck ([68db524e](https://github.com/ooneex/ooneex/commit/68db524e))
+
+### Changed
+
+- Remove generateRouteDoc and generateRouteType — Franck ([45846849](https://github.com/ooneex/ooneex/commit/45846849))
+- Cache logger and role instances and reduce socket serialization — Franck ([2e70e31b](https://github.com/ooneex/ooneex/commit/2e70e31b))
+- Pass context to permission setUserPermissions — Franck ([0dabb260](https://github.com/ooneex/ooneex/commit/0dabb260))
+
 ## [1.7.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.7.9) - 2026-04-09
 
 ### Changed

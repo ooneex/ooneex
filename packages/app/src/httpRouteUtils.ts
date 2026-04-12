@@ -13,12 +13,14 @@ import { LogsEntity } from "@ooneex/logger";
 import type { IMailer } from "@ooneex/mailer";
 import type { IMiddleware, MiddlewareClassType } from "@ooneex/middleware";
 import type { IRateLimiter } from "@ooneex/rate-limit";
-import { ERole, Role } from "@ooneex/role";
+import { ERole, type IRole, Role } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import type { IStorage } from "@ooneex/storage";
 import type { ScalarType } from "@ooneex/types";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
+
+const roleChecker: IRole = new Role();
 
 export const checkAllowedUsers = (context: ContextType): RouteValidationError | null => {
   if (!context.user) {
@@ -257,9 +259,8 @@ export const validateRouteAccess = async (
       };
     }
 
-    const role = new Role();
     const hasRequiredRole = route.roles.some((requiredRole) =>
-      context.user?.roles.some((userRole) => role.hasRole(userRole, requiredRole)),
+      context.user?.roles.some((userRole) => roleChecker.hasRole(userRole, requiredRole)),
     );
 
     if (!hasRequiredRole) {
@@ -298,7 +299,7 @@ const buildExceptionResponse = (
   return context.response.exception(message, { status, ...(key ? { key } : {}) }).get(env);
 };
 
-export const logRequest = (context: ContextType): void => {
+export const logRequest = (context: ContextType, statusOverride?: StatusCodeType): void => {
   const path = context.route?.path || "";
   const logger = context.logger as {
     success: (message: string, data?: LogsEntity) => void;
@@ -311,7 +312,7 @@ export const logRequest = (context: ContextType): void => {
     return;
   }
 
-  const status = context.response.getStatus();
+  const status = statusOverride ?? context.response.getStatus();
   const logData = new LogsEntity();
   logData.date = new Date();
   logData.status = status;
@@ -507,7 +508,7 @@ export const formatHttpRoutes = (
           );
 
           if (cached) {
-            logRequest(context);
+            logRequest(context, cached.status as StatusCodeType);
             return new Response(cached.body, {
               status: cached.status,
               headers: cached.headers,

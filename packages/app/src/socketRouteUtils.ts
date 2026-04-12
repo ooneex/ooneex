@@ -121,8 +121,7 @@ export const socketRouteHandler = async ({
 
   context.channel = {
     send: async (response: IResponse): Promise<void> => {
-      const data = await response.get(currentEnv).json();
-      ws.send(JSON.stringify(data));
+      ws.send(await response.get(currentEnv).text());
     },
     close: (code?: number, reason?: string): void => {
       ws.close(code, reason);
@@ -137,13 +136,18 @@ export const socketRouteHandler = async ({
       ws.unsubscribe(route.name);
     },
     publish: async (response: IResponse): Promise<void> => {
-      const data = await response.get(currentEnv).json();
-
-      server.publish(route.name, data);
+      server.publish(route.name, await response.get(currentEnv).text());
     },
   };
 
-  const requestData = JSON.parse(message) as RequestDataType;
+  let requestData: RequestDataType;
+  try {
+    requestData = JSON.parse(message) as RequestDataType;
+  } catch {
+    logSocketRequest(context, HttpStatus.Code.BadRequest, route.path);
+    return sendException(context, "Invalid JSON message", HttpStatus.Code.BadRequest, "INVALID_JSON");
+  }
+
   context.queries = requestData.queries as Record<string, ScalarType>;
   context.payload = requestData.payload as Record<string, ScalarType>;
   context.lang = requestData.lang as LocaleInfoType;
@@ -221,8 +225,7 @@ export const socketRouteHandler = async ({
 
   // Cache: store response before sending
   if (cacheKey && context.cache) {
-    const data = await context.response.get(currentEnv).json();
-    const serialized = JSON.stringify(data);
+    const serialized = await context.response.get(currentEnv).text();
     await context.cache.set(cacheKey, serialized, 300);
     logSocketRequest(context, HttpStatus.Code.OK, route.path);
     ws.send(serialized);

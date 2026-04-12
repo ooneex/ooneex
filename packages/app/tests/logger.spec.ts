@@ -289,7 +289,7 @@ describe("logger", () => {
     expect(callOrder).toEqual(["logger1", "logger2"]);
   });
 
-  test("each method retrieves logger from container independently", () => {
+  test("resolves logger instances once at creation, not per call", () => {
     let getCallCount = 0;
 
     const mockLogger = new MockLogger();
@@ -305,11 +305,13 @@ describe("logger", () => {
 
     const log = logger([MockLogger], container);
 
+    expect(getCallCount).toBe(1);
+
     log.info("Message 1");
     log.info("Message 2");
     log.warn("Message 3");
 
-    expect(getCallCount).toBe(3);
+    expect(getCallCount).toBe(1);
     expect(mockLogger.calls).toHaveLength(3);
   });
 });

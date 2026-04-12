@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.3) - 2026-04-12
+
+### Fixed
+
+- Remove redundant session creation from signIn flow — Franck ([6aa3b397](https://github.com/ooneex/ooneex/commit/6aa3b397))
+
 ## [1.6.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.2) - 2026-04-12
 
 ### Changed

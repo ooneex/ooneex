@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.5.0) - 2026-04-12
+
+### Added
+
+- Add target option to command runner — Franck ([c5cc8c88](https://github.com/ooneex/ooneex/commit/c5cc8c88))
+
 ## [0.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/command@0.4.0) - 2026-04-11
 
 ### Added

@@ -195,6 +195,7 @@
         "@ooneex/mailer": "workspace:^",
         "@ooneex/permission": "workspace:^",
         "@ooneex/rate-limit": "workspace:^",
+        "@ooneex/role": "workspace:^",
         "@ooneex/storage": "workspace:^",
         "@ooneex/translation": "workspace:^",
         "@ooneex/types": "workspace:^",

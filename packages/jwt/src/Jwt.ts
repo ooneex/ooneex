@@ -9,15 +9,12 @@ import type { IJwt, JwtDefaultPayloadType, JwtPayloadType } from "./types";
 export class Jwt implements IJwt {
   private secret: Uint8Array<ArrayBuffer>;
 
-  constructor(
-    @inject(AppEnv) private readonly env: AppEnv,
-    secret?: string,
-  ) {
-    secret = secret || this.env.JWT_SECRET;
+  constructor(@inject(AppEnv) private readonly env: AppEnv) {
+    const secret = this.env.JWT_SECRET;
 
     if (!secret) {
       throw new JwtException(
-        "JWT secret is required. Please provide a secret either through the constructor options or set the JWT_SECRET environment variable.",
+        "JWT secret is required. Please set the JWT_SECRET environment variable.",
         "JWT_SECRET_REQUIRED",
       );
     }

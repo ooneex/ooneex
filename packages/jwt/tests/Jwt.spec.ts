@@ -27,70 +27,41 @@ describe("Jwt", () => {
   });
 
   describe("Constructor", () => {
-    test("should create Jwt instance with provided secret", () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+    test("should create Jwt instance with JWT_SECRET from env", () => {
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       expect(jwt).toBeInstanceOf(Jwt);
       expect(jwt.getSecret()).toBeInstanceOf(Uint8Array);
     });
 
-    test("should create Jwt instance with environment variable secret", () => {
-      Bun.env.JWT_SECRET = testSecret;
-      const jwt = new Jwt(createMockEnv());
-
-      expect(jwt).toBeInstanceOf(Jwt);
-      expect(jwt.getSecret()).toBeInstanceOf(Uint8Array);
-    });
-
-    test("should prioritize constructor secret over environment variable", () => {
-      Bun.env.JWT_SECRET = "env-secret";
-      const constructorSecret = testSecret;
-      const jwt = new Jwt(createMockEnv(), constructorSecret);
+    test("should encode JWT_SECRET correctly", () => {
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       const secretBuffer = jwt.getSecret();
-      const expectedBuffer = new TextEncoder().encode(constructorSecret);
+      const expectedBuffer = new TextEncoder().encode(testSecret);
 
       expect(secretBuffer).toEqual(expectedBuffer);
     });
 
-    test("should throw JwtException when no secret is provided", () => {
-      delete Bun.env.JWT_SECRET;
-
-      expect(() => new Jwt(createMockEnv())).toThrow(JwtException);
-      expect(() => new Jwt(createMockEnv(), "")).toThrow(JwtException);
+    test("should throw JwtException when JWT_SECRET is not set", () => {
+      expect(() => new Jwt(createMockEnv({ JWT_SECRET: undefined }))).toThrow(JwtException);
     });
 
-    test("should throw JwtException with descriptive message when no secret provided", () => {
-      delete Bun.env.JWT_SECRET;
-
+    test("should throw JwtException with descriptive message when JWT_SECRET is not set", () => {
       try {
-        new Jwt(createMockEnv());
+        new Jwt(createMockEnv({ JWT_SECRET: undefined }));
       } catch (error) {
         expect(error).toBeInstanceOf(JwtException);
         expect((error as JwtException).message).toBe(
-          "JWT secret is required. Please provide a secret either through the constructor options or set the JWT_SECRET environment variable.",
+          "JWT secret is required. Please set the JWT_SECRET environment variable.",
         );
       }
-    });
-
-    test("should accept empty string as constructor parameter and fallback to env", () => {
-      Bun.env.JWT_SECRET = testSecret;
-
-      const jwt = new Jwt(createMockEnv(), "");
-      expect(jwt.getSecret()).toEqual(new TextEncoder().encode(testSecret));
-    });
-
-    test("should accept undefined as constructor parameter and fallback to env", () => {
-      Bun.env.JWT_SECRET = testSecret;
-
-      const jwt = new Jwt(createMockEnv(), undefined);
-      expect(jwt.getSecret()).toEqual(new TextEncoder().encode(testSecret));
     });
   });
 
   describe("getSecret", () => {
     test("should return secret as Uint8Array", () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
       const secret = jwt.getSecret();
 
       expect(secret).toBeInstanceOf(Uint8Array);
@@ -106,7 +77,7 @@ describe("Jwt", () => {
       ];
 
       for (const secret of secrets) {
-        const jwt = new Jwt(createMockEnv(), secret);
+        const jwt = new Jwt(createMockEnv({ JWT_SECRET: secret }));
         const returnedSecret = jwt.getSecret();
         const expectedSecret = new TextEncoder().encode(secret);
 
@@ -119,7 +90,7 @@ describe("Jwt", () => {
     let jwt: Jwt;
 
     beforeEach(() => {
-      jwt = new Jwt(createMockEnv(), testSecret);
+      jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
     });
 
     test("should create JWT token with default configuration", async () => {
@@ -295,7 +266,7 @@ describe("Jwt", () => {
     let jwt: Jwt;
 
     beforeEach(() => {
-      jwt = new Jwt(createMockEnv(), testSecret);
+      jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
     });
 
     test("should return true for valid token", async () => {
@@ -342,7 +313,7 @@ describe("Jwt", () => {
     });
 
     test("should return false for token signed with different secret", async () => {
-      const differentJwt = new Jwt(createMockEnv(), "different-secret-key-with-minimum-length");
+      const differentJwt = new Jwt(createMockEnv({ JWT_SECRET: "different-secret-key-with-minimum-length" }));
       const token = await differentJwt.create();
       const isValid = await jwt.isValid(token);
 
@@ -384,7 +355,7 @@ describe("Jwt", () => {
     let jwt: Jwt;
 
     beforeEach(() => {
-      jwt = new Jwt(createMockEnv(), testSecret);
+      jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
     });
 
     test("should return default header for token created with default settings", async () => {
@@ -464,7 +435,7 @@ describe("Jwt", () => {
     let jwt: Jwt;
 
     beforeEach(() => {
-      jwt = new Jwt(createMockEnv(), testSecret);
+      jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
     });
 
     test("should return payload for valid token", async () => {
@@ -655,7 +626,7 @@ describe("Jwt", () => {
 
   describe("Integration Tests", () => {
     test("should create, validate, and decode token in complete flow", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
       const originalPayload = {
         userId: "integration-test-user",
         email: "integration@test.com",
@@ -685,7 +656,7 @@ describe("Jwt", () => {
     });
 
     test("should work with real-world JWT workflow", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       // Simulate login - create access token
       const accessToken = await jwt.create({
@@ -725,8 +696,8 @@ describe("Jwt", () => {
     });
 
     test("should handle cross-instance token validation", async () => {
-      const jwt1 = new Jwt(createMockEnv(), testSecret);
-      const jwt2 = new Jwt(createMockEnv(), testSecret);
+      const jwt1 = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
+      const jwt2 = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       // Create token with first instance
       const token = await jwt1.create({
@@ -742,7 +713,7 @@ describe("Jwt", () => {
     });
 
     test("should demonstrate token lifecycle", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       // Create token with short expiration
       const shortLivedToken = await jwt.create({
@@ -769,7 +740,7 @@ describe("Jwt", () => {
 
   describe("Edge Cases and Error Handling", () => {
     test("should handle very large payloads", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
       const largePayload = {
         userId: "large-payload-test",
         data: new Array(1000).fill("x").join(""),
@@ -785,7 +756,7 @@ describe("Jwt", () => {
     });
 
     test("should handle special characters in payload values", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
       const specialPayload = {
         name: "José María",
         description: "Special chars: 你好 🌟 @#$%^&*()",
@@ -803,7 +774,7 @@ describe("Jwt", () => {
     });
 
     test("should handle concurrent token operations", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
 
       // Create multiple tokens concurrently
       const promises = Array.from({ length: 10 }, (_, i) => jwt.create({ payload: { userId: `user${i}`, index: i } }));
@@ -837,14 +808,14 @@ describe("Jwt", () => {
       ];
 
       for (const secret of secrets) {
-        expect(() => new Jwt(createMockEnv(), secret)).not.toThrow();
-        const jwt = new Jwt(createMockEnv(), secret);
+        expect(() => new Jwt(createMockEnv({ JWT_SECRET: secret }))).not.toThrow();
+        const jwt = new Jwt(createMockEnv({ JWT_SECRET: secret }));
         expect(jwt.getSecret()).toBeInstanceOf(Uint8Array);
       }
     });
 
     test("should maintain consistency across multiple operations", async () => {
-      const jwt = new Jwt(createMockEnv(), testSecret);
+      const jwt = new Jwt(createMockEnv({ JWT_SECRET: testSecret }));
       const payload = { userId: "consistency-test", timestamp: Date.now() };
 
       // Create token

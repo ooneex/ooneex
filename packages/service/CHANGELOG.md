@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.16](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.16) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.1.14](https://github.com/ooneex/ooneex/releases/tag/@ooneex/service@1.1.14) - 2026-04-09
 
 ### Changed

@@ -1,14 +1,18 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import type { IUser } from "@ooneex/user";
 import { Permission, PermissionException } from "@/index";
+import type { ContextType } from "../../controller/src/types";
 
 class TestPermission<A extends string = string, S extends string = string> extends Permission<A, S> {
   public allow(): this {
     return this;
   }
 
-  public setUserPermissions(_user: IUser | null): this {
+  public setUserPermissions(_context: ContextType): this {
     return this;
+  }
+
+  public check(_context: ContextType): boolean {
+    return true;
   }
 
   public addPermission(
@@ -56,8 +60,13 @@ describe("Permission", () => {
     });
 
     test("should have setUserPermissions method", () => {
-      const result = permission.setUserPermissions(null);
+      const result = permission.setUserPermissions({} as ContextType);
       expect(result).toBe(permission);
+    });
+
+    test("should have check method", () => {
+      const result = permission.check({} as ContextType);
+      expect(result).toBe(true);
     });
   });
 

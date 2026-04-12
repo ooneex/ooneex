@@ -1,5 +1,5 @@
 import { AbilityBuilder, createMongoAbility, type MongoAbility } from "@casl/ability";
-import type { IUser } from "@ooneex/user";
+import type { ContextType } from "../../controller/src/types";
 import { PermissionException } from "./PermissionException";
 import type { IPermission, PermissionActionType, Subjects } from "./types";
 
@@ -12,7 +12,8 @@ export abstract class Permission<A extends string = string, S extends string = s
   }
 
   public abstract allow(): this;
-  public abstract setUserPermissions(user: IUser | null): this;
+  public abstract setUserPermissions(context: ContextType): this;
+  public abstract check(context: ContextType): boolean;
 
   public build(): this {
     this.builtAbility = this.ability.build();

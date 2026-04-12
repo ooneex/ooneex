@@ -1,4 +1,4 @@
-import type { IUser } from "@ooneex/user";
+import type { ContextType } from "../../controller/src/types";
 
 export enum EPermissionAction {
   CREATE = "create",
@@ -88,8 +88,9 @@ export type PermissionClassType = new (...args: any[]) => IPermission;
 
 export interface IPermission<A extends string = string, S extends string = string> {
   allow: () => IPermission<A, S>;
-  setUserPermissions: (user: IUser | null) => IPermission<A, S>;
+  setUserPermissions: (context: ContextType) => IPermission<A, S>;
   build: () => IPermission<A, S>;
+  check: (context: ContextType) => boolean;
   can: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
   cannot: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
 }

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import { Container, EContainerScope } from "@ooneex/container";
-import type { IUser } from "@ooneex/user";
 import { decorator } from "@/decorators";
 import type { IPermission } from "@/types";
 
@@ -31,8 +30,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -61,8 +60,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -94,8 +93,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -135,8 +134,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -169,8 +168,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -202,8 +201,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -234,8 +233,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -263,11 +262,11 @@ describe("decorator.permission", () => {
       public cannot(_action: string, _subject: string, _field?: string): boolean {
         return false;
       }
-      public setUserPermissions(_user: IUser | null): this {
+      public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -301,12 +300,12 @@ describe("decorator.permission", () => {
         return false;
       }
 
-      public setUserPermissions(_user: IUser | null): this {
+      public setUserPermissions(): this {
         return this;
       }
 
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 
@@ -338,8 +337,8 @@ describe("decorator.permission", () => {
       public setUserPermissions(): this {
         return this;
       }
-      public check(): Promise<boolean> {
-        return Promise.resolve(true);
+      public check(): boolean {
+        return true;
       }
     }
 

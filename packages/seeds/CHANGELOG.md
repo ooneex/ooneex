@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.6.0) - 2026-04-12
+
+### Added
+
+- Use module path in generated test imports — Franck ([ad856db0](https://github.com/ooneex/ooneex/commit/ad856db0))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.5.0) - 2026-04-10
 
 ### Added

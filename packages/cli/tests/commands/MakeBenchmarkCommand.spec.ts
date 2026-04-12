@@ -134,7 +134,7 @@ export class ListStatusesController {
 
       await command.run({ name: "load", target: "UpdateStatusController" });
 
-      const filePath = join(testDir, "src", "controllers", "status.update.load.bench.json");
+      const filePath = join(testDir, "src", "controllers", "load.bench.json");
       expect(existsSync(filePath)).toBe(true);
 
       const content = JSON.parse(await Bun.file(filePath).text());
@@ -153,7 +153,7 @@ export class ListStatusesController {
 
       await command.run({ name: "load", target: "ListStatusesController" });
 
-      const filePath = join(testDir, "src", "controllers", "status.list.load.bench.json");
+      const filePath = join(testDir, "src", "controllers", "load.bench.json");
       expect(existsSync(filePath)).toBe(true);
 
       const content = JSON.parse(await Bun.file(filePath).text());
@@ -171,7 +171,7 @@ export class ListStatusesController {
 
       await command.run({ name: "stress", target: "UpdateStatus" });
 
-      const filePath = join(testDir, "src", "controllers", "status.update.stress.bench.json");
+      const filePath = join(testDir, "src", "controllers", "stress.bench.json");
       expect(existsSync(filePath)).toBe(true);
     });
 
@@ -189,7 +189,7 @@ export class ListStatusesController {
 
       await command.run({ name: "load", module: "status", target: "UpdateStatusController" });
 
-      const filePath = join(moduleControllersDir, "status.update.load.bench.json");
+      const filePath = join(moduleControllersDir, "load.bench.json");
       expect(existsSync(filePath)).toBe(true);
     });
 
@@ -198,7 +198,7 @@ export class ListStatusesController {
 
       await command.run({ name: "perf", target: "ListStatusesController" });
 
-      const filePath = join(testDir, "src", "controllers", "status.list.perf.bench.json");
+      const filePath = join(testDir, "src", "controllers", "perf.bench.json");
       const content = JSON.parse(await Bun.file(filePath).text());
       expect(content.connections).toBe(10);
       expect(content.duration).toBe(10);
@@ -209,7 +209,7 @@ export class ListStatusesController {
 
       await command.run({ name: "load", target: "ListStatusesController" });
 
-      const filePath = join(testDir, "src", "controllers", "status.list.load.bench.json");
+      const filePath = join(testDir, "src", "controllers", "load.bench.json");
       const content = JSON.parse(await Bun.file(filePath).text());
       expect(content.queries.page).toBe(0);
       expect(content.queries.limit).toBe(0);

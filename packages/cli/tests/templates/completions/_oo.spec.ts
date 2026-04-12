@@ -69,6 +69,11 @@ describe("_oo.txt", () => {
       expect(content).toContain("modules/*/src/controllers/*Controller.ts");
       expect(content).toContain("compadd -a names");
     });
+
+    test("should only match names containing a dot to filter out non-route names", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain('\\([^"]*\\.[^"]*\\)');
+    });
   });
 
   describe("controllers helper", () => {

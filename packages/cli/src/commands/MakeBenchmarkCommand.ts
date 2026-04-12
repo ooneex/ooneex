@@ -138,7 +138,7 @@ export class MakeBenchmarkCommand<T extends CommandOptionsType = CommandOptionsT
     benchmark.duration = 10;
 
     const jsonContent = JSON.stringify(benchmark, null, 2);
-    const benchmarkFileName = `${routeInfo.name}.${name}.bench.json`;
+    const benchmarkFileName = `${name}.bench.json`;
     const filePath = join(controllersDir, benchmarkFileName);
     await Bun.write(filePath, `${jsonContent}\n`);
 

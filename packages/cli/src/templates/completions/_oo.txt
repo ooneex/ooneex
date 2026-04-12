@@ -11,7 +11,7 @@ _oo_modules() {
 _oo_route_names() {
   local -a names
   if [[ -d modules ]]; then
-    names=(${(@f)"$(command grep -rh 'name:' modules/*/src/controllers/*Controller.ts 2>/dev/null | sed -n 's/.*name: "\([^"]*\)".*/\1/p' | sort -u)"})
+    names=(${(@f)"$(command grep -rh 'name:' modules/*/src/controllers/*Controller.ts 2>/dev/null | sed -n 's/.*name: "\([^"]*\.[^"]*\)".*/\1/p' | sort -u)"})
     compadd -a names
   fi
 }

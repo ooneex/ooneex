@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.11](https://github.com/ooneex/ooneex/releases/tag/@ooneex/role@1.1.11) - 2026-04-12
+
+### Changed
+
+- Bump package versions and fix description dashes — Franck ([78bf3699](https://github.com/ooneex/ooneex/commit/78bf3699))
+
 ## [1.1.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/role@1.1.9) - 2026-04-08
 
 ### Changed

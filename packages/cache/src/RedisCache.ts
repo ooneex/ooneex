@@ -9,6 +9,8 @@ import type { RedisCacheOptionsType } from "./types";
 export class RedisCache extends AbstractCache {
   private client: Bun.RedisClient;
   private readonly namespace: string | null;
+  private readonly connectionString: string;
+  private readonly clientOptions: Record<string, unknown>;
 
   constructor(
     @inject(AppEnv) private readonly env: AppEnv,
@@ -25,6 +27,8 @@ export class RedisCache extends AbstractCache {
       );
     }
 
+    this.connectionString = connectionString;
+
     const { connectionString: _, namespace: __, ...userOptions } = options;
 
     const defaultOptions = {
@@ -36,9 +40,9 @@ export class RedisCache extends AbstractCache {
       enableAutoPipelining: true,
     };
 
-    const clientOptions = { ...defaultOptions, ...userOptions };
+    this.clientOptions = { ...defaultOptions, ...userOptions };
 
-    this.client = new Bun.RedisClient(connectionString, clientOptions);
+    this.client = new Bun.RedisClient(this.connectionString, this.clientOptions);
   }
 
   private getKey(key: string): string {
@@ -47,6 +51,7 @@ export class RedisCache extends AbstractCache {
 
   protected async connect(): Promise<void> {
     if (!this.client.connected) {
+      this.client = new Bun.RedisClient(this.connectionString, this.clientOptions);
       await this.client.connect();
     }
   }

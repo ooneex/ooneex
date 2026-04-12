@@ -533,6 +533,38 @@ describe("RedisCacheAdapter", () => {
     });
   });
 
+  describe("reconnection", () => {
+    test("should recreate client when connection is lost", async () => {
+      mockRedisClient.get.mockResolvedValue(testValue);
+
+      // First call establishes connection
+      await adapter.get(testKey);
+      const callsAfterFirstGet = MockRedisClient.mock.calls.length;
+
+      // Simulate connection drop
+      mockRedisClient.connected = false;
+
+      // Next call should recreate the client
+      await adapter.get(testKey);
+      expect(MockRedisClient).toHaveBeenCalledTimes(callsAfterFirstGet + 1);
+      expect(MockRedisClient).toHaveBeenLastCalledWith("redis://localhost:6379/1", defaultOptions);
+      expect(mockRedisClient.connect).toHaveBeenCalled();
+    });
+
+    test("should not recreate client when connection is healthy", async () => {
+      mockRedisClient.get.mockResolvedValue(testValue);
+
+      await adapter.get(testKey);
+      MockRedisClient.mockClear();
+
+      // Connection still healthy
+      await adapter.get(testKey);
+      await adapter.get(testKey);
+
+      expect(MockRedisClient).toHaveBeenCalledTimes(0);
+    });
+  });
+
   describe("delete and has methods integration", () => {
     test("should return false when checking existence after deletion", async () => {
       mockRedisClient.set.mockResolvedValue();

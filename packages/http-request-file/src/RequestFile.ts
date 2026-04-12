@@ -2,6 +2,8 @@ import { Mime, type MimeType } from "@ooneex/http-mimes";
 import { random, toKebabCase } from "@ooneex/utils";
 import type { IRequestFile } from "./types";
 
+const mime = new Mime();
+
 export class RequestFile implements IRequestFile {
   public readonly id: string;
   public readonly name: string;
@@ -31,7 +33,6 @@ export class RequestFile implements IRequestFile {
     this.id = random.nanoid(25);
     this.name = `${this.id}.${this.extension}`;
 
-    const mime = new Mime();
     const typeAsString = this.type as string;
 
     this.isImage = mime.isImage(typeAsString);

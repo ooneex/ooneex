@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.13) - 2026-04-12
+
+### Changed
+
+- Create Resend client once in constructor — Franck ([16068efb](https://github.com/ooneex/ooneex/commit/16068efb))
+
 ## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/mailer@1.1.12) - 2026-04-09
 
 ### Changed

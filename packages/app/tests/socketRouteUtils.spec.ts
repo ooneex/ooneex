@@ -545,6 +545,7 @@ describe("socketRouteUtils", () => {
     });
 
     test("builds permission and sets context.permission when route has permission", async () => {
+      const checkMock = mock(() => true);
       const allowMock = mock(() => mockPermission);
       const setUserPermissionsMock = mock(() => mockPermission);
       const buildMock = mock(() => mockPermission);
@@ -553,12 +554,14 @@ describe("socketRouteUtils", () => {
         allow: allowMock,
         setUserPermissions: setUserPermissionsMock,
         build: buildMock,
+        check: checkMock,
       };
 
       class SocketPermission {
         allow = allowMock;
         setUserPermissions = setUserPermissionsMock;
         build = buildMock;
+        check = checkMock;
       }
       container.add(SocketPermission);
 
@@ -600,6 +603,67 @@ describe("socketRouteUtils", () => {
       expect(allowMock).toHaveBeenCalled();
       expect(setUserPermissionsMock).toHaveBeenCalled();
       expect(buildMock).toHaveBeenCalled();
+      expect(checkMock).toHaveBeenCalled();
+    });
+
+    test("returns 403 when permission check fails", async () => {
+      const checkMock = mock(() => false);
+      const allowMock = mock(() => mockDeniedPermission);
+      const setUserPermissionsMock = mock(() => mockDeniedPermission);
+      const buildMock = mock(() => mockDeniedPermission);
+
+      const mockDeniedPermission = {
+        allow: allowMock,
+        setUserPermissions: setUserPermissionsMock,
+        build: buildMock,
+        check: checkMock,
+      };
+
+      class DeniedSocketPermission {
+        allow = allowMock;
+        setUserPermissions = setUserPermissionsMock;
+        build = buildMock;
+        check = checkMock;
+      }
+      container.add(DeniedSocketPermission);
+
+      const wsSendMock = mock(() => {});
+      const context = createMockSocketContext();
+
+      class DeniedPermSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ ok: true });
+        }
+      }
+      container.add(DeniedPermSocketController);
+
+      const route = createMockSocketRoute({
+        controller: DeniedPermSocketController,
+        permission: DeniedSocketPermission as unknown as PermissionClassType,
+      });
+
+      const wsId = `test-ws-id-denied-permission-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        lang: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(checkMock).toHaveBeenCalled();
+      const sentData = JSON.parse(String((wsSendMock.mock.calls as unknown[][])?.[0]?.[0]));
+      expect(sentData.status).toBe(HttpStatus.Code.Forbidden);
     });
 
     test("does not set permission when route has no permission", async () => {

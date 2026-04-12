@@ -485,6 +485,18 @@ export const formatHttpRoutes = (
         if (route.permission) {
           const permission = container.get(route.permission);
           context.permission = permission.allow().setUserPermissions(context).build();
+
+          if (!context.permission.check(context)) {
+            const httpResponse = buildExceptionResponse(
+              context,
+              "Forbidden",
+              HttpStatus.Code.Forbidden,
+              context.env.APP_ENV,
+              "PERMISSION_DENIED",
+            );
+            logRequest(context);
+            return httpResponse;
+          }
         }
 
         // Cache: check for cached response

@@ -730,6 +730,7 @@ describe("httpRouteUtils", () => {
 
   describe("formatHttpRoutes permission", () => {
     test("builds permission and sets context.permission when route has permission", async () => {
+      const checkMock = mock(() => true);
       const allowMock = mock(() => mockPermission);
       const setUserPermissionsMock = mock(() => mockPermission);
       const buildMock = mock(() => mockPermission);
@@ -738,12 +739,14 @@ describe("httpRouteUtils", () => {
         allow: allowMock,
         setUserPermissions: setUserPermissionsMock,
         build: buildMock,
+        check: checkMock,
       };
 
       class TestPermission {
         allow = allowMock;
         setUserPermissions = setUserPermissionsMock;
         build = buildMock;
+        check = checkMock;
       }
       container.add(TestPermission);
 

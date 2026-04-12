@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.8) - 2026-04-12
+
+### Changed
+
+- Reuse shared HttpStatus instance — Franck ([df0c6c86](https://github.com/ooneex/ooneex/commit/df0c6c86))
+
 ## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/http-response@1.3.7) - 2026-04-09
 
 ### Changed

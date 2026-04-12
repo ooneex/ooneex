@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.5.0) - 2026-04-12
+
+### Added
+
+- Add injectable decorator with scope support — Franck ([8d0f878b](https://github.com/ooneex/ooneex/commit/8d0f878b))
+
 ## [1.4.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.4.4) - 2026-04-09
 
 ### Changed

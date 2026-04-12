@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/container",
-  "description": "Dependency injection container built on Inversify \u2014 manages service lifecycle with singleton, transient, and request-scoped registrations and automatic dependency resolution",
-  "version": "1.4.5",
+  "description": "Dependency injection container built on Inversify — manages service lifecycle with singleton, transient, and request-scoped registrations and automatic dependency resolution",
+  "version": "1.5.0",
   "type": "module",
   "files": [
     "dist",

@@ -8,23 +8,25 @@ import type { IMailer } from "./types";
 
 @decorator.mailer()
 export class ResendMailer implements IMailer {
-  private apiKey: string;
+  private readonly client: Resend;
   private from?: { name: string; address: string };
 
   constructor(@inject(AppEnv) private readonly env: AppEnv) {
-    this.apiKey = this.env.RESEND_API_KEY as string;
+    const apiKey = this.env.RESEND_API_KEY as string;
 
     this.from = {
       name: this.env.MAILER_SENDER_NAME || "",
       address: this.env.MAILER_SENDER_ADDRESS || "",
     };
 
-    if (!this.apiKey) {
+    if (!apiKey) {
       throw new MailerException(
         "Resend API key is required. Please set the RESEND_API_KEY environment variable.",
         "API_KEY_REQUIRED",
       );
     }
+
+    this.client = new Resend(apiKey);
   }
 
   public async send(config: {
@@ -50,9 +52,7 @@ export class ResendMailer implements IMailer {
       );
     }
 
-    const client = new Resend(this.apiKey);
-
-    await client.emails.send({
+    await this.client.emails.send({
       to: config.to,
       from: `${senderName} <${senderAddress}>`,
       subject: `${config.subject}`,

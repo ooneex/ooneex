@@ -1,4 +1,4 @@
-import { createClerkClient, type Session, type SignInToken, type User, verifyToken } from "@clerk/backend";
+import { createClerkClient, type Session, type User, verifyToken } from "@clerk/backend";
 import { AppEnv } from "@ooneex/app-env";
 import { inject } from "@ooneex/container";
 import { AuthException } from "./AuthException";
@@ -132,7 +132,7 @@ export class ClerkAuth implements IAuth {
     email: string;
     password: string;
     ttl?: number;
-  }): Promise<{ user: User; token: SignInToken }> {
+  }): Promise<{ user: User; token: string }> {
     const { data: users } = await this.client.users.getUserList({
       emailAddress: [email],
     });
@@ -152,12 +152,16 @@ export class ClerkAuth implements IAuth {
       throw new AuthException("Invalid email or password.", "INVALID_CREDENTIALS");
     }
 
-    const token = await this.client.signInTokens.createSignInToken({
+    const signInToken = await this.client.signInTokens.createSignInToken({
       userId: user.id,
       expiresInSeconds: ttl,
     });
 
-    return { user, token };
+    await this.client.sessions.createSession({
+      userId: user.id,
+    });
+
+    return { user, token: signInToken.token };
   }
 
   public async signOut(sessionId: string): Promise<Session> {

@@ -19,17 +19,19 @@ export class TypeormSqliteDatabase extends TypeormDatabase {
       );
     }
 
-    this.source = new DataSource({
-      synchronize: false,
-      entities: [
-        // Load your entities here
-      ],
-      enableWAL: true,
-      busyErrorRetry: 2000,
-      busyTimeout: 30_000,
-      database,
-      type: "sqlite",
-    });
+    if (!this.source) {
+      this.source = new DataSource({
+        synchronize: false,
+        entities: [
+          // Load your entities here
+        ],
+        enableWAL: true,
+        busyErrorRetry: 2000,
+        busyTimeout: 30_000,
+        database,
+        type: "sqlite",
+      });
+    }
 
     return this.source;
   }

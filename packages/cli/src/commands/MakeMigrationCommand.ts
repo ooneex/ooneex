@@ -31,6 +31,7 @@ export class MakeMigrationCommand<T extends CommandOptionsType = CommandOptionsT
     const { migrationPath: filePath } = await migrationCreate({
       migrationsDir: join(base, "src", "migrations"),
       testsDir: join(base, "tests", "migrations"),
+      module: module ?? "",
     });
 
     // Create bin/migration/up.ts if it doesn't exist

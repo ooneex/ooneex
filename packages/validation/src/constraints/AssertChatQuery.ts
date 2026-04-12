@@ -5,11 +5,11 @@ import { Validation } from "../Validation";
 const CHAT_QUERY_MIN_LENGTH = 1;
 const CHAT_QUERY_MAX_LENGTH = 2000;
 const CHAT_QUERY_FORBIDDEN_PATTERNS = [
-  /<script[^>]*>.*?<\/script>/gi,
-  /<\/?[a-zA-Z][^>]*>/g,
-  /javascript:/gi,
-  /data:/gi,
-  /vbscript:/gi,
+  /<script[^>]*>.*?<\/script>/i,
+  /<\/?[a-zA-Z][^>]*>/,
+  /javascript:/i,
+  /data:/i,
+  /vbscript:/i,
 ];
 
 export class AssertChatQuery extends Validation {
@@ -28,7 +28,6 @@ export class AssertChatQuery extends Validation {
     }
 
     for (const pattern of CHAT_QUERY_FORBIDDEN_PATTERNS) {
-      pattern.lastIndex = 0;
       if (pattern.test(data as string)) {
         return this.invalidResult("Invalid chat query");
       }

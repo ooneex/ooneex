@@ -43,6 +43,9 @@ export const run = async (): Promise<void> => {
       drop: {
         type: "boolean",
       },
+      target: {
+        type: "string",
+      },
     },
     strict: false,
     allowPositionals: true,
@@ -68,6 +71,7 @@ export const run = async (): Promise<void> => {
     module: typeof values.module === "string" ? toKebabCase(values.module) : values.module,
     destination: values.destination,
     drop: values.drop,
+    target: values.target,
     route: {
       name: values["route-name"],
       path: values["route-path"] as `/${string}` | undefined,

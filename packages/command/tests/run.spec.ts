@@ -246,6 +246,33 @@ describe("run", () => {
       expect(args[0].drop).toBe(true);
     });
 
+    test("should pass target option", async () => {
+      const runFn = mock(async () => {});
+
+      class TargetCommand implements ICommand {
+        public run = runFn;
+        public getName(): string {
+          return "target-cmd";
+        }
+        public getDescription(): string {
+          return "target command";
+        }
+      }
+
+      container.add(TargetCommand);
+      COMMANDS_CONTAINER.push(TargetCommand);
+
+      mockParseArgsResult = {
+        values: { target: "UpdateStatusController" },
+        positionals: ["bun", "script.ts", "target-cmd"],
+      };
+
+      await run();
+
+      const args = runFn.mock.calls[0] as unknown as [Record<string, unknown>];
+      expect(args[0].target).toBe("UpdateStatusController");
+    });
+
     test("should pass channel and destination options", async () => {
       const runFn = mock(async () => {});
 
@@ -448,6 +475,7 @@ describe("run", () => {
       expect(args[0].module).toBeUndefined();
       expect(args[0].destination).toBeUndefined();
       expect(args[0].drop).toBeUndefined();
+      expect(args[0].target).toBeUndefined();
 
       const route = args[0].route as Record<string, unknown>;
       expect(route.name).toBeUndefined();

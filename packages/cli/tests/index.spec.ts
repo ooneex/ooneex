@@ -38,6 +38,7 @@ describe("@ooneex/cli - index", () => {
     "CompletionZshCommand",
     "HelpCommand",
     "MakeAiCommand",
+    "MakeBenchmarkCommand",
     "MakeAnalyticsCommand",
     "MakeAppCommand",
     "MakeCacheCommand",

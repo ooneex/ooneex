@@ -58,6 +58,32 @@ describe("_ooneex.txt", () => {
     });
   });
 
+  describe("route names helper", () => {
+    test("should define _ooneex_route_names function", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("_ooneex_route_names()");
+    });
+
+    test("should grep route names from controller files", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("modules/*/src/controllers/*Controller.ts");
+      expect(content).toContain("compadd -a names");
+    });
+  });
+
+  describe("controllers helper", () => {
+    test("should define _ooneex_controllers function", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("_ooneex_controllers()");
+    });
+
+    test("should grep controller class names from controller files", async () => {
+      const content = await Bun.file(templatePath).text();
+      expect(content).toContain("export class");
+      expect(content).toContain("compadd -a controllers");
+    });
+  });
+
   describe("commands list", () => {
     const expectedCommands = [
       "app\\:build",
@@ -68,6 +94,7 @@ describe("_ooneex.txt", () => {
       "help",
       "make\\:ai",
       "make\\:analytics",
+      "make\\:benchmark",
       "make\\:app",
       "make\\:cache",
       "make\\:claude\\:skill",
@@ -121,6 +148,18 @@ describe("_ooneex.txt", () => {
       const match = content.match(/command:run\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("_ooneex_custom_commands");
+    });
+
+    test("make:benchmark should have name, module, and target options", async () => {
+      const content = await Bun.file(templatePath).text();
+      const match = content.match(/make:benchmark\)([\s\S]*?);;/);
+      expect(match).not.toBeNull();
+      expect(match?.[1]).toContain("--name=");
+      expect(match?.[1]).toContain("_ooneex_route_names");
+      expect(match?.[1]).toContain("--module=");
+      expect(match?.[1]).toContain("_ooneex_modules");
+      expect(match?.[1]).toContain("--target=");
+      expect(match?.[1]).toContain("_ooneex_controllers");
     });
 
     test("make:controller should have name, module, route-name, route-path, route-method, and is-socket options", async () => {

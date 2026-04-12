@@ -8,6 +8,22 @@ _oo_modules() {
   fi
 }
 
+_oo_route_names() {
+  local -a names
+  if [[ -d modules ]]; then
+    names=(${(@f)"$(command grep -rh 'name:' modules/*/src/controllers/*Controller.ts 2>/dev/null | sed -n 's/.*name: "\([^"]*\)".*/\1/p' | sort -u)"})
+    compadd -a names
+  fi
+}
+
+_oo_controllers() {
+  local -a controllers
+  if [[ -d modules ]]; then
+    controllers=(${(@f)"$(command grep -rh 'export class' modules/*/src/controllers/*Controller.ts 2>/dev/null | sed -n 's/.*export class \([^ ]*Controller\).*/\1/p' | sort -u)"})
+    compadd -a controllers
+  fi
+}
+
 _oo_custom_commands() {
   local -a cmds
   if [[ -d modules ]]; then
@@ -27,6 +43,7 @@ _oo() {
     'help:Show available commands'
     'make\:ai:Generate a new AI class'
     'make\:analytics:Generate a new analytics class'
+    'make\:benchmark:Generate a new benchmark file'
     'make\:app:Generate a new application'
     'make\:cache:Generate a new cache class'
     'make\:claude\:skill:Generate Claude skills from templates'
@@ -82,6 +99,12 @@ _oo() {
         command:run)
           _arguments -s \
             '1:command name:_oo_custom_commands'
+          ;;
+        make:benchmark)
+          _arguments -s \
+            '--name=[Benchmark name]:name:_oo_route_names' \
+            '--module=[Module name]:module:_oo_modules' \
+            '--target=[Target controller name]:target:_oo_controllers'
           ;;
         make:controller)
           _arguments -s \

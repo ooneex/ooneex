@@ -5,6 +5,7 @@ export { CommandRunCommand } from "./CommandRunCommand";
 export { CompletionZshCommand } from "./CompletionZshCommand";
 export { HelpCommand } from "./HelpCommand";
 export { MakeAiCommand } from "./MakeAiCommand";
+export { MakeBenchmarkCommand } from "./MakeBenchmarkCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";
 export { MakeAppCommand } from "./MakeAppCommand";
 export { MakeCacheCommand } from "./MakeCacheCommand";

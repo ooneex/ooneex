@@ -28,10 +28,11 @@ const createMockClerkUser = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-const createMockContext = (token: string | null = "valid-token") => ({
+const createMockContext = (token: string | null = "valid-token", route?: { roles?: ERole[] } | null) => ({
   header: {
     getBearerToken: mock(() => token),
   },
+  route: route !== undefined ? route : null,
   user: undefined as unknown,
 });
 
@@ -47,8 +48,8 @@ describe("ClerkAuthMiddleware", () => {
   });
 
   describe("Token validation", () => {
-    test("should throw AuthException when bearer token is missing", async () => {
-      const context = createMockContext(null);
+    test("should throw AuthException when bearer token is missing and roles require auth", async () => {
+      const context = createMockContext(null, { roles: [ERole.USER] });
 
       try {
         await middleware.handler(context as never);
@@ -59,8 +60,56 @@ describe("ClerkAuthMiddleware", () => {
       }
     });
 
-    test("should throw AuthException when bearer token is empty string", async () => {
-      const context = createMockContext("");
+    test("should throw AuthException when bearer token is empty string and roles require auth", async () => {
+      const context = createMockContext("", { roles: [ERole.ADMIN] });
+
+      try {
+        await middleware.handler(context as never);
+        expect.unreachable("Should have thrown");
+      } catch (error) {
+        expect(error).toBeInstanceOf(AuthException);
+        expect((error as AuthException).message).toBe("Authentication required: Missing bearer token");
+      }
+    });
+
+    test("should return context without throwing when no token and route has no roles", async () => {
+      const context = createMockContext(null, { roles: [] });
+
+      const result = await middleware.handler(context as never);
+
+      expect(result).toBe(context as never);
+      expect(context.user).toBeUndefined();
+    });
+
+    test("should return context without throwing when no token and route roles is only GUEST", async () => {
+      const context = createMockContext(null, { roles: [ERole.GUEST] });
+
+      const result = await middleware.handler(context as never);
+
+      expect(result).toBe(context as never);
+      expect(context.user).toBeUndefined();
+    });
+
+    test("should return context without throwing when no token and route is null", async () => {
+      const context = createMockContext(null, null);
+
+      const result = await middleware.handler(context as never);
+
+      expect(result).toBe(context as never);
+      expect(context.user).toBeUndefined();
+    });
+
+    test("should return context without throwing when no token and route has no roles property", async () => {
+      const context = createMockContext(null, {});
+
+      const result = await middleware.handler(context as never);
+
+      expect(result).toBe(context as never);
+      expect(context.user).toBeUndefined();
+    });
+
+    test("should throw when no token and route has GUEST plus other roles", async () => {
+      const context = createMockContext(null, { roles: [ERole.GUEST, ERole.USER] });
 
       try {
         await middleware.handler(context as never);

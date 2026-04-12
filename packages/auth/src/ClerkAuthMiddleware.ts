@@ -21,7 +21,14 @@ export class ClerkAuthMiddleware implements IMiddleware, IAuth {
   public async handler<T extends ContextConfigType>(context: ContextType<T>): Promise<ContextType<T>> {
     const token = context.header.getBearerToken();
 
+    const routeRoles = context.route?.roles ?? [];
+    const isGuestOnly = routeRoles.length === 0 || (routeRoles.length === 1 && routeRoles[0] === ERole.GUEST);
+
     if (!token) {
+      if (isGuestOnly) {
+        return context;
+      }
+
       throw new AuthException("Authentication required: Missing bearer token", "MISSING_BEARER_TOKEN", {
         status: HttpStatus.Code.Unauthorized,
       });

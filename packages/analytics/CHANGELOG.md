@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.13) - 2026-04-12
+
+### Changed
+
+- Extract shutdown from capture into dedicated method — Franck ([454f1030](https://github.com/ooneex/ooneex/commit/454f1030))
+
 ## [1.1.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/analytics@1.1.12) - 2026-04-09
 
 ### Changed

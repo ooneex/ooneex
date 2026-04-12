@@ -3,6 +3,8 @@ import { Header, type IHeader } from "@ooneex/http-header";
 import { HttpStatus, type StatusCodeType } from "@ooneex/http-status";
 import type { IResponse, ResponseDataType } from "./types";
 
+const httpStatus = new HttpStatus();
+
 export class HttpResponse<Data extends Record<string, unknown> = Record<string, unknown>> implements IResponse<Data> {
   public readonly header: IHeader;
   private key: string | null = null;
@@ -93,17 +95,15 @@ export class HttpResponse<Data extends Record<string, unknown> = Record<string, 
       });
     }
 
-    const status = new HttpStatus();
-
     const responseData: ResponseDataType<Data> = {
       key: this.key || null,
       data: this.data || ({} as Data),
       message: this.message,
-      success: status.isSuccessful(this.status),
+      success: httpStatus.isSuccessful(this.status),
       done: this.done,
       status: this.status,
-      isClientError: status.isClientError(this.status),
-      isServerError: status.isServerError(this.status),
+      isClientError: httpStatus.isClientError(this.status),
+      isServerError: httpStatus.isServerError(this.status),
       isNotFound: false,
       isUnauthorized: false,
       isForbidden: false,

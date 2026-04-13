@@ -535,8 +535,8 @@ export const formatHttpRoutes = (
         const response = await httpRouteHandler({ context, route });
 
         // Cache the response if caching is enabled
-        if (route.cache && context.cache) {
-          const cacheKey = Bun.CSRF.generate(env?.CSRF_SECRET, { encoding: "hex" });
+        if (route.cache && context.cache && response.ok) {
+          const cacheKey = `http:${Bun.CSRF.generate(env?.CSRF_SECRET, { encoding: "hex" })}`;
           const headers: Record<string, string> = {};
           response.headers.forEach((value, key) => {
             headers[key] = value;

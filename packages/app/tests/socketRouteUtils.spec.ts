@@ -861,6 +861,56 @@ describe("socketRouteUtils", () => {
       expect(wsSendMock).toHaveBeenCalled();
     });
 
+    test("does not cache response when status is not successful", async () => {
+      const wsSendMock = mock(() => {});
+      const cacheGetMock = mock(() => Promise.resolve(undefined));
+      const cacheSetMock = mock(() => Promise.resolve());
+
+      const context = createMockSocketContext({
+        cache: {
+          get: cacheGetMock,
+          set: cacheSetMock,
+          has: mock(() => Promise.resolve(false)),
+          delete: mock(() => Promise.resolve(false)),
+        },
+      });
+
+      class ErrorSocketController {
+        index(ctx: ContextType): IResponse {
+          ctx.response.done = true;
+          return ctx.response.json({ error: "not found" }, HttpStatus.Code.NotFound);
+        }
+      }
+      container.add(ErrorSocketController);
+
+      const route = createMockSocketRoute({
+        controller: ErrorSocketController,
+        cache: true,
+      });
+
+      const wsId = `test-ws-error-no-cache-${Date.now()}`;
+      container.addConstant(wsId, { context, route });
+
+      const mockWs = createMockWs(wsId, wsSendMock);
+      const mockServer = createMockServer();
+
+      const message = JSON.stringify({
+        payload: {},
+        queries: {},
+        lang: {},
+      });
+
+      await socketRouteHandler({
+        message,
+        ws: mockWs as unknown as import("bun").ServerWebSocket<{ id: string }>,
+        server: mockServer as unknown as import("bun").Server<{ id: string }>,
+      });
+
+      expect(cacheGetMock).toHaveBeenCalled();
+      expect(cacheSetMock).not.toHaveBeenCalled();
+      expect(wsSendMock).toHaveBeenCalled();
+    });
+
     test("does not use cache when route.cache is false", async () => {
       const wsSendMock = mock(() => {});
       const cacheGetMock = mock(() => Promise.resolve('{"data":"cached"}'));

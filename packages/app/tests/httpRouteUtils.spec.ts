@@ -1104,13 +1104,15 @@ describe("httpRouteUtils", () => {
       expect(typeof handler).toBe("function");
     });
 
-    test("generates CSRF cache key with env CSRF_SECRET and hex encoding", () => {
+    test("generates CSRF cache key with http: prefix and hex encoding", () => {
       const secret = "my-csrf-secret";
-      const cacheKey = Bun.CSRF.generate(secret, { encoding: "hex" });
+      const cacheKey = `http:${Bun.CSRF.generate(secret, { encoding: "hex" })}`;
 
       expect(typeof cacheKey).toBe("string");
-      expect(cacheKey.length).toBeGreaterThan(0);
-      expect(Bun.CSRF.verify(cacheKey, { secret, encoding: "hex" })).toBe(true);
+      expect(cacheKey.startsWith("http:")).toBe(true);
+      expect(cacheKey.length).toBeGreaterThan("http:".length);
+      const csrfPart = cacheKey.slice("http:".length);
+      expect(Bun.CSRF.verify(csrfPart, { secret, encoding: "hex" })).toBe(true);
     });
 
     test("CSRF generate throws when secret is not provided", () => {
@@ -1150,6 +1152,25 @@ describe("httpRouteUtils", () => {
 
       expect(handler).toBeDefined();
       expect(typeof handler).toBe("function");
+    });
+
+    test("does not cache response when status is not successful", async () => {
+      class ErrorCacheController {
+        index(): IResponse {
+          return new HttpResponse().json({ error: "not found" }, HttpStatus.Code.NotFound);
+        }
+      }
+      container.add(ErrorCacheController);
+
+      const context = createMockContext();
+      const route = createMockRoute({
+        controller: ErrorCacheController,
+        cache: true,
+      } as Partial<RouteConfigType>);
+
+      const response = await httpRouteHandler({ context, route });
+      expect(response.status).toBe(HttpStatus.Code.NotFound);
+      expect(response.ok).toBe(false);
     });
 
     test("cache.set receives correct structure with body, status, headers, and TTL", async () => {

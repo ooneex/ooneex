@@ -226,7 +226,7 @@ export const socketRouteHandler = async ({
   }
 
   // Cache: store response before sending
-  if (cacheKey && context.cache) {
+  if (cacheKey && context.cache && context.response.getStatus() < 300) {
     const serialized = await context.response.get(currentEnv).text();
     await context.cache.set(cacheKey, serialized, 300);
     logSocketRequest(context, HttpStatus.Code.OK, route.path);

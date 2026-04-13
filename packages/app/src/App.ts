@@ -104,30 +104,46 @@ export class App {
     const appEnvValidator = new AssertAppEnv();
     const appEnvResult = appEnvValidator.validate(env.APP_ENV);
     if (!appEnvResult.isValid) {
-      throw new Exception(`Invalid APP_ENV: ${appEnvResult.message}`, {
-        key: "INVALID_APP_ENV",
-        status: HttpStatus.Code.InternalServerError,
-        data: { appEnv: env.APP_ENV },
-      });
+      throw new Exception(
+        `Invalid APP_ENV "${env.APP_ENV}": set the APP_ENV environment variable to one of local, development, staging, testing, test, qa, uat, integration, preview, demo, sandbox, beta, canary, hotfix, or production`,
+        {
+          key: "INVALID_APP_ENV",
+          status: HttpStatus.Code.InternalServerError,
+          data: { appEnv: env.APP_ENV },
+        },
+      );
     }
 
     const portValidator = new AssertPort();
     const portResult = portValidator.validate(env.PORT);
     if (!portResult.isValid) {
-      throw new Exception(`Invalid PORT: ${portResult.message}`, {
-        key: "INVALID_PORT",
-        status: HttpStatus.Code.InternalServerError,
-        data: { port: env.PORT },
-      });
+      throw new Exception(
+        `Invalid PORT "${env.PORT}": set the PORT environment variable to a number between 1 and 65535`,
+        {
+          key: "INVALID_PORT",
+          status: HttpStatus.Code.InternalServerError,
+          data: { port: env.PORT },
+        },
+      );
     }
 
     const hostnameValidator = new AssertHostname();
     const hostnameResult = hostnameValidator.validate(env.HOST_NAME);
     if (!hostnameResult.isValid) {
-      throw new Exception(`Invalid HOST_NAME: ${hostnameResult.message}`, {
-        key: "INVALID_HOST_NAME",
+      throw new Exception(
+        `Invalid HOST_NAME "${env.HOST_NAME}": set the HOST_NAME environment variable to a valid hostname or IP address`,
+        {
+          key: "INVALID_HOST_NAME",
+          status: HttpStatus.Code.InternalServerError,
+          data: { hostname: env.HOST_NAME },
+        },
+      );
+    }
+
+    if (!env.CSRF_SECRET) {
+      throw new Exception("Missing CSRF_SECRET: set the CSRF_SECRET environment variable to enable CSRF protection", {
+        key: "MISSING_CSRF_SECRET",
         status: HttpStatus.Code.InternalServerError,
-        data: { hostname: env.HOST_NAME },
       });
     }
 
@@ -155,7 +171,7 @@ export class App {
       : (middlewares as MiddlewareClassType[]);
 
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), allMiddlewares, prefix),
+      ...formatHttpRoutes(router.getHttpRoutes(), allMiddlewares, prefix, env),
       ...formatSocketRoutes(router.getSocketRoutes(), prefix),
     };
 

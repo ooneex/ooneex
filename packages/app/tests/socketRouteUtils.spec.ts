@@ -997,7 +997,7 @@ describe("socketRouteUtils", () => {
         server: mockServer as unknown as import("bun").Server<{ id: string }>,
       });
 
-      const expectedKey = `ws:api.socket.cachekey:${JSON.stringify({ id: "42" })}:${JSON.stringify({ page: "2" })}:${JSON.stringify({ action: "test" })}`;
+      const expectedKey = `ws:${Bun.hash(`api.socket.cachekey::${JSON.stringify({ id: "42" })}:${JSON.stringify({})}:${JSON.stringify({})}`)}`;
       expect(cacheGetMock).toHaveBeenCalledWith(expectedKey);
     });
 

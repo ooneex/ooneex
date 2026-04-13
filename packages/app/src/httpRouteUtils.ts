@@ -21,6 +21,7 @@ import { type AssertType, type IAssert, type } from "@ooneex/validation";
 import type { BunRequest, Server } from "bun";
 
 const roleChecker: IRole = new Role();
+const CACHE_COOKIE_NAME = "_cache_key";
 
 export const checkAllowedUsers = (context: ContextType): RouteValidationError | null => {
   if (!context.user) {
@@ -443,6 +444,7 @@ export const formatHttpRoutes = (
   httpRoutes: Map<string, RouteConfigType[]>,
   middlewares: MiddlewareClassType[] = [],
   prefix?: string,
+  env?: IAppEnv,
 ): HttpRoutesMap => {
   const routes: HttpRoutesMap = {};
 
@@ -454,6 +456,34 @@ export const formatHttpRoutes = (
       const methodHandlers = routes[versionedPath];
 
       methodHandlers[route.method] = async (req: BunRequest, server: Server<unknown>) => {
+        // Early cache check using cookie before building context
+        if (route.cache) {
+          const cacheKeyCookie = req.cookies.get(CACHE_COOKIE_NAME);
+
+          if (cacheKeyCookie && Bun.CSRF.verify(cacheKeyCookie, { secret: env?.CSRF_SECRET || "", encoding: "hex" })) {
+            try {
+              const cache = container.hasConstant("cache") ? container.getConstant<ICache>("cache") : undefined;
+
+              if (cache) {
+                const cached = await cache.get<{
+                  body: string;
+                  status: number;
+                  headers: Record<string, string>;
+                }>(cacheKeyCookie);
+
+                if (cached) {
+                  return new Response(cached.body, {
+                    status: cached.status,
+                    headers: cached.headers,
+                  });
+                }
+              }
+            } catch {
+              // Fall through to normal request handling
+            }
+          }
+        }
+
         let context = await buildHttpContext({ req, server, route });
 
         try {
@@ -502,24 +532,11 @@ export const formatHttpRoutes = (
           }
         }
 
-        // Cache: check for cached response
+        const response = await httpRouteHandler({ context, route });
+
+        // Cache the response if caching is enabled
         if (route.cache && context.cache) {
-          const cacheKey = `http:${context.method}:${versionedPath}:${JSON.stringify(context.params ?? {})}:${JSON.stringify(context.queries ?? {})}`;
-          const cached = await context.cache.get<{ body: string; status: number; headers: Record<string, string> }>(
-            cacheKey,
-          );
-
-          if (cached) {
-            logRequest(context, cached.status as StatusCodeType);
-            return new Response(cached.body, {
-              status: cached.status,
-              headers: cached.headers,
-            });
-          }
-
-          const response = await httpRouteHandler({ context, route });
-
-          const body = await response.clone().text();
+          const cacheKey = Bun.CSRF.generate(env?.CSRF_SECRET, { encoding: "hex" });
           const headers: Record<string, string> = {};
           response.headers.forEach((value, key) => {
             headers[key] = value;
@@ -528,17 +545,23 @@ export const formatHttpRoutes = (
           await context.cache.set(
             cacheKey,
             {
-              body,
+              body: await response.clone().text(),
               status: response.status,
               headers,
             },
             300,
           );
 
-          return response;
+          req.cookies.set({
+            name: CACHE_COOKIE_NAME,
+            value: cacheKey,
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+          });
         }
 
-        return httpRouteHandler({ context, route });
+        return response;
       };
     }
   }

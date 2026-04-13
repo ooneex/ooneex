@@ -83,6 +83,7 @@ describe("App", () => {
     Bun.env.APP_ENV = "development";
     Bun.env.PORT = "3000";
     Bun.env.HOST_NAME = "localhost";
+    Bun.env.CSRF_SECRET = "test-csrf-secret-key";
     container.add(AppEnv);
   });
 
@@ -90,6 +91,7 @@ describe("App", () => {
     Bun.env.APP_ENV = originalEnv.APP_ENV;
     Bun.env.PORT = originalEnv.PORT;
     Bun.env.HOST_NAME = originalEnv.HOST_NAME;
+    Bun.env.CSRF_SECRET = originalEnv.CSRF_SECRET;
   });
 
   describe("constructor", () => {
@@ -371,7 +373,9 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).status).toBe(HttpStatus.Code.InternalServerError);
-        expect((error as Exception).message).toContain("Invalid APP_ENV");
+        expect((error as Exception).message).toContain(
+          'Invalid APP_ENV "invalid_env": set the APP_ENV environment variable',
+        );
         expect((error as Exception).key).toBe("INVALID_APP_ENV");
       }
     });
@@ -388,7 +392,7 @@ describe("App", () => {
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
-        expect((error as Exception).message).toContain("Invalid PORT");
+        expect((error as Exception).message).toContain('Invalid PORT "-1": set the PORT environment variable');
         expect((error as Exception).key).toBe("INVALID_PORT");
       }
     });
@@ -406,6 +410,9 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).message).toContain("Invalid PORT");
+        expect((error as Exception).message).toContain(
+          "set the PORT environment variable to a number between 1 and 65535",
+        );
         expect((error as Exception).key).toBe("INVALID_PORT");
       }
     });
@@ -424,6 +431,9 @@ describe("App", () => {
       } catch (error) {
         expect(error).toBeInstanceOf(Exception);
         expect((error as Exception).message).toContain("Invalid HOST_NAME");
+        expect((error as Exception).message).toContain(
+          "set the HOST_NAME environment variable to a valid hostname or IP address",
+        );
         expect((error as Exception).key).toBe("INVALID_HOST_NAME");
       }
     });
@@ -504,6 +514,43 @@ describe("App", () => {
       const result = await app.init();
 
       expect(result).toBeInstanceOf(App);
+    });
+
+    test("throws Exception when CSRF_SECRET is missing", async () => {
+      Bun.env.APP_ENV = "development";
+      Bun.env.PORT = "3000";
+      Bun.env.HOST_NAME = "localhost";
+      Bun.env.CSRF_SECRET = undefined;
+
+      const config = createMockConfig();
+      const app = new App(config);
+
+      try {
+        await app.init();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Exception);
+        expect((error as Exception).message).toContain("Missing CSRF_SECRET");
+        expect((error as Exception).key).toBe("MISSING_CSRF_SECRET");
+      }
+    });
+
+    test("throws Exception when CSRF_SECRET is empty string", async () => {
+      Bun.env.APP_ENV = "development";
+      Bun.env.PORT = "3000";
+      Bun.env.HOST_NAME = "localhost";
+      Bun.env.CSRF_SECRET = "   ";
+
+      const config = createMockConfig();
+      const app = new App(config);
+
+      try {
+        await app.init();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Exception);
+        expect((error as Exception).key).toBe("MISSING_CSRF_SECRET");
+      }
     });
   });
 });

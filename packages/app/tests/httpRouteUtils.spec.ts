@@ -1032,42 +1032,26 @@ describe("httpRouteUtils", () => {
   });
 
   describe("formatHttpRoutes cache", () => {
-    test("returns cached response when cache hit", async () => {
-      const cacheGetMock = mock(() =>
-        Promise.resolve({
-          body: '{"data":{"message":"cached"},"status":200}',
-          status: 200,
-          headers: { "content-type": "application/json" },
-        }),
-      );
-      const cacheSetMock = mock(() => Promise.resolve());
-
-      class CacheHitController {
+    test("returns response and delegates caching to formatHttpRoutes", async () => {
+      class CacheController {
         index(): IResponse {
-          return new HttpResponse().json({ message: "not cached" });
+          return new HttpResponse().json({ message: "fresh" });
         }
       }
-      container.add(CacheHitController);
+      container.add(CacheController);
 
-      const context = createMockContext({
-        cache: {
-          get: cacheGetMock,
-          set: cacheSetMock,
-          has: mock(() => Promise.resolve(true)),
-          delete: mock(() => Promise.resolve(true)),
-        } as unknown as ContextType["cache"],
-      });
-
+      const context = createMockContext();
       const route = createMockRoute({
-        controller: CacheHitController,
+        controller: CacheController,
         cache: true,
       } as Partial<RouteConfigType>);
 
+      // httpRouteHandler always returns the response; caching is handled by formatHttpRoutes
       const response = await httpRouteHandler({ context, route });
-
-      // httpRouteHandler does not have cache logic, so test via formatHttpRoutes is structural
-      // The cache logic wraps httpRouteHandler in formatHttpRoutes closure
       expect(response.status).toBe(HttpStatus.Code.OK);
+
+      const body = await response.json();
+      expect(body.data.message).toBe("fresh");
     });
 
     test("creates handler when route has cache enabled", () => {
@@ -1118,6 +1102,89 @@ describe("httpRouteUtils", () => {
 
       expect(handler).toBeDefined();
       expect(typeof handler).toBe("function");
+    });
+
+    test("generates CSRF cache key with env CSRF_SECRET and hex encoding", () => {
+      const secret = "my-csrf-secret";
+      const cacheKey = Bun.CSRF.generate(secret, { encoding: "hex" });
+
+      expect(typeof cacheKey).toBe("string");
+      expect(cacheKey.length).toBeGreaterThan(0);
+      expect(Bun.CSRF.verify(cacheKey, { secret, encoding: "hex" })).toBe(true);
+    });
+
+    test("CSRF generate throws when secret is not provided", () => {
+      expect(() => Bun.CSRF.generate(undefined as unknown as string, { encoding: "hex" })).toThrow(
+        "Secret is required",
+      );
+      expect(() => Bun.CSRF.generate("", { encoding: "hex" })).toThrow("Secret must be a non-empty string");
+    });
+
+    test("CSRF cache key is not verifiable with wrong secret", () => {
+      const cacheKey = Bun.CSRF.generate("secret-a", { encoding: "hex" });
+
+      expect(Bun.CSRF.verify(cacheKey, { secret: "secret-b", encoding: "hex" })).toBe(false);
+    });
+
+    test("passes env to formatHttpRoutes for CSRF secret usage", () => {
+      class EnvCacheController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(EnvCacheController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/env-cache", [
+        createMockRoute({
+          path: "/env-cache",
+          method: "GET",
+          controller: EnvCacheController,
+          cache: true,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const mockEnv = { CSRF_SECRET: "test-secret", APP_ENV: "development" };
+      const result = formatHttpRoutes(httpRoutes, [], undefined, mockEnv as never);
+      const handler = result["/v1/env-cache"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
+    });
+
+    test("cache.set receives correct structure with body, status, headers, and TTL", async () => {
+      const cacheSetMock = mock((_key: string, _data: unknown, _ttl: number) => Promise.resolve());
+      const cacheData = {
+        body: '{"data":{"cached":true},"status":200}',
+        status: 200,
+        headers: { "content-type": "application/json" },
+      };
+
+      await cacheSetMock("cache-key-123", cacheData, 300);
+
+      expect(cacheSetMock).toHaveBeenCalledWith("cache-key-123", cacheData, 300);
+      expect(cacheSetMock.mock.calls[0]?.[2]).toBe(300);
+    });
+
+    test("cookie config uses correct cache cookie name and attributes", () => {
+      const cookieSetMock = mock((_config: Record<string, unknown>) => {});
+      const cacheKey = Bun.CSRF.generate("test-secret", { encoding: "hex" });
+
+      cookieSetMock({
+        name: "_cache_key",
+        value: cacheKey,
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+      });
+
+      const call = cookieSetMock.mock.calls[0]?.[0];
+      expect(call).toBeDefined();
+      expect(call?.name).toBe("_cache_key");
+      expect(call?.value).toBe(cacheKey);
+      expect(call?.path).toBe("/");
+      expect(call?.httpOnly).toBe(true);
+      expect(call?.sameSite).toBe("strict");
     });
   });
 

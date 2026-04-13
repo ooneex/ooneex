@@ -119,6 +119,22 @@ export const socketRouteHandler = async ({
   let { context, route } = container.getConstant<{ context: ContextType; route: RouteConfigType }>(ws.data.id);
   const currentEnv: EnvironmentNameType = context.env.APP_ENV;
 
+  // Cache: check for cached response
+  const cacheKey =
+    route.cache && context.cache
+      ? `ws:${Bun.hash(`${route.name}:${context.user?.email ?? ""}:${JSON.stringify(context.params ?? {})}:${JSON.stringify(context.queries ?? {})}:${JSON.stringify(context.payload ?? {})}`)}`
+      : null;
+
+  if (cacheKey && context.cache) {
+    const cached = await context.cache.get<string>(cacheKey);
+
+    if (cached) {
+      logSocketRequest(context, HttpStatus.Code.OK, route.path);
+      ws.send(cached);
+      return;
+    }
+  }
+
   context.channel = {
     send: async (response: IResponse): Promise<void> => {
       ws.send(await response.get(currentEnv).text());
@@ -183,22 +199,6 @@ export const socketRouteHandler = async ({
     if (!(await context.permission.check(context))) {
       logSocketRequest(context, HttpStatus.Code.Forbidden, route.path);
       return sendException(context, "Forbidden", HttpStatus.Code.Forbidden, "PERMISSION_DENIED");
-    }
-  }
-
-  // Cache: check for cached response
-  const cacheKey =
-    route.cache && context.cache
-      ? `ws:${route.name}:${JSON.stringify(context.params ?? {})}:${JSON.stringify(context.queries ?? {})}:${JSON.stringify(context.payload ?? {})}`
-      : null;
-
-  if (cacheKey && context.cache) {
-    const cached = await context.cache.get<string>(cacheKey);
-
-    if (cached) {
-      logSocketRequest(context, HttpStatus.Code.OK, route.path);
-      ws.send(cached);
-      return;
     }
   }
 

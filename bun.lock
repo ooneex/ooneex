@@ -31,7 +31,7 @@
         "lint-staged": "^16.2.7",
         "nx": "22.6.2",
         "typescript": "^5.9.3",
-        "undici-types": "^7.16.0",
+        "undici-types": "^8.0.0",
       },
     },
     "packages/ai": {
@@ -2139,7 +2139,7 @@
 
     "undici": ["undici@7.18.2", "", {}, "sha512-y+8YjDFzWdQlSE9N5nzKMT3g4a5UBX1HKowfdXh0uvAnTaqqwqB92Jt4UXBAeKekDs5IaDKyJFR4X1gYVCgXcw=="],
 
-    "undici-types": ["undici-types@7.18.2", "", {}, "sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w=="],
+    "undici-types": ["undici-types@8.0.3", "", {}, "sha512-01i8dgg3Z/YFD32o+icA3Nh/V+7zJeNslP8qtS/6ZpveRQQjh/SnBXCM8gMj4ZZugsVWtzg6WG5zsEXF+YcMVw=="],
 
     "unicorn-magic": ["unicorn-magic@0.1.0", "", {}, "sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ=="],
 

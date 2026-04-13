@@ -13,7 +13,7 @@ export abstract class Permission<A extends string = string, S extends string = s
 
   public abstract allow(): this;
   public abstract setUserPermissions(context: ContextType): this;
-  public abstract check(context: ContextType): boolean;
+  public abstract check(context: ContextType): Promise<boolean> | boolean;
 
   public build(): this {
     this.builtAbility = this.ability.build();

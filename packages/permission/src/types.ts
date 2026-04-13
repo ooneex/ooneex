@@ -87,10 +87,10 @@ export type Subjects = `${EPermissionSubject}`;
 export type PermissionClassType = new (...args: any[]) => IPermission;
 
 export interface IPermission<A extends string = string, S extends string = string> {
-  allow: () => IPermission<A, S>;
-  setUserPermissions: (context: ContextType) => IPermission<A, S>;
-  build: () => IPermission<A, S>;
-  check: (context: ContextType) => boolean;
-  can: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
-  cannot: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => boolean;
+  allow: () => Promise<IPermission<A, S>> | IPermission<A, S>;
+  setUserPermissions: (context: ContextType) => Promise<IPermission<A, S>> | IPermission<A, S>;
+  build: () => Promise<IPermission<A, S>> | IPermission<A, S>;
+  check: (context: ContextType) => Promise<boolean> | boolean;
+  can: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => Promise<boolean> | boolean;
+  cannot: (action: PermissionActionType | A, subject: Subjects | S, field?: string) => Promise<boolean> | boolean;
 }

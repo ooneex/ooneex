@@ -3,10 +3,14 @@ import { type ContentPartSource, chat, type ModelMessage } from "@tanstack/ai";
 import { type } from "arktype";
 import { AiException } from "./AiException";
 import type {
+  AiAudioSourceType,
   AiConfigType,
   AiImageSourceType,
   AiMessageType,
+  AiSpeechFormatType,
+  AiSpeechResultType,
   AiToneType,
+  AiVideoResultType,
   GenerateCaseQuestionOptionsType,
   GenerateCaseQuestionResultType,
   GenerateFlashcardOptionsType,
@@ -18,9 +22,9 @@ import type {
 
 export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TConfig> {
   // biome-ignore lint/suspicious/noExplicitAny: adapter type varies by provider
-  protected abstract createChatAdapter(config?: TConfig): any;
+  protected abstract createChatAdapter(config?: TConfig, task?: string): any;
   // biome-ignore lint/suspicious/noExplicitAny: adapter type varies by provider
-  protected abstract createRunAdapter(config?: TConfig): any;
+  protected abstract createRunAdapter(config?: TConfig, task?: string): any;
 
   protected buildPrompt(instruction: string, config?: TConfig): string {
     const parts: string[] = [config?.prompt || instruction];
@@ -52,8 +56,8 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     return messages.map((msg) => ({ role: msg.role as "user" | "assistant" | "tool", content: msg.content }));
   }
 
-  protected async executeChat(content: string, systemPrompt: string, config?: TConfig): Promise<string> {
-    const adapter = this.createChatAdapter(config);
+  protected async executeChat(content: string, systemPrompt: string, config?: TConfig, task?: string): Promise<string> {
+    const adapter = this.createChatAdapter(config, task);
 
     const baseMessages: ModelMessage[] = config?.messages ? this.toMessages(config.messages) : [];
     const userMessage: ModelMessage = { role: "user", content: `${systemPrompt}\n\nText to process:\n${content}` };
@@ -75,7 +79,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Condense the following text while preserving its core meaning and key information. Remove redundancies and unnecessary details.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "makeShorter");
   }
 
   public async makeLonger(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -83,7 +87,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Expand the following text by adding relevant details, examples, and explanations while maintaining coherence and the original message.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "makeLonger");
   }
 
   public async summarize(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -91,7 +95,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Provide a clear and comprehensive summary of the following text, capturing all essential points and main ideas.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "summarize");
   }
 
   public async concise(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -99,7 +103,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Rewrite the following text in the most concise form possible without losing essential meaning.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "concise");
   }
 
   public async paragraph(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -107,7 +111,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Transform the following text into well-structured paragraph format with clear topic sentences and logical flow.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "paragraph");
   }
 
   public async bulletPoints(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -115,7 +119,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Convert the following text into a clear, organized list of bullet points highlighting the key information.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "bulletPoints");
   }
 
   public async rephrase(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -123,7 +127,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Rephrase the following text using different words and sentence structures while preserving the original meaning.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "rephrase");
   }
 
   public async simplify(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -131,7 +135,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Simplify the following text by using plain language, shorter sentences, and avoiding jargon. Make it accessible to a general audience.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "simplify");
   }
 
   public async changeTone(
@@ -143,7 +147,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       `Rewrite the following text in a ${tone} tone while maintaining clarity.`,
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "changeTone");
   }
 
   public async proofread(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -151,7 +155,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Proofread and correct the following text for grammar, spelling, punctuation, and clarity issues. Return the corrected version.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "proofread");
   }
 
   public async translate(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -160,7 +164,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       `Translate the following text accurately into ${targetLanguage}, preserving the original meaning, tone, and nuance.`,
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "translate");
   }
 
   public async explain(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -168,7 +172,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Provide a clear explanation of the following text, breaking down complex concepts and clarifying the meaning.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "explain");
   }
 
   public async expandIdeas(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -176,7 +180,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Expand on the ideas presented in the following text by exploring related concepts, implications, and additional perspectives.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "expandIdeas");
   }
 
   public async fixGrammar(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -184,7 +188,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Fix all grammatical errors in the following text, including subject-verb agreement, tense consistency, and sentence structure.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "fixGrammar");
   }
 
   public async generateTitle(content: string, config?: Omit<TConfig, "output">): Promise<string> {
@@ -192,7 +196,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       "Generate a compelling, descriptive title for the following text that captures its main theme and engages readers.",
       config as TConfig,
     );
-    return this.executeChat(content, prompt, config as TConfig);
+    return this.executeChat(content, prompt, config as TConfig, "generateTitle");
   }
 
   public async extractKeywords(content: string, config?: Omit<TConfig, "output">): Promise<string[]> {
@@ -203,7 +207,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config as TConfig,
     );
 
-    const result = await this.executeChat(content, prompt, config as TConfig);
+    const result = await this.executeChat(content, prompt, config as TConfig, "extractKeywords");
 
     const items = result
       .split(",")
@@ -221,7 +225,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config as TConfig,
     );
 
-    const result = await this.executeChat(content, prompt, config as TConfig);
+    const result = await this.executeChat(content, prompt, config as TConfig, "extractCategories");
 
     const items = result
       .split(",")
@@ -239,7 +243,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config as TConfig,
     );
 
-    const result = await this.executeChat(content, prompt, config as TConfig);
+    const result = await this.executeChat(content, prompt, config as TConfig, "extractTopics");
 
     const items = result
       .split(",")
@@ -289,7 +293,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config,
     );
 
-    const result = await this.executeChat(subject, prompt, config);
+    const result = await this.executeChat(subject, prompt, config, "generateCaseQuestion");
 
     const cleaned = result.replace(/```json\n?|\n?```/g, "").trim();
     const parsed = JSON.parse(cleaned) as GenerateCaseQuestionResultType;
@@ -322,7 +326,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config,
     );
 
-    const result = await this.executeChat(subject, prompt, config);
+    const result = await this.executeChat(subject, prompt, config, "generateFlashcard");
 
     const cleaned = result.replace(/```json\n?|\n?```/g, "").trim();
     const parsed = JSON.parse(cleaned) as GenerateFlashcardResultType;
@@ -357,7 +361,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
       config,
     );
 
-    const result = await this.executeChat(subject, prompt, config);
+    const result = await this.executeChat(subject, prompt, config, "generateQuestion");
 
     const cleaned = result.replace(/```json\n?|\n?```/g, "").trim();
     const parsed = JSON.parse(cleaned) as GenerateQuestionResultType;
@@ -365,8 +369,37 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     return parsed;
   }
 
+  public async describeImage(source: AiImageSourceType, config?: Omit<TConfig, "output">): Promise<string> {
+    const adapter = this.createChatAdapter(config as TConfig, "describeImage");
+
+    const systemPrompt = this.buildPrompt(
+      "Describe the provided image in detail. Include the main subject, visual elements, colors, composition, and any notable features. Provide a clear, objective description without personal opinions or interpretations.",
+      config as TConfig,
+    );
+
+    const baseMessages: ModelMessage[] = config?.messages ? this.toMessages(config.messages) : [];
+    const userMessage: ModelMessage = {
+      role: "user",
+      content: [
+        { type: "text", content: systemPrompt },
+        { type: "image", source: source as ContentPartSource },
+      ],
+    };
+
+    const messages = [...baseMessages, userMessage];
+    const result = await chat({
+      adapter,
+      messages: messages as unknown as NonNullable<
+        Parameters<typeof chat<typeof adapter, undefined, false>>[0]["messages"]
+      >,
+      stream: false,
+    });
+
+    return result.trim();
+  }
+
   public async imageToMarkdown(source: AiImageSourceType, config?: Omit<TConfig, "output">): Promise<string> {
-    const adapter = this.createChatAdapter(config as TConfig);
+    const adapter = this.createChatAdapter(config as TConfig, "imageToMarkdown");
 
     const systemPrompt = this.buildPrompt(
       "Convert the content of the provided image into well-structured Markdown. Preserve the document structure including headings, lists, tables, code blocks, and formatting. Transcribe all visible text accurately.",
@@ -394,8 +427,73 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     return result.trim();
   }
 
+  public async imageToText(source: AiImageSourceType, config?: Omit<TConfig, "output">): Promise<string> {
+    const adapter = this.createChatAdapter(config as TConfig, "imageToText");
+
+    const systemPrompt = this.buildPrompt(
+      "Extract and return all visible text from the provided image. Preserve the reading order and paragraph structure. Do not add any interpretation, commentary, or formatting beyond what is visible in the image.",
+      config as TConfig,
+    );
+
+    const baseMessages: ModelMessage[] = config?.messages ? this.toMessages(config.messages) : [];
+    const userMessage: ModelMessage = {
+      role: "user",
+      content: [
+        { type: "text", content: systemPrompt },
+        { type: "image", source: source as ContentPartSource },
+      ],
+    };
+
+    const messages = [...baseMessages, userMessage];
+    const result = await chat({
+      adapter,
+      messages: messages as unknown as NonNullable<
+        Parameters<typeof chat<typeof adapter, undefined, false>>[0]["messages"]
+      >,
+      stream: false,
+    });
+
+    return result.trim();
+  }
+
+  public async speechToText(source: AiAudioSourceType, config?: Omit<TConfig, "output">): Promise<string> {
+    const adapter = this.createChatAdapter(config as TConfig, "speechToText");
+
+    const systemPrompt = this.buildPrompt(
+      "Transcribe the provided audio into text. Preserve the original speech content accurately, including punctuation and paragraph breaks where appropriate. Do not add any interpretation, commentary, or summary.",
+      config as TConfig,
+    );
+
+    const baseMessages: ModelMessage[] = config?.messages ? this.toMessages(config.messages) : [];
+    const userMessage: ModelMessage = {
+      role: "user",
+      content: [
+        { type: "text", content: systemPrompt },
+        { type: "audio", source: source as ContentPartSource },
+      ],
+    };
+
+    const messages = [...baseMessages, userMessage];
+    const result = await chat({
+      adapter,
+      messages: messages as unknown as NonNullable<
+        Parameters<typeof chat<typeof adapter, undefined, false>>[0]["messages"]
+      >,
+      stream: false,
+    });
+
+    return result.trim();
+  }
+
+  public abstract textToSpeech(
+    text: string,
+    config?: Omit<TConfig, "output"> & { voice?: string; format?: AiSpeechFormatType; speed?: number },
+  ): Promise<AiSpeechResultType>;
+
+  public abstract textToVideo(prompt: string, config?: Omit<TConfig, "output">): Promise<AiVideoResultType>;
+
   public async run<T>(prompt: string, config?: Omit<TConfig, "prompt">): Promise<T> {
-    const adapter = this.createRunAdapter(config as TConfig);
+    const adapter = this.createRunAdapter(config as TConfig, "run");
 
     let defaultPrompt =
       "Process the following request and respond appropriately. If the request asks for structured data, return valid JSON.";
@@ -444,7 +542,7 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     prompt: string,
     config?: Omit<TConfig, "prompt" | "output">,
   ): AsyncGenerator<string, void, unknown> {
-    const adapter = this.createRunAdapter(config as TConfig);
+    const adapter = this.createRunAdapter(config as TConfig, "runStream");
 
     const defaultPrompt = "Process the following request and respond appropriately.";
     const systemPrompt = this.buildPrompt(defaultPrompt, config as TConfig);

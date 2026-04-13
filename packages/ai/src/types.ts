@@ -1,63 +1,11 @@
 import type { LocaleType } from "@ooneex/translation";
 import type { AssertType } from "@ooneex/validation";
-import type { ImageGenerationResult, TTSResult } from "@tanstack/ai";
-import type { anthropicText } from "@tanstack/ai-anthropic";
-import type { GeminiAspectRatio, GeminiImageProviderOptions, GeminiTTSVoice, geminiText } from "@tanstack/ai-gemini";
-import type { groqText } from "@tanstack/ai-groq";
-import type { ollamaText } from "@tanstack/ai-ollama";
-import type {
-  OpenAITranscriptionProviderOptions,
-  OpenAITTSFormat,
-  OpenAITTSVoice,
-  openaiText,
-} from "@tanstack/ai-openai";
+import type { createOpenRouterText } from "@tanstack/ai-openrouter";
 
 // biome-ignore lint/suspicious/noExplicitAny: trust me
 export type AiClassType = new (...args: any[]) => IAiChat<any>;
 
-export type OpenAiModelType = Parameters<typeof openaiText>[0];
-export type AnthropicModelType = Parameters<typeof anthropicText>[0];
-export type GeminiModelType = Parameters<typeof geminiText>[0];
-export type GroqModelType = Parameters<typeof groqText>[0];
-export type OllamaModelType = Parameters<typeof ollamaText>[0];
-
-export type OpenAiTTSModelType = "tts-1" | "tts-1-hd" | "gpt-4o-audio-preview";
-export type OpenAiSTTModelType =
-  | "whisper-1"
-  | "gpt-4o-transcribe"
-  | "gpt-4o-mini-transcribe"
-  | "gpt-4o-transcribe-diarize";
-export type GeminiTTSModelType = "gemini-2.5-flash-preview-tts" | "gemini-2.5-pro-preview-tts";
-
-export type OpenAiImageModelType = "gpt-image-1" | "gpt-image-1-mini" | "dall-e-3" | "dall-e-2";
-export type OpenAiImageSizeType =
-  | "1024x1024"
-  | "1536x1024"
-  | "1024x1536"
-  | "1792x1024"
-  | "1024x1792"
-  | "256x256"
-  | "512x512"
-  | "auto";
-
-export type GeminiImageModelType =
-  | "gemini-2.5-flash-image"
-  | "gemini-2.0-flash-preview-image-generation"
-  | "imagen-3.0-generate-002"
-  | "imagen-4.0-generate-001"
-  | "imagen-4.0-fast-generate-001"
-  | "imagen-4.0-ultra-generate-001";
-export type GeminiImageSizeType =
-  | "1024x1024"
-  | "512x512"
-  | "1024x768"
-  | "1536x1024"
-  | "1792x1024"
-  | "1920x1080"
-  | "768x1024"
-  | "1024x1536"
-  | "1024x1792"
-  | "1080x1920";
+export type OpenRouterModelType = Parameters<typeof createOpenRouterText>[0];
 
 export type GenerateQuestionOptionsType = {
   choiceCount?: number;
@@ -136,6 +84,27 @@ export type AiImageSourceType = {
   value: string;
 };
 
+export type AiAudioSourceType = {
+  type: "url" | "data";
+  value: string;
+};
+
+export type AiVideoResultType = {
+  jobId: string;
+  url?: string | undefined;
+  status: "pending" | "processing" | "completed" | "failed";
+  error?: string | undefined;
+};
+
+export type AiSpeechFormatType = "mp3" | "opus" | "aac" | "flac" | "wav" | "pcm";
+
+export type AiSpeechResultType = {
+  audio: string;
+  format: AiSpeechFormatType;
+  duration?: number | undefined;
+  contentType?: string | undefined;
+};
+
 export type AiMessageType = {
   role: "user" | "assistant" | "system" | "tool";
   content: string;
@@ -143,7 +112,7 @@ export type AiMessageType = {
 
 export type AiConfigType = {
   apiKey?: string;
-  model?: OpenAiModelType | AnthropicModelType | GeminiModelType | GroqModelType | OllamaModelType;
+  model?: OpenRouterModelType;
   wordCount?: number;
   stream?: boolean;
   language?: LocaleType;
@@ -155,113 +124,7 @@ export type AiConfigType = {
   output?: AssertType;
 };
 
-export type OpenAiConfigType = Omit<AiConfigType, "model"> & {
-  model?: OpenAiModelType;
-};
-
-export type AnthropicConfigType = Omit<AiConfigType, "model"> & {
-  model?: AnthropicModelType;
-};
-
-export type GeminiConfigType = Omit<AiConfigType, "model"> & {
-  model?: GeminiModelType;
-};
-
-export type GroqConfigType = Omit<AiConfigType, "model"> & {
-  model?: GroqModelType;
-};
-
-export type OllamaConfigType = Omit<AiConfigType, "model" | "apiKey"> & {
-  host?: string;
-  model?: OllamaModelType;
-};
-
-export type OpenAiTextToSpeechOptionsType = {
-  apiKey?: string;
-  model?: OpenAiTTSModelType;
-  voice?: OpenAITTSVoice;
-  format?: OpenAITTSFormat;
-  speed?: number;
-  language?: string;
-  instructions?: string;
-};
-
-export type OpenAiSpeechToTextOptionsType = {
-  apiKey?: string;
-  model?: OpenAiSTTModelType;
-  language?: string;
-  prompt?: string;
-  responseFormat?: "json" | "text" | "srt" | "verbose_json" | "vtt";
-  modelOptions?: OpenAITranscriptionProviderOptions;
-};
-
-export type GroqTTSModelType = "canopylabs/orpheus-v1-english" | "canopylabs/orpheus-arabic-saudi";
-export type GroqTTSVoiceType =
-  | "autumn"
-  | "diana"
-  | "hannah"
-  | "austin"
-  | "daniel"
-  | "troy"
-  | "fahad"
-  | "sultan"
-  | "lulwa"
-  | "noura";
-export type GroqTTSFormatType = "wav" | "mp3" | "flac" | "ogg" | "mulaw";
-
-export type GroqTextToSpeechOptionsType = {
-  apiKey?: string;
-  model?: GroqTTSModelType;
-  voice?: GroqTTSVoiceType;
-  format?: GroqTTSFormatType;
-  sampleRate?: number;
-};
-
-export type GeminiTextToSpeechOptionsType = {
-  apiKey?: string;
-  model?: GeminiTTSModelType;
-  voice?: GeminiTTSVoice;
-  format?: "mp3" | "opus" | "aac" | "flac" | "wav" | "pcm";
-  speed?: number;
-  instructions?: string;
-  language?: string;
-};
-
-export type OpenAiGenerateImageOptionsType = {
-  apiKey?: string;
-  model?: OpenAiImageModelType;
-  numberOfImages?: number;
-  size?: OpenAiImageSizeType;
-  quality?: "high" | "medium" | "low" | "auto" | "hd" | "standard";
-  background?: "transparent" | "opaque" | "auto";
-  outputFormat?: "png" | "jpeg" | "webp";
-  moderation?: "low" | "auto";
-  style?: "vivid" | "natural";
-};
-
-export type GeminiGenerateImageOptionsType = {
-  apiKey?: string;
-  model?: GeminiImageModelType;
-  numberOfImages?: number;
-  size?: GeminiImageSizeType;
-  aspectRatio?: GeminiAspectRatio;
-  personGeneration?: "DONT_ALLOW" | "ALLOW_ADULT" | "ALLOW_ALL";
-  negativePrompt?: string;
-  addWatermark?: boolean;
-  outputMimeType?: "image/png" | "image/jpeg" | "image/webp";
-};
-
-export type {
-  TTSResult,
-  ImageGenerationResult,
-  OpenAITTSVoice,
-  OpenAITTSFormat,
-  GeminiTTSVoice,
-  GeminiAspectRatio,
-  GeminiImageProviderOptions,
-  OpenAITranscriptionProviderOptions,
-};
-export type { TranscriptionResult, TranscriptionSegment, TranscriptionWord } from "@tanstack/ai";
+export type OpenRouterConfigType = AiConfigType;
 
 export interface IAiChat<TConfig extends AiConfigType = AiConfigType> {
   makeShorter?: (content: string, config?: TConfig) => Promise<string>;
@@ -297,7 +160,15 @@ export interface IAiChat<TConfig extends AiConfigType = AiConfigType> {
     options?: GenerateQuestionOptionsType,
     config?: TConfig,
   ) => Promise<GenerateQuestionResultType>;
+  describeImage?: (source: AiImageSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
   imageToMarkdown?: (source: AiImageSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
+  imageToText?: (source: AiImageSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
+  speechToText?: (source: AiAudioSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
+  textToSpeech?: (
+    text: string,
+    config?: Omit<TConfig, "output"> & { voice?: string; format?: AiSpeechFormatType; speed?: number },
+  ) => Promise<AiSpeechResultType>;
+  textToVideo?: (prompt: string, config?: Omit<TConfig, "output">) => Promise<AiVideoResultType>;
   run: <T>(content: string, config?: TConfig) => Promise<T>;
   runStream: (content: string, config?: TConfig) => AsyncGenerator<string, void, unknown>;
 }

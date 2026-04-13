@@ -21,61 +21,54 @@ export class FilesystemCache extends AbstractCache {
     this.maxFileSize = options.maxFileSize || 10 * 1024 * 1024; // 10MB default
   }
 
-  protected async connect(): Promise<void> {
-    try {
-      const { mkdir, stat } = await import("node:fs/promises");
-      await mkdir(this.cacheDir, { recursive: true });
+  private async ensureCacheDir(): Promise<void> {
+    const { mkdir, stat } = await import("node:fs/promises");
+    await mkdir(this.cacheDir, { recursive: true });
 
-      const stats = await stat(this.cacheDir);
-      if (!stats.isDirectory()) {
-        throw new CacheException("Failed to create cache directory", "DIR_CREATE_FAILED");
-      }
-    } catch (error) {
-      throw new CacheException(`Failed to initialize filesystem cache: ${error}`, "INIT_FAILED");
+    const stats = await stat(this.cacheDir);
+    if (!stats.isDirectory()) {
+      throw new CacheException("Failed to create cache directory", "DIR_CREATE_FAILED");
     }
   }
 
   public async get<T = unknown>(key: string): Promise<T | undefined> {
-    return this.withConnection(`Failed to get key "${key}"`, async () => {
-      const entry = await this.readCacheEntry<T>(key);
+    await this.ensureCacheDir();
+    const entry = await this.readCacheEntry<T>(key);
 
-      return entry?.value;
-    });
+    return entry?.value;
   }
 
   public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
-    return this.withConnection(`Failed to set key "${key}"`, async () => {
-      const entry: CacheEntryType<T> = {
-        value,
-        createdAt: Date.now(),
-        originalKey: key,
-        ...(ttl !== undefined && { ttl }),
-      };
+    await this.ensureCacheDir();
 
-      await this.writeCacheEntry(key, entry);
-    });
+    const entry: CacheEntryType<T> = {
+      value,
+      createdAt: Date.now(),
+      originalKey: key,
+      ...(ttl !== undefined && { ttl }),
+    };
+
+    await this.writeCacheEntry(key, entry);
   }
 
   public async delete(key: string): Promise<boolean> {
-    return this.withConnection(`Failed to delete key "${key}"`, async () => {
-      const file = Bun.file(this.getFilePath(key));
+    await this.ensureCacheDir();
+    const file = Bun.file(this.getFilePath(key));
 
-      if (!(await file.exists())) {
-        return false;
-      }
+    if (!(await file.exists())) {
+      return false;
+    }
 
-      await file.delete();
+    await file.delete();
 
-      return true;
-    });
+    return true;
   }
 
   public async has(key: string): Promise<boolean> {
-    return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
-      const entry = await this.readCacheEntry(key);
+    await this.ensureCacheDir();
+    const entry = await this.readCacheEntry(key);
 
-      return entry !== undefined;
-    });
+    return entry !== undefined;
   }
 
   private getFilePath(key: string): string {

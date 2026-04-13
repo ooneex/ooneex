@@ -41,49 +41,36 @@ export class UpstashRedisCache extends AbstractCache {
     return `${this.namespace}:${key}`;
   }
 
-  protected async connect(): Promise<void> {
-    // Upstash Redis uses HTTP REST API, no persistent connection needed
-  }
-
   public async get<T = unknown>(key: string): Promise<T | undefined> {
-    return this.withConnection(`Failed to get key "${key}"`, async () => {
-      const value = await this.client.get<T>(this.getKey(key));
+    const value = await this.client.get<T>(this.getKey(key));
 
-      if (value === null) {
-        return;
-      }
+    if (value === null) {
+      return;
+    }
 
-      return value;
-    });
+    return value;
   }
 
   public async set<T = unknown>(key: string, value: T, ttl?: number): Promise<void> {
-    return this.withConnection(`Failed to set key "${key}"`, async () => {
-      const normalizedValue = value === undefined ? null : value;
+    const normalizedValue = value === undefined ? null : value;
+    const namespacedKey = this.getKey(key);
 
-      const namespacedKey = this.getKey(key);
-
-      if (ttl && ttl > 0) {
-        await this.client.set(namespacedKey, normalizedValue, { ex: ttl });
-      } else {
-        await this.client.set(namespacedKey, normalizedValue);
-      }
-    });
+    if (ttl && ttl > 0) {
+      await this.client.set(namespacedKey, normalizedValue, { ex: ttl });
+    } else {
+      await this.client.set(namespacedKey, normalizedValue);
+    }
   }
 
   public async delete(key: string): Promise<boolean> {
-    return this.withConnection(`Failed to delete key "${key}"`, async () => {
-      const result = await this.client.del(this.getKey(key));
+    const result = await this.client.del(this.getKey(key));
 
-      return result > 0;
-    });
+    return result > 0;
   }
 
   public async has(key: string): Promise<boolean> {
-    return this.withConnection(`Failed to check if key "${key}" exists`, async () => {
-      const result = await this.client.exists(this.getKey(key));
+    const result = await this.client.exists(this.getKey(key));
 
-      return result > 0;
-    });
+    return result > 0;
   }
 }

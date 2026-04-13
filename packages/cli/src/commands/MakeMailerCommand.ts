@@ -52,7 +52,9 @@ export class MakeMailerCommand<T extends CommandOptionsType = CommandOptionsType
 
     // Generate test files
     const mailerTestContent = mailerTestTemplate.replace(/{{NAME}}/g, name).replace(/{{MODULE}}/g, module ?? "");
-    const templateTestContent = mailerTemplateTestTemplate.replace(/{{NAME}}/g, name).replace(/{{MODULE}}/g, module ?? "");
+    const templateTestContent = mailerTemplateTestTemplate
+      .replace(/{{NAME}}/g, name)
+      .replace(/{{MODULE}}/g, module ?? "");
     const testsLocalDir = join(base, "tests", "mailers");
     const testsDir = join(process.cwd(), testsLocalDir);
     const mailerTestFilePath = join(testsDir, `${name}Mailer.spec.ts`);

@@ -67,7 +67,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       name: "app",
       cwd: destination,
       silent: true,
-     
     });
 
     const appModulePackagePath = join(destination, "modules", "app", "package.json");
@@ -89,7 +88,6 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       name: "shared",
       cwd: destination,
       silent: true,
-     
     });
     await Bun.write(join(destination, "modules", "shared", "src", "databases", "SharedDatabase.ts"), databaseTemplate);
     const snakeName = toSnakeCase(name);

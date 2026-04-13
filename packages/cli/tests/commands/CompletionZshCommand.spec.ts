@@ -130,9 +130,7 @@ describe("CompletionZshCommand", () => {
       const ooContent = await Bun.file(join(completionDir, "_oo")).text();
 
       // completion:zsh and make:claude:skill should have no options at all
-      const noOptsMatch = ooContent.match(
-        /app:build\|app:start\|app:stop\|help\|make:release.*completion:zsh\)\s*;;/,
-      );
+      const noOptsMatch = ooContent.match(/app:build\|app:start\|app:stop\|help\|make:release.*completion:zsh\)\s*;;/);
       expect(noOptsMatch).not.toBeNull();
 
       // make:module should only have --name, not --module

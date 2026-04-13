@@ -157,8 +157,12 @@ function printPerformanceAnalysis(result: autocannon.Result): void {
   const avgResponseTime = avgLatencyMs;
   const reqPerConnection = avgReqPerSec / connections;
 
-  w(`  ${dim("Success Rate")}     ${successRate >= 99 ? green(`${successRate.toFixed(1)}%`) : successRate >= 95 ? yellow(`${successRate.toFixed(1)}%`) : red(`${successRate.toFixed(1)}%`)}\n`);
-  w(`  ${dim("Avg Resp Time")}    ${avgResponseTime < 10 ? green(formatLatency(avgResponseTime)) : avgResponseTime < 100 ? yellow(formatLatency(avgResponseTime)) : red(formatLatency(avgResponseTime))}\n`);
+  w(
+    `  ${dim("Success Rate")}     ${successRate >= 99 ? green(`${successRate.toFixed(1)}%`) : successRate >= 95 ? yellow(`${successRate.toFixed(1)}%`) : red(`${successRate.toFixed(1)}%`)}\n`,
+  );
+  w(
+    `  ${dim("Avg Resp Time")}    ${avgResponseTime < 10 ? green(formatLatency(avgResponseTime)) : avgResponseTime < 100 ? yellow(formatLatency(avgResponseTime)) : red(formatLatency(avgResponseTime))}\n`,
+  );
   w(`  ${dim("Req/Connection")}   ${formatNumber(Math.round(reqPerConnection))} req/sec\n`);
   w("\n");
 
@@ -203,18 +207,30 @@ function getPerformanceGrade(
   if (reqPerSec > 10000) score = Math.min(100, score + 5);
 
   if (score >= 90) {
-    return { label: "A  Excellent", message: "  Server handles load with low latency and high reliability", color: green };
+    return {
+      label: "A  Excellent",
+      message: "  Server handles load with low latency and high reliability",
+      color: green,
+    };
   }
   if (score >= 75) {
     return { label: "B  Good", message: "  Server performs well under load with acceptable latency", color: green };
   }
   if (score >= 60) {
-    return { label: "C  Fair", message: "  Server shows moderate latency or occasional errors under load", color: yellow };
+    return {
+      label: "C  Fair",
+      message: "  Server shows moderate latency or occasional errors under load",
+      color: yellow,
+    };
   }
   if (score >= 40) {
     return { label: "D  Poor", message: "  Server struggles with high latency or significant errors", color: red };
   }
-  return { label: "F  Critical", message: "  Server cannot handle the load — consider scaling or optimization", color: red };
+  return {
+    label: "F  Critical",
+    message: "  Server cannot handle the load — consider scaling or optimization",
+    color: red,
+  };
 }
 
 @decorator.command()

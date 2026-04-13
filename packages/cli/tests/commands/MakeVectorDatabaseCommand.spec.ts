@@ -134,7 +134,14 @@ describe("MakeVectorDatabaseCommand", () => {
 
       await command.run({ name: "Knowledge", module: "user-profile" });
 
-      const testFilePath = join(testDir, "modules", "user-profile", "tests", "databases", "KnowledgeVectorDatabase.spec.ts");
+      const testFilePath = join(
+        testDir,
+        "modules",
+        "user-profile",
+        "tests",
+        "databases",
+        "KnowledgeVectorDatabase.spec.ts",
+      );
       expect(existsSync(testFilePath)).toBe(true);
 
       const content = await Bun.file(testFilePath).text();

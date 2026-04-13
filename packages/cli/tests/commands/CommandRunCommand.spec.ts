@@ -99,12 +99,7 @@ describe("CommandRunCommand", () => {
       await command.run();
 
       expect(spawnCalls).toHaveLength(1);
-      expect(spawnCalls[0]?.cmd).toEqual([
-        "bun",
-        "run",
-        join(moduleDir, "bin", "command", "run.ts"),
-        "user:create",
-      ]);
+      expect(spawnCalls[0]?.cmd).toEqual(["bun", "run", join(moduleDir, "bin", "command", "run.ts"), "user:create"]);
       expect(spawnCalls[0]?.cwd).toBe(moduleDir);
     });
 

@@ -160,7 +160,14 @@ describe("MakeMailerCommand", () => {
       expect(content).not.toContain("{{MODULE}}");
       expect(content).toContain("@module/user-profile/mailers/WelcomeMailer");
 
-      const templateTestFilePath = join(testDir, "modules", "user-profile", "tests", "mailers", "WelcomeMailerTemplate.spec.ts");
+      const templateTestFilePath = join(
+        testDir,
+        "modules",
+        "user-profile",
+        "tests",
+        "mailers",
+        "WelcomeMailerTemplate.spec.ts",
+      );
       expect(existsSync(templateTestFilePath)).toBe(true);
 
       const templateContent = await Bun.file(templateTestFilePath).text();

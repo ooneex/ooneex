@@ -5,9 +5,7 @@ import type { ScalarType } from "@ooneex/types";
 
 export const logger = (loggers: LoggerClassType[], container: IContainer) => {
   type LogType = ILogger<Record<string, ScalarType>> | ILogger<LogsEntity>;
-  const instances: LogType[] = loggers
-    .map((l) => container.get<LogType>(l))
-    .filter(Boolean);
+  const instances: LogType[] = loggers.map((l) => container.get<LogType>(l)).filter(Boolean);
 
   return {
     error: (message: string | IException, data?: Record<string, ScalarType> & LogsEntity) => {

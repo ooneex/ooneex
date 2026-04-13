@@ -857,7 +857,7 @@ describe("socketRouteUtils", () => {
 
       expect(cacheGetMock).toHaveBeenCalled();
       expect(cacheSetMock).toHaveBeenCalled();
-      expect((cacheSetMock.mock.calls as unknown[][])[0]![2]).toBe(300);
+      expect((cacheSetMock.mock.calls as unknown[][])[0]?.[2]).toBe(300);
       expect(wsSendMock).toHaveBeenCalled();
     });
 

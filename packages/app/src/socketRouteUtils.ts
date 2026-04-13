@@ -176,9 +176,11 @@ export const socketRouteHandler = async ({
 
   if (route.permission) {
     const permission = container.get(route.permission);
-    context.permission = permission.allow().setUserPermissions(context).build();
+    const allowed = await permission.allow();
+    const userPermissions = await allowed.setUserPermissions(context);
+    context.permission = await userPermissions.build();
 
-    if (!context.permission.check(context)) {
+    if (!(await context.permission.check(context))) {
       logSocketRequest(context, HttpStatus.Code.Forbidden, route.path);
       return sendException(context, "Forbidden", HttpStatus.Code.Forbidden, "PERMISSION_DENIED");
     }

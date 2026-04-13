@@ -485,9 +485,11 @@ export const formatHttpRoutes = (
 
         if (route.permission) {
           const permission = container.get(route.permission);
-          context.permission = permission.allow().setUserPermissions(context).build();
+          const allowed = await permission.allow();
+          const userPermissions = await allowed.setUserPermissions(context);
+          context.permission = await userPermissions.build();
 
-          if (!context.permission.check(context)) {
+          if (!(await context.permission.check(context))) {
             const httpResponse = buildExceptionResponse(
               context,
               "Forbidden",

@@ -1,7 +1,9 @@
 import { inject } from "@ooneex/container";
+import { decorator } from "@ooneex/mailer";
 import type { IMailer } from "@ooneex/mailer";
 import { type {{NAME}}MailerPropsType, {{NAME}}MailerTemplate } from "./{{NAME}}MailerTemplate";
 
+@decorator.mailer()
 export class {{NAME}}Mailer implements IMailer {
   constructor(
     @inject("mailer")

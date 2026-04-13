@@ -30,6 +30,16 @@ describe("mailer.txt", () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain('@inject("mailer")');
   });
+
+  test("should have @decorator.mailer() decorator", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("@decorator.mailer()");
+  });
+
+  test("should import decorator from @ooneex/mailer", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain('import { decorator } from "@ooneex/mailer"');
+  });
 });
 
 describe("mailer.test.txt", () => {

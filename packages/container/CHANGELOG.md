@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.5.1) - 2026-04-13
+
+### Changed
+
+- Reorder imports in container test — Franck ([b0605402](https://github.com/ooneex/ooneex/commit/b0605402))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/container@1.5.0) - 2026-04-12
 
 ### Added

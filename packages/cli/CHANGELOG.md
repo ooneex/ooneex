@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.26.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.3) - 2026-04-13
+
+### Changed
+
+- Apply formatter across commands and tests — Franck ([44cc8b74](https://github.com/ooneex/ooneex/commit/44cc8b74))
+
 ## [1.26.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.2) - 2026-04-12
 
 ### Changed

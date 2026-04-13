@@ -43,9 +43,7 @@ export const run = async (): Promise<void> => {
   }
 
   if (values.drop) {
-    const database = container.getConstant<{ drop: () => Promise<void> }>(
-      "database",
-    );
+    const database = container.getConstant<{ drop: () => Promise<void> }>("database");
     if (database) {
       await database.drop();
       logger.info("Database dropped\n", undefined, {
@@ -93,9 +91,7 @@ export const run = async (): Promise<void> => {
   }
 
   try {
-    const database = container.getConstant<{ close: () => Promise<void> }>(
-      "database",
-    );
+    const database = container.getConstant<{ close: () => Promise<void> }>("database");
     if (database) {
       await database.close();
     }

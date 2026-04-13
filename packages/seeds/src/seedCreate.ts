@@ -21,7 +21,10 @@ export const seedCreate = async (config: {
 
   await Bun.write(join(process.cwd(), seedsDir, `${dataFile}.yml`), "# Seed data\n");
 
-  const testContent = testTemplate.replace(/\{\{NAME\}\}/g, name).replace(/\{\{DATA_FILE\}\}/g, dataFile).replace(/\{\{MODULE\}\}/g, config.module ?? "");
+  const testContent = testTemplate
+    .replace(/\{\{NAME\}\}/g, name)
+    .replace(/\{\{DATA_FILE\}\}/g, dataFile)
+    .replace(/\{\{MODULE\}\}/g, config.module ?? "");
   await Bun.write(join(process.cwd(), testsDir, `${seedName}.spec.ts`), testContent);
 
   const imports: string[] = [];

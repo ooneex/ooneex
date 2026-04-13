@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.5.0) - 2026-04-13
+
+### Added
+
+- Add CSRF_SECRET environment variable — Franck ([86e22016](https://github.com/ooneex/ooneex/commit/86e22016))
+
 ## [1.4.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.4.2) - 2026-04-12
 
 ### Changed

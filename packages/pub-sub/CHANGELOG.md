@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.2.3) - 2026-04-13
+
+### Changed
+
+- Simplify connection handling in RedisPubSubClient — Franck ([32761e0d](https://github.com/ooneex/ooneex/commit/32761e0d))
+
 ## [1.2.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.2.2) - 2026-04-12
 
 ### Changed

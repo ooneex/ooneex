@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.9.0) - 2026-04-13
+
+### Added
+
+- Append CORS middleware to route middleware chain — Franck ([541839ec](https://github.com/ooneex/ooneex/commit/541839ec))
+
 ## [1.8.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.8.2) - 2026-04-12
 
 ### Changed

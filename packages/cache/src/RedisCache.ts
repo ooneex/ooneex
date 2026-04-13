@@ -28,11 +28,17 @@ export class RedisCache extends AbstractCache {
     const { connectionString: _, namespace: __, ...userOptions } = options;
 
     this.client = new Bun.RedisClient(connectionString, {
+      // Max time (ms) to wait for initial connection
       connectionTimeout: 10_000,
-      idleTimeout: 30_000,
+      // Disable idle timeout to keep connection alive during traffic bursts
+      idleTimeout: 0,
+      // Automatically reconnect on connection loss
       autoReconnect: true,
-      maxRetries: 3,
+      // Max reconnection attempts before giving up
+      maxRetries: 10,
+      // Queue commands while disconnected, flush on reconnect
       enableOfflineQueue: true,
+      // Batch multiple commands into fewer round-trips
       enableAutoPipelining: true,
       ...userOptions,
     });

@@ -5,9 +5,9 @@ import { RedisCache } from "@/index";
 // Default options that the adapter uses
 const defaultOptions = {
   connectionTimeout: 10_000,
-  idleTimeout: 30_000,
+  idleTimeout: 0,
   autoReconnect: true,
-  maxRetries: 3,
+  maxRetries: 10,
   enableOfflineQueue: true,
   enableAutoPipelining: true,
 };

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.10.0) - 2026-04-13
+
+### Added
+
+- Await async permission methods in route handlers — Franck ([d05ff1f8](https://github.com/ooneex/ooneex/commit/d05ff1f8))
+
 ## [1.9.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.9.0) - 2026-04-13
 
 ### Added

@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.4.0) - 2026-04-13
+
+### Added
+
+- Add clear method to cache implementations — Franck ([862ac10e](https://github.com/ooneex/ooneex/commit/862ac10e))
+
+### Changed
+
+- Tune Redis client defaults and document options — Franck ([1f33b99d](https://github.com/ooneex/ooneex/commit/1f33b99d))
+
 ## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.5) - 2026-04-13
 
 ### Changed

@@ -120,6 +120,7 @@ describe("env.txt", () => {
   test("should contain AI section", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# AI");
+    expect(content).toContain("OPENROUTER_API_KEY=");
     expect(content).toContain("OPENAI_API_KEY=");
     expect(content).toContain("ANTHROPIC_API_KEY=");
     expect(content).toContain("GEMINI_API_KEY=");

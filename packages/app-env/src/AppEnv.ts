@@ -88,6 +88,7 @@ export class AppEnv implements IAppEnv {
   public readonly CSRF_SECRET: string | undefined;
 
   // AI
+  public readonly OPENROUTER_API_KEY: string | undefined;
   public readonly OPENAI_API_KEY: string | undefined;
   public readonly ANTHROPIC_API_KEY: string | undefined;
   public readonly GEMINI_API_KEY: string | undefined;
@@ -211,6 +212,7 @@ export class AppEnv implements IAppEnv {
     this.CSRF_SECRET = Bun.env.CSRF_SECRET?.trim();
 
     // AI
+    this.OPENROUTER_API_KEY = Bun.env.OPENROUTER_API_KEY?.trim();
     this.OPENAI_API_KEY = Bun.env.OPENAI_API_KEY?.trim();
     this.ANTHROPIC_API_KEY = Bun.env.ANTHROPIC_API_KEY?.trim();
     this.GEMINI_API_KEY = Bun.env.GEMINI_API_KEY?.trim();

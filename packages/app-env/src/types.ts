@@ -105,6 +105,7 @@ export interface IAppEnv {
   readonly CSRF_SECRET: string | undefined;
 
   // AI
+  readonly OPENROUTER_API_KEY: string | undefined;
   readonly OPENAI_API_KEY: string | undefined;
   readonly ANTHROPIC_API_KEY: string | undefined;
   readonly GEMINI_API_KEY: string | undefined;

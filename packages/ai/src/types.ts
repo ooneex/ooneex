@@ -105,6 +105,16 @@ export type AiSpeechResultType = {
   contentType?: string | undefined;
 };
 
+export type AiImageResultType = {
+  url: string;
+  revisedPrompt?: string | undefined;
+};
+
+export type AiVideoSourceType = {
+  type: "url" | "data";
+  value: string;
+};
+
 export type AiMessageType = {
   role: "user" | "assistant" | "system" | "tool";
   content: string;
@@ -164,11 +174,22 @@ export interface IAiChat<TConfig extends AiConfigType = AiConfigType> {
   imageToMarkdown?: (source: AiImageSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
   imageToText?: (source: AiImageSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
   speechToText?: (source: AiAudioSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
+  videoToText?: (source: AiVideoSourceType, config?: Omit<TConfig, "output">) => Promise<string>;
+  imageToImage?: (
+    source: AiImageSourceType,
+    prompt: string,
+    config?: Omit<TConfig, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ) => Promise<AiImageResultType>;
+  textToImage?: (
+    prompt: string,
+    config?: Omit<TConfig, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ) => Promise<AiImageResultType>;
   textToSpeech?: (
     text: string,
     config?: Omit<TConfig, "output"> & { voice?: string; format?: AiSpeechFormatType; speed?: number },
   ) => Promise<AiSpeechResultType>;
   textToVideo?: (prompt: string, config?: Omit<TConfig, "output">) => Promise<AiVideoResultType>;
+  getVideoStatus?: (jobId: string, config?: Omit<TConfig, "output">) => Promise<AiVideoResultType>;
   run: <T>(content: string, config?: TConfig) => Promise<T>;
   runStream: (content: string, config?: TConfig) => AsyncGenerator<string, void, unknown>;
 }

@@ -5,6 +5,8 @@ import { AiException } from "./AiException";
 import { BaseAi } from "./BaseAi";
 import { decorator } from "./decorators";
 import type {
+  AiImageResultType,
+  AiImageSourceType,
   AiSpeechFormatType,
   AiSpeechResultType,
   AiVideoResultType,
@@ -49,11 +51,16 @@ export class OpenRouterAi extends BaseAi<OpenRouterConfigType> {
     imageToMarkdown: "google/gemini-2.5-flash",
     imageToText: "google/gemini-2.5-flash",
 
+    // Image generation
+    textToImage: "openai/dall-e-3",
+    imageToImage: "openai/dall-e-2",
+
     // Audio
     speechToText: "google/gemini-2.5-flash",
     textToSpeech: "openai/tts-1",
 
     // Video
+    videoToText: "google/gemini-2.5-flash",
     textToVideo: "google/veo-3",
 
     // General purpose
@@ -78,11 +85,95 @@ export class OpenRouterAi extends BaseAi<OpenRouterConfigType> {
     return apiKey;
   }
 
+  private async fetchWithRetry(url: string, options: RequestInit, retries = 3, delayMs = 1000): Promise<Response> {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const response = await fetch(url, options);
+      if (response.ok || attempt === retries) return response;
+      if ([429, 500, 502, 503, 504].includes(response.status)) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * 2 ** attempt));
+        continue;
+      }
+      return response;
+    }
+    throw new AiException("Max retries exceeded", "MAX_RETRIES_EXCEEDED");
+  }
+
   private getDefaultModel(task?: string): OpenRouterModelType {
     if (task && task in OpenRouterAi.DEFAULT_MODELS) {
       return OpenRouterAi.DEFAULT_MODELS[task] as OpenRouterModelType;
     }
     return "google/gemini-2.5-flash";
+  }
+
+  public async textToImage(
+    prompt: string,
+    config?: Omit<OpenRouterConfigType, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ): Promise<AiImageResultType> {
+    const apiKey = this.getApiKey(config as OpenRouterConfigType);
+    const model = config?.model ?? OpenRouterAi.DEFAULT_MODELS.textToImage ?? "openai/dall-e-3";
+
+    const response = await this.fetchWithRetry("https://openrouter.ai/api/v1/images/generations", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        prompt,
+        size: config?.size ?? "1024x1024",
+        quality: config?.quality ?? "standard",
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new AiException(`OpenRouter image generation failed: ${error}`, "IMAGE_GENERATION_FAILED");
+    }
+
+    const result = (await response.json()) as { data: { url: string; revised_prompt?: string }[] };
+    const image = result.data[0] as { url: string; revised_prompt?: string };
+
+    return {
+      url: image.url,
+      revisedPrompt: image.revised_prompt,
+    };
+  }
+
+  public async imageToImage(
+    source: AiImageSourceType,
+    prompt: string,
+    config?: Omit<OpenRouterConfigType, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ): Promise<AiImageResultType> {
+    const apiKey = this.getApiKey(config as OpenRouterConfigType);
+    const model = config?.model ?? OpenRouterAi.DEFAULT_MODELS.imageToImage ?? "openai/dall-e-2";
+
+    const response = await this.fetchWithRetry("https://openrouter.ai/api/v1/images/edits", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        prompt,
+        image: source.value,
+        size: config?.size ?? "1024x1024",
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new AiException(`OpenRouter image editing failed: ${error}`, "IMAGE_EDITING_FAILED");
+    }
+
+    const result = (await response.json()) as { data: { url: string; revised_prompt?: string }[] };
+    const image = result.data[0] as { url: string; revised_prompt?: string };
+
+    return {
+      url: image.url,
+      revisedPrompt: image.revised_prompt,
+    };
   }
 
   public async textToSpeech(
@@ -93,7 +184,7 @@ export class OpenRouterAi extends BaseAi<OpenRouterConfigType> {
     const model = config?.model ?? OpenRouterAi.DEFAULT_MODELS.textToSpeech ?? "openai/tts-1";
     const format = config?.format ?? "mp3";
 
-    const response = await fetch("https://openrouter.ai/api/v1/audio/speech", {
+    const response = await this.fetchWithRetry("https://openrouter.ai/api/v1/audio/speech", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -127,7 +218,7 @@ export class OpenRouterAi extends BaseAi<OpenRouterConfigType> {
     const apiKey = this.getApiKey(config as OpenRouterConfigType);
     const model = config?.model ?? OpenRouterAi.DEFAULT_MODELS.textToVideo ?? "google/veo-3";
 
-    const response = await fetch("https://openrouter.ai/api/v1/video/generations", {
+    const response = await this.fetchWithRetry("https://openrouter.ai/api/v1/video/generations", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -139,6 +230,34 @@ export class OpenRouterAi extends BaseAi<OpenRouterConfigType> {
     if (!response.ok) {
       const error = await response.text();
       throw new AiException(`OpenRouter video generation failed: ${error}`, "VIDEO_GENERATION_FAILED");
+    }
+
+    const result = (await response.json()) as { id: string; url?: string; status: string; error?: string };
+
+    return {
+      jobId: result.id,
+      url: result.url,
+      status: result.status as AiVideoResultType["status"],
+      error: result.error,
+    };
+  }
+
+  public async getVideoStatus(
+    jobId: string,
+    config?: Omit<OpenRouterConfigType, "output">,
+  ): Promise<AiVideoResultType> {
+    const apiKey = this.getApiKey(config as OpenRouterConfigType);
+
+    const response = await this.fetchWithRetry(`https://openrouter.ai/api/v1/video/generations/${jobId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new AiException(`OpenRouter video status check failed: ${error}`, "VIDEO_STATUS_FAILED");
     }
 
     const result = (await response.json()) as { id: string; url?: string; status: string; error?: string };

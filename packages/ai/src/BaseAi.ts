@@ -7,10 +7,12 @@ import type {
   AiConfigType,
   AiImageSourceType,
   AiMessageType,
+  AiImageResultType,
   AiSpeechFormatType,
   AiSpeechResultType,
   AiToneType,
   AiVideoResultType,
+  AiVideoSourceType,
   GenerateCaseQuestionOptionsType,
   GenerateCaseQuestionResultType,
   GenerateFlashcardOptionsType,
@@ -485,12 +487,54 @@ export abstract class BaseAi<TConfig extends AiConfigType> implements IAiChat<TC
     return result.trim();
   }
 
+  public async videoToText(source: AiVideoSourceType, config?: Omit<TConfig, "output">): Promise<string> {
+    const adapter = this.createChatAdapter(config as TConfig, "videoToText");
+
+    const systemPrompt = this.buildPrompt(
+      "Describe the content of the provided video in detail. Include the main events, actions, visual elements, and any spoken dialogue or text visible in the video. Provide a clear, chronological description.",
+      config as TConfig,
+    );
+
+    const baseMessages: ModelMessage[] = config?.messages ? this.toMessages(config.messages) : [];
+    const userMessage: ModelMessage = {
+      role: "user",
+      content: [
+        { type: "text", content: systemPrompt },
+        { type: "video", source: source as ContentPartSource },
+      ],
+    };
+
+    const messages = [...baseMessages, userMessage];
+    const result = await chat({
+      adapter,
+      messages: messages as unknown as NonNullable<
+        Parameters<typeof chat<typeof adapter, undefined, false>>[0]["messages"]
+      >,
+      stream: false,
+    });
+
+    return result.trim();
+  }
+
+  public abstract imageToImage(
+    source: AiImageSourceType,
+    prompt: string,
+    config?: Omit<TConfig, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ): Promise<AiImageResultType>;
+
+  public abstract textToImage(
+    prompt: string,
+    config?: Omit<TConfig, "output"> & { size?: string; quality?: "standard" | "hd" },
+  ): Promise<AiImageResultType>;
+
   public abstract textToSpeech(
     text: string,
     config?: Omit<TConfig, "output"> & { voice?: string; format?: AiSpeechFormatType; speed?: number },
   ): Promise<AiSpeechResultType>;
 
   public abstract textToVideo(prompt: string, config?: Omit<TConfig, "output">): Promise<AiVideoResultType>;
+
+  public abstract getVideoStatus(jobId: string, config?: Omit<TConfig, "output">): Promise<AiVideoResultType>;
 
   public async run<T>(prompt: string, config?: Omit<TConfig, "prompt">): Promise<T> {
     const adapter = this.createRunAdapter(config as TConfig, "run");

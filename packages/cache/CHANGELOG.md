@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.5](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.5) - 2026-04-13
+
+### Changed
+
+- Update tests to expect raw errors instead of CacheException — Franck ([019d1ec1](https://github.com/ooneex/ooneex/commit/019d1ec1))
+
 ## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cache@1.3.4) - 2026-04-13
 
 ### Changed

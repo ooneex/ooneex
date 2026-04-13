@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.2.0) - 2026-04-13
+
+### Added
+
+- Support async permission methods — Franck ([b468e938](https://github.com/ooneex/ooneex/commit/b468e938))
+
 ## [1.1.15](https://github.com/ooneex/ooneex/releases/tag/@ooneex/permission@1.1.15) - 2026-04-12
 
 ### Changed

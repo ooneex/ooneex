@@ -20,9 +20,10 @@ const mockRedisClient = {
   }),
   get: mock(async (_key: string): Promise<string | null> => null),
   set: mock(async (_key: string, _value: string): Promise<void> => {}),
-  del: mock(async (_key: string): Promise<number> => 1),
+  del: mock(async (..._keys: string[]): Promise<number> => 1),
   exists: mock(async (_key: string): Promise<boolean> => false),
   expire: mock(async (_key: string, _seconds: number): Promise<number> => 1),
+  scan: mock(async (_cursor: string | number, ..._args: (string | number)[]): Promise<[string, string[]]> => ["0", []]),
 };
 
 // Mock the RedisClient constructor
@@ -68,6 +69,7 @@ describe("RedisCacheAdapter", () => {
       mockRedisClient.del,
       mockRedisClient.exists,
       mockRedisClient.expire,
+      mockRedisClient.scan,
       MockRedisClient,
     ];
 
@@ -83,9 +85,12 @@ describe("RedisCacheAdapter", () => {
     });
     mockRedisClient.get.mockImplementation(async (_key: string): Promise<string | null> => null);
     mockRedisClient.set.mockImplementation(async (_key: string, _value: string): Promise<void> => {});
-    mockRedisClient.del.mockImplementation(async (_key: string): Promise<number> => 1);
+    mockRedisClient.del.mockImplementation(async (..._keys: string[]): Promise<number> => 1);
     mockRedisClient.exists.mockImplementation(async (_key: string): Promise<boolean> => false);
     mockRedisClient.expire.mockImplementation(async (_key: string, _seconds: number): Promise<number> => 1);
+    mockRedisClient.scan.mockImplementation(
+      async (_cursor: string | number, ..._args: (string | number)[]): Promise<[string, string[]]> => ["0", []],
+    );
   });
 
   describe("constructor", () => {
@@ -522,6 +527,47 @@ describe("RedisCacheAdapter", () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Command timed out"));
 
       expect(adapter.has(testKey)).rejects.toThrow("Command timed out");
+    });
+  });
+
+  describe("clear method", () => {
+    test("should scan and delete all namespaced keys", async () => {
+      mockRedisClient.scan.mockResolvedValueOnce(["0", ["cache:key1", "cache:key2"]]);
+      mockRedisClient.del.mockResolvedValue(2);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledWith("0", "MATCH", "cache:*", "COUNT", 100);
+      expect(mockRedisClient.del).toHaveBeenCalledWith("cache:key1", "cache:key2");
+    });
+
+    test("should handle multiple scan iterations", async () => {
+      mockRedisClient.scan
+        .mockResolvedValueOnce(["42", ["cache:key1", "cache:key2"]])
+        .mockResolvedValueOnce(["0", ["cache:key3"]]);
+      mockRedisClient.del.mockResolvedValue(1);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledTimes(2);
+      expect(mockRedisClient.del).toHaveBeenCalledTimes(2);
+      expect(mockRedisClient.del).toHaveBeenCalledWith("cache:key1", "cache:key2");
+      expect(mockRedisClient.del).toHaveBeenCalledWith("cache:key3");
+    });
+
+    test("should handle empty scan result", async () => {
+      mockRedisClient.scan.mockResolvedValueOnce(["0", []]);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledTimes(1);
+      expect(mockRedisClient.del).not.toHaveBeenCalled();
+    });
+
+    test("should throw on Redis error", async () => {
+      mockRedisClient.scan.mockRejectedValue(new Error("Redis scan failed"));
+
+      expect(adapter.clear()).rejects.toThrow("Redis scan failed");
     });
   });
 

@@ -114,6 +114,16 @@ export class FilesystemCache extends AbstractCache {
     }
   }
 
+  public async clear(): Promise<void> {
+    await this.ensureCacheDir();
+    const { readdir, unlink } = await import("node:fs/promises");
+    const files = await readdir(this.cacheDir);
+
+    await Promise.all(
+      files.filter((file) => file.endsWith(".cache")).map((file) => unlink(`${this.cacheDir}/${file}`).catch(() => {})),
+    );
+  }
+
   private async writeCacheEntry<T>(key: string, entry: CacheEntryType<T>): Promise<void> {
     const content = JSON.stringify(entry);
 

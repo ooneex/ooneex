@@ -73,4 +73,21 @@ export class UpstashRedisCache extends AbstractCache {
 
     return result > 0;
   }
+
+  public async clear(): Promise<void> {
+    let cursor = "0";
+
+    do {
+      const [nextCursor, keys] = await this.client.scan(cursor, { match: `${this.namespace}:*`, count: 100 });
+      cursor = nextCursor;
+
+      if (keys.length > 0) {
+        const pipeline = this.client.pipeline();
+        for (const key of keys) {
+          pipeline.del(key);
+        }
+        await pipeline.exec();
+      }
+    } while (cursor !== "0");
+  }
 }

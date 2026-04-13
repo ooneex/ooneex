@@ -79,4 +79,18 @@ export class RedisCache extends AbstractCache {
 
     return result;
   }
+
+  public async clear(): Promise<void> {
+    const pattern = this.namespace ? `${this.namespace}:*` : "*";
+    let cursor = "0";
+
+    do {
+      const [nextCursor, keys] = await this.client.scan(cursor, "MATCH", pattern, "COUNT", 100);
+      cursor = nextCursor;
+
+      if (keys.length > 0) {
+        await this.client.del(...keys);
+      }
+    } while (cursor !== "0");
+  }
 }

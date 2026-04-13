@@ -31,4 +31,5 @@ export interface ICache {
   set: <T = unknown>(key: string, value: T, ttl?: number) => Promise<void>;
   delete: (key: string) => Promise<boolean>;
   has: (key: string) => Promise<boolean>;
+  clear: () => Promise<void>;
 }

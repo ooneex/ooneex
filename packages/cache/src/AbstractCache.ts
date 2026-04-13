@@ -5,4 +5,5 @@ export abstract class AbstractCache implements ICache {
   public abstract set<T = unknown>(key: string, value: T, ttl?: number): Promise<void>;
   public abstract delete(key: string): Promise<boolean>;
   public abstract has(key: string): Promise<boolean>;
+  public abstract clear(): Promise<void>;
 }

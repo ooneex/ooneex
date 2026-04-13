@@ -2,12 +2,20 @@ import { beforeEach, describe, expect, mock, test } from "bun:test";
 import { AppEnv } from "@ooneex/app-env";
 import { CacheException, UpstashRedisCache } from "@/index";
 
+// Create mock pipeline instance
+const mockPipeline = {
+  del: mock((_key: string) => mockPipeline),
+  exec: mock(async () => []),
+};
+
 // Create mock Redis client instance
 const mockRedisClient = {
   get: mock(async <T>(_key: string): Promise<T | null> => null),
   set: mock(async (_key: string, _value: unknown, _opts?: { ex?: number }): Promise<string> => "OK"),
   del: mock(async (_key: string): Promise<number> => 1),
   exists: mock(async (_key: string): Promise<number> => 0),
+  scan: mock(async (_cursor: string | number, _opts?: object): Promise<[string, string[]]> => ["0", []]),
+  pipeline: mock(() => mockPipeline),
 };
 
 // Mock the @upstash/redis module
@@ -17,6 +25,8 @@ mock.module("@upstash/redis", () => ({
     set = mockRedisClient.set;
     del = mockRedisClient.del;
     exists = mockRedisClient.exists;
+    scan = mockRedisClient.scan;
+    pipeline = mockRedisClient.pipeline;
   },
 }));
 
@@ -32,7 +42,16 @@ describe("UpstashRedisCache", () => {
     });
 
     // Reset all mocks
-    const mocksToReset = [mockRedisClient.get, mockRedisClient.set, mockRedisClient.del, mockRedisClient.exists];
+    const mocksToReset = [
+      mockRedisClient.get,
+      mockRedisClient.set,
+      mockRedisClient.del,
+      mockRedisClient.exists,
+      mockRedisClient.scan,
+      mockRedisClient.pipeline,
+      mockPipeline.del,
+      mockPipeline.exec,
+    ];
 
     mocksToReset.forEach((mockFn) => {
       if (mockFn && typeof mockFn.mockClear === "function") {
@@ -47,6 +66,12 @@ describe("UpstashRedisCache", () => {
     );
     mockRedisClient.del.mockImplementation(async (_key: string): Promise<number> => 1);
     mockRedisClient.exists.mockImplementation(async (_key: string): Promise<number> => 0);
+    mockRedisClient.scan.mockImplementation(
+      async (_cursor: string | number, _opts?: object): Promise<[string, string[]]> => ["0", []],
+    );
+    mockRedisClient.pipeline.mockImplementation(() => mockPipeline);
+    mockPipeline.del.mockImplementation((_key: string) => mockPipeline);
+    mockPipeline.exec.mockImplementation(async () => []);
   });
 
   describe("constructor", () => {
@@ -441,6 +466,48 @@ describe("UpstashRedisCache", () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Command timed out"));
 
       expect(adapter.has(testKey)).rejects.toThrow("Command timed out");
+    });
+  });
+
+  describe("clear method", () => {
+    test("should scan and delete all namespaced keys", async () => {
+      mockRedisClient.scan.mockResolvedValueOnce(["0", ["cache:key1", "cache:key2"]]);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledWith("0", { match: "cache:*", count: 100 });
+      expect(mockRedisClient.pipeline).toHaveBeenCalledTimes(1);
+      expect(mockPipeline.del).toHaveBeenCalledWith("cache:key1");
+      expect(mockPipeline.del).toHaveBeenCalledWith("cache:key2");
+      expect(mockPipeline.exec).toHaveBeenCalledTimes(1);
+    });
+
+    test("should handle multiple scan iterations", async () => {
+      mockRedisClient.scan
+        .mockResolvedValueOnce(["42", ["cache:key1", "cache:key2"]])
+        .mockResolvedValueOnce(["0", ["cache:key3"]]);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledTimes(2);
+      expect(mockRedisClient.pipeline).toHaveBeenCalledTimes(2);
+      expect(mockPipeline.del).toHaveBeenCalledTimes(3);
+      expect(mockPipeline.exec).toHaveBeenCalledTimes(2);
+    });
+
+    test("should handle empty scan result", async () => {
+      mockRedisClient.scan.mockResolvedValueOnce(["0", []]);
+
+      await adapter.clear();
+
+      expect(mockRedisClient.scan).toHaveBeenCalledTimes(1);
+      expect(mockRedisClient.pipeline).not.toHaveBeenCalled();
+    });
+
+    test("should throw on scan error", async () => {
+      mockRedisClient.scan.mockRejectedValue(new Error("Upstash scan failed"));
+
+      expect(adapter.clear()).rejects.toThrow("Upstash scan failed");
     });
   });
 

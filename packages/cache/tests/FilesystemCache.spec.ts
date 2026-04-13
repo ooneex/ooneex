@@ -352,6 +352,34 @@ describe("FilesystemCacheAdapter", () => {
     });
   });
 
+  describe("clear method", () => {
+    test("should remove all cached entries", async () => {
+      await adapter.set("key1", "value1");
+      await adapter.set("key2", "value2");
+      await adapter.set("key3", "value3");
+
+      await adapter.clear();
+
+      expect(await adapter.has("key1")).toBe(false);
+      expect(await adapter.has("key2")).toBe(false);
+      expect(await adapter.has("key3")).toBe(false);
+    });
+
+    test("should not throw when cache directory is empty", async () => {
+      await adapter.clear();
+      expect(true).toBe(true);
+    });
+
+    test("should allow new entries after clear", async () => {
+      await adapter.set("key1", "value1");
+      await adapter.clear();
+      await adapter.set("key2", "value2");
+
+      expect(await adapter.has("key1")).toBe(false);
+      expect(await adapter.get<string>("key2")).toBe("value2");
+    });
+  });
+
   describe("delete and has methods integration", () => {
     test("should return false when checking existence after deletion", async () => {
       await adapter.set(testKey, testValue);

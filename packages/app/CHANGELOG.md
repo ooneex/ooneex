@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.11.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.11.0) - 2026-04-13
+
+### Added
+
+- Use signed cookie for HTTP response caching — Franck ([302d531a](https://github.com/ooneex/ooneex/commit/302d531a))
+
 ## [1.10.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.10.0) - 2026-04-13
 
 ### Added

@@ -6,7 +6,7 @@ import type { IPubSubClient, PubSubMessageHandlerType, RedisPubSubOptionsType } 
 
 @injectable()
 export class RedisPubSubClient<Data extends Record<string, ScalarType>> implements IPubSubClient<Data> {
-  private client: Bun.RedisClient;
+  private readonly client: Bun.RedisClient;
   private subscriber: Bun.RedisClient | null = null;
 
   constructor(
@@ -24,39 +24,25 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
 
     const { connectionString: _, ...userOptions } = options;
 
-    const defaultOptions = {
+    this.client = new Bun.RedisClient(connectionString, {
+      // Max time (ms) to wait for initial connection
       connectionTimeout: 10_000,
-      idleTimeout: 30_000,
+      // Disable idle timeout to keep connection alive during traffic bursts
+      idleTimeout: 0,
+      // Automatically reconnect on connection loss
       autoReconnect: true,
-      maxRetries: 3,
+      // Max reconnection attempts before giving up
+      maxRetries: 10,
+      // Queue commands while disconnected, flush on reconnect
       enableOfflineQueue: true,
+      // Batch multiple commands into fewer round-trips
       enableAutoPipelining: true,
-    };
-
-    const clientOptions = { ...defaultOptions, ...userOptions };
-
-    this.client = new Bun.RedisClient(connectionString, clientOptions);
-  }
-
-  private async connect(): Promise<void> {
-    if (!this.client.connected) {
-      await this.client.connect();
-    }
-  }
-
-  private async connectSubscriber(): Promise<void> {
-    if (!this.subscriber) {
-      this.subscriber = await this.client.duplicate();
-    }
-
-    if (!this.subscriber.connected) {
-      await this.subscriber.connect();
-    }
+      ...userOptions,
+    });
   }
 
   public async publish(config: { channel: string; data: Data }): Promise<void> {
     try {
-      await this.connect();
       const message = JSON.stringify(config.data);
       await this.client.publish(config.channel, message);
     } catch (error) {
@@ -66,8 +52,11 @@ export class RedisPubSubClient<Data extends Record<string, ScalarType>> implemen
 
   public async subscribe(channel: string, handler: PubSubMessageHandlerType<Data>): Promise<void> {
     try {
-      await this.connectSubscriber();
-      await this.subscriber?.subscribe(channel, (message: string, ch: string) => {
+      if (!this.subscriber) {
+        this.subscriber = await this.client.duplicate();
+      }
+
+      await this.subscriber.subscribe(channel, (message: string, ch: string) => {
         try {
           const data = JSON.parse(message) as Data;
           handler({ data, channel: ch });

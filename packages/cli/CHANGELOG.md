@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.27.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.27.0) - 2026-04-13
+
+### Added
+
+- Add CSRF section to app env template — Franck ([6fb1f777](https://github.com/ooneex/ooneex/commit/6fb1f777))
+
+### Changed
+
+- Add decorator checks to mailer template tests — Franck ([87185c4e](https://github.com/ooneex/ooneex/commit/87185c4e))
+
 ## [1.26.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.26.3) - 2026-04-13
 
 ### Changed

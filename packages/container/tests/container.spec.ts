@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "bun:test";
-import { Container, EContainerScope, container as sharedContainer, injectable } from "@/index";
+import { Container, EContainerScope, injectable, container as sharedContainer } from "@/index";
 
 describe("Container - Dependency Injection", () => {
   let container: Container;

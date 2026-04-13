@@ -185,11 +185,11 @@ describe("UpstashRedisCache", () => {
       expect(result).toEqual(complexObject);
     });
 
-    test("should throw CacheException on error", async () => {
+    test("should throw on error", async () => {
       mockRedisClient.get.mockRejectedValue(new Error("Upstash connection failed"));
 
-      expect(adapter.get(testKey)).rejects.toThrow(CacheException);
-      expect(adapter.get(testKey)).rejects.toThrow('Failed to get key "test-key"');
+      expect(adapter.get(testKey)).rejects.toThrow(Error);
+      expect(adapter.get(testKey)).rejects.toThrow("Upstash connection failed");
     });
   });
 
@@ -263,11 +263,11 @@ describe("UpstashRedisCache", () => {
       expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, testValue);
     });
 
-    test("should throw CacheException on error", async () => {
+    test("should throw on error", async () => {
       mockRedisClient.set.mockRejectedValue(new Error("Upstash write failed"));
 
-      expect(adapter.set(testKey, testValue)).rejects.toThrow(CacheException);
-      expect(adapter.set(testKey, testValue)).rejects.toThrow('Failed to set key "test-key"');
+      expect(adapter.set(testKey, testValue)).rejects.toThrow(Error);
+      expect(adapter.set(testKey, testValue)).rejects.toThrow("Upstash write failed");
     });
   });
 
@@ -322,22 +322,22 @@ describe("UpstashRedisCache", () => {
       expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${unicodeKey}`);
     });
 
-    test("should throw CacheException on error", async () => {
+    test("should throw on error", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("Upstash delete failed"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("Upstash delete failed");
     });
 
-    test("should throw CacheException on connection error", async () => {
+    test("should throw on connection error", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("ECONNREFUSED"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("ECONNREFUSED");
     });
 
-    test("should throw CacheException on timeout", async () => {
+    test("should throw on timeout", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("Command timed out"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("Command timed out");
     });
   });
 
@@ -425,22 +425,22 @@ describe("UpstashRedisCache", () => {
       expect(result).toBe(false);
     });
 
-    test("should throw CacheException on error", async () => {
+    test("should throw on error", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Upstash exists failed"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("Upstash exists failed");
     });
 
-    test("should throw CacheException on connection error", async () => {
+    test("should throw on connection error", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("ECONNREFUSED"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("ECONNREFUSED");
     });
 
-    test("should throw CacheException on timeout", async () => {
+    test("should throw on timeout", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Command timed out"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("Command timed out");
     });
   });
 

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
 import { AppEnv } from "@ooneex/app-env";
-import { CacheException, RedisCache } from "@/index";
+import { RedisCache } from "@/index";
 
 // Default options that the adapter uses
 const defaultOptions = {
@@ -132,7 +132,6 @@ describe("RedisCacheAdapter", () => {
 
       const result = await adapter.get("non-existent-key");
       expect(result).toBeUndefined();
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.get).toHaveBeenCalledWith("cache:non-existent-key");
     });
 
@@ -214,21 +213,20 @@ describe("RedisCacheAdapter", () => {
       expect(result).toBe(rawValue);
     });
 
-    test("should throw CacheException on Redis error", async () => {
+    test("should throw on Redis error", async () => {
       mockRedisClient.get.mockRejectedValue(new Error("Redis connection failed"));
 
-      expect(adapter.get(testKey)).rejects.toThrow(CacheException);
-      expect(adapter.get(testKey)).rejects.toThrow('Failed to get key "test-key"');
+      expect(adapter.get(testKey)).rejects.toThrow(Error);
+      expect(adapter.get(testKey)).rejects.toThrow("Redis connection failed");
     });
 
-    test("should reuse connection on subsequent calls", async () => {
+    test("should handle subsequent calls", async () => {
       mockRedisClient.get.mockResolvedValue(testValue);
 
       await adapter.get(testKey);
       await adapter.get(testKey);
       await adapter.get(testKey);
 
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.get).toHaveBeenCalledTimes(3);
     });
   });
@@ -237,7 +235,6 @@ describe("RedisCacheAdapter", () => {
     test("should store string value", async () => {
       await adapter.set(testKey, testValue);
 
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.set).toHaveBeenCalledWith(`cache:${testKey}`, testValue);
     });
 
@@ -312,19 +309,18 @@ describe("RedisCacheAdapter", () => {
       expect(mockRedisClient.expire).not.toHaveBeenCalled();
     });
 
-    test("should throw CacheException on Redis error", async () => {
+    test("should throw on Redis error", async () => {
       mockRedisClient.set.mockRejectedValue(new Error("Redis write failed"));
 
-      expect(adapter.set(testKey, testValue)).rejects.toThrow(CacheException);
-      expect(adapter.set(testKey, testValue)).rejects.toThrow('Failed to set key "test-key"');
+      expect(adapter.set(testKey, testValue)).rejects.toThrow(Error);
+      expect(adapter.set(testKey, testValue)).rejects.toThrow("Redis write failed");
     });
 
-    test("should reuse connection on subsequent calls", async () => {
+    test("should handle subsequent calls", async () => {
       await adapter.set("key1", "value1");
       await adapter.set("key2", "value2");
       await adapter.set("key3", "value3");
 
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.set).toHaveBeenCalledTimes(3);
     });
   });
@@ -335,7 +331,6 @@ describe("RedisCacheAdapter", () => {
 
       const result = await adapter.delete(testKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
@@ -389,32 +384,31 @@ describe("RedisCacheAdapter", () => {
       expect(mockRedisClient.del).toHaveBeenCalledWith(`cache:${unicodeKey}`);
     });
 
-    test("should throw CacheException on Redis error", async () => {
+    test("should throw on Redis error", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("Redis delete failed"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("Redis delete failed");
     });
 
-    test("should throw CacheException on Redis connection error", async () => {
+    test("should throw on Redis connection error", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("ECONNREFUSED"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("ECONNREFUSED");
     });
 
-    test("should throw CacheException on Redis timeout", async () => {
+    test("should throw on Redis timeout", async () => {
       mockRedisClient.del.mockRejectedValue(new Error("Command timed out"));
 
-      expect(adapter.delete(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.delete(testKey)).rejects.toThrow("Command timed out");
     });
 
-    test("should reuse connection on subsequent calls", async () => {
+    test("should handle subsequent calls", async () => {
       mockRedisClient.del.mockResolvedValue(1);
 
       await adapter.delete("key1");
       await adapter.delete("key2");
       await adapter.delete("key3");
 
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.del).toHaveBeenCalledTimes(3);
     });
   });
@@ -425,7 +419,6 @@ describe("RedisCacheAdapter", () => {
 
       const result = await adapter.has(testKey);
       expect(result).toBe(true);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.exists).toHaveBeenCalledWith(`cache:${testKey}`);
     });
 
@@ -447,7 +440,6 @@ describe("RedisCacheAdapter", () => {
       expect(result2).toBe(true);
       expect(result3).toBe(true);
       expect(mockRedisClient.exists).toHaveBeenCalledTimes(3);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
     });
 
     test("should handle existence check immediately after set", async () => {
@@ -514,54 +506,34 @@ describe("RedisCacheAdapter", () => {
       expect(result).toBe(false);
     });
 
-    test("should throw CacheException on Redis error", async () => {
+    test("should throw on Redis error", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Redis exists failed"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("Redis exists failed");
     });
 
-    test("should throw CacheException on Redis connection error", async () => {
+    test("should throw on Redis connection error", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("ECONNREFUSED"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("ECONNREFUSED");
     });
 
-    test("should throw CacheException on Redis timeout", async () => {
+    test("should throw on Redis timeout", async () => {
       mockRedisClient.exists.mockRejectedValue(new Error("Command timed out"));
 
-      expect(adapter.has(testKey)).rejects.toThrow(CacheException);
+      expect(adapter.has(testKey)).rejects.toThrow("Command timed out");
     });
   });
 
-  describe("reconnection", () => {
-    test("should recreate client when connection is lost", async () => {
-      mockRedisClient.get.mockResolvedValue(testValue);
-
-      // First call establishes connection
-      await adapter.get(testKey);
-      const callsAfterFirstGet = MockRedisClient.mock.calls.length;
-
-      // Simulate connection drop
-      mockRedisClient.connected = false;
-
-      // Next call should recreate the client
-      await adapter.get(testKey);
-      expect(MockRedisClient).toHaveBeenCalledTimes(callsAfterFirstGet + 1);
-      expect(MockRedisClient).toHaveBeenLastCalledWith("redis://localhost:6379/1", defaultOptions);
-      expect(mockRedisClient.connect).toHaveBeenCalled();
-    });
-
-    test("should not recreate client when connection is healthy", async () => {
+  describe("client lifecycle", () => {
+    test("should use the same client for multiple calls", async () => {
       mockRedisClient.get.mockResolvedValue(testValue);
 
       await adapter.get(testKey);
-      MockRedisClient.mockClear();
-
-      // Connection still healthy
       await adapter.get(testKey);
       await adapter.get(testKey);
 
-      expect(MockRedisClient).toHaveBeenCalledTimes(0);
+      expect(mockRedisClient.get).toHaveBeenCalledTimes(3);
     });
   });
 

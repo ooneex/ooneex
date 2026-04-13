@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.6.3) - 2026-04-13
+
+### Changed
+
+- Apply formatter to seeds module — Franck ([9753929e](https://github.com/ooneex/ooneex/commit/9753929e))
+
 ## [1.6.2](https://github.com/ooneex/ooneex/releases/tag/@ooneex/seeds@1.6.2) - 2026-04-12
 
 ### Changed

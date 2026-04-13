@@ -111,6 +111,12 @@ describe("env.txt", () => {
     expect(content).toContain("JWT_SECRET=");
   });
 
+  test("should contain CSRF section", async () => {
+    const content = await Bun.file(templatePath).text();
+    expect(content).toContain("# CSRF");
+    expect(content).toContain("CSRF_SECRET=");
+  });
+
   test("should contain AI section", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# AI");

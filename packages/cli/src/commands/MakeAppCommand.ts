@@ -2,7 +2,7 @@ import { join } from "node:path";
 import type { ICommand } from "@ooneex/command";
 import { decorator } from "@ooneex/command";
 import { TerminalLogger } from "@ooneex/logger";
-import { toKebabCase, toSnakeCase } from "@ooneex/utils";
+import { random, toKebabCase, toSnakeCase } from "@ooneex/utils";
 import { askDestination } from "../prompts/askDestination";
 import { askName } from "../prompts/askName";
 import commitlintTemplate from "../templates/app/.commitlintrc.ts.txt";
@@ -78,7 +78,9 @@ export class MakeAppCommand<T extends CommandOptionsType = CommandOptionsType> i
       .replace(/^CACHE_REDIS_URL=/m, 'CACHE_REDIS_URL="redis://localhost:6379"')
       .replace(/^PUBSUB_REDIS_URL=/m, 'PUBSUB_REDIS_URL="redis://localhost:6379"')
       .replace(/^RATE_LIMIT_REDIS_URL=/m, 'RATE_LIMIT_REDIS_URL="redis://localhost:6379"')
-      .replace(/^DATABASE_REDIS_URL=/m, 'DATABASE_REDIS_URL="redis://localhost:6379"');
+      .replace(/^DATABASE_REDIS_URL=/m, 'DATABASE_REDIS_URL="redis://localhost:6379"')
+      .replace(/^CSRF_SECRET=/m, `CSRF_SECRET="${random.nanoid(20)}"`);
+
     await Bun.write(join(destination, "modules", "app", ".env"), envContent);
     await Bun.write(join(destination, "modules", "app", ".env.example"), envTemplate);
     await Bun.write(join(destination, "modules", "app", "src", "index.ts"), indexTemplate);

@@ -144,6 +144,23 @@ describe("MakeAppCommand", () => {
       expect(content).toContain("redis://localhost:6379");
     });
 
+    test("should generate CSRF_SECRET with a nanoid value in .env", async () => {
+      await command.run({ name: "MyApp", destination: testDir });
+
+      const content = await Bun.file(join(testDir, "modules", "app", ".env")).text();
+      const match = content.match(/CSRF_SECRET="(.+)"/);
+      expect(match).not.toBeNull();
+      expect(match![1]).toHaveLength(20);
+    });
+
+    test("should not set CSRF_SECRET in .env.example", async () => {
+      await command.run({ name: "MyApp", destination: testDir });
+
+      const content = await Bun.file(join(testDir, "modules", "app", ".env.example")).text();
+      expect(content).toContain("CSRF_SECRET=");
+      expect(content).not.toContain('CSRF_SECRET="');
+    });
+
     test("should generate Docker files with snake_case name", async () => {
       await command.run({ name: "MyApp", destination: testDir });
 

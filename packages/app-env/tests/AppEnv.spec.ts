@@ -619,6 +619,7 @@ describe("AppEnv", () => {
       delete Bun.env.MAILER_SENDER_ADDRESS;
       delete Bun.env.RESEND_API_KEY;
       delete Bun.env.JWT_SECRET;
+      delete Bun.env.CSRF_SECRET;
       delete Bun.env.OPENAI_API_KEY;
       delete Bun.env.ANTHROPIC_API_KEY;
       delete Bun.env.GEMINI_API_KEY;
@@ -694,6 +695,7 @@ describe("AppEnv", () => {
       expect(appEnv.MAILER_SENDER_ADDRESS).toBeUndefined();
       expect(appEnv.RESEND_API_KEY).toBeUndefined();
       expect(appEnv.JWT_SECRET).toBeUndefined();
+      expect(appEnv.CSRF_SECRET).toBeUndefined();
       expect(appEnv.OPENAI_API_KEY).toBeUndefined();
       expect(appEnv.ANTHROPIC_API_KEY).toBeUndefined();
       expect(appEnv.GEMINI_API_KEY).toBeUndefined();
@@ -728,6 +730,7 @@ describe("AppEnv", () => {
       Bun.env.CACHE_UPSTASH_REDIS_REST_TOKEN = "upstash-token";
       Bun.env.DATABASE_URL = "postgres://db";
       Bun.env.JWT_SECRET = "secret123";
+      Bun.env.CSRF_SECRET = "csrf-secret-123";
       Bun.env.ANTHROPIC_API_KEY = "sk-ant-123";
       Bun.env.AUTH_TOKEN = "tok_abc123";
       Bun.env.CLERK_SECRET_KEY = "sk_clerk_123";
@@ -740,6 +743,7 @@ describe("AppEnv", () => {
       expect(appEnv.CACHE_UPSTASH_REDIS_REST_TOKEN).toBe("upstash-token");
       expect(appEnv.DATABASE_URL).toBe("postgres://db");
       expect(appEnv.JWT_SECRET).toBe("secret123");
+      expect(appEnv.CSRF_SECRET).toBe("csrf-secret-123");
       expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant-123");
       expect(appEnv.AUTH_TOKEN).toBe("tok_abc123");
       expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
@@ -1049,6 +1053,13 @@ describe("AppEnv", () => {
       const appEnv = new AppEnv();
 
       expect(appEnv.JWT_SECRET).toBe("secret123");
+    });
+
+    test("should trim CSRF env var", () => {
+      Bun.env.CSRF_SECRET = "  csrf-secret  ";
+      const appEnv = new AppEnv();
+
+      expect(appEnv.CSRF_SECRET).toBe("csrf-secret");
     });
 
     test("should trim AI env vars", () => {

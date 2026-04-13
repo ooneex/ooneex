@@ -84,6 +84,9 @@ export class AppEnv implements IAppEnv {
   // JWT
   public readonly JWT_SECRET: string | undefined;
 
+  // CSRF
+  public readonly CSRF_SECRET: string | undefined;
+
   // AI
   public readonly OPENAI_API_KEY: string | undefined;
   public readonly ANTHROPIC_API_KEY: string | undefined;
@@ -203,6 +206,9 @@ export class AppEnv implements IAppEnv {
 
     // JWT
     this.JWT_SECRET = Bun.env.JWT_SECRET?.trim();
+
+    // CSRF
+    this.CSRF_SECRET = Bun.env.CSRF_SECRET?.trim();
 
     // AI
     this.OPENAI_API_KEY = Bun.env.OPENAI_API_KEY?.trim();

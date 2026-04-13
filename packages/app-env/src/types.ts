@@ -101,6 +101,9 @@ export interface IAppEnv {
   // JWT
   readonly JWT_SECRET: string | undefined;
 
+  // CSRF
+  readonly CSRF_SECRET: string | undefined;
+
   // AI
   readonly OPENAI_API_KEY: string | undefined;
   readonly ANTHROPIC_API_KEY: string | undefined;

@@ -150,8 +150,12 @@ export class App {
     const { middlewares = [], routing } = this.config;
     const prefix = trim(routing.prefix, "/");
 
+    const allMiddlewares = this.config.cors
+      ? [...(middlewares as MiddlewareClassType[]), this.config.cors]
+      : (middlewares as MiddlewareClassType[]);
+
     const routes = {
-      ...formatHttpRoutes(router.getHttpRoutes(), middlewares as MiddlewareClassType[], prefix),
+      ...formatHttpRoutes(router.getHttpRoutes(), allMiddlewares, prefix),
       ...formatSocketRoutes(router.getSocketRoutes(), prefix),
     };
 

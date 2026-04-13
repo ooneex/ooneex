@@ -217,7 +217,7 @@ describe("ClerkAuth", () => {
       client.signInTokens.createSignInToken.mockImplementation(() =>
         Promise.resolve({ id: "sit_1", token: "sign-in-token" }),
       );
-});
+    });
 
     test("should sign in with email and password", async () => {
       const result = await auth.signIn({ email: "test@example.com", password: "password123" });

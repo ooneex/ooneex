@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.4) - 2026-04-13
+
+### Changed
+
+- Fix indentation in ClerkAuth test — Franck ([3a97185b](https://github.com/ooneex/ooneex/commit/3a97185b))
+
 ## [1.6.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.3) - 2026-04-12
 
 ### Fixed

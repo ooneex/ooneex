@@ -34,7 +34,7 @@
     "@ooneex/http-status": "workspace:^",
     "@ooneex/validation": "workspace:^",
     "@ooneex/utils": "workspace:^",
-    "@tanstack/ai": "^0.9.2",
+    "@tanstack/ai": "^0.10.0",
     "@tanstack/ai-anthropic": "^0.7.1",
     "@tanstack/ai-gemini": "^0.8.4",
     "@tanstack/ai-groq": "^0.1.3",

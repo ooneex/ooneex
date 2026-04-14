@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.6.0) - 2026-04-14
+
+### Added
+
+- Add OPENROUTER_API_KEY environment variable — Franck ([9cef2406](https://github.com/ooneex/ooneex/commit/9cef2406))
+
 ## [1.5.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.5.0) - 2026-04-13
 
 ### Added

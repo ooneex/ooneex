@@ -36,7 +36,7 @@
     },
     "packages/ai": {
       "name": "@ooneex/ai",
-      "version": "1.1.14",
+      "version": "1.2.0",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -63,7 +63,7 @@
     },
     "packages/app": {
       "name": "@ooneex/app",
-      "version": "1.11.0",
+      "version": "1.12.0",
       "dependencies": {
         "@ooneex/analytics": "workspace:^",
         "@ooneex/app-env": "workspace:^",
@@ -98,7 +98,7 @@
     },
     "packages/app-env": {
       "name": "@ooneex/app-env",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "dependencies": {
         "@ooneex/container": "workspace:^",
         "@ooneex/exception": "workspace:^",
@@ -135,7 +135,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.27.0",
+      "version": "1.28.0",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -223,7 +223,7 @@
     },
     "packages/csv": {
       "name": "@ooneex/csv",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -340,7 +340,7 @@
     },
     "packages/json": {
       "name": "@ooneex/json",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -463,7 +463,7 @@
     },
     "packages/pub-sub": {
       "name": "@ooneex/pub-sub",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -492,7 +492,7 @@
     },
     "packages/rate-limit": {
       "name": "@ooneex/rate-limit",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "dependencies": {
         "@ooneex/app-env": "workspace:^",
         "@ooneex/container": "workspace:^",
@@ -639,7 +639,7 @@
     },
     "packages/yml": {
       "name": "@ooneex/yml",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@ooneex/exception": "workspace:^",
         "@ooneex/http-status": "workspace:^",

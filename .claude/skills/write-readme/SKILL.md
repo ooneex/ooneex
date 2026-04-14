@@ -29,7 +29,7 @@ Every package README must follow this structure:
 
 ## Installation
 
-{Installation instructions for Bun, pnpm, Yarn, npm}
+{Installation instructions for Bun only}
 
 ## Usage
 
@@ -125,29 +125,13 @@ Common features to consider:
 
 ### Installation Section
 
-Always use this exact format:
+Always use this exact format (Bun only):
 
 ```markdown
 ## Installation
 
-### Bun
 \`\`\`bash
 bun add @ooneex/{package-name}
-\`\`\`
-
-### pnpm
-\`\`\`bash
-pnpm add @ooneex/{package-name}
-\`\`\`
-
-### Yarn
-\`\`\`bash
-yarn add @ooneex/{package-name}
-\`\`\`
-
-### npm
-\`\`\`bash
-npm install @ooneex/{package-name}
 \`\`\`
 ```
 
@@ -403,24 +387,8 @@ A high-performance, type-safe caching library for TypeScript applications. This 
 
 ## Installation
 
-### Bun
 \`\`\`bash
 bun add @ooneex/cache
-\`\`\`
-
-### pnpm
-\`\`\`bash
-pnpm add @ooneex/cache
-\`\`\`
-
-### Yarn
-\`\`\`bash
-yarn add @ooneex/cache
-\`\`\`
-
-### npm
-\`\`\`bash
-npm install @ooneex/cache
 \`\`\`
 
 ## Usage
@@ -535,7 +503,7 @@ Sections included:
 - Title and description
 - Badges (6)
 - Features (X items)
-- Installation (4 package managers)
+- Installation (Bun)
 - Usage (X examples)
 - API Reference (X classes, X functions, X types)
 - Advanced Usage (X examples)

@@ -12,7 +12,9 @@ import type { LocaleInfoType } from "@ooneex/translation";
 import type { ScalarType } from "@ooneex/types";
 import { random } from "@ooneex/utils";
 import type { BunRequest, Server, ServerWebSocket } from "bun";
-import { buildHttpContext, checkAllowedUsers, validateResponse, validateRouteAccess } from "./httpRouteUtils";
+import { checkAllowedUsers } from "./utils/auth";
+import { buildHttpContext } from "./utils/context";
+import { validateResponse, validateRouteAccess } from "./utils/validation";
 
 type SocketRouteHandler = (req: BunRequest, server: Server<unknown>) => Promise<undefined>;
 type SocketRoutesMap = Record<string, SocketRouteHandler>;

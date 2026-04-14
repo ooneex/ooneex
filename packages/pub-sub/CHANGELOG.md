@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.2.4) - 2026-04-14
+
+### Changed
+
+- Apply formatter to RedisPubSubClient tests — Franck ([db81b1bd](https://github.com/ooneex/ooneex/commit/db81b1bd))
+
 ## [1.2.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/pub-sub@1.2.3) - 2026-04-13
 
 ### Changed

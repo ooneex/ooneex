@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/json",
   "description": "JSON file loader and parser with streaming support and generator-based iteration",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/yml",
   "description": "YAML file loader and parser using Bun's built-in YAML support with generator-based streaming",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

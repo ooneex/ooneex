@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.28.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.28.0) - 2026-04-14
+
+### Added
+
+- Add OPENROUTER_API_KEY to app env template — Franck ([cdff1261](https://github.com/ooneex/ooneex/commit/cdff1261))
+
+### Changed
+
+- Use optional chaining for regex match access — Franck ([b59e95dc](https://github.com/ooneex/ooneex/commit/b59e95dc))
+
 ## [1.27.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.27.0) - 2026-04-13
 
 ### Added

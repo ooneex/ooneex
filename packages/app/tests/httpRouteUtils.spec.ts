@@ -7,9 +7,11 @@ import { HttpResponse, type IResponse } from "@ooneex/http-response";
 import { HttpStatus } from "@ooneex/http-status";
 import type { MiddlewareClassType } from "@ooneex/middleware";
 import type { PermissionClassType } from "@ooneex/permission";
+import type { IRateLimiter, RateLimitResultType } from "@ooneex/rate-limit";
 import { ERole } from "@ooneex/role";
 import type { RouteConfigType } from "@ooneex/routing";
 import { type AssertType, type IAssert, type } from "@ooneex/validation";
+import type { BunRequest, Server } from "bun";
 import {
   checkAllowedUsers,
   formatHttpRoutes,
@@ -1320,6 +1322,215 @@ describe("httpRouteUtils", () => {
 
       expect(order).toEqual(["auth", "cors"]);
       expect(result.response.header.get("Access-Control-Allow-Origin")).toBe("*");
+    });
+  });
+
+  describe("formatHttpRoutes rate limit", () => {
+    const createMockRateLimiter = (result: RateLimitResultType): IRateLimiter => ({
+      check: mock(() => Promise.resolve(result)),
+      isLimited: mock(() => Promise.resolve(result.limited)),
+      reset: mock(() => Promise.resolve(true)),
+      getCount: mock(() => Promise.resolve(result.total - result.remaining)),
+    });
+
+    test("returns 429 when rate limit is exceeded", async () => {
+      const resetAt = new Date(Date.now() + 60_000);
+      const rateLimiter = createMockRateLimiter({
+        limited: true,
+        remaining: 0,
+        total: 120,
+        resetAt,
+      });
+      container.addConstant("rateLimiter", rateLimiter);
+
+      class RateLimitController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(RateLimitController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/rate-limited", [
+        createMockRoute({
+          path: "/rate-limited",
+          method: "GET",
+          controller: RateLimitController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/rate-limited"]?.GET;
+
+      expect(handler).toBeDefined();
+
+      const mockReq = {
+        cookies: { get: mock(() => null), set: mock(() => {}) },
+        headers: new Headers(),
+        method: "GET",
+        url: "http://localhost/v1/rate-limited",
+      } as unknown as BunRequest;
+      const mockServer = {
+        requestIP: mock(() => ({ address: "192.168.1.1" })),
+      } as unknown as Server<unknown>;
+
+      // biome-ignore lint/complexity/noBannedTypes: trust me
+      const response = await (handler as Function)(mockReq, mockServer);
+
+      expect(response.status).toBe(HttpStatus.Code.TooManyRequests);
+      expect(response.headers.get("Content-Type")).toBe("application/json");
+      expect(response.headers.get("X-RateLimit-Limit")).toBe("120");
+      expect(response.headers.get("X-RateLimit-Remaining")).toBe("0");
+      expect(response.headers.get("Retry-After")).toBeDefined();
+      expect(response.headers.get("X-RateLimit-Reset")).toBeDefined();
+
+      const body = await response.json();
+      expect(body.message).toBe("Too Many Requests");
+      expect(body.key).toBe("RATE_LIMITED");
+
+      expect(rateLimiter.check).toHaveBeenCalledWith("192.168.1.1");
+
+      container.removeConstant("rateLimiter");
+    });
+
+    test("allows request when rate limit is not exceeded", () => {
+      const rateLimiter = createMockRateLimiter({
+        limited: false,
+        remaining: 119,
+        total: 120,
+        resetAt: new Date(Date.now() + 60_000),
+      });
+      container.addConstant("rateLimiter", rateLimiter);
+
+      class AllowedController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(AllowedController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/allowed", [
+        createMockRoute({
+          path: "/allowed",
+          method: "GET",
+          controller: AllowedController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/allowed"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
+
+      container.removeConstant("rateLimiter");
+    });
+
+    test("skips rate limit when no rateLimiter is configured", () => {
+      class NoRateLimitController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(NoRateLimitController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/no-rate-limit", [
+        createMockRoute({
+          path: "/no-rate-limit",
+          method: "GET",
+          controller: NoRateLimitController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/no-rate-limit"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
+    });
+
+    test("falls through when rate limiter throws", async () => {
+      const throwingRateLimiter: IRateLimiter = {
+        check: mock(() => Promise.reject(new Error("Redis connection failed"))),
+        isLimited: mock(() => Promise.reject(new Error("Redis connection failed"))),
+        reset: mock(() => Promise.resolve(true)),
+        getCount: mock(() => Promise.resolve(0)),
+      };
+      container.addConstant("rateLimiter", throwingRateLimiter);
+
+      class FallThroughController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(FallThroughController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/fallthrough", [
+        createMockRoute({
+          path: "/fallthrough",
+          method: "GET",
+          controller: FallThroughController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/fallthrough"]?.GET;
+
+      expect(handler).toBeDefined();
+      expect(typeof handler).toBe("function");
+
+      container.removeConstant("rateLimiter");
+    });
+
+    test("uses unknown IP when server.requestIP returns null", async () => {
+      const resetAt = new Date(Date.now() + 60_000);
+      const rateLimiter = createMockRateLimiter({
+        limited: true,
+        remaining: 0,
+        total: 120,
+        resetAt,
+      });
+      container.addConstant("rateLimiter", rateLimiter);
+
+      class NullIpController {
+        index(): IResponse {
+          return new HttpResponse().json({ ok: true });
+        }
+      }
+      container.add(NullIpController);
+
+      const httpRoutes = new Map<string, RouteConfigType[]>();
+      httpRoutes.set("/null-ip", [
+        createMockRoute({
+          path: "/null-ip",
+          method: "GET",
+          controller: NullIpController,
+        } as Partial<RouteConfigType>),
+      ]);
+
+      const result = formatHttpRoutes(httpRoutes);
+      const handler = result["/v1/null-ip"]?.GET;
+
+      const mockReq = {
+        cookies: { get: mock(() => null), set: mock(() => {}) },
+        headers: new Headers(),
+        method: "GET",
+        url: "http://localhost/v1/null-ip",
+      } as unknown as BunRequest;
+      const mockServer = {
+        requestIP: mock(() => null),
+      } as unknown as Server<unknown>;
+
+      // biome-ignore lint/complexity/noBannedTypes: trust me
+      const response = await (handler as Function)(mockReq, mockServer);
+
+      expect(response.status).toBe(HttpStatus.Code.TooManyRequests);
+      expect(rateLimiter.check).toHaveBeenCalledWith("unknown");
+
+      container.removeConstant("rateLimiter");
     });
   });
 

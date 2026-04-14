@@ -456,6 +456,34 @@ export const formatHttpRoutes = (
       const methodHandlers = routes[versionedPath];
 
       methodHandlers[route.method] = async (req: BunRequest, server: Server<unknown>) => {
+        // Rate limit check before building context
+        try {
+          const rateLimiter = container.hasConstant("rateLimiter")
+            ? container.getConstant<IRateLimiter>("rateLimiter")
+            : undefined;
+
+          if (rateLimiter) {
+            const address = server.requestIP(req);
+            const ip = address?.address ?? "unknown";
+            const result = await rateLimiter.check(ip);
+
+            if (result.limited) {
+              return new Response(JSON.stringify({ message: "Too Many Requests", key: "RATE_LIMITED" }), {
+                status: HttpStatus.Code.TooManyRequests,
+                headers: {
+                  "Content-Type": "application/json",
+                  "Retry-After": String(Math.ceil((result.resetAt.getTime() - Date.now()) / 1000)),
+                  "X-RateLimit-Limit": String(result.total),
+                  "X-RateLimit-Remaining": "0",
+                  "X-RateLimit-Reset": String(Math.ceil(result.resetAt.getTime() / 1000)),
+                },
+              });
+            }
+          }
+        } catch {
+          // Fall through to normal request handling
+        }
+
         // Early cache check using cookie before building context
         if (route.cache) {
           const cacheKeyCookie = req.cookies.get(CACHE_COOKIE_NAME);

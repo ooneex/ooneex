@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.2.0) - 2026-04-14
+
+### Added
+
+- Add generateImage and extend OpenRouterAi with speech/video — Franck ([db52b806](https://github.com/ooneex/ooneex/commit/db52b806))
+
+### Changed
+
+- Reorder imports in BaseAi and its test — Franck ([bf59793a](https://github.com/ooneex/ooneex/commit/bf59793a))
+- Replace per-provider AIs with unified OpenRouterAi — Franck ([c8a6aa59](https://github.com/ooneex/ooneex/commit/c8a6aa59))
+
 ## [1.1.14](https://github.com/ooneex/ooneex/releases/tag/@ooneex/ai@1.1.14) - 2026-04-12
 
 ### Changed

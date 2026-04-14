@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test";
-import type { AiConfigType, AiSpeechResultType, AiImageResultType, AiVideoResultType } from "@/types";
+import type { AiConfigType, AiImageResultType, AiSpeechResultType, AiVideoResultType } from "@/types";
 
 // biome-ignore lint/suspicious/noExplicitAny: test mock
 let chatMock: any;

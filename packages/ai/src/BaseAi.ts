@@ -5,9 +5,9 @@ import { AiException } from "./AiException";
 import type {
   AiAudioSourceType,
   AiConfigType,
+  AiImageResultType,
   AiImageSourceType,
   AiMessageType,
-  AiImageResultType,
   AiSpeechFormatType,
   AiSpeechResultType,
   AiToneType,

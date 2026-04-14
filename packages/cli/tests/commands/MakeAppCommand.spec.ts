@@ -150,7 +150,7 @@ describe("MakeAppCommand", () => {
       const content = await Bun.file(join(testDir, "modules", "app", ".env")).text();
       const match = content.match(/CSRF_SECRET="(.+)"/);
       expect(match).not.toBeNull();
-      expect(match![1]).toHaveLength(20);
+      expect(match?.[1]).toHaveLength(20);
     });
 
     test("should not set CSRF_SECRET in .env.example", async () => {

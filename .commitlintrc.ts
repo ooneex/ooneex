@@ -16,6 +16,9 @@ const Configuration: UserConfig = {
       [
         "common",
         "ai",
+        "csv",
+        "json",
+        "yml",
         "analytics",
         "app",
         "app-env",

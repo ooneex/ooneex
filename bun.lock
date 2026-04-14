@@ -221,6 +221,14 @@
         "@ooneex/country": "workspace:^",
       },
     },
+    "packages/csv": {
+      "name": "@ooneex/csv",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
+    },
     "packages/currencies": {
       "name": "@ooneex/currencies",
       "version": "1.1.12",
@@ -329,6 +337,14 @@
     "packages/http-status": {
       "name": "@ooneex/http-status",
       "version": "1.1.11",
+    },
+    "packages/json": {
+      "name": "@ooneex/json",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:*",
+        "@ooneex/http-status": "workspace:*",
+      },
     },
     "packages/jwt": {
       "name": "@ooneex/jwt",
@@ -621,6 +637,14 @@
         "arktype": "^2.1.29",
       },
     },
+    "packages/yml": {
+      "name": "@ooneex/yml",
+      "version": "0.0.1",
+      "dependencies": {
+        "@ooneex/exception": "workspace:^",
+        "@ooneex/http-status": "workspace:^",
+      },
+    },
     "packages/youtube": {
       "name": "@ooneex/youtube",
       "version": "1.3.7",
@@ -904,6 +928,8 @@
 
     "@ooneex/cron": ["@ooneex/cron@workspace:packages/cron"],
 
+    "@ooneex/csv": ["@ooneex/csv@workspace:packages/csv"],
+
     "@ooneex/currencies": ["@ooneex/currencies@workspace:packages/currencies"],
 
     "@ooneex/database": ["@ooneex/database@workspace:packages/database"],
@@ -929,6 +955,8 @@
     "@ooneex/http-response": ["@ooneex/http-response@workspace:packages/http-response"],
 
     "@ooneex/http-status": ["@ooneex/http-status@workspace:packages/http-status"],
+
+    "@ooneex/json": ["@ooneex/json@workspace:packages/json"],
 
     "@ooneex/jwt": ["@ooneex/jwt@workspace:packages/jwt"],
 
@@ -981,6 +1009,8 @@
     "@ooneex/utils": ["@ooneex/utils@workspace:packages/utils"],
 
     "@ooneex/validation": ["@ooneex/validation@workspace:packages/validation"],
+
+    "@ooneex/yml": ["@ooneex/yml@workspace:packages/yml"],
 
     "@ooneex/youtube": ["@ooneex/youtube@workspace:packages/youtube"],
 

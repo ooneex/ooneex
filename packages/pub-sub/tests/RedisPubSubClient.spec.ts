@@ -67,9 +67,7 @@ describe("RedisPubSubClient", () => {
     });
 
     // Reset mock implementations to defaults
-    mockRedisClient.publish.mockImplementation(
-      async (_channel: string, _message: string): Promise<void> => {},
-    );
+    mockRedisClient.publish.mockImplementation(async (_channel: string, _message: string): Promise<void> => {});
     mockRedisClient.duplicate.mockImplementation(async () => mockSubscriberClient);
     mockSubscriberClient.subscribe.mockImplementation(
       async (_channel: string, _handler: (message: string, channel: string) => void): Promise<void> => {},
@@ -302,7 +300,12 @@ describe("RedisPubSubClient", () => {
         connectionString: "redis://localhost:6379",
       });
 
-      expect(client.subscribe("test-channel", mock(() => {}))).rejects.toThrow(PubSubException);
+      expect(
+        client.subscribe(
+          "test-channel",
+          mock(() => {}),
+        ),
+      ).rejects.toThrow(PubSubException);
     });
   });
 

@@ -231,7 +231,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.check(testKey)).rejects.toThrow(RateLimitException);
       expect(limiter.check(testKey)).rejects.toThrow('Failed to check rate limit for key "user:123"');
     });
-
   });
 
   describe("reset method", () => {
@@ -278,7 +277,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.reset(testKey)).rejects.toThrow(RateLimitException);
       expect(limiter.reset(testKey)).rejects.toThrow('Failed to reset rate limit for key "user:123"');
     });
-
   });
 
   describe("getCount method", () => {
@@ -325,7 +323,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.getCount(testKey)).rejects.toThrow(RateLimitException);
       expect(limiter.getCount(testKey)).rejects.toThrow('Failed to get count for key "user:123"');
     });
-
   });
 
   describe("integration scenarios", () => {

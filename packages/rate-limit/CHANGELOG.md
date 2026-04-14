@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.3.4) - 2026-04-14
+
+### Changed
+
+- Remove trailing blank lines in tests — Franck ([8e3c64ba](https://github.com/ooneex/ooneex/commit/8e3c64ba))
+- Simplify Redis connection and split Upstash config errors — Franck ([4278386c](https://github.com/ooneex/ooneex/commit/4278386c))
+
 ## [1.3.3](https://github.com/ooneex/ooneex/releases/tag/@ooneex/rate-limit@1.3.3) - 2026-04-12
 
 ### Changed

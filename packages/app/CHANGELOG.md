@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.12.0) - 2026-04-14
+
+### Added
+
+- Apply IP-based rate limiting before handling HTTP requests — Franck ([1eae5110](https://github.com/ooneex/ooneex/commit/1eae5110))
+
+### Changed
+
+- Add test suites for split utils modules — Franck ([a40048ec](https://github.com/ooneex/ooneex/commit/a40048ec))
+- Split httpRouteUtils into focused utils modules — Franck ([eb215dcd](https://github.com/ooneex/ooneex/commit/eb215dcd))
+
+### Fixed
+
+- Only cache successful responses — Franck ([068ad902](https://github.com/ooneex/ooneex/commit/068ad902))
+
 ## [1.11.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app@1.11.0) - 2026-04-13
 
 ### Added

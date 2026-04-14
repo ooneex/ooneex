@@ -6,7 +6,7 @@ import type { IRateLimiter, RateLimitResultType, RedisRateLimiterOptionsType } f
 
 @decorator.rateLimit()
 export class RedisRateLimiter implements IRateLimiter {
-  private client: Bun.RedisClient;
+  private readonly client: Bun.RedisClient;
   private readonly namespace: string;
 
   constructor(
@@ -25,24 +25,21 @@ export class RedisRateLimiter implements IRateLimiter {
 
     const { connectionString: _, namespace: __, ...userOptions } = options;
 
-    const defaultOptions = {
+    this.client = new Bun.RedisClient(connectionString, {
+      // Max time (ms) to wait for initial connection
       connectionTimeout: 10_000,
-      idleTimeout: 30_000,
+      // Disable idle timeout to keep connection alive during traffic bursts
+      idleTimeout: 0,
+      // Automatically reconnect on connection loss
       autoReconnect: true,
-      maxRetries: 3,
+      // Max reconnection attempts before giving up
+      maxRetries: 10,
+      // Queue commands while disconnected, flush on reconnect
       enableOfflineQueue: true,
+      // Batch multiple commands into fewer round-trips
       enableAutoPipelining: true,
-    };
-
-    const clientOptions = { ...defaultOptions, ...userOptions };
-
-    this.client = new Bun.RedisClient(connectionString, clientOptions);
-  }
-
-  private async connect(): Promise<void> {
-    if (!this.client.connected) {
-      await this.client.connect();
-    }
+      ...userOptions,
+    });
   }
 
   private getKey(key: string): string {
@@ -53,8 +50,6 @@ export class RedisRateLimiter implements IRateLimiter {
     const limit = 120;
     const windowSeconds = 60;
     try {
-      await this.connect();
-
       const rateLimitKey = this.getKey(key);
 
       // Increment counter
@@ -88,8 +83,6 @@ export class RedisRateLimiter implements IRateLimiter {
 
   public async reset(key: string): Promise<boolean> {
     try {
-      await this.connect();
-
       const rateLimitKey = this.getKey(key);
       const result = await this.client.del(rateLimitKey);
 
@@ -101,8 +94,6 @@ export class RedisRateLimiter implements IRateLimiter {
 
   public async getCount(key: string): Promise<number> {
     try {
-      await this.connect();
-
       const rateLimitKey = this.getKey(key);
       const value = await this.client.get(rateLimitKey);
 

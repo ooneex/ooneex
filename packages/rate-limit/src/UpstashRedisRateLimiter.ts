@@ -28,10 +28,17 @@ export class UpstashRedisRateLimiter implements IRateLimiter {
     const url = options.url || this.env.RATE_LIMIT_UPSTASH_REDIS_URL;
     const token = options.token || this.env.RATE_LIMIT_UPSTASH_REDIS_TOKEN;
 
-    if (!url || !token) {
+    if (!url) {
       throw new RateLimitException(
-        "Upstash Redis URL and token are required. Please provide them through the constructor options or set the RATE_LIMIT_UPSTASH_REDIS_URL and RATE_LIMIT_UPSTASH_REDIS_TOKEN environment variables.",
-        "RATE_LIMIT_CONNECTION_FAILED",
+        "Upstash Redis REST URL is required. Please provide a URL either through the constructor options or set the RATE_LIMIT_UPSTASH_REDIS_URL environment variable.",
+        "CONFIG_REQUIRED",
+      );
+    }
+
+    if (!token) {
+      throw new RateLimitException(
+        "Upstash Redis REST token is required. Please provide a token either through the constructor options or set the RATE_LIMIT_UPSTASH_REDIS_TOKEN environment variable.",
+        "CONFIG_REQUIRED",
       );
     }
 

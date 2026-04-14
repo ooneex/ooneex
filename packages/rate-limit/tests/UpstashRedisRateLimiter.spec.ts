@@ -97,7 +97,7 @@ describe("UpstashRedisRateLimiter", () => {
 
       expect(() => new UpstashRedisRateLimiter(createMockEnv(), { token: "test-token" })).toThrow(RateLimitException);
       expect(() => new UpstashRedisRateLimiter(createMockEnv(), { token: "test-token" })).toThrow(
-        "Upstash Redis URL and token are required",
+        "Upstash Redis REST URL is required",
       );
 
       Bun.env.RATE_LIMIT_UPSTASH_REDIS_URL = originalUrl;

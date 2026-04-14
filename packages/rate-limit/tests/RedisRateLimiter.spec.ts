@@ -11,19 +11,15 @@ const createMockEnv = (): AppEnv => {
 // Default options that the rate limiter uses
 const defaultOptions = {
   connectionTimeout: 10_000,
-  idleTimeout: 30_000,
+  idleTimeout: 0,
   autoReconnect: true,
-  maxRetries: 3,
+  maxRetries: 10,
   enableOfflineQueue: true,
   enableAutoPipelining: true,
 };
 
 // Create mock Redis client instance
 const mockRedisClient = {
-  connected: false,
-  connect: mock(async (): Promise<void> => {
-    mockRedisClient.connected = true;
-  }),
   get: mock(async (_key: string): Promise<string | null> => null),
   incr: mock(async (_key: string): Promise<number> => 1),
   del: mock(async (_key: string): Promise<number> => 1),
@@ -57,9 +53,6 @@ describe("RedisRateLimiter", () => {
   });
 
   beforeEach(() => {
-    // Reset connected state
-    mockRedisClient.connected = false;
-
     // Create a new limiter for each test
     limiter = new RedisRateLimiter(createMockEnv(), {
       connectionString: "redis://localhost:6379/1",
@@ -67,7 +60,6 @@ describe("RedisRateLimiter", () => {
 
     // Reset all mocks
     const mocksToReset = [
-      mockRedisClient.connect,
       mockRedisClient.get,
       mockRedisClient.incr,
       mockRedisClient.del,
@@ -83,9 +75,6 @@ describe("RedisRateLimiter", () => {
     });
 
     // Reset mock implementations to defaults
-    mockRedisClient.connect.mockImplementation(async (): Promise<void> => {
-      mockRedisClient.connected = true;
-    });
     mockRedisClient.get.mockImplementation(async (_key: string): Promise<string | null> => null);
     mockRedisClient.incr.mockImplementation(async (_key: string): Promise<number> => 1);
     mockRedisClient.del.mockImplementation(async (_key: string): Promise<number> => 1);
@@ -154,7 +143,6 @@ describe("RedisRateLimiter", () => {
       expect(result.remaining).toBe(119);
       expect(result.total).toBe(120);
       expect(result.resetAt).toBeInstanceOf(Date);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.incr).toHaveBeenCalledWith("ratelimit:user:123");
       expect(mockRedisClient.expire).toHaveBeenCalledWith("ratelimit:user:123", 60);
     });
@@ -229,7 +217,6 @@ describe("RedisRateLimiter", () => {
         connectionString: "redis://localhost:6379/1",
         namespace: "myapp",
       });
-      mockRedisClient.connected = false;
       mockRedisClient.incr.mockResolvedValue(1);
       mockRedisClient.ttl.mockResolvedValue(60);
 
@@ -245,17 +232,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.check(testKey)).rejects.toThrow('Failed to check rate limit for key "user:123"');
     });
 
-    test("should reuse connection on subsequent calls", async () => {
-      mockRedisClient.incr.mockResolvedValue(1);
-      mockRedisClient.ttl.mockResolvedValue(60);
-
-      await limiter.check(testKey);
-      await limiter.check(testKey);
-      await limiter.check(testKey);
-
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
-      expect(mockRedisClient.incr).toHaveBeenCalledTimes(3);
-    });
   });
 
   describe("reset method", () => {
@@ -265,7 +241,6 @@ describe("RedisRateLimiter", () => {
       const result = await limiter.reset(testKey);
 
       expect(result).toBe(true);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.del).toHaveBeenCalledWith("ratelimit:user:123");
     });
 
@@ -290,7 +265,6 @@ describe("RedisRateLimiter", () => {
         connectionString: "redis://localhost:6379/1",
         namespace: "myapp",
       });
-      mockRedisClient.connected = false;
       mockRedisClient.del.mockResolvedValue(1);
 
       await customLimiter.reset("ip:192.168.1.1");
@@ -305,16 +279,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.reset(testKey)).rejects.toThrow('Failed to reset rate limit for key "user:123"');
     });
 
-    test("should reuse connection on subsequent calls", async () => {
-      mockRedisClient.del.mockResolvedValue(1);
-
-      await limiter.reset("key1");
-      await limiter.reset("key2");
-      await limiter.reset("key3");
-
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
-      expect(mockRedisClient.del).toHaveBeenCalledTimes(3);
-    });
   });
 
   describe("getCount method", () => {
@@ -324,7 +288,6 @@ describe("RedisRateLimiter", () => {
       const result = await limiter.getCount(testKey);
 
       expect(result).toBe(42);
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
       expect(mockRedisClient.get).toHaveBeenCalledWith("ratelimit:user:123");
     });
 
@@ -349,7 +312,6 @@ describe("RedisRateLimiter", () => {
         connectionString: "redis://localhost:6379/1",
         namespace: "myapp",
       });
-      mockRedisClient.connected = false;
       mockRedisClient.get.mockResolvedValue("10");
 
       await customLimiter.getCount("ip:192.168.1.1");
@@ -364,16 +326,6 @@ describe("RedisRateLimiter", () => {
       expect(limiter.getCount(testKey)).rejects.toThrow('Failed to get count for key "user:123"');
     });
 
-    test("should reuse connection on subsequent calls", async () => {
-      mockRedisClient.get.mockResolvedValue("5");
-
-      await limiter.getCount("key1");
-      await limiter.getCount("key2");
-      await limiter.getCount("key3");
-
-      expect(mockRedisClient.connect).toHaveBeenCalledTimes(1);
-      expect(mockRedisClient.get).toHaveBeenCalledTimes(3);
-    });
   });
 
   describe("integration scenarios", () => {

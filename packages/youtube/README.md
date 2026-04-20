@@ -8,11 +8,7 @@ YouTube video downloader and metadata extraction library for fetching video info
 
 ## Features
 
-✅ **Video ID Extraction** - Parse video IDs from watch URLs, short URLs, embed URLs, and other YouTube URL formats
-
-✅ **Embed URL Generation** - Convert any YouTube URL or video ID into an embeddable URL via `getEmbedUrl`
-
-✅ **Watch URL Generation** - Convert any YouTube URL or video ID into a standard watch URL via `getWatchUrl`
+✅ **Transcript Fetching** - Retrieve timestamped transcripts and video metadata via `Youtube#transcript`
 
 ✅ **ytdlp Integration** - Type definitions for ytdlp-nodejs including video/audio quality, format options, and download progress
 
@@ -21,6 +17,8 @@ YouTube video downloader and metadata extraction library for fetching video info
 ✅ **Error Handling** - Custom `YoutubeException` for YouTube-specific error scenarios
 
 ✅ **Type-Safe** - Full TypeScript support with `IYoutube` interface and re-exported ytdlp types
+
+> For URL helpers like `getId`, `getEmbedUrl`, and `getWatchUrl`, see [`@ooneex/youtube-utils`](../youtube-utils).
 
 ## Installation
 

@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/hour-utils",
   "description": "Time unit conversion utilities for hours, minutes, seconds, and milliseconds",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.3.8) - 2026-04-20
+
+### Changed
+
+- Extract URL helpers to youtube-utils package — Franck ([aa85dbe6](https://github.com/ooneex/ooneex/commit/aa85dbe6))
+
 ## [1.3.7](https://github.com/ooneex/ooneex/releases/tag/@ooneex/youtube@1.3.7) - 2026-04-12
 
 ### Changed

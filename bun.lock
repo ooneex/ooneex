@@ -223,7 +223,7 @@
     },
     "packages/csv": {
       "name": "@ooneex/csv",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -340,7 +340,7 @@
     },
     "packages/json": {
       "name": "@ooneex/json",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@ooneex/exception": "workspace:*",
         "@ooneex/http-status": "workspace:*",
@@ -622,7 +622,7 @@
     },
     "packages/utils": {
       "name": "@ooneex/utils",
-      "version": "0.4.9",
+      "version": "0.4.10",
       "dependencies": {
         "nanoid": "^5.1.6",
       },
@@ -639,7 +639,7 @@
     },
     "packages/yml": {
       "name": "@ooneex/yml",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@ooneex/exception": "workspace:^",
         "@ooneex/http-status": "workspace:^",

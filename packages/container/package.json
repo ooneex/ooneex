@@ -30,7 +30,7 @@
   "dependencies": {
     "@ooneex/exception": "workspace:^",
     "@ooneex/http-status": "workspace:^",
-    "inversify": "^7.10.4"
+    "inversify": "^8.0.0"
   },
   "keywords": [
     "bun",

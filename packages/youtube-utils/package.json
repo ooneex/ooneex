@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/youtube-utils",
   "description": "YouTube URL utilities for extracting video IDs and generating embed or watch URLs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

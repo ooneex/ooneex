@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/color",
   "description": "Curated color palette with hex values and human-friendly names plus TypeScript types for UI theming",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist",

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.10](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.10) - 2026-04-20
+
+### Changed
+
+- Rename capitalizeWord to capitalize — Franck ([fc0f79f2](https://github.com/ooneex/ooneex/commit/fc0f79f2))
+
 ## [0.4.9](https://github.com/ooneex/ooneex/releases/tag/@ooneex/utils@0.4.9) - 2026-04-12
 
 ### Changed

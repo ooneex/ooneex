@@ -282,6 +282,10 @@
         "@ooneex/http-status": "workspace:^",
       },
     },
+    "packages/hour-utils": {
+      "name": "@ooneex/hour-utils",
+      "version": "0.0.1",
+    },
     "packages/html": {
       "name": "@ooneex/html",
       "version": "1.1.13",
@@ -951,6 +955,8 @@
     "@ooneex/fetcher": ["@ooneex/fetcher@workspace:packages/fetcher"],
 
     "@ooneex/fs": ["@ooneex/fs@workspace:packages/fs"],
+
+    "@ooneex/hour-utils": ["@ooneex/hour-utils@workspace:packages/hour-utils"],
 
     "@ooneex/html": ["@ooneex/html@workspace:packages/html"],
 

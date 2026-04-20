@@ -34,6 +34,7 @@ const Configuration: UserConfig = {
         "cron",
         "currencies",
         "database",
+        "hour-utils",
         "education",
         "entities",
         "exception",

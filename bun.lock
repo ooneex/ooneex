@@ -153,6 +153,10 @@
         "@ooneex/types": "workspace:^",
       },
     },
+    "packages/color": {
+      "name": "@ooneex/color",
+      "version": "0.1.0",
+    },
     "packages/command": {
       "name": "@ooneex/command",
       "version": "0.5.2",
@@ -654,6 +658,10 @@
         "ytdlp-nodejs": "^2.3.5",
       },
     },
+    "packages/youtube-utils": {
+      "name": "@ooneex/youtube-utils",
+      "version": "0.1.0",
+    },
   },
   "packages": {
     "@ark/schema": ["@ark/schema@0.56.0", "", { "dependencies": { "@ark/util": "0.56.0" } }, "sha512-ECg3hox/6Z/nLajxXqNhgPtNdHWC9zNsDyskwO28WinoFEnWow4IsERNz9AnXRhTZJnYIlAJ4uGn3nlLk65vZA=="],
@@ -918,6 +926,8 @@
 
     "@ooneex/cli": ["@ooneex/cli@workspace:packages/cli"],
 
+    "@ooneex/color": ["@ooneex/color@workspace:packages/color"],
+
     "@ooneex/command": ["@ooneex/command@workspace:packages/command"],
 
     "@ooneex/container": ["@ooneex/container@workspace:packages/container"],
@@ -1013,6 +1023,8 @@
     "@ooneex/yml": ["@ooneex/yml@workspace:packages/yml"],
 
     "@ooneex/youtube": ["@ooneex/youtube@workspace:packages/youtube"],
+
+    "@ooneex/youtube-utils": ["@ooneex/youtube-utils@workspace:packages/youtube-utils"],
 
     "@opendataloader/pdf": ["@opendataloader/pdf@2.0.2", "", { "dependencies": { "commander": "^14.0.3" }, "bin": { "opendataloader-pdf": "dist/cli.js" } }, "sha512-pNlY3w1+MNxsNn+UdVtTyS0gfqe/zgkf01rizN156WWz2AN5C/zyGFWbweB0Owy6TYE76LeysSHREjbKJ/rXFA=="],
 

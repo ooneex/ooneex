@@ -155,7 +155,7 @@
     },
     "packages/color": {
       "name": "@ooneex/color",
-      "version": "0.1.0",
+      "version": "0.0.1",
     },
     "packages/command": {
       "name": "@ooneex/command",
@@ -660,7 +660,7 @@
     },
     "packages/youtube-utils": {
       "name": "@ooneex/youtube-utils",
-      "version": "0.1.0",
+      "version": "0.0.1",
     },
   },
   "packages": {

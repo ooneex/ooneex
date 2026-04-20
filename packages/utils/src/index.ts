@@ -1,4 +1,4 @@
-export { capitalizeWord } from "./capitalizeWord";
+export { capitalize } from "./capitalize";
 export { dataURLtoFile } from "./dataURLtoFile";
 export { formatRelativeNumber } from "./formatRelativeNumber";
 export { millisecondsToHMS } from "./millisecondsToHMS";

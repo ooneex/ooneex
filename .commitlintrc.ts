@@ -84,6 +84,7 @@ const Configuration: UserConfig = {
         "validation",
         "video",
         "youtube",
+        "youtube-utils",
         "release",
       ],
     ],

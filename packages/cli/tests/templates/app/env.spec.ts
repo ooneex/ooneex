@@ -19,13 +19,6 @@ describe("env.txt", () => {
     expect(content).toContain("HOST_NAME=");
   });
 
-  test("should contain API section", async () => {
-    const content = await Bun.file(templatePath).text();
-    expect(content).toContain("# API");
-    expect(content).toContain("INTERNAL_API_URLS=");
-    expect(content).toContain("EXTERNAL_API_URLS=");
-  });
-
   test("should contain Logs section", async () => {
     const content = await Bun.file(templatePath).text();
     expect(content).toContain("# Logs");

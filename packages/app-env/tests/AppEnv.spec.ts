@@ -582,8 +582,6 @@ describe("AppEnv", () => {
     afterEach(() => {
       delete Bun.env.PORT;
       delete Bun.env.HOST_NAME;
-      delete Bun.env.INTERNAL_API_URLS;
-      delete Bun.env.EXTERNAL_API_URLS;
       delete Bun.env.LOGS_DATABASE_URL;
       delete Bun.env.BETTERSTACK_LOGGER_SOURCE_TOKEN;
       delete Bun.env.BETTERSTACK_LOGGER_INGESTING_HOST;
@@ -658,8 +656,6 @@ describe("AppEnv", () => {
       const appEnv = new AppEnv();
 
       expect(appEnv.HOST_NAME).toBe("0.0.0.0");
-      expect(appEnv.INTERNAL_API_URLS).toEqual([]);
-      expect(appEnv.EXTERNAL_API_URLS).toEqual([]);
       expect(appEnv.LOGS_DATABASE_URL).toBeUndefined();
       expect(appEnv.BETTERSTACK_LOGGER_SOURCE_TOKEN).toBeUndefined();
       expect(appEnv.BETTERSTACK_LOGGER_INGESTING_HOST).toBeUndefined();
@@ -747,16 +743,6 @@ describe("AppEnv", () => {
       expect(appEnv.ANTHROPIC_API_KEY).toBe("sk-ant-123");
       expect(appEnv.AUTH_TOKEN).toBe("tok_abc123");
       expect(appEnv.CLERK_SECRET_KEY).toBe("sk_clerk_123");
-    });
-
-    test("should read API env vars and split by comma", () => {
-      Bun.env.INTERNAL_API_URLS = "http://localhost:3000, http://localhost:3001";
-      Bun.env.EXTERNAL_API_URLS = "https://api.example.com";
-
-      const appEnv = new AppEnv();
-
-      expect(appEnv.INTERNAL_API_URLS).toEqual(["http://localhost:3000", "http://localhost:3001"]);
-      expect(appEnv.EXTERNAL_API_URLS).toEqual(["https://api.example.com"]);
     });
 
     test("should read CORS env vars", () => {

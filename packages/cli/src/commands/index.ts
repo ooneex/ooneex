@@ -1,14 +1,12 @@
 export { AppBuildCommand } from "./AppBuildCommand";
 export { AppStartCommand } from "./AppStartCommand";
 export { AppStopCommand } from "./AppStopCommand";
-export { BenchmarkRunCommand } from "./BenchmarkRunCommand";
 export { CommandRunCommand } from "./CommandRunCommand";
 export { CompletionZshCommand } from "./CompletionZshCommand";
 export { HelpCommand } from "./HelpCommand";
 export { MakeAiCommand } from "./MakeAiCommand";
 export { MakeAnalyticsCommand } from "./MakeAnalyticsCommand";
 export { MakeAppCommand } from "./MakeAppCommand";
-export { MakeBenchmarkCommand } from "./MakeBenchmarkCommand";
 export { MakeCacheCommand } from "./MakeCacheCommand";
 export { MakeClaudeSkillCommand } from "./MakeClaudeSkillCommand";
 export { MakeCommandCommand } from "./MakeCommandCommand";

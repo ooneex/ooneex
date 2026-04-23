@@ -58,37 +58,6 @@ describe("_oo.txt", () => {
     });
   });
 
-  describe("route names helper", () => {
-    test("should define _oo_route_names function", async () => {
-      const content = await Bun.file(templatePath).text();
-      expect(content).toContain("_oo_route_names()");
-    });
-
-    test("should grep route names from controller files", async () => {
-      const content = await Bun.file(templatePath).text();
-      expect(content).toContain("modules/*/src/controllers/*Controller.ts");
-      expect(content).toContain("compadd -a names");
-    });
-
-    test("should only match names containing a dot to filter out non-route names", async () => {
-      const content = await Bun.file(templatePath).text();
-      expect(content).toContain('\\([^"]*\\.[^"]*\\)');
-    });
-  });
-
-  describe("controllers helper", () => {
-    test("should define _oo_controllers function", async () => {
-      const content = await Bun.file(templatePath).text();
-      expect(content).toContain("_oo_controllers()");
-    });
-
-    test("should grep controller class names from controller files", async () => {
-      const content = await Bun.file(templatePath).text();
-      expect(content).toContain("export class");
-      expect(content).toContain("compadd -a controllers");
-    });
-  });
-
   describe("commands list", () => {
     const expectedCommands = [
       "app\\:build",
@@ -99,8 +68,6 @@ describe("_oo.txt", () => {
       "help",
       "make\\:ai",
       "make\\:analytics",
-      "benchmark\\:run",
-      "make\\:benchmark",
       "make\\:app",
       "make\\:cache",
       "make\\:claude\\:skill",
@@ -154,28 +121,6 @@ describe("_oo.txt", () => {
       const match = content.match(/command:run\)([\s\S]*?);;/);
       expect(match).not.toBeNull();
       expect(match?.[1]).toContain("_oo_custom_commands");
-    });
-
-    test("benchmark:run should have module and target options", async () => {
-      const content = await Bun.file(templatePath).text();
-      const match = content.match(/benchmark:run\)([\s\S]*?);;/);
-      expect(match).not.toBeNull();
-      expect(match?.[1]).toContain("--module=");
-      expect(match?.[1]).toContain("_oo_modules");
-      expect(match?.[1]).toContain("--target=");
-      expect(match?.[1]).toContain("_oo_route_names");
-    });
-
-    test("make:benchmark should have name, module, and target options", async () => {
-      const content = await Bun.file(templatePath).text();
-      const match = content.match(/make:benchmark\)([\s\S]*?);;/);
-      expect(match).not.toBeNull();
-      expect(match?.[1]).toContain("--name=");
-      expect(match?.[1]).toContain("_oo_route_names");
-      expect(match?.[1]).toContain("--module=");
-      expect(match?.[1]).toContain("_oo_modules");
-      expect(match?.[1]).toContain("--target=");
-      expect(match?.[1]).toContain("_oo_controllers");
     });
 
     test("make:controller should have name, module, route-name, route-path, route-method, and is-socket options", async () => {

@@ -34,7 +34,7 @@
     "@ooneex/http-status": "workspace:^",
     "@ooneex/validation": "workspace:^",
     "@tanstack/ai": "^0.9.2",
-    "@tanstack/ai-openrouter": "^0.7.4"
+    "@tanstack/ai-openrouter": "^0.8.0"
   },
   "devDependencies": {
     "@ooneex/translation": "workspace:^"

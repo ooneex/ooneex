@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/url@1.3.0) - 2026-04-27
+
+### Added
+
+- Add bearerToken query support with URI decoding — Franck ([d80f4353](https://github.com/ooneex/ooneex/commit/d80f4353))
+
 ## [1.2.12](https://github.com/ooneex/ooneex/releases/tag/@ooneex/url@1.2.12) - 2026-04-12
 
 ### Changed

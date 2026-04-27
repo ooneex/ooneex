@@ -28,10 +28,15 @@ const createMockClerkUser = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-const createMockContext = (token: string | null = "valid-token", route?: { roles?: ERole[] } | null) => ({
+const createMockContext = (
+  token: string | null = "valid-token",
+  route?: { roles?: ERole[] } | null,
+  queries?: { bearerToken?: string | null },
+) => ({
   header: {
     getBearerToken: mock(() => token),
   },
+  queries,
   route: route !== undefined ? route : null,
   user: undefined as unknown,
 });
@@ -126,6 +131,43 @@ describe("ClerkAuthMiddleware", () => {
       await middleware.handler(context as never);
 
       expect(mockClerkAuth.getCurrentUser).toHaveBeenCalledWith("my-token");
+    });
+
+    test("should fall back to queries.bearerToken when header has no bearer token", async () => {
+      const context = createMockContext(null, { roles: [ERole.USER] }, { bearerToken: "query-token" });
+
+      await middleware.handler(context as never);
+
+      expect(mockClerkAuth.getCurrentUser).toHaveBeenCalledWith("query-token");
+    });
+
+    test("should prefer header bearer token over queries.bearerToken", async () => {
+      const context = createMockContext("header-token", { roles: [ERole.USER] }, { bearerToken: "query-token" });
+
+      await middleware.handler(context as never);
+
+      expect(mockClerkAuth.getCurrentUser).toHaveBeenCalledWith("header-token");
+    });
+
+    test("should throw when both header and queries.bearerToken are missing and roles require auth", async () => {
+      const context = createMockContext(null, { roles: [ERole.USER] }, {});
+
+      try {
+        await middleware.handler(context as never);
+        expect.unreachable("Should have thrown");
+      } catch (error) {
+        expect(error).toBeInstanceOf(AuthException);
+        expect((error as AuthException).message).toBe("Authentication required: Missing bearer token");
+      }
+    });
+
+    test("should not throw when context.queries is undefined and route is guest-only", async () => {
+      const context = createMockContext(null, { roles: [ERole.GUEST] });
+
+      const result = await middleware.handler(context as never);
+
+      expect(result).toBe(context as never);
+      expect(context.user).toBeUndefined();
     });
   });
 

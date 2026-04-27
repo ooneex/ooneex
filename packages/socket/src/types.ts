@@ -12,7 +12,7 @@ export interface IController<T extends ContextConfigType = ContextConfigType> {
 export type ContextConfigType = {
   // biome-ignore lint/suspicious/noExplicitAny: trust me
   response: Record<string, any>;
-} & RequestConfigType;
+} & Partial<RequestConfigType>;
 
 export type ContextType<T extends ContextConfigType = ContextConfigType> = ControllerContextType<T> & {
   channel: {

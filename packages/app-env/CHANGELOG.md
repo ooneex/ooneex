@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.6.1) - 2026-04-27
+
+### Changed
+
+- Remove INTERNAL_API_URLS and EXTERNAL_API_URLS env vars — Franck ([6ca16e20](https://github.com/ooneex/ooneex/commit/6ca16e20))
+
 ## [1.6.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/app-env@1.6.0) - 2026-04-14
 
 ### Added

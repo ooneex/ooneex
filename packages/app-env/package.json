@@ -1,7 +1,7 @@
 {
   "name": "@ooneex/app-env",
   "description": "Environment detection and configuration management for Ooneex applications — supports development, staging, production, and testing environments",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "type": "module",
   "files": [
     "dist",

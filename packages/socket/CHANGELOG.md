@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.14](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.14) - 2026-04-27
+
+### Changed
+
+- Make RequestConfigType partial in ContextConfigType — Franck ([0bd5fb16](https://github.com/ooneex/ooneex/commit/0bd5fb16))
+
 ## [1.2.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket@1.2.13) - 2026-04-12
 
 ### Changed

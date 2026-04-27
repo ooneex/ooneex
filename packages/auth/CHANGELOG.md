@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.7.0) - 2026-04-27
+
+### Added
+
+- Fall back to queries.bearerToken when header is missing — Franck ([e3e25b56](https://github.com/ooneex/ooneex/commit/e3e25b56))
+
 ## [1.6.4](https://github.com/ooneex/ooneex/releases/tag/@ooneex/auth@1.6.4) - 2026-04-13
 
 ### Changed

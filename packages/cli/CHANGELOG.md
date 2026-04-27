@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.1](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.28.1) - 2026-04-27
+
+### Changed
+
+- Remove benchmark commands and autocannon dependency — Franck ([7d75be35](https://github.com/ooneex/ooneex/commit/7d75be35))
+- Remove API section from env template — Franck ([4dcb3e03](https://github.com/ooneex/ooneex/commit/4dcb3e03))
+
 ## [1.28.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/cli@1.28.0) - 2026-04-14
 
 ### Added

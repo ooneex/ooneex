@@ -435,6 +435,46 @@ describe("ReadonlyUrl", () => {
     });
   });
 
+  describe("Bearer token parsing", () => {
+    test("should default bearer token to null when not specified", () => {
+      const url = new ReadonlyUrl("https://example.com");
+      expect(url.getBearerToken()).toBeNull();
+    });
+
+    test("should parse bearerToken query parameter", () => {
+      const url = new ReadonlyUrl("https://example.com?bearerToken=abc123");
+      expect(url.getBearerToken()).toBe("abc123");
+    });
+
+    test("should decode URL-encoded bearer token", () => {
+      const token = "abc def+ghi/jkl=mno";
+      const encoded = encodeURIComponent(token);
+      const url = new ReadonlyUrl(`https://example.com?bearerToken=${encoded}`);
+      expect(url.getBearerToken()).toBe(token);
+    });
+
+    test("should decode bearer token with special characters", () => {
+      const url = new ReadonlyUrl(
+        "https://example.com?bearerToken=Bearer%20eyJhbGciOiJIUzI1NiJ9",
+      );
+      expect(url.getBearerToken()).toBe("Bearer eyJhbGciOiJIUzI1NiJ9");
+    });
+
+    test("should return null for empty bearer token", () => {
+      const url = new ReadonlyUrl("https://example.com?bearerToken=");
+      expect(url.getBearerToken()).toBeNull();
+    });
+
+    test("should parse bearer token alongside other parameters", () => {
+      const url = new ReadonlyUrl(
+        "https://example.com?bearerToken=token123&page=2&q=search",
+      );
+      expect(url.getBearerToken()).toBe("token123");
+      expect(url.getPage()).toBe(2);
+      expect(url.getSearch()).toBe("search");
+    });
+  });
+
   describe("Edge cases and special URLs", () => {
     test("should handle file:// protocol", () => {
       const url = new ReadonlyUrl("file:///path/to/file.txt");

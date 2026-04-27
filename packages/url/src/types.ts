@@ -8,6 +8,7 @@ export type UrlQueriesType = Record<string, ScalarType> & {
   order?: "ASC" | "DESC";
   orderBy?: string;
   q?: string;
+  bearerToken?: string;
 };
 
 export interface IReadonlyUrl {
@@ -29,6 +30,7 @@ export interface IReadonlyUrl {
   getOrder: () => "ASC" | "DESC";
   getOrderBy: () => string | null;
   getSearch: () => string | null;
+  getBearerToken: () => string | null;
   toString: () => string;
 }
 

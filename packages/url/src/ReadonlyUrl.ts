@@ -145,6 +145,12 @@ export class ReadonlyUrl implements IReadonlyUrl {
     return (this.queries.q as string) ?? null;
   }
 
+  public getBearerToken(): string | null {
+    const token = this.queries.bearerToken as string | undefined;
+
+    return token ? decodeURIComponent(token) : null;
+  }
+
   public getFragment(): string {
     return this.fragment;
   }

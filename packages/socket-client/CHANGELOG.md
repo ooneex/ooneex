@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.3.0) - 2026-04-27
+
+### Added
+
+- Encode bearerToken query param in client connection URL — Franck ([f8c6625c](https://github.com/ooneex/ooneex/commit/f8c6625c))
+
 ## [1.2.13](https://github.com/ooneex/ooneex/releases/tag/@ooneex/socket-client@1.2.13) - 2026-04-12
 
 ### Changed

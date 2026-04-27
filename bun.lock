@@ -97,7 +97,7 @@
     },
     "packages/app-env": {
       "name": "@ooneex/app-env",
-      "version": "1.6.0",
+      "version": "1.6.1",
       "dependencies": {
         "@ooneex/container": "workspace:^",
         "@ooneex/exception": "workspace:^",
@@ -134,7 +134,7 @@
     },
     "packages/cli": {
       "name": "@ooneex/cli",
-      "version": "1.28.0",
+      "version": "1.28.1",
       "bin": {
         "ooneex": "./dist/index.js",
         "oo": "./dist/index.js",
@@ -565,7 +565,7 @@
     },
     "packages/socket": {
       "name": "@ooneex/socket",
-      "version": "1.2.13",
+      "version": "1.2.14",
       "devDependencies": {
         "@ooneex/controller": "workspace:^",
         "@ooneex/http-request": "workspace:^",

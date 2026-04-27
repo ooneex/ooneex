@@ -53,11 +53,6 @@ export class Socket<
   }
 
   private buildURL(url: string): string {
-    if (url.startsWith("ws://") || url.startsWith("wss://")) {
-      return url;
-    }
-
-    // Convert HTTP(S) to WebSocket protocol
     if (url.startsWith("http://")) {
       url = url.replace("http://", "ws://");
     } else if (url.startsWith("https://")) {
@@ -66,7 +61,17 @@ export class Socket<
       url = `wss://${url}`;
     }
 
-    return url;
+    return this.encodeBearerToken(url);
+  }
+
+  private encodeBearerToken(url: string): string {
+    const parsed = new URL(url);
+    const bearerToken = parsed.searchParams.get("bearerToken");
+    if (!bearerToken) {
+      return url;
+    }
+    parsed.searchParams.set("bearerToken", bearerToken);
+    return parsed.toString();
   }
 
   private setupEventHandlers(): void {
